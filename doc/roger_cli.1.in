@@ -1,0 +1,27 @@
+.\" Copyright (c) 2009-2013, Jan-Michael Brummer <jan.brummer@tabos.org>
+.TH roger_cli 1 "" "Roger Router CLI Version @PACKAGE_VERSION@"
+.SH NAME
+Roger Router CLI \- Router Manager
+.SH SYNOPSIS
+.TP 5
+\fBroger cli
+
+.SH DESCRIPTION
+.PP
+\fFROGER CLI\fR prints the current FRITZ!Box journal to the screen.
+
+.SH SEE ALSO
+\fIhttp://www.tabos.org/roger/\fR
+.br
+
+.SH LICENSE
+Copyright (c) 2009-2013 Jan-Michael Brummer
+
+.SH AUTHORS
+Roger Router's active developers are:
+.br
+ Jan-Michael Brummer (developer)
+.br
+
+This manpage was written by Jan-Michael Brummer <\fIjan.brummer@tabos.org\fR>.
+

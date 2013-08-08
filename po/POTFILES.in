@@ -1,0 +1,39 @@
+# List of files that (could) contain strings for translation
+[encoding: UTF-8]
+roger/about.c
+roger/application.c
+roger/assistant.c
+roger/debugwindow.c
+roger/fax.c
+roger/journal.c
+roger/main_ui.c
+roger/phone.c
+roger/pref.c
+roger/pref_action.c
+roger/pref_audio.c
+roger/pref_fax.c
+roger/pref_filters.c
+roger/pref_plugins.c
+roger/pref_prefix.c
+roger/pref_profiles.c
+roger/pref_router.c
+roger/pref_softphone.c
+roger/pref_misc.c
+roger/print.c
+roger/plugins/evolution/evolution.c
+[type: gettext/ini]roger/plugins/evolution/evolution.plugin.in
+roger/plugins/fritzfon/fritzfon.c
+[type: gettext/ini]roger/plugins/fritzfon/fritzfon.plugin.in
+roger/plugins/notification/notification.c
+[type: gettext/ini]roger/plugins/notification/notification.plugin.in
+roger/plugins/gtknotify/gtknotify.c
+[type: gettext/ini]roger/plugins/gtknotify/gtknotify.plugin.in
+roger/plugins/statusicon/gtk.c
+[type: gettext/ini]roger/plugins/statusicon/statusicon.plugin.in
+roger-cli/main_cli.c
+libcallibre/filter.c
+[type: gettext/ini]libcallibre/plugins/areacodes_global/areacodes_global.plugin.in
+[type: gettext/ini]libcallibre/plugins/callmonitor/callmonitor.plugin.in
+[type: gettext/ini]libcallibre/plugins/fritzbox/fritzbox.plugin.in
+[type: gettext/ini]libcallibre/plugins/pulseaudio/pulseaudio.plugin.in
+[type: gettext/ini]roger.desktop.in

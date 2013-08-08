@@ -1,0 +1,8 @@
+[Plugin]
+Module=areacodes_global
+_Name=Areacodes (Global)
+_Description=Display city name in journal
+Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
+Copyright=Copyright © 2012 Jan-Michael Brummer
+Website=http://www.tabos.org/
+Help=http://www.tabos.org/forum/

@@ -1,0 +1,16 @@
+* Plugins support with PEAS (C, Vala, Python, JavaScript)
+* Splitted ui from lib (GTK frontend, CLI frontend)
+* GApplication (Jumplist in GNOME 3)
+* GNetworkMonitor for reduced network transfer
+* Faster detection routine
+* Call list search now automatically search all columns (no user input)
+* Status icon available as plugin
+* Instant apply of settings using gsettings (dconf, registry)
+* Moved almost everything to plugins with signal support
+* Cleaner interface which can be extended by plugins
+* Wayland support
+
+* SOUP network for a/synchronous calls to router to let UI be responsive
+* Improved parser (e.g. 10x faster for caller list parsing, 4x faster for ab parsing, 3x faster areacodes lookup)
+* Use complete session time (reduced login/logout calls improves general router performance)
+* Size is 1/3 compared to ffgtk

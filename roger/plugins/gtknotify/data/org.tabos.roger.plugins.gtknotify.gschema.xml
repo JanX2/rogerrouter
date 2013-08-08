@@ -1,0 +1,10 @@
+<schemalist>
+	<schema id="org.tabos.roger.plugins.notification-gtk" path="/org/tabos/roger/plugins/notification-gtk/">
+		<key name="incoming-numbers" type="as">
+			<default>[]</default>
+		</key>
+		<key name="outgoing-numbers" type="as">
+			<default>[]</default>
+		</key>
+	</schema>
+</schemalist>

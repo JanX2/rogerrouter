@@ -1,0 +1,39 @@
+%.plugin: %.plugin.in
+	$(INTLTOOL_MERGE) $(top_srcdir)/po $< $@ -d -u -c $(top_builddir)/po/.intltool-merge-cache
+
+plugin_DATA = $(plugin_in_files:.plugin.in=.plugin)
+
+CLEANFILES = $(plugin_DATA)
+DISTCLEANFILES = $(plugin_DATA)
+EXTRA_DIST = $(plugin_in_files).in
+
+#	-DG_LOG_DOMAIN=\""Callibre"\"
+
+AM_CFLAGS = \
+	$(GTK_CFLAGS) \
+	$(PEAS_CFLAGS)		\
+	$(OS_CFLAGS) \
+	-I$(top_srcdir)/
+
+plugin_cflags =			\
+	$(GTK_CFLAGS) \
+	$(PEAS_CFLAGS)		\
+	$(OS_CFLAGS) \
+	-I$(top_srcdir)/
+
+plugin_ldflags = \
+	-export-dynamic \
+	-no-undefined \
+	-avoid-version \
+	-module \
+	$(PLUGIN_LIBTOOL_FLAGS)
+
+plugin_libadd = \
+	$(GTK_LIBS) \
+	$(PEAS_GTK_LIBS) \
+	$(OS_LIBS) \
+	$(PEAS_LIBS)
+
+if WIN32
+plugin_ldflags += -L$(top_srcdir)/libcallibre/.libs -lcallibre -L$(top_srcdir)/roger/.libs -lroger_core -no-undefined
+endif

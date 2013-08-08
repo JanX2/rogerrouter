@@ -1,0 +1,9 @@
+[Plugin]
+Module=statusicon
+_Name=Status icon GTK
+_Description=Status icon plugin using GTK following FreeDesktop standard
+Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
+Copyright=Copyright © 2012 Jan-Michael Brummer
+Website=http://www.tabos.org/
+Help=http://www.tabos.org/forum/
+

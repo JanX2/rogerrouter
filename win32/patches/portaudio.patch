@@ -1,0 +1,42 @@
+diff -urN portaudio/configure.in portaudio-ffgtk/configure.in
+--- portaudio/configure.in	2011-11-11 05:06:17.000000000 +0100
++++ portaudio-ffgtk/configure.in	2013-07-26 21:49:34.688971911 +0200
+@@ -257,8 +257,8 @@
+         if [[ "x$with_asio" = "xyes" ]]; then
+             ASIODIR="$with_asiodir"
+             add_objects src/hostapi/asio/pa_asio.o src/common/pa_ringbuffer.o src/os/win/pa_win_hostapis.o src/os/win/pa_win_util.o src/os/win/pa_win_coinitialize.o src/hostapi/asio/iasiothiscallresolver.o $ASIODIR/common/asio.o $ASIODIR/host/asiodrivers.o $ASIODIR/host/pc/asiolist.o
+-            LIBS="-lwinmm -lm -lole32 -luuid"
+-            DLL_LIBS="${DLL_LIBS} -lwinmm -lm -lole32 -luuid"
++            LIBS="-lwinmm -lm -lole32"
++            DLL_LIBS="${DLL_LIBS} -lwinmm -lm -lole32"
+             CFLAGS="$CFLAGS -ffast-math -fomit-frame-pointer -I\$(top_srcdir)/src/hostapi/asio -I$ASIODIR/host/pc -I$ASIODIR/common -I$ASIODIR/host -UPA_USE_ASIO -DPA_USE_ASIO=1 -DWINDOWS"
+ 
+             dnl Setting the windows version flags below resolves a conflict between Interlocked* 
+@@ -273,8 +273,8 @@
+         if [[ "x$with_wdmks" = "xyes" ]]; then
+             DXDIR="$with_dxdir"
+             add_objects src/hostapi/wdmks/pa_win_wdmks.o src/os/win/pa_win_hostapis.o src/os/win/pa_win_util.o
+-            LIBS="-lwinmm -lm -luuid -lsetupapi -lole32"
+-            DLL_LIBS="${DLL_LIBS} -lwinmm -lm -L$DXDIR/lib -luuid -lsetupapi -lole32"
++            LIBS="-lwinmm -lm -lsetupapi -lole32"
++            DLL_LIBS="${DLL_LIBS} -lwinmm -lm -L$DXDIR/lib -lsetupapi -lole32"
+             #VC98="\"/c/Program Files/Microsoft Visual Studio/VC98/Include\""
+             #CFLAGS="$CFLAGS -I$VC98 -DPA_NO_WMME -DPA_NO_ASIO"
+             CFLAGS="$CFLAGS -I$DXDIR/include -UPA_USE_WDMKS -DPA_USE_WDMKS=1"
+@@ -282,14 +282,14 @@
+ 
+         if [[ "x$with_wmme" = "xyes" ]]; then
+             add_objects src/hostapi/wmme/pa_win_wmme.o src/os/win/pa_win_hostapis.o src/os/win/pa_win_util.o src/os/win/pa_win_waveformat.o
+-            LIBS="-lwinmm -lm -lole32 -luuid"
++            LIBS="-lwinmm -lm -lole32"
+             DLL_LIBS="${DLL_LIBS} -lwinmm"
+             CFLAGS="$CFLAGS -UPA_USE_WMME -DPA_USE_WMME=1"
+         fi
+ 
+         if [[ "x$with_wasapi" = "xyes" ]]; then
+             add_objects src/hostapi/wasapi/pa_win_wasapi.o src/common/pa_ringbuffer.o src/os/win/pa_win_hostapis.o src/os/win/pa_win_util.o src/os/win/pa_win_coinitialize.o src/os/win/pa_win_waveformat.o
+-            LIBS="-lwinmm -lm -lole32 -luuid"
++            LIBS="-lwinmm -lm -lole32"
+             DLL_LIBS="${DLL_LIBS} -lwinmm -lole32"
+             CFLAGS="$CFLAGS -I\$(top_srcdir)/src/hostapi/wasapi/mingw-include -UPA_USE_WASAPI -DPA_USE_WASAPI=1"
+         fi

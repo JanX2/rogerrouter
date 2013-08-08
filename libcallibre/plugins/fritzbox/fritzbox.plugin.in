@@ -1,0 +1,9 @@
+[Plugin]
+Module=fritzbox
+_Name=AVM FRITZ!Box
+_Description=FRITZ!Box router integration for 7170, 7320, 7390
+Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
+Copyright=Copyright © 2012 Jan-Michael Brummer
+Website=http://www.tabos.org/
+Help=http://www.tabos.org/forum/
+Builtin=true

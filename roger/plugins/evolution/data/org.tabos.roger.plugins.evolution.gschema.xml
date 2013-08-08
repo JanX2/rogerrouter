@@ -1,0 +1,7 @@
+<schemalist>
+	<schema id="org.tabos.roger.plugins.evolution" path="/org/tabos/roger/plugins/evolution/">
+		<key name="book" type="s">
+			<default>'system-address-book'</default>
+		</key>
+	</schema>
+</schemalist>

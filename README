@@ -1,0 +1,7 @@
+Minimum requirements:
+    * GTK 3.4
+    * glib/gio 2.32
+    * speex/speexdsp 1.0
+    * libpeas 1.0
+    * gmodule
+    * libsoup 2.4

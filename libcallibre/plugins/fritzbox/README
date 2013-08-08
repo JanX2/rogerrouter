@@ -1,0 +1,34 @@
+* The router plugin for FRITZ!Box uses the jason_boxinfo.xml file from update-check for detection. This means that it will
+  only support recent FRITZ!Box router, namely:
+
+    FRITZ!Box WLAN 3270
+    FRITZ!Box WLAN 3370
+    FRITZ!Box Fon 5113
+    FRITZ!Box 6360 Cable
+    FRITZ!Box 6840 LTE
+    FRITZ!Box Fon WLAN 7112
+    FRITZ!Box Fon WLAN 7113
+    FRITZ!Box Fon WLAN 7170
+    FRITZ!Box Fon WLAN 7240
+    FRITZ!Box Fon WLAN 7270
+    FRITZ!Box Fon WLAN 7320
+    FRITZ!Box Fon WLAN 7330
+    FRITZ!Box Fon WLAN 7340
+    FRITZ!Box Fon WLAN 7360
+    FRITZ!Box Fon WLAN 7390
+    FRITZ!Box Fon WLAN 7570
+    VoIP Gateway 5188
+    FRITZ!WLAN Repeater N/G
+    FRITZ!WLAN Repeater 300E
+    Multibox 7270 NGN
+
+* Tested devices are listed in the fritzbox.plugin.in file. Currently tested:
+    FRITZ!Box Fon WLAN 7170
+    FRITZ!Box Fon WLAN 7320
+    FRITZ!Box Fon WLAN 7390
+
+
+* This plugin supports any firmware >= 04.74 with update-check.
+
+
+-- 28.12.2012 Jan-Michael Brummer --

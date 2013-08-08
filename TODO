@@ -1,0 +1,133 @@
+TODO
+----------
+
+Version a (done)
+-----------
+* Add preferences (done)
+* Add simple status icon plugin (done)
+* call monitor (telnet) (done)
+    - signal (done)
+
+* Consistent internal names of libcallibre! (done)
+* Comments and documentation of libcallibre!! (done)
+* Valgrind check of libcallibre (done)
+
+Version b
+-----------
+* Implement filters (load/store) (done)
+* Manage filters (add/delete/edit) (done)
+* improved dial dialog (done)
+* audio plugins (done)
+* ab/fax (done)
+
+Version c
+-----------
+plugin API
+ - reverse lookup
+ - contacts (done)
+* change dial dialog to support contact name completion (done)
+* faxophone plugin (fax: 100% done, phone: 100% done)
+* actions (done)
+
+Version d
+-----------
+* MSN as combobox instead of entry (done)
+* Asynchronous reverse lookup (done)
+* Re-design phone layout (done)
+
+Version e
+-----------
+* Fix: Network events that depends on profiles are not spawned on first profile detection (done)
+* Support reverse lookup for notification (done)
+
+Version f
+-----------
+
+
+CLOSED
+----------
+* switch to gsettings? (done)
+* areacodes as plugin? (done)
+* move csv part to fritzbox plugin? (done)
+* general csv parse function? (done)
+* review filter (done)
+* deinit functions (done)
+* soap instead network_glib? (done)
+* DEBUG flag in logging.c should depend on log_level (done)
+* GString vs gchar * (done)
+* check minimal include files (done)
+* GSList check (done)
+* FRITZ!Box split version to major/minor (done)
+* Test/Implement other boxes (7320 done)
+* check plugins of libcallibre (done)
+* Check 7170, 7320, 7390 (done)
+* Login without password is currently not possible (done, tested with 7390)
+* Evolution plugin should check correct ebook version (done)
+* Remove old filters (done)
+* Status/Time in dial window (done)
+* Read dialport of router and preselect (done)
+* make dist/check (done)
+* Suppress number (done)
+* Open ports by assistant (done)
+* Rework dial dialog (done)
+* Notifications - numbers (done)
+* libsecret instead of libgnome-keyring (done)
+* Change status icon on missed calls (done)
+* Port other address books (fritzfon) (done)
+* User space logging function restructure (done)
+
+OPENS
+-----------
+
+* Prepend callibre_ to each external callibre function?
+* Check router structure for different routers (speedport)
+
+* Areacodes plugin for every country (global list available as csv) (90% done, add special handling for countrys not starting with 0 indicator, e.g. Russian Federation)
+* Allow plugins to add columns to journal view (GTK)
+* Allow plugins to add pages to preferences notebook (GTK)
+
+* remove markup from translation and add hints
+
+* Reverse lookup for other services / improve
+
+* Addressbook selection in preferences
+
+* Better icons in journal/print
+
+**** WIN32 ****
+* Parameters pass-through in roger (done)
+* All application windows should be centered (done)
+* Validate statusicon last call entry (done)
+* Portaudio plugin (done)
+* Fix open call (done)
+* Notification plugin (done)
+* Remove registry entries on removal (done)
+* Missing icons for plugins (done)
+* Installer UI improvement (done)
+* PortAudio is not preselected (done)
+* Notification GTK (done)
+
+* Application icon in different sizes
+
+- POSTPONED -
+* Fax printer / in nsis package
+
+
+************** UNDECIDED **************
+* Speedport?
+* Notifications - sound (files)
+* Different sound output for notifications
+* Import for JFritz
+* Export contacts to CSV?
+* DSL/Connection information
+
+
+
+* Distribution schema: Add default actions
+
+WILL NOT BE IMPLEMENTED
+-------------------------------
+* Fax receiving? - Every supported FRITZ!Box now supports fax receiving
+
+QUESTIONS
+------------
