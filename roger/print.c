@@ -309,7 +309,7 @@ static void draw_page_cb(GtkPrintOperation *operation, GtkPrintContext *context,
 	pango_layout_set_width(print_data->layout, (width - 8) * PANGO_SCALE);
 
 	/* Title */
-	gchar *data = g_strdup_printf("<b>%s - %s</b>", APP_NAME, _("Anruferliste"));
+	gchar *data = g_strdup_printf("<b>%s - %s</b>", PACKAGE_NAME, _("Anruferliste"));
 	pango_layout_set_markup(print_data->layout, data, -1);
 	pango_layout_set_alignment(print_data->layout, PANGO_ALIGN_CENTER);
 	cairo_move_to(cairo, 3, print_data->line_height * 0.5);

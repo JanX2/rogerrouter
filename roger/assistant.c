@@ -513,7 +513,7 @@ void assistant()
 	g_signal_connect(G_OBJECT(window), "close", G_CALLBACK(assistant_close), NULL);
 	g_signal_connect(G_OBJECT(window), "prepare", G_CALLBACK(assistant_prepare), NULL);
 
-	gtk_window_set_title(GTK_WINDOW(window), _(APP_NAME " Profile Assistant"));
+	gtk_window_set_title(GTK_WINDOW(window), _(PACKAGE_NAME " Profile Assistant"));
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 	gtk_window_set_default_size(GTK_WINDOW(window), 300, 300);
 

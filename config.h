@@ -14,7 +14,7 @@
 #define HAVE_CAPI_36 1
 
 /* Have dbus-glib-1 */
-/* #undef HAVE_DBUS */
+#define HAVE_DBUS 1
 
 /* Define to 1 if you have the `dcgettext' function. */
 #define HAVE_DCGETTEXT 1
@@ -23,7 +23,7 @@
 #define HAVE_DLFCN_H 1
 
 /* Have libebook >= 3.5.4 */
-/* #undef HAVE_EBOOK_SOURCE_REGISTRY */
+#define HAVE_EBOOK_SOURCE_REGISTRY 1
 
 /* Have faxophone */
 #define HAVE_FAXOPHONE 1
@@ -35,7 +35,7 @@
 #define HAVE_INTTYPES_H 1
 
 /* Define if your <locale.h> file defines LC_MESSAGES. */
-/* #undef HAVE_LC_MESSAGES */
+#define HAVE_LC_MESSAGES 1
 
 /* Define to 1 if you have the `gthread-2.0' library (-lgthread-2.0). */
 #define HAVE_LIBGTHREAD_2_0 1
@@ -44,7 +44,7 @@
 #define HAVE_LIBM 1
 
 /* Have libnotify */
-/* #undef HAVE_LIBNOTIFY */
+#define HAVE_LIBNOTIFY 1
 
 /* Define to 1 if you have the <locale.h> header file. */
 #define HAVE_LOCALE_H 1
@@ -53,10 +53,10 @@
 #define HAVE_MEMORY_H 1
 
 /* Have portaudio */
-#define HAVE_PORTAUDIO 1
+/* #undef HAVE_PORTAUDIO */
 
 /* Have pulseaudio */
-/* #undef HAVE_PULSEAUDIO */
+#define HAVE_PULSEAUDIO 1
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #define HAVE_STDINT_H 1

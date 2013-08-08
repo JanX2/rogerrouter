@@ -25,9 +25,6 @@
 
 G_BEGIN_DECLS
 
-#define APP_NAME PACKAGE_NAME
-#define APP_NAME_LONG APP_NAME " Router manager"
-
 #define JOURNAL_FILE "journal.xml"
 
 #define _(text) gettext(text)

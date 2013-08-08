@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce configure.
-AC_INIT(Roger, 1.8.0, http://www.tabos.org/roger)
+AC_INIT(Roger Router, 1.8.0, http://www.tabos.org/roger)
 AC_PREFIX_DEFAULT(/usr)
 AM_INIT_AUTOMAKE([1.11 no-dist-gzip dist-xz])
 AC_CONFIG_HEADERS(config.h)

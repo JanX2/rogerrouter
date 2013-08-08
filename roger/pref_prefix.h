@@ -1,5 +1,5 @@
 /**
- * Roger Router - Router manager
+ * Roger Router
  * Copyright (c) 2012-2013 Jan-Michael Brummer
  *
  * This file is part of Roger Router.

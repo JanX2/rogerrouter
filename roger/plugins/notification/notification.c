@@ -267,7 +267,7 @@ void impl_activate(PeasActivatable *plugin)
 	}
 
 	/* Init libnotify */
-	notify_init(APP_NAME);
+	notify_init(PACKAGE_NAME);
 
 	/* Connect to "call-notify" signal */
 	notify_plugin->priv->signal_id = g_signal_connect(G_OBJECT(app_object), "connection-notify", G_CALLBACK(notifications_connection_notify_cb), NULL);

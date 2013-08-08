@@ -365,11 +365,11 @@ static gint application_command_line_cb(GApplication *app, GApplicationCommandLi
 
 Application *application_new(void)
 {
-	g_set_prgname(APP_NAME_LONG);
-	g_set_application_name(APP_NAME_LONG);
+	g_set_prgname(PACKAGE_NAME);
+	g_set_application_name(PACKAGE_NAME);
 
 	application = g_object_new(application_get_type(),
-		"application-id", "org.tabos."APP_NAME,
+		"application-id", "org.tabos."PACKAGE,
 		"flags", G_APPLICATION_HANDLES_COMMAND_LINE,
 		NULL);
 
