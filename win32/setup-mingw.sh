@@ -88,7 +88,7 @@ make_pkg "http://downloads.xiph.org/releases/speex/" "speex-1.2rc1.tar.gz" "spee
 make_pkg "http://www.mega-nerd.com/libsndfile/files/" "libsndfile-1.0.25.tar.gz" "libsndfile-1.0.25"
 
 # Download and compile libcapi20
-make_pkg "http://tabos.org/roger/download/" "libcapi20-3.0.7.tar.bz2" "capi20"
+make_pkg "http://tabos.org/ffgtk/download/" "libcapi20-3.0.7.tar.bz2" "capi20"
 
 # Download and compile portaudio
 make_pkg "http://www.portaudio.com/archives/" "pa_stable_v19_20111121.tgz" "portaudio"
