@@ -11,6 +11,13 @@ AM_CFLAGS = -I$(top_srcdir)
 libroutermanager_includedir = $(includedir)/libroutermanager/
 libroutermanager_include_HEADERS = $(wildcard *.h)
 
+libroutermanager_faxophone_includedir = $(includedir)/libroutermanager/libfaxophone
+libroutermanager_faxophone_include_HEADERS = \
+	libfaxophone/fax.h \
+	libfaxophone/faxophone.h \
+	libfaxophone/isdn-convert.h \
+	libfaxophone/phone.h
+
 libroutermanager_la_SOURCES = \
 	action.c\
 	action.h\
