@@ -4,10 +4,12 @@ CLEANFILES              = *~ comperr
 DISTCLEANFILES			= intltool-extract intltool-merge intltool-update
 MAINTAINERCLEANFILES    = configure aclocal.m4 Makefile.in config.h.in
 			  stamp-h.in
-include_HEADERS = routermanager.h
 lib_LTLIBRARIES = libroutermanager.la
 
 AM_CFLAGS = -I$(top_srcdir)
+
+libroutermanager_includedir = $(includedir)/libroutermanager/
+libroutermanager_include_HEADERS = $(wildcard *.h)
 
 libroutermanager_la_SOURCES = \
 	action.c\
