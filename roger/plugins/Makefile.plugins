@@ -33,5 +33,5 @@ plugin_libadd = \
 	$(PEAS_LIBS)
 
 if WIN32
-plugin_ldflags += -L$(top_srcdir)/libcallibre/.libs -lcallibre -L$(top_srcdir)/roger/.libs -lroger_core -no-undefined
+plugin_ldflags += -L$(top_srcdir)/libroutermanager/.libs -lroutermanager -L$(top_srcdir)/roger/.libs -lroger_core -no-undefined
 endif
