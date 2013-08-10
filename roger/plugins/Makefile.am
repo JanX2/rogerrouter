@@ -9,7 +9,3 @@ endif
 if WITH_LIBNOTIFY
 SUBDIRS += notification
 endif
-
-if WITH_SECRET
-SUBDIRS += secret
-endif

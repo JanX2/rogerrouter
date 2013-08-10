@@ -15144,7 +15144,7 @@ then
 	EXTRA_CFLAGS+="-Werror"
 fi
 
-ac_config_files="$ac_config_files Makefile win32/roger.nsi doc/Makefile doc/roger.1 doc/roger_cli.1 po/Makefile.in libroutermanager/routermanager.pc libroutermanager/Makefile libroutermanager/data/Makefile libroutermanager/plugins/Makefile libroutermanager/plugins/fritzbox/Makefile libroutermanager/plugins/callmonitor/Makefile libroutermanager/plugins/areacodes_global/Makefile libroutermanager/plugins/pulseaudio/Makefile libroutermanager/plugins/reverselookup/Makefile libroutermanager/plugins/wincred/Makefile libroutermanager/plugins/portaudio/Makefile roger/Makefile roger/data/Makefile roger-cli/Makefile roger/plugins/Makefile roger/plugins/statusicon/Makefile roger/plugins/statusicon/data/Makefile roger/plugins/notification/Makefile roger/plugins/notification/data/Makefile roger/plugins/fritzfon/Makefile roger/plugins/fritzfon/data/Makefile roger/plugins/evolution/Makefile roger/plugins/evolution/data/Makefile roger/plugins/secret/Makefile roger/plugins/gtknotify/Makefile roger/plugins/gtknotify/data/Makefile"
+ac_config_files="$ac_config_files Makefile win32/roger.nsi doc/Makefile doc/roger.1 doc/roger_cli.1 po/Makefile.in libroutermanager/routermanager.pc libroutermanager/Makefile libroutermanager/data/Makefile libroutermanager/plugins/Makefile libroutermanager/plugins/fritzbox/Makefile libroutermanager/plugins/callmonitor/Makefile libroutermanager/plugins/areacodes_global/Makefile libroutermanager/plugins/pulseaudio/Makefile libroutermanager/plugins/reverselookup/Makefile libroutermanager/plugins/wincred/Makefile libroutermanager/plugins/portaudio/Makefile libroutermanager/plugins/secret/Makefile roger/Makefile roger/data/Makefile roger-cli/Makefile roger-cli2/Makefile roger/plugins/Makefile roger/plugins/statusicon/Makefile roger/plugins/statusicon/data/Makefile roger/plugins/notification/Makefile roger/plugins/notification/data/Makefile roger/plugins/fritzfon/Makefile roger/plugins/fritzfon/data/Makefile roger/plugins/evolution/Makefile roger/plugins/evolution/data/Makefile roger/plugins/gtknotify/Makefile roger/plugins/gtknotify/data/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -16220,9 +16220,11 @@ do
     "libroutermanager/plugins/reverselookup/Makefile") CONFIG_FILES="$CONFIG_FILES libroutermanager/plugins/reverselookup/Makefile" ;;
     "libroutermanager/plugins/wincred/Makefile") CONFIG_FILES="$CONFIG_FILES libroutermanager/plugins/wincred/Makefile" ;;
     "libroutermanager/plugins/portaudio/Makefile") CONFIG_FILES="$CONFIG_FILES libroutermanager/plugins/portaudio/Makefile" ;;
+    "libroutermanager/plugins/secret/Makefile") CONFIG_FILES="$CONFIG_FILES libroutermanager/plugins/secret/Makefile" ;;
     "roger/Makefile") CONFIG_FILES="$CONFIG_FILES roger/Makefile" ;;
     "roger/data/Makefile") CONFIG_FILES="$CONFIG_FILES roger/data/Makefile" ;;
     "roger-cli/Makefile") CONFIG_FILES="$CONFIG_FILES roger-cli/Makefile" ;;
+    "roger-cli2/Makefile") CONFIG_FILES="$CONFIG_FILES roger-cli2/Makefile" ;;
     "roger/plugins/Makefile") CONFIG_FILES="$CONFIG_FILES roger/plugins/Makefile" ;;
     "roger/plugins/statusicon/Makefile") CONFIG_FILES="$CONFIG_FILES roger/plugins/statusicon/Makefile" ;;
     "roger/plugins/statusicon/data/Makefile") CONFIG_FILES="$CONFIG_FILES roger/plugins/statusicon/data/Makefile" ;;
@@ -16232,7 +16234,6 @@ do
     "roger/plugins/fritzfon/data/Makefile") CONFIG_FILES="$CONFIG_FILES roger/plugins/fritzfon/data/Makefile" ;;
     "roger/plugins/evolution/Makefile") CONFIG_FILES="$CONFIG_FILES roger/plugins/evolution/Makefile" ;;
     "roger/plugins/evolution/data/Makefile") CONFIG_FILES="$CONFIG_FILES roger/plugins/evolution/data/Makefile" ;;
-    "roger/plugins/secret/Makefile") CONFIG_FILES="$CONFIG_FILES roger/plugins/secret/Makefile" ;;
     "roger/plugins/gtknotify/Makefile") CONFIG_FILES="$CONFIG_FILES roger/plugins/gtknotify/Makefile" ;;
     "roger/plugins/gtknotify/data/Makefile") CONFIG_FILES="$CONFIG_FILES roger/plugins/gtknotify/data/Makefile" ;;
     "po/stamp-it") CONFIG_COMMANDS="$CONFIG_COMMANDS po/stamp-it" ;;

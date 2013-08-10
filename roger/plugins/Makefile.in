@@ -79,7 +79,6 @@ build_triplet = @build@
 host_triplet = @host@
 @WITH_EBOOK_TRUE@am__append_1 = evolution
 @WITH_LIBNOTIFY_TRUE@am__append_2 = notification
-@WITH_SECRET_TRUE@am__append_3 = secret
 subdir = roger/plugins
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -147,8 +146,7 @@ am__define_uniq_tagged_files = \
   done | $(am__uniquify_input)`
 ETAGS = etags
 CTAGS = ctags
-DIST_SUBDIRS = statusicon fritzfon gtknotify evolution notification \
-	secret
+DIST_SUBDIRS = statusicon fritzfon gtknotify evolution notification
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 am__relativize = \
   dir0=`pwd`; \
@@ -362,7 +360,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = statusicon fritzfon gtknotify $(am__append_1) \
-	$(am__append_2) $(am__append_3)
+	$(am__append_2)
 plugindir = ${libdir}/roger/
 all: all-recursive
 

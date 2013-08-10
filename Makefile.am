@@ -1,6 +1,7 @@
 SUBDIRS = libroutermanager roger roger-cli po doc
 
 EXTRA_DIST = \
+	autogen.sh \
 	roger.desktop.in \
 	remove-settings.sh \
 	share/roger-cups \
@@ -11,9 +12,13 @@ EXTRA_DIST = \
 	win32/printer.nsh \
 	win32/roger.nsi.in \
 	win32/roger.ico \
-	win32/themes/* \
-	win32/printer/* \
-	win32/patches/*
+	win32/themes/Adwaita/gtk-3.0/gtk.css \
+	win32/themes/Adwaita/gtk-3.0/gtk.gresource \
+	win32/themes/Adwaita/gtk-3.0/settings.ini \
+	win32/printer/ghostpdf.inf \
+	win32/printer/ghostpdf.ppd \
+	win32/patches/portaudio.patch \
+	win32/patches/spandsp-0.0.6.patch
 
 noinst_HEADERS = config.h
 

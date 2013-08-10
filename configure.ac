@@ -356,6 +356,7 @@ AC_OUTPUT([
     libroutermanager/plugins/reverselookup/Makefile
     libroutermanager/plugins/wincred/Makefile
     libroutermanager/plugins/portaudio/Makefile
+    libroutermanager/plugins/secret/Makefile
     roger/Makefile
     roger/data/Makefile
     roger-cli/Makefile
@@ -368,7 +369,6 @@ AC_OUTPUT([
     roger/plugins/fritzfon/data/Makefile
     roger/plugins/evolution/Makefile
     roger/plugins/evolution/data/Makefile
-    roger/plugins/secret/Makefile
     roger/plugins/gtknotify/Makefile
     roger/plugins/gtknotify/data/Makefile
 ])

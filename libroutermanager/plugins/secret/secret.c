@@ -17,8 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtk/gtk.h>
-
 #include <libsecret/secret.h>
 
 #include <libroutermanager/call.h>

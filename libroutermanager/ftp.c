@@ -462,7 +462,7 @@ gboolean ftp_put_file(struct ftp *client, const gchar *file, const gchar *path, 
 		offset += written;
 	} while (offset != size);
 #ifdef FTP_DEBUG
-	g_debug("ftp_put_file(): done. written = %d", offset);
+	g_debug("ftp_put_file(): done");
 #endif
 	g_io_channel_shutdown(client->data, TRUE, &error);
 	client->data = NULL;
