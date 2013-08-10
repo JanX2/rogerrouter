@@ -7,8 +7,6 @@ CLEANFILES = $(plugin_DATA)
 DISTCLEANFILES = $(plugin_DATA)
 EXTRA_DIST = $(plugin_in_files).in
 
-#	-DG_LOG_DOMAIN=\""Callibre"\"
-
 AM_CFLAGS = \
 	$(GTK_CFLAGS) \
 	$(PEAS_CFLAGS)		\
