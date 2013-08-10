@@ -76,7 +76,7 @@ Section RogerRouter
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/gspawn-win32-helper-console.exe"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/gspawn-win32-helper.exe"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libroger_core.dll"
-	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libcallibre.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libroutermanager.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libatk-1.0-0.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libcairo-2.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libcairo-gobject-2.dll"
@@ -142,10 +142,10 @@ Section RogerRouter
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/roger/plugins/*.dll"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/roger/plugins/*.plugin"
 
-	SetOutPath "$INSTDIR\lib\callibre\plugins"
-	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/callibre/plugins/*.dll"
-	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/callibre/plugins/*.plugin"
-	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/callibre/plugins/*.csv"
+	SetOutPath "$INSTDIR\lib\routermanager\plugins"
+	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/routermanager/plugins/*.dll"
+	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/routermanager/plugins/*.plugin"
+	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/routermanager/plugins/*.csv"
 
 	SetOutPath "$INSTDIR\share\"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/share/roger"

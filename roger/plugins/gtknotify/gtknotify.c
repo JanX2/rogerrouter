@@ -21,30 +21,30 @@
 
 #include <gtk/gtk.h>
 
-#include <libcallibre/plugins.h>
-#include <libcallibre/call.h>
-#include <libcallibre/appobject.h>
-#include <libcallibre/appobject-emit.h>
-#include <libcallibre/libfaxophone/phone.h>
-#include <libcallibre/fax_phone.h>
-#include <libcallibre/router.h>
-#include <libcallibre/profile.h>
-#include <libcallibre/lookup.h>
-#include <libcallibre/gstring.h>
+#include <libroutermanager/plugins.h>
+#include <libroutermanager/call.h>
+#include <libroutermanager/appobject.h>
+#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/libfaxophone/phone.h>
+#include <libroutermanager/fax_phone.h>
+#include <libroutermanager/router.h>
+#include <libroutermanager/profile.h>
+#include <libroutermanager/lookup.h>
+#include <libroutermanager/gstring.h>
 
 #include <roger/main.h>
 #include <roger/application.h>
 #include <roger/phone.h>
 #include <roger/pref.h>
 
-#define CALLIBRE_TYPE_NOTIFICATION_GTK_PLUGIN (callibre_notification_gtk_plugin_get_type ())
-#define CALLIBRE_NOTIFICATION_GTK_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), CALLIBRE_TYPE_NOTIFICATION_GTK_PLUGIN, CallibreNotificationGtkPlugin))
+#define ROUTERMANAGER_TYPE_NOTIFICATION_GTK_PLUGIN (routermanager_notification_gtk_plugin_get_type ())
+#define ROUTERMANAGER_NOTIFICATION_GTK_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_NOTIFICATION_GTK_PLUGIN, RouterManagerNotificationGtkPlugin))
 
 typedef struct {
         guint signal_id;
-} CallibreNotificationGtkPluginPrivate;
+} RouterManagerNotificationGtkPluginPrivate;
 
-CALLIBRE_PLUGIN_REGISTER_CONFIGURABLE(CALLIBRE_TYPE_NOTIFICATION_GTK_PLUGIN, CallibreNotificationGtkPlugin, callibre_notification_gtk_plugin)
+ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_NOTIFICATION_GTK_PLUGIN, RouterManagerNotificationGtkPlugin, routermanager_notification_gtk_plugin)
 
 static GSettings *notification_gtk_settings = NULL;
 static gchar **selected_outgoing_numbers = NULL;
@@ -121,7 +121,7 @@ static gpointer notification_reverse_lookup_thread(gpointer data)
 
 	number = connection->remote_number;
 
-	if (callibre_lookup(number, &name, &address, &zip, &city)) {
+	if (routermanager_lookup(number, &name, &address, &zip, &city)) {
 		if (connection->notification) {
 			GtkWidget *contact_name_label = g_object_get_data(connection->notification, "name");
 			GtkWidget *contact_street_label = g_object_get_data(connection->notification, "street");
@@ -373,7 +373,7 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
  */
 void impl_activate(PeasActivatable *plugin)
 {
-	CallibreNotificationGtkPlugin *notify_plugin = CALLIBRE_NOTIFICATION_GTK_PLUGIN(plugin);
+	RouterManagerNotificationGtkPlugin *notify_plugin = ROUTERMANAGER_NOTIFICATION_GTK_PLUGIN(plugin);
 
 	notification_gtk_settings = g_settings_new("org.tabos.roger.plugins.notification-gtk");
 
@@ -395,7 +395,7 @@ void impl_activate(PeasActivatable *plugin)
  */
 void impl_deactivate(PeasActivatable *plugin)
 {
-	CallibreNotificationGtkPlugin *notify_plugin = CALLIBRE_NOTIFICATION_GTK_PLUGIN(plugin);
+	RouterManagerNotificationGtkPlugin *notify_plugin = ROUTERMANAGER_NOTIFICATION_GTK_PLUGIN(plugin);
 
 	/* If signal handler is connected: disconnect */
 	if (g_signal_handler_is_connected(G_OBJECT(app_object), notify_plugin->priv->signal_id)) {

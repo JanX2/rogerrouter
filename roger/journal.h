@@ -20,8 +20,8 @@
 #ifndef JOURNAL_H
 #define JOURNAL_H
 
-#include <libcallibre/filter.h>
-#include <libcallibre/call.h>
+#include <libroutermanager/filter.h>
+#include <libroutermanager/call.h>
 
 G_BEGIN_DECLS
 

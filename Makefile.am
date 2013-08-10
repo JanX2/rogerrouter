@@ -1,4 +1,4 @@
-SUBDIRS = libcallibre roger roger-cli po doc
+SUBDIRS = libroutermanager roger roger-cli po doc
 
 EXTRA_DIST = \
 	roger.desktop.in \

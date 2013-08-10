@@ -24,7 +24,7 @@
 #include <libebook/e-book-client.h>
 #include <ebook-sources.h>
 
-#include <libcallibre/gstring.h>
+#include <libroutermanager/gstring.h>
 
 /**
  * \brief Get client for active address book

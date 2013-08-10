@@ -20,9 +20,9 @@
 #ifndef PRINT_H
 #define PRINT_H
 
-#include <libcallibre/router.h>
-#include <libcallibre/libfaxophone/faxophone.h>
-#include <libcallibre/libfaxophone/fax.h>
+#include <libroutermanager/router.h>
+#include <libroutermanager/libfaxophone/faxophone.h>
+#include <libroutermanager/libfaxophone/fax.h>
 
 G_BEGIN_DECLS
 

@@ -4,17 +4,17 @@
 #include <glib/gstdio.h>
 #include <glib/gprintf.h>
 
-#include <libcallibre/appobject.h>
-#include <libcallibre/profile.h>
-#include <libcallibre/callibre.h>
-#include <libcallibre/logging.h>
-#include <libcallibre/router.h>
-#include <libcallibre/gstring.h>
+#include <libroutermanager/appobject.h>
+#include <libroutermanager/profile.h>
+#include <libroutermanager/routermanager.h>
+#include <libroutermanager/logging.h>
+#include <libroutermanager/router.h>
+#include <libroutermanager/gstring.h>
 
-#include <libcallibre/libfaxophone/faxophone.h>
-#include <libcallibre/libfaxophone/fax.h>
-#include <libcallibre/libfaxophone/phone.h>
-#include <libcallibre/fax_phone.h>
+#include <libroutermanager/libfaxophone/faxophone.h>
+#include <libroutermanager/libfaxophone/fax.h>
+#include <libroutermanager/libfaxophone/phone.h>
+#include <libroutermanager/fax_phone.h>
 
 #include <main.h>
 
@@ -40,6 +40,7 @@ static GOptionEntry entries[] = {
 
 /** Internal main loop */
 GMainLoop *main_loop = NULL;
+static gboolean success = FALSE;
 
 /**
  * \brief Assistant UI
@@ -88,6 +89,10 @@ gchar *convert_fax_to_tiff(gchar *file_name)
 	gchar *args[12];
 	gchar *output;
 	gchar *tiff;
+
+	if (strstr(file_name, ".tif")) {
+		return file_name;
+	}
 
 	tiff = g_strdup_printf("%s.tif", file_name);
 
@@ -168,8 +173,10 @@ void fax_connection_status_cb(AppObject *object, gint status, struct capi_connec
 			case PHASE_E:
 				if (!fax_status->error_code) {
 					g_message("%s", "Fax transfer successful");
+					success = TRUE;
 				} else {
 					g_message("%s", "Fax transfer failed");
+					success = FALSE;
 				}
 				phone_hangup(connection);
 				fax_status->done = TRUE;
@@ -214,6 +221,7 @@ int main(int argc, char **argv)
 	GError *error = NULL;
 	GOptionContext *context;
 	gchar *tiff = NULL;
+	int ret = 0;
 
 #if !GLIB_CHECK_VERSION(2, 36, 0)
 	/* Init g_type */
@@ -229,11 +237,11 @@ int main(int argc, char **argv)
 	}
 
 	if (!journal && !(sendfax && file_name && number) && !(call && number)) {
-		exit(0);
+		exit(-3);
 	}
 
-	/* Initialize callibre */
-	callibre_init(&cli_ops, FALSE);
+	/* Initialize routermanager */
+	routermanager_init(&cli_ops, debug);
 
 	/* Only show messages >= INFO */
 	log_set_level(G_LOG_LEVEL_INFO);
@@ -256,11 +264,11 @@ int main(int argc, char **argv)
 			gpointer connection = fax_dial(tiff, number);
 			if (!connection) {
 				g_error("could not create connection!");
-				exit(2);
+				exit(-2);
 			}
 		} else {
 			g_warning("Error converting print file to TIFF!");
-			exit(2);
+			exit(-4);
 		}
 
 	}
@@ -276,12 +284,16 @@ int main(int argc, char **argv)
 	main_loop = g_main_loop_new(NULL, FALSE);
 	g_main_loop_run(main_loop);
 
-	/* Shutdown callibre */
-	callibre_shutdown();
+	/* Shutdown routermanager */
+	routermanager_shutdown();
 
 	if (sendfax && tiff) {
 		g_unlink(tiff);
 	}
 
-	return 0;
+	if (sendfax && !success) {
+		ret = -6;
+	}
+
+	return ret;
 }

@@ -221,7 +221,7 @@ msgid "Fax transfer failed"
 msgstr "Faxübertragung fehlgeschlagen"
 
 #. Fax
-#: ../roger/fax.c:181 ../roger/pref.c:127 ../libcallibre/filter.c:441
+#: ../roger/fax.c:181 ../roger/pref.c:127 ../libroutermanager/filter.c:441
 msgid "Fax"
 msgstr "Fax"
 
@@ -1255,43 +1255,43 @@ msgstr "Übertragung beginnt:"
 
 #. No self-made filters available, create standard filters
 #. All calls
-#: ../libcallibre/filter.c:421
+#: ../libroutermanager/filter.c:421
 msgid "All calls"
 msgstr "Alle Anrufe"
 
 #. Incoming calls
-#: ../libcallibre/filter.c:426
+#: ../libroutermanager/filter.c:426
 msgid "Incoming calls"
 msgstr "Eingehende Anrufe"
 
 #. Missed calls
-#: ../libcallibre/filter.c:431
+#: ../libroutermanager/filter.c:431
 msgid "Missed calls"
 msgstr "Verpasste Anrufe"
 
 #. Outgoing calls
-#: ../libcallibre/filter.c:436
+#: ../libroutermanager/filter.c:436
 msgid "Outgoing calls"
 msgstr "Ausgehende Anrufe"
 
 #. Answering machine
-#: ../libcallibre/filter.c:446
+#: ../libroutermanager/filter.c:446
 msgid "Answering machine"
 msgstr "Anrufbeantworter"
 
-#: ../libcallibre/plugins/areacodes_global/areacodes_global.plugin.in.h:1
+#: ../libroutermanager/plugins/areacodes_global/areacodes_global.plugin.in.h:1
 msgid "Areacodes (Global)"
 msgstr "Ortsvorwahl (Global)"
 
-#: ../libcallibre/plugins/areacodes_global/areacodes_global.plugin.in.h:2
+#: ../libroutermanager/plugins/areacodes_global/areacodes_global.plugin.in.h:2
 msgid "Display city name in journal"
 msgstr "Zeigt Städtenamen im Journal"
 
-#: ../libcallibre/plugins/callmonitor/callmonitor.plugin.in.h:1
+#: ../libroutermanager/plugins/callmonitor/callmonitor.plugin.in.h:1
 msgid "Call Monitor (Telnet)"
 msgstr "Anrufmonitor (Telnet)"
 
-#: ../libcallibre/plugins/callmonitor/callmonitor.plugin.in.h:2
+#: ../libroutermanager/plugins/callmonitor/callmonitor.plugin.in.h:2
 msgid ""
 "Call Monitor watches telnet port 1012 for call status messages (RING/CALL/"
 "DIAL)"
@@ -1299,19 +1299,19 @@ msgstr ""
 "Anrufmonitor überwacht den Telnetport 1012 für Anrufstatusmeldungen (RING/"
 "CALLDIAL)"
 
-#: ../libcallibre/plugins/fritzbox/fritzbox.plugin.in.h:1
+#: ../libroutermanager/plugins/fritzbox/fritzbox.plugin.in.h:1
 msgid "AVM FRITZ!Box"
 msgstr "AVM FRITZ!Box"
 
-#: ../libcallibre/plugins/fritzbox/fritzbox.plugin.in.h:2
+#: ../libroutermanager/plugins/fritzbox/fritzbox.plugin.in.h:2
 msgid "FRITZ!Box router integration for 7170, 7320, 7390"
 msgstr "FRITZ!Box Routerintegration für 7170, 7320, 7390"
 
-#: ../libcallibre/plugins/pulseaudio/pulseaudio.plugin.in.h:1
+#: ../libroutermanager/plugins/pulseaudio/pulseaudio.plugin.in.h:1
 msgid "PulseAudio plugin"
 msgstr "PulseAudio Plugin"
 
-#: ../libcallibre/plugins/pulseaudio/pulseaudio.plugin.in.h:2
+#: ../libroutermanager/plugins/pulseaudio/pulseaudio.plugin.in.h:2
 msgid "Audio plugin for PulseAudio"
 msgstr "Audio-Plugin für PulseAudio"
 

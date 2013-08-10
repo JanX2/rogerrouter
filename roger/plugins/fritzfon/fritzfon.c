@@ -21,27 +21,27 @@
 
 #include <gtk/gtk.h>
 
-#include <libcallibre/plugins.h>
-#include <libcallibre/appobject.h>
-#include <libcallibre/address-book.h>
-#include <libcallibre/profile.h>
-#include <libcallibre/router.h>
-#include <libcallibre/network.h>
-#include <libcallibre/number.h>
-#include <libcallibre/gstring.h>
-#include <libcallibre/ftp.h>
+#include <libroutermanager/plugins.h>
+#include <libroutermanager/appobject.h>
+#include <libroutermanager/address-book.h>
+#include <libroutermanager/profile.h>
+#include <libroutermanager/router.h>
+#include <libroutermanager/network.h>
+#include <libroutermanager/number.h>
+#include <libroutermanager/gstring.h>
+#include <libroutermanager/ftp.h>
 
 #include "../../main.h"
 #include "xml.h"
 
-#define CALLIBRE_TYPE_FRITZFON_PLUGIN        (callibre_fritzfon_plugin_get_type ())
-#define CALLIBRE_FRITZFON_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), CALLIBRE_TYPE_FRITZFON_PLUGIN, CallibreFritzFonPlugin))
+#define ROUTERMANAGER_TYPE_FRITZFON_PLUGIN        (routermanager_fritzfon_plugin_get_type ())
+#define ROUTERMANAGER_FRITZFON_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_FRITZFON_PLUGIN, RouterManagerFritzFonPlugin))
 
 typedef struct {
 	guint signal_id;
-} CallibreFritzFonPluginPrivate;
+} RouterManagerFritzFonPluginPrivate;
 
-CALLIBRE_PLUGIN_REGISTER_CONFIGURABLE(CALLIBRE_TYPE_FRITZFON_PLUGIN, CallibreFritzFonPlugin, callibre_fritzfon_plugin)
+ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_FRITZFON_PLUGIN, RouterManagerFritzFonPlugin, routermanager_fritzfon_plugin)
 
 void pref_notebook_add_page(GtkWidget *notebook, GtkWidget *page, gchar *title);
 GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand, gboolean vexpand);
@@ -378,7 +378,7 @@ struct address_book fritzfon_book = {
 
 void impl_activate(PeasActivatable *plugin)
 {
-	CallibreFritzFonPlugin *fritzfon_plugin = CALLIBRE_FRITZFON_PLUGIN(plugin);
+	RouterManagerFritzFonPlugin *fritzfon_plugin = ROUTERMANAGER_FRITZFON_PLUGIN(plugin);
 
 	fritzfon_settings = g_settings_new("org.tabos.roger.plugins.fritzfon");
 
@@ -389,12 +389,12 @@ void impl_activate(PeasActivatable *plugin)
 
 	fritzfon_plugin->priv->signal_id = g_signal_connect(G_OBJECT(app_object), "contact-process", G_CALLBACK(fritzfon_contact_process_cb), NULL);
 
-	callibre_address_book_register(&fritzfon_book);
+	routermanager_address_book_register(&fritzfon_book);
 }
 
 void impl_deactivate(PeasActivatable *plugin)
 {
-	CallibreFritzFonPlugin *fritzfon_plugin = CALLIBRE_FRITZFON_PLUGIN(plugin);
+	RouterManagerFritzFonPlugin *fritzfon_plugin = ROUTERMANAGER_FRITZFON_PLUGIN(plugin);
 
 	if (g_signal_handler_is_connected(G_OBJECT(app_object), fritzfon_plugin->priv->signal_id)) {
 		g_signal_handler_disconnect(G_OBJECT(app_object), fritzfon_plugin->priv->signal_id);

@@ -22,12 +22,12 @@
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
-#include <libcallibre/plugins.h>
-#include <libcallibre/call.h>
-#include <libcallibre/appobject.h>
-#include <libcallibre/gstring.h>
-#include <libcallibre/address-book.h>
-#include <libcallibre/number.h>
+#include <libroutermanager/plugins.h>
+#include <libroutermanager/call.h>
+#include <libroutermanager/appobject.h>
+#include <libroutermanager/gstring.h>
+#include <libroutermanager/address-book.h>
+#include <libroutermanager/number.h>
 
 #include "../../main.h"
 #include "config.h"
@@ -41,14 +41,14 @@
 
 #include "ebook-sources.h"
 
-#define CALLIBRE_TYPE_EVOLUTION_PLUGIN        (callibre_evolution_plugin_get_type ())
-#define CALLIBRE_EVOLUTION_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), CALLIBRE_TYPE_EVOLUTION_PLUGIN, CallibreEvolutionPlugin))
+#define ROUTERMANAGER_TYPE_EVOLUTION_PLUGIN        (routermanager_evolution_plugin_get_type ())
+#define ROUTERMANAGER_EVOLUTION_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_EVOLUTION_PLUGIN, RouterManagerEvolutionPlugin))
 
 typedef struct {
 	guint signal_id;
-} CallibreEvolutionPluginPrivate;
+} RouterManagerEvolutionPluginPrivate;
 
-CALLIBRE_PLUGIN_REGISTER_CONFIGURABLE(CALLIBRE_TYPE_EVOLUTION_PLUGIN, CallibreEvolutionPlugin, callibre_evolution_plugin)
+ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_EVOLUTION_PLUGIN, RouterManagerEvolutionPlugin, routermanager_evolution_plugin)
 
 void pref_notebook_add_page(GtkWidget *notebook, GtkWidget *page, gchar *title);
 GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand, gboolean vexpand);
@@ -426,7 +426,7 @@ struct address_book evolution_book = {
 
 void impl_activate(PeasActivatable *plugin)
 {
-	CallibreEvolutionPlugin *evolution_plugin = CALLIBRE_EVOLUTION_PLUGIN(plugin);
+	RouterManagerEvolutionPlugin *evolution_plugin = ROUTERMANAGER_EVOLUTION_PLUGIN(plugin);
 
 	ebook_settings = g_settings_new("org.tabos.roger.plugins.evolution");
 
@@ -435,12 +435,12 @@ void impl_activate(PeasActivatable *plugin)
 	ebook_read_book();
 	evolution_plugin->priv->signal_id = g_signal_connect(G_OBJECT(app_object), "contact-process", G_CALLBACK(evolution_contact_process_cb), NULL);
 
-	callibre_address_book_register(&evolution_book);
+	routermanager_address_book_register(&evolution_book);
 }
 
 void impl_deactivate(PeasActivatable *plugin)
 {
-	CallibreEvolutionPlugin *evolution_plugin = CALLIBRE_EVOLUTION_PLUGIN(plugin);
+	RouterManagerEvolutionPlugin *evolution_plugin = ROUTERMANAGER_EVOLUTION_PLUGIN(plugin);
 
 	if (g_signal_handler_is_connected(G_OBJECT(app_object), evolution_plugin->priv->signal_id)) {
 		g_signal_handler_disconnect(G_OBJECT(app_object), evolution_plugin->priv->signal_id);

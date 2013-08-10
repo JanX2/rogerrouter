@@ -20,10 +20,10 @@
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
 
-#include <libcallibre/appobject.h>
-#include <libcallibre/profile.h>
-#include <libcallibre/libfaxophone/fax.h>
-#include <libcallibre/libfaxophone/phone.h>
+#include <libroutermanager/appobject.h>
+#include <libroutermanager/profile.h>
+#include <libroutermanager/libfaxophone/fax.h>
+#include <libroutermanager/libfaxophone/phone.h>
 
 #include <roger/phone.h>
 #include <roger/main.h>

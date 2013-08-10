@@ -31,9 +31,9 @@ roger/plugins/gtknotify/gtknotify.c
 roger/plugins/statusicon/gtk.c
 [type: gettext/ini]roger/plugins/statusicon/statusicon.plugin.in
 roger-cli/main_cli.c
-libcallibre/filter.c
-[type: gettext/ini]libcallibre/plugins/areacodes_global/areacodes_global.plugin.in
-[type: gettext/ini]libcallibre/plugins/callmonitor/callmonitor.plugin.in
-[type: gettext/ini]libcallibre/plugins/fritzbox/fritzbox.plugin.in
-[type: gettext/ini]libcallibre/plugins/pulseaudio/pulseaudio.plugin.in
+libroutermanager/filter.c
+[type: gettext/ini]libroutermanager/plugins/areacodes_global/areacodes_global.plugin.in
+[type: gettext/ini]libroutermanager/plugins/callmonitor/callmonitor.plugin.in
+[type: gettext/ini]libroutermanager/plugins/fritzbox/fritzbox.plugin.in
+[type: gettext/ini]libroutermanager/plugins/pulseaudio/pulseaudio.plugin.in
 [type: gettext/ini]roger.desktop.in

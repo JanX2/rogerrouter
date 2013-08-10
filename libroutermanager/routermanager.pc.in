@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: routermanager
+Description: Router Manager
+Version: @VERSION@
+Libs: -L${libdir} -lroutermanager
+Cflags: -I${includedir}/

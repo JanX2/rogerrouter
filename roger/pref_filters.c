@@ -19,9 +19,9 @@
 
 #include <gtk/gtk.h>
 
-#include <libcallibre/profile.h>
-#include <libcallibre/plugins.h>
-#include <libcallibre/filter.h>
+#include <libroutermanager/profile.h>
+#include <libroutermanager/plugins.h>
+#include <libroutermanager/filter.h>
 
 #include <main.h>
 #include <journal.h>

@@ -20,11 +20,11 @@
 #include <string.h>
 
 #include <gtk/gtk.h>
-#include <libcallibre/profile.h>
-#include <libcallibre/phone.h>
-#include <libcallibre/plugins.h>
-#include <libcallibre/action.h>
-#include <libcallibre/router.h>
+#include <libroutermanager/profile.h>
+#include <libroutermanager/phone.h>
+#include <libroutermanager/plugins.h>
+#include <libroutermanager/action.h>
+#include <libroutermanager/router.h>
 
 #include <main.h>
 #include <pref.h>

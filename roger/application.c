@@ -21,12 +21,12 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
-#include <libcallibre/profile.h>
-#include <libcallibre/ui_ops.h>
-#include <libcallibre/callibre.h>
-#include <libcallibre/plugins.h>
-#include <libcallibre/osdep.h>
-#include <libcallibre/router.h>
+#include <libroutermanager/profile.h>
+#include <libroutermanager/ui_ops.h>
+#include <libroutermanager/routermanager.h>
+#include <libroutermanager/plugins.h>
+#include <libroutermanager/osdep.h>
+#include <libroutermanager/router.h>
 
 #include <journal.h>
 #include <assistant.h>
@@ -84,7 +84,7 @@ void app_show_help(void)
 
 void app_quit(void)
 {
-	callibre_shutdown();
+	routermanager_shutdown();
 	g_application_quit(G_APPLICATION(application));
 }
 
@@ -109,7 +109,7 @@ void app_reconnect(void)
 
 static void application_finalize (GObject *object)
 {
-	callibre_shutdown();
+	routermanager_shutdown();
 	G_OBJECT_CLASS(application_parent_class)->finalize(object);
 }
 
@@ -268,12 +268,12 @@ static void app_init(Application *app)
 	const gchar *user_plugins = g_get_user_data_dir();
 	gchar *path = g_build_filename(user_plugins, "roger", G_DIR_SEPARATOR_S, "plugins", NULL);
 
-	callibre_plugins_add_search_path(path);
-	callibre_plugins_add_search_path(get_directory(APP_PLUGINS));
+	routermanager_plugins_add_search_path(path);
+	routermanager_plugins_add_search_path(get_directory(APP_PLUGINS));
 	g_free(path);
 
-	if (callibre_init(&gtk_ops, option_state.debug) == FALSE) {
-		printf("callibre() failed");
+	if (routermanager_init(&gtk_ops, option_state.debug) == FALSE) {
+		printf("routermanager() failed");
 		return;
 	}
 

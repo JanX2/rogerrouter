@@ -8,9 +8,9 @@ Version a (done)
 * call monitor (telnet) (done)
     - signal (done)
 
-* Consistent internal names of libcallibre! (done)
-* Comments and documentation of libcallibre!! (done)
-* Valgrind check of libcallibre (done)
+* Consistent internal names of libroutermanager! (done)
+* Comments and documentation of libroutermanager!! (done)
+* Valgrind check of libroutermanager (done)
 
 Version b
 -----------
@@ -59,7 +59,7 @@ CLOSED
 * GSList check (done)
 * FRITZ!Box split version to major/minor (done)
 * Test/Implement other boxes (7320 done)
-* check plugins of libcallibre (done)
+* check plugins of libroutermanager (done)
 * Check 7170, 7320, 7390 (done)
 * Login without password is currently not possible (done, tested with 7390)
 * Evolution plugin should check correct ebook version (done)
@@ -79,7 +79,7 @@ CLOSED
 OPENS
 -----------
 
-* Prepend callibre_ to each external callibre function?
+* Prepend routermanager_ to each external routermanager function?
 * Check router structure for different routers (speedport)
 
 * Areacodes plugin for every country (global list available as csv) (90% done, add special handling for countrys not starting with 0 indicator, e.g. Russian Federation)

@@ -24,7 +24,7 @@
 #include <main.h>
 #include <config.h>
 
-#include <libcallibre/callibre.h>
+#include <libroutermanager/routermanager.h>
 
 typedef GtkApplication Application;
 

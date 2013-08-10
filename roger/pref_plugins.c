@@ -22,8 +22,8 @@
 #include <libpeas/peas.h>
 #include <libpeas-gtk/peas-gtk.h>
 
-#include <libcallibre/profile.h>
-#include <libcallibre/plugins.h>
+#include <libroutermanager/profile.h>
+#include <libroutermanager/plugins.h>
 
 #include <main.h>
 #include <pref.h>

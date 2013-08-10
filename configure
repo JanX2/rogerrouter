@@ -13704,7 +13704,7 @@ case "$host" in
 	*-*-*mingw*)
 		WIN32=yes
 		macos=no
-		OS_CFLAGS="-D_WIN32_WINNT=0x0501 -DCALLIBRE_PLUGINS='\"lib/callibre/plugins/\"' -DAPP_PLUGINS='\"lib/roger/plugins/\"' -DAPP_DATA='\"share/roger/\"' -DAPP_LOCALE='\"share/locale\"'"
+		OS_CFLAGS="-D_WIN32_WINNT=0x0501 -DROUTERMANAGER_PLUGINS='\"lib/routermanager/plugins/\"' -DAPP_PLUGINS='\"lib/roger/plugins/\"' -DAPP_DATA='\"share/roger/\"' -DAPP_LOCALE='\"share/locale\"'"
 		OS_LIBS="-mwindows -mms-bitfields -Wl,-subsystem,windows -lws2_32"
 		if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}windre", so it can be a program name with args.
@@ -13815,7 +13815,7 @@ fi
 	*)
 		WIN32=no
 		macos=no
-		OS_CFLAGS="-DCALLIBRE_PLUGINS='\"\$(libdir)/callibre/plugins/\"' -DAPP_PLUGINS='\"\$(libdir)/roger/plugins/\"' -DAPP_DATA='\"\$(datadir)/roger/\"' -DAPP_LOCALE='\"\$(localedir)\"'"
+		OS_CFLAGS="-DROUTERMANAGER_PLUGINS='\"\$(libdir)/routermanager/plugins/\"' -DAPP_PLUGINS='\"\$(libdir)/roger/plugins/\"' -DAPP_DATA='\"\$(datadir)/roger/\"' -DAPP_LOCALE='\"\$(localedir)\"'"
 		OS_LIBS="-rdynamic"
 	;;
 esac
@@ -15144,7 +15144,7 @@ then
 	EXTRA_CFLAGS+="-Werror"
 fi
 
-ac_config_files="$ac_config_files Makefile win32/roger.nsi doc/Makefile doc/roger.1 doc/roger_cli.1 po/Makefile.in libcallibre/callibre.pc libcallibre/Makefile libcallibre/data/Makefile libcallibre/plugins/Makefile libcallibre/plugins/fritzbox/Makefile libcallibre/plugins/callmonitor/Makefile libcallibre/plugins/areacodes_global/Makefile libcallibre/plugins/pulseaudio/Makefile libcallibre/plugins/reverselookup/Makefile libcallibre/plugins/wincred/Makefile libcallibre/plugins/portaudio/Makefile roger/Makefile roger/data/Makefile roger-cli/Makefile roger/plugins/Makefile roger/plugins/statusicon/Makefile roger/plugins/statusicon/data/Makefile roger/plugins/notification/Makefile roger/plugins/notification/data/Makefile roger/plugins/fritzfon/Makefile roger/plugins/fritzfon/data/Makefile roger/plugins/evolution/Makefile roger/plugins/evolution/data/Makefile roger/plugins/secret/Makefile roger/plugins/gtknotify/Makefile roger/plugins/gtknotify/data/Makefile"
+ac_config_files="$ac_config_files Makefile win32/roger.nsi doc/Makefile doc/roger.1 doc/roger_cli.1 po/Makefile.in libroutermanager/routermanager.pc libroutermanager/Makefile libroutermanager/data/Makefile libroutermanager/plugins/Makefile libroutermanager/plugins/fritzbox/Makefile libroutermanager/plugins/callmonitor/Makefile libroutermanager/plugins/areacodes_global/Makefile libroutermanager/plugins/pulseaudio/Makefile libroutermanager/plugins/reverselookup/Makefile libroutermanager/plugins/wincred/Makefile libroutermanager/plugins/portaudio/Makefile roger/Makefile roger/data/Makefile roger-cli/Makefile roger/plugins/Makefile roger/plugins/statusicon/Makefile roger/plugins/statusicon/data/Makefile roger/plugins/notification/Makefile roger/plugins/notification/data/Makefile roger/plugins/fritzfon/Makefile roger/plugins/fritzfon/data/Makefile roger/plugins/evolution/Makefile roger/plugins/evolution/data/Makefile roger/plugins/secret/Makefile roger/plugins/gtknotify/Makefile roger/plugins/gtknotify/data/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -16209,17 +16209,17 @@ do
     "doc/roger.1") CONFIG_FILES="$CONFIG_FILES doc/roger.1" ;;
     "doc/roger_cli.1") CONFIG_FILES="$CONFIG_FILES doc/roger_cli.1" ;;
     "po/Makefile.in") CONFIG_FILES="$CONFIG_FILES po/Makefile.in" ;;
-    "libcallibre/callibre.pc") CONFIG_FILES="$CONFIG_FILES libcallibre/callibre.pc" ;;
-    "libcallibre/Makefile") CONFIG_FILES="$CONFIG_FILES libcallibre/Makefile" ;;
-    "libcallibre/data/Makefile") CONFIG_FILES="$CONFIG_FILES libcallibre/data/Makefile" ;;
-    "libcallibre/plugins/Makefile") CONFIG_FILES="$CONFIG_FILES libcallibre/plugins/Makefile" ;;
-    "libcallibre/plugins/fritzbox/Makefile") CONFIG_FILES="$CONFIG_FILES libcallibre/plugins/fritzbox/Makefile" ;;
-    "libcallibre/plugins/callmonitor/Makefile") CONFIG_FILES="$CONFIG_FILES libcallibre/plugins/callmonitor/Makefile" ;;
-    "libcallibre/plugins/areacodes_global/Makefile") CONFIG_FILES="$CONFIG_FILES libcallibre/plugins/areacodes_global/Makefile" ;;
-    "libcallibre/plugins/pulseaudio/Makefile") CONFIG_FILES="$CONFIG_FILES libcallibre/plugins/pulseaudio/Makefile" ;;
-    "libcallibre/plugins/reverselookup/Makefile") CONFIG_FILES="$CONFIG_FILES libcallibre/plugins/reverselookup/Makefile" ;;
-    "libcallibre/plugins/wincred/Makefile") CONFIG_FILES="$CONFIG_FILES libcallibre/plugins/wincred/Makefile" ;;
-    "libcallibre/plugins/portaudio/Makefile") CONFIG_FILES="$CONFIG_FILES libcallibre/plugins/portaudio/Makefile" ;;
+    "libroutermanager/routermanager.pc") CONFIG_FILES="$CONFIG_FILES libroutermanager/routermanager.pc" ;;
+    "libroutermanager/Makefile") CONFIG_FILES="$CONFIG_FILES libroutermanager/Makefile" ;;
+    "libroutermanager/data/Makefile") CONFIG_FILES="$CONFIG_FILES libroutermanager/data/Makefile" ;;
+    "libroutermanager/plugins/Makefile") CONFIG_FILES="$CONFIG_FILES libroutermanager/plugins/Makefile" ;;
+    "libroutermanager/plugins/fritzbox/Makefile") CONFIG_FILES="$CONFIG_FILES libroutermanager/plugins/fritzbox/Makefile" ;;
+    "libroutermanager/plugins/callmonitor/Makefile") CONFIG_FILES="$CONFIG_FILES libroutermanager/plugins/callmonitor/Makefile" ;;
+    "libroutermanager/plugins/areacodes_global/Makefile") CONFIG_FILES="$CONFIG_FILES libroutermanager/plugins/areacodes_global/Makefile" ;;
+    "libroutermanager/plugins/pulseaudio/Makefile") CONFIG_FILES="$CONFIG_FILES libroutermanager/plugins/pulseaudio/Makefile" ;;
+    "libroutermanager/plugins/reverselookup/Makefile") CONFIG_FILES="$CONFIG_FILES libroutermanager/plugins/reverselookup/Makefile" ;;
+    "libroutermanager/plugins/wincred/Makefile") CONFIG_FILES="$CONFIG_FILES libroutermanager/plugins/wincred/Makefile" ;;
+    "libroutermanager/plugins/portaudio/Makefile") CONFIG_FILES="$CONFIG_FILES libroutermanager/plugins/portaudio/Makefile" ;;
     "roger/Makefile") CONFIG_FILES="$CONFIG_FILES roger/Makefile" ;;
     "roger/data/Makefile") CONFIG_FILES="$CONFIG_FILES roger/data/Makefile" ;;
     "roger-cli/Makefile") CONFIG_FILES="$CONFIG_FILES roger-cli/Makefile" ;;

@@ -414,7 +414,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = libcallibre roger roger-cli po doc
+SUBDIRS = libroutermanager roger roger-cli po doc
 EXTRA_DIST = \
 	roger.desktop.in \
 	remove-settings.sh \

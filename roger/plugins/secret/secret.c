@@ -21,20 +21,20 @@
 
 #include <libsecret/secret.h>
 
-#include <libcallibre/call.h>
-#include <libcallibre/plugins.h>
-#include <libcallibre/password.h>
+#include <libroutermanager/call.h>
+#include <libroutermanager/plugins.h>
+#include <libroutermanager/password.h>
 
 #include <secret.h>
 
-#define CALLIBRE_TYPE_SECRET_PLUGIN        (callibre_secret_plugin_get_type ())
-#define CALLIBRE_SECRET_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), CALLIBRE_TYPE_SECRET_PLUGIN, CallibreSecretPlugin))
+#define ROUTERMANAGER_TYPE_SECRET_PLUGIN        (routermanager_secret_plugin_get_type ())
+#define ROUTERMANAGER_SECRET_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_SECRET_PLUGIN, RouterManagerSecretPlugin))
 
 typedef struct {
         guint signal_id;
-} CallibreSecretPluginPrivate;
+} RouterManagerSecretPluginPrivate;
 
-CALLIBRE_PLUGIN_REGISTER(CALLIBRE_TYPE_SECRET_PLUGIN, CallibreSecretPlugin, callibre_secret_plugin)
+ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_SECRET_PLUGIN, RouterManagerSecretPlugin, routermanager_secret_plugin)
 
 const SecretSchema *secret_get_schema(void)
 {
@@ -116,7 +116,7 @@ struct password_manager secret = {
 
 void impl_activate(PeasActivatable *plugin)
 {
-	CallibreSecretPlugin *secret_plugin = CALLIBRE_SECRET_PLUGIN(plugin);
+	RouterManagerSecretPlugin *secret_plugin = ROUTERMANAGER_SECRET_PLUGIN(plugin);
 
 	if (secret_service_get_sync(1 << 1, NULL, NULL)) {
 		g_debug("Register libsecret password manager plugin");
@@ -135,5 +135,5 @@ void impl_activate(PeasActivatable *plugin)
 
 void impl_deactivate(PeasActivatable *plugin)
 {
-	CallibreSecretPlugin *secret_plugin = CALLIBRE_SECRET_PLUGIN(plugin);
+	RouterManagerSecretPlugin *secret_plugin = ROUTERMANAGER_SECRET_PLUGIN(plugin);
 }

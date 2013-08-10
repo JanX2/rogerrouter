@@ -23,8 +23,8 @@
 #include <string.h>
 #include <gio/gio.h>
 #include <gtk/gtk.h>
-#include <libcallibre/call.h>
-#include <libcallibre/appobject-emit.h>
+#include <libroutermanager/call.h>
+#include <libroutermanager/appobject-emit.h>
 #include <phone.h>
 
 static GDBusNodeInfo *introspection_data = NULL;

@@ -23,19 +23,19 @@
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
-#include <libcallibre/profile.h>
-#include <libcallibre/router.h>
-#include <libcallibre/call.h>
-#include <libcallibre/callibre.h>
-#include <libcallibre/filter.h>
-#include <libcallibre/appobject.h>
-#include <libcallibre/file.h>
-#include <libcallibre/osdep.h>
-#include <libcallibre/voxplay.h>
-#include <libcallibre/appobject-emit.h>
-#include <libcallibre/lookup.h>
-#include <libcallibre/csv.h>
-#include <libcallibre/gstring.h>
+#include <libroutermanager/profile.h>
+#include <libroutermanager/router.h>
+#include <libroutermanager/call.h>
+#include <libroutermanager/routermanager.h>
+#include <libroutermanager/filter.h>
+#include <libroutermanager/appobject.h>
+#include <libroutermanager/file.h>
+#include <libroutermanager/osdep.h>
+#include <libroutermanager/voxplay.h>
+#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/lookup.h>
+#include <libroutermanager/csv.h>
+#include <libroutermanager/gstring.h>
 
 #include "main.h"
 #include "phone.h"
@@ -242,7 +242,7 @@ static gpointer lookup_journal(gpointer user_data)
 		gchar *city;
 
 		if (EMPTY_STRING(call->remote.name)) {
-			if (callibre_lookup(call->remote.number, &name, &address, &zip, &city)) {
+			if (routermanager_lookup(call->remote.number, &name, &address, &zip, &city)) {
 				call->remote.name = name;
 				call->remote.lookup = TRUE;
 				found = TRUE;
@@ -390,7 +390,7 @@ void lookup_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, g
 
 	call = g_value_get_pointer(&ptr);
 
-	if (callibre_lookup(call->remote.number, &name, &address, &zip, &city)) {
+	if (routermanager_lookup(call->remote.number, &name, &address, &zip, &city)) {
 		GtkWidget *dialog = gtk_message_dialog_new_with_markup(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE, "<b>Name:</b>\t%s\n"
 					     "<b>Address:</b>\t%s\n"
 					     "<b>ZIP:</b>\t%s\n"

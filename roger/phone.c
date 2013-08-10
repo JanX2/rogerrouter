@@ -23,24 +23,24 @@
 #include <math.h>
 
 #include <gtk/gtk.h>
-#include <libcallibre/appobject.h>
-#include <libcallibre/appobject-emit.h>
-#include <libcallibre/gstring.h>
-#include <libcallibre/address-book.h>
-#include <libcallibre/call.h>
-#include <libcallibre/callibre.h>
-#include <libcallibre/profile.h>
-#include <libcallibre/router.h>
-#include <libcallibre/number.h>
-#include <libcallibre/phone.h>
+#include <libroutermanager/appobject.h>
+#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/gstring.h>
+#include <libroutermanager/address-book.h>
+#include <libroutermanager/call.h>
+#include <libroutermanager/routermanager.h>
+#include <libroutermanager/profile.h>
+#include <libroutermanager/router.h>
+#include <libroutermanager/number.h>
+#include <libroutermanager/phone.h>
 #include "journal.h"
 #include "pref.h"
 #include "phone.h"
 #include "main.h"
 #include "llevel.h"
-#include <libcallibre/fax_phone.h>
-#include <libcallibre/libfaxophone/phone.h>
-#include <libcallibre/libfaxophone/isdn-convert.h>
+#include <libroutermanager/fax_phone.h>
+#include <libroutermanager/libfaxophone/phone.h>
+#include <libroutermanager/libfaxophone/isdn-convert.h>
 
 static GSList *phone_active_connections = NULL;
 

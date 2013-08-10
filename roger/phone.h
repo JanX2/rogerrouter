@@ -20,9 +20,9 @@
 #ifndef PHONE_H
 #define PHONE_H
 
-#include <libcallibre/contact.h>
-#include <libcallibre/connection.h>
-#include <libcallibre/appobject.h>
+#include <libroutermanager/contact.h>
+#include <libroutermanager/connection.h>
+#include <libroutermanager/appobject.h>
 
 G_BEGIN_DECLS
 

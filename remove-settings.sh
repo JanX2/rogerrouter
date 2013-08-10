@@ -1,2 +1,2 @@
 #!/bin/bash
-dconf reset -f /org/tabos/
+dconf reset -f "/org/tabos/"

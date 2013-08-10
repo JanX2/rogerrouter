@@ -21,10 +21,10 @@
 
 #include <gtk/gtk.h>
 
-#include <libcallibre/call.h>
-#include <libcallibre/callibre.h>
-#include <libcallibre/plugins.h>
-#include <libcallibre/profile.h>
+#include <libroutermanager/call.h>
+#include <libroutermanager/routermanager.h>
+#include <libroutermanager/plugins.h>
+#include <libroutermanager/profile.h>
 
 #include <roger/journal.h>
 #include <roger/about.h>
@@ -33,14 +33,14 @@
 #include <roger/main.h>
 #include <roger/pref.h>
 
-#define CALLIBRE_TYPE_STATUSICON_PLUGIN        (callibre_statusicon_plugin_get_type ())
-#define CALLIBRE_STATUSICON_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), CALLIBRE_TYPE_STATUSICON_PLUGIN, CallibreStatusIconPlugin))
+#define ROUTERMANAGER_TYPE_STATUSICON_PLUGIN        (routermanager_statusicon_plugin_get_type ())
+#define ROUTERMANAGER_STATUSICON_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_STATUSICON_PLUGIN, RouterManagerStatusIconPlugin))
 
 typedef struct {
         guint signal_id;
-} CallibreStatusIconPluginPrivate;
+} RouterManagerStatusIconPluginPrivate;
 
-CALLIBRE_PLUGIN_REGISTER_CONFIGURABLE(CALLIBRE_TYPE_STATUSICON_PLUGIN, CallibreStatusIconPlugin, callibre_statusicon_plugin)
+ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_STATUSICON_PLUGIN, RouterManagerStatusIconPlugin, routermanager_statusicon_plugin)
 
 #define MAX_LASTCALLS 5
 
@@ -349,7 +349,7 @@ void statusicon_connection_notify_cb(AppObject *obj, struct connection *connecti
 
 void impl_activate(PeasActivatable *plugin)
 {
-	CallibreStatusIconPlugin *statusicon_plugin = CALLIBRE_STATUSICON_PLUGIN(plugin);
+	RouterManagerStatusIconPlugin *statusicon_plugin = ROUTERMANAGER_STATUSICON_PLUGIN(plugin);
 	gchar *path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "app.png", NULL);
 
 	journal_set_hide_on_quit(TRUE);
@@ -377,7 +377,7 @@ void impl_activate(PeasActivatable *plugin)
 
 void impl_deactivate(PeasActivatable *plugin)
 {
-	CallibreStatusIconPlugin *statusicon_plugin = CALLIBRE_STATUSICON_PLUGIN(plugin);
+	RouterManagerStatusIconPlugin *statusicon_plugin = ROUTERMANAGER_STATUSICON_PLUGIN(plugin);
 
 	/* Unregister delete handler */
 	journal_set_hide_on_quit(FALSE);

@@ -19,11 +19,11 @@
 
 #include <gtk/gtk.h>
 #include <string.h>
-#include <libcallibre/profile.h>
-#include <libcallibre/router.h>
-#include <libcallibre/ftp.h>
-#include <libcallibre/password.h>
-#include <libcallibre/net_monitor.h>
+#include <libroutermanager/profile.h>
+#include <libroutermanager/router.h>
+#include <libroutermanager/ftp.h>
+#include <libroutermanager/password.h>
+#include <libroutermanager/net_monitor.h>
 #include <main.h>
 #include <journal.h>
 

@@ -23,10 +23,10 @@
 #include <gtk/gtk.h>
 #include <cairo-pdf.h>
 
-#include <libcallibre/appobject-emit.h>
-#include <libcallibre/router.h>
-#include <libcallibre/libfaxophone/faxophone.h>
-#include <libcallibre/libfaxophone/fax.h>
+#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/router.h>
+#include <libroutermanager/libfaxophone/faxophone.h>
+#include <libroutermanager/libfaxophone/fax.h>
 
 #include <print.h>
 #include <journal.h>

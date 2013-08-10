@@ -19,8 +19,8 @@
 
 #include <gtk/gtk.h>
 
-#include <libcallibre/libfaxophone/faxophone.h>
-#include <libcallibre/libfaxophone/isdn-convert.h>
+#include <libroutermanager/libfaxophone/faxophone.h>
+#include <libroutermanager/libfaxophone/isdn-convert.h>
 
 #include <llevel.h>
 

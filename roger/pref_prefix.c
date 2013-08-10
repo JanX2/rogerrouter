@@ -19,10 +19,10 @@
 
 #include <gtk/gtk.h>
 
-#include <libcallibre/profile.h>
-#include <libcallibre/plugins.h>
-#include <libcallibre/router.h>
-#include <libcallibre/ftp.h>
+#include <libroutermanager/profile.h>
+#include <libroutermanager/plugins.h>
+#include <libroutermanager/router.h>
+#include <libroutermanager/ftp.h>
 
 #include <main.h>
 #include <phone.h>

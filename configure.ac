@@ -37,7 +37,7 @@ case "$host" in
 	*-*-*mingw*)
 		WIN32=yes
 		macos=no
-		OS_CFLAGS="-D_WIN32_WINNT=0x0501 -DCALLIBRE_PLUGINS='\"lib/callibre/plugins/\"' -DAPP_PLUGINS='\"lib/roger/plugins/\"' -DAPP_DATA='\"share/roger/\"' -DAPP_LOCALE='\"share/locale\"'"
+		OS_CFLAGS="-D_WIN32_WINNT=0x0501 -DROUTERMANAGER_PLUGINS='\"lib/routermanager/plugins/\"' -DAPP_PLUGINS='\"lib/roger/plugins/\"' -DAPP_DATA='\"share/roger/\"' -DAPP_LOCALE='\"share/locale\"'"
 		OS_LIBS="-mwindows -mms-bitfields -Wl,-subsystem,windows -lws2_32"
 		AC_CHECK_TOOL(WINDRES, windre, windres)
 	;;
@@ -57,7 +57,7 @@ case "$host" in
 	*)
 		WIN32=no
 		macos=no
-		OS_CFLAGS="-DCALLIBRE_PLUGINS='\"\$(libdir)/callibre/plugins/\"' -DAPP_PLUGINS='\"\$(libdir)/roger/plugins/\"' -DAPP_DATA='\"\$(datadir)/roger/\"' -DAPP_LOCALE='\"\$(localedir)\"'"
+		OS_CFLAGS="-DROUTERMANAGER_PLUGINS='\"\$(libdir)/routermanager/plugins/\"' -DAPP_PLUGINS='\"\$(libdir)/roger/plugins/\"' -DAPP_DATA='\"\$(datadir)/roger/\"' -DAPP_LOCALE='\"\$(localedir)\"'"
 		OS_LIBS="-rdynamic"
 	;;
 esac
@@ -345,17 +345,17 @@ AC_OUTPUT([
     doc/roger.1
     doc/roger_cli.1
     po/Makefile.in
-    libcallibre/callibre.pc
-    libcallibre/Makefile
-    libcallibre/data/Makefile
-    libcallibre/plugins/Makefile
-    libcallibre/plugins/fritzbox/Makefile
-    libcallibre/plugins/callmonitor/Makefile
-    libcallibre/plugins/areacodes_global/Makefile
-    libcallibre/plugins/pulseaudio/Makefile
-    libcallibre/plugins/reverselookup/Makefile
-    libcallibre/plugins/wincred/Makefile
-    libcallibre/plugins/portaudio/Makefile
+    libroutermanager/routermanager.pc
+    libroutermanager/Makefile
+    libroutermanager/data/Makefile
+    libroutermanager/plugins/Makefile
+    libroutermanager/plugins/fritzbox/Makefile
+    libroutermanager/plugins/callmonitor/Makefile
+    libroutermanager/plugins/areacodes_global/Makefile
+    libroutermanager/plugins/pulseaudio/Makefile
+    libroutermanager/plugins/reverselookup/Makefile
+    libroutermanager/plugins/wincred/Makefile
+    libroutermanager/plugins/portaudio/Makefile
     roger/Makefile
     roger/data/Makefile
     roger-cli/Makefile
