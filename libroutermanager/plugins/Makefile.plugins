@@ -29,5 +29,5 @@ plugin_libadd = \
 	$(OS_LIBS)
 
 if WIN32
-plugin_ldflags += -L$(top_srcdir)/libcallibre/.libs -lcallibre -no-undefined
+plugin_ldflags += -L$(top_srcdir)/libroutermanager/.libs -lroutermanager -no-undefined
 endif
