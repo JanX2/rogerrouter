@@ -66,7 +66,6 @@ GSList *call_add(GSList *journal, gint type, const gchar *date_time, const gchar
 void call_free(gpointer data);
 gchar *call_scramble_number(const gchar *number);
 gchar *call_full_number(const gchar *number, gboolean country_code_prefix);
-gchar *call_get_country_code(const gchar *number);
 gint call_sort_by_date(gconstpointer a, gconstpointer b);
 gchar *call_format_number(struct profile *profile, const gchar *number, enum number_format output_format);
 

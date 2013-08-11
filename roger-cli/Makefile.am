@@ -6,5 +6,4 @@ roger_cli_CFLAGS = $(EXTRA_CFLAGS) $(GMODULE_CFLAGS) -Wall -O2 -g -DAPP_PLUGINS=
 roger_cli_LDFLAGS = $(EXTRA_LIBS) $(GMODULE_LIBS) -export-dynamic $(top_builddir)/libroutermanager/libroutermanager.la $(PEAS_GTK_LIBS)
 
 roger_cli_SOURCES =\
-	main.h \
 	main_cli.c

@@ -12,6 +12,7 @@
 #ifndef FAX_H
 #define FAX_H
 
+#define SPANDSP_EXPOSE_INTERNAL_STRUCTURES
 #include <spandsp.h>
 
 /* Service indicator (0x04=speech, 0x11=fax/g3) */

@@ -32,9 +32,22 @@ Application *application_new(void);
 
 #ifdef G_OS_WIN32
 #include <windows.h>
+/**
+ * \brief roger_main - windows library main function
+ * \param hint hinstance
+ * \param argc argument count
+ * \param argv argument vector
+ * \return error code
+ */
 int roger_main(HINSTANCE hint, int argc, char **argv);
 int roger_main(HINSTANCE hint, int argc, char **argv) {
 #else
+/**
+ * \brief Main function
+ * \param argc argument count
+ * \param argv argument vector
+ * \return error code
+ */
 int main( int argc, char **argv ) {
 #endif
 	Application *application;

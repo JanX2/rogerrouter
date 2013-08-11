@@ -20,6 +20,8 @@
 #ifndef LIBROUTERMANAGER_ACTION_H
 #define LIBROUTERMANAGER_ACTION_H
 
+#include <glib.h>
+
 G_BEGIN_DECLS
 
 #include <libroutermanager/profile.h>

@@ -79,6 +79,16 @@ PKG_CHECK_MODULES([SOUP], [libsoup-2.4])
 PKG_CHECK_MODULES([PEAS], [libpeas-1.0])
 PKG_CHECK_MODULES([PEAS_GTK], [libpeas-gtk-1.0])
 
+# Introspection
+GOBJECT_INTROSPECTION_CHECK([0.9.3])
+
+if test "$found_introspection" = "yes"; then
+	enable_introspection=yes
+	AC_DEFINE([ENABLE_INTROSPECTION], [1], [Define to enable GObject Introspection])
+else
+	enable_introspection=no
+fi
+
 dnl ********************************************************************
 dnl libnotify is optional
 dnl ********************************************************************

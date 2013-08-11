@@ -15,7 +15,6 @@ roger/pref_fax.c
 roger/pref_filters.c
 roger/pref_plugins.c
 roger/pref_prefix.c
-roger/pref_profiles.c
 roger/pref_router.c
 roger/pref_softphone.c
 roger/pref_misc.c

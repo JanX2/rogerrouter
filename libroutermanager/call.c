@@ -166,9 +166,10 @@ void call_free(gpointer data)
 }
 
 /**
+ * call_scramble_number:
  * \brief Scramble number so we can print it to log files
  * \param number input number
- * \return scrambled number
+ * Returns: (transfer none) scrambled number
  */
 gchar *call_scramble_number(const gchar *number)
 {
@@ -196,9 +197,12 @@ gchar *call_scramble_number(const gchar *number)
 }
 
 /**
- * \brief Get call-by-call prefix length
- * \param number input number string
- * \return length of call-by-call prefix
+ * call_by_call_prefix_length:
+ * @number: input number string
+ *
+ * Get call-by-call prefix length
+ *
+ * Returns: length of call-by-call prefix
  */
 gint call_by_call_prefix_length(const gchar *number)
 {

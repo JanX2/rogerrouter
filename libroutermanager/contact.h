@@ -20,6 +20,8 @@
 #ifndef LIBROUTERMANAGER_CONTACT_H
 #define LIBROUTERMANAGER_CONTACT_H
 
+#include <glib.h>
+
 G_BEGIN_DECLS
 
 struct contact {

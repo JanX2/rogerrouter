@@ -22,7 +22,7 @@
 
 G_BEGIN_DECLS
 
-typedef gboolean lookup_func(gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city);
+typedef gboolean (*lookup_func)(gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city);
 
 gboolean routermanager_lookup(gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city);
 gboolean routermanager_lookup_register(lookup_func func);
