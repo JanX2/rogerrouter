@@ -103,6 +103,11 @@ gboolean fritzbox_load_journal(struct profile *profile, gchar **data_ptr)
 	return FALSE;
 }
 
+/**
+ * \brief Main clear journal function (big switch for each supported router)
+ * \param profile profile info structure
+ * \return error code
+ */
 gboolean fritzbox_clear_journal(struct profile *profile)
 {
 	if (!profile) {

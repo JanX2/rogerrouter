@@ -122,6 +122,12 @@ static gint get_font_width(GtkPrintContext *context, PangoFontDescription *desc)
 	return width;
 }
 
+/**
+ * \brief Get page count
+ * \param context print context
+ * \param print_data print data
+ * \return page count in print data
+ */
 static int get_page_count(GtkPrintContext *context, PrintData *print_data)
 {
 	gdouble width, height;
@@ -509,14 +515,8 @@ void journal_print(GtkWidget *view_widget)
 
 /**
  * \brief Create fax report based on give information
- * \param pnFile filename to store report
- * \param pnReportDir save directory
- * \param pnRemote remote number
- * \param local local number
- * \param pnStatus fax transfer status
- * \param pnError error message
- * \param nPages number of pages
- * \param bitrate transferred bitrate
+ * \param status fax status structure
+ * \param report_dir storage directory
  */
 void create_fax_report(struct fax_status *status, const char *report_dir)
 {

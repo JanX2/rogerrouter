@@ -27,4 +27,3 @@ GtkWidget *pref_page_prefix(void);
 G_END_DECLS
 
 #endif
-

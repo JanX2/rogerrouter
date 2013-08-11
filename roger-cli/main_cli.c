@@ -102,6 +102,11 @@ void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
 	g_main_loop_quit(main_loop);
 }
 
+/**
+ * \brief Convert incoming fax (ps-format) to tiff (fax-format)
+ * \param file_name incoming file name
+ * \return tiff file name
+ */
 gchar *convert_fax_to_tiff(gchar *file_name)
 {
 	GError *error = NULL;
@@ -154,16 +159,35 @@ gchar *convert_fax_to_tiff(gchar *file_name)
 	return tiff;
 }
 
+/**
+ * \brief CAPI connection established callback - just print message
+ * \param object appobject
+ * \param connection capi connection pointer
+ * \param user_data user data pointer (NULL)
+ */
 static void capi_connection_established_cb(AppObject *object, struct capi_connection *connection, gpointer user_data)
 {
 	g_message(_("Connected"));
 }
 
+/**
+ * \brief CAPI connection terminated callback - just print message
+ * \param object appobject
+ * \param connection capi connection pointer
+ * \param user_data user data pointer (NULL)
+ */
 static void capi_connection_terminated_cb(AppObject *object, struct capi_connection *connection, gpointer user_data)
 {
 	g_message(_("Disconnected"));
 }
 
+/**
+ * \brief FAX connection status - show status message
+ * \param object appobject
+ * \param status fax connection status
+ * \param connection capi connection pointer
+ * \param user_data user data pointer (NULL)
+ */
 void fax_connection_status_cb(AppObject *object, gint status, struct capi_connection *connection, gpointer user_data)
 {
 	struct fax_status *fax_status;

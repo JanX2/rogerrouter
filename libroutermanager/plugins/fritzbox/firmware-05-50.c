@@ -185,11 +185,24 @@ gboolean fritzbox_login_05_50(struct profile *profile)
 	return !!strcmp(profile->router_info->session_id, "0000000000000000");
 }
 
+/**
+ * \brief Number compare function
+ * \param a string a
+ * \param b string b
+ * \return return value of strcmp
+ */
 gint number_compare(gconstpointer a, gconstpointer b)
 {
 	return strcmp(a, b);
 }
 
+/**
+ * \brief Extract number from fw 05.50
+ * \param number_list pointer to number list
+ * \param data incoming page data
+ * \param msn_str msn string to lookup
+ * \return TRUE on success, otherwise FALSE
+ */
 inline gboolean extract_number_05_50(GSList **number_list, const gchar *data, gchar *msn_str)
 {
 	gchar *fon;
@@ -285,6 +298,11 @@ set:
 	g_settings_set_int(profile->settings, "phone-controller", type);
 }
 
+/**
+ * \brief Extract DECT numbers of fw 05.50
+ * \param profile profile pointer
+ * \param data incoming page data
+ */
 static void fritzbox_extract_dect_05_50(struct profile *profile, const gchar *data)
 {
 	const gchar *start = data;
@@ -640,6 +658,11 @@ gboolean fritzbox_load_journal_05_50(struct profile *profile, gchar **data_ptr)
 	return TRUE;
 }
 
+/**
+ * \brief Clear journal
+ * \param profile profile pointer
+ * \return TRUE on success, otherwise FALSE
+ */
 gboolean fritzbox_clear_journal_05_50(struct profile *profile)
 {
 	SoupMessage *msg;
@@ -674,4 +697,3 @@ gboolean fritzbox_clear_journal_05_50(struct profile *profile)
 
 	return TRUE;
 }
-

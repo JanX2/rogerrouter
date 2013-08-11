@@ -27,6 +27,11 @@
 
 #define CSV_AREACODES "\"Country\",\"Country Code\",\"Area\",\"Area Code\""
 
+/**
+ * \brief trim csv string
+ * \param str_in input string
+ * \return trimmed string
+ */
 static gchar *csv_trim(const gchar *str_in)
 {
 	gchar *str_out;

@@ -134,9 +134,8 @@ am__libroger_core_la_SOURCES_DIST = about.c about.h application.c \
 	phone.h pref.c pref.h pref_action.c pref_action.h pref_audio.c \
 	pref_audio.h pref_fax.c pref_fax.h pref_filters.c \
 	pref_filters.h pref_plugins.c pref_plugins.h pref_prefix.c \
-	pref_prefix.h pref_profiles.c pref_profiles.h pref_router.c \
-	pref_router.h pref_softphone.c pref_softphone.h pref_misc.c \
-	pref_misc.h print.c print.h
+	pref_prefix.h pref_router.c pref_router.h pref_softphone.c \
+	pref_softphone.h pref_misc.c pref_misc.h print.c print.h
 am__objects_1 = libroger_core_la-about.lo \
 	libroger_core_la-application.lo libroger_core_la-assistant.lo \
 	libroger_core_la-contacts.lo libroger_core_la-dbus.lo \
@@ -148,7 +147,6 @@ am__objects_1 = libroger_core_la-about.lo \
 	libroger_core_la-pref_filters.lo \
 	libroger_core_la-pref_plugins.lo \
 	libroger_core_la-pref_prefix.lo \
-	libroger_core_la-pref_profiles.lo \
 	libroger_core_la-pref_router.lo \
 	libroger_core_la-pref_softphone.lo \
 	libroger_core_la-pref_misc.lo libroger_core_la-print.lo
@@ -171,9 +169,8 @@ am__roger_SOURCES_DIST = about.c about.h application.c application.h \
 	pref.h pref_action.c pref_action.h pref_audio.c pref_audio.h \
 	pref_fax.c pref_fax.h pref_filters.c pref_filters.h \
 	pref_plugins.c pref_plugins.h pref_prefix.c pref_prefix.h \
-	pref_profiles.c pref_profiles.h pref_router.c pref_router.h \
-	pref_softphone.c pref_softphone.h pref_misc.c pref_misc.h \
-	print.c print.h winmain.c
+	pref_router.c pref_router.h pref_softphone.c pref_softphone.h \
+	pref_misc.c pref_misc.h print.c print.h winmain.c
 am__objects_2 = roger-about.$(OBJEXT) roger-application.$(OBJEXT) \
 	roger-assistant.$(OBJEXT) roger-contacts.$(OBJEXT) \
 	roger-dbus.$(OBJEXT) roger-debugwindow.$(OBJEXT) \
@@ -183,9 +180,8 @@ am__objects_2 = roger-about.$(OBJEXT) roger-application.$(OBJEXT) \
 	roger-pref_action.$(OBJEXT) roger-pref_audio.$(OBJEXT) \
 	roger-pref_fax.$(OBJEXT) roger-pref_filters.$(OBJEXT) \
 	roger-pref_plugins.$(OBJEXT) roger-pref_prefix.$(OBJEXT) \
-	roger-pref_profiles.$(OBJEXT) roger-pref_router.$(OBJEXT) \
-	roger-pref_softphone.$(OBJEXT) roger-pref_misc.$(OBJEXT) \
-	roger-print.$(OBJEXT)
+	roger-pref_router.$(OBJEXT) roger-pref_softphone.$(OBJEXT) \
+	roger-pref_misc.$(OBJEXT) roger-print.$(OBJEXT)
 @WIN32_FALSE@am_roger_OBJECTS = $(am__objects_2)
 @WIN32_TRUE@am_roger_OBJECTS = $(am__objects_2) \
 @WIN32_TRUE@	roger-winmain.$(OBJEXT)
@@ -540,8 +536,6 @@ roger_core_SOURCES = \
 	pref_plugins.h\
 	pref_prefix.c\
 	pref_prefix.h\
-	pref_profiles.c\
-	pref_profiles.h\
 	pref_router.c\
 	pref_router.h\
 	pref_softphone.c\
@@ -727,7 +721,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libroger_core_la-pref_misc.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libroger_core_la-pref_plugins.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libroger_core_la-pref_prefix.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libroger_core_la-pref_profiles.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libroger_core_la-pref_router.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libroger_core_la-pref_softphone.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libroger_core_la-print.Plo@am__quote@
@@ -750,7 +743,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/roger-pref_misc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/roger-pref_plugins.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/roger-pref_prefix.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/roger-pref_profiles.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/roger-pref_router.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/roger-pref_softphone.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/roger-print.Po@am__quote@
@@ -902,13 +894,6 @@ libroger_core_la-pref_prefix.lo: pref_prefix.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='pref_prefix.c' object='libroger_core_la-pref_prefix.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libroger_core_la_CFLAGS) $(CFLAGS) -c -o libroger_core_la-pref_prefix.lo `test -f 'pref_prefix.c' || echo '$(srcdir)/'`pref_prefix.c
-
-libroger_core_la-pref_profiles.lo: pref_profiles.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libroger_core_la_CFLAGS) $(CFLAGS) -MT libroger_core_la-pref_profiles.lo -MD -MP -MF $(DEPDIR)/libroger_core_la-pref_profiles.Tpo -c -o libroger_core_la-pref_profiles.lo `test -f 'pref_profiles.c' || echo '$(srcdir)/'`pref_profiles.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libroger_core_la-pref_profiles.Tpo $(DEPDIR)/libroger_core_la-pref_profiles.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='pref_profiles.c' object='libroger_core_la-pref_profiles.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libroger_core_la_CFLAGS) $(CFLAGS) -c -o libroger_core_la-pref_profiles.lo `test -f 'pref_profiles.c' || echo '$(srcdir)/'`pref_profiles.c
 
 libroger_core_la-pref_router.lo: pref_router.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libroger_core_la_CFLAGS) $(CFLAGS) -MT libroger_core_la-pref_router.lo -MD -MP -MF $(DEPDIR)/libroger_core_la-pref_router.Tpo -c -o libroger_core_la-pref_router.lo `test -f 'pref_router.c' || echo '$(srcdir)/'`pref_router.c
@@ -1189,20 +1174,6 @@ roger-pref_prefix.obj: pref_prefix.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='pref_prefix.c' object='roger-pref_prefix.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(roger_CFLAGS) $(CFLAGS) -c -o roger-pref_prefix.obj `if test -f 'pref_prefix.c'; then $(CYGPATH_W) 'pref_prefix.c'; else $(CYGPATH_W) '$(srcdir)/pref_prefix.c'; fi`
-
-roger-pref_profiles.o: pref_profiles.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(roger_CFLAGS) $(CFLAGS) -MT roger-pref_profiles.o -MD -MP -MF $(DEPDIR)/roger-pref_profiles.Tpo -c -o roger-pref_profiles.o `test -f 'pref_profiles.c' || echo '$(srcdir)/'`pref_profiles.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/roger-pref_profiles.Tpo $(DEPDIR)/roger-pref_profiles.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='pref_profiles.c' object='roger-pref_profiles.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(roger_CFLAGS) $(CFLAGS) -c -o roger-pref_profiles.o `test -f 'pref_profiles.c' || echo '$(srcdir)/'`pref_profiles.c
-
-roger-pref_profiles.obj: pref_profiles.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(roger_CFLAGS) $(CFLAGS) -MT roger-pref_profiles.obj -MD -MP -MF $(DEPDIR)/roger-pref_profiles.Tpo -c -o roger-pref_profiles.obj `if test -f 'pref_profiles.c'; then $(CYGPATH_W) 'pref_profiles.c'; else $(CYGPATH_W) '$(srcdir)/pref_profiles.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/roger-pref_profiles.Tpo $(DEPDIR)/roger-pref_profiles.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='pref_profiles.c' object='roger-pref_profiles.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(roger_CFLAGS) $(CFLAGS) -c -o roger-pref_profiles.obj `if test -f 'pref_profiles.c'; then $(CYGPATH_W) 'pref_profiles.c'; else $(CYGPATH_W) '$(srcdir)/pref_profiles.c'; fi`
 
 roger-pref_router.o: pref_router.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(roger_CFLAGS) $(CFLAGS) -MT roger-pref_router.o -MD -MP -MF $(DEPDIR)/roger-pref_router.Tpo -c -o roger-pref_router.o `test -f 'pref_router.c' || echo '$(srcdir)/'`pref_router.c

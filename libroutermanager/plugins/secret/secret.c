@@ -34,6 +34,10 @@ typedef struct {
 
 ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_SECRET_PLUGIN, RouterManagerSecretPlugin, routermanager_secret_plugin)
 
+/**
+ * \brief Get secret schema for this plugin
+ * \return secret schema layout
+ */
 const SecretSchema *secret_get_schema(void)
 {
 	static const SecretSchema the_schema = {
@@ -48,6 +52,12 @@ const SecretSchema *secret_get_schema(void)
 	return &the_schema;
 }
 
+/**
+ * \brief Store password
+ * \param profile profile pointer
+ * \param name password name
+ * \param password password
+ */
 static void secret_store_password(struct profile *profile, const gchar *name, const gchar *password)
 {
 	GError *error = NULL;
@@ -67,6 +77,12 @@ static void secret_store_password(struct profile *profile, const gchar *name, co
 	}
 }
 
+/**
+ * \brief Get password
+ * \param profile profile pointer
+ * \param name password name
+ * \return password
+ */
 static gchar *secret_get_password(struct profile *profile, const gchar *name)
 {
 	GError *error = NULL;
@@ -86,6 +102,12 @@ static gchar *secret_get_password(struct profile *profile, const gchar *name)
 	return password;
 }
 
+/**
+ * \brief Remove password
+ * \param profile profile pointer
+ * \param name password name
+ * \return TRUE on success, otherwise FALSE
+ */
 static gboolean secret_remove_password(struct profile *profile, const gchar *name)
 {
 	GError *error = NULL;
@@ -112,6 +134,10 @@ struct password_manager secret = {
 	secret_remove_password,
 };
 
+/**
+ * \brief Activate peas plugin - register libsecret password manager if present
+ * \param plugin peas plugin
+ */
 void impl_activate(PeasActivatable *plugin)
 {
 	RouterManagerSecretPlugin *secret_plugin = ROUTERMANAGER_SECRET_PLUGIN(plugin);
@@ -131,6 +157,10 @@ void impl_activate(PeasActivatable *plugin)
 #endif
 }
 
+/**
+ * \brief Deactivate peas plugin
+ * \param plugin peas plugin
+ */
 void impl_deactivate(PeasActivatable *plugin)
 {
 	RouterManagerSecretPlugin *secret_plugin = ROUTERMANAGER_SECRET_PLUGIN(plugin);

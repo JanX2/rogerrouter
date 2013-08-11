@@ -29,6 +29,10 @@
 
 #include <config.h>
 
+/**
+ * \brief Create softphone preference page
+ * \return preference widget
+ */
 GtkWidget *pref_page_softphone(void)
 {
 	GtkWidget *grid = gtk_grid_new();

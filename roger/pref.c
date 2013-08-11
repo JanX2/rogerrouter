@@ -28,7 +28,6 @@
 #include <pref_router.h>
 #include <pref_plugins.h>
 #include <pref_filters.h>
-#include <pref_profiles.h>
 #include <pref_softphone.h>
 #include <pref_audio.h>
 #include <pref_fax.h>
@@ -134,9 +133,6 @@ void preferences(void)
 
 	page = pref_page_plugins();
 	pref_notebook_add_page(notebook, page, _("Plugins"));
-
-	//page = pref_page_profiles();
-	//pref_notebook_add_page(notebook, page, _("Profiles"));
 
 	page = pref_page_audio();
 	pref_notebook_add_page(notebook, page, _("Audio"));

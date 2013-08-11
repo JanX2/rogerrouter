@@ -99,6 +99,11 @@ static void type_box_changed_cb(GtkWidget *widget, gpointer next)
 	}
 }
 
+/**
+ * \brief Type box changed (2)
+ * \param widget box widget
+ * \param rule_ptr pointer to filter rule
+ */
 static void type_box_changed_cb2(GtkWidget *widget, gpointer rule_ptr)
 {
 	struct filter_rule *rule = rule_ptr;
@@ -106,6 +111,11 @@ static void type_box_changed_cb2(GtkWidget *widget, gpointer rule_ptr)
 	rule->type = gtk_combo_box_get_active(GTK_COMBO_BOX(widget));
 }
 
+/**
+ * \brief Sub type box changed
+ * \param widget box widget
+ * \param rule_ptr pointer to filter rule
+ */
 static void sub_type_box_changed_cb(GtkWidget *widget, gpointer rule_ptr)
 {
 	struct filter_rule *rule = rule_ptr;
@@ -130,6 +140,7 @@ static void entry_changed_cb(GtkWidget *widget, gpointer data)
 	rule->entry = g_strdup(gtk_entry_get_text(GTK_ENTRY(widget)));
 }
 
+/* Forward declaration */
 static void pref_filters_add_rule(gpointer grid_ptr, struct filter_rule *rule);
 
 /**
@@ -235,8 +246,30 @@ static void pref_filters_add_rule(gpointer grid_ptr, struct filter_rule *rule)
 	table_y++;
 }
 
-void filter_refresh_list(GtkListStore *list_store);
+/**
+ * \brief Refresh filter list - rebuild
+ * \param list_store list store widget
+ */
+void filter_refresh_list(GtkListStore *list_store)
+{
+	GSList *list = filter_get_list();
+	GtkTreeIter iter;
 
+	while (list) {
+		struct filter *filter = list->data;
+
+		gtk_list_store_append(list_store, &iter);
+		gtk_list_store_set(list_store, &iter, 0, filter->name, -1);
+		gtk_list_store_set(list_store, &iter, 1, filter, -1);
+		list = list->next;
+	}
+}
+
+/**
+ * \brief Filter edit callback
+ * \param widget button widget
+ * \param data gtk tree view widget
+ */
 void filter_edit_cb(GtkWidget *widget, gpointer data)
 {
 	GtkTreeIter selected_iter;
@@ -420,21 +453,10 @@ void filter_remove_cb(GtkWidget *widget, gpointer data)
 	filter_save();
 }
 
-void filter_refresh_list(GtkListStore *list_store)
-{
-	GSList *list = filter_get_list();
-	GtkTreeIter iter;
-
-	while (list) {
-		struct filter *filter = list->data;
-
-		gtk_list_store_append(list_store, &iter);
-		gtk_list_store_set(list_store, &iter, 0, filter->name, -1);
-		gtk_list_store_set(list_store, &iter, 1, filter, -1);
-		list = list->next;
-	}
-}
-
+/**
+ * \brief Create filter preferences page
+ * \retrun filters widget
+ */
 GtkWidget *pref_page_filters(void)
 {
 	GtkWidget *group;

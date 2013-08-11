@@ -29,6 +29,10 @@
 #include <pref.h>
 #include <pref_plugins.h>
 
+/**
+ * \brief Create plugins preferences page
+ * \return plugins widget
+ */
 GtkWidget *pref_page_plugins(void)
 {
 	GtkWidget *plugins = peas_gtk_plugin_manager_new(engine);

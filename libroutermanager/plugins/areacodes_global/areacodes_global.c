@@ -42,7 +42,12 @@ typedef struct {
 
 ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_GLOBAL_AREACODES_PLUGIN, RouterManagerGlobalAreaCodesPlugin, routermanager_global_areacodes_plugin)
 
-
+/**
+ * \brief Get area code pointer based on full_number
+ * \param areacodes_plugin private plugin data
+ * \param full_number full phone number
+ * \return pointer to areacode entry
+ */
 struct areacode *areacodes_get_area_code(RouterManagerGlobalAreaCodesPlugin *areacodes_plugin, const gchar *full_number)
 {
 	gchar sub_string[6];

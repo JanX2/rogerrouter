@@ -46,7 +46,7 @@
 			<default>''</default>
 		</key>
 		<key name="active-plugins" type="as">
-			<default>['areacodes_global', 'callmonitor']</default>
+			<default>['areacodes_global', 'reverselookup']</default>
 		</key>
 
 		<key name="active-filter" type="s">

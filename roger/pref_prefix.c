@@ -29,6 +29,10 @@
 #include <pref.h>
 #include <pref_prefix.h>
 
+/**
+ * \brief Create router phone widget
+ * \return router phone widget
+ */
 static GtkWidget *pref_page_router_phone(void)
 {
 	GtkWidget *group;
@@ -123,6 +127,10 @@ static GtkWidget *pref_page_router_phone(void)
 	return pref_group_create(group, _("Prefixes"), TRUE, FALSE);
 }
 
+/**
+ * \brief Create prefix preferences widget
+ * \return prefix widget
+ */
 GtkWidget *pref_page_prefix(void)
 {
 	GtkWidget *grid;

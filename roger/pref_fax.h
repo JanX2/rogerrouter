@@ -27,4 +27,3 @@ GtkWidget *pref_page_fax(void);
 G_END_DECLS
 
 #endif
-

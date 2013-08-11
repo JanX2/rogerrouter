@@ -25,6 +25,11 @@
 #include <pref.h>
 #include <pref_misc.h>
 
+/**
+ * \brief Ghostscript file set callback - set file name to settings
+ * \param choose file chooser widget
+ * \param user_data user data pointer (NULL)
+ */
 void gs_file_set_cb(GtkFileChooser *chooser, gpointer user_data)
 {
 	gchar *filename = gtk_file_chooser_get_current_folder(chooser);
@@ -34,6 +39,11 @@ void gs_file_set_cb(GtkFileChooser *chooser, gpointer user_data)
 	g_free(filename);
 }
 
+/**
+ * \brief Ghostscript button clicked callback - open file chooser dialog
+ * \param button gs button widget
+ * \param user_data user data pointer (NULL)
+ */
 void gs_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
 	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Select ghostscript executable"), pref_get_window(), GTK_FILE_CHOOSER_ACTION_OPEN, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, NULL);
@@ -49,6 +59,10 @@ void gs_button_clicked_cb(GtkButton *button, gpointer user_data)
 	gtk_widget_destroy(dialog);
 }
 
+/**
+ * \brief Create misc page widget
+ * \return misc widget
+ */
 GtkWidget *pref_page_misc(void)
 {
 	GtkWidget *grid = gtk_grid_new();

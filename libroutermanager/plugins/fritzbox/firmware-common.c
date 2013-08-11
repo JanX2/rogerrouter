@@ -526,6 +526,11 @@ static void dial_number_cb(SoupSession *session, SoupMessage *msg, gpointer user
 	fritzbox_logout(profile, FALSE);
 }
 
+/**
+ * \brief Depending on type get dialport
+ * \param type phone type
+ * \return dialport
+ */
 static gint fritzbox_get_dialport(gint type)
 {
 	gint index;
@@ -855,6 +860,11 @@ gint fritzbox_find_phone_port(gint dial_port)
 	return -1;
 }
 
+/**
+ * \brief Extract IP address from router
+ * \param profile profile pointer
+ * \return current IP address or NULL on error
+ */
 gchar *fritzbox_get_ip(struct profile *profile)
 {
 	SoupMessage *msg;
@@ -900,6 +910,11 @@ gchar *fritzbox_get_ip(struct profile *profile)
 	return ip;
 }
 
+/**
+ * \brief Reconnect network
+ * \param profile profile pointer
+ * \return TRUE on success, otherwise FALSE
+ */
 gboolean fritzbox_reconnect(struct profile *profile)
 {
 	SoupMessage *msg;
@@ -940,6 +955,12 @@ gboolean fritzbox_reconnect(struct profile *profile)
 	return TRUE;
 }
 
+/**
+ * \brief Delete fax file from router
+ * \param profile profile pointer
+ * \param filename fax filename to delete
+ * \return TRUE on success, otherwise FALSE
+ */
 gboolean fritzbox_delete_fax(struct profile *profile, const gchar *filename)
 {
 	struct ftp *client;
@@ -953,6 +974,12 @@ gboolean fritzbox_delete_fax(struct profile *profile, const gchar *filename)
 	return ftp_delete_file(client, filename);
 }
 
+/**
+ * \brief Delete voice file from router
+ * \param profile profile pointer
+ * \param filename voice filename to delete
+ * \return TRUE on success, otherwise FALSE
+ */
 gboolean fritzbox_delete_voice(struct profile *profile, const gchar *filename)
 {
 	struct ftp *client;

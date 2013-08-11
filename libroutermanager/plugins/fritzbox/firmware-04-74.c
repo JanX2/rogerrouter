@@ -150,11 +150,24 @@ gboolean fritzbox_login_04_74(struct profile *profile)
 	return TRUE;
 }
 
+/**
+ * \brief Compare strings
+ * \param a string a
+ * \param b string b
+ * \return return value of strcmp
+ */
 gint number_compare_04_74(gconstpointer a, gconstpointer b)
 {
 	return strcmp(a, b);
 }
 
+/**
+ * \brief Extract phone number from fw 04.74
+ * \param number_list pointer to number_list
+ * \param data incoming page data
+ * \param msn_str string we want to lookup
+ * \return TRUE on success, otherwise FALSE
+ */
 inline gboolean extract_number_04_74(GSList **number_list, const gchar *data, gchar *msn_str)
 {
 	gchar *fon;
@@ -561,6 +574,11 @@ gboolean fritzbox_load_journal_04_74(struct profile *profile, gchar **data_ptr)
 	return TRUE;
 }
 
+/**
+ * \brief Clear journal
+ * \param profile profile pointer
+ * \return TRUE on success, otherwise FALSE
+ */
 gboolean fritzbox_clear_journal_04_74(struct profile *profile)
 {
 	SoupMessage *msg;
@@ -596,4 +614,3 @@ gboolean fritzbox_clear_journal_04_74(struct profile *profile)
 
 	return TRUE;
 }
-

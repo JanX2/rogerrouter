@@ -29,6 +29,11 @@
 #include <main.h>
 #include <pref.h>
 
+/**
+ * \brief Report dir set callback - store it in the settings
+ * \param chooser file chooser widget
+ * \param user_data user data pointer (NULL)
+ */
 void report_dir_file_set_cb(GtkFileChooser *chooser, gpointer user_data)
 {
 	gchar *filename = gtk_file_chooser_get_current_folder(chooser);
@@ -39,6 +44,11 @@ void report_dir_file_set_cb(GtkFileChooser *chooser, gpointer user_data)
 	g_free(filename);
 }
 
+/**
+ * \brief Report dir button callback - open file chooser dialog
+ * \param button button widget
+ * \param user_data user data pointer (NULL)
+ */
 void report_dir_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
 	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Select fax report directory"), pref_get_window(), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, NULL);
@@ -54,6 +64,10 @@ void report_dir_button_clicked_cb(GtkButton *button, gpointer user_data)
 	gtk_widget_destroy(dialog);
 }
 
+/**
+ * \brief Create fax preferences page
+ * \return fax widget
+ */
 GtkWidget *pref_page_fax(void)
 {
 	GtkWidget *grid = gtk_grid_new();

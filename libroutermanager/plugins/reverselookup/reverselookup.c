@@ -44,6 +44,15 @@ ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_REVERSE_LOOKUP_PLUGIN, RouterMa
 
 static GHashTable *table = NULL;
 
+/**
+ * \brief Reverse lookup function
+ * \param number number to lookup
+ * \param name pointer to store name to
+ * \param address pointer to store address to
+ * \param zip pointer to store zip to
+ * \param city pointer to store city to
+ * \return TRUE on success, otherwise FALSE
+ */
 static gboolean reverse_lookup(gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city)
 {
 	SoupMessage *msg;

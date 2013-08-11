@@ -26,6 +26,10 @@
 #include <pref.h>
 #include <pref_audio.h>
 
+/**
+ * \brief Create audio preferences widget
+ * \return audio widget
+ */
 GtkWidget *pref_page_audio(void)
 {
 	GtkWidget *grid = gtk_grid_new();

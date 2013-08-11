@@ -32,19 +32,30 @@
 
 static GtkWidget *ftp_password_entry;
 
+/**
+ * \brief Toggle password visiblity
+ * \param togglebutton toggle button
+ * \param user_data router password widget
+ */
 static void show_password_cb(GtkToggleButton *togglebutton, gpointer user_data)
 {
 	gtk_entry_set_visibility(GTK_ENTRY(user_data), gtk_toggle_button_get_active(togglebutton));
 	gtk_entry_set_visibility(GTK_ENTRY(ftp_password_entry), gtk_toggle_button_get_active(togglebutton));
 }
 
+/**
+ * \brief Verify that router password is valid
+ * \param button verify button widget
+ * \param user_data user data pointer (NULL)
+ */
 static void verify_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
 	GtkWidget *dialog;
+	struct profile *profile = profile_get_active();
 
-	router_logout(profile_get_active());
+	router_logout(profile);
 
-	if (router_login(profile_get_active()) == TRUE) {
+	if (router_login(profile) == TRUE) {
 		dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE, _("Login password is valid"));
 	} else {
 		dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("Login password is invalid"));
@@ -54,6 +65,11 @@ static void verify_button_clicked_cb(GtkButton *button, gpointer user_data)
 	gtk_widget_destroy(dialog);
 }
 
+/**
+ * \brief Verify that ftp password is valid
+ * \param button verify button widget
+ * \param user_data user data pointer (NULL)
+ */
 static void verify_ftp_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
 	GtkWidget *dialog;
@@ -75,6 +91,11 @@ static void verify_ftp_button_clicked_cb(GtkButton *button, gpointer user_data)
 	gtk_widget_destroy(dialog);
 }
 
+/**
+ * \brief Update preferences button clicked callback
+ * \param button update button widget
+ * \param user_data preference window widget
+ */
 static void update_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
 	GtkWidget *update_dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Do you want to reload the router settings and replace your preferences?"));
@@ -91,6 +112,11 @@ static void update_button_clicked_cb(GtkButton *button, gpointer user_data)
 	router_get_settings(profile_get_active());
 }
 
+/**
+ * \brief Router login password changed callback - set password in password manager
+ * \param entry password entry widget
+ * \param user_data profile pointer
+ */
 static void router_login_password_changed_cb(GtkEntry *entry, gpointer user_data)
 {
 	struct profile *profile = user_data;
@@ -98,6 +124,11 @@ static void router_login_password_changed_cb(GtkEntry *entry, gpointer user_data
 	password_manager_set_password(profile, "login-password", gtk_entry_get_text(GTK_ENTRY(entry)));
 }
 
+/**
+ * \brief FTP login password changed callback - set password in password manager
+ * \param entry password entry widget
+ * \param user_data profile pointer
+ */
 static void router_ftp_password_changed_cb(GtkEntry *entry, gpointer user_data)
 {
 	struct profile *profile = user_data;
@@ -105,6 +136,10 @@ static void router_ftp_password_changed_cb(GtkEntry *entry, gpointer user_data)
 	password_manager_set_password(profile, "ftp-password", gtk_entry_get_text(GTK_ENTRY(entry)));
 }
 
+/**
+ * \brief Create router preferences settings widget
+ * \return router settings widget
+ */
 static GtkWidget *pref_page_router_settings(void)
 {
 	GtkWidget *group;
@@ -226,6 +261,10 @@ static GtkWidget *pref_page_router_settings(void)
 	return pref_group_create(group, _("Settings"), TRUE, FALSE);
 }
 
+/**
+ * \brief Create router information widget
+ * \return router information widget
+ */
 static GtkWidget *pref_page_router_information(void)
 {
 	GtkWidget *group;
@@ -269,6 +308,10 @@ static GtkWidget *pref_page_router_information(void)
 	return pref_group_create(group, "", TRUE, FALSE);
 }
 
+/**
+ * \brief Create router preferences widget
+ * \return router widget
+ */
 GtkWidget *pref_page_router(void)
 {
 	GtkWidget *grid;

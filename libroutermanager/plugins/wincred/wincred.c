@@ -34,6 +34,12 @@ typedef struct {
 
 ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_WINCRED_PLUGIN, RouterManagerWinCredPlugin, routermanager_wincred_plugin)
 
+/**
+ * \brief Store password
+ * \param profile profile pointer
+ * \param name password name
+ * \param password password
+ */
 static void wincred_store_password(struct profile *profile, const gchar *name, const gchar *password)
 {
 	CREDENTIALA cred = { 0 };
@@ -65,6 +71,12 @@ static void wincred_store_password(struct profile *profile, const gchar *name, c
 	g_free(wide_password);
 }
 
+/**
+ * \brief Get password
+ * \param profile profile pointer
+ * \param name password name
+ * \return password
+ */
 static gchar *wincred_get_password(struct profile *profile, const gchar *name)
 {
 	PCREDENTIALA cred;
@@ -93,6 +105,12 @@ static gchar *wincred_get_password(struct profile *profile, const gchar *name)
 	return g_strdup(secret_password);
 }
 
+/**
+ * \brief Remove password
+ * \param profile profile pointer
+ * \param name password name
+ * \return TRUE on success, otherwise FALSE
+ */
 static gboolean wincred_remove_password(struct profile *profile, const gchar *name)
 {
 	PCREDENTIALA cred;
@@ -120,12 +138,20 @@ struct password_manager wincred = {
 	wincred_remove_password,
 };
 
+/**
+ * \brief Activate plugin - register windows credential password manager
+ * \pram plugin peas plugin
+ */
 void impl_activate(PeasActivatable *plugin)
 {
 	g_debug("Register wincred password manager plugin");
 	password_manager_register(&wincred);
 }
 
+/**
+ * \brief Deactivate plugin
+ * \pram plugin peas plugin
+ */
 void impl_deactivate(PeasActivatable *plugin)
 {
 }

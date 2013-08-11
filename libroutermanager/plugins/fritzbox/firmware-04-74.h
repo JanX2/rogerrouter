@@ -30,4 +30,3 @@ gboolean fritzbox_clear_journal_04_74(struct profile *profile);
 G_END_DECLS
 
 #endif
-
