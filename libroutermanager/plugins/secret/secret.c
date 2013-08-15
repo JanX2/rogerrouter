@@ -140,12 +140,8 @@ struct password_manager secret = {
  */
 void impl_activate(PeasActivatable *plugin)
 {
-	RouterManagerSecretPlugin *secret_plugin = ROUTERMANAGER_SECRET_PLUGIN(plugin);
-
-	if (secret_service_get_sync(1 << 1, NULL, NULL)) {
-		g_debug("Register libsecret password manager plugin");
-		password_manager_register(&secret);
-	}
+	g_debug("Register libsecret password manager plugin");
+	password_manager_register(&secret);
 
 #ifdef SECRET_TEST
 	g_debug("Starting secret\n");
@@ -163,5 +159,4 @@ void impl_activate(PeasActivatable *plugin)
  */
 void impl_deactivate(PeasActivatable *plugin)
 {
-	RouterManagerSecretPlugin *secret_plugin = ROUTERMANAGER_SECRET_PLUGIN(plugin);
 }
