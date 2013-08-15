@@ -107,8 +107,6 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 	EContactPhoto *photo;
 	GdkPixbufLoader *loader;
 	GSList *list;
-	EContactAddress *private_address = NULL;
-	EContactAddress *business_address = NULL;
 	EBookClientView *view;
 	GError *error = NULL;
 	GSList *ebook_contacts;
