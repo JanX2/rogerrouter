@@ -20,6 +20,12 @@ EXTRA_DIST = \
 	win32/patches/portaudio.patch \
 	win32/patches/spandsp-0.0.6.patch
 
+sharedir = $(datadir)/roger
+share_DATA = \
+	share/roger-cups\
+	share/roger-fax.ppd\
+	share/install-fax.sh
+
 noinst_HEADERS = config.h
 
 DISTCLEANFILES = intltool-extract intltool-merge intltool-update roger.desktop

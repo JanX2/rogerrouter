@@ -153,8 +153,8 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(appsdir)"
-DATA = $(apps_DATA)
+am__installdirs = "$(DESTDIR)$(appsdir)" "$(DESTDIR)$(sharedir)"
+DATA = $(apps_DATA) $(share_DATA)
 HEADERS = $(noinst_HEADERS)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
@@ -443,6 +443,12 @@ EXTRA_DIST = \
 	win32/patches/portaudio.patch \
 	win32/patches/spandsp-0.0.6.patch
 
+sharedir = $(datadir)/roger
+share_DATA = \
+	share/roger-cups\
+	share/roger-fax.ppd\
+	share/install-fax.sh
+
 noinst_HEADERS = config.h
 DISTCLEANFILES = intltool-extract intltool-merge intltool-update roger.desktop
 appsdir = $(datadir)/applications
@@ -533,6 +539,27 @@ uninstall-appsDATA:
 	@list='$(apps_DATA)'; test -n "$(appsdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(appsdir)'; $(am__uninstall_files_from_dir)
+install-shareDATA: $(share_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(share_DATA)'; test -n "$(sharedir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(sharedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(sharedir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(sharedir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(sharedir)" || exit $$?; \
+	done
+
+uninstall-shareDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(share_DATA)'; test -n "$(sharedir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(sharedir)'; $(am__uninstall_files_from_dir)
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run 'make' without going through this Makefile.
@@ -825,7 +852,7 @@ check: check-recursive
 all-am: Makefile $(DATA) $(HEADERS) config.h
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(appsdir)"; do \
+	for dir in "$(DESTDIR)$(appsdir)" "$(DESTDIR)$(sharedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -881,7 +908,7 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-appsDATA install-data-local
+install-data-am: install-appsDATA install-data-local install-shareDATA
 
 install-dvi: install-dvi-recursive
 
@@ -927,7 +954,7 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-appsDATA uninstall-local
+uninstall-am: uninstall-appsDATA uninstall-local uninstall-shareDATA
 
 .MAKE: $(am__recursive_targets) all install-am install-strip
 
@@ -942,12 +969,12 @@ uninstall-am: uninstall-appsDATA uninstall-local
 	install-data-am install-data-local install-dvi install-dvi-am \
 	install-exec install-exec-am install-html install-html-am \
 	install-info install-info-am install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs installdirs-am \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags tags-am uninstall uninstall-am uninstall-appsDATA \
-	uninstall-local
+	install-pdf-am install-ps install-ps-am install-shareDATA \
+	install-strip installcheck installcheck-am installdirs \
+	installdirs-am maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-generic mostlyclean-libtool pdf pdf-am \
+	ps ps-am tags tags-am uninstall uninstall-am \
+	uninstall-appsDATA uninstall-local uninstall-shareDATA
 
 
 @INTLTOOL_DESKTOP_RULE@

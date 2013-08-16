@@ -28,7 +28,7 @@
 #include <libroutermanager/lookup.h>
 
 /** Pointer to internal lookup function */
-static lookup_func *internal_lookup = NULL;
+static lookup_func internal_lookup = NULL;
 
 /**
  * \brief Lookup number and return name/address/zip/city
