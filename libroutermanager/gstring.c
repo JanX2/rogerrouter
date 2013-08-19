@@ -302,9 +302,9 @@ gchar *strip_html(gchar *word)
 	GRegex *tags = g_regex_new("<(.|\n)*?>", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
 	GRegex *space = g_regex_new("&nbsp;", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
 	GRegex *misc = g_regex_new("Â", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
-	gchar *stripped = g_regex_replace_literal(tags, word, -1, 0, g_strdup(""), 0, NULL);
-	gchar *spaced_str = g_regex_replace_literal(space, stripped, -1, 0, g_strdup(" "), 0, NULL);
-	gchar *misc_str = g_regex_replace_literal(misc, spaced_str, -1, 0, g_strdup(""), 0, NULL);
+	gchar *stripped = g_regex_replace_literal(tags, word, -1, 0, "", 0, NULL);
+	gchar *spaced_str = g_regex_replace_literal(space, stripped, -1, 0, " ", 0, NULL);
+	gchar *misc_str = g_regex_replace_literal(misc, spaced_str, -1, 0, "", 0, NULL);
 	gchar *return_str = convert_entities(misc_str);
 	g_free(misc_str);
 	g_free(spaced_str);

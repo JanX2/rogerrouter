@@ -244,6 +244,7 @@ gboolean bluetooth_init(void)
 		if (!EMPTY_STRING(path)) {
 			bluetooth_set_headset(path);
 		}
+		g_free(path);
 	}
 
 	return TRUE;

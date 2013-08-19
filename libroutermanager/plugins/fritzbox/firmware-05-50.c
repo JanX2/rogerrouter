@@ -137,12 +137,14 @@ gboolean fritzbox_login_05_50(struct profile *profile)
 	profile->router_info->session_id = xml_extract_tag(data, "SID");
 
 	if (!strcmp(profile->router_info->session_id, "0000000000000000")) {
-		const gchar *user = router_get_login_user(profile);
+		gchar *user = router_get_login_user(profile);
+		gchar *password = router_get_login_password(profile);
 
 		challenge = xml_extract_tag(data, "Challenge");
 		g_object_unref(msg);
 
-		dots = make_dots(router_get_login_password(profile));
+		dots = make_dots(password);
+		g_free(password);
 		str = g_strconcat(challenge, "-", dots, NULL);
 		md5_str = md5(str);
 
@@ -161,6 +163,7 @@ gboolean fritzbox_login_05_50(struct profile *profile)
 		g_free(url);
 
 		soup_session_send_message(soup_session_sync, msg);
+		g_free(user);
 		if (msg->status_code != 200) {
 			g_debug("Received status code: %d", msg->status_code);
 			g_object_unref(msg);

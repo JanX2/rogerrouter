@@ -633,6 +633,7 @@ GSList *fritzbox_load_faxbox(GSList *journal)
 	gchar *user = router_get_ftp_user(profile);
 	gchar *response;
 	gchar *path;
+	gchar *volume_path;
 
 	client = ftp_init(router_get_host(profile));
 	if (!client) {
@@ -649,7 +650,9 @@ GSList *fritzbox_load_faxbox(GSList *journal)
 		return journal;
 	}
 
-	path = g_build_filename(g_settings_get_string(profile->settings, "fax-volume"), "FRITZ/faxbox/", NULL);
+	volume_path = g_settings_get_string(profile->settings, "fax-volume");
+	path = g_build_filename(volume_path, "FRITZ/faxbox/", NULL);
+	g_free(volume_path);
 	response = ftp_list_dir(client, path);
 	if (response) {
 		gchar **split;
@@ -749,6 +752,7 @@ GSList *fritzbox_load_voicebox(GSList *journal)
 	gint index;
 	struct profile *profile = profile_get_active();
 	gchar *user = router_get_ftp_user(profile);
+	gchar *volume_path;
 
 	client = ftp_init(router_get_host(profile));
 	if (!client) {
@@ -761,7 +765,9 @@ GSList *fritzbox_load_voicebox(GSList *journal)
 		return journal;
 	}
 
-	path = g_build_filename(g_settings_get_string(profile->settings, "fax-volume"), "FRITZ/voicebox/", NULL);
+	volume_path = g_settings_get_string(profile->settings, "fax-volume");
+	path = g_build_filename(volume_path, "FRITZ/voicebox/", NULL);
+	g_free(volume_path);
 
 	for (index = 0; index < 5; index++) {
 		gchar *file = g_strdup_printf("%smeta%d", path, index);
