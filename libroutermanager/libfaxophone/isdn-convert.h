@@ -18,9 +18,9 @@
 #include <libroutermanager/libfaxophone/faxophone.h>
 
 // 16bit PCM, Mono, 8000 hz -> alaw
-signed char linear16_2_law[65536];
+extern signed char linear16_2_law[65536];
 // alaw -> 16bit PCM, Mono, 8000 hz
-unsigned short law_2_linear16[256];
+extern unsigned short law_2_linear16[256];
 
 void create_table_buffer(void);
 double get_line_level_in(struct capi_connection *connection);
