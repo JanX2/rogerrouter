@@ -44,7 +44,7 @@ case "$host" in
 	*darwin*)
 		WIN32=no
 		macos=yes
-		OS_CFLAGS=""
+		OS_CFLAGS="-DROUTERMANAGER_PLUGINS='\"\$(libdir)/routermanager/plugins/\"' -DAPP_PLUGINS='\"\$(libdir)/roger/plugins/\"' -DAPP_DATA='\"\$(datadir)/roger/\"' -DAPP_LOCALE='\"\$(localedir)\"' -DBUNDLE_DATADIR_SUFFIX='\"/roger\"' -DBUNDLE_LOCALEDIR_SUFFIX='\"/locale\"' -DBUNDLE_PLUGINDIR_SUFFIX='\"roger/plugins\"'"
 		OS_LIBS="-rdynamic"
 	;;
 	*freebsd*)
@@ -80,14 +80,14 @@ PKG_CHECK_MODULES([PEAS], [libpeas-1.0])
 PKG_CHECK_MODULES([PEAS_GTK], [libpeas-gtk-1.0])
 
 # Introspection
-GOBJECT_INTROSPECTION_CHECK([0.9.3])
+#GOBJECT_INTROSPECTION_CHECK([0.9.3])
 
-if test "$found_introspection" = "yes"; then
-	enable_introspection=yes
-	AC_DEFINE([ENABLE_INTROSPECTION], [1], [Define to enable GObject Introspection])
-else
-	enable_introspection=no
-fi
+#if test "$found_introspection" = "yes"; then
+#	enable_introspection=yes
+#	AC_DEFINE([ENABLE_INTROSPECTION], [1], [Define to enable GObject Introspection])
+#else
+#	enable_introspection=no
+#fi
 
 dnl ********************************************************************
 dnl libnotify is optional
