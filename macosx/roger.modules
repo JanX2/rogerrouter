@@ -40,7 +40,9 @@
 	</autotools>
 
 	<autotools id="portaudio" autogen-sh="configure" autogenargs="--disable-mac-universal ">
-		<branch repo="portaudio" module="pa_stable_v19_20111121.tgz" version="v19" checkoutdir="portaudio" size="1422825" md5sum="25c85c1cc5e9e657486cbc299c6c035a"  />
+		<branch repo="portaudio" module="pa_stable_v19_20111121.tgz" version="v19" checkoutdir="portaudio" size="1422825" md5sum="25c85c1cc5e9e657486cbc299c6c035a">
+			<patch file="portaudio.patch" strip="1"/>
+		</branch>
 	</autotools>
 
 	<autotools id="roger" autogen-sh="./autogen.sh; ./configure">
