@@ -81,6 +81,16 @@ roger_core_LTLIBRARIES = libroger_core.la
 libroger_core_la_SOURCES = $(roger_core_SOURCES)
 libroger_core_la_CFLAGS = $(roger_CFLAGS)
 libroger_core_la_LDFLAGS = $(roger_LDFLAGS) -shared -Wl,--output-def,roger_core.def,--out-implib,roger_core.dll.a -o roger_core.dll -no-undefined -avoid-version
+endif
+
+if MACOSX
+roger_SOURCES = $(roger_core_SOURCES)
+
+roger_coredir=$(bindir)
+roger_core_LTLIBRARIES = libroger_core.la
+libroger_core_la_SOURCES = $(roger_core_SOURCES)
+libroger_core_la_CFLAGS = $(roger_CFLAGS)
+libroger_core_la_LDFLAGS = $(roger_LDFLAGS) -shared -no-undefined -avoid-version
 else
 roger_SOURCES = $(roger_core_SOURCES)
 endif
