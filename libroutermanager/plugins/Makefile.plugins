@@ -22,6 +22,7 @@ plugin_ldflags = \
 	-no-undefined \
 	-avoid-version \
 	-module \
+	-shared \
 	$(PLUGIN_LIBTOOL_FLAGS)
 
 plugin_libadd = \
@@ -29,5 +30,9 @@ plugin_libadd = \
 	$(OS_LIBS)
 
 if WIN32
+plugin_ldflags += -L$(top_srcdir)/libroutermanager/.libs -lroutermanager -no-undefined
+endif
+
+if MACOSX
 plugin_ldflags += -L$(top_srcdir)/libroutermanager/.libs -lroutermanager -no-undefined
 endif
