@@ -108,26 +108,26 @@ export SED
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck
 
-if HAVE_INTROSPECTION
--include $(INTROSPECTION_MAKEFILE)
-INTROSPECTION_GIRS =
-INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) --accept-unprefixed
-INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
+#if HAVE_INTROSPECTION
+#-include $(INTROSPECTION_MAKEFILE)
+#INTROSPECTION_GIRS =
+#INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) --accept-unprefixed
+#INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 
-router_manager-1.0.gir: libroutermanager.la
-router_manager_1_0_gir_NAMESPACE = router_manager
-router_manager_1_0_gir_VERSION = 1.8.0
-router_manager_1_0_gir_INCLUDES = GObject-2.0
-router_manager_1_0_gir_CFLAGS = $(libroutermanager_la_CFLAGS)
-router_manager_1_0_gir_LIBS = libroutermanager.la
-router_manager_1_0_gir_FILES = $(libroutermanager_la_SOURCES)
-INTROSPECTION_GIRS += router_manager-1.0.gir
+#router_manager-1.0.gir: libroutermanager.la
+#router_manager_1_0_gir_NAMESPACE = router_manager
+#router_manager_1_0_gir_VERSION = 1.8.0
+#router_manager_1_0_gir_INCLUDES = GObject-2.0
+#router_manager_1_0_gir_CFLAGS = $(libroutermanager_la_CFLAGS)
+#router_manager_1_0_gir_LIBS = libroutermanager.la
+#router_manager_1_0_gir_FILES = $(libroutermanager_la_SOURCES)
+#INTROSPECTION_GIRS += router_manager-1.0.gir
 
-girdir = $(datadir)/gir-1.0
-gir_DATA = $(INTROSPECTION_GIRS)
+#girdir = $(datadir)/gir-1.0
+#gir_DATA = $(INTROSPECTION_GIRS)
 
-typelibdir = $(libdir)/girepository-1.0
-typelib_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+#typelibdir = $(libdir)/girepository-1.0
+#typelib_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
 
-CLEANFILES = $(gir_DATA) $(typelib_DATA)
-endif
+#CLEANFILES = $(gir_DATA) $(typelib_DATA)
+#endif
