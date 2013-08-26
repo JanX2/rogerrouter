@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleLocalizations</key>
+    <string>nl de</string>
+    <key>CFBundleExecutable</key>
+    <string>roger</string>
+    <key>CFBundleGetInfoString</key>
+    <string>@PACKAGE_VERSION@ (C) 2008-2013 Jan-Michael Brummer</string>
+    <key>CFBundleIconFile</key>
+    <string>roger</string>
+    <key>CFBundleIdentifier</key>
+    <string>org.tabos.roger.pkg</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>1.0</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>@PACKAGE_VERSION@</string>
+    <key>CFBundleSignature</key>
+    <string>frtz</string>
+    <key>CFBundleVersion</key>
+    <string>@PACKAGE_VERSION@</string>
+    <key>NSHumanReadableCopyright</key>
+    <string>Copyright 2008 - 2013 Jan-Michael Brummer, GNU General Public License V2.</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>10.5</string>
+</dict>
+</plist>
