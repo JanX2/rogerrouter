@@ -35,3 +35,7 @@ plugin_libadd = \
 if WIN32
 plugin_ldflags += -L$(top_srcdir)/libroutermanager/.libs -lroutermanager -L$(top_srcdir)/roger/.libs -lroger_core -no-undefined
 endif
+
+if MACOSX
+plugin_ldflags += -L$(top_srcdir)/libroutermanager/.libs -lroutermanager -L$(top_srcdir)/roger/.libs -lroger_core -no-undefined
+endif
