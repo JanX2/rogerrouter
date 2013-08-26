@@ -16,7 +16,9 @@
 	</autotools>
 
 	<autotools id="libsndfile">
-		<branch repo="libsndfile" module="libsndfile-1.0.25.tar.gz" version="1.0.25" size="1060692" md5sum="e2b7bb637e01022c7d20f95f9c3990a2" />
+		<branch repo="libsndfile" module="libsndfile-1.0.25.tar.gz" version="1.0.25" size="1060692" md5sum="e2b7bb637e01022c7d20f95f9c3990a2">
+			<patch file="libsndfile-1.0.25.patch" strip="1"/>
+		</branch>
 	</autotools>
 
 	<autotools id="libsoup" autogen-sh="./autogen.sh; ./configure" autogenargs="--without-gnome --disable-tls-check">
