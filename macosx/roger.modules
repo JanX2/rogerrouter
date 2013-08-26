@@ -26,7 +26,9 @@
 	</autotools>
 
 	<autotools id="libpeas">
-		<branch repo="libpeas" module="libpeas-1.6.2.tar.xz" version="1.6.2" />
+		<branch repo="libpeas" module="libpeas-1.6.2.tar.xz" version="1.6.2">
+			<patch file="libpeas-1.6.2.patch" strip="1"/>
+		</branch>
 	</autotools>
 
 	 <autotools id="spandsp" autogen-sh="./autogen.sh; ./configure">
