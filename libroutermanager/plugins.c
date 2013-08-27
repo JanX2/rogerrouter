@@ -36,7 +36,6 @@ PeasEngine *engine = NULL;
  */
 void routermanager_plugins_add_search_path(gchar *path)
 {
-	g_debug("Adding '%s'", path);
 	search_path_list = g_slist_append(search_path_list, g_strdup(path));
 }
 

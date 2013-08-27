@@ -9,8 +9,11 @@ echo roger postinstall script, trying to install printer
 echo install_path = ${install_path} 
 
 mkdir -p /var/spool/roger
-chown root:_lp /var/spool/roger
+chown root:_lpadmin /var/spool/roger
 chmod 2770 /var/spool/roger/
+cp ${install_path}/Contents/Resources/share/roger/roger-cups /usr/libexec/cups/backend/
+chmod 700 /usr/libexec/cups/backend/roger-cups
+chown root:wheel /usr/libexec/cups/backend/roger-cups
 lpadmin -p Roger-Router-Fax -E -v roger-cups:/ -P ${install_path}/Contents/Resources/share/roger/roger-fax.ppd
 retval=$?
 if test $retval != 0; then
