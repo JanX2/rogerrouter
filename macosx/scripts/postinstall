@@ -24,4 +24,5 @@ if test $retval != 0; then
 else
 	echo Printer Roger-Router-Fax is added
 fi
-exit $retval
+exit 0
+#exit $retval
