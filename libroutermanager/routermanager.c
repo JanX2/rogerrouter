@@ -36,6 +36,8 @@
 #include <libroutermanager/action.h>
 #include <libroutermanager/bluetooth.h>
 
+static gchar *pkg_data_dir = NULL;
+static gchar *locale_dir = NULL;
 static gchar *plugin_dir = NULL;
 
 /**
@@ -73,6 +75,23 @@ gchar *get_directory(gchar *type)
  */
 void init_directory_paths(void)
 {
+#ifdef __APPLE__
+	const gchar *tmp = NULL;
+
+	if ((tmp = g_getenv("XDG_DATA_DIRS")) != NULL) {
+		pkg_data_dir = g_strdup_printf("%s/routermanager/", tmp);
+		locale_dir = g_strdup_printf("%s/locale/", tmp);
+
+		if ((tmp = getenv("DYLD_LIBRARY_PATH")) != NULL) {
+			plugin_dir = g_strdup_printf("%s/routermanager/plugins/", tmp);
+		} else {
+			plugin_dir = get_directory(ROUTERMANAGER_PLUGINS);
+		}
+		printf("plugin_dir: %s", plugin_dir);
+		return;
+	}
+#endif
+
 	plugin_dir = get_directory(ROUTERMANAGER_PLUGINS);
 }
 
