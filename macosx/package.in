@@ -11,6 +11,7 @@ echo SVN version: $svn
 VERSION=$package_version.$svn
 gtk-mac-bundler roger.bundle
 mv roger.app Router\ Router.app
+sed -i 's/roger_app/Roger Router/g' Roger\ Router.app/Contents/Info.plist >  Roger\ Router.app/Contents/Info.plist
 pkgbuild --install-location /Applications --component Roger\ Router.app --version $VERSION --scripts scripts Roger\ Router\ -\ ${VERSION}.pkg
 rm -rf Roger\ Router.app
 
