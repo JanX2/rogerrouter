@@ -268,7 +268,10 @@ static void app_init(Application *app)
 	const gchar *user_plugins = g_get_user_data_dir();
 	gchar *path = g_build_filename(user_plugins, "roger", G_DIR_SEPARATOR_S, "plugins", NULL);
 
+	init_directory_paths();
+	printf("Adding: '%s'", path);
 	routermanager_plugins_add_search_path(path);
+	printf("Adding: '%s'", get_directory(APP_PLUGINS));
 	routermanager_plugins_add_search_path(get_directory(APP_PLUGINS));
 	g_free(path);
 
