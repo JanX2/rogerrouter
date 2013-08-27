@@ -83,10 +83,16 @@ void journal_clear(void)
 GdkPixbuf *journal_get_call_icon(gint type)
 {
 	gchar *path = NULL;
+	GError *error = NULL;
 
 	if (icon_call_in == NULL) {
 		path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "callin.png", NULL);
-		icon_call_in = gdk_pixbuf_new_from_file(path, NULL);
+		g_debug("path: '%s'", path);
+		icon_call_in = gdk_pixbuf_new_from_file(path, &error);
+		if (!icon_call_in) {
+			g_debug("ERROR!!!");
+			g_debug("Message: %s", error->message);
+		}
 		g_free(path);
 	}
 
