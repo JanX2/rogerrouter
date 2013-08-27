@@ -84,9 +84,9 @@
   </binary>
 
 <!-- ghostscript -->
-<!--  <binary>
+  <binary>
     ${prefix}/bin/gs
-</binary> -->
+</binary>
 
   <!-- Translation filenames, one for each program or library that you
        want to copy in to the bundle. The "dest" attribute is
@@ -111,10 +111,10 @@
   <data>
     ${prefix}/share/roger
   </data>
-<!--  <data>
+  <data>
     ${prefix}/share/ghostscript
   </data> 
-  <data dest='${bundle}/Contents/Resources/en.lproj'>
+<!--  <data dest='${bundle}/Contents/Resources/en.lproj'>
     ${project}/en.lproj -->
 
   <!-- gtkosxintegration translations -->
