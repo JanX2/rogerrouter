@@ -38,7 +38,6 @@ gboolean routermanager_init(struct ui_ops *ui_ops, gboolean debug);
 void routermanager_shutdown(void);
 gchar *get_directory(gchar *type);
 gchar *get_plugin_dir(void);
-void init_directory_paths(void);
 
 G_END_DECLS
 
