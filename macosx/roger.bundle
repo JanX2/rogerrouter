@@ -121,6 +121,10 @@
     ${prefix}/share/themes
   </data>
 
+  <data>
+    ${prefix}/lib/gdk-pixbuf-2.0
+  </data>
+
   <data dest='${bundle}/Contents/Resources/share/themes/'>
     ${project}/../win32/themes
   </data>
