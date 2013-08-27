@@ -24,6 +24,7 @@
 #include <libroutermanager/profile.h>
 #include <libroutermanager/libfaxophone/fax.h>
 #include <libroutermanager/libfaxophone/phone.h>
+#include <libroutermanager/routermanager.h>
 
 #include <roger/phone.h>
 #include <roger/main.h>
@@ -264,6 +265,14 @@ void app_show_fax_window(gchar *tiff_file)
 	gtk_widget_show_all(window);
 }
 
+gboolean app_show_fax_window_idle(gpointer data)
+{
+	gchar *tiff_file = data;
+
+	app_show_fax_window(tiff_file);
+	return FALSE;
+}
+
 gchar *convert_fax_to_tiff(gchar *file_name)
 {
 	GError *error = NULL;
@@ -277,6 +286,9 @@ gchar *convert_fax_to_tiff(gchar *file_name)
 	/* convert ps to tiff */
 #ifdef G_OS_WIN32
 	args[0] = g_settings_get_string(profile->settings, "ghostscript");
+#elif __APPLE__
+	args[0] = get_directory("bin/gs");
+	g_debug("args[0]: %s\n", args[0]);
 #else
 	args[0] = "gs";
 #endif
@@ -323,7 +335,11 @@ void fax_process_cb(GtkWidget *widget, gchar *file_name, gpointer user_data)
 
 	tiff = convert_fax_to_tiff(file_name);
 	if (tiff) {
+#ifdef __APPLE__
+		g_idle_add(app_show_fax_window_idle, tiff);
+#else
 		app_show_fax_window(tiff);
+#endif
 	} else {
 		g_warning("Error converting print file to TIFF!");
 	}
