@@ -23,6 +23,7 @@
 #include <libroutermanager/plugins.h>
 
 #include <main.h>
+#include <journal.h>
 
 #include <pref.h>
 #include <pref_router.h>
@@ -103,6 +104,7 @@ void preferences(void)
 	GtkWidget *content;
 	GtkWidget *notebook = gtk_notebook_new();
 	GtkWidget *page;
+	GtkWidget *parent = NULL;
 
 	if (!profile_get_active()) {
 		return;
@@ -113,7 +115,8 @@ void preferences(void)
 		return;
 	}
 
-	dialog = gtk_dialog_new_with_buttons(_("Preferences"), NULL, 0, GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE, NULL);
+	parent = journal_get_window();
+	dialog = gtk_dialog_new_with_buttons(_("Preferences"), parent ? GTK_WINDOW(parent) : NULL, GTK_DIALOG_MODAL, GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE, NULL);
 	content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 
 	page = pref_page_router();

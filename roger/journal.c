@@ -87,7 +87,6 @@ GdkPixbuf *journal_get_call_icon(gint type)
 
 	if (icon_call_in == NULL) {
 		path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "callin.png", NULL);
-		g_debug("path: '%s'", path);
 		icon_call_in = gdk_pixbuf_new_from_file(path, &error);
 		if (!icon_call_in) {
 			g_debug("ERROR!!!");
@@ -883,4 +882,9 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 void journal_quit(void)
 {
 	gtk_widget_destroy(GTK_WIDGET(journal_win));
+}
+
+GtkWidget *journal_get_window(void)
+{
+	return journal_win;
 }

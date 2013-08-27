@@ -71,14 +71,8 @@ gchar *get_directory(gchar *type)
 	gchar *bundle = gtkosx_application_get_bundle_path();
 
 	if (gtkosx_application_get_bundle_id()) {
-		printf("bundle: %s         ", bundle);
-		printf("type: %s           ", type);
-		printf("final: %s/Contents/Resources/%s       ", bundle, type);
 		return g_strdup_printf("%s/Contents/Resources/%s", bundle, type);
 	} else {
-		printf("bundle: %s         ", bundle);
-		printf("type: %s           ", type);
-		printf("final: %s/../%s       ", bundle, type);
 		return g_strdup_printf("%s/../%s", bundle, type);
 	}
 #else

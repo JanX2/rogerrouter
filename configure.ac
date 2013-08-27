@@ -381,6 +381,8 @@ AC_OUTPUT([
     roger/plugins/evolution/data/Makefile
     roger/plugins/gtknotify/Makefile
     roger/plugins/gtknotify/data/Makefile
+    macosx/roger.plist
+    macosx/package
 ])
 
 
