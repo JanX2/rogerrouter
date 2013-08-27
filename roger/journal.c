@@ -676,7 +676,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	gtk_container_add(GTK_CONTAINER (window), grid);
 
 	toolbar = gtk_toolbar_new();
-#ifdef G_OS_WIN32
+#if defined(G_OS_WIN32) || defined(__APPLE__)
 	gtk_toolbar_set_style(GTK_TOOLBAR(toolbar), GTK_TOOLBAR_ICONS);
 #endif
 
