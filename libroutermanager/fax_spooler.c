@@ -22,7 +22,7 @@
 #include <string.h>
 #include <sys/types.h>
 
-#ifdef G_OS_UNIX
+#if defined(G_OS_UNIX) && !defined(__APPLE__)
 #include <gio/gio.h>
 
 #include <libroutermanager/appobject-emit.h>
@@ -109,6 +109,7 @@ void fax_printer_init(void)
 	GFile *file;
 	GDir *dir;
 	gchar *dir_name = g_strdup_printf("/var/spool/roger");
+	GError *error = NULL;
 
 	/* Check if spooler is present, create directory if needed */
 	dir = g_dir_open(dir_name, 0, NULL);
@@ -126,9 +127,14 @@ void fax_printer_init(void)
 	/* Create GFile for GFileMonitor */
 	file = g_file_new_for_path(dir_name);
 	/* Create file monitor for spool directory */
-	file_monitor = g_file_monitor_directory(file, 0, NULL, NULL);
-	/* Set callback for file monitor */
-	g_signal_connect(file_monitor, "changed", G_CALLBACK(fax_spooler_changed_cb), NULL);
+	file_monitor = g_file_monitor_directory(file, 0, NULL, &error);
+	if (file_monitor) {
+		/* Set callback for file monitor */
+		g_signal_connect(file_monitor, "changed", G_CALLBACK(fax_spooler_changed_cb), NULL);
+	} else {
+		g_debug("Error occured creating file monitor\n");
+		g_debug("Message: %s\n", error->message);
+	}
 
 	g_free(dir_name);
 }

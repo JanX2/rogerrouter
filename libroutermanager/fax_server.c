@@ -1,6 +1,6 @@
 #include <glib.h>
 
-#ifdef G_OS_WIN32
+#if defined(G_OS_WIN32) || defined(__APPLE__)
 
 #include <unistd.h>
 #include <errno.h>
