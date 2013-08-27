@@ -65,6 +65,8 @@ gchar *get_directory(gchar *type)
 	tmp = g_file_get_path(directory);
 
 	return tmp;
+#elif __APPLE__
+	return g_strdup_printf("%s/%s", pkg_data_dir, type);
 #else
 	return g_strdup(type);
 #endif
