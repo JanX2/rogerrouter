@@ -111,14 +111,23 @@
     ${project}/de.lproj
   </data> -->
 
+  <data dest='${bundle}/Contents/Resources/etc/gtk-3.0/settings.ini'>
+    ${project}/settings.ini
+  </data>
+
   <!-- Copy in the themes data. You may want to trim this to save space
        in your bundle. -->
   <data>
     ${prefix}/share/themes
   </data>
 
-  <data dest='${bundle}/Contents/Resources/etc/gtk-3.0/settings.ini'>
-    ${prefix}/etc/gtk-3.0/settings.ini
+  <data dest='${bundle}/Contents/Resources/share/themes/'>
+    ${project}/../win32/themes
+  </data>
+
+  <!-- Copy in the schemas data -->
+  <data>
+    ${prefix}/share/glib-2.0/schemas/*
   </data>
 
   <!-- Copy icons. Note that the .icns file is an Apple format which
