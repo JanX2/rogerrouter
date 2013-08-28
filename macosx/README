@@ -1,0 +1,40 @@
+These are the steps necessary to compile Roger Router from source on OS X:
+
+* Building GTK+ 3 for OS X
+
+    $ curl -O http://git.gnome.org/browse/gtk-osx/plain/gtk-osx-build-setup.sh
+    $ sh gtk-osx-build-setup.sh
+
+    $ jhbuild bootstrap
+    $ jhbuild build meta-gtk-osx-bootstrap
+    $ jhbuild build meta-gtk-osx-gtk3
+
+* Building Roger Router
+
+Please note that we currently build Roger Router for Macos 10.5, so we actually have the following in our ~/.jhbuild-custom:
+
+    setup_sdk(target="10.5", sdk_version="10.5", architectures=["i386"])
+    os.environ["CC"] = "/usr/bin/llvm-gcc"
+    os.environ["CXX"] = "/usr/bin/llvm-g++"
+    skip.append("libiconv")
+    moduleset=os.environ['HOME'] + '/roger.modules'
+
+Note that roger.modules in moduleset is a symlink to the file located in the Roger Router sources.
+
+    $ jhbuild build roger
+
+* Test Roger Router
+
+    $ jhbuild shell
+    $ roger
+
+If you are done testing your build exit the jhbuild shell.
+
+* Build package for distribution
+
+    - Install gtk-mac-bundler
+
+Then run
+    $ sh package
+
+in the macosx folder within the Roger Router sources.

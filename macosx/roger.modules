@@ -50,7 +50,7 @@
 		<branch repo="ghostscript" module="9.05/ghostscript-9.05.tar.bz2" version="9.05"/>
 	</autotools>
 
-	<autotools id="roger" autogen-sh="./autogen.sh; ./configure">
+	<autotools id="roger" autogen-sh="autogen.sh; ./configure">
 		<branch repo="roger"/>
 		<dependencies>
 			<dep package="libcapi20"/>
