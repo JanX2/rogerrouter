@@ -33,6 +33,8 @@ export GTK3_INI_FILES="$bundle_etc/gtk-3.0/settings.ini"
 export GTK_IM_MODULE_FILE="$bundle_etc/gtk-3.0/gtk.immodules"
 export GDK_PIXBUF_MODULE_FILE="$bundle_etc/gtk-3.0/gdk-pixbuf.loaders"
 export PANGO_RC_FILE="$bundle_etc/pango/pangorc"
+export PANGO_LIBDIR="$bundle_lib"
+export PANGO_SYSCONFDIR="$bundle_etc"
 
 # Add own bin path to path
 export PATH=$PATH:$bundle_bin
