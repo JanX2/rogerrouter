@@ -51,6 +51,7 @@ gpointer csv_parse_data(const gchar *data, const gchar *header, csv_parse_line_f
 	gchar sep[2];
 	gchar **lines = NULL;
 	gchar *pos;
+	gpointer data_ptr = ptr;
 
 	/* Safety check */
 	g_assert(data != NULL);
@@ -71,6 +72,7 @@ gpointer csv_parse_data(const gchar *data, const gchar *header, csv_parse_line_f
 	/* Check header */
 	if (strncmp(lines[index], header, strlen(header))) {
 		g_debug("Unknown CSV-Header: '%s'", lines[index]);
+		data_ptr = NULL;
 		goto end;
 	}
 
@@ -78,7 +80,7 @@ gpointer csv_parse_data(const gchar *data, const gchar *header, csv_parse_line_f
 	while (lines[++index] != NULL) {
 		gchar **split = g_strsplit(lines[index], sep, -1);
 
-		ptr = csv_parse_line(ptr, split);
+		data_ptr = csv_parse_line(data_ptr, split);
 
 		g_strfreev(split);
 	}
@@ -87,7 +89,7 @@ end:
 	g_strfreev(lines);
 
 	/* Return ptr */
-	return ptr;
+	return data_ptr;
 }
 
 /**

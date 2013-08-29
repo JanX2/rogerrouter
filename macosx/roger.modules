@@ -3,7 +3,7 @@
 <moduleset>
 	<include href="http://git.gnome.org/browse/gtk-osx/plain/modulesets-stable/gtk-osx.modules"/>
 	<repository type="svn" name="roger" href="http://svn.tabos.org/repos/"/>
-	<repository type="tarball" name="libcapi20" href="http://fazant.net/ffgtk/macos/"/>
+	<repository type="tarball" name="libcapi20" href="http://en.tabos.org/download/"/>
 	<repository type="tarball" name="speex" href="http://downloads.xiph.org/releases/speex/"/>
 	<repository type="tarball" name="libsndfile" href="http://www.mega-nerd.com/libsndfile/files/"/>
 	<repository type="tarball" name="libsoup" href="http://ftp.gnome.org/pub/GNOME/sources/libsoup/2.40/"/>
@@ -37,7 +37,7 @@
 	</autotools>
 
 	<autotools id="libcapi20">
-		<branch repo="libcapi20" module="capi20-3.6.tar.bz2" version="3.6" checkoutdir="capi20" />
+		<branch repo="libcapi20" module="capi20.tar.xz" version="3.6" checkoutdir="capi20" />
 	</autotools>
 
 	<autotools id="portaudio" autogen-sh="configure" autogenargs="--disable-mac-universal ">

@@ -69,9 +69,14 @@ static inline gpointer csv_parse_fritzbox(gpointer ptr, gchar **split)
  */
 GSList *csv_parse_fritzbox_journal_data(GSList *list, const gchar *data)
 {
-	list = csv_parse_data(data, CSV_FRITZBOX_JOURNAL_DE, csv_parse_fritzbox, list);
+	GSList *new_list = NULL;
+
+	new_list = csv_parse_data(data, CSV_FRITZBOX_JOURNAL_DE, csv_parse_fritzbox, list);
+	if (!new_list) {
+		new_list = csv_parse_data(data, CSV_FRITZBOX_JOURNAL_EN, csv_parse_fritzbox, list);
+	}
 
 	/* Return call list */
-	return list;
+	return new_list;
 }
 
