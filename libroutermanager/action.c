@@ -153,21 +153,33 @@ void action_connection_notify_cb(AppObject *object, struct connection *connectio
 
 /**
  * \brief Create new action structure
+ * \return new action structure pointer
+ */
+struct action *action_create(void)
+{
+	struct action *action = g_slice_new(struct action);
+
+	memset(action, 0, sizeof(struct action));
+
+	return action;
+}
+
+/**
+ * \brief Modify action structure
  * \param name name of the new action
  * \param description action description
  * \param exec application execution line
- * \param flags action flags
+ * \param numbers numbers the apply to this action
  * \return new action structure pointer
  */
-struct action *action_create(const gchar *name, const gchar *description, const gchar *exec, guchar flags)
+struct action *action_modify(struct action *action, const gchar *name, const gchar *description, const gchar *exec, gchar **numbers)
 {
-	struct action *action = g_slice_new(struct action);
 	gchar *settings_path;
 
 	action->name = g_strdup(name);
 	action->description = g_strdup(description);
 	action->exec = g_strdup(exec);
-	action->flags = flags;
+	action->numbers = numbers;
 
 	/* Setup action settings */
 	settings_path = g_strconcat("/org/tabos/routermanager/profile/", profile_get_active()->name, "/", name, "/", NULL);
@@ -177,6 +189,7 @@ struct action *action_create(const gchar *name, const gchar *description, const 
 	g_settings_set_string(action->settings, "description", action->description);
 	g_settings_set_string(action->settings, "exec", action->exec);
 	g_settings_set_int(action->settings, "flags", action->flags);
+	g_settings_set_strv(action->settings, "numbers", (const gchar * const *) action->numbers);
 
 	g_free(settings_path);
 

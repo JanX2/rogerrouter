@@ -59,7 +59,8 @@ inline void action_remove(struct profile *profile, struct action *action);
 inline void action_add(struct profile *profile, struct action *action);
 void action_commit(struct profile *profile);
 void action_free(gpointer data);
-struct action *action_create(const gchar *name, const gchar *description, const gchar *exec, guchar flags);
+struct action *action_create(void);
+struct action *action_modify(struct action *action, const gchar *name, const gchar *description, const gchar *exec, gchar **numbers);
 
 G_END_DECLS
 

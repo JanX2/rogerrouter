@@ -262,24 +262,12 @@ gboolean action_edit(struct action *action)
 
 	if (result == GTK_RESPONSE_APPLY) {
 		if (!action) {
-			action = action_create(gtk_entry_get_text(GTK_ENTRY(name_entry)), gtk_entry_get_text(GTK_ENTRY(description_entry)), gtk_entry_get_text(GTK_ENTRY(exec_entry)), 0);
+			action = action_create();
 			action_add(profile_get_active(), action);
 			selected_action = action;
-		} else {
-			g_free(action->name);
-			action->name = g_strdup(gtk_entry_get_text(GTK_ENTRY(name_entry)));
-			g_free(action->description);
-			action->description = g_strdup(gtk_entry_get_text(GTK_ENTRY(description_entry)));
-			g_free(action->exec);
-			action->exec = g_strdup(gtk_entry_get_text(GTK_ENTRY(exec_entry)));
-
-			g_settings_set_string(action->settings, "name", action->name);
-			g_settings_set_string(action->settings, "description", action->description);
-			g_settings_set_string(action->settings, "exec", action->exec);
 		}
 
-
-		g_settings_set_strv(action->settings, "numbers", (const gchar * const*) selected_numbers);
+		action = action_modify(action, gtk_entry_get_text(GTK_ENTRY(name_entry)), gtk_entry_get_text(GTK_ENTRY(description_entry)), gtk_entry_get_text(GTK_ENTRY(exec_entry)), selected_numbers);
 		action_commit(profile_get_active());
 
 		changed = TRUE;
