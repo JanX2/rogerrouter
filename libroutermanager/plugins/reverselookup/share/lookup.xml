@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<lookup>
+	<country code="31">
+		<lookup>
+			<service>gebeld.nl</service>
+			<prefix>0</prefix>
+			<url>http://www.gebeld.nl/content.asp?zapp=zapp&amp;land=&amp;zoek=Nummer&amp;searchfield1=fullnumber&amp;searchfield2=&amp;queryfield1=%NUMBER%&amp;queryfield2=&amp;fuzzy=&amp;volll=&amp;database=open&amp;tld=</url>
+			<pattern>&lt;/div&gt;</pattern>
+			<pattern></pattern>
+			<pattern>&lt;/td&gt;&lt;/tr&gt;</pattern>
+			<pattern>\s+&lt;tr\s+bgcolor=&quot;#fee3ad&quot;&gt;\s+&lt;TD&gt;&lt;/TD&gt;\s+&lt;td\s+width=&quot;73%&quot;&gt;(&amp;nbsp;(?P&lt;firstname&gt;.*))?&amp;nbsp;(?P&lt;lastname&gt;.*)&lt;/td&gt;\s+&lt;TD&gt;&lt;/TD&gt;&lt;/tr&gt;</pattern>
+			<pattern>\s+&lt;tr\s+bgcolor=&quot;#fee3ad&quot;&gt;\s+&lt;TD&gt;&lt;/TD&gt;\s+&lt;td\s+width=&quot;73%&quot;&gt;&amp;nbsp;(?P&lt;street&gt;.*)&lt;/td&gt;\s+&lt;TD&gt;&lt;/TD&gt;&lt;/tr&gt;</pattern>
+			<pattern>\s+&lt;tr\s+bgcolor=&quot;#fee3ad&quot;&gt;\s+&lt;TD&gt;&lt;/TD&gt;\s+&lt;td\s+width=&quot;73%&quot;&gt;&amp;nbsp;(?P&lt;zipcode&gt;.*)&amp;nbsp;(?P&lt;city&gt;.*)&lt;/td&gt;\s+&lt;TD&gt;&lt;/TD&gt;&lt;/tr&gt;</pattern>
+		</lookup>
+		<lookup>
+			<service>gevonden.cc</service>
+			<prefix>0</prefix>
+			<url>http://www.gevonden.cc/telefoonnummer/%NUMBER%/lastname/</url>
+			<pattern>&lt;div\sclass=&quot;resultaat&quot;&gt;&amp;nbsp;&lt;b&gt;(?P&lt;lastname&gt;.*),(?P&lt;firstname&gt;.*)&amp;nbsp;&lt;/b&gt;&lt;br\s/&gt;&amp;nbsp;(?P&lt;street&gt;.*)&amp;nbsp;&lt;br\s/&gt;&amp;nbsp;(?P&lt;zipcode&gt;.*)&amp;nbsp;(?P&lt;city&gt;.*)&lt;br\s/&gt;</pattern>
+		</lookup>
+		<lookup>
+			<service>nummerzoeker.com</service>
+			<prefix>0</prefix>
+			<url>http://www.nummerzoeker.com/?color=white&amp;lastname=&amp;str=&amp;hnr=&amp;pc=&amp;pl=&amp;phone=%NUMBER%&amp;maxrows=10&amp;sort=3&amp;search=Zoeken</url>
+			<pattern>\s+&lt;tr\sclass=&quot;c0&quot;&gt;</pattern>
+			<pattern>\s+&lt;td\sclass=&quot;nowrap&quot;&gt;</pattern>
+			<pattern>\s+&lt;/td&gt;</pattern>
+			<pattern>\s+&lt;td\sclass=&quot;nowrap&quot;&gt;.*&lt;/td&gt;</pattern>
+			<pattern>\s+&lt;td&gt;(?P&lt;lastname&gt;.*),(?P&lt;firstname&gt;.*)&lt;/td&gt;</pattern>
+			<pattern>\s+&lt;td\sclass=&quot;nowrap&quot;&gt;(?P&lt;street&gt;.*)&lt;/td&gt;</pattern>
+			<pattern>\s+&lt;td\sclass=&quot;nowrap&quot;&gt;(?P&lt;zipcode&gt;.*)&lt;/td&gt;</pattern>
+			<pattern>\s+&lt;td\sclass=&quot;nowrap&quot;&gt;(?P&lt;city&gt;.*)&lt;/td&gt;</pattern>
+			<pattern>\s+&lt;td\sclass=&quot;nowrap&quot;&gt;</pattern>
+		</lookup>
+	</country>
+	<country code="49">
+		<lookup>
+			<service>11880.com</service>
+			<prefix>0</prefix>
+			<url>http://www.11880.com/inverssuche/index/search?_dvform_posted=1&amp;phoneNumber=%NUMBER%</url>
+			<pattern>&lt;a class=&quot;namelink&quot;\s+href=&quot;/[^&quot;]*.html&quot;&gt;&lt;strong&gt;(?P&lt;name&gt;[^&lt;]+)&lt;/strong&gt;&lt;/a&gt;.{10,900}&lt;p class=&quot;data track&quot;&gt;\s*(?P&lt;address&gt;(.+))&lt;br /&gt;\s*(?P&lt;zip&gt;\d{5}) (?P&lt;city&gt;[^&lt;\n]+)\s*&lt;/p&gt;</pattern>
+		</lookup>
+		<lookup>
+		 	<service>Das Oertliche</service>
+			<prefix>1</prefix>
+			<url>http://www.dasoertliche.de/Controller?&amp;form_name=search_inv&amp;ph=%NUMBER%</url>
+			<pattern>&lt;a href=&quot;[^&quot;]*&quot;\s+class=&quot;preview(.+)&gt;(?P&lt;firstname&gt;.+)\s+(?P&lt;lastname&gt;.+)</pattern>
+			<pattern>[^&lt;]*&lt;/a&gt;</pattern>
+			<pattern>[^&lt;]*&lt;div class=&quot;strasse&quot;&gt;\s+(?P&lt;street&gt;.+),\s+(?P&lt;zipcode&gt;\d+)\s+(?P&lt;city&gt;.+)&lt;/div&gt;</pattern>
+		</lookup>
+	</country>
+</lookup>

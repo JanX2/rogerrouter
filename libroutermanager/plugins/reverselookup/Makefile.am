@@ -6,6 +6,11 @@ plugindir = $(libdir)/routermanager/plugins/reverselookup
 
 plugin_LTLIBRARIES = libreverselookup.la
 
+sharedir = $(libdir)/routermanager/plugins/reverselookup
+share_DATA  = share/lookup.xml
+
+EXTRA_DIST += $(share_DATA)
+
 libreverselookup_la_SOURCES = \
 	reverselookup.c
 

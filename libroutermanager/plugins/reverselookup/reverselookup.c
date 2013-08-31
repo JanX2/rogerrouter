@@ -31,6 +31,10 @@
 #include <libroutermanager/network.h>
 #include <libroutermanager/logging.h>
 #include <libroutermanager/lookup.h>
+#include <libroutermanager/xml.h>
+#include <libroutermanager/routermanager.h>
+
+#include "reverselookup.h"
 
 #define ROUTERMANAGER_TYPE_REVERSE_LOOKUP_PLUGIN (routermanager_reverse_lookup_plugin_get_type ())
 #define ROUTERMANAGER_REVERSE_LOOKUP_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_REVERSE_LOOKUP_PLUGIN, RouterManagerReverseLookupPlugin))
@@ -43,9 +47,23 @@ typedef struct {
 ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_REVERSE_LOOKUP_PLUGIN, RouterManagerReverseLookupPlugin, routermanager_reverse_lookup_plugin)
 
 static GHashTable *table = NULL;
+/** Global lookup list */
+static GSList *lookup_list = NULL;
+/** Lookup country code hash table */
+static GHashTable *lookup_table = NULL;
+
+static gchar *replace_number(gchar *url, gchar *full_number)
+{
+	GRegex *number = g_regex_new("%NUMBER%", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
+	gchar *out = g_regex_replace_literal(number, url, -1, 0, full_number, 0, NULL);
+
+	g_regex_unref(number);
+
+	return out;
+}
 
 /**
- * \brief Reverse lookup function
+ * \brief Internal reverse lookup function
  * \param number number to lookup
  * \param name pointer to store name to
  * \param address pointer to store address to
@@ -53,7 +71,7 @@ static GHashTable *table = NULL;
  * \param city pointer to store city to
  * \return TRUE on success, otherwise FALSE
  */
-static gboolean reverse_lookup(gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city)
+static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city)
 {
 	SoupMessage *msg;
 	const gchar *data;
@@ -69,7 +87,8 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **address, gch
 		return FALSE;
 	}
 
-	full_number = call_full_number(number, FALSE);
+	/* get full number according to service preferences */
+	full_number = call_full_number(number, lookup->prefix);
 
 	rl_contact = g_hash_table_lookup(table, full_number);
 	if (rl_contact) {
@@ -92,12 +111,13 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **address, gch
 	g_assert(zip != NULL);
 	g_assert(city != NULL);
 
-	msg = soup_form_request_new(SOUP_METHOD_POST, "http://www.11880.com/inverssuche/index/search",
-		"_dvform_posted", "1",
-		"phoneNumber", full_number,
-		NULL);
+	gchar *url = replace_number(lookup->url, full_number);
+	SoupURI *uri = soup_uri_new(url);
+	msg = soup_message_new_from_uri(SOUP_METHOD_GET, uri);
 
 	soup_session_send_message(soup_session_sync, msg);
+	soup_uri_free(uri);
+	g_free(url);
 	if (msg->status_code != 200) {
 		g_debug("Received status code: %d", msg->status_code);
 		g_object_unref(msg);
@@ -108,15 +128,15 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **address, gch
 
 	data = msg->response_body->data;
 
-	reg = g_regex_new("<a class=\"namelink\"\\s+href=\"/[^\"]*.html\"><strong>(?P<name>[^<]+)</strong></a>.{10,900}<p class=\"data track\">\\s*(?P<address>(.+))<br />\\s*(?P<zip>\\d{5}) (?P<city>[^<\n]+)\\s*</p>", G_REGEX_MULTILINE | G_REGEX_DOTALL, 0, NULL);
+	reg = g_regex_new(lookup->pattern, G_REGEX_MULTILINE | G_REGEX_DOTALL, 0, NULL);
 	if (!reg) {
 		goto end;
 	}
 
 	if (!g_regex_match(reg, data, 0, &info)) {
-		//gchar *tmp_file = g_strdup_printf("rl-%s.html", number);
-		//file_save(tmp_file, data, msg->response_body->length);
-		//g_free(tmp_file);
+		gchar *tmp_file = g_strdup_printf("rl-%s.html", number);
+		file_save(tmp_file, data, msg->response_body->length);
+		g_free(tmp_file);
 		goto end;
 	}
 
@@ -131,7 +151,7 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **address, gch
 		*name = g_strdup("");
 	}
 
-	//g_debug("Match found: %s -> %s", number, *name);
+	//g_debug("Match found: %s->%s", number, *name);
 
 	if ((rl_tmp = g_match_info_fetch_named(info, "address"))) {
 		*address = strip_html(rl_tmp);
@@ -156,8 +176,6 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **address, gch
 
 	g_match_info_free(info);
 
-	//g_debug("Found entry, adding");
-
 	rl_contact->name = g_strdup(*name);
 	rl_contact->street = g_strdup(*address);
 	rl_contact->zip = g_strdup(*zip);
@@ -171,49 +189,179 @@ end:
 }
 
 /**
- * \brief Contact process callback (searches for reverselookup and set city name)
- * \param obj app object
- * \param contact contact structure
- * \param user_data pointer to reverselookup plugin structure
+ * \brief Get lookup list
+ * \param country_code country code
+ * \return lookup list
  */
-static void reverse_lookup_contact_process_cb(AppObject *obj, struct contact *contact, gpointer user_data)
+GSList *get_lookup_list(const gchar *country_code)
 {
-	RouterManagerReverseLookupPlugin *reverselookup_plugin = user_data;
-	struct contact *rl_contact;
-	gchar *name;
-	gchar *street;
-	gchar *zip;
-	gchar *city;
+	GSList *list = NULL;
 
-	/* In case we do not have a number or we already have a valid name, abort */
-	if (EMPTY_STRING(contact->number) || !EMPTY_STRING(contact->name)) {
-		return;
+	/* If country code is NULL, return current lookup list */
+	if (!country_code) {
+		return lookup_list;
 	}
 
-	rl_contact = g_hash_table_lookup(reverselookup_plugin->priv->table, contact->number);
-	if (rl_contact) {
-		if (!EMPTY_STRING(rl_contact->name)) {
-			g_free(contact->name);
-			contact->name = g_strdup(rl_contact->name);
-			contact->lookup = TRUE;
+	if (!lookup_table) {
+		return NULL;
+	}
+
+	/* Extract country code list from hashtable */
+	list = g_hash_table_lookup(lookup_table, (gpointer) atol(country_code));
+
+	return list;
+}
+
+/**
+ * \brief Extract country code from full number
+ * \param full_number full international number
+ * \return country code or NULL on error
+ */
+gchar *get_country_code(const gchar *full_number)
+{
+	gchar sub_string[7];
+	int index;
+	int len = strlen(full_number);
+
+	for (index = 6; index > 0; index--) {
+		if (len <= index) {
+			continue;
 		}
-		return;
+
+		strncpy(sub_string, full_number, index);
+		sub_string[index] = '\0';
+
+		if (g_hash_table_lookup(lookup_table, (gpointer) atol(sub_string))) {
+			return g_strdup(sub_string);
+		}
 	}
 
-	rl_contact = g_slice_new0(struct contact);
+	return NULL;
+}
 
-	if (reverse_lookup(contact->number, &name, &street, &zip, &city)) {
-		g_free(contact->name);
-		contact->name = name;
-		contact->lookup = TRUE;
+/**
+ * \brief Reverse lookup function
+ * \param number number to lookup
+ * \param name pointer to store name to
+ * \param address pointer to store address to
+ * \param zip pointer to store zip to
+ * \param city pointer to store city to
+ * \return TRUE on success, otherwise FALSE
+ */
+static gboolean reverse_lookup(gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city)
+{
+	struct lookup *lookup = NULL;
+	GSList *list = NULL;
+	gchar *full_number = NULL;
+	gchar *country_code = NULL;
+	gboolean found = FALSE;
+	const gint international_prefix_len = strlen(router_get_international_prefix(profile_get_active()));
 
-		rl_contact->name = name;
-		rl_contact->street = street;
-		rl_contact->zip = zip;
-		rl_contact->city = city;
+	/* Get full number and extract country code if possible */
+	full_number = call_full_number(number, TRUE);
+	if (full_number != NULL) {
+		//g_debug("Input number '%s'", number);
+		//g_debug("full number '%s'", full_number);
+		country_code = get_country_code(full_number);
+		//if (country_code) {
+			//g_debug("Country code: %s", country_code + international_prefix_len);
+		//} else {
+			//g_debug("Warning: Could not get country code!!");
+		//}
+		g_free(full_number);
 	}
 
-	g_hash_table_insert(reverselookup_plugin->priv->table, contact->number, rl_contact);
+	if (country_code && strcmp(country_code + international_prefix_len, router_get_country_code(profile_get_active()))) {
+		/* if country code is not the same as the router country code, loop through country list */
+		list = get_lookup_list(country_code + international_prefix_len);
+	} else {
+		/* if country code is the same as the router country code, use default plugin */
+		list = get_lookup_list(router_get_country_code(profile_get_active()));
+	}
+
+	g_free(country_code);
+
+	for (; list != NULL && list->data != NULL; list = list->next) {
+		lookup = list->data;
+
+		//g_debug("Using service '%s'", lookup->service);
+
+		found = do_reverse_lookup(lookup, number, name, address, zip, city);
+		/* in case we found some valid data, break loop */
+		if (found) {
+			break;
+		}
+	}
+
+	return found;
+}
+
+/**
+ * \brief Add lookup from xmlnode
+ * \param psNode xml node structure
+ */
+static void lookup_add(xmlnode *node)
+{
+	struct lookup *lookup = NULL;
+	xmlnode *child = NULL;
+	gchar *service = NULL;
+	gchar *prefix = NULL;
+	gchar *url = NULL;
+	gchar *pattern = NULL;
+
+	child = xmlnode_get_child(node, "service");
+	g_assert(child != NULL);
+	service = xmlnode_get_data(child);
+
+	child = xmlnode_get_child(node, "prefix");
+	g_assert(child != NULL);
+	prefix = xmlnode_get_data(child);
+
+	child = xmlnode_get_child(node, "url");
+	g_assert(child != NULL);
+	url = xmlnode_get_data(child);
+
+	child = xmlnode_get_child(node, "pattern");
+	g_assert(child != NULL);
+
+	pattern = xmlnode_get_data(child);
+	while ((child = xmlnode_get_next_twin(child)) != NULL) {
+		gchar *entry = xmlnode_get_data(child);
+		gchar *tmp = g_strconcat(pattern, "\\R", entry, NULL);
+		g_free(entry);
+		g_free(pattern);
+		pattern = tmp;
+	}
+
+	lookup = g_malloc0(sizeof(struct lookup));
+	g_debug("Service: '%s', prefix: %s", service, prefix);
+	lookup->service = service;
+	lookup->prefix = prefix[ 0 ] == '1';
+	lookup->url = url;
+	lookup->pattern = pattern;
+	lookup_list = g_slist_prepend(lookup_list, lookup);
+}
+
+/**
+ * \brief Add country code from xmlnode
+ * \param node xml node structure
+ */
+static void country_code_add(xmlnode *node)
+{
+	xmlnode *child = NULL;
+	const gchar *code = NULL;
+
+	code = xmlnode_get_attrib(node, "code");
+	g_debug("Country Code: %s", code);
+
+	lookup_list = NULL;
+
+	for (child = xmlnode_get_child(node, "lookup"); child != NULL; child = xmlnode_get_next_twin(child)) {
+		lookup_add(child);
+	}
+	lookup_list = g_slist_reverse(lookup_list);
+
+	g_hash_table_insert(lookup_table, (gpointer) atol(code), lookup_list);
 }
 
 /**
@@ -223,16 +371,32 @@ static void reverse_lookup_contact_process_cb(AppObject *obj, struct contact *co
 static void impl_activate(PeasActivatable *plugin)
 {
 	RouterManagerReverseLookupPlugin *reverselookup_plugin = ROUTERMANAGER_REVERSE_LOOKUP_PLUGIN(plugin);
+	xmlnode *node, *child;
+	gchar *file;
 
 	reverselookup_plugin->priv->table = g_hash_table_new(g_str_hash, g_str_equal);
 	table = g_hash_table_new(g_str_hash, g_str_equal);
 
-	routermanager_lookup_register(reverse_lookup);
-
-	/* Connect to "contact-process" signal */
-	if (1 == 0) {
-		reverselookup_plugin->priv->signal_id = g_signal_connect(G_OBJECT(app_object), "contact-process", G_CALLBACK(reverse_lookup_contact_process_cb), reverselookup_plugin);
+	file = g_strconcat(get_directory(ROUTERMANAGER_PLUGINS), G_DIR_SEPARATOR_S, "reverselookup", G_DIR_SEPARATOR_S, "lookup.xml", NULL);
+	node = read_xml_from_file(file);
+	if (!node) {
+		g_debug("Could not read %s", file);
+		g_free(file);
+		return;
 	}
+	g_free(file);
+
+	/* Create new lookup hash table */
+	lookup_table = g_hash_table_new(NULL, NULL);
+
+	for (child = xmlnode_get_child(node, "country"); child != NULL; child = xmlnode_get_next_twin(child)) {
+		/* Add new country code lists to hash table */
+		country_code_add(child);
+	}
+
+	xmlnode_free(node);
+
+	routermanager_lookup_register(reverse_lookup);
 }
 
 /**

@@ -76,6 +76,8 @@ libroutermanager_la_SOURCES = \
 	ui_ops.h\
 	voxplay.c\
 	voxplay.h\
+	xml.c\
+	xml.h\
 	libfaxophone/fax.c \
 	libfaxophone/fax.h \
 	libfaxophone/faxophone.c \
