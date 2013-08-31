@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-31 11:49+0200\n"
+"POT-Creation-Date: 2013-08-31 16:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: German <jan.brummer@tabos.org>\n"
@@ -330,7 +330,7 @@ msgstr "Datum/Zeit"
 
 #. Name
 #: ../roger/journal.c:785 ../roger/pref_action.c:192
-#: ../roger/pref_action.c:505 ../roger/pref_filters.c:209
+#: ../roger/pref_action.c:493 ../roger/pref_filters.c:209
 #: ../roger/pref_filters.c:506 ../roger/print.c:382
 msgid "Name"
 msgstr "Name"
@@ -578,63 +578,63 @@ msgstr "Aktivieren"
 msgid "MSN Settings"
 msgstr "MSN Einstellungen"
 
-#: ../roger/pref_action.c:321
+#: ../roger/pref_action.c:309
 #, c-format
 msgid "Do you want to delete the action '%s'?"
 msgstr "Wollen Sie die Aktion '%s' löschen?"
 
-#: ../roger/pref_action.c:322
+#: ../roger/pref_action.c:310
 msgid "Delete action"
 msgstr "Aktion löschen"
 
-#: ../roger/pref_action.c:510
+#: ../roger/pref_action.c:498
 msgid "<b>Execute actions</b>"
 msgstr "<b>Aktionen ausführen:</b>"
 
 #. Incoming call label
-#: ../roger/pref_action.c:514 ../roger/plugins/notification/notification.c:143
+#: ../roger/pref_action.c:502 ../roger/plugins/notification/notification.c:143
 #: ../roger/plugins/notification/notification.c:224
 msgid "Incoming call"
 msgstr "Eingehender Anruf"
 
 #. Incoming call rings toggle
-#: ../roger/pref_action.c:518
+#: ../roger/pref_action.c:506
 msgid "Call rings"
 msgstr "Anruf klingelt"
 
 #. Incoming call begins toggle
 #. Outgoing call begins toggle
-#: ../roger/pref_action.c:523 ../roger/pref_action.c:547
+#: ../roger/pref_action.c:511 ../roger/pref_action.c:535
 msgid "Call begins"
 msgstr "Anruf beginnt"
 
 #. Incoming call ends toggle
 #. Outgoing call ends toggle
-#: ../roger/pref_action.c:528 ../roger/pref_action.c:552
+#: ../roger/pref_action.c:516 ../roger/pref_action.c:540
 msgid "Call ends"
 msgstr "Anruf beendet"
 
 #. Incoming call missed toggle
-#: ../roger/pref_action.c:533
+#: ../roger/pref_action.c:521
 msgid "Call missed"
 msgstr "Anruf verpasst"
 
 #. Outgoing call label
-#: ../roger/pref_action.c:538 ../roger/plugins/notification/notification.c:143
+#: ../roger/pref_action.c:526 ../roger/plugins/notification/notification.c:143
 #: ../roger/plugins/notification/notification.c:228
 msgid "Outgoing call"
 msgstr "Ausgehender Anruf"
 
 #. Outgoing call dial toggle
-#: ../roger/pref_action.c:542
+#: ../roger/pref_action.c:530
 msgid "Call dial"
 msgstr "Anruf wählen"
 
-#: ../roger/pref_action.c:573
+#: ../roger/pref_action.c:561
 msgid "<b>Description</b>"
 msgstr "<b>Beschreibung</b>"
 
-#: ../roger/pref_action.c:585
+#: ../roger/pref_action.c:573
 msgid "Define actions"
 msgstr "Aktionen definieren"
 
@@ -1307,6 +1307,14 @@ msgstr "PulseAudio Plugin"
 #: ../libroutermanager/plugins/pulseaudio/pulseaudio.plugin.in.h:2
 msgid "Audio plugin for PulseAudio"
 msgstr "Audio-Plugin für PulseAudio"
+
+#: ../libroutermanager/plugins/reverselookup/reverselookup.plugin.in.h:1
+msgid "Reverse Lookup"
+msgstr "Rückwärtssuche"
+
+#: ../libroutermanager/plugins/reverselookup/reverselookup.plugin.in.h:2
+msgid "Reverse lookup through 3rd-party"
+msgstr "Rückwärtssuche durch andere Anbieter"
 
 #: ../roger.desktop.in.h:2
 msgid "Journal, Fax-Software and Call-Monitor for AVM FRITZ!Box or compatible"

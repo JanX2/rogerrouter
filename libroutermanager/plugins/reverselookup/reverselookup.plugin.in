@@ -1,7 +1,7 @@
 [Plugin]
 Module=reverselookup
-_Name=Reverse Lookup (11880)
-_Description=Reverse lookup through 11880
+_Name=Reverse Lookup
+_Description=Reverse lookup through 3rd-party
 Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
 Copyright=Copyright © 2013 Jan-Michael Brummer
 Website=http://www.tabos.org/
