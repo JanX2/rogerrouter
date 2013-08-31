@@ -12,7 +12,8 @@ share_DATA  = share/lookup.xml
 EXTRA_DIST += $(share_DATA)
 
 libreverselookup_la_SOURCES = \
-	reverselookup.c
+	reverselookup.c \
+	reverselookup.h
 
 libreverselookup_la_CFLAGS = $(plugin_cflags) -Wall -Werror -DPLUGIN_DIR=\"$(plugindir)\" $(SOUP_CFLAGS)
 libreverselookup_la_LDFLAGS = $(plugin_ldflags)
