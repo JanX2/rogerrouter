@@ -391,5 +391,17 @@ gchar *call_full_number(const gchar *number, gboolean country_code_prefix)
 	/* Remove call-by-call (carrier preselect) prefix */
 	number += call_by_call_prefix_length(number);
 
+	/* Check if it is an international number */
+	if (!strncmp(number, "00", 2)) {
+		gchar *out;
+
+		if (country_code_prefix) {
+			return g_strdup(number);
+		}
+
+		out = g_strdup_printf("0%s", number + 4);
+		return out;
+	}
+
 	return call_format_number(profile_get_active(), number, country_code_prefix ? NUMBER_FORMAT_INTERNATIONAL : NUMBER_FORMAT_NATIONAL);
 }

@@ -39,6 +39,8 @@
 #define ROUTERMANAGER_TYPE_REVERSE_LOOKUP_PLUGIN (routermanager_reverse_lookup_plugin_get_type ())
 #define ROUTERMANAGER_REVERSE_LOOKUP_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_REVERSE_LOOKUP_PLUGIN, RouterManagerReverseLookupPlugin))
 
+//#define RL_DEBUG 1
+
 typedef struct {
 	guint signal_id;
 	GHashTable *table;
@@ -66,12 +68,12 @@ static gchar *replace_number(gchar *url, gchar *full_number)
  * \brief Internal reverse lookup function
  * \param number number to lookup
  * \param name pointer to store name to
- * \param address pointer to store address to
+ * \param street pointer to store street to
  * \param zip pointer to store zip to
  * \param city pointer to store city to
  * \return TRUE on success, otherwise FALSE
  */
-static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city)
+static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **name, gchar **street, gchar **zip, gchar **city)
 {
 	SoupMessage *msg;
 	const gchar *data;
@@ -82,11 +84,6 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 	gboolean result = FALSE;
 	gchar *full_number;
 
-	/* In case we do not have a number, abort */
-	if (EMPTY_STRING(number) || !isdigit(number[0])) {
-		return FALSE;
-	}
-
 	/* get full number according to service preferences */
 	full_number = call_full_number(number, lookup->prefix);
 
@@ -96,7 +93,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 
 		if (!EMPTY_STRING(rl_contact->name)) {
 			*name = g_strdup(rl_contact->name);
-			*address = g_strdup(rl_contact->street);
+			*street = g_strdup(rl_contact->street);
 			*zip = g_strdup(rl_contact->zip);
 			*city = g_strdup(rl_contact->city);
 			return TRUE;
@@ -104,10 +101,13 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 
 		return FALSE;
 	}
-	//g_debug("New lookup for '%s'", full_number);
+
+#ifdef RL_DEBUG
+	g_debug("New lookup for '%s'", full_number);
+#endif
 
 	g_assert(name != NULL);
-	g_assert(address != NULL);
+	g_assert(street != NULL);
 	g_assert(zip != NULL);
 	g_assert(city != NULL);
 
@@ -140,6 +140,12 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 		goto end;
 	}
 
+#ifdef RL_DEBUG
+	gchar *tmp_file = g_strdup_printf("rl-found-%s.html", number);
+	file_save(tmp_file, data, msg->response_body->length);
+	g_free(tmp_file);
+#endif
+
 	if (!g_match_info_matches(info)) {
 		goto end;
 	}
@@ -151,13 +157,15 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 		*name = g_strdup("");
 	}
 
-	//g_debug("Match found: %s->%s", number, *name);
+#ifdef RL_DEBUG
+	g_debug("Match found: %s->%s", number, *name);
+#endif
 
-	if ((rl_tmp = g_match_info_fetch_named(info, "address"))) {
-		*address = strip_html(rl_tmp);
+	if ((rl_tmp = g_match_info_fetch_named(info, "street"))) {
+		*street = strip_html(rl_tmp);
 		g_free(rl_tmp);
 	} else {
-		*address = g_strdup("");
+		*street = g_strdup("");
 	}
 
 	if ((rl_tmp = g_match_info_fetch_named(info, "zip"))) {
@@ -177,7 +185,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 	g_match_info_free(info);
 
 	rl_contact->name = g_strdup(*name);
-	rl_contact->street = g_strdup(*address);
+	rl_contact->street = g_strdup(*street);
 	rl_contact->zip = g_strdup(*zip);
 	rl_contact->city = g_strdup(*city);
 	result = TRUE;
@@ -243,12 +251,12 @@ gchar *get_country_code(const gchar *full_number)
  * \brief Reverse lookup function
  * \param number number to lookup
  * \param name pointer to store name to
- * \param address pointer to store address to
+ * \param street pointer to store street to
  * \param zip pointer to store zip to
  * \param city pointer to store city to
  * \return TRUE on success, otherwise FALSE
  */
-static gboolean reverse_lookup(gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city)
+static gboolean reverse_lookup(gchar *number, gchar **name, gchar **street, gchar **zip, gchar **city)
 {
 	struct lookup *lookup = NULL;
 	GSList *list = NULL;
@@ -260,14 +268,17 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **address, gch
 	/* Get full number and extract country code if possible */
 	full_number = call_full_number(number, TRUE);
 	if (full_number != NULL) {
-		//g_debug("Input number '%s'", number);
-		//g_debug("full number '%s'", full_number);
 		country_code = get_country_code(full_number);
-		//if (country_code) {
-			//g_debug("Country code: %s", country_code + international_prefix_len);
-		//} else {
-			//g_debug("Warning: Could not get country code!!");
-		//}
+
+#ifdef RL_DEBUG
+		g_debug("Input number '%s'", number);
+		g_debug("full number '%s'", full_number);
+		if (country_code) {
+			g_debug("Country code: %s", country_code + international_prefix_len);
+		} else {
+			g_debug("Warning: Could not get country code!!");
+		}
+#endif
 		g_free(full_number);
 	}
 
@@ -281,12 +292,19 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **address, gch
 
 	g_free(country_code);
 
+	/* In case we do not have a number, abort */
+	if (EMPTY_STRING(number) || !isdigit(number[0])) {
+		return FALSE;
+	}
+
 	for (; list != NULL && list->data != NULL; list = list->next) {
 		lookup = list->data;
 
-		//g_debug("Using service '%s'", lookup->service);
+#ifdef RL_DEBUG
+		g_debug("Using service '%s'", lookup->service);
+#endif
 
-		found = do_reverse_lookup(lookup, number, name, address, zip, city);
+		found = do_reverse_lookup(lookup, number, name, street, zip, city);
 		/* in case we found some valid data, break loop */
 		if (found) {
 			break;
