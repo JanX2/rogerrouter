@@ -16,7 +16,8 @@ libroutermanager_faxophone_include_HEADERS = \
 	libfaxophone/fax.h \
 	libfaxophone/faxophone.h \
 	libfaxophone/isdn-convert.h \
-	libfaxophone/phone.h
+	libfaxophone/phone.h \
+	libfaxophone/ringtone.h
 
 libroutermanager_la_SOURCES = \
 	action.c\
@@ -82,7 +83,9 @@ libroutermanager_la_SOURCES = \
 	libfaxophone/isdn-convert.c \
 	libfaxophone/isdn-convert.h \
 	libfaxophone/phone.c \
-	libfaxophone/phone.h
+	libfaxophone/phone.h \
+	libfaxophone/ringtone.c \
+	libfaxophone/ringtone.h
 
 if WITH_DBUS
 libroutermanager_la_SOURCES += \

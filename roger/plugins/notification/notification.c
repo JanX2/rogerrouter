@@ -28,6 +28,7 @@
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/libfaxophone/phone.h>
+#include <libroutermanager/libfaxophone/ringtone.h>
 #include <libroutermanager/fax_phone.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/profile.h>
@@ -193,12 +194,15 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 
 	/* If its a disconnect or a connect, close previous notification window */
 	if ((connection->type & CONNECTION_TYPE_DISCONNECT) || (connection->type & CONNECTION_TYPE_CONNECT)) {
+		ringtone_stop();
 		if (connection->notification) {
 			notify_notification_close(connection->notification, NULL);
 			connection->notification = NULL;
 		}
 		return;
 	}
+
+	ringtone_play(connection->type);
 
 	/** Ask for contact information */
 	memset(contact, 0, sizeof(struct contact));
@@ -422,6 +426,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *enable_column;
 	GtkTreeViewColumn *number_column;
+	GtkWidget *play_ringtones_toggle;
 
 	/* Settings grid */
 	settings_grid = gtk_grid_new();
@@ -461,6 +466,10 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	enable_column = gtk_tree_view_column_new_with_attributes(_("Incoming"), renderer, "active", 2, NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(view), enable_column);
 	g_signal_connect(G_OBJECT(renderer), "toggled", G_CALLBACK(notification_incoming_toggle_cb), tree_model);
+
+	play_ringtones_toggle = gtk_check_button_new_with_label(_("Play ringtones"));
+	g_settings_bind(notification_settings, "play-ringtones", play_ringtones_toggle, "active", G_SETTINGS_BIND_DEFAULT);
+	gtk_grid_attach(GTK_GRID(settings_grid), play_ringtones_toggle, 0, 1, 1, 1);
 
 	return pref_group_create(settings_grid, _("Choose for which MSNs you want notifications:"), TRUE, TRUE);
 }

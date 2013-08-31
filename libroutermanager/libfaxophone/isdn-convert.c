@@ -236,7 +236,9 @@ void convert_isdn_to_audio(struct capi_connection *connection, unsigned char *in
 		ll_ratio = 1.0;
 	}
 
-	connection->line_level_in_state = connection->line_level_in_state * (1.0 - ll_ratio) + ((double) max / 128) * ll_ratio;
+	if (connection) {
+		connection->line_level_in_state = connection->line_level_in_state * (1.0 - ll_ratio) + ((double) max / 128) * ll_ratio;
+	}
 
 	*out_buf_len = out_ptr;
 }

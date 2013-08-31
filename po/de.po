@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-02 22:21+0200\n"
+"POT-Creation-Date: 2013-08-31 11:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: German <jan.brummer@tabos.org>\n"
@@ -194,172 +194,171 @@ msgstr "Warnung"
 msgid "Error"
 msgstr "Fehler"
 
-#: ../roger/fax.c:43 ../roger/phone.c:165 ../roger-cli/main_cli.c:135
+#: ../roger/fax.c:44 ../roger/phone.c:165 ../roger-cli/main_cli.c:170
 #, c-format
 msgid "Connected"
 msgstr "Verbunden"
 
-#: ../roger/fax.c:51 ../roger/phone.c:196 ../roger-cli/main_cli.c:140
+#: ../roger/fax.c:52 ../roger/phone.c:196 ../roger-cli/main_cli.c:181
 #, c-format
 msgid "Disconnected"
 msgstr "Nicht verbunden"
 
-#: ../roger/fax.c:77
+#: ../roger/fax.c:78
 msgid "Transfer starting"
 msgstr "Übertragung beginnt"
 
-#: ../roger/fax.c:84 ../roger-cli/main_cli.c:165
+#: ../roger/fax.c:85 ../roger-cli/main_cli.c:213
 msgid "Transferring page"
 msgstr "Übertrage Seite"
 
-#: ../roger/fax.c:89
+#: ../roger/fax.c:90
 msgid "Fax transfer successful"
 msgstr "Faxübertragung erfolgreich"
 
-#: ../roger/fax.c:91
+#: ../roger/fax.c:92
 msgid "Fax transfer failed"
 msgstr "Faxübertragung fehlgeschlagen"
 
 #. Fax
-#: ../roger/fax.c:181 ../roger/pref.c:127 ../libroutermanager/filter.c:441
+#: ../roger/fax.c:182 ../roger/pref.c:129 ../libroutermanager/filter.c:441
 msgid "Fax"
 msgstr "Fax"
 
-#: ../roger/fax.c:197
+#: ../roger/fax.c:198
 msgid "Information"
 msgstr "Information"
 
-#: ../roger/fax.c:208
+#: ../roger/fax.c:209
 msgid "Status:"
 msgstr "Status:"
 
-#: ../roger/fax.c:215
+#: ../roger/fax.c:216
 msgid "Current page:"
 msgstr "Aktuelle Seite:"
 
-#: ../roger/fax.c:222
+#: ../roger/fax.c:223
 msgid "Remote station:"
 msgstr "Empfängerstation:"
 
-#: ../roger/fax.c:229
+#: ../roger/fax.c:230
 msgid "Progress:"
 msgstr "Fortschritt:"
 
-#: ../roger/fax.c:246
+#: ../roger/fax.c:247
 msgid "Connection: Idle | Duration: 00:00:00"
 msgstr "Verbindung: Untätig | Dauer: 00:00:00"
 
-#: ../roger/journal.c:201
+#: ../roger/journal.c:206
 #, c-format
 msgid "Profile: %s | Total: %d call(s) | Duration: %d:%2.2d"
 msgstr "Profil: %s | Anzahl: %d Anruf(e) | Dauer: %d:%2.2d"
 
-#: ../roger/journal.c:201
+#: ../roger/journal.c:206
 msgid "<No profile>"
 msgstr "<Kein Profil>"
 
-#: ../roger/journal.c:321
+#: ../roger/journal.c:326
 msgid "Do you want to delete the router journal?"
 msgstr "Wollen Sie das Journal vom Router löschen?"
 
-#: ../roger/journal.c:322
+#: ../roger/journal.c:327
 msgid "Delete journal"
 msgstr "Journal löschen"
 
-#: ../roger/journal.c:362
+#: ../roger/journal.c:367
 msgid "Do you want to delete the selected entry?"
 msgstr "Wollen Sie den ausgewählten Eintrag löschen?"
 
-#: ../roger/journal.c:363
+#: ../roger/journal.c:368
 msgid "Delete entry"
 msgstr "Eintrag löschen"
 
-#: ../roger/journal.c:403
+#: ../roger/journal.c:408
 #, c-format
 msgid "Number '%s' not found in online database"
 msgstr "Nummer '%s' wurde in der Online-Datenbank nicht gefunden"
 
 #. Create dialog
-#: ../roger/journal.c:518 ../roger/pref_filters.c:60
+#: ../roger/journal.c:523 ../roger/pref_filters.c:60
 msgid "Voice box"
 msgstr "Anrufbeantworter"
 
-#: ../roger/journal.c:520
+#: ../roger/journal.c:525
 msgid "Playing voice box entry..."
 msgstr "Spiele Anrufbeantworter-Eintrag"
 
-#: ../roger/journal.c:685
+#: ../roger/journal.c:690
 msgid "Refresh journal"
 msgstr "Journal laden"
 
-#: ../roger/journal.c:691
+#: ../roger/journal.c:696
 msgid "Print journal"
 msgstr "Journal drucken"
 
-#: ../roger/journal.c:696
+#: ../roger/journal.c:701
 msgid "Reverse lookup"
 msgstr "Rückwärtssuche"
 
-#: ../roger/journal.c:701
+#: ../roger/journal.c:706
 msgid "Clear journal on router"
 msgstr "Lösche Journal vom Router"
 
-#: ../roger/journal.c:706
+#: ../roger/journal.c:711
 msgid "Delete selected entry"
 msgstr "Ausgewählten Eintrag löschen"
 
-#: ../roger/journal.c:715
+#: ../roger/journal.c:720
 msgid "Search:"
 msgstr "Suche:"
 
-#: ../roger/journal.c:719
+#: ../roger/journal.c:724
 msgid "Search in journal for name or number"
 msgstr "Suche im Journal nach Name oder Nummer"
 
-#: ../roger/journal.c:725
+#: ../roger/journal.c:730
 msgid "Filter:"
 msgstr "Filter:"
 
-#: ../roger/journal.c:767 ../roger/print.c:368
+#: ../roger/journal.c:772 ../roger/print.c:374
 msgid "Type"
 msgstr "Typ"
 
-#: ../roger/journal.c:772 ../roger/print.c:372
+#: ../roger/journal.c:777 ../roger/print.c:378
 msgid "Date/Time"
 msgstr "Datum/Zeit"
 
 #. Name
-#: ../roger/journal.c:780 ../roger/pref_action.c:192
-#: ../roger/pref_action.c:505 ../roger/pref_filters.c:198
-#: ../roger/pref_filters.c:484 ../roger/pref_profiles.c:185
-#: ../roger/print.c:376
+#: ../roger/journal.c:785 ../roger/pref_action.c:192
+#: ../roger/pref_action.c:505 ../roger/pref_filters.c:209
+#: ../roger/pref_filters.c:506 ../roger/print.c:382
 msgid "Name"
 msgstr "Name"
 
-#: ../roger/journal.c:788
+#: ../roger/journal.c:793
 msgid "Company"
 msgstr "Firma"
 
-#: ../roger/journal.c:795 ../roger/pref_action.c:255
-#: ../roger/pref_filters.c:199 ../roger/print.c:380
-#: ../roger/plugins/notification/notification.c:452
+#: ../roger/journal.c:800 ../roger/pref_action.c:255
+#: ../roger/pref_filters.c:210 ../roger/print.c:386
+#: ../roger/plugins/notification/notification.c:457
 #: ../roger/plugins/gtknotify/gtknotify.c:565
 msgid "Number"
 msgstr "Nummer"
 
-#: ../roger/journal.c:802
+#: ../roger/journal.c:807
 msgid "City"
 msgstr "Stadt"
 
-#: ../roger/journal.c:809
+#: ../roger/journal.c:814
 msgid "Extension"
 msgstr "Nebenstelle"
 
-#: ../roger/journal.c:816
+#: ../roger/journal.c:821
 msgid "Line"
 msgstr "Leitung"
 
-#: ../roger/journal.c:823 ../roger/print.c:392
+#: ../roger/journal.c:828 ../roger/print.c:398
 msgid "Duration"
 msgstr "Dauer"
 
@@ -389,7 +388,7 @@ msgid "Terminated"
 msgstr "Beendet"
 
 #: ../roger/phone.c:280 ../roger/phone.c:303 ../roger/phone.c:356
-#: ../roger/pref.c:130
+#: ../roger/pref.c:132
 msgid "Softphone"
 msgstr "Softphone"
 
@@ -506,35 +505,35 @@ msgid "Connection: Idle | Time: 00:00:00"
 msgstr "Verbindung: Untätig | Dauer: 00:00:00"
 
 #. Preferences
-#: ../roger/pref.c:117 ../roger/plugins/statusicon/gtk.c:286
+#: ../roger/pref.c:119 ../roger/plugins/statusicon/gtk.c:286
 msgid "Preferences"
 msgstr "Einstellungen"
 
-#: ../roger/pref.c:121
+#: ../roger/pref.c:123
 msgid "Router"
 msgstr "Router"
 
-#: ../roger/pref.c:124
+#: ../roger/pref.c:126
 msgid "Prefix"
 msgstr "Vorwahlen"
 
-#: ../roger/pref.c:133
+#: ../roger/pref.c:135
 msgid "Filters"
 msgstr "Filter"
 
-#: ../roger/pref.c:136
+#: ../roger/pref.c:138
 msgid "Plugins"
 msgstr "Plugins"
 
-#: ../roger/pref.c:142 ../roger/pref_audio.c:104
+#: ../roger/pref.c:141 ../roger/pref_audio.c:108
 msgid "Audio"
 msgstr "Audio"
 
-#: ../roger/pref.c:145
+#: ../roger/pref.c:144
 msgid "Actions"
 msgstr "Aktionen"
 
-#: ../roger/pref.c:149 ../roger/pref_misc.c:79
+#: ../roger/pref.c:148 ../roger/pref_misc.c:93
 msgid "Misc"
 msgstr "Verschiedenes"
 
@@ -566,8 +565,8 @@ msgstr ""
 "%NAME% - Anrufername\n"
 "%COMPANY% - Anruferfirma"
 
-#: ../roger/pref_action.c:220 ../roger/pref_fax.c:125
-#: ../roger/pref_softphone.c:89
+#: ../roger/pref_action.c:220 ../roger/pref_fax.c:139
+#: ../roger/pref_softphone.c:93
 msgid "General"
 msgstr "Allgemein"
 
@@ -593,8 +592,8 @@ msgid "<b>Execute actions</b>"
 msgstr "<b>Aktionen ausführen:</b>"
 
 #. Incoming call label
-#: ../roger/pref_action.c:514 ../roger/plugins/notification/notification.c:142
-#: ../roger/plugins/notification/notification.c:220
+#: ../roger/pref_action.c:514 ../roger/plugins/notification/notification.c:143
+#: ../roger/plugins/notification/notification.c:224
 msgid "Incoming call"
 msgstr "Eingehender Anruf"
 
@@ -621,8 +620,8 @@ msgid "Call missed"
 msgstr "Anruf verpasst"
 
 #. Outgoing call label
-#: ../roger/pref_action.c:538 ../roger/plugins/notification/notification.c:142
-#: ../roger/plugins/notification/notification.c:224
+#: ../roger/pref_action.c:538 ../roger/plugins/notification/notification.c:143
+#: ../roger/plugins/notification/notification.c:228
 msgid "Outgoing call"
 msgstr "Ausgehender Anruf"
 
@@ -639,100 +638,100 @@ msgstr "<b>Beschreibung</b>"
 msgid "Define actions"
 msgstr "Aktionen definieren"
 
-#: ../roger/pref_audio.c:51
+#: ../roger/pref_audio.c:55
 msgid "Plugin"
 msgstr "Plugin"
 
-#: ../roger/pref_audio.c:58
+#: ../roger/pref_audio.c:62
 msgid "Output"
 msgstr "Ausgabe"
 
-#: ../roger/pref_audio.c:64
+#: ../roger/pref_audio.c:68
 msgid "Input"
 msgstr "Eingabe"
 
-#: ../roger/pref_fax.c:44
+#: ../roger/pref_fax.c:54
 msgid "Select fax report directory"
 msgstr "Wähle Fax-Berichtsverzeichnis"
 
-#: ../roger/pref_fax.c:100
+#: ../roger/pref_fax.c:114
 msgid "Header"
 msgstr "Kopfzeile"
 
-#: ../roger/pref_fax.c:108
+#: ../roger/pref_fax.c:122
 msgid "Ident"
 msgstr "Ident"
 
-#: ../roger/pref_fax.c:116
+#: ../roger/pref_fax.c:130
 msgid "Resolution"
 msgstr "Auflösung"
 
-#: ../roger/pref_fax.c:120
+#: ../roger/pref_fax.c:134
 msgid "Low (98dpi)"
 msgstr "Niedrig (98dpi)"
 
-#: ../roger/pref_fax.c:121
+#: ../roger/pref_fax.c:135
 msgid "High (196dpi)"
 msgstr "Hoch (196dpi)"
 
-#: ../roger/pref_fax.c:133
+#: ../roger/pref_fax.c:147
 msgid "Create fax report"
 msgstr "Erstelle Faxbericht"
 
-#: ../roger/pref_fax.c:141
+#: ../roger/pref_fax.c:155
 msgid "Report directory"
 msgstr "Berichtsverzeichnis"
 
-#: ../roger/pref_fax.c:147
+#: ../roger/pref_fax.c:161
 msgid "Select report directory"
 msgstr "Wähle Berichtsverzeichnis"
 
-#: ../roger/pref_fax.c:160 ../roger/pref_misc.c:75
+#: ../roger/pref_fax.c:174 ../roger/pref_misc.c:89
 msgid "Select"
 msgstr "Auswählen"
 
-#: ../roger/pref_fax.c:171
+#: ../roger/pref_fax.c:185
 msgid "Report"
 msgstr "Bericht"
 
 #. MSN
-#: ../roger/pref_fax.c:180 ../roger/pref_softphone.c:62
+#: ../roger/pref_fax.c:194 ../roger/pref_softphone.c:66
 msgid "MSN"
 msgstr "MSN"
 
-#: ../roger/pref_fax.c:195
+#: ../roger/pref_fax.c:209
 msgid "Bitrate"
 msgstr "Bitrate"
 
-#: ../roger/pref_fax.c:206 ../roger/pref_softphone.c:76
+#: ../roger/pref_fax.c:220 ../roger/pref_softphone.c:80
 msgid "Controller"
 msgstr "Kontroller"
 
-#: ../roger/pref_fax.c:210 ../roger/pref_softphone.c:80
+#: ../roger/pref_fax.c:224 ../roger/pref_softphone.c:84
 msgid "ISDN-Controller 1"
 msgstr "ISDN-Kontroller 1"
 
-#: ../roger/pref_fax.c:211 ../roger/pref_softphone.c:81
+#: ../roger/pref_fax.c:225 ../roger/pref_softphone.c:85
 msgid "ISDN-Controller 2"
 msgstr "ISDN-Kontroller 2"
 
-#: ../roger/pref_fax.c:212 ../roger/pref_softphone.c:82
+#: ../roger/pref_fax.c:226 ../roger/pref_softphone.c:86
 msgid "Outside line ISDN"
 msgstr "ISDN-Amt"
 
-#: ../roger/pref_fax.c:213 ../roger/pref_softphone.c:83
+#: ../roger/pref_fax.c:227 ../roger/pref_softphone.c:87
 msgid "Outside line Analog"
 msgstr "Analog-Amt"
 
-#: ../roger/pref_fax.c:214 ../roger/pref_softphone.c:84
+#: ../roger/pref_fax.c:228 ../roger/pref_softphone.c:88
 msgid "Internet"
 msgstr "Internet"
 
-#: ../roger/pref_fax.c:218
+#: ../roger/pref_fax.c:232
 msgid "Error correction mode (ECM)"
 msgstr "Fehlerkorrekturmodus (ECM)"
 
-#: ../roger/pref_fax.c:223
+#: ../roger/pref_fax.c:237
 msgid "Modem"
 msgstr "Modem"
 
@@ -741,7 +740,7 @@ msgstr "Modem"
 msgid "All"
 msgstr "Alle"
 
-#: ../roger/pref_filters.c:57 ../roger/plugins/notification/notification.c:461
+#: ../roger/pref_filters.c:57 ../roger/plugins/notification/notification.c:466
 #: ../roger/plugins/gtknotify/gtknotify.c:574
 #: ../roger/plugins/statusicon/gtk.c:166
 msgid "Incoming"
@@ -751,7 +750,7 @@ msgstr "Eingehend"
 msgid "Missed"
 msgstr "Verpasst"
 
-#: ../roger/pref_filters.c:59 ../roger/plugins/notification/notification.c:456
+#: ../roger/pref_filters.c:59 ../roger/plugins/notification/notification.c:461
 #: ../roger/plugins/gtknotify/gtknotify.c:569
 #: ../roger/plugins/statusicon/gtk.c:189
 msgid "Outgoing"
@@ -793,61 +792,61 @@ msgstr "Beginnt mit"
 msgid "Contains"
 msgstr "Enthält"
 
-#: ../roger/pref_filters.c:196
+#: ../roger/pref_filters.c:207
 msgid "Call type"
 msgstr "Anruftyp"
 
-#: ../roger/pref_filters.c:197
+#: ../roger/pref_filters.c:208
 msgid "Date"
 msgstr "Datum"
 
-#: ../roger/pref_filters.c:200
+#: ../roger/pref_filters.c:211
 msgid "Local number"
 msgstr "Lokale Nummer"
 
-#: ../roger/pref_filters.c:265
+#: ../roger/pref_filters.c:298
 msgid "Edit filter"
 msgstr "Filter bearbeiten"
 
-#: ../roger/pref_filters.c:273 ../roger/pref_filters.c:338
+#: ../roger/pref_filters.c:306 ../roger/pref_filters.c:371
 msgid "Enter filter name"
 msgstr "Filternamen eingeben"
 
-#: ../roger/pref_filters.c:335
+#: ../roger/pref_filters.c:368
 msgid "Add new filter"
 msgstr "Neuen Filter hinzufügen"
 
-#: ../roger/pref_filters.c:399
+#: ../roger/pref_filters.c:432
 #, c-format
 msgid "Do you want to delete the filter '%s'?"
 msgstr "Wollen Sie den Filter '%s' löschen?"
 
-#: ../roger/pref_filters.c:400
+#: ../roger/pref_filters.c:433
 msgid "Delete filter"
 msgstr "Filter löschen"
 
-#: ../roger/pref_filters.c:500
+#: ../roger/pref_filters.c:522
 msgid "Manage filters"
 msgstr "Filter verwalten"
 
-#: ../roger/pref_plugins.c:45
+#: ../roger/pref_plugins.c:49
 msgid "Choose which plugins should be loaded at startup"
 msgstr "Wähle welche Plugins beim Starten geladen werden"
 
 #. Line access code
-#: ../roger/pref_prefix.c:63
+#: ../roger/pref_prefix.c:67
 msgid "Line access code"
 msgstr "Amtsholung"
 
-#: ../roger/pref_prefix.c:67
+#: ../roger/pref_prefix.c:71
 msgid "If needed enter line access code"
 msgstr "Falls Nötig die Amtsholung"
 
-#: ../roger/pref_prefix.c:75
+#: ../roger/pref_prefix.c:79
 msgid "International call prefix"
 msgstr "Internationaler Anrufpräfix"
 
-#: ../roger/pref_prefix.c:79
+#: ../roger/pref_prefix.c:83
 msgid ""
 "Prefix to be added before the country code to make an international call "
 "(usually 00)"
@@ -855,19 +854,19 @@ msgstr ""
 "Vorwahl die vor die Landesvorwahl gesetzt wird um einen internationalen "
 "Anruf zu tätigen(gewöhnlich 00)"
 
-#: ../roger/pref_prefix.c:87
+#: ../roger/pref_prefix.c:91
 msgid "Country code"
 msgstr "Landesvorwahl"
 
-#: ../roger/pref_prefix.c:91
+#: ../roger/pref_prefix.c:95
 msgid "Country code without precending zero (e.g. 49=Germany)"
 msgstr "Landesvorwahl ohne führende Null (z.B. 49=Deutschland)"
 
-#: ../roger/pref_prefix.c:99
+#: ../roger/pref_prefix.c:103
 msgid "National call prefix"
 msgstr "Nationaler Anrufpräfix"
 
-#: ../roger/pref_prefix.c:103
+#: ../roger/pref_prefix.c:107
 msgid ""
 "Prefix to be added before the area code to make a long distance national "
 "call (usually 0)"
@@ -875,81 +874,68 @@ msgstr ""
 "Vorwahl die vor die Ortsvorwahl gesetzt wird um einen nationalen Anruf zu "
 "führen (gewöhnlich 0)"
 
-#: ../roger/pref_prefix.c:111
+#: ../roger/pref_prefix.c:115
 msgid "Area code"
 msgstr "Ortsvorwahl"
 
-#: ../roger/pref_prefix.c:115
+#: ../roger/pref_prefix.c:119
 msgid "Area Code without precending zero"
 msgstr "Ortsvorwahl ohne führende Null"
 
-#: ../roger/pref_prefix.c:123
+#: ../roger/pref_prefix.c:127
 msgid "Prefixes"
 msgstr "Vorwahlen"
 
-#: ../roger/pref_profiles.c:82
-#, c-format
-msgid "Do you want to delete the profile '%s'?"
-msgstr "Wollen Sie das Profil '%s' löschen?"
-
-#: ../roger/pref_profiles.c:83
-msgid "Delete profile"
-msgstr "Profil löschen"
-
-#: ../roger/pref_profiles.c:197
-msgid "Manage profiles"
-msgstr "Profile verwalten"
-
-#: ../roger/pref_router.c:48
+#: ../roger/pref_router.c:59
 msgid "Login password is valid"
 msgstr "Anmeldepasswort ist gültig"
 
-#: ../roger/pref_router.c:50
+#: ../roger/pref_router.c:61
 msgid "Login password is invalid"
 msgstr "Anmeldepasswort ist ungültig"
 
-#: ../roger/pref_router.c:65
+#: ../roger/pref_router.c:81
 msgid "Could not connect to FTP. Missing USB storage?"
 msgstr "Konnte nicht mit dem FTP verbinden. Fehlt der USB-Speicher?"
 
-#: ../roger/pref_router.c:68
+#: ../roger/pref_router.c:84
 msgid "FTP password is valid"
 msgstr "FTP-Password ist gültig"
 
-#: ../roger/pref_router.c:70
+#: ../roger/pref_router.c:86
 msgid "FTP password is invalid"
 msgstr "FTP-Password ist ungültig"
 
-#: ../roger/pref_router.c:80
+#: ../roger/pref_router.c:101
 msgid "Do you want to reload the router settings and replace your preferences?"
 msgstr "Wollen Sie die Einstellungen vom Router laden und damit ihre ersetzen?"
 
-#: ../roger/pref_router.c:81
+#: ../roger/pref_router.c:102
 msgid "Update settings"
 msgstr "Einstellungen aktualisieren"
 
 #. Host
-#: ../roger/pref_router.c:141
+#: ../roger/pref_router.c:176
 msgid "Host"
 msgstr "Host"
 
-#: ../roger/pref_router.c:145
+#: ../roger/pref_router.c:180
 msgid "Host name, e.g. fritz.box or speedport.ip"
 msgstr "Hostname, z.B. fritz.box"
 
-#: ../roger/pref_router.c:152
+#: ../roger/pref_router.c:187
 msgid "Login user"
 msgstr "Anmeldebenutzer"
 
-#: ../roger/pref_router.c:156
+#: ../roger/pref_router.c:191
 msgid "Router login user"
 msgstr "Anmeldebenutzer des Routers"
 
-#: ../roger/pref_router.c:163
+#: ../roger/pref_router.c:198
 msgid "Login password"
 msgstr "Anmeldepasswort"
 
-#: ../roger/pref_router.c:167
+#: ../roger/pref_router.c:202
 msgid "Router login password"
 msgstr "Anmeldepasswort des Routers"
 
@@ -957,83 +943,83 @@ msgstr "Anmeldepasswort des Routers"
 #. Verify button
 #. g_settings_bind(profile_get_active()->settings, "ftp-password", ftp_password_entry, "text", G_SETTINGS_BIND_DEFAULT);
 #. Verify button
-#: ../roger/pref_router.c:176 ../roger/pref_router.c:207
+#: ../roger/pref_router.c:211 ../roger/pref_router.c:242
 msgid "Verify"
 msgstr "Überprüfen"
 
-#: ../roger/pref_router.c:177 ../roger/pref_router.c:208
+#: ../roger/pref_router.c:212 ../roger/pref_router.c:243
 msgid "Check if password is valid"
 msgstr "Überprüfe ob Passwort gültig ist"
 
-#: ../roger/pref_router.c:183 ../roger/pref_router.c:187
+#: ../roger/pref_router.c:218 ../roger/pref_router.c:222
 msgid "FTP user"
 msgstr "FTP-Benutzer"
 
-#: ../roger/pref_router.c:194
+#: ../roger/pref_router.c:229
 msgid "FTP password"
 msgstr "FTP-Passwort"
 
-#: ../roger/pref_router.c:198
+#: ../roger/pref_router.c:233
 msgid "Router FTP password"
 msgstr "Router FTP Passwort"
 
-#: ../roger/pref_router.c:214
+#: ../roger/pref_router.c:249
 msgid "Show passwords"
 msgstr "Passwörter anzeigen"
 
-#: ../roger/pref_router.c:219
+#: ../roger/pref_router.c:254
 msgid "Toggle passwords visibility"
 msgstr "Sichtbarkeit der Passwörter umstellen"
 
-#: ../roger/pref_router.c:226
+#: ../roger/pref_router.c:261
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: ../roger/pref_router.c:255
+#: ../roger/pref_router.c:294
 msgid "Refresh settings"
 msgstr "Einstellungen erneuern"
 
-#: ../roger/pref_router.c:262
+#: ../roger/pref_router.c:301
 #, c-format
 msgid "%s (Firmware: %s)"
 msgstr "%s (Firmware: %s)"
 
-#: ../roger/pref_softphone.c:96
+#: ../roger/pref_softphone.c:100
 msgid "Use buttons of"
 msgstr "Verwende Tasten von"
 
-#: ../roger/pref_softphone.c:119
+#: ../roger/pref_softphone.c:123
 msgid "Bluetooth headset"
 msgstr "Bluetooth-Headset"
 
-#: ../roger/pref_misc.c:39
+#: ../roger/pref_misc.c:49
 msgid "Select ghostscript executable"
 msgstr "Wähle das Ghostscript-Programm aus"
 
-#: ../roger/pref_misc.c:67
+#: ../roger/pref_misc.c:81
 msgid "Ghostscript executable"
 msgstr "Ghostscript-Programm"
 
 #. Title
-#: ../roger/print.c:312
+#: ../roger/print.c:318
 msgid "Anruferliste"
 msgstr "Anruferliste"
 
 #. Page
-#: ../roger/print.c:320
+#: ../roger/print.c:326
 #, c-format
 msgid "<small>Page %d of %d</small>"
 msgstr "<small>Seite %d von %d</small>"
 
-#: ../roger/print.c:384
+#: ../roger/print.c:390
 msgid "Local Name"
 msgstr "Lokaler Name"
 
-#: ../roger/print.c:388
+#: ../roger/print.c:394
 msgid "Local Number"
 msgstr "Lokale Nummer"
 
-#: ../roger/print.c:483
+#: ../roger/print.c:489
 msgid "Roger Router-Journal"
 msgstr "Roger Router-Journal"
 
@@ -1089,12 +1075,12 @@ msgstr "Bitrate:"
 msgid "Message:"
 msgstr "Nachricht:"
 
-#: ../roger/plugins/evolution/evolution.c:470
+#: ../roger/plugins/evolution/evolution.c:468
 #: ../roger/plugins/fritzfon/fritzfon.c:422
 msgid "Book:"
 msgstr "Buch:"
 
-#: ../roger/plugins/evolution/evolution.c:483
+#: ../roger/plugins/evolution/evolution.c:481
 #: ../roger/plugins/fritzfon/fritzfon.c:435
 msgid "Contact book"
 msgstr "Kontaktbuch"
@@ -1116,8 +1102,8 @@ msgid "FRITZ!Box address book support"
 msgstr "FRITZ!Box Adressbuch-Support"
 
 #. Create notification message
-#: ../roger/plugins/notification/notification.c:133
-#: ../roger/plugins/notification/notification.c:209
+#: ../roger/plugins/notification/notification.c:134
+#: ../roger/plugins/notification/notification.c:213
 #, c-format
 msgid ""
 "Name:\t%s\n"
@@ -1132,17 +1118,21 @@ msgstr ""
 "Straße:\t%s\n"
 "Stadt:\t%s%s%s"
 
-#: ../roger/plugins/notification/notification.c:221
+#: ../roger/plugins/notification/notification.c:225
 #: ../roger/plugins/gtknotify/gtknotify.c:335
 msgid "Accept"
 msgstr "Annehmen"
 
-#: ../roger/plugins/notification/notification.c:222
+#: ../roger/plugins/notification/notification.c:226
 #: ../roger/plugins/gtknotify/gtknotify.c:340
 msgid "Decline"
 msgstr "Ablehnen"
 
-#: ../roger/plugins/notification/notification.c:465
+#: ../roger/plugins/notification/notification.c:470
+msgid "Play ringtones"
+msgstr "Spiele Klingeltöne"
+
+#: ../roger/plugins/notification/notification.c:474
 msgid "Choose for which MSNs you want notifications:"
 msgstr "Wähle für welche MSNs Benachrichtigungen angezeigt werden:"
 
@@ -1151,8 +1141,11 @@ msgid "Notification"
 msgstr "Benachrichtigung"
 
 #: ../roger/plugins/notification/notification.plugin.in.h:2
-msgid "Display notification about incoming/outgoing/missed calls"
-msgstr "Zeigt Benachrichtigungen über eingehende/ausgehende/verpasste Anrufe"
+msgid ""
+"Display notification about incoming/outgoing/missed calls and plays sounds"
+msgstr ""
+"Zeigt Benachrichtigungen über eingehende/ausgehende/verpasste Anrufe und "
+"spielt Klänge"
 
 #: ../roger/plugins/gtknotify/gtknotify.c:251
 msgid "Name:"
@@ -1249,7 +1242,7 @@ msgstr "Statusicon GTK"
 msgid "Status icon plugin using GTK following FreeDesktop standard"
 msgstr "Statusicon-Plugin in GTK nach den FreeDesktop-Standard"
 
-#: ../roger-cli/main_cli.c:160
+#: ../roger-cli/main_cli.c:208
 msgid "Transfer starting:"
 msgstr "Übertragung beginnt:"
 
@@ -1323,3 +1316,12 @@ msgstr ""
 #: ../roger.desktop.in.h:3
 msgid "fritz;box;fritzbox;router;manager;fax;softphone;"
 msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
+
+#~ msgid "Do you want to delete the profile '%s'?"
+#~ msgstr "Wollen Sie das Profil '%s' löschen?"
+
+#~ msgid "Delete profile"
+#~ msgstr "Profil löschen"
+
+#~ msgid "Manage profiles"
+#~ msgstr "Profile verwalten"
