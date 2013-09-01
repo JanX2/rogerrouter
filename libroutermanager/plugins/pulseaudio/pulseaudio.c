@@ -255,9 +255,6 @@ GSList *pulse_audio_detect_devices(void) {
 	GSList *list = NULL;
 	struct audio_device *device;
 
-	/* Set media role */
-	g_setenv("PULSE_PROP_media.role", "phone", TRUE);
-
 	if (pulse_get_device_list(input_device_list, output_device_list) < 0) {
 		g_warning("failed to get device list");
 		return list;
@@ -475,6 +472,11 @@ struct audio pulse_audio = {
 static void impl_activate(PeasActivatable *plugin)
 {
 	//RouterManagerPulseAudioPlugin *pulseaudio_plugin = ROUTERMANAGER_PULSEAUDIO_PLUGIN(plugin);
+
+	/* Set media role */
+	g_setenv("PULSE_PROP_media.role", "phone", TRUE);
+	g_setenv("PULSE_PROP_filter.want", "echo-cancel", TRUE);
+
 	routermanager_audio_register(&pulse_audio);
 }
 
