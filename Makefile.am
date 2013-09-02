@@ -7,6 +7,7 @@ EXTRA_DIST = \
 	share/roger-cups \
 	share/roger-fax.ppd \
 	share/install-fax.sh \
+	share/roger.appdata.xml \
 	win32/setup-mingw.sh \
 	win32/settings.ini \
 	win32/printer.nsh \
@@ -25,6 +26,10 @@ share_DATA = \
 	share/roger-cups\
 	share/roger-fax.ppd\
 	share/install-fax.sh
+
+appdatadir = $(datadir)/appdata
+appdata_DATA = \
+	share/roger.appdata.xml
 
 noinst_HEADERS = config.h
 
