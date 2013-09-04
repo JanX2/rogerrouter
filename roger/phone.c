@@ -394,9 +394,9 @@ static void phone_set_dial_number(GtkMenuItem *item, gpointer user_data)
 	g_object_set_data(G_OBJECT(entry), "number", user_data);
 	if (!EMPTY_STRING(name)) {
 		gtk_entry_set_text(GTK_ENTRY(entry), name);
-		gtk_entry_set_icon_from_stock(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, GTK_STOCK_INDEX);
+		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, "go-down");
 	} else {
-		gtk_entry_set_icon_from_stock(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, NULL);
+		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, NULL);
 	}
 }
 
@@ -585,7 +585,7 @@ GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct p
 
 		if (!EMPTY_STRING(contact->name)) {
 			gtk_entry_set_text(GTK_ENTRY(state->name_entry), contact->name);
-			gtk_entry_set_icon_from_stock(GTK_ENTRY(state->name_entry), GTK_ENTRY_ICON_SECONDARY, GTK_STOCK_INDEX);
+			gtk_entry_set_icon_from_icon_name(GTK_ENTRY(state->name_entry), GTK_ENTRY_ICON_SECONDARY, "go-down");
 			g_object_set_data(G_OBJECT(state->name_entry), "contact", contact);
 			g_object_set_data(G_OBJECT(state->name_entry), "number", contact->number);
 		} else if (contact->number) {

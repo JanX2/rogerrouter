@@ -160,7 +160,7 @@ gboolean action_edit(struct action *action)
 	gint result;
 	gboolean changed = FALSE;
 
-	dialog = gtk_dialog_new_with_buttons(_("Action"), pref_get_window(), GTK_DIALOG_MODAL, GTK_STOCK_APPLY, GTK_RESPONSE_APPLY, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
+	dialog = gtk_dialog_new_with_buttons(_("Action"), pref_get_window(), GTK_DIALOG_MODAL, _("_Apply"), GTK_RESPONSE_APPLY, _("_Cancel"), GTK_RESPONSE_CANCEL, NULL);
 
 	/**
 	 * General:
@@ -542,15 +542,15 @@ GtkWidget *pref_page_action(void)
 	gtk_grid_attach(GTK_GRID(grid), outgoing_call_ends_toggle, 3, 9, 1, 1);
 
 	/* Buttons */
-	add_button = gtk_button_new_from_stock(GTK_STOCK_ADD);
+	add_button = gtk_button_new_with_mnemonic(_("_Add"));
 	g_signal_connect(add_button, "clicked", G_CALLBACK(pref_action_add_button_clicked_cb), view);
 	gtk_grid_attach(GTK_GRID(grid), add_button, 0, 11, 1, 1);
 
-	remove_button = gtk_button_new_from_stock(GTK_STOCK_REMOVE);
+	remove_button = gtk_button_new_with_mnemonic(_("_Remove"));
 	g_signal_connect(remove_button, "clicked", G_CALLBACK(pref_action_remove_button_clicked_cb), view);
 	gtk_grid_attach(GTK_GRID(grid), remove_button, 1, 11, 1, 1);
 
-	edit_button = gtk_button_new_from_stock(GTK_STOCK_EDIT);
+	edit_button = gtk_button_new_with_mnemonic(_("_Edit"));
 	g_signal_connect(edit_button, "clicked", G_CALLBACK(pref_action_edit_button_clicked_cb), view);
 	gtk_grid_attach(GTK_GRID(grid), edit_button, 2, 11, 1, 1);
 

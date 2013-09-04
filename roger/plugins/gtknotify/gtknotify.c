@@ -241,7 +241,7 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 	gtk_widget_set_hexpand(local_label, TRUE);
 	gtk_grid_attach(GTK_GRID(contact_grid), local_label, 0, line, 3, 1);
 
-	image = gtk_image_new_from_stock(GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_DIALOG);
+	image = gtk_image_new_from_icon_name("dialog-information", GTK_ICON_SIZE_DIALOG);
 	gtk_widget_set_hexpand(image, TRUE);
 	gtk_widget_set_vexpand(image, TRUE);
 	gtk_grid_attach(GTK_GRID(contact_grid), image, 0, 2, 1, 4);

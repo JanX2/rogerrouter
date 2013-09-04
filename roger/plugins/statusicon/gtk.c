@@ -88,7 +88,7 @@ GtkWidget *create_call_item(struct call *call) {
 	GtkWidget *name_label = NULL;
 	gchar *name;
 
-	item = gtk_image_menu_item_new();
+	item = gtk_menu_item_new();
 
 	label = gtk_label_new("");
 	number_text = g_markup_printf_escaped("<small>%s</small>", call->remote.number);
@@ -105,12 +105,6 @@ GtkWidget *create_call_item(struct call *call) {
 	gtk_misc_set_alignment(GTK_MISC(name_label), 0.0, 0.5);
 	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
 	g_object_set(G_OBJECT(item), "child", box, NULL);
-
-
-	pix = journal_get_call_icon(call->type);
-	image = GTK_WIDGET(gtk_image_new_from_pixbuf(pix));
-	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), image);
-	gtk_image_menu_item_set_always_show_image(GTK_IMAGE_MENU_ITEM(item), TRUE);
 
 	return item;
 }
@@ -150,10 +144,8 @@ void statusicon_add_lastcalls(GtkWidget *menu)
 	GtkWidget *submenu = NULL;
 	int count = 0;
 
-	item = gtk_image_menu_item_new_with_label(_("Last calls"));
+	item = gtk_menu_item_new_with_label(_("Last calls"));
 	submenu = gtk_menu_new();
-	GtkWidget *last_calls = GTK_WIDGET(gtk_image_new_from_stock(GTK_STOCK_JUMP_TO, GTK_ICON_SIZE_MENU));
-	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), last_calls);
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
@@ -239,18 +231,16 @@ void statusicon_add_functions(GtkWidget *menu)
 	GtkWidget *item = NULL;
 	GtkWidget *submenu = NULL;
 
-	item = gtk_image_menu_item_new_with_label(_("Functions"));
+	item = gtk_menu_item_new_with_label(_("Functions"));
 	submenu = gtk_menu_new();
-	GtkWidget *functions = GTK_WIDGET(gtk_image_new_from_stock(GTK_STOCK_JUMP_TO, GTK_ICON_SIZE_MENU));
-	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), functions);
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
-	item = gtk_image_menu_item_new_with_label(_("Copy IP address"));
+	item = gtk_menu_item_new_with_label(_("Copy IP address"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(submenu), item);
 	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(app_copy_ip), NULL);
 
-	item = gtk_image_menu_item_new_with_label(_("Reconnect"));
+	item = gtk_menu_item_new_with_label(_("Reconnect"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(submenu), item);
 	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(app_reconnect), NULL);
 }
@@ -262,30 +252,22 @@ static void statusicon_gtk_popup(GtkStatusIcon *statusicon, guint button, guint 
 	menu = gtk_menu_new();
 
 	/* Journal */
-	GtkWidget *item = gtk_image_menu_item_new_with_label(_("Journal"));
-	GtkWidget *quit = GTK_WIDGET(gtk_image_new_from_stock(GTK_STOCK_ADD, GTK_ICON_SIZE_MENU));
-	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), quit);
+	GtkWidget *item = gtk_menu_item_new_with_label(_("Journal"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(statusicon_journal_cb), NULL);
 
 	/* Contacts */
 	/*item = gtk_image_menu_item_new_with_label(_("Contacts"));
-	quit = GTK_WIDGET(gtk_image_new_from_stock(GTK_STOCK_ADD, GTK_ICON_SIZE_MENU));
-	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), quit);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(app_show_contacts), NULL);*/
 
 	/* Phone */
-	item = gtk_image_menu_item_new_with_label(_("Phone"));
-	quit = GTK_WIDGET(gtk_image_new_from_stock(GTK_STOCK_ADD, GTK_ICON_SIZE_MENU));
-	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), quit);
+	item = gtk_menu_item_new_with_label(_("Phone"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(app_show_phone_window), NULL);
 
 	/* Preferences */
-	item = gtk_image_menu_item_new_with_label(_("Preferences"));
-	quit = GTK_WIDGET(gtk_image_new_from_stock(GTK_STOCK_INDEX, GTK_ICON_SIZE_MENU));
-	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), quit);
+	item = gtk_menu_item_new_with_label(_("Preferences"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(app_show_preferences), NULL);
 
@@ -298,16 +280,12 @@ static void statusicon_gtk_popup(GtkStatusIcon *statusicon, guint button, guint 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
 	/* Help */
-	item = gtk_image_menu_item_new_with_label(_("Help"));
-	quit = GTK_WIDGET(gtk_image_new_from_stock(GTK_STOCK_HELP, GTK_ICON_SIZE_MENU));
-	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), quit);
+	item = gtk_menu_item_new_with_label(_("Help"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(app_show_help), NULL);
 
 	/* About */
-	item = gtk_image_menu_item_new_with_label(_("About"));
-	quit = GTK_WIDGET(gtk_image_new_from_stock(GTK_STOCK_ABOUT, GTK_ICON_SIZE_MENU));
-	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), quit);
+	item = gtk_menu_item_new_with_label(_("About"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(app_show_about), NULL);
 
@@ -316,9 +294,7 @@ static void statusicon_gtk_popup(GtkStatusIcon *statusicon, guint button, guint 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
 	/* Quit */
-	item = gtk_image_menu_item_new_with_label(_("Quit"));
-	quit = GTK_WIDGET(gtk_image_new_from_stock(GTK_STOCK_QUIT, GTK_ICON_SIZE_MENU));
-	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), quit);
+	item = gtk_menu_item_new_with_label(_("Quit"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(app_quit), NULL);
 

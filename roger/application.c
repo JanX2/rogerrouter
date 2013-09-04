@@ -34,7 +34,6 @@
 #include <phone.h>
 #include <pref.h>
 #include <about.h>
-#include <debugwindow.h>
 #include <fax.h>
 #include <contacts.h>
 #include <dbus.h>
@@ -128,11 +127,6 @@ static void preferences_activated(GSimpleAction *action, GVariant *parameter, gp
 	app_show_preferences();
 }
 
-static void debugwindow_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
-{
-	debug_window();
-}
-
 static void donate_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
 	os_execute("http://www.tabos.org/roger");
@@ -169,7 +163,6 @@ static GActionEntry apps_entries[] = {
 	{"phone", dialnumber_activated, NULL, NULL, NULL},
 	{"copy_ip", copy_ip_activated, NULL, NULL, NULL},
 	{"reconnect", reconnect_activated, NULL, NULL, NULL},
-	{"debugwindow", debugwindow_activated, NULL, NULL, NULL},
 	{"donate", donate_activated, NULL, NULL, NULL},
 	{"forum", forum_activated, NULL, NULL, NULL},
 	{"about", about_activated, NULL, NULL, NULL},
@@ -235,10 +228,6 @@ static void app_init(Application *app)
 		"    <section>"
 		"      <submenu>"
 		"        <attribute name='label' translatable='yes'>Help</attribute>"
-//		"        <item>"
-//		"          <attribute name='label' translatable='yes'>Debug window</attribute>"
-//		"          <attribute name='action'>app.debugwindow</attribute>"
-//		"        </item>"
 		"        <item>"
 		"          <attribute name='label' translatable='yes'>Donate</attribute>"
 		"          <attribute name='action'>app.donate</attribute>"

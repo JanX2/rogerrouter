@@ -290,7 +290,7 @@ static GtkWidget *pref_page_router_information(void)
 	gtk_grid_attach(GTK_GRID(group), space, 0, 0, 1, 1);
 
 	/* Update button */
-	update_button = gtk_button_new_from_stock(GTK_STOCK_REFRESH);
+	update_button = gtk_button_new_with_mnemonic(_("_Refresh"));
 	gtk_widget_set_tooltip_text(update_button, _("Refresh settings"));
 	g_signal_connect(update_button, "clicked", G_CALLBACK(update_button_clicked_cb), pref_get_window());
 	gtk_grid_attach(GTK_GRID(group), update_button, 0, 1, 1, 1);

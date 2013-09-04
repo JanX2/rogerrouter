@@ -229,11 +229,11 @@ static void pref_filters_add_rule(gpointer grid_ptr, struct filter_rule *rule)
 	g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(entry_changed_cb), rule);
 	gtk_grid_attach(GTK_GRID(own_grid), entry, 2, 0, 1, 1);
 
-	add_button = gtk_button_new_from_stock(GTK_STOCK_ADD);
+	add_button = gtk_button_new_with_mnemonic(_("Add"));
 	g_signal_connect(G_OBJECT(add_button), "clicked", G_CALLBACK(add_button_clicked_cb), grid);
 	gtk_grid_attach(GTK_GRID(own_grid), add_button, 3, 0, 1, 1);
 
-	remove_button = gtk_button_new_from_stock(GTK_STOCK_REMOVE);
+	remove_button = gtk_button_new_with_mnemonic(_("_Remove"));
 	g_signal_connect(remove_button, "clicked", G_CALLBACK(remove_button_clicked_cb), own_grid);
 	gtk_grid_attach(GTK_GRID(own_grid), remove_button, 4, 0, 1, 1);
 
@@ -295,7 +295,7 @@ void filter_edit_cb(GtkWidget *widget, gpointer data)
 	filter = g_value_get_pointer(&ptr);
 	g_value_unset(&ptr);
 
-	edit_dialog = gtk_dialog_new_with_buttons(_("Edit filter"), pref_get_window(), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE, NULL);
+	edit_dialog = gtk_dialog_new_with_buttons(_("Edit filter"), pref_get_window(), GTK_DIALOG_DESTROY_WITH_PARENT, _("_Close"), GTK_RESPONSE_CLOSE, NULL);
 
 	grid = gtk_grid_new();
 
@@ -365,7 +365,7 @@ void filter_add_cb(GtkWidget *widget, gpointer data)
 	gint result;
 
 	pref_filters_current_rules = NULL;
-	add_dialog = gtk_dialog_new_with_buttons(_("Add new filter"), pref_get_window(), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
+	add_dialog = gtk_dialog_new_with_buttons(_("Add new filter"), pref_get_window(), GTK_DIALOG_DESTROY_WITH_PARENT, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_OK"), GTK_RESPONSE_OK, NULL);
 
 	grid = gtk_grid_new();
 	label = gtk_label_new(_("Enter filter name"));
@@ -507,15 +507,15 @@ GtkWidget *pref_page_filters(void)
 	gtk_tree_view_append_column(GTK_TREE_VIEW(view), name_column);
 
 	/* Buttons */
-	add_button = gtk_button_new_from_stock(GTK_STOCK_ADD);
+	add_button = gtk_button_new_with_mnemonic(_("_Add"));
 	g_signal_connect(add_button, "clicked", G_CALLBACK(filter_add_cb), view);
 	gtk_grid_attach(GTK_GRID(group), add_button, 0, 2, 1, 1);
 
-	remove_button = gtk_button_new_from_stock(GTK_STOCK_REMOVE);
+	remove_button = gtk_button_new_with_mnemonic(_("_Remove"));
 	g_signal_connect(remove_button, "clicked", G_CALLBACK(filter_remove_cb), view);
 	gtk_grid_attach(GTK_GRID(group), remove_button, 1, 2, 1, 1);
 
-	edit_button = gtk_button_new_from_stock(GTK_STOCK_EDIT);
+	edit_button = gtk_button_new_with_mnemonic(_("_Edit"));
 	g_signal_connect(edit_button, "clicked", G_CALLBACK(filter_edit_cb), view);
 	gtk_grid_attach(GTK_GRID(group), edit_button, 2, 2, 1, 1);
 

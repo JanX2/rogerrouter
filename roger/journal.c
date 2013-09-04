@@ -40,7 +40,6 @@
 #include "main.h"
 #include "phone.h"
 #include "journal.h"
-#include "debugwindow.h"
 #include "print.h"
 
 GtkWidget *journal_win = NULL;
@@ -108,13 +107,17 @@ GdkPixbuf *journal_get_call_icon(gint type)
 	}
 
 	if (icon_fax == NULL) {
-		GtkWidget *image = gtk_image_new();
-		icon_fax = gtk_widget_render_icon_pixbuf(image, GTK_STOCK_PRINT_REPORT, GTK_ICON_SIZE_SMALL_TOOLBAR);
+		GtkIconTheme *icons;
+
+		icons = gtk_icon_theme_get_default();
+		icon_fax = gtk_icon_theme_load_icon(icons, "document-open", 18, 0, NULL);
 	}
 
 	if (icon_voice == NULL) {
-		GtkWidget *image = gtk_image_new();
-		icon_voice = gtk_widget_render_icon_pixbuf(image, GTK_STOCK_MEDIA_RECORD, GTK_ICON_SIZE_SMALL_TOOLBAR);
+		GtkIconTheme *icons;
+
+		icons = gtk_icon_theme_get_default();
+		icon_voice = gtk_icon_theme_load_icon(icons, "media-record", 18, 0, NULL);
 	}
 
 	switch (type) {
@@ -433,7 +436,7 @@ static void search_entry_changed(GtkEditable *entry, GtkTreeView *view)
 	}
 
 	if (strlen(text)) {
-		gtk_entry_set_icon_from_stock(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, GTK_STOCK_CLEAR);
+		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, "edit-clear");
 
 		journal_search_filter = filter_new("internal_search");
 
@@ -443,7 +446,7 @@ static void search_entry_changed(GtkEditable *entry, GtkTreeView *view)
 			filter_rule_add(journal_search_filter, JOURNAL_COL_NAME, FILTER_CONTAINS, (gchar*)text);
 		}
 	} else {
-		gtk_entry_set_icon_from_stock(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, NULL);
+		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, NULL);
 	}
 
 	journal_clear();
@@ -520,7 +523,7 @@ void journal_play_voice(const gchar *name)
 	}
 
 	/* Create dialog */
-	dialog = gtk_dialog_new_with_buttons(_("Voice box"), GTK_WINDOW(journal_win), GTK_DIALOG_MODAL, GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE, NULL);
+	dialog = gtk_dialog_new_with_buttons(_("Voice box"), GTK_WINDOW(journal_win), GTK_DIALOG_MODAL, _("_Close"), GTK_RESPONSE_CLOSE, NULL);
 	content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 	label = gtk_label_new(_("Playing voice box entry..."));
 
@@ -610,13 +613,6 @@ gint journal_delete_event_cb(GtkWidget *widget, GdkEvent event, gpointer data)
 	return FALSE;
 }
 
-static void filter_edit_cb(GtkWidget *button, GtkWidget *filter_box)
-{
-	gchar *text = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(filter_box));
-
-	g_debug("Active filter: '%s'", text);
-}
-
 static gint journal_sort_by_date(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer data)
 {
 	struct call *call_a;
@@ -685,29 +681,25 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	gtk_toolbar_set_style(GTK_TOOLBAR(toolbar), GTK_TOOLBAR_ICONS);
 #endif
 
-	if (1 == 1) {
-	button = gtk_tool_button_new_from_stock(GTK_STOCK_REFRESH);
+	button = gtk_tool_button_new(NULL, _("Print"));
+	gtk_tool_button_set_icon_name(GTK_TOOL_BUTTON(button), "view-refresh");
 	gtk_widget_set_tooltip_text(GTK_WIDGET(button), _("Refresh journal"));
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(journal_button_refresh_clicked_cb), window);
 	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), button, toolbar_index++);
-	}
 
-	print_button = gtk_tool_button_new_from_stock(GTK_STOCK_PRINT);
+	print_button = gtk_tool_button_new(NULL, _("Print"));
+	gtk_tool_button_set_icon_name(GTK_TOOL_BUTTON(print_button), "document-print");
 	gtk_widget_set_tooltip_text(GTK_WIDGET(print_button), _("Print journal"));
 	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), print_button, toolbar_index++);
 
-	if (1 == 0) {
-	lookup_button = gtk_tool_button_new_from_stock(GTK_STOCK_FIND);
-	gtk_widget_set_tooltip_text(GTK_WIDGET(lookup_button), _("Reverse lookup"));
-	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), lookup_button, toolbar_index++);
-	}
-
-	clear_button = gtk_tool_button_new_from_stock(GTK_STOCK_CLEAR);
+	clear_button = gtk_tool_button_new(NULL, _("Clear"));
+	gtk_tool_button_set_icon_name(GTK_TOOL_BUTTON(clear_button), "edit-clear");
 	gtk_widget_set_tooltip_text(GTK_WIDGET(clear_button), _("Clear journal on router"));
 	g_signal_connect(G_OBJECT(clear_button), "clicked", G_CALLBACK(journal_button_clear_clicked_cb), window);
 	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), clear_button, toolbar_index++);
 
-	delete_button = gtk_tool_button_new_from_stock(GTK_STOCK_DELETE);
+	delete_button = gtk_tool_button_new(NULL, _("Delete"));
+	gtk_tool_button_set_icon_name(GTK_TOOL_BUTTON(delete_button), "edit-delete");
 	gtk_widget_set_tooltip_text(GTK_WIDGET(delete_button), _("Delete selected entry"));
 	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), delete_button, toolbar_index++);
 
@@ -723,7 +715,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	entry = gtk_entry_new();
 	gtk_widget_set_tooltip_text(entry, _("Search in journal for name or number"));
 	g_signal_connect(G_OBJECT(entry), "icon-release", G_CALLBACK(entry_icon_released), NULL);
-	gtk_entry_set_icon_from_stock(GTK_ENTRY(entry), GTK_ENTRY_ICON_PRIMARY, GTK_STOCK_FIND);
+	gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_PRIMARY, "edit-find");
 	gtk_widget_set_hexpand(entry, TRUE);
 	gtk_grid_attach(GTK_GRID(grid), entry, 2, 0, 1, 1);
 
@@ -736,10 +728,6 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 	g_signal_connect(G_OBJECT(journal_filter_box), "changed", G_CALLBACK(filter_box_changed), NULL);
 	gtk_grid_attach(GTK_GRID(grid), journal_filter_box, 4, 0, 1, 1);
-
-	GtkWidget *filter_edit_button = gtk_button_new_from_stock(GTK_STOCK_EDIT);
-	g_signal_connect(filter_edit_button, "clicked", G_CALLBACK(filter_edit_cb), journal_filter_box);
-	//gtk_grid_attach(GTK_GRID(grid), filter_edit_button, 5, 0, 1, 1);
 
 	scrolled = gtk_scrolled_window_new (NULL, NULL);
 	gtk_widget_set_hexpand(scrolled, TRUE);
