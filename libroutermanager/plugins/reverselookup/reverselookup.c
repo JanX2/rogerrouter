@@ -134,9 +134,11 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 	}
 
 	if (!g_regex_match(reg, data, 0, &info)) {
+#ifdef RL_DEBUG
 		gchar *tmp_file = g_strdup_printf("rl-%s.html", number);
 		file_save(tmp_file, data, msg->response_body->length);
 		g_free(tmp_file);
+#endif
 		goto end;
 	}
 
