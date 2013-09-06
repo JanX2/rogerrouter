@@ -288,10 +288,10 @@ gchar *convert_fax_to_tiff(gchar *file_name)
 	args[0] = g_settings_get_string(profile->settings, "ghostscript");
 #elif __APPLE__
 	args[0] = get_directory("bin/gs");
-	g_debug("args[0]: %s\n", args[0]);
 #else
-	args[0] = "gs";
+	args[0] = get_directory("gs");
 #endif
+	g_debug("args[0]: %s\n", args[0]);
 	args[1] = "-q";
 	args[2] = "-dNOPAUSE";
 	args[3] = "-dSAFER";
@@ -317,9 +317,11 @@ gchar *convert_fax_to_tiff(gchar *file_name)
 
 	if (!g_spawn_sync(NULL, args, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL, NULL, &error)) {
 		g_warning("Error occurred: %s", error ? error->message : "");
+		g_free(args[0]);
 		g_free(tiff);
 		return NULL;
 	}
+	g_free(args[0]);
 
 	if (!g_file_test(tiff, G_FILE_TEST_EXISTS)) {
 		g_free(tiff);
@@ -335,11 +337,7 @@ void fax_process_cb(GtkWidget *widget, gchar *file_name, gpointer user_data)
 
 	tiff = convert_fax_to_tiff(file_name);
 	if (tiff) {
-#ifdef __APPLE__
 		g_idle_add(app_show_fax_window_idle, tiff);
-#else
-		app_show_fax_window(tiff);
-#endif
 	} else {
 		g_warning("Error converting print file to TIFF!");
 	}

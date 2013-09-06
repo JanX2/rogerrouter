@@ -677,9 +677,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	gtk_container_add(GTK_CONTAINER (window), grid);
 
 	toolbar = gtk_toolbar_new();
-#if defined(G_OS_WIN32) || defined(__APPLE__)
 	gtk_toolbar_set_style(GTK_TOOLBAR(toolbar), GTK_TOOLBAR_ICONS);
-#endif
 
 	button = gtk_tool_button_new(NULL, _("Print"));
 	gtk_tool_button_set_icon_name(GTK_TOOL_BUTTON(button), "view-refresh");
