@@ -64,17 +64,18 @@ gpointer print_server_thread(gpointer data)
 	return NULL;
 }
 
-gboolean fax_printer_init(GError *error)
+gboolean fax_printer_init(GError **error)
 {
 	GSocket *socket = NULL;
 	GInetAddress *inet_address = NULL;
 	GSocketAddress *sock_address = NULL;
-	GError *error = NULL;
+	GError *fax_error = NULL;
 
-	socket = g_socket_new(G_SOCKET_FAMILY_IPV4, G_SOCKET_TYPE_STREAM, G_SOCKET_PROTOCOL_TCP, &error);
+	socket = g_socket_new(G_SOCKET_FAMILY_IPV4, G_SOCKET_TYPE_STREAM, G_SOCKET_PROTOCOL_TCP, &fax_error);
 	if (error != NULL) {
-		g_debug("Could not create socket. Error: '%s'", error -> message);
-		g_error_free(error);
+		g_debug("Could not create socket. Error: '%s'", fax_error->message);
+		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Could not create socket. Error: '%s'", fax_error ? fax_error->message : "");
+		g_error_free(fax_error);
 		return FALSE;
 	}
 
@@ -84,20 +85,23 @@ gboolean fax_printer_init(GError *error)
 	if (sock_address == NULL) {
 		g_debug("Could not create sock address on port 9100");
 		g_object_unref(socket);
+		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Could not create sock address on port 9100");
 		return FALSE;
 	}
 
 	error = NULL;
-	if (g_socket_bind(socket, sock_address, TRUE, &error) == FALSE) {
-		g_debug("Could not bind to socket. Error: %s", error -> message);
-		g_error_free(error);
+	if (g_socket_bind(socket, sock_address, TRUE, &fax_error) == FALSE) {
+		g_debug("Could not bind to socket. Error: %s", fax_error->message);
+		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Could not bind to socket. Error: %s", fax_error->message);
+		g_error_free(fax_error);
 		g_object_unref(socket);
 		return FALSE;
 	}
 
-	if (g_socket_listen(socket, &error) == FALSE) {
-		g_debug("Could not listen on socket. Error: %s", error -> message);
-		g_error_free(error);
+	if (g_socket_listen(socket, &fax_error) == FALSE) {
+		g_debug("Could not listen on socket. Error: %s", fax_error->message);
+		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Could not listen on socket. Error: %s", fax_error->message);
+		g_error_free(fax_error);
 		g_object_unref(socket);
 		return FALSE;
 	}
