@@ -64,7 +64,7 @@ gpointer print_server_thread(gpointer data)
 	return NULL;
 }
 
-void fax_printer_init(void)
+gboolean fax_printer_init(GError *error)
 {
 	GSocket *socket = NULL;
 	GInetAddress *inet_address = NULL;
@@ -75,7 +75,7 @@ void fax_printer_init(void)
 	if (error != NULL) {
 		g_debug("Could not create socket. Error: '%s'", error -> message);
 		g_error_free(error);
-		return;
+		return FALSE;
 	}
 
 	inet_address = g_inet_address_new_from_string("127.0.0.1");
@@ -84,7 +84,7 @@ void fax_printer_init(void)
 	if (sock_address == NULL) {
 		g_debug("Could not create sock address on port 9100");
 		g_object_unref(socket);
-		return;
+		return FALSE;
 	}
 
 	error = NULL;
@@ -92,19 +92,21 @@ void fax_printer_init(void)
 		g_debug("Could not bind to socket. Error: %s", error -> message);
 		g_error_free(error);
 		g_object_unref(socket);
-		return;
+		return FALSE;
 	}
 
 	if (g_socket_listen(socket, &error) == FALSE) {
 		g_debug("Could not listen on socket. Error: %s", error -> message);
 		g_error_free(error);
 		g_object_unref(socket);
-		return;
+		return FALSE;
 	}
 
 	g_debug("Fax Server running on port 9100");
 
 	g_thread_new("printserver", print_server_thread, socket);
+
+	return TRUE;
 }
 
 #endif

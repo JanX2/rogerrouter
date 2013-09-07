@@ -103,20 +103,29 @@ end:
 /**
  * \brief Initialize new printer spool queue
  */
-void fax_printer_init(void)
+gboolean fax_printer_init(GError **error)
 {
 	GFileMonitor *file_monitor;
 	GFile *file;
 	GDir *dir;
 	gchar *dir_name = g_strdup_printf("/var/spool/roger");
-	GError *error = NULL;
+	GError *file_error = NULL;
+	gboolean ret = FALSE;
 
-	/* Check if spooler is present, create directory if needed */
-	dir = g_dir_open(dir_name, 0, NULL);
-	if (!dir) {
+	/* Check if spooler is present */
+	if (!g_file_test(dir_name, G_FILE_TEST_IS_DIR)) {
+		g_debug("Spooler directory %s does not exists!", dir_name);
+		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Spooler directory %s does not exists!", dir_name);
 		g_free(dir_name);
-		g_warning("Spooler directory not present!");
-		return;
+		return FALSE;
+	}
+
+	dir = g_dir_open(dir_name, 0, &file_error);
+	if (!dir) {
+		g_debug("Could not access spooler directory. Is user in group fax?\n%s", file_error ? file_error->message : "");
+		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Could not access spooler directory. Is user in group fax?\n%s", file_error ? file_error->message : "");
+		g_free(dir_name);
+		return FALSE;
 	}
 	g_dir_close(dir);
 
@@ -127,16 +136,21 @@ void fax_printer_init(void)
 	/* Create GFile for GFileMonitor */
 	file = g_file_new_for_path(dir_name);
 	/* Create file monitor for spool directory */
-	file_monitor = g_file_monitor_directory(file, 0, NULL, &error);
+	file_monitor = g_file_monitor_directory(file, 0, NULL, &file_error);
 	if (file_monitor) {
 		/* Set callback for file monitor */
 		g_signal_connect(file_monitor, "changed", G_CALLBACK(fax_spooler_changed_cb), NULL);
+		ret = TRUE;
 	} else {
 		g_debug("Error occured creating file monitor\n");
-		g_debug("Message: %s\n", error->message);
+		g_debug("Message: %s\n", file_error->message);
+		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "%s", file_error->message);
+		ret = FALSE;
 	}
 
 	g_free(dir_name);
+
+	return ret;
 }
 
 #endif

@@ -173,6 +173,7 @@ static void application_init(Application *app)
 static void app_init(Application *app)
 {
 	GtkBuilder *builder;
+	GError *error = NULL;
 
 	g_action_map_add_action_entries(G_ACTION_MAP(application), apps_entries, G_N_ELEMENTS(apps_entries), application);
 
@@ -252,8 +253,15 @@ static void app_init(Application *app)
 	routermanager_plugins_add_search_path(get_directory(APP_PLUGINS));
 	g_free(path);
 
-	if (routermanager_init(option_state.debug) == FALSE) {
-		printf("routermanager() failed");
+	if (routermanager_init(option_state.debug, &error) == FALSE) {
+		printf("routermanager() failed: %s\n", error ? error->message : "");
+
+		GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "RouterManager failed");
+		gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), "%s", error ? error->message : "");
+		gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+
+		g_clear_error(&error);
 		return;
 	}
 

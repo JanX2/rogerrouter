@@ -42,6 +42,11 @@
 
 static gchar *plugin_dir = NULL;
 
+GQuark rm_print_error_quark(void)
+{
+	return g_quark_from_static_string("rm-print-error-quark");
+}
+
 /**
  * \brief Get directory of requested type
  * \param pnType directory type name
@@ -98,7 +103,7 @@ gchar *get_plugin_dir(void)
  * \param debug enable debug output
  * \return TRUE on success, FALSE on error
  */
-gboolean routermanager_init(gboolean debug)
+gboolean routermanager_init(gboolean debug, GError **error)
 {
 	gchar *dir;
 
@@ -129,7 +134,9 @@ gboolean routermanager_init(gboolean debug)
 	filter_init();
 
 	/* Init fax printer */
-	fax_printer_init();
+	if (!fax_printer_init(error)) {
+		return FALSE;
+	}
 
 	/* Initialize network */
 	net_init();
@@ -141,7 +148,8 @@ gboolean routermanager_init(gboolean debug)
 	plugins_init();
 
 	/* Initialize router */
-	if (router_init() == FALSE) {
+	if (!router_init()) {
+		g_set_error(error, RM_ERROR, RM_ERROR_ROUTER, "%s", "Failed to initialize router");
 		return FALSE;
 	}
 

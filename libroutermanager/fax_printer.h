@@ -22,7 +22,9 @@
 
 G_BEGIN_DECLS
 
-void fax_printer_init(void);
+#include <routermanager.h>
+
+gboolean fax_printer_init(GError **error);
 
 G_END_DECLS
 

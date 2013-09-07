@@ -34,7 +34,16 @@ G_BEGIN_DECLS
 #define ROUTERMANAGER_SCHEME_PROFILE "org.tabos.routermanager.profile"
 #define ROUTERMANAGER_SCHEME_PROFILE_ACTION "org.tabos.routermanager.profile.action"
 
-gboolean routermanager_init(gboolean debug);
+#define RM_ERROR rm_print_error_quark()
+
+typedef enum
+{
+	RM_ERROR_FAX,
+	RM_ERROR_ROUTER
+} rm_error;
+
+GQuark rm_print_error_quark(void);
+gboolean routermanager_init(gboolean debug, GError **error);
 void routermanager_shutdown(void);
 gchar *get_directory(gchar *type);
 gchar *get_plugin_dir(void);
