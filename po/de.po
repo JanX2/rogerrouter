@@ -1002,7 +1002,7 @@ msgstr "Einstellungen"
 #. Update button
 #: ../roger/pref_router.c:293
 msgid "_Refresh"
-msgstr "_Erneuern"
+msgstr "_Aktualisieren"
 
 #: ../roger/pref_router.c:294
 msgid "Refresh settings"

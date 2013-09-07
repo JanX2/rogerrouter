@@ -90,19 +90,27 @@ GSList *bluetooth_create_list(void) {
 	}
 
 	/* Get dbus bluez manager */
-	manager = dbus_g_proxy_new_for_name(dbus_connection, "org.bluez", "/", "org.bluez.Manager");
+	manager = dbus_g_proxy_new_for_name(dbus_connection, "org.bluez", "/org/bluez", "org.freedesktop.DBus.ObjectManager");
 	if (manager == NULL) {
 		return NULL;
 	}
 
 	/* Get adapter list */
-	dbus_g_proxy_call(manager, "ListAdapters", &error, G_TYPE_INVALID, dbus_g_type_get_collection("GPtrArray", DBUS_TYPE_G_OBJECT_PATH), &adapters, G_TYPE_INVALID);
-	g_object_unref(manager);
-	if (error) {
+	if (!dbus_g_proxy_call(manager, "ListAdapters", &error, G_TYPE_INVALID, dbus_g_type_get_collection("GPtrArray", DBUS_TYPE_G_OBJECT_PATH), &adapters, G_TYPE_INVALID)) {
+		GHashTable *table;
+
 		g_warning("Couldn't get adapter list: %s", error->message);
 		g_error_free(error);
-		return NULL;
+		error = NULL;
+
+		if (!dbus_g_proxy_call(manager, "GetProperties", &error, G_TYPE_INVALID, dbus_g_type_get_map("GHashTable", G_TYPE_STRING, G_TYPE_VALUE), &table, G_TYPE_INVALID)) {
+			g_warning("Couldn't get adapter properties: %s", error->message);
+			g_error_free(error);
+			g_object_unref(manager);
+			return NULL;
+		}
 	}
+	g_object_unref(manager);
 
 	for (adapter_index = 0; adapter_index < adapters->len; adapter_index++) {
 		/* Create adapter proxy */

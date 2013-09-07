@@ -189,6 +189,38 @@ AM_CONDITIONAL(WITH_EBOOK, test "x$with_ebook" != "xno")
 AM_CONDITIONAL(HAVE_EBOOK_SOURCE_REGISTRY, test "x$with_ebook_registry" = "xyes")
 
 dnl ********************************************************************
+dnl gstreamer is optional
+dnl ********************************************************************
+AC_ARG_WITH([gstreamer],
+	[AS_HELP_STRING([--with-gstreamer=@<:@ARG@:>@],
+	[Use gstreamer (possible values: no, yes, check, or the path to gstreamer) @<:@default=check@:>@])],
+	[],
+	[with_gstreamer=no])
+
+AC_MSG_CHECKING(for gstreamer-1.0 and gstreamer-app-1.0)
+AS_IF([test "x$with_gstreamer" != xsuper],
+	[if test "x$with_gstreamer" = xcheck; then
+		pkg-config --exists gstreamer-1.0 && pkg-config --exists gstreamer-app-1.0 && with_gstreamer=yes
+	elif test "x$with_gstreamer" = xyes; then
+		( pkg-config --exists gstreamer-1.0 && pkg-config --exists gstreamer-app-1.0 ) || AC_MSG_FAILURE(
+			[--with-gstreamer=yes was given, but test for gstreamer-1.0 and gstreamer-app-1.0 failed])
+	fi
+	if test "x$with_gstreamer" = xyes; then
+		AC_SUBST([GSTREAMER_CFLAGS], ["`pkg-config --cflags gstreamer-1.0 gstreamer-app-1.0`"])
+		AC_SUBST([GSTREAMER_LIBS], ["`pkg-config --libs gstreamer-1.0 gstreamer-app-1.0`"])
+		AC_DEFINE([HAVE_GSTREAMER], 1, [Have gstreamer])
+		ROGER_FEATURES_YES="\tgstreamer\n$ROGER_FEATURES_YES"
+	else
+		with_gstreamer=no
+		ROGER_FEATURES_NO="\tgstreamer\n$ROGER_FEATURES_NO"
+	fi
+])
+
+AC_MSG_RESULT($with_gstreamer)
+
+AM_CONDITIONAL(WITH_GSTREAMER, test "x$with_gstreamer" != "xno")
+
+dnl ********************************************************************
 dnl pulseaudio is optional
 dnl ********************************************************************
 AC_ARG_WITH([pulseaudio],
@@ -366,6 +398,7 @@ AC_OUTPUT([
     libroutermanager/plugins/reverselookup/Makefile
     libroutermanager/plugins/wincred/Makefile
     libroutermanager/plugins/portaudio/Makefile
+    libroutermanager/plugins/gstreamer/Makefile
     libroutermanager/plugins/secret/Makefile
     roger/Makefile
     roger/data/Makefile

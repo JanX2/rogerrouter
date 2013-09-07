@@ -51,15 +51,6 @@ struct cmd_line_option_state {
 
 static struct cmd_line_option_state option_state;
 
-void gtk_assistant(void)
-{
-	assistant();
-}
-
-struct ui_ops gtk_ops = {
-	gtk_assistant,
-};
-
 typedef GtkApplication Application;
 typedef GtkApplicationClass ApplicationClass;
 
@@ -261,7 +252,7 @@ static void app_init(Application *app)
 	routermanager_plugins_add_search_path(get_directory(APP_PLUGINS));
 	g_free(path);
 
-	if (routermanager_init(&gtk_ops, option_state.debug) == FALSE) {
+	if (routermanager_init(option_state.debug) == FALSE) {
 		printf("routermanager() failed");
 		return;
 	}
@@ -273,6 +264,10 @@ static void app_init(Application *app)
 #endif
 
 	journal_window(G_APPLICATION(app), NULL);
+
+	if (!profile_get_active()) {
+		assistant();
+	}
 }
 
 static void application_class_init(ApplicationClass *class)

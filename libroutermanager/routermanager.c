@@ -95,10 +95,10 @@ gchar *get_plugin_dir(void)
 
 /**
  * \brief Initialize routermanager
- * \param ui_ops ui operations structure
+ * \param debug enable debug output
  * \return TRUE on success, FALSE on error
  */
-gboolean routermanager_init(struct ui_ops *ui_ops, gboolean debug)
+gboolean routermanager_init(gboolean debug)
 {
 	gchar *dir;
 
@@ -146,7 +146,7 @@ gboolean routermanager_init(struct ui_ops *ui_ops, gboolean debug)
 	}
 
 	/* Initialize profiles */
-	profile_init(ui_ops);
+	profile_init();
 
 	/* Initialize network monitor */
 	net_monitor_init();

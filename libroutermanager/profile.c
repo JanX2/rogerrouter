@@ -43,8 +43,6 @@ static struct profile *profile_active = NULL;
 /** Global application settings */
 static GSettings *settings = NULL;
 
-static struct ui_ops *internal_ui_ops = NULL;
-
 /**
  * \brief Add profile to profile list
  * \param profile profile structure pointer
@@ -243,19 +241,14 @@ gboolean profile_detect_active(void)
 	g_debug("Router not found!");
 	g_slice_free(struct router_info, router_info);
 
-	if (internal_ui_ops) {
-		internal_ui_ops->assistant();
-	}
-
 	return FALSE;
 }
 
 /**
  * \brief Initialize profiles (load profiles)
- * \param ui_ops ui operations (assistant)
  * \return TRUE
  */
-gboolean profile_init(struct ui_ops *ui_ops)
+gboolean profile_init(void)
 {
 	settings = g_settings_new(ROUTERMANAGER_SCHEME);
 	gchar **profiles = g_settings_get_strv(settings, "profiles");
@@ -267,8 +260,6 @@ gboolean profile_init(struct ui_ops *ui_ops)
 	}
 
 	g_strfreev(profiles);
-
-	internal_ui_ops = ui_ops;
 
 	return TRUE;
 }

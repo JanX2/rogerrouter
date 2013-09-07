@@ -34,7 +34,7 @@ G_BEGIN_DECLS
 #define ROUTERMANAGER_SCHEME_PROFILE "org.tabos.routermanager.profile"
 #define ROUTERMANAGER_SCHEME_PROFILE_ACTION "org.tabos.routermanager.profile.action"
 
-gboolean routermanager_init(struct ui_ops *ui_ops, gboolean debug);
+gboolean routermanager_init(gboolean debug);
 void routermanager_shutdown(void);
 gchar *get_directory(gchar *type);
 gchar *get_plugin_dir(void);

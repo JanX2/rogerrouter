@@ -35,7 +35,7 @@ struct profile {
 	GSList *action_list;
 };
 
-gboolean profile_init(struct ui_ops *ui_ops);
+gboolean profile_init(void);
 void profile_shutdown(void);
 
 struct profile *profile_new(const gchar *name, const gchar *host, const gchar *user, const gchar *password);

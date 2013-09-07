@@ -62,19 +62,6 @@ GMainLoop *main_loop = NULL;
 static gboolean success = FALSE;
 
 /**
- * \brief Assistant UI
- */
-static void cli_assistant(void)
-{
-	g_error("There is currently no assistant in cli-mode, please use the GUI (Roger Router) to setup a profile");
-}
-
-/** UI operations */
-struct ui_ops cli_ops = {
-	cli_assistant,
-};
-
-/**
  * \brief Journal loaded callback
  * \param obj app object
  * \param journal journal call list
@@ -284,7 +271,10 @@ int main(int argc, char **argv)
 	}
 
 	/* Initialize routermanager */
-	routermanager_init(&cli_ops, debug);
+	routermanager_init(debug);
+	if (!profile_get_active()) {
+		return 0;
+	}
 
 	/* Only show messages >= INFO */
 	log_set_level(G_LOG_LEVEL_INFO);

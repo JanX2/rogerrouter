@@ -8,6 +8,10 @@ if WITH_PORTAUDIO
 SUBDIRS += portaudio
 endif
 
+if WITH_GSTREAMER
+SUBDIRS += gstreamer
+endif
+
 if WITH_SECRET
 SUBDIRS += secret
 endif
