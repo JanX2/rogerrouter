@@ -32,7 +32,7 @@
 #include <libroutermanager/ftp.h>
 #include <libroutermanager/xml.h>
 
-#include "../../main.h"
+#include <roger/main.h>
 
 #define ROUTERMANAGER_TYPE_FRITZFON_PLUGIN        (routermanager_fritzfon_plugin_get_type ())
 #define ROUTERMANAGER_FRITZFON_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_FRITZFON_PLUGIN, RouterManagerFritzFonPlugin))

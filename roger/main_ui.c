@@ -19,12 +19,14 @@
 
 #include <stdlib.h>
 #include <string.h>
+
 #include <gtk/gtk.h>
 
-#include <main.h>
-#include <config.h>
-
 #include <libroutermanager/routermanager.h>
+
+#include <roger/main.h>
+
+#include <config.h>
 
 typedef GtkApplication Application;
 

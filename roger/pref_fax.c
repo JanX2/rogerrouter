@@ -26,8 +26,8 @@
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/gstring.h>
 
-#include <main.h>
-#include <pref.h>
+#include <roger/main.h>
+#include <roger/pref.h>
 
 /**
  * \brief Report dir set callback - store it in the settings

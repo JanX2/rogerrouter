@@ -20,11 +20,11 @@
 #include <string.h>
 
 #include <libedataserver/eds-version.h>
-
 #include <libebook/e-book-client.h>
-#include <ebook-sources.h>
 
 #include <libroutermanager/gstring.h>
+
+#include <ebook-sources.h>
 
 /**
  * \brief Get client for active address book

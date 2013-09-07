@@ -26,9 +26,10 @@
 #include <libroutermanager/action.h>
 #include <libroutermanager/router.h>
 
-#include <main.h>
-#include <pref.h>
-#include <pref_action.h>
+#include <roger/main.h>
+#include <roger/pref.h>
+#include <roger/pref_action.h>
+#include <roger/uitools.h>
 
 static GtkWidget *incoming_call_rings_toggle;
 static GtkWidget *incoming_call_begins_toggle;
@@ -447,6 +448,7 @@ GtkWidget *pref_page_action(void)
 	GtkWidget *edit_button;
 	GtkWidget *description_label;
 	GtkWidget *description_text_label;
+	gchar *tmp;
 
 	/* Define actions:
 	 * |-Name-------------| Execute actions
@@ -495,7 +497,9 @@ GtkWidget *pref_page_action(void)
 
 	/* Execute actions label */
 	execute_label = gtk_label_new("");
-	gtk_label_set_markup(GTK_LABEL(execute_label), _("<b>Execute actions</b>"));
+	tmp = ui_bold_text(_("Execute actions"));
+	gtk_label_set_markup(GTK_LABEL(execute_label), tmp);
+	g_free(tmp);
 	gtk_grid_attach(GTK_GRID(grid), execute_label, 3, 0, 1, 1);
 
 	/* Incoming call label */
@@ -558,7 +562,9 @@ GtkWidget *pref_page_action(void)
 
 	/* Description */
 	description_label = ui_label_new("");
-	gtk_label_set_markup(GTK_LABEL(description_label), _("<b>Description</b>"));
+	tmp = ui_bold_text(_("Description"));
+	gtk_label_set_markup(GTK_LABEL(description_label), tmp);
+	g_free(tmp);
 	gtk_misc_set_alignment(GTK_MISC(description_label), 0, 0.5);
 	gtk_grid_attach(GTK_GRID(grid), description_label, 0, 12, 3, 1);
 

@@ -23,10 +23,10 @@
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/filter.h>
 
-#include <main.h>
-#include <journal.h>
-#include <pref.h>
-#include <pref_filters.h>
+#include <roger/main.h>
+#include <roger/journal.h>
+#include <roger/pref.h>
+#include <roger/pref_filters.h>
 
 static gint table_y;
 static GSList *pref_filters_current_rules;

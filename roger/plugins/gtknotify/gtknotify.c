@@ -36,6 +36,7 @@
 #include <roger/application.h>
 #include <roger/phone.h>
 #include <roger/pref.h>
+#include <roger/uitools.h>
 
 #define ROUTERMANAGER_TYPE_NOTIFICATION_GTK_PLUGIN (routermanager_notification_gtk_plugin_get_type ())
 #define ROUTERMANAGER_NOTIFICATION_GTK_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_NOTIFICATION_GTK_PLUGIN, RouterManagerNotificationGtkPlugin))
@@ -325,7 +326,9 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 		GtkWidget *accept_button;
 		GtkWidget *decline_button;
 
-		gtk_label_set_markup(GTK_LABEL(type_label), _("<b>Incoming call</b>"));
+		tmp = ui_bold_text(_("Incoming call"));
+		gtk_label_set_markup(GTK_LABEL(type_label), tmp);
+		g_free(tmp);
 
 		phone_grid = gtk_grid_new();
 		/* Set standard spacing to 5 */
@@ -344,7 +347,9 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 
 		gtk_grid_attach(GTK_GRID(main_grid), phone_grid, 0, 1, 1, 1);
 	} else if (connection->type == CONNECTION_TYPE_OUTGOING) {
-		gtk_label_set_markup(GTK_LABEL(type_label), _("<b>Outgoing call</b>"));
+		tmp = ui_bold_text(_("Outgoing call"));
+		gtk_label_set_markup(GTK_LABEL(type_label), tmp);
+		g_free(tmp);
 		g_timeout_add_seconds(5, notification_gtk_close, notify);
 	}
 

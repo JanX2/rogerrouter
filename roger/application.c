@@ -28,15 +28,15 @@
 #include <libroutermanager/osdep.h>
 #include <libroutermanager/router.h>
 
-#include <journal.h>
-#include <assistant.h>
-#include <main.h>
-#include <phone.h>
-#include <pref.h>
-#include <about.h>
-#include <fax.h>
-#include <contacts.h>
-#include <dbus.h>
+#include <roger/journal.h>
+#include <roger/assistant.h>
+#include <roger/main.h>
+#include <roger/phone.h>
+#include <roger/pref.h>
+#include <roger/about.h>
+#include <roger/fax.h>
+#include <roger/contacts.h>
+#include <roger/dbus.h>
 
 #include <config.h>
 

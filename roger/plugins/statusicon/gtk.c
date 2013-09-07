@@ -32,6 +32,7 @@
 #include <roger/phone.h>
 #include <roger/main.h>
 #include <roger/pref.h>
+#include <roger/uitools.h>
 
 #define ROUTERMANAGER_TYPE_STATUSICON_PLUGIN        (routermanager_statusicon_plugin_get_type ())
 #define ROUTERMANAGER_STATUSICON_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_STATUSICON_PLUGIN, RouterManagerStatusIconPlugin))

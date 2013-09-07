@@ -22,9 +22,9 @@
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/audio.h>
 
-#include <main.h>
-#include <pref.h>
-#include <pref_audio.h>
+#include <roger/main.h>
+#include <roger/pref.h>
+#include <roger/pref_audio.h>
 
 /**
  * \brief Create audio preferences widget

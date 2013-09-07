@@ -25,10 +25,10 @@
 #include <libroutermanager/ftp.h>
 #include <libroutermanager/password.h>
 
-#include <main.h>
-#include <phone.h>
-#include <pref.h>
-#include <pref_router.h>
+#include <roger/main.h>
+#include <roger/phone.h>
+#include <roger/pref.h>
+#include <roger/pref_router.h>
 
 static GtkWidget *ftp_password_entry;
 

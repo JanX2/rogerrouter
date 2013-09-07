@@ -25,9 +25,9 @@
 #include <libroutermanager/profile.h>
 #include <libroutermanager/plugins.h>
 
-#include <main.h>
-#include <pref.h>
-#include <pref_plugins.h>
+#include <roger/main.h>
+#include <roger/pref.h>
+#include <roger/pref_plugins.h>
 
 /**
  * \brief Create plugins preferences page

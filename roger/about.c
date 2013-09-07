@@ -18,8 +18,10 @@
  */
 
 #include <stdlib.h>
+
 #include <gtk/gtk.h>
-#include "main.h"
+
+#include <roger/main.h>
 
 #include <config.h>
 

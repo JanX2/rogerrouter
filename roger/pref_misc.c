@@ -21,9 +21,9 @@
 #include <libroutermanager/profile.h>
 #include <libroutermanager/plugins.h>
 
-#include <main.h>
-#include <pref.h>
-#include <pref_misc.h>
+#include <roger/main.h>
+#include <roger/pref.h>
+#include <roger/pref_misc.h>
 
 /**
  * \brief Ghostscript file set callback - set file name to settings

@@ -28,7 +28,7 @@
 
 #include <roger/phone.h>
 #include <roger/main.h>
-#include <roger/pref.h>
+#include <roger/uitools.h>
 #include <roger/print.h>
 
 static GtkWidget *progress_bar;

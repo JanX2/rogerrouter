@@ -21,11 +21,14 @@
 
 #ifdef HAVE_DBUS
 #include <string.h>
+
 #include <gio/gio.h>
 #include <gtk/gtk.h>
+
 #include <libroutermanager/call.h>
 #include <libroutermanager/appobject-emit.h>
-#include <phone.h>
+
+#include <roger/phone.h>
 
 static GDBusNodeInfo *introspection_data = NULL;
 static guint owner_id;

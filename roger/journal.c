@@ -37,10 +37,10 @@
 #include <libroutermanager/csv.h>
 #include <libroutermanager/gstring.h>
 
-#include "main.h"
-#include "phone.h"
-#include "journal.h"
-#include "print.h"
+#include <roger/main.h>
+#include <roger/phone.h>
+#include <roger/journal.h>
+#include <roger/print.h>
 
 GtkWidget *journal_win = NULL;
 GtkWidget *journal_filter_box = NULL;
@@ -385,42 +385,6 @@ static void journal_button_delete_clicked_cb(GtkWidget *button, GtkWidget *view)
 	router_load_journal(profile_get_active());
 }
 
-void lookup_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
-{
-	struct call *call = NULL;
-	GValue ptr = { 0 };
-	gchar *name;
-	gchar *address;
-	gchar *zip;
-	gchar *city;
-
-	gtk_tree_model_get_value(model, iter, JOURNAL_COL_CALL_PTR, &ptr);
-
-	call = g_value_get_pointer(&ptr);
-
-	if (routermanager_lookup(call->remote.number, &name, &address, &zip, &city)) {
-		GtkWidget *dialog = gtk_message_dialog_new_with_markup(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE, "<b>Name:</b>\t%s\n"
-					     "<b>Address:</b>\t%s\n"
-					     "<b>ZIP:</b>\t%s\n"
-					     "<b>City:</b>\t%s\n",
-					     name, address, zip, city);
-		gtk_dialog_run(GTK_DIALOG(dialog));
-		gtk_widget_destroy(dialog);
-	} else {
-		g_debug("No data for requested lookup");
-		GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("Number '%s' not found in online database"), call->remote.number);
-		gtk_dialog_run(GTK_DIALOG(dialog));
-		gtk_widget_destroy(dialog);
-	}
-}
-
-static void journal_button_lookup_clicked_cb(GtkWidget *button, GtkWidget *data)
-{
-	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(data));
-
-	gtk_tree_selection_selected_foreach(selection, lookup_foreach, NULL);
-}
-
 static void journal_startup(GApplication *application)
 {
 	journal_application = application;
@@ -645,7 +609,6 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	GtkWidget *entry;
 	GtkToolItem *button;
 	GtkToolItem *print_button;
-	GtkToolItem *lookup_button;
 	GtkToolItem *clear_button;
 	GtkToolItem *delete_button;
 	GtkWidget *label;
@@ -834,9 +797,6 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	gtk_window_set_title(GTK_WINDOW(window), "Journal");
 
 	g_signal_connect(G_OBJECT(print_button), "clicked", G_CALLBACK(journal_button_print_clicked_cb), view);
-	if (1 == 0) {
-	g_signal_connect(G_OBJECT(lookup_button), "clicked", G_CALLBACK(journal_button_lookup_clicked_cb), view);
-	}
 	g_signal_connect(G_OBJECT(delete_button), "clicked", G_CALLBACK(journal_button_delete_clicked_cb), view);
 	g_signal_connect(G_OBJECT(view), "row-activated", G_CALLBACK(journal_row_activated_cb), list_store);
 

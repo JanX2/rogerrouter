@@ -28,9 +28,9 @@
 #include <libroutermanager/libfaxophone/faxophone.h>
 #include <libroutermanager/libfaxophone/fax.h>
 
-#include <print.h>
-#include <journal.h>
-#include <main.h>
+#include <roger/print.h>
+#include <roger/journal.h>
+#include <roger/main.h>
 
 #define FONT "cairo:monospace 10"
 

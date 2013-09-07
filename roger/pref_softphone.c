@@ -24,8 +24,8 @@
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/bluetooth.h>
 
-#include <main.h>
-#include <pref.h>
+#include <roger/main.h>
+#include <roger/pref.h>
 
 #include <config.h>
 

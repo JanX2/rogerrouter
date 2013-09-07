@@ -17,15 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtk/gtk.h>
 #include <string.h>
+
+#include <gtk/gtk.h>
+
 #include <libroutermanager/profile.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/ftp.h>
 #include <libroutermanager/password.h>
 #include <libroutermanager/net_monitor.h>
-#include <main.h>
-#include <journal.h>
+
+#include <roger/main.h>
+#include <roger/journal.h>
+#include <roger/uitools.h>
 
 #include <config.h>
 
@@ -242,7 +246,9 @@ GtkWidget *page_create_profile(GtkWidget *window)
 	/* Profile label */
 	profile_label = gtk_label_new("");
 	g_object_set_data(G_OBJECT(window), "profile_label", profile_label);
-	gtk_label_set_markup(GTK_LABEL(profile_label), _("<b>Enter new profile name</b>"));
+	gchar *tmp = ui_bold_text(_("Enter new profile name"));
+	gtk_label_set_markup(GTK_LABEL(profile_label), tmp);
+	g_free(tmp);
 	gtk_misc_set_alignment(GTK_MISC(profile_label), 0, 0.5f);
 	gtk_misc_set_padding(GTK_MISC(profile_label), 10, 10);
 	gtk_grid_attach(GTK_GRID(profile_grid), profile_label, 0, 0, 1, 1);
@@ -299,7 +305,9 @@ GtkWidget *page_create_router(GtkWidget *window)
 
 	/* Select router label */
 	router_label = gtk_label_new("");
-	gtk_label_set_markup(GTK_LABEL(router_label), _("<b>Select your router:</b>"));
+	gchar *tmp = ui_bold_text(_("Select your router:"));
+	gtk_label_set_markup(GTK_LABEL(router_label), tmp);
+	g_free(tmp);
 	gtk_misc_set_alignment(GTK_MISC(router_label), 0, 0.5f);
 	gtk_misc_set_padding(GTK_MISC(router_label), 10, 10);
 	gtk_grid_attach(GTK_GRID(router_grid), router_label, 0, 0, 1, 1);
@@ -351,7 +359,9 @@ GtkWidget *page_create_router(GtkWidget *window)
 
 	/* Enter user label */
 	router_user_label = gtk_label_new("");
-	gtk_label_set_markup(GTK_LABEL(router_user_label), _("<b>Enter login data:</b>"));
+	tmp = ui_bold_text(_("Enter login data:"));
+	gtk_label_set_markup(GTK_LABEL(router_user_label), tmp);
+	g_free(tmp);
 	gtk_misc_set_alignment(GTK_MISC(router_user_label), 0, 0.5f);
 	gtk_misc_set_padding(GTK_MISC(router_user_label), 10, 10);
 	gtk_grid_attach(GTK_GRID(router_grid), router_user_label, 0, 4, 1, 1);
@@ -394,7 +404,9 @@ GtkWidget *page_create_router(GtkWidget *window)
 
 	/* Enter user label */
 	router_ftp_user_label = gtk_label_new("");
-	gtk_label_set_markup(GTK_LABEL(router_ftp_user_label), _("<b>Enter FTP login data:</b>"));
+	tmp = ui_bold_text(_("Enter FTP login data:"));
+	gtk_label_set_markup(GTK_LABEL(router_ftp_user_label), tmp);
+	g_free(tmp);
 	gtk_misc_set_alignment(GTK_MISC(router_ftp_user_label), 0, 0.5f);
 	gtk_misc_set_padding(GTK_MISC(router_ftp_user_label), 10, 10);
 	gtk_grid_attach(GTK_GRID(router_grid), router_ftp_user_label, 0, 6, 1, 1);

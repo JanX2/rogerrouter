@@ -24,10 +24,10 @@
 #include <libroutermanager/router.h>
 #include <libroutermanager/ftp.h>
 
-#include <main.h>
-#include <phone.h>
-#include <pref.h>
-#include <pref_prefix.h>
+#include <roger/main.h>
+#include <roger/phone.h>
+#include <roger/pref.h>
+#include <roger/pref_prefix.h>
 
 /**
  * \brief Create router phone widget

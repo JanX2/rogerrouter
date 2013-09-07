@@ -22,35 +22,22 @@
 #include <libroutermanager/profile.h>
 #include <libroutermanager/plugins.h>
 
-#include <main.h>
-#include <journal.h>
+#include <roger/main.h>
+#include <roger/journal.h>
 
-#include <pref.h>
-#include <pref_router.h>
-#include <pref_plugins.h>
-#include <pref_filters.h>
-#include <pref_softphone.h>
-#include <pref_audio.h>
-#include <pref_fax.h>
-#include <pref_action.h>
-#include <pref_prefix.h>
-#include <pref_misc.h>
+#include <roger/pref.h>
+#include <roger/pref_router.h>
+#include <roger/pref_plugins.h>
+#include <roger/pref_filters.h>
+#include <roger/pref_softphone.h>
+#include <roger/pref_audio.h>
+#include <roger/pref_fax.h>
+#include <roger/pref_action.h>
+#include <roger/pref_prefix.h>
+#include <roger/pref_misc.h>
+#include <roger/uitools.h>
 
 static GtkWidget *dialog = NULL;
-
-inline GtkWidget *ui_label_new(gchar *text)
-{
-	GtkWidget *label;
-	GdkRGBA col;
-
-	label = gtk_label_new(text);
-	//gtk_widget_set_hexpand(label, TRUE);
-	gdk_rgba_parse(&col, "#808080");
-	gtk_widget_override_color(label, GTK_STATE_NORMAL, &col);
-	gtk_misc_set_alignment(GTK_MISC(label), 1, 0.5);
-
-	return label;
-}
 
 void pref_notebook_add_page(GtkWidget *notebook, GtkWidget *page, gchar *title)
 {
@@ -63,7 +50,7 @@ GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand,
 	GtkWidget *grid;
 	GtkWidget *align1;
 	GtkWidget *title;
-	gchar *title_markup = g_strdup_printf("<b>%s</b>", title_str);
+	gchar *title_markup = ui_bold_text(title_str);
 
 	grid = gtk_grid_new();
 

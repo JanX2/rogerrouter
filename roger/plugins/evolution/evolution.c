@@ -29,7 +29,7 @@
 #include <libroutermanager/address-book.h>
 #include <libroutermanager/number.h>
 
-#include "../../main.h"
+#include <roger/main.h>
 #include "config.h"
 
 #ifdef HAVE_EBOOK_SOURCE_REGISTRY

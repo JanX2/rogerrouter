@@ -19,7 +19,7 @@
 
 #include <gtk/gtk.h>
 
-#include <contacts.h>
+#include <roger/contacts.h>
 
 void contacts(void)
 {

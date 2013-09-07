@@ -60,7 +60,9 @@ roger_core_SOURCES =\
 	pref_misc.c\
 	pref_misc.h\
 	print.c \
-	print.h
+	print.h \
+	uitools.c \
+	uitools.h
 
 if WIN32
 roger_SOURCES = $(roger_core_SOURCES)

@@ -23,6 +23,7 @@
 #include <math.h>
 
 #include <gtk/gtk.h>
+
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/gstring.h>
@@ -33,14 +34,15 @@
 #include <libroutermanager/router.h>
 #include <libroutermanager/number.h>
 #include <libroutermanager/phone.h>
-#include "journal.h"
-#include "pref.h"
-#include "phone.h"
-#include "main.h"
-#include "llevel.h"
 #include <libroutermanager/fax_phone.h>
 #include <libroutermanager/libfaxophone/phone.h>
 #include <libroutermanager/libfaxophone/isdn-convert.h>
+
+#include <roger/journal.h>
+#include <roger/pref.h>
+#include <roger/phone.h>
+#include <roger/main.h>
+#include <roger/llevel.h>
 
 static GSList *phone_active_connections = NULL;
 

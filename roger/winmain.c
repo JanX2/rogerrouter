@@ -17,10 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtk/gtk.h>
-#include <main.h>
 #include <windows.h>
 #include <stdio.h>
+#include <gtk/gtk.h>
+
+#include <roger/main.h>
 
 typedef int (CALLBACK *LPFNROGERMAIN)(HINSTANCE, int, char **);
 typedef BOOL (WINAPI* LPFNSETPROCESSDEPPOLICY)(DWORD);
