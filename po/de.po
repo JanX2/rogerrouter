@@ -1,14 +1,14 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Roger Router - Translation to German
+# Copyright (C) 2013 Jan-Michael Brummer
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Jan-Michael Brummer <jan.brummer@tabos.org>, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-05 21:19+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2013-09-07 19:34+0200\n"
+"PO-Revision-Date: 2013-09-07 19:34+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: German <jan.brummer@tabos.org>\n"
 "Language: German\n"
@@ -24,26 +24,26 @@ msgstr ""
 "FRITZ!Box Journal, Soft/phone und Fax\n"
 "Gewidmet meinem Vater"
 
-#: ../roger/application.c:191
+#: ../roger/application.c:183
 msgid "Contacts"
 msgstr "Kontakte"
 
 #. Help
-#: ../roger/application.c:192 ../roger/plugins/statusicon/gtk.c:283
+#: ../roger/application.c:184 ../roger/plugins/statusicon/gtk.c:283
 msgid "Help"
 msgstr "Hilfe"
 
-#: ../roger/application.c:193
+#: ../roger/application.c:185
 msgid "Donate"
 msgstr "Spenden"
 
 #. About
-#: ../roger/application.c:194 ../roger/plugins/statusicon/gtk.c:288
+#: ../roger/application.c:186 ../roger/plugins/statusicon/gtk.c:288
 msgid "About"
 msgstr "Über"
 
 #. Quit
-#: ../roger/application.c:195 ../roger/plugins/statusicon/gtk.c:297
+#: ../roger/application.c:187 ../roger/plugins/statusicon/gtk.c:297
 msgid "Quit"
 msgstr "Beenden"
 
@@ -173,12 +173,12 @@ msgstr "Zusammenfassung"
 msgid " Profile Assistant"
 msgstr " Profilassistent"
 
-#: ../roger/fax.c:44 ../roger/phone.c:165 ../roger-cli/main_cli.c:170
+#: ../roger/fax.c:44 ../roger/phone.c:165 ../roger-cli/main_cli.c:157
 #, c-format
 msgid "Connected"
 msgstr "Verbunden"
 
-#: ../roger/fax.c:52 ../roger/phone.c:196 ../roger-cli/main_cli.c:181
+#: ../roger/fax.c:52 ../roger/phone.c:196 ../roger-cli/main_cli.c:168
 #, c-format
 msgid "Disconnected"
 msgstr "Nicht verbunden"
@@ -187,7 +187,7 @@ msgstr "Nicht verbunden"
 msgid "Transfer starting"
 msgstr "Übertragung beginnt"
 
-#: ../roger/fax.c:85 ../roger-cli/main_cli.c:213
+#: ../roger/fax.c:85 ../roger-cli/main_cli.c:200
 msgid "Transferring page"
 msgstr "Übertrage Seite"
 
@@ -271,85 +271,85 @@ msgstr "_Schließen"
 msgid "Playing voice box entry..."
 msgstr "Spiele Anrufbeantworter-Eintrag"
 
-#: ../roger/journal.c:684 ../roger/journal.c:690
+#: ../roger/journal.c:682 ../roger/journal.c:688
 msgid "Print"
 msgstr "Drucken"
 
-#: ../roger/journal.c:686
+#: ../roger/journal.c:684
 msgid "Refresh journal"
 msgstr "Journal laden"
 
-#: ../roger/journal.c:692
+#: ../roger/journal.c:690
 msgid "Print journal"
 msgstr "Journal drucken"
 
-#: ../roger/journal.c:695
+#: ../roger/journal.c:693
 msgid "Clear"
 msgstr "Leeren"
 
-#: ../roger/journal.c:697
+#: ../roger/journal.c:695
 msgid "Clear journal on router"
 msgstr "Lösche Journal vom Router"
 
-#: ../roger/journal.c:701
+#: ../roger/journal.c:699
 msgid "Delete"
 msgstr "Löschen"
 
-#: ../roger/journal.c:703
+#: ../roger/journal.c:701
 msgid "Delete selected entry"
 msgstr "Ausgewählten Eintrag löschen"
 
-#: ../roger/journal.c:712
+#: ../roger/journal.c:710
 msgid "Search:"
 msgstr "Suche:"
 
-#: ../roger/journal.c:716
+#: ../roger/journal.c:714
 msgid "Search in journal for name or number"
 msgstr "Suche im Journal nach Name oder Nummer"
 
-#: ../roger/journal.c:722
+#: ../roger/journal.c:720
 msgid "Filter:"
 msgstr "Filter:"
 
-#: ../roger/journal.c:760 ../roger/print.c:374
+#: ../roger/journal.c:758 ../roger/print.c:374
 msgid "Type"
 msgstr "Typ"
 
-#: ../roger/journal.c:765 ../roger/print.c:378
+#: ../roger/journal.c:763 ../roger/print.c:378
 msgid "Date/Time"
 msgstr "Datum/Zeit"
 
 #. Name
-#: ../roger/journal.c:773 ../roger/pref_action.c:192
+#: ../roger/journal.c:771 ../roger/pref_action.c:192
 #: ../roger/pref_action.c:493 ../roger/pref_filters.c:209
 #: ../roger/pref_filters.c:506 ../roger/print.c:382
 msgid "Name"
 msgstr "Name"
 
-#: ../roger/journal.c:781
+#: ../roger/journal.c:779
 msgid "Company"
 msgstr "Firma"
 
-#: ../roger/journal.c:788 ../roger/pref_action.c:255
+#: ../roger/journal.c:786 ../roger/pref_action.c:255
 #: ../roger/pref_filters.c:210 ../roger/print.c:386
 #: ../roger/plugins/notification/notification.c:457
 #: ../roger/plugins/gtknotify/gtknotify.c:565
 msgid "Number"
 msgstr "Nummer"
 
-#: ../roger/journal.c:795
+#: ../roger/journal.c:793
 msgid "City"
 msgstr "Stadt"
 
-#: ../roger/journal.c:802
+#: ../roger/journal.c:800
 msgid "Extension"
 msgstr "Nebenstelle"
 
-#: ../roger/journal.c:809
+#: ../roger/journal.c:807
 msgid "Line"
 msgstr "Leitung"
 
-#: ../roger/journal.c:816 ../roger/print.c:398
+#: ../roger/journal.c:814 ../roger/print.c:398
 msgid "Duration"
 msgstr "Dauer"
 
@@ -1271,7 +1271,7 @@ msgstr "Statusicon GTK"
 msgid "Status icon plugin using GTK following FreeDesktop standard"
 msgstr "Statusicon-Plugin in GTK nach den FreeDesktop-Standard"
 
-#: ../roger-cli/main_cli.c:208
+#: ../roger-cli/main_cli.c:195
 msgid "Transfer starting:"
 msgstr "Übertragung beginnt:"
 

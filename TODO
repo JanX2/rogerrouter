@@ -1,7 +1,7 @@
 TODO
 ----------
 
-* Prepend routermanager_ or rm_ to each external routermanager function?
+* Prepend rm_ to each external routermanager function?
 * Check router structure for different routers (speedport)
 * Areacodes plugin for every country (global list available as csv) (90% done, add special handling for countrys not starting with 0 indicator, e.g. Russian Federation)
 * remove markup from translation and add hints

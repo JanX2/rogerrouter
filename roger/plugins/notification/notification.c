@@ -240,6 +240,8 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 	notify_notification_set_category(notify, "information");
 	notify_notification_set_urgency(notify, NOTIFY_URGENCY_CRITICAL);
 
+	notify_notification_set_hint(notify, "desktop-entry", g_variant_new_string("roger"));
+
 	connection->notification = notify;
 
 	notify_notification_show(notify, NULL);
