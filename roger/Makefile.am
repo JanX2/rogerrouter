@@ -64,8 +64,9 @@ roger_core_SOURCES =\
 	uitools.c \
 	uitools.h
 
-if WIN32
 roger_SOURCES = $(roger_core_SOURCES)
+
+if WIN32
 roger_SOURCES +=\
 	winmain.c
 
@@ -84,15 +85,11 @@ libroger_core_la_LDFLAGS = $(roger_LDFLAGS) -shared -Wl,--output-def,roger_core.
 endif
 
 if MACOSX
-roger_SOURCES = $(roger_core_SOURCES)
-
 roger_coredir=$(bindir)
 roger_core_LTLIBRARIES = libroger_core.la
 libroger_core_la_SOURCES = $(roger_core_SOURCES)
 libroger_core_la_CFLAGS = $(roger_CFLAGS)
 libroger_core_la_LDFLAGS = $(roger_LDFLAGS) -shared -no-undefined -avoid-version
-else
-roger_SOURCES = $(roger_core_SOURCES)
 endif
 
 NULL =
