@@ -72,7 +72,7 @@ gboolean fax_printer_init(GError **error)
 	GError *fax_error = NULL;
 
 	socket = g_socket_new(G_SOCKET_FAMILY_IPV4, G_SOCKET_TYPE_STREAM, G_SOCKET_PROTOCOL_TCP, &fax_error);
-	if (error != NULL) {
+	if (socket == NULL) {
 		g_debug("Could not create socket. Error: '%s'", fax_error->message);
 		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Could not create socket. Error: '%s'", fax_error ? fax_error->message : "");
 		g_error_free(fax_error);
@@ -85,11 +85,10 @@ gboolean fax_printer_init(GError **error)
 	if (sock_address == NULL) {
 		g_debug("Could not create sock address on port 9100");
 		g_object_unref(socket);
-		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Could not create sock address on port 9100");
+		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "%s", "Could not create sock address on port 9100");
 		return FALSE;
 	}
 
-	error = NULL;
 	if (g_socket_bind(socket, sock_address, TRUE, &fax_error) == FALSE) {
 		g_debug("Could not bind to socket. Error: %s", fax_error->message);
 		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Could not bind to socket. Error: %s", fax_error->message);
