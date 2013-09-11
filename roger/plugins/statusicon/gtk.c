@@ -83,8 +83,6 @@ GtkWidget *create_call_item(struct call *call) {
 	GtkWidget *item = NULL;
 	GtkWidget *label = NULL;
 	GtkWidget *box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-	GtkWidget *image = NULL;
-	GdkPixbuf *pix = NULL;
 	gchar *number_text;
 	GtkWidget *name_label = NULL;
 	gchar *name;
