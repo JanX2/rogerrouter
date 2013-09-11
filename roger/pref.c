@@ -103,7 +103,7 @@ void preferences(void)
 	}
 
 	parent = journal_get_window();
-	dialog = gtk_dialog_new_with_buttons(_("Preferences"), parent ? GTK_WINDOW(parent) : NULL, GTK_DIALOG_MODAL, _("_Close"), GTK_RESPONSE_CLOSE, NULL);
+	dialog = gtk_dialog_new_with_buttons(_("Preferences"), parent ? GTK_WINDOW(parent) : NULL, 0, _("_Close"), GTK_RESPONSE_CLOSE, NULL);
 	content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 
 	page = pref_page_router();
