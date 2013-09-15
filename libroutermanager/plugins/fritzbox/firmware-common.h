@@ -20,6 +20,8 @@
 #ifndef FIRMWARE_COMMON_H
 #define FIRMWARE_COMMON_H
 
+#include <string.h>
+
 #include <libroutermanager/router.h>
 
 G_BEGIN_DECLS
@@ -73,8 +75,6 @@ gchar *xml_extract_tag(const gchar *data, gchar *tag);
 gchar *xml_extract_input_value(const gchar *data, gchar *tag);
 gchar *xml_extract_list_value(const gchar *data, gchar *tag);
 gchar *html_extract_assignment(const gchar *data, gchar *tag, gboolean p);
-inline gchar *make_dots(const gchar *str);
-inline gchar *md5(gchar *input);
 gboolean fritzbox_present(struct router_info *router_info);
 gboolean fritzbox_logout(struct profile *profile, gboolean force);
 void fritzbox_read_msn(struct profile *profile, const gchar *data);
@@ -89,6 +89,56 @@ gchar *fritzbox_get_ip(struct profile *profile);
 gboolean fritzbox_reconnect(struct profile *profile);
 gboolean fritzbox_delete_fax(struct profile *profile, const gchar *filename);
 gboolean fritzbox_delete_voice(struct profile *profile, const gchar *filename);
+
+/**
+ * \brief Make dots (UTF8 -> UTF16)
+ * \param str UTF8 string
+ * \return UTF16 string
+ */
+static inline gchar *make_dots(const gchar *str)
+{
+	GString *new_str = g_string_new("");
+	gunichar chr;
+	gchar *next;
+
+	while (str && *str) {
+		chr = g_utf8_get_char(str);
+		next = g_utf8_next_char(str);
+
+		if (chr > 255) {
+			new_str = g_string_append_c(new_str, '.');
+		} else {
+			new_str = g_string_append_c(new_str, chr);
+		}
+
+		str = next;
+	}
+
+	return g_string_free(new_str, FALSE);
+}
+
+/**
+ * \brief Compute md5 sum of input string
+ * \param input - input string
+ * \return md5 in hex or NULL on error
+ */
+static inline gchar *md5(gchar *input)
+{
+	GError *error = NULL;
+	gchar *ret = NULL;
+
+	gunichar2 *bin = g_utf8_to_utf16(input, -1, NULL, NULL, &error);
+
+	if (error == NULL) {
+		ret = g_compute_checksum_for_string(G_CHECKSUM_MD5, (gchar *) bin, strlen(input) * 2);
+		g_free(bin);
+	} else {
+		g_debug("Error converting utf8 to utf16: '%s'", error->message);
+		g_error_free(error);
+	}
+
+	return ret;
+}
 
 G_END_DECLS
 

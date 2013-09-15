@@ -104,22 +104,6 @@ static short alaw2linear(unsigned char alaw_byte) {
 }
 
 /**
- * \brief Bit-inverse the given value
- * \param chr char value
- * \return bit-inversed value
- */
-inline unsigned char bit_inverse(unsigned char chr) {
-	return ((chr >> 7) & 0x1) |
-		((chr >> 5) & 0x2) |
-		((chr >> 3) & 0x4) |
-		((chr >> 1) & 0x8) |
-		((chr << 1) & 0x10) |
-		((chr << 3) & 0x20) |
-		((chr << 5) & 0x40) |
-		((chr << 7) & 0x80);
-}
-
-/**
  * \brief Create lookup table buffer
  */
 void create_table_buffer(void) {

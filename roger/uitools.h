@@ -22,7 +22,7 @@
 
 G_BEGIN_DECLS
 
-inline GtkWidget *ui_label_new(gchar *text);
+GtkWidget *ui_label_new(gchar *text);
 gchar *ui_bold_text(gchar *text);
 
 G_END_DECLS

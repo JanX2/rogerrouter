@@ -43,6 +43,7 @@
 #include <roger/phone.h>
 #include <roger/main.h>
 #include <roger/llevel.h>
+#include <roger/uitools.h>
 
 static GSList *phone_active_connections = NULL;
 

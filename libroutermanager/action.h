@@ -55,8 +55,8 @@ struct action {
 void action_init(struct profile *profile);
 void action_shutdown(struct profile *profile);
 GSList *action_get_list(struct profile *profile);
-inline void action_remove(struct profile *profile, struct action *action);
-inline void action_add(struct profile *profile, struct action *action);
+void action_remove(struct profile *profile, struct action *action);
+void action_add(struct profile *profile, struct action *action);
 void action_commit(struct profile *profile);
 void action_free(gpointer data);
 struct action *action_create(void);

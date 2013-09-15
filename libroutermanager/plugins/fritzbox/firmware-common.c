@@ -242,56 +242,6 @@ gchar *html_extract_assignment(const gchar *data, gchar *tag, gboolean p)
 }
 
 /**
- * \brief Make dots (UTF8 -> UTF16)
- * \param str UTF8 string
- * \return UTF16 string
- */
-inline gchar *make_dots(const gchar *str)
-{
-	GString *new_str = g_string_new("");
-	gunichar chr;
-	gchar *next;
-
-	while (str && *str) {
-		chr = g_utf8_get_char(str);
-		next = g_utf8_next_char(str);
-
-		if (chr > 255) {
-			new_str = g_string_append_c(new_str, '.');
-		} else {
-			new_str = g_string_append_c(new_str, chr);
-		}
-
-		str = next;
-	}
-
-	return g_string_free(new_str, FALSE);
-}
-
-/**
- * \brief Compute md5 sum of input string
- * \param input - input string
- * \return md5 in hex or NULL on error
- */
-inline gchar *md5(gchar *input)
-{
-	GError *error = NULL;
-	gchar *ret = NULL;
-
-	gunichar2 *bin = g_utf8_to_utf16(input, -1, NULL, NULL, &error);
-
-	if (error == NULL) {
-		ret = g_compute_checksum_for_string(G_CHECKSUM_MD5, (gchar *) bin, strlen(input) * 2);
-		g_free(bin);
-	} else {
-		g_debug("Error converting utf8 to utf16: '%s'", error->message);
-		g_error_free(error);
-	}
-
-	return ret;
-}
-
-/**
  * \brief Check if a FRITZ!Box router is present
  * \param router_info - router information structure
  * \return true if fritzbox and type could be retrieved, otherwise false

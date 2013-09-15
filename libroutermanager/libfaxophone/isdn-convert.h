@@ -27,6 +27,16 @@ double get_line_level_in(struct capi_connection *connection);
 double get_line_level_out(struct capi_connection *connection);
 void convert_isdn_to_audio(struct capi_connection *connection, guchar *in_buf, guint in_buf_len, guchar *out_buf, guint *out_buf_len, short *rec_buf);
 void convert_audio_to_isdn(struct capi_connection *connection, guchar *in_buf, guint in_buf_len, guchar *out_buf, guint *out_buf_len, short *rec_buf);
-inline guchar bit_inverse(guchar chr);
+
+static inline guchar bit_inverse(guchar chr) {
+	return ((chr >> 7) & 0x1) |
+		((chr >> 5) & 0x2) |
+		((chr >> 3) & 0x4) |
+		((chr >> 1) & 0x8) |
+		((chr << 1) & 0x10) |
+		((chr << 3) & 0x20) |
+		((chr << 5) & 0x40) |
+		((chr << 7) & 0x80);
+}
 
 #endif

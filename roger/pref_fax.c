@@ -147,7 +147,7 @@ GtkWidget *pref_page_fax(void)
 	report_toggle = gtk_check_button_new_with_label(_("Create fax report"));
 	GdkRGBA col;
 	gdk_rgba_parse(&col, "#808080");
-	gtk_widget_override_color(report_toggle, GTK_STATE_NORMAL, &col);
+	gtk_widget_override_color(report_toggle, GTK_STATE_FLAG_NORMAL, &col);
 
 	g_settings_bind(profile_get_active()->settings, "fax-report", report_toggle, "active", G_SETTINGS_BIND_DEFAULT);
 	gtk_grid_attach(GTK_GRID(report_grid), report_toggle, 0, 0, 1, 1);
@@ -230,7 +230,7 @@ GtkWidget *pref_page_fax(void)
 	gtk_grid_attach(GTK_GRID(modem_grid), controller_combobox, 1, 2, 1, 1);
 
 	ecm_toggle = gtk_check_button_new_with_label(_("Error correction mode (ECM)"));
-	gtk_widget_override_color(ecm_toggle, GTK_STATE_NORMAL, &col);
+	gtk_widget_override_color(ecm_toggle, GTK_STATE_FLAG_NORMAL, &col);
 	g_settings_bind(profile_get_active()->settings, "fax-ecm", ecm_toggle, "active", G_SETTINGS_BIND_DEFAULT);
 	gtk_grid_attach(GTK_GRID(modem_grid), ecm_toggle, 0, 3, 2, 1);
 

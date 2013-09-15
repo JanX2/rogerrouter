@@ -249,7 +249,7 @@ static GtkWidget *pref_page_router_settings(void)
 	show_password_toggle = gtk_check_button_new_with_label(_("Show passwords"));
 	GdkRGBA col;
 	gdk_rgba_parse(&col, "#808080");
-	gtk_widget_override_color(show_password_toggle, GTK_STATE_NORMAL, &col);
+	gtk_widget_override_color(show_password_toggle, GTK_STATE_FLAG_NORMAL, &col);
 
 	gtk_widget_set_tooltip_text(show_password_toggle, _("Toggle passwords visibility"));
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(show_password_toggle), FALSE);

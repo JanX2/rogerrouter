@@ -233,7 +233,7 @@ void action_commit(struct profile *profile)
  * \param profile profile pointer
  * \param action action to add to profile action list
  */
-inline void action_add(struct profile *profile, struct action *action)
+void action_add(struct profile *profile, struct action *action)
 {
 	/* Add action to profile action list */
 	profile->action_list = g_slist_prepend(profile->action_list, action);
@@ -244,7 +244,7 @@ inline void action_add(struct profile *profile, struct action *action)
  * \param profile profile pointer
  * \param action action structure to remove
  */
-inline void action_remove(struct profile *profile, struct action *action)
+void action_remove(struct profile *profile, struct action *action)
 {
 	/* Remove profile from action list */
 	profile->action_list = g_slist_remove(profile->action_list, action);

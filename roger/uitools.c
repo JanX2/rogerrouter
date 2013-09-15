@@ -21,14 +21,14 @@
 
 #include <roger/uitools.h>
 
-inline GtkWidget *ui_label_new(gchar *text)
+GtkWidget *ui_label_new(gchar *text)
 {
 	GtkWidget *label;
 	GdkRGBA col;
 
 	label = gtk_label_new(text);
 	gdk_rgba_parse(&col, "#808080");
-	gtk_widget_override_color(label, GTK_STATE_NORMAL, &col);
+	gtk_widget_override_color(label, GTK_STATE_FLAG_NORMAL, &col);
 	gtk_misc_set_alignment(GTK_MISC(label), 1, 0.5);
 
 	return label;

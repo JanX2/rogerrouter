@@ -20,9 +20,10 @@
 #ifndef PREF_H
 #define PREF_H
 
+#include <roger/uitools.h>
+
 G_BEGIN_DECLS
 
-inline GtkWidget *ui_label_new(gchar *text);
 void pref_notebook_add_page(GtkWidget *notebook, GtkWidget *page, gchar *title);
 GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand, gboolean vexpand);
 void preferences(void);

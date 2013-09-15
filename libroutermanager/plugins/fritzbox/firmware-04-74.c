@@ -168,7 +168,7 @@ gint number_compare_04_74(gconstpointer a, gconstpointer b)
  * \param msn_str string we want to lookup
  * \return TRUE on success, otherwise FALSE
  */
-inline gboolean extract_number_04_74(GSList **number_list, const gchar *data, gchar *msn_str)
+gboolean extract_number_04_74(GSList **number_list, const gchar *data, gchar *msn_str)
 {
 	gchar *fon;
 
