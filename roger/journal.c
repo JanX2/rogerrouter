@@ -81,43 +81,57 @@ void journal_clear(void)
 
 GdkPixbuf *journal_get_call_icon(gint type)
 {
-	gchar *path = NULL;
-	GError *error = NULL;
+	//gchar *path = NULL;
+	//GError *error = NULL;
 
 	if (icon_call_in == NULL) {
-		path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "callin.png", NULL);
-		icon_call_in = gdk_pixbuf_new_from_file(path, &error);
-		if (!icon_call_in) {
-			g_debug("ERROR!!!");
-			g_debug("Message: %s", error->message);
-		}
-		g_free(path);
+		//path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "callin.png", NULL);
+		//icon_call_in = gdk_pixbuf_new_from_file(path, &error);
+		//if (!icon_call_in) {
+		//	g_debug("ERROR!!!");
+		//	g_debug("Message: %s", error->message);
+		//}
+		//g_free(path);
+		GtkIconTheme *icons;
+
+		icons = gtk_icon_theme_get_default();
+		icon_call_in = gtk_icon_theme_load_icon(icons, "call-end-symbolic", 18, 0, NULL);
 	}
 
 	if (icon_call_missed == NULL) {
-		path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "callmissed.png", NULL);
-		icon_call_missed = gdk_pixbuf_new_from_file(path, NULL);
-		g_free(path);
+		//path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "callmissed.png", NULL);
+		//icon_call_missed = gdk_pixbuf_new_from_file(path, NULL);
+		//g_free(path);
+		GtkIconTheme *icons;
+
+		icons = gtk_icon_theme_get_default();
+		icon_call_missed = gtk_icon_theme_load_icon(icons, "call-missed-symbolic", 18, 0, NULL);
 	}
 
 	if (icon_call_out == NULL) {
-		path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "callout.png", NULL);
-		icon_call_out = gdk_pixbuf_new_from_file(path, NULL);
-		g_free(path);
+		//path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "callout.png", NULL);
+		//icon_call_out = gdk_pixbuf_new_from_file(path, NULL);
+		//g_free(path);
+		GtkIconTheme *icons;
+
+		icons = gtk_icon_theme_get_default();
+		icon_call_out = gtk_icon_theme_load_icon(icons, "call-start-symbolic", 18, 0, NULL);
 	}
 
 	if (icon_fax == NULL) {
 		GtkIconTheme *icons;
 
 		icons = gtk_icon_theme_get_default();
-		icon_fax = gtk_icon_theme_load_icon(icons, "document-open", 18, 0, NULL);
+		icon_fax = gtk_icon_theme_load_icon(icons, "folder-documents-symbolic", 18, 0, NULL);
 	}
 
 	if (icon_voice == NULL) {
 		GtkIconTheme *icons;
 
 		icons = gtk_icon_theme_get_default();
-		icon_voice = gtk_icon_theme_load_icon(icons, "media-record", 18, 0, NULL);
+		icon_voice = gtk_icon_theme_load_icon(icons, "folder-music-symbolic", 18, 0, NULL);
+		//GtkWidget *image = gtk_image_new_from_icon_name("folder-music-symbolic", GTK_ICON_SIZE_MENU);
+		//icon_voice = gtk_image_get_pixbuf(GTK_IMAGE(image));
 	}
 
 	switch (type) {
