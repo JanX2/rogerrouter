@@ -266,6 +266,20 @@ void fritzbox_extract_numbers_04_74(struct profile *profile, const gchar *data)
 		g_free(msn_str);
 	}
 
+	/* VoipExtensionX/NumberY */
+	for (port = 0; port < 10; port++) {
+		for (index = 0; index < 10; index++) {
+			gchar *msn_str = g_strdup_printf("telcfg:settings/VoipExtension%d/Number%d", port, index);
+
+			if (extract_number_04_74(&number_list, data, msn_str)) {
+				if (type == -1) {
+					type = 4;
+				}
+			}
+			g_free(msn_str);
+		}
+	}
+
 	numbers = g_malloc(sizeof(gchar*) * (g_slist_length(number_list) + 1));
 	for (list = number_list; list; list = list->next) {
 		g_debug("Adding MSN '%s'", call_scramble_number(list->data));
