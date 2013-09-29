@@ -196,6 +196,19 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 		}
 	}
 
+	if (!found && connection->local_number[0] != '0') {
+		gchar *tmp = call_full_number(connection->local_number, FALSE);
+
+		/* Match numbers against local number and check if we should show a notification */
+		for (count = 0; count < g_strv_length(numbers); count++) {
+			if (!strcmp(tmp, numbers[count])) {
+				found = TRUE;
+				break;
+			}
+		}
+		g_free(tmp);
+	}
+
 	/* No match found? -> exit */
 	if (!found) {
 		return;
