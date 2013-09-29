@@ -106,12 +106,11 @@ gboolean callmonitor_io_cb(GIOChannel *source, GIOCondition condition, gpointer 
 
 			gchar **lines = g_strsplit(msg, "\n", -1);
 			gint count = 0;
-			while (lines[count] != NULL) {
+			for (count = 0; count < g_strv_length(lines); count++) {
 				if (strlen(lines[count]) > 0) {
 					//g_debug("CallMonitor: '%s'", lines[count]);
 					callmonitor_convert(lines[count]);
 				}
-				count++;
 			}
 			g_strfreev(lines);
 
