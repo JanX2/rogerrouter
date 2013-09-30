@@ -185,6 +185,7 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 
 	/* If numbers are NULL, exit */
 	if (!numbers || !g_strv_length(numbers)) {
+		g_debug("type: %d, numbers is empty", connection->type);
 		return;
 	}
 
@@ -197,10 +198,13 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 	}
 
 	if (!found && connection->local_number[0] != '0') {
+		g_debug("type: %d, number '%s' not found", connection->type, connection->local_number);
+
 		gchar *tmp = call_full_number(connection->local_number, FALSE);
 
 		/* Match numbers against local number and check if we should show a notification */
 		for (count = 0; count < g_strv_length(numbers); count++) {
+			g_debug("type: %d, number '%s'/'%s' <-> '%s'", connection->type, connection->local_number, tmp, numbers[count]);
 			if (!strcmp(tmp, numbers[count])) {
 				found = TRUE;
 				break;
