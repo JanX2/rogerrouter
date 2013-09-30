@@ -39,6 +39,8 @@ struct connection *connection_add_call(gint id, gint type, const gchar *local_nu
 	connection->local_number = g_strdup(local_number);
 	connection->remote_number = g_strdup(remote_number);
 
+	g_debug("Adding connection: type %d, local %s, remote %s", connection->type, call_scramble_number(connection->local_number), call_scramble_number(connection->remote_number));
+
 	connection_list = g_slist_append(connection_list, connection);
 
 	return connection;
