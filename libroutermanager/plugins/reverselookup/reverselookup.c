@@ -39,7 +39,7 @@
 #define ROUTERMANAGER_TYPE_REVERSE_LOOKUP_PLUGIN (routermanager_reverse_lookup_plugin_get_type ())
 #define ROUTERMANAGER_REVERSE_LOOKUP_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_REVERSE_LOOKUP_PLUGIN, RouterManagerReverseLookupPlugin))
 
-//#define RL_DEBUG 1
+#define RL_DEBUG 1
 
 typedef struct {
 	guint signal_id;
@@ -148,10 +148,17 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 	g_free(tmp_file);
 #endif
 
+#ifdef RL_DEBUG
+	g_debug("g_match_info_matches()");
+#endif
+
 	if (!g_match_info_matches(info)) {
 		goto end;
 	}
 
+#ifdef RL_DEBUG
+	g_debug("g_match_info_fetch_named()");
+#endif
 	if ((rl_tmp = g_match_info_fetch_named(info, "name"))) {
 		*name = strip_html(rl_tmp);
 		g_free(rl_tmp);
@@ -164,6 +171,9 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 #endif
 
 	if ((rl_tmp = g_match_info_fetch_named(info, "street"))) {
+#ifdef RL_DEBUG
+		g_debug("street: %s", rl_tmp);
+#endif
 		*street = strip_html(rl_tmp);
 		g_free(rl_tmp);
 	} else {
@@ -171,6 +181,9 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 	}
 
 	if ((rl_tmp = g_match_info_fetch_named(info, "zip"))) {
+#ifdef RL_DEBUG
+		g_debug("zip: %s", rl_tmp);
+#endif
 		*zip = strip_html(rl_tmp);
 		g_free(rl_tmp);
 	} else {
@@ -178,6 +191,9 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 	}
 
 	if ((rl_tmp = g_match_info_fetch_named(info, "city"))) {
+#ifdef RL_DEBUG
+		g_debug("city: %s", rl_tmp);
+#endif
 		*city = strip_html(rl_tmp);
 		g_free(rl_tmp);
 	} else {
