@@ -51,8 +51,15 @@ typedef struct capi_profile {
 /* max. B-Channels */
 #define CAPI_BCHANNELS 2
 
+#define USE_ISDN_MUTEX 1
+
+#ifdef USE_ISDN_MUTEX
 #define isdn_lock() do { g_mutex_lock(&session->isdn_mutex); } while (0);
 #define isdn_unlock() do { g_mutex_unlock(&session->isdn_mutex); } while (0);
+#else
+#define isdn_lock()
+#define isdn_unlock()
+#endif
 
 #undef CREATE_THREAD
 #define CREATE_THREAD(name, func, data) g_thread_new(name, func, data)
@@ -125,6 +132,7 @@ struct capi_connection {
 
 	gpointer audio;
 
+	void (*init_data)(struct capi_connection *connection);
 	void (*data)(struct capi_connection *connection, _cmsg capi_message);
 	void (*clean)(struct capi_connection *connection);
 };

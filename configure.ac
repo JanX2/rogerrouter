@@ -371,6 +371,37 @@ AC_MSG_RESULT($with_dbus)
 
 AM_CONDITIONAL(WITH_DBUS, test "x$with_dbus" != "xno")
 
+dnl ********************************************************************
+dnl appindicator is optional
+dnl ********************************************************************
+AC_ARG_WITH([appindicator3],
+	[AS_HELP_STRING([--with-appindicator3=@<:@ARG@:>@],
+	[Use appindicator3 (possible values: no, yes, check, or the path to appindicator3) @<:@default=check@:>@])],
+	[],
+	[with_appindicator3=check])
+
+AC_MSG_CHECKING(for appindicator3-0.1)
+AS_IF([test "x$with_appindicator3" != xno],
+	[if test "x$with_appindicator3" = xcheck; then
+		pkg-config --exists appindicator3-0.1 && with_appindicator3=yes
+	elif test "x$with_appindicator3" = xyes; then
+		pkg-config --exists appindicator3-0.1 || AC_MSG_FAILURE(
+			[--with-appindicator3=yes was given, but test for appindicator3 failed])
+	fi
+	if test "x$with_appindicator3" = xyes; then
+		AC_SUBST([APPINDICATOR_CFLAGS], ["`pkg-config --cflags appindicator3-0.1`"])
+		AC_SUBST([APPINDICATOR_LIBS], ["`pkg-config --libs appindicator3-0.1`"])
+		AC_DEFINE([HAVE_APPINDICATOR], 1, [Have appindicator])
+		ROGER_FEATURES_YES="\tappindicator3\n$ROGER_FEATURES_YES"
+	else
+		with_appindicator3=no
+		ROGER_FEATURES_NO="\tappindicator3\n$ROGER_FEATURES_NO"
+	fi
+])
+
+AC_MSG_RESULT($with_appindicator3)
+
+AM_CONDITIONAL(WITH_APPINDICATOR3, test "x$with_appindicator3" != "xno")
 
 AC_ARG_ENABLE(werror,
 	AS_HELP_STRING([--disable-werror], [don't use gcc's -Werror option when building]))
@@ -414,6 +445,8 @@ AC_OUTPUT([
     roger/plugins/evolution/data/Makefile
     roger/plugins/gtknotify/Makefile
     roger/plugins/gtknotify/data/Makefile
+    roger/plugins/indicator/Makefile
+    roger/plugins/indicator/data/Makefile
     macosx/roger.plist
     macosx/package
 ])

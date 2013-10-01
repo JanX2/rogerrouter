@@ -428,7 +428,7 @@ void fax_transfer(struct capi_connection *connection, _cmsg capi_message)
 	gint32 ret;
 
 	/* buffer-length check */
-	g_assert(len <= CAPI_PACKETS);
+	//g_assert(len <= CAPI_PACKETS);
 
 	/* Save data and send response */
 	memcpy(alaw_buffer_rx, (uint8_t *) DATA_B3_IND_DATA(&capi_message), len);

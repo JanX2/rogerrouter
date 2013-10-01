@@ -60,6 +60,18 @@ gpointer phone_input_thread(gpointer data) {
 	return NULL;
 }
 
+void phone_init_data(struct capi_connection *connection)
+{
+	struct session *session = faxophone_get_session();
+
+	g_debug("phone_init_data()");
+	if (session->input_thread_state == 0) {
+		session->input_thread_state = 1;
+
+		CREATE_THREAD("phone-input", phone_input_thread, connection);
+	}
+}
+
 /**
  * \brief Phone transfer routine which accepts incoming data, converts and outputs the audio
  * \param connection active capi connection
@@ -73,12 +85,6 @@ void phone_transfer(struct capi_connection *connection, _cmsg capi_message) {
 	guint len = DATA_B3_IND_DATALENGTH(&capi_message);
 	guint audio_buf_len;
 	short rec_buffer[8192];
-
-	if (session->input_thread_state == 0) {
-		session->input_thread_state = 1;
-
-		CREATE_THREAD("phone-input", phone_input_thread, connection);
-	}
 
 	/* Set incoming data pointer */
 	audio_buffer_rx = DATA_B3_IND_DATA(&capi_message);

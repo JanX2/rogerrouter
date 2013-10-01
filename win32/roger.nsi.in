@@ -94,7 +94,7 @@ Section RogerRouter
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libpangocairo-1.0-0.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libpangowin32-1.0-0.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libpixman-1-0.dll"
-	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libpng15-15.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libpng16-16.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libsndfile-1.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libspeex-1.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libxml2-2.dll"

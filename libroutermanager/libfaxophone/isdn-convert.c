@@ -182,7 +182,7 @@ void convert_isdn_to_audio(struct capi_connection *connection, unsigned char *in
 	unsigned int to_process;
 	unsigned int out_ptr = 0;
 	unsigned int j;
-	unsigned char nInByte;
+	unsigned char in_byte;
 	int sample;
 	double ratio_in = 1.0f;
 	double ll_ratio;
@@ -191,13 +191,13 @@ void convert_isdn_to_audio(struct capi_connection *connection, unsigned char *in
 	out_ptr = 0;
 
 	for (index = 0; index < in_buf_len; index++) {
-		nInByte = in_buf[index];
+		in_byte = in_buf[index];
 
 		if (recorder != NULL && rec_buf != NULL) {
-			rec_buf[index] = recorder->file ? lut_a2s[nInByte] : 0;
+			rec_buf[index] = recorder->file ? lut_a2s[in_byte] : 0;
 		}
 
-		sample = lut_analyze[nInByte];
+		sample = lut_analyze[in_byte];
 		if (abs((int) sample - 128) > max) {
 			max = abs((int) sample - 128);
 		}
@@ -205,8 +205,8 @@ void convert_isdn_to_audio(struct capi_connection *connection, unsigned char *in
 		to_process = (int) floor((double)(index + 1) * ratio_in) - (int) floor((double) index * ratio_in);
 
 		for (j = 0; j < to_process; j++) {
-			out_buf[out_ptr++] = lut_in[(int) nInByte * 2];
-			out_buf[out_ptr++] = lut_in[(int) nInByte * 2 + 1];
+			out_buf[out_ptr++] = lut_in[(int) in_byte * 2];
+			out_buf[out_ptr++] = lut_in[(int) in_byte * 2 + 1];
 		}
 	}
 

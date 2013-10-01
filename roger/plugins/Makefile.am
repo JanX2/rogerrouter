@@ -9,3 +9,7 @@ endif
 if WITH_LIBNOTIFY
 SUBDIRS += notification
 endif
+
+if WITH_APPINDICATOR3
+SUBDIRS += indicator
+endif

@@ -1,0 +1,9 @@
+[Plugin]
+Module=indicator
+_Name=Application Indicator
+_Description=Status icon plugin using AppIndicator support
+Authors=Dieter Schärf <ds@dschaerf.de>
+Copyright=Copyright © 2013 Dieter Schärf
+Website=http://ffgtk.dschaerf.de/plugins/applicationindicator/
+Help=http://ffgtk.dschaerf.de/plugins/applicationindicator/
+

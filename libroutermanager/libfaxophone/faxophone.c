@@ -59,11 +59,13 @@ static int capi_connection_set_type(struct capi_connection *connection, int type
 	/* Set informations depending on type */
 	switch (type) {
 		case SESSION_PHONE:
+			connection->init_data = phone_init_data;
 			connection->data = phone_transfer;
 			connection->clean = NULL;
 			connection->early_b3 = 1;
 			break;
 		case SESSION_FAX:
+			connection->init_data = NULL;
 			connection->data = fax_transfer;
 			connection->clean = fax_clean;
 			connection->early_b3 = 0;
@@ -828,6 +830,9 @@ static int capi_indication(_cmsg capi_message) {
 			connection->state = STATE_CONNECTED;
 
 			capi_enable_dtmf(connection);
+			if (connection->init_data) {
+				connection->init_data(connection);
+			}
 
 			/* notify application about successful call establishment */
 			session->handlers->connected(connection);
@@ -845,9 +850,9 @@ static int capi_indication(_cmsg capi_message) {
 			}
 
 			//g_debug("IND: CAPI_DATA_B3 - nConnection: %d, plci: %d, ncci: %d", connection->id, connection->plci, connection->ncci);
-			if (connection->data) {
+			//if (connection->data) {
 				connection->data(connection, capi_message);
-			}
+			//}
 			break;
 
 		/* CAPI_FACILITY - Facility (DTMF) */
@@ -1348,14 +1353,13 @@ static gpointer capi_loop(void *user_data) {
 					g_usleep(1 * G_USEC_PER_SEC);
 					break;
 				default:
-					g_usleep(1);
 					return NULL;
 			}
 		} else if (!faxophone_quit) {
 			if (session == NULL || session->appl_id == -1) {
 				g_usleep(1 * G_USEC_PER_SEC);
 			} else {
-				g_usleep(10);
+				g_usleep(1);
 			}
 		}
 	}

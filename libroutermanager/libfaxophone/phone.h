@@ -21,6 +21,7 @@ void phone_record(struct capi_connection *connection, guchar hold, const gchar *
 void phone_send_dtmf_code(struct capi_connection *connection, guchar code);
 void phone_hangup(struct capi_connection *connection);
 gint phone_pickup(struct capi_connection *connection);
+void phone_init_data(struct capi_connection *connection);
 void phone_transfer(struct capi_connection *connection, _cmsg message);
 void phone_conference(struct capi_connection *active, struct capi_connection *hold);
 void phone_flush(struct capi_connection *connection);

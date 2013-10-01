@@ -1,4 +1,7 @@
 /**
+ * Roger Router - Plugin Application Indicator
+ * Copyright (c) 2013 Dieter Schärf
+ *
  * Roger Router
  * Copyright (c) 2012-2013 Jan-Michael Brummer
  *
@@ -21,6 +24,8 @@
 
 #include <gtk/gtk.h>
 
+#include <libappindicator/app-indicator.h>
+
 #include <libroutermanager/call.h>
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/profile.h>
@@ -35,27 +40,27 @@
 
 #define MAX_LASTCALLS 5
 
-#define ROUTERMANAGER_TYPE_STATUSICON_PLUGIN        (routermanager_statusicon_plugin_get_type ())
-#define ROUTERMANAGER_STATUSICON_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_STATUSICON_PLUGIN, RouterManagerStatusIconPlugin))
+#define ROUTERMANAGER_TYPE_INDICATOR_PLUGIN        (routermanager_indicator_plugin_get_type ())
+#define ROUTERMANAGER_INDICATOR_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_INDICATOR_PLUGIN, RouterManagerIndicatorPlugin))
 
 typedef struct {
 	guint signal_id;
-} RouterManagerStatusIconPluginPrivate;
+} RouterManagerIndicatorPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_STATUSICON_PLUGIN, RouterManagerStatusIconPlugin, routermanager_statusicon_plugin)
+ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_INDICATOR_PLUGIN, RouterManagerIndicatorPlugin, routermanager_indicator_plugin)
 
 extern GList *journal_list;
 extern GtkWidget *journal_win;
 
-static GSettings *statusicon_settings = NULL;
-static GtkStatusIcon *statusicon = NULL;
+static AppIndicator *indicator;
+static GSettings *indicator_settings;
 
 /**
  * \brief create "Functions" submenu items
  * \param none
  * \return new menu widget
  */
-GtkWidget *statusicon_menu_functions(void)
+GtkWidget *indicator_menu_functions(void)
 {
 	GtkWidget *menu;
 	GtkWidget *item;
@@ -80,7 +85,7 @@ GtkWidget *statusicon_menu_functions(void)
  * \param obj gtk menu item
  * \param user_data unused user pointer
  */
-void statusicon_dial_number_cb(GtkMenuItem *item, gpointer user_data)
+void indicator_dial_number_cb(GtkMenuItem *item, gpointer user_data)
 {
 	app_show_phone_window(user_data);
 }
@@ -91,7 +96,7 @@ void statusicon_dial_number_cb(GtkMenuItem *item, gpointer user_data)
  * \param gchar label
  * \param int call_type
  */
-void statusicon_menu_last_calls_group(GtkWidget *menu, gchar *label, int call_type)
+void indicator_menu_last_calls_group(GtkWidget *menu, gchar *label, int call_type)
 {
 	GtkWidget *item;
 	GList *list;
@@ -115,7 +120,7 @@ void statusicon_menu_last_calls_group(GtkWidget *menu, gchar *label, int call_ty
 				gtk_menu_item_set_label(GTK_MENU_ITEM(item), call->remote.number);
 			}
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(statusicon_dial_number_cb), &call->remote);
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(indicator_dial_number_cb), &call->remote);
 
 			count++;
 
@@ -133,7 +138,7 @@ void statusicon_menu_last_calls_group(GtkWidget *menu, gchar *label, int call_ty
  * \param type call type
  * \return new menu widget
  */
-GtkWidget* statusicon_menu_last_calls(void)
+GtkWidget* indicator_menu_last_calls(void)
 {
 	GtkWidget *menu;
 	GtkWidget *item;
@@ -141,42 +146,60 @@ GtkWidget* statusicon_menu_last_calls(void)
 	menu = gtk_menu_new();
 
 	/* Last calls - Incomming */
-	statusicon_menu_last_calls_group(menu, _("Incoming"), CALL_TYPE_INCOMING);
+	indicator_menu_last_calls_group(menu, _("Incoming"), CALL_TYPE_INCOMING);
 
 	/* Separator */
 	item = gtk_separator_menu_item_new();
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
 	/* Last calls - Outgoing */
-	statusicon_menu_last_calls_group(menu, _("Outgoing"), CALL_TYPE_OUTGOING);
+	indicator_menu_last_calls_group(menu, _("Outgoing"), CALL_TYPE_OUTGOING);
 
 	/* Separator */
 	item = gtk_separator_menu_item_new();
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
 	/* Last calls - Missed */
-	statusicon_menu_last_calls_group(menu, _("Missed"), CALL_TYPE_MISSED);
+	indicator_menu_last_calls_group(menu, _("Missed"), CALL_TYPE_MISSED);
 
 	return menu;
 }
 
-void statusicon_activate_cb(void)
+/**
+ * \brief "last_calls" callback function
+ * \param obj gtk menu item
+ */
+void indicator_last_calls_cb(GtkMenuItem *item)
 {
-	gtk_status_icon_set_from_pixbuf(statusicon, journal_get_call_icon(CALL_TYPE_OUTGOING));
+	GtkWidget *submenu;
+	
+	submenu = indicator_menu_last_calls();
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
 
-	gtk_widget_set_visible(GTK_WIDGET(journal_win), !gtk_widget_get_visible(GTK_WIDGET(journal_win)));
+	gtk_widget_show_all(submenu);
 }
 
-void statusicon_journal_cb(void)
+/**
+ * \brief "journal" callback function
+ * \param none
+ */
+void indicator_journal_cb(void)
 {
+	app_indicator_set_status(indicator, APP_INDICATOR_STATUS_ACTIVE);
+
 	if (gtk_widget_get_visible(GTK_WIDGET(journal_win))) {
 		gtk_window_present(GTK_WINDOW(journal_win));
 	} else {
-		statusicon_activate_cb();
+		gtk_widget_set_visible(GTK_WIDGET(journal_win), TRUE);
 	}
 }
 
-void statusicon_popup_menu_cb(GtkStatusIcon *statusicon, guint button, guint activate_time, gpointer user_data)
+/**
+ * \brief create menu
+ * \param none
+ * \return new menu widget
+ */
+GtkWidget *indicator_menu(void)
 {
 	GtkWidget *menu;
 	GtkWidget *item;
@@ -187,7 +210,7 @@ void statusicon_popup_menu_cb(GtkStatusIcon *statusicon, guint button, guint act
 	/* Journal */
 	item = gtk_menu_item_new_with_label(_("Journal"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(statusicon_journal_cb), NULL);
+	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(indicator_journal_cb), NULL);
 
 	/* Contacts */
 	/*item = gtk_menu_item_new_with_label(_("Contacts"));
@@ -201,13 +224,14 @@ void statusicon_popup_menu_cb(GtkStatusIcon *statusicon, guint button, guint act
 
 	/* Last calls */
 	item = gtk_menu_item_new_with_label(_("Last calls"));
-	submenu = statusicon_menu_last_calls();
+	submenu = indicator_menu_last_calls();
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(indicator_last_calls_cb), NULL);
 
 	/* Functions */
 	item = gtk_menu_item_new_with_label(_("Functions"));
-	submenu = statusicon_menu_functions();
+	submenu = indicator_menu_functions();
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
@@ -245,79 +269,79 @@ void statusicon_popup_menu_cb(GtkStatusIcon *statusicon, guint button, guint act
 
 	gtk_widget_show_all(menu);
 
-#ifdef G_OS_WIN32
-	button = 0;
-#endif
-
-	gtk_menu_popup(GTK_MENU(menu), NULL, NULL, gtk_status_icon_position_menu, statusicon, button, activate_time);
+	return menu;
 }
 
-/** * \brief "connection-notify" callback function
+/**
+ * \brief "connection-notify" callback function
  * \param obj app object
  * \param connection connection structure
  * \param unused_pointer unused user pointer
  */
-void statusicon_connection_notify_cb(AppObject *obj, struct connection *connection, gpointer unused_pointer)
+void indicator_connection_notify_cb(AppObject *obj, struct connection *connection, gpointer unused_pointer)
 {
 	g_debug("Called: '%d/%d", connection->type, CONNECTION_TYPE_MISS);
 	if (connection->type == CONNECTION_TYPE_MISS) {
 		g_debug("Setting missed icon");
-		gtk_status_icon_set_from_pixbuf(statusicon, journal_get_call_icon(CALL_TYPE_MISSED));
+		app_indicator_set_status(indicator, APP_INDICATOR_STATUS_ATTENTION);
 	}
 }
 
 void impl_activate(PeasActivatable *plugin)
 {
-	RouterManagerStatusIconPlugin *statusicon_plugin;
+	RouterManagerIndicatorPlugin *indicator_plugin;
+	GtkWidget *menu;
+	gchar *icon;
 
 	journal_set_hide_on_quit(TRUE);
 
-	statusicon_settings = g_settings_new("org.tabos.roger.plugins.statusicon");
+	indicator_settings = g_settings_new("org.tabos.roger.plugins.indicator");
 
-	/* Create StatusIcon GTK */
-	statusicon = gtk_status_icon_new();
+	/* Create Application Indicator */
+	icon = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "callout.png", NULL);
+	indicator = app_indicator_new("roger", icon, APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
+	g_free(icon);
 
-	g_signal_connect(G_OBJECT(statusicon), "popup-menu", G_CALLBACK(statusicon_popup_menu_cb), NULL);
-	g_signal_connect(G_OBJECT(statusicon), "activate", G_CALLBACK(statusicon_activate_cb), NULL);
+	menu = indicator_menu();
+	app_indicator_set_menu(indicator, GTK_MENU(menu));
 
-	gtk_status_icon_set_from_pixbuf(statusicon, journal_get_call_icon(CALL_TYPE_OUTGOING));
-	gtk_status_icon_set_tooltip_text(statusicon, _("Roger Router"));
-	gtk_status_icon_set_visible(statusicon, TRUE);
+	icon = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "callmissed.png", NULL);
+	app_indicator_set_attention_icon(indicator, icon);
+	g_free(icon);
+
+	app_indicator_set_status(indicator, APP_INDICATOR_STATUS_ACTIVE);
 
 	/* Connect to "call-notify" signal */
-	statusicon_plugin = ROUTERMANAGER_STATUSICON_PLUGIN(plugin);
-	statusicon_plugin->priv->signal_id = g_signal_connect(G_OBJECT(app_object), "connection-notify", G_CALLBACK(statusicon_connection_notify_cb), NULL);
+	indicator_plugin = ROUTERMANAGER_INDICATOR_PLUGIN(plugin);
+	indicator_plugin->priv->signal_id = g_signal_connect(G_OBJECT(app_object), "connection-notify", G_CALLBACK(indicator_connection_notify_cb), NULL);
 
-	if (g_settings_get_boolean(statusicon_settings, "hide-journal-on-startup")) {
+	if (g_settings_get_boolean(indicator_settings, "hide-journal-on-startup")) {
 		journal_set_hide_on_start(TRUE);
 	}
 }
 
 void impl_deactivate(PeasActivatable *plugin)
 {
-	RouterManagerStatusIconPlugin *statusicon_plugin;
+	RouterManagerIndicatorPlugin *indicator_plugin;
 
 	/* Unregister delete handler */
 	journal_set_hide_on_quit(FALSE);
 
 	/* If signal handler is connected: disconnect */
-	statusicon_plugin = ROUTERMANAGER_STATUSICON_PLUGIN(plugin);
-	if (g_signal_handler_is_connected(G_OBJECT(app_object), statusicon_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(app_object), statusicon_plugin->priv->signal_id);
+	indicator_plugin = ROUTERMANAGER_INDICATOR_PLUGIN(plugin);
+	if (g_signal_handler_is_connected(G_OBJECT(app_object), indicator_plugin->priv->signal_id)) {
+		g_signal_handler_disconnect(G_OBJECT(app_object), indicator_plugin->priv->signal_id);
 	}
 
 	if (journal_win) {
 		/* Make sure journal window is visible on deactivate */
-		gtk_widget_show(GTK_WIDGET(journal_win));
+		gtk_widget_show (GTK_WIDGET (journal_win));
 	}
 
-//#if !GTK_CHECK_VERSION(3, 7, 0)
-	/* This is currently broken in GTK 3.8.0 - for now the application must be restart to remove the status icon..... */
-	gtk_status_icon_set_visible(statusicon, FALSE);
-	g_object_unref(statusicon);
-//#endif
+	app_indicator_set_status(indicator, APP_INDICATOR_STATUS_PASSIVE);
+	g_object_unref(indicator);
 
-	statusicon = NULL;
+	indicator = NULL;
 }
 
 GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
@@ -326,7 +350,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	GtkWidget *group;
 
 	toggle_button = gtk_check_button_new_with_label(_("Hide Journal on startup"));
-	g_settings_bind(statusicon_settings, "hide-journal-on-startup", toggle_button, "active", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(indicator_settings, "hide-journal-on-startup", toggle_button, "active", G_SETTINGS_BIND_DEFAULT);
 
 	group = pref_group_create(toggle_button, _("Startup"), TRUE, FALSE);
 

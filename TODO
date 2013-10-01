@@ -6,6 +6,7 @@ TODO
 * Areacodes plugin for every country (global list available as csv) (90% done, add special handling for countrys not starting with 0 indicator, e.g. Russian Federation)
 * Addressbook selection in preferences
 * Better icons in journal/print
+* Secret check
 
 **** WIN32 ****
 * Application icon in different sizes
@@ -25,3 +26,7 @@ TODO
 
 
 * Distribution schema: Add default actions
+
+
+
+* wincred faults with empty password?
