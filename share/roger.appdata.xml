@@ -13,10 +13,10 @@
    integration into Evolution and FritzFon address books.
   </p>
   <p>
-   Some plugins are packaged separately.
+   Some plugins for Roger Router are packaged separately.
   </p>
   <p>
-   Note:<br/>
+   Note:
    If you want to use the call notification in Roger Router
    you must enable this feature within your fritzbox with #96*5*.
    If you want to use the fax function in Roger Router you must
