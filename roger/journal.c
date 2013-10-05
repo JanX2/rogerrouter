@@ -42,7 +42,8 @@
 #include <roger/journal.h>
 #include <roger/print.h>
 
-//#define OLD_ICONS 1
+#define JOURNAL_OLD_ICONS 1
+//#define JOURNAL_TOP_OLD_ICONS 1
 
 GtkWidget *journal_win = NULL;
 GtkWidget *journal_filter_box = NULL;
@@ -83,13 +84,13 @@ void journal_clear(void)
 
 GdkPixbuf *journal_get_call_icon(gint type)
 {
-#ifdef OLD_ICONS
+#ifdef JOURNAL_OLD_ICONS
 	gchar *path = NULL;
 	GError *error = NULL;
 #endif
 
 	if (icon_call_in == NULL) {
-#ifdef OLD_ICONS
+#ifdef JOURNAL_OLD_ICONS
 		path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "callin.png", NULL);
 		icon_call_in = gdk_pixbuf_new_from_file(path, &error);
 		if (!icon_call_in) {
@@ -106,7 +107,7 @@ GdkPixbuf *journal_get_call_icon(gint type)
 	}
 
 	if (icon_call_missed == NULL) {
-#ifdef OLD_ICONS
+#ifdef JOURNAL_OLD_ICONS
 		path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "callmissed.png", NULL);
 		icon_call_missed = gdk_pixbuf_new_from_file(path, NULL);
 		g_free(path);
@@ -119,7 +120,7 @@ GdkPixbuf *journal_get_call_icon(gint type)
 	}
 
 	if (icon_call_out == NULL) {
-#ifdef OLD_ICONS
+#ifdef JOURNAL_OLD_ICONS
 		path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "callout.png", NULL);
 		icon_call_out = gdk_pixbuf_new_from_file(path, NULL);
 		g_free(path);
@@ -135,7 +136,7 @@ GdkPixbuf *journal_get_call_icon(gint type)
 		GtkIconTheme *icons;
 
 		icons = gtk_icon_theme_get_default();
-#ifdef OLD_ICONS
+#ifdef JOURNAL_OLD_ICONS
 		icon_fax = gtk_icon_theme_load_icon(icons, "document-open", 18, 0, NULL);
 #else
 		icon_fax = gtk_icon_theme_load_icon(icons, "folder-documents-symbolic", 18, 0, NULL);
@@ -146,7 +147,7 @@ GdkPixbuf *journal_get_call_icon(gint type)
 		GtkIconTheme *icons;
 
 		icons = gtk_icon_theme_get_default();
-#ifdef OLD_ICONS
+#ifdef JOURNAL_OLD_ICONS
 		icon_voice = gtk_icon_theme_load_icon(icons, "media-record", 18, 0, NULL);
 #else
 		icon_voice = gtk_icon_theme_load_icon(icons, "folder-music-symbolic", 18, 0, NULL);
@@ -433,7 +434,7 @@ static void search_entry_changed(GtkEditable *entry, GtkTreeView *view)
 	}
 
 	if (strlen(text)) {
-#ifdef OLD_ICONS
+#ifdef JOURNAL_TOP_OLD_ICONS
 		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, "edit-clear");
 #else
 		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, "edit-clear-symbolic");
@@ -681,7 +682,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	button = gtk_button_new();
 	gtk_widget_set_hexpand(button, FALSE);
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-#ifdef OLD_ICONS
+#ifdef JOURNAL_TOP_OLD_ICONS
 	gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_icon_name("view-refresh", GTK_ICON_SIZE_SMALL_TOOLBAR));
 #else
 	gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_icon_name("view-refresh-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR));
@@ -694,7 +695,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	print_button = gtk_button_new();
 	gtk_widget_set_hexpand(print_button, FALSE);
 	gtk_button_set_relief(GTK_BUTTON(print_button), GTK_RELIEF_NONE);
-#ifdef OLD_ICONS
+#ifdef JOURNAL_TOP_OLD_ICONS
 	gtk_button_set_image(GTK_BUTTON(print_button), gtk_image_new_from_icon_name("document-print", GTK_ICON_SIZE_SMALL_TOOLBAR));
 #else
 	gtk_button_set_image(GTK_BUTTON(print_button), gtk_image_new_from_icon_name("printer-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR));
@@ -707,7 +708,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	clear_button = gtk_button_new();
 	gtk_widget_set_hexpand(clear_button, FALSE);
 	gtk_button_set_relief(GTK_BUTTON(clear_button), GTK_RELIEF_NONE);
-#ifdef OLD_ICONS
+#ifdef JOURNAL_TOP_OLD_ICONS
 	gtk_button_set_image(GTK_BUTTON(clear_button), gtk_image_new_from_icon_name("edit-clear", GTK_ICON_SIZE_SMALL_TOOLBAR));
 #else
 	gtk_button_set_image(GTK_BUTTON(clear_button), gtk_image_new_from_icon_name("edit-clear-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR));
@@ -721,7 +722,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	delete_button = gtk_button_new();
 	gtk_widget_set_hexpand(delete_button, FALSE);
 	gtk_button_set_relief(GTK_BUTTON(delete_button), GTK_RELIEF_NONE);
-#ifdef OLD_ICONS
+#ifdef JOURNAL_TOP_OLD_ICONS
 	gtk_button_set_image(GTK_BUTTON(delete_button), gtk_image_new_from_icon_name("edit-delete", GTK_ICON_SIZE_SMALL_TOOLBAR));
 #else
 	gtk_button_set_image(GTK_BUTTON(delete_button), gtk_image_new_from_icon_name("edit-delete-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR));
@@ -743,7 +744,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	entry = gtk_entry_new();
 	gtk_widget_set_tooltip_text(entry, _("Search in journal for name or number"));
 	g_signal_connect(G_OBJECT(entry), "icon-release", G_CALLBACK(entry_icon_released), NULL);
-#ifdef OLD_ICONS
+#ifdef JOURNAL_TOP_OLD_ICONS
 	gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_PRIMARY, "edit-find");
 #else
 	gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_PRIMARY, "edit-find-symbolic");
