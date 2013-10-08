@@ -25,9 +25,9 @@
   </p>
  </description>
  <screenshots>
-  <screenshot type="default" width="800" height="421">http://http://de.tabos.org/images/screenshots/journal.png</screenshot>
+  <screenshot type="default" width="1024" height="576">http://de.tabos.org/images/screenshots/Roger-Router-Journal.png</screenshot>
+  <screenshot width="800" height="534">http://de.tabos.org/images/screenshots/Roger-Router-Plugins.png</screenshot>
  </screenshots>
  <url type="homepage">http://www.tabos.org</url>
  <updatecontact>jan.brummer@tabos.org</updatecontact>
 </application>
-
