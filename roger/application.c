@@ -27,6 +27,7 @@
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/osdep.h>
 #include <libroutermanager/router.h>
+#include <libroutermanager/appobject-emit.h>
 
 #include <roger/journal.h>
 #include <roger/assistant.h>
@@ -47,6 +48,7 @@ static GSettings *app_settings = NULL;
 struct cmd_line_option_state {
 	gboolean debug;
 	gboolean quit;
+	gchar *number;
 };
 
 static struct cmd_line_option_state option_state;
@@ -294,6 +296,7 @@ G_GNUC_NORETURN static gboolean option_version_cb(const gchar *option_name, cons
 const GOptionEntry all_options[] = {
 	{"debug", 'd', 0, G_OPTION_ARG_NONE, &option_state.debug, "Enable debug", NULL},
 	{"quit", 'q', 0, G_OPTION_ARG_NONE, &option_state.quit, "Quit", NULL},
+	{"call", 'c', 0, G_OPTION_ARG_STRING, &option_state.number, "Remote phone number", NULL},
 	{"version", 0, G_OPTION_FLAG_NO_ARG | G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_CALLBACK, option_version_cb, NULL, NULL},
 	{NULL}
 };
@@ -346,6 +349,23 @@ static gint application_command_line_cb(GApplication *app, GApplicationCommandLi
 		app_init(application);
 		gdk_notify_startup_complete();
 		startup_called = FALSE;
+	}
+
+	if (option_state.number) {
+		struct contact contact_s;
+		struct contact *contact = &contact_s;
+		gchar *full_number;
+
+		g_debug("number: %s", option_state.number);
+		full_number = call_full_number(option_state.number, FALSE);
+
+		/** Ask for contact information */
+		memset(contact, 0, sizeof(struct contact));
+		contact_s.number = full_number;
+		emit_contact_process(contact);
+
+		app_show_phone_window(contact);
+		g_free(full_number);
 	}
 
 	g_strfreev(argv);
