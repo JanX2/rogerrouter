@@ -26,6 +26,7 @@
 
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/contact.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/address-book.h>
 #include <libroutermanager/call.h>
@@ -584,19 +585,23 @@ GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct p
 	gtk_grid_attach(GTK_GRID(grid), state->name_entry, 2, line, 2, 1);
 
 	if (contact) {
-		emit_contact_process(contact);
+		struct contact *contact_copy = g_slice_new(struct contact);
 
-		if (!EMPTY_STRING(contact->name)) {
-			gtk_entry_set_text(GTK_ENTRY(state->name_entry), contact->name);
+		contact_copy = contact_dup(contact);
+
+		emit_contact_process(contact_copy);
+
+		if (!EMPTY_STRING(contact_copy->name)) {
+			gtk_entry_set_text(GTK_ENTRY(state->name_entry), contact_copy->name);
 			gtk_entry_set_icon_from_icon_name(GTK_ENTRY(state->name_entry), GTK_ENTRY_ICON_SECONDARY, "go-down");
-			g_object_set_data(G_OBJECT(state->name_entry), "contact", contact);
-			g_object_set_data(G_OBJECT(state->name_entry), "number", contact->number);
-		} else if (contact->number) {
-			gtk_entry_set_text(GTK_ENTRY(state->name_entry), contact->number);
-			g_object_set_data(G_OBJECT(state->name_entry), "number", contact->number);
+			g_object_set_data(G_OBJECT(state->name_entry), "contact", contact_copy);
+			g_object_set_data(G_OBJECT(state->name_entry), "number", contact_copy->number);
+		} else if (contact_copy->number) {
+			gtk_entry_set_text(GTK_ENTRY(state->name_entry), contact_copy->number);
+			g_object_set_data(G_OBJECT(state->name_entry), "number", contact_copy->number);
 		}
-		if (contact->image) {
-			GdkPixbuf *buf = image_get_scaled(contact->image, 1);
+		if (contact_copy->image) {
+			GdkPixbuf *buf = image_get_scaled(contact_copy->image, 1);
 			gtk_image_set_from_pixbuf(GTK_IMAGE(state->photo_image), buf);
 			gtk_widget_set_visible(state->photo_image, TRUE);
 		}

@@ -41,6 +41,11 @@ void contact_copy(struct contact *src, struct contact *dst)
 	} else {
 		dst->numbers = NULL;
 	}
+
+	if (src->number) {
+		dst->number = g_strdup(src->number);
+	}
+
 	if (src->company) {
 		dst->company = g_strdup(src->company);
 	} else {
@@ -61,4 +66,13 @@ void contact_copy(struct contact *src, struct contact *dst)
 	} else {
 		dst->city = NULL;
 	}
+}
+
+struct contact *contact_dup(struct contact *src)
+{
+	struct contact *dst = g_slice_new(struct contact);
+
+	contact_copy(src, dst);
+
+	return dst;
 }
