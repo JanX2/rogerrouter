@@ -75,7 +75,7 @@ void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
 	for (list = journal; list != NULL; list = list->next) {
 		struct call *call = list->data;
 
-		g_message("%15s %20s %20s %20s %20s %20s %5s",
+		g_printf("%15s %20s %20s %20s %20s %20s %5s\n",
 			call->date_time,
 			call->remote.name,
 			call->remote.number,
