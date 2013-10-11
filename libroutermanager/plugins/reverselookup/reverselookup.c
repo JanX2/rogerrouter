@@ -283,24 +283,35 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **street, gcha
 	gboolean found = FALSE;
 	const gint international_prefix_len = strlen(router_get_international_prefix(profile_get_active()));
 
+#ifdef RL_DEBUG
+	g_debug("Input number '%s'", number);
+#endif
+
 	/* Get full number and extract country code if possible */
 	full_number = call_full_number(number, TRUE);
-	if (full_number != NULL) {
-		country_code = get_country_code(full_number);
-
-#ifdef RL_DEBUG
-		g_debug("Input number '%s'", number);
-		g_debug("full number '%s'", full_number);
-		if (country_code) {
-			g_debug("Country code: %s", country_code + international_prefix_len);
-		} else {
-			g_debug("Warning: Could not get country code!!");
-		}
-#endif
-		g_free(full_number);
+	if (!full_number) {
+		return FALSE;
 	}
 
-	if (country_code && strcmp(country_code + international_prefix_len, router_get_country_code(profile_get_active()))) {
+#ifdef RL_DEBUG
+	g_debug("full number '%s'", full_number);
+#endif
+
+	country_code = get_country_code(full_number);
+#ifdef RL_DEBUG
+	if (country_code) {
+		g_debug("Country code: %s", country_code + international_prefix_len);
+	} else {
+		g_debug("Warning: Could not get country code!!");
+	}
+#endif
+	g_free(full_number);
+
+	if (!country_code) {
+		return FALSE;
+	}
+
+	if (strcmp(country_code + international_prefix_len, router_get_country_code(profile_get_active()))) {
 		/* if country code is not the same as the router country code, loop through country list */
 		list = get_lookup_list(country_code + international_prefix_len);
 	} else {

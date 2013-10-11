@@ -1,3 +1,16 @@
+roger - 1.8.1
+------------------------------------------------------------------------------------------------------------------
+* Ringtones
+* Reverse lookup database
+* Add rl for netherlands
+* International firmware support
+* Improved OS X support
+* Improved echo cancelation on Linux
+* Appdata.xml support for new GNOME Software
+* GNOME filter notification support
+* UI improvements
+* Bugfixes
+
 roger - 1.8.0
 ------------------------------------------------------------------------------------------------------------------
 * Plugins support with PEAS (C, Vala, Python, JavaScript)
