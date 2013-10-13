@@ -150,6 +150,15 @@ gboolean fax_window_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpointer
 	return FALSE;
 }
 
+void fax_window_clear(void)
+{
+	gtk_label_set_text(GTK_LABEL(remote_label), "");
+	gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress_bar), 0);
+	gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progress_bar), "");
+	gtk_label_set_text(GTK_LABEL(page_current_label), "");
+	gtk_label_set_text(GTK_LABEL(status_current_label), "");
+}
+
 void app_show_fax_window(gchar *tiff_file)
 {
 	GtkWidget *window;
@@ -239,13 +248,9 @@ void app_show_fax_window(gchar *tiff_file)
 	gtk_container_add(GTK_CONTAINER(separator), frame_grid);
 
 	pos_y++;
-	separator = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
-	gtk_grid_attach(GTK_GRID(grid), separator, 0, pos_y, 3, 1);
-
-	pos_y++;
 	state->phone_statusbar = gtk_statusbar_new();
 	gtk_statusbar_push(GTK_STATUSBAR(state->phone_statusbar), 0, _("Connection: Idle | Duration: 00:00:00"));
-	gtk_grid_attach(GTK_GRID(grid), state->phone_statusbar, 0, pos_y, 2, 1);
+	gtk_grid_attach(GTK_GRID(grid), state->phone_statusbar, 0, pos_y, 3, 1);
 
 	/* We set the dial frame last, so that all other widgets are in place */
 	frame = phone_dial_frame(window, NULL, state);
@@ -291,7 +296,7 @@ gchar *convert_fax_to_tiff(gchar *file_name)
 #else
 	args[0] = get_directory("gs");
 #endif
-	g_debug("args[0]: %s\n", args[0]);
+	g_debug("convert_fax_to_tiff(): args[0]=%s", args[0]);
 	args[1] = "-q";
 	args[2] = "-dNOPAUSE";
 	args[3] = "-dSAFER";

@@ -42,6 +42,7 @@
 #include <roger/journal.h>
 #include <roger/pref.h>
 #include <roger/phone.h>
+#include <roger/fax.h>
 #include <roger/main.h>
 #include <roger/llevel.h>
 #include <roger/uitools.h>
@@ -335,6 +336,7 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 				if (connection) {
 					phone_add_connection(connection);
 					snprintf(state->phone_status_text, sizeof(state->phone_status_text), _("Dialing"));
+					fax_window_clear();
 					//state->connection = 1;
 					phone_setup_timer(state);
 				}

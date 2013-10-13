@@ -210,10 +210,15 @@ GtkWidget *pref_page_fax(void)
 	gtk_grid_attach(GTK_GRID(modem_grid), bitrate_label, 0, 1, 1, 1);
 
 	bitrate_combobox = gtk_combo_box_text_new();
-	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(bitrate_combobox), "2400");
 	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(bitrate_combobox), "4800");
 	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(bitrate_combobox), "9600");
 	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(bitrate_combobox), "14400");
+#if defined(T30_SUPPORT_V34)
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(bitrate_combobox), "28800");
+#endif
+#if defined(T30_SUPPORT_V34HDX)
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(bitrate_combobox), "33600");
+#endif
 	g_settings_bind(profile_get_active()->settings, "fax-bitrate", bitrate_combobox, "active", G_SETTINGS_BIND_DEFAULT);
 	gtk_grid_attach(GTK_GRID(modem_grid), bitrate_combobox, 1, 1, 1, 1);
 

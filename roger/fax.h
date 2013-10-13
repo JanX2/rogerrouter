@@ -24,6 +24,7 @@ G_BEGIN_DECLS
 
 void fax_process_init(void);
 void app_show_fax_window(gchar *tiff_file);
+void fax_window_clear(void);
 
 G_END_DECLS
 
