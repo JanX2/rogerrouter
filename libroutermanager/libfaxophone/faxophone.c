@@ -722,7 +722,7 @@ static int capi_indication(_cmsg capi_message) {
 				reject = 1;
 			}
 
-			if (reject ) {
+			if (reject) {
 				/* Ignore */
 				g_debug("IND: CAPI_CONNECT - plci: %d, ncci: %d - IGNORING (%s <- %s)", plci, 0, target_phone_number, source_phone_number);
 				capi_resp_connection(plci, 1);
