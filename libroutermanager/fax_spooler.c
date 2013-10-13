@@ -69,7 +69,7 @@ static void fax_spooler_changed_cb(GFileMonitor *monitor, GFile *file, GFile *ot
 	gchar *name = NULL;
 	static int type = -1;
 
-	g_debug("changed!!\n");
+	g_debug("fax_spooler_changed_cb()");
 	/* Return if there is no valid file or user name */
 	if (!file_name || !user_name) {
 		goto end;

@@ -257,25 +257,21 @@ gint spandsp_init(const gchar *tiff_file, gboolean sending, gchar modem, gchar e
 	g_debug("status->fax_state: %p", status->fax_state);
 
 	fax_set_transmit_on_idle(status->fax_state, TRUE);
-	fax_set_tep_mode(status->fax_state, FALSE);
+	//fax_set_tep_mode(status->fax_state, FALSE);
 
 	t30 = fax_get_t30_state(status->fax_state);
 
 	/* Supported compressions */
 	supported_compressions = 0;
-	supported_compressions |= T30_SUPPORT_NO_COMPRESSION;
 	supported_compressions |= T30_SUPPORT_T4_1D_COMPRESSION;
 	supported_compressions |= T30_SUPPORT_T4_2D_COMPRESSION;
-	if (ecm) {
-		supported_compressions |= T30_SUPPORT_T6_COMPRESSION;
-	}
+	supported_compressions |= T30_SUPPORT_T6_COMPRESSION;
 
 	/* Supported resolutions */
 	supported_resolutions = 0;
 	supported_resolutions |= T30_SUPPORT_STANDARD_RESOLUTION;
 	supported_resolutions |= T30_SUPPORT_FINE_RESOLUTION;
 	supported_resolutions |= T30_SUPPORT_SUPERFINE_RESOLUTION;
-	/*supported_resolutions |= T30_SUPPORT_R4_RESOLUTION;*/
 	supported_resolutions |= T30_SUPPORT_R8_RESOLUTION;
 	supported_resolutions |= T30_SUPPORT_R16_RESOLUTION;
 	supported_resolutions |= T30_SUPPORT_300_300_RESOLUTION;
@@ -293,7 +289,6 @@ gint spandsp_init(const gchar *tiff_file, gboolean sending, gchar modem, gchar e
 	supported_image_sizes |= T30_SUPPORT_303MM_WIDTH;
 	supported_image_sizes |= T30_SUPPORT_UNLIMITED_LENGTH;
 	supported_image_sizes |= T30_SUPPORT_A4_LENGTH;
-	/*supported_image_sizes |= T30_SUPPORT_B4_LENGTH;*/
 	supported_image_sizes |= T30_SUPPORT_US_LETTER_LENGTH;
 	supported_image_sizes |= T30_SUPPORT_US_LEGAL_LENGTH;
 
@@ -301,12 +296,17 @@ gint spandsp_init(const gchar *tiff_file, gboolean sending, gchar modem, gchar e
 	supported_modems = 0;
 	if (modem > 0) {
 		supported_modems |= T30_SUPPORT_V27TER;
-	}
-	if (modem > 1) {
-		supported_modems |= T30_SUPPORT_V29;
-	}
-	if (modem > 2) {
-		supported_modems |= T30_SUPPORT_V17;
+		if (modem > 1) {
+			supported_modems |= T30_SUPPORT_V29;
+		}
+		if (modem > 2) {
+			supported_modems |= T30_SUPPORT_V17;
+		}
+#if defined(T30_SUPPORT_V34)
+		if (modem > 3) {
+			supported_modems |= T30_SUPPORT_V34;
+		}
+#endif
 	}
 	t30_set_supported_modems(t30, supported_modems);
 
@@ -314,8 +314,8 @@ gint spandsp_init(const gchar *tiff_file, gboolean sending, gchar modem, gchar e
 	t30_set_ecm_capability(t30, ecm);
 
 	t30_set_supported_compressions(t30, supported_compressions);
-	t30_set_supported_resolutions(t30, supported_resolutions);
-	t30_set_supported_image_sizes(t30, supported_image_sizes);
+	//t30_set_supported_resolutions(t30, supported_resolutions);
+	//t30_set_supported_image_sizes(t30, supported_image_sizes);
 
 	/* spandsp loglevel */
 	if (log_level >= 1) {
@@ -435,28 +435,16 @@ void fax_transfer(struct capi_connection *connection, _cmsg capi_message)
 	struct fax_status *status = connection->priv;
 	struct session *session = faxophone_get_session();
 	_cmsg cmsg;
-	guint8 alaw_buffer_rx[CAPI_PACKETS];
 	guint8 alaw_buffer_tx[CAPI_PACKETS];
 	gint32 len = DATA_B3_IND_DATALENGTH(&capi_message);
-	gint32 ret;
-
-	/* buffer-length check */
-	//g_assert(len <= CAPI_PACKETS);
-
-	/* Save data and send response */
-	memcpy(alaw_buffer_rx, (uint8_t *) DATA_B3_IND_DATA(&capi_message), len);
-	isdn_lock();
-	DATA_B3_RESP(&cmsg, session->appl_id, session->message_number++, connection->ncci, DATA_B3_IND_DATAHANDLE(&capi_message));
-	isdn_unlock();
 
 	/* RX/TX spandsp */
-	ret = spandsp_rx(status->fax_state, alaw_buffer_rx, len);
-	if (!ret) {
-		ret = spandsp_tx(status->fax_state, alaw_buffer_tx, len);
-	}
+	spandsp_rx(status->fax_state, DATA_B3_IND_DATA(&capi_message), len);
+	spandsp_tx(status->fax_state, alaw_buffer_tx, len);
 
 	/* Send data to remote */
 	isdn_lock();
+	DATA_B3_RESP(&cmsg, session->appl_id, session->message_number++, connection->ncci, DATA_B3_IND_DATAHANDLE(&capi_message));
 	DATA_B3_REQ(&cmsg, session->appl_id, 0, connection->ncci, (void *) alaw_buffer_tx, len, session->message_number++, 0);
 	isdn_unlock();
 }
