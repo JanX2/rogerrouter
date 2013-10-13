@@ -129,12 +129,9 @@ static gint phase_handler_b(t30_state_t *state, void *user_data, gint result) {
 	status->bad_rows = stats.bad_rows;
 	status->encoding = stats.encoding;
 	status->bitrate = stats.bit_rate;
-	status->page_total = stats.pages_in_file;
+	//status->page_total = stats.pages_in_file;
 
 	status->page_current = status->sending ? stats.pages_tx + 1 : stats.pages_rx + 1;
-	if (status->sending) {
-		status->bytes_sent = 0;
-	}
 
 	session->handlers->status(connection, 0);
 
@@ -158,16 +155,16 @@ static gint phase_handler_d(t30_state_t *state, void *user_data, gint result) {
 
 	g_debug("Phase D handler (0x%X) %s", result, t30_frametype(result));
 	g_debug(" - pages transferred %d", status->sending ? stats.pages_tx : stats.pages_rx);
-	g_debug(" - image size %d x %d", stats.width, stats.length);
+	/*g_debug(" - image size %d x %d", stats.width, stats.length);
 	g_debug(" - bad rows %d", stats.bad_rows);
 	g_debug(" - longest bad row run %d", stats.longest_bad_row_run);
-	g_debug(" - image size %d", stats.image_size);
+	g_debug(" - image size %d", stats.image_size);*/
 
 	status->phase = PHASE_D;
-	status->ecm = stats.error_correcting_mode;
+	/*status->ecm = stats.error_correcting_mode;
 	status->bad_rows = stats.bad_rows;
 	status->encoding = stats.encoding;
-	status->bitrate = stats.bit_rate;
+	status->bitrate = stats.bit_rate;*/
 
 	if (status->sending) {
 		status->page_current = (stats.pages_in_file >= stats.pages_tx + 1 ? stats.pages_tx + 1 : stats.pages_tx);
@@ -175,7 +172,7 @@ static gint phase_handler_d(t30_state_t *state, void *user_data, gint result) {
 		status->page_current = stats.pages_rx;
 	}
 
-	status->page_total = stats.pages_in_file;
+	//status->page_total = stats.pages_in_file;
 	status->bytes_received = 0;
 	status->bytes_sent = 0;
 
@@ -205,18 +202,18 @@ static void phase_handler_e(t30_state_t *state, void *user_data, gint result) {
 
 	transferred = status->sending ? stats.pages_tx : stats.pages_rx;
 	g_debug(" - pages transferred %d", transferred);
-	g_debug(" - image resolution %d x %d", stats.x_resolution, stats.y_resolution);
+	/*g_debug(" - image resolution %d x %d", stats.x_resolution, stats.y_resolution);
 	g_debug(" - compression type %d", stats.encoding);
-	g_debug(" - coding method %s", t4_encoding_to_str(stats.encoding));
+	g_debug(" - coding method %s", t4_encoding_to_str(stats.encoding));*/
 
 	status->phase = PHASE_E;
-	status->ecm = stats.error_correcting_mode;
+	/*status->ecm = stats.error_correcting_mode;
 	status->bad_rows = stats.bad_rows;
 	status->encoding = stats.encoding;
-	status->bitrate = stats.bit_rate;
+	status->bitrate = stats.bit_rate;*/
 
 	status->page_current = (status->sending ? stats.pages_tx : stats.pages_rx);
-	status->page_total = stats.pages_in_file;
+	//status->page_total = stats.pages_in_file;
 	status->error_code = result;
 
 	t30 = fax_get_t30_state(status->fax_state);
@@ -230,6 +227,30 @@ static void phase_handler_e(t30_state_t *state, void *user_data, gint result) {
 	g_debug("Remote station id: %s", status->remote_ident);
 
 	session->handlers->status(connection, 0);
+}
+
+/**
+ * \brief Get total pages in TIFF file
+ * \param file filename
+ * \return number of pages
+ */
+static int get_tiff_total_pages(const char *file)
+{
+	TIFF *tiff_file;
+	int max;
+
+	if ((tiff_file = TIFFOpen(file, "r")) == NULL) {
+		return -1;
+	}
+
+	max = 0;
+	while (TIFFSetDirectory(tiff_file, (tdir_t) max)) {
+		max++;
+	}
+
+	TIFFClose(tiff_file);
+
+	return max;
 }
 
 /**
@@ -247,7 +268,6 @@ gint spandsp_init(const gchar *tiff_file, gboolean sending, gchar modem, gchar e
 {
 	t30_state_t *t30;
 	logging_state_t *log_state;
-	gint supported_compressions = 0;
 	gint supported_resolutions = 0;
 	gint supported_image_sizes = 0;
 	gint supported_modems = 0;
@@ -257,15 +277,9 @@ gint spandsp_init(const gchar *tiff_file, gboolean sending, gchar modem, gchar e
 	g_debug("status->fax_state: %p", status->fax_state);
 
 	fax_set_transmit_on_idle(status->fax_state, TRUE);
-	//fax_set_tep_mode(status->fax_state, FALSE);
+	fax_set_tep_mode(status->fax_state, FALSE);
 
 	t30 = fax_get_t30_state(status->fax_state);
-
-	/* Supported compressions */
-	supported_compressions = 0;
-	supported_compressions |= T30_SUPPORT_T4_1D_COMPRESSION;
-	supported_compressions |= T30_SUPPORT_T4_2D_COMPRESSION;
-	supported_compressions |= T30_SUPPORT_T6_COMPRESSION;
 
 	/* Supported resolutions */
 	supported_resolutions = 0;
@@ -308,14 +322,24 @@ gint spandsp_init(const gchar *tiff_file, gboolean sending, gchar modem, gchar e
 		}
 #endif
 	}
+
 	t30_set_supported_modems(t30, supported_modems);
 
 	/* Error correction */
-	t30_set_ecm_capability(t30, ecm);
+	if (ecm) {
+		/* Supported compressions */
+#if defined(SPANDSP_SUPPORT_T85)
+		t30_set_supported_compressions(t30, T30_SUPPORT_T4_1D_COMPRESSION | T30_SUPPORT_T4_2D_COMPRESSION | T30_SUPPORT_T6_COMPRESSION | T30_SUPPORT_T85_C
+#else
+		t30_set_supported_compressions(t30, T30_SUPPORT_T4_1D_COMPRESSION | T30_SUPPORT_T4_2D_COMPRESSION | T30_SUPPORT_T6_COMPRESSION);
+#endif
 
-	t30_set_supported_compressions(t30, supported_compressions);
-	//t30_set_supported_resolutions(t30, supported_resolutions);
-	//t30_set_supported_image_sizes(t30, supported_image_sizes);
+		t30_set_ecm_capability(t30, ecm);
+	}
+
+	t30_set_supported_t30_features(t30, T30_SUPPORT_IDENTIFICATION | T30_SUPPORT_SELECTIVE_POLLING | T30_SUPPORT_SUB_ADDRESSING);
+	t30_set_supported_resolutions(t30, supported_resolutions);
+	t30_set_supported_image_sizes(t30, supported_image_sizes);
 
 	/* spandsp loglevel */
 	if (log_level >= 1) {
@@ -338,6 +362,7 @@ gint spandsp_init(const gchar *tiff_file, gboolean sending, gchar modem, gchar e
 
 	if (sending == TRUE) {
 		t30_set_tx_file(t30, tiff_file, -1, -1);
+		status->page_total = get_tiff_total_pages(tiff_file);
 	} else {
 		t30_set_rx_file(t30, tiff_file, -1);
 	}

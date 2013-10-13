@@ -71,14 +71,15 @@ void fax_connection_status_cb(AppObject *object, gint status, struct capi_connec
 			case PHASE_B:
 				g_debug("Ident: %s", fax_status->remote_ident);
 				gtk_label_set_text(GTK_LABEL(remote_label), (fax_status->remote_ident));
-				snprintf(buffer, sizeof(buffer), "%d/%d", fax_status->page_current, fax_status->page_total);
 
+				snprintf(buffer, sizeof(buffer), "%d/%d", fax_status->page_current, fax_status->page_total);
+				g_debug("Pages: %s", buffer);
 				gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress_bar), 0);
 				gtk_label_set_text(GTK_LABEL(page_current_label), buffer);
 				gtk_label_set_text(GTK_LABEL(status_current_label), _("Transfer starting"));
 				break;
 			case PHASE_D:
-				snprintf(buffer, sizeof(buffer), "%d", fax_status->page_current);
+				snprintf(buffer, sizeof(buffer), "%d/%d", fax_status->page_current, fax_status->page_total);
 				g_debug("Pages: %s", buffer);
 				gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress_bar), (float)fax_status->page_current / (float)fax_status->page_total);
 				gtk_label_set_text(GTK_LABEL(page_current_label), buffer);
@@ -165,7 +166,6 @@ void app_show_fax_window(gchar *tiff_file)
 	GtkWidget *grid;
 	GtkWidget *frame_grid;
 	GtkWidget *frame;
-	GtkWidget *separator;
 	GtkWidget *status_label;
 	GtkWidget *progress_label;
 	//GtkWidget *progress_bar;
@@ -176,20 +176,18 @@ void app_show_fax_window(gchar *tiff_file)
 	gint pos_y = 0;
 	struct phone_state *state;
 
-	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	grid = gtk_grid_new();
-
 	state = g_malloc0(sizeof(struct phone_state));
 	state->type = PHONE_TYPE_FAX;
-
 	state->priv = tiff_file;
 
+	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_title(GTK_WINDOW(window), _("Fax"));
+	gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
+
+	grid = gtk_grid_new();
 	/* Set standard spacing to 5 */
 	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
-
-	gtk_window_set_title(GTK_WINDOW(window), _("Fax"));
-	gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
 
 	/**
 	 * Connect to: <ENTRY> <PICKUP-BUTTON> <HANGUP-BUTTON>
@@ -204,7 +202,7 @@ void app_show_fax_window(gchar *tiff_file)
 	 */
 
 	pos_y++;
-	separator = gtk_frame_new(_("Information"));
+	frame = gtk_frame_new(_("Information"));
 
 	frame_grid = gtk_grid_new();
 	/* Set standard spacing to 5 */
@@ -212,7 +210,7 @@ void app_show_fax_window(gchar *tiff_file)
 	gtk_grid_set_column_spacing(GTK_GRID(frame_grid), 5);
 	gtk_container_set_border_width(GTK_CONTAINER(frame_grid), 2);
 
-	gtk_grid_attach(GTK_GRID(grid), separator, 0, pos_y, 3, 1);
+	gtk_grid_attach(GTK_GRID(grid), frame, 0, pos_y, 3, 1);
 
 	pos_y++;
 	status_label = ui_label_new(_("Status:"));
@@ -245,12 +243,11 @@ void app_show_fax_window(gchar *tiff_file)
 	gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progress_bar), "0%");
 	gtk_grid_attach(GTK_GRID(frame_grid), progress_bar, 1, pos_y, 1, 1);
 
-	gtk_container_add(GTK_CONTAINER(separator), frame_grid);
+	gtk_container_add(GTK_CONTAINER(frame), frame_grid);
 
-	pos_y++;
 	state->phone_statusbar = gtk_statusbar_new();
 	gtk_statusbar_push(GTK_STATUSBAR(state->phone_statusbar), 0, _("Connection: Idle | Duration: 00:00:00"));
-	gtk_grid_attach(GTK_GRID(grid), state->phone_statusbar, 0, pos_y, 3, 1);
+	gtk_grid_attach(GTK_GRID(grid), state->phone_statusbar, 0, 2, 3, 1);
 
 	/* We set the dial frame last, so that all other widgets are in place */
 	frame = phone_dial_frame(window, NULL, state);
