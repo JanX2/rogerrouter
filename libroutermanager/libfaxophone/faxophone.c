@@ -22,6 +22,8 @@
  * \brief CAPI routines and main faxophone functions
  */
 
+#include <sys/resource.h>
+
 #include <libfaxophone/faxophone.h>
 #include <libfaxophone/fax.h>
 #include <libfaxophone/phone.h>
@@ -500,7 +502,7 @@ static struct capi_connection *capi_find_new(void) {
  * \param ncci ncci
  * \return capi connection or NULL on error
  */
-static struct capi_connection *capiFindNcci(int ncci) {
+static struct capi_connection *capi_find_ncci(int ncci) {
 	int index;
 
 	for (index = 0; index < CAPI_CONNECTIONS; index++) {
@@ -558,7 +560,7 @@ static void capi_resp_connection(int plci, unsigned int nIgnore) {
 
 /**
  * \brief Enable DTMF support.
- * \param psIsdn isdn device structure.
+ * \param isdn isdn device structure.
  * \param ncci NCCI
  */
 static void capi_enable_dtmf(struct capi_connection *connection) {
@@ -592,7 +594,7 @@ static void capi_enable_dtmf(struct capi_connection *connection) {
 
 	/* 0x01 = DTMF selector */
 	isdn_lock();
-	FACILITY_REQ(&message, session->appl_id, 0/*psIsdn->message_number++*/, connection->plci, 0x01, (unsigned char *) facility);
+	FACILITY_REQ(&message, session->appl_id, 0/*isdn->message_number++*/, connection->plci, 0x01, (unsigned char *) facility);
 	isdn_unlock();
 }
 
@@ -649,11 +651,10 @@ void capi_send_dtmf_code(struct capi_connection *connection, unsigned char dtmf)
 
 	/* 0x01 = DTMF selector */
 	isdn_lock();
-	FACILITY_REQ(&message, session->appl_id, 0/*psIsdn->message_number++*/, connection->ncci, 0x01, (unsigned char *) facility);
+	FACILITY_REQ(&message, session->appl_id, 0/*isdn->message_number++*/, connection->ncci, 0x01, (unsigned char *) facility);
 	isdn_unlock();
 }
 
-#if 0
 /**
  * \brief Send display message to remote
  * \param connection active capi connection
@@ -671,19 +672,19 @@ void capi_send_display_message(struct capi_connection *connection, char *text) {
 		len = strlen(text);
 	}
 
-	/* Message length */
+	/* Complete length */
 	facility[0] = len + 2;
 	/* Send DTMF 0x03 */
 	facility[1] = (_cbyte) 0x28;
+	/* Message length */
+	facility[0] = len;
 
 	strncpy((char *) facility + 3, text, len);
 
 	isdn_lock();
-	INFO_REQ(&message, session->appl_id, 0/*psIsdn->message_number++*/, connection->plci, (unsigned char *) "", (unsigned char *) "", (unsigned char *) "", (unsigned char *) "", (unsigned char *) facility, NULL);
-	//FACILITY_REQ(&message, session->appl_id, 0/*psIsdn->message_number++*/, connection->plci, 0x01, (unsigned char *) facility);
+	INFO_REQ(&message, session->appl_id, 0, connection->plci, (unsigned char *) "", (unsigned char *) "", (unsigned char *) "", (unsigned char *) "", (unsigned char *) facility, NULL);
 	isdn_unlock();
 }
-#endif
 
 /**
  * \brief CAPI indication
@@ -857,15 +858,13 @@ static int capi_indication(_cmsg capi_message) {
 			ncci = CONNECT_B3_IND_NCCI(&capi_message);
 			plci = ncci & 0x0000ffff;
 
-			connection = capiFindNcci(ncci);
+			connection = capi_find_ncci(ncci);
 			if (connection == NULL) {
 				break;
 			}
 
 			//g_debug("IND: CAPI_DATA_B3 - nConnection: %d, plci: %d, ncci: %d", connection->id, connection->plci, connection->ncci);
-			//if (connection->data) {
-				connection->data(connection, capi_message);
-			//}
+			connection->data(connection, capi_message);
 			break;
 
 		/* CAPI_FACILITY - Facility (DTMF) */
@@ -1122,13 +1121,6 @@ static int capi_indication(_cmsg capi_message) {
 					/* status */
 					g_debug("CAPI_INFO - STATUS");
 					break;
-				case 0xC000:/* {
-					int nTmp;
-
-					for (nTmp = 0; nTmp < sizeof(info_element); nTmp++) {
-						g_debug("InfoElement (%d): %x (%c)", nTmp, info_element[nTmp], info_element[nTmp]);
-					}
-				}*/
 				default:
 						/* Unknown */
 					g_debug("CAPI_INFO - UNKNOWN INFO (0x%02x)", info);
@@ -1163,7 +1155,7 @@ static int capi_indication(_cmsg capi_message) {
 			DISCONNECT_B3_RESP(&cmsg1, session->appl_id, session->message_number++, ncci);
 			isdn_unlock();
 
-			connection = capiFindNcci(ncci);
+			connection = capi_find_ncci(ncci);
 			if (connection == NULL) {
 				break;
 			}
@@ -1544,6 +1536,7 @@ struct session *faxophone_init(struct session_handlers *handlers, const char *ho
 			/* start capi transmission loop */
 			faxophone_quit = 0;
 			capi_thread = CREATE_THREAD("capi", capi_loop, NULL);
+			setpriority(PRIO_PROCESS, 0, -10);
 		}
 	}
 
