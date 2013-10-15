@@ -94,24 +94,19 @@ void phone_transfer(struct capi_connection *connection, _cmsg capi_message) {
 	struct session *session = faxophone_get_session();
 	_cmsg cmsg;
 	guchar audio_buffer[CAPI_PACKETS * 2];
-	guchar *audio_buffer_rx;
 	guint len = DATA_B3_IND_DATALENGTH(&capi_message);
 	guint audio_buf_len;
 	short rec_buffer[8192];
 
-	/* Set incoming data pointer */
-	audio_buffer_rx = DATA_B3_IND_DATA(&capi_message);
-
 	/* convert isdn to audio format */
-	convert_isdn_to_audio(connection, audio_buffer_rx, len, audio_buffer, &audio_buf_len, rec_buffer);
-
-	/* Send data to soundcard */
-	session->handlers->audio_output(connection->audio, audio_buffer, audio_buf_len);
-
+	convert_isdn_to_audio(connection, DATA_B3_IND_DATA(&capi_message), len, audio_buffer, &audio_buf_len, rec_buffer);
 	/* Send capi response */
 	isdn_lock();
 	DATA_B3_RESP(&cmsg, session->appl_id, session->message_number++, connection->ncci, DATA_B3_IND_DATAHANDLE(&capi_message));
 	isdn_unlock();
+
+	/* Send data to soundcard */
+	session->handlers->audio_output(connection->audio, audio_buffer, audio_buf_len);
 }
 
 /**

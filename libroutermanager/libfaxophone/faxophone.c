@@ -723,7 +723,11 @@ static int capi_indication(_cmsg capi_message) {
 				reject = 1;
 			}
 
+#ifdef ACCEPT_INTERN
+			if (reject && strncmp(source_phone_number, "**", 2)) {
+#else
 			if (reject) {
+#endif
 				/* Ignore */
 				g_debug("IND: CAPI_CONNECT - plci: %d, ncci: %d - IGNORING (%s <- %s)", plci, 0, target_phone_number, source_phone_number);
 				capi_resp_connection(plci, 1);
@@ -739,7 +743,6 @@ static int capi_indication(_cmsg capi_message) {
 				capi_resp_connection(plci, 0);
 
 			}
-			g_debug("IND: CAPI_CONNECT done");
 
 			break;
 

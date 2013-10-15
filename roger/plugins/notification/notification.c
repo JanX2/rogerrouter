@@ -166,6 +166,7 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 	gchar **numbers = NULL;
 	gint count;
 	gboolean found = FALSE;
+	gboolean intern = FALSE;
 
 	/* Get notification numbers */
 	if (connection->type & CONNECTION_TYPE_OUTGOING) {
@@ -185,6 +186,11 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 			found = TRUE;
 			break;
 		}
+	}
+
+	if (!found && !strncmp(connection->local_number, "**", 2)) {
+		intern = TRUE;
+		found = TRUE;
 	}
 
 	/* No match found? -> exit */
@@ -210,15 +216,19 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 	emit_contact_process(contact);
 
 	/* Create notification message */
-	text = g_markup_printf_escaped(_("Name:\t%s\nNumber:\t%s\nCompany:\t%s\nStreet:\t%s\nCity:\t\t%s%s%s"),
-		contact->name ? contact->name : "",
-		contact->number ? contact->number : "",
-		contact->company ? contact->company : "",
-		contact->street ? contact->street : "",
-		contact->zip ? contact->zip : "",
-		contact->zip ? " " : "",
-		contact->city ? contact->city : ""
-	);
+	if (!intern) {
+		text = g_markup_printf_escaped(_("Name:\t%s\nNumber:\t%s\nCompany:\t%s\nStreet:\t%s\nCity:\t\t%s%s%s"),
+			contact->name ? contact->name : "",
+			contact->number ? contact->number : "",
+			contact->company ? contact->company : "",
+			contact->street ? contact->street : "",
+			contact->zip ? contact->zip : "",
+			contact->zip ? " " : "",
+			contact->city ? contact->city : ""
+		);
+	} else {
+		text = g_markup_printf_escaped(_("Number:\t%s"), connection->local_number);
+	}
 
 	if (connection->type == CONNECTION_TYPE_INCOMING) {
 		notify = notify_notification_new(_("Incoming call"), text, "notification-message-roger-in.svg");
@@ -247,7 +257,7 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 	notify_notification_show(notify, NULL);
 
 	if (EMPTY_STRING(contact->name)) {
-		g_debug("Starting lookup thread\n");
+		g_debug("Starting lookup thread");
 		g_thread_new("notification reverse lookup", notification_reverse_lookup_thread, connection);
 	}
 

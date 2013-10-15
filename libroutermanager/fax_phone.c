@@ -36,6 +36,7 @@
 #include <libfaxophone/faxophone.h>
 #include <libfaxophone/fax.h>
 #include <libfaxophone/phone.h>
+#include <libfaxophone/ringtone.h>
 
 static struct session *session = NULL;
 static gconstpointer net_event;
@@ -106,6 +107,14 @@ void connection_ring(struct capi_connection *capi_connection)
 
 	g_debug("connection_ring() src %s trg %s", capi_connection->source, capi_connection->target);
 	connection = connection_find_by_number(capi_connection->source);
+#if ACCEPT_INERN
+	if (!connection && !strncmp(capi_connection->source, "**", 2)) {
+		connection = connection_add_call(981, CONNECTION_TYPE_INCOMING, capi_connection->source, capi_connection->target);
+
+		emit_connection_notify(connection);
+	}
+#endif
+
 	g_debug("connection_ring() connection %p", connection);
 	if (connection) {
 		g_debug("connection_ring() set capi_connection %p", capi_connection);
