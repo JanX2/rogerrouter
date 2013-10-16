@@ -226,7 +226,6 @@ void phone_connection_notify_cb(AppObject *object, struct connection *connection
 		g_debug("Established");
 		snprintf(state->phone_status_text, sizeof(state->phone_status_text), _("Established"));
 	} else {
-		g_debug("default");
 		if (connection->type & CONNECTION_TYPE_DISCONNECT) {
 			g_debug("Disconnect, check %p == %p?", state->connection, connection);
 			if (state->connection != connection) {

@@ -188,10 +188,12 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 		}
 	}
 
+#ifdef ACCEPT_INTERN
 	if (!found && !strncmp(connection->local_number, "**", 2)) {
 		intern = TRUE;
 		found = TRUE;
 	}
+#endif
 
 	/* No match found? -> exit */
 	if (!found) {
