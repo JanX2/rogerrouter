@@ -28,6 +28,8 @@ roger/plugins/gtknotify/gtknotify.c
 [type: gettext/ini]roger/plugins/gtknotify/gtknotify.plugin.in
 roger/plugins/statusicon/gtk.c
 [type: gettext/ini]roger/plugins/statusicon/statusicon.plugin.in
+roger/plugins/indicator/indicator.c
+[type: gettext/ini]roger/plugins/indicator/indicator.plugin.in
 roger-cli/main_cli.c
 libroutermanager/filter.c
 [type: gettext/ini]libroutermanager/plugins/areacodes_global/areacodes_global.plugin.in
