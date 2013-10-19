@@ -22,7 +22,11 @@
 function build()
 {
 	echo "Configuring $1"
-	autoconf
+	if [ -f ./autogen.sh ]; then
+		./autogen.sh
+	else
+		autoconf
+	fi
 	mingw32-configure
 	if [ $? -ne 0 ]; then
 		exit
@@ -37,6 +41,7 @@ function build()
 	if [ $? -ne 0 ]; then
 		sudo make install
 	fi
+	ADD_CFLAGS=""
 }
 
 function make_pkg
@@ -75,21 +80,23 @@ function make_pkg
 topdir=`pwd`/..
 windir=`pwd`
 
-
 # ********************* INFO *****************************
 echo "Cross-Compiling Roger Router for Windows 32-bit"
-read -p "Press any key to continue... " -n1 -s
-echo ""
 
 # ********************* MINGW32 PACKAGES **************************
 
 # Install mingw32 tools
-#sudo yum install mingw32-atk mingw32-gettext mingw32-pkg-config mingw32-binutils mingw32-glib2 mingw32-termcap mingw32-bzip2 mingw32-gtk3 \
-#	mingw32-wine-gecko mingw32-cairo mingw32-harfbuzz mingw32-win-iconv mingw32-cpp mingw32-headers mingw32-zlib mingw32-crt \
-#	mingw32-icu mingw32-expat mingw32-jasper mingw32-filesystem mingw32-libffi mingw32-fontconfig mingw32-libjpeg-turbo \
-#	mingw32-freetype mingw32-libpng mingw-binutils-generic mingw32-gcc-c++ mingw32-libxml2 mingw-filesystem-base \
-#	mingw32-gcc mingw32-pango mingw32-gdk-pixbuf mingw32-pixman mingw32-libsoup mingw32-dlfcn mingw32-libtiff mingw32-pthreads \
-#	mingw32-nsis flex bison python-devel wine
+
+if [ $# -eq 1 ]; then
+	if [ $1 == "setup" ]; then
+		sudo yum install mingw32-atk mingw32-gettext mingw32-pkg-config mingw32-binutils mingw32-glib2 mingw32-termcap mingw32-bzip2 mingw32-gtk3 \
+			mingw32-wine-gecko mingw32-cairo mingw32-harfbuzz mingw32-win-iconv mingw32-cpp mingw32-headers mingw32-zlib mingw32-crt \
+			mingw32-icu mingw32-expat mingw32-jasper mingw32-filesystem mingw32-libffi mingw32-fontconfig mingw32-libjpeg-turbo \
+			mingw32-freetype mingw32-libpng mingw-binutils-generic mingw32-gcc-c++ mingw32-libxml2 mingw-filesystem-base \
+			mingw32-gcc mingw32-pango mingw32-gdk-pixbuf mingw32-pixman mingw32-libsoup mingw32-dlfcn mingw32-libtiff mingw32-pthreads \
+			mingw32-nsis flex bison python-devel wine wget
+	fi
+fi
 
 mkdir -p packages
 cd packages
@@ -107,44 +114,21 @@ make_pkg "http://downloads.xiph.org/releases/speex/" "speex-1.2rc1.tar.gz" "spee
 make_pkg "http://www.mega-nerd.com/libsndfile/files/" "libsndfile-1.0.25.tar.gz" "libsndfile-1.0.25"
 
 # Download and compile libcapi20
-make_pkg "http://tabos.org/ffgtk/download/" "libcapi20-3.0.7.tar.bz2" "capi20"
-
-# Download and compile portaudio
-make_pkg "http://www.portaudio.com/archives/" "pa_stable_v19_20111121.tgz" "portaudio"
-
-# Download and compile spandsp
-make_pkg "http://soft-switch.org/downloads/spandsp/" "spandsp-0.0.6pre21.tgz" "spandsp-0.0.6"
+make_pkg "http://tabos.org/download/" "libcapi20-3.0.7.tar.bz2" "capi20"
 
 # ************ PATCHED PACKAGES ********************
 
-# Download and compile spandsp
-#wget http://soft-switch.org/downloads/spandsp/spandsp-0.0.6pre21.tgz
-#tar xf spandsp-0.0.6pre21.tgz
-#cd spandsp-0.0.6
-#export ac_cv_func_malloc_0_nonnull=yes
-#export ac_cv_func_realloc_0_nonnull=yes
-#mingw32-configure CFLAGS="-DLIBSPANDSP_EXPORTS -D_WIN32_WINNT=0x0501 -mwindows -mms-bitfields -Wl,-subsystem,windows -lws2_32" LDFLAGS="-D_WIN32_WINNT=0x0501"
-#make -j4
-#sudo make install
-#cd ..
+# Download and compile portaudio (patch to make dll and do not depend on uuid)
+make_pkg "http://www.portaudio.com/archives/" "pa_stable_v19_20111121.tgz" "portaudio"
 
-# Download and compile patched (without python) gobject introspection
-#wget http://ftp.gnome.org/pub/GNOME/sources/gobject-introspection/1.36/gobject-introspection-1.36.0.tar.xz
-#tar xf gobject-introspection-1.36.0.tar.xz
-#cd gobject-introspection-1.36.0
-#mingw32-configure
-#make -j4
-#sudo make install
-#cd ..
+# Download and compile spandsp (configure needs to be patched, gethostname not resolved)
+make_pkg "http://soft-switch.org/downloads/spandsp/" "spandsp-0.0.6pre21.tgz" "spandsp-0.0.6"
 
-# Download and compile libpeas
-#wget http://ftp.gnome.org/pub/GNOME/sources/libpeas/1.8/libpeas-1.8.1.tar.xz
-#tar xf libpeas-1.8.1.tar.xz
-#cd libpeas-1.8.1
-#mingw32-configure
-#make -j4
-#sudo make install
-#cd ..
+# Download and compile gobject-introspection (default compilation broken due to python)
+make_pkg "http://ftp.gnome.org/pub/GNOME/sources/gobject-introspection/1.38/" "gobject-introspection-1.38.0.tar.xz" "gobject-introspection-1.38.0"
+
+# Download and compile libpeas (depends on gobject-introspection, g-ir-scanner)
+make_pkg "http://ftp.gnome.org/pub/GNOME/sources/libpeas/1.8/" "libpeas-1.8.1.tar.xz" "libpeas-1.8.1"
 
 # ******************** Roger Router *******************
 
