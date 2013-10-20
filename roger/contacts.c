@@ -31,6 +31,8 @@
 #include <roger/uitools.h>
 #include <roger/phone.h>
 
+#if GTK_CHECK_VERSION(3, 10, 0)
+
 GdkPixbuf *image_get_scaled(GdkPixbuf *image, gint req_width, gint req_height);
 
 static GSList *contact_list = NULL;
@@ -122,7 +124,7 @@ void contacts_update_details(struct contact *contact)
 		if (contact->street) {
 			g_string_append_printf(addr_str, "%s\n", contact->street);
 		}
-		if (contact->zip) {
+		if (!EMPTY_STRING(contact->zip)) {
 			g_string_append_printf(addr_str, "%s ", contact->zip);
 		}
 		if (contact->city) {
@@ -331,3 +333,9 @@ void contacts(void)
 	gtk_widget_set_size_request(contacts_window, 800, 500);
 	gtk_widget_show_all(contacts_window);
 }
+
+#else
+void contacts(void)
+{
+}
+#endif
