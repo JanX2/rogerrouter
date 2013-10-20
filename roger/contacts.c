@@ -144,7 +144,10 @@ void listbox_row_selected_cb(GtkListBox *listbox, GtkListBoxRow *row, gpointer u
 	struct contact *contact;
 	gint index;
 
-	g_return_if_fail(row != NULL);
+	if (!row) {
+		return;
+	}
+
 	g_assert(contact_list != NULL);
 	index = gtk_list_box_row_get_index(row);
 	contact = g_slist_nth_data(contact_list, index);
