@@ -405,16 +405,23 @@ static void phone_set_dial_number(GtkMenuItem *item, gpointer user_data)
 	}
 }
 
-GdkPixbuf *image_get_scaled(GdkPixbuf *image, float scale)
+GdkPixbuf *image_get_scaled(GdkPixbuf *image, gint req_width, gint req_height)
 {
 	GdkPixbuf *scaled = NULL;
 	gint width, height;
 	gint orig_width, orig_height;
 	gfloat factor;
 
-	gtk_icon_size_lookup(GTK_ICON_SIZE_DIALOG, &orig_width, &orig_height);
-	orig_width *= scale;
-	orig_height *= scale;
+	if (!image) {
+		image = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "user-info", req_width, 0, NULL);
+	}
+
+	if (req_width != -1 && req_height != -1) {
+		orig_width = req_width;
+		orig_height = req_height;
+	} else {
+		gtk_icon_size_lookup(GTK_ICON_SIZE_DIALOG, &orig_width, &orig_height);
+	}
 
 	width = gdk_pixbuf_get_width(image);
 	height = gdk_pixbuf_get_height(image);
@@ -501,7 +508,7 @@ static gboolean number_entry_match_selected_cb(GtkEntryCompletion *completion, G
 	contact = g_value_get_pointer(&value_contact);
 
 	if (contact->image) {
-		GdkPixbuf *buf = image_get_scaled(contact->image, 1);
+		GdkPixbuf *buf = image_get_scaled(contact->image, -1, -1);
 		gtk_image_set_from_pixbuf(GTK_IMAGE(state->photo_image), buf);
 		gtk_widget_set_visible(state->photo_image, TRUE);
 	} else {
@@ -602,7 +609,7 @@ GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct p
 			g_object_set_data(G_OBJECT(state->name_entry), "number", contact_copy->number);
 		}
 		if (contact_copy->image) {
-			GdkPixbuf *buf = image_get_scaled(contact_copy->image, 1);
+			GdkPixbuf *buf = image_get_scaled(contact_copy->image, -1, -1);
 			gtk_image_set_from_pixbuf(GTK_IMAGE(state->photo_image), buf);
 			gtk_widget_set_visible(state->photo_image, TRUE);
 		}
@@ -628,7 +635,7 @@ GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct p
 			gtk_entry_set_text(GTK_ENTRY(state->number_entry), contact->number);
 		}
 		if (contact->image) {
-			GdkPixbuf *buf = image_get_scaled(contact->image, 1);
+			GdkPixbuf *buf = image_get_scaled(contact->image, -1, -1);
 			gtk_image_set_from_pixbuf(GTK_IMAGE(state->photo_image), buf);
 		}
 	}
