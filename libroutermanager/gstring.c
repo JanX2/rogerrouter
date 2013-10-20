@@ -33,6 +33,10 @@ gchar *g_strcasestr(const gchar *haystack, const gchar *needle)
 {
 	size_t n = strlen(needle);
 
+	if (!haystack || !needle) {
+		return NULL;
+	}
+
 	for (; *haystack; haystack++) {
 		if (g_ascii_strncasecmp(haystack, needle, n) == 0) {
 			return (gchar *) haystack;
