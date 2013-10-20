@@ -168,7 +168,7 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 
 		display_name = e_contact_get_const(e_contact, E_CONTACT_FULL_NAME);
 
-		if (display_name == NULL) {
+		if (EMPTY_STRING(display_name)) {
 			continue;
 		}
 
@@ -265,7 +265,8 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 			contact->city = g_strdup(address->locality);
 		}
 
-		contacts = g_slist_prepend(contacts, contact);
+		//contacts = g_slist_prepend(contacts, contact);
+		contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
 	}
 
 	g_slist_free(ebook_contacts);

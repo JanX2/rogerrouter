@@ -158,7 +158,7 @@ static void contact_add(struct profile *profile, xmlnode *node, gint count)
 		}
 	}
 
-	contacts = g_slist_prepend(contacts, contact);
+	contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
 }
 
 static void phonebook_add(struct profile *profile, xmlnode *node) {
