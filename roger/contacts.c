@@ -40,6 +40,7 @@ static GtkWidget *detail_photo_image = NULL;
 static GtkWidget *detail_name_label = NULL;
 static gint detail_row = 1;
 static GtkWidget *contacts_window = NULL;
+static GtkWidget *contacts_window_grid;
 
 void dial_clicked_cb(GtkWidget *button, gpointer user_data)
 {
@@ -62,8 +63,24 @@ void dial_clicked_cb(GtkWidget *button, gpointer user_data)
 void contacts_update_details(struct contact *contact)
 {
 	GSList *numbers;
+	GtkWidget *grid = gtk_grid_new();
 	gchar *markup;
-	int index;
+
+	gtk_widget_set_margin_left(grid, 25);
+	gtk_widget_set_margin_top(grid, 25);
+	gtk_widget_set_margin_right(grid, 25);
+	gtk_widget_set_margin_bottom(grid, 25);
+
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 15);
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 15);
+	detail_photo_image = gtk_image_new();
+	gtk_grid_attach(GTK_GRID(grid), detail_photo_image, 0, 0, 1, 1);
+
+	detail_name_label = gtk_label_new("");
+	gtk_label_set_ellipsize(GTK_LABEL(detail_name_label), PANGO_ELLIPSIZE_END);
+	gtk_misc_set_alignment(GTK_MISC(detail_name_label), 0, 0.5);
+	gtk_widget_set_hexpand(detail_name_label, TRUE);
+	gtk_grid_attach(GTK_GRID(grid), detail_name_label, 1, 0, 1, 1);
 
 	GdkPixbuf *buf = image_get_scaled(contact->image, 96, 96);
 	gtk_image_set_from_pixbuf(GTK_IMAGE(detail_photo_image), buf);
@@ -72,9 +89,6 @@ void contacts_update_details(struct contact *contact)
 	gtk_label_set_markup(GTK_LABEL(detail_name_label), markup);
 	g_free(markup);
 
-	for (index = detail_row; index > 0; index--) {
-		gtk_grid_remove_row(GTK_GRID(detail_grid), index);
-	}
 	detail_row = 1;
 
 	for (numbers = contact->numbers; numbers != NULL; numbers = numbers->next) {
@@ -107,9 +121,9 @@ void contacts_update_details(struct contact *contact)
 		gtk_button_set_image(GTK_BUTTON(dial), phone_image);
 		gtk_button_set_relief(GTK_BUTTON(dial), GTK_RELIEF_NONE);
 		g_signal_connect(dial, "clicked", G_CALLBACK(dial_clicked_cb), phone_number->number);
-		gtk_grid_attach(GTK_GRID(detail_grid), type, 0, detail_row, 1, 1);
-		gtk_grid_attach(GTK_GRID(detail_grid), number, 1, detail_row, 1, 1);
-		gtk_grid_attach(GTK_GRID(detail_grid), dial, 2, detail_row, 1, 1);
+		gtk_grid_attach(GTK_GRID(grid), type, 0, detail_row, 1, 1);
+		gtk_grid_attach(GTK_GRID(grid), number, 1, detail_row, 1, 1);
+		gtk_grid_attach(GTK_GRID(grid), dial, 2, detail_row, 1, 1);
 		detail_row++;
 	}
 
@@ -118,7 +132,7 @@ void contacts_update_details(struct contact *contact)
 		GString *addr_str = g_string_new("");
 		GtkWidget *label;
 
-		gtk_grid_attach(GTK_GRID(detail_grid), address, 0, detail_row, 1, 1);
+		gtk_grid_attach(GTK_GRID(grid), address, 0, detail_row, 1, 1);
 		if (contact->street) {
 			g_string_append_printf(addr_str, "%s\n", contact->street);
 		}
@@ -131,12 +145,19 @@ void contacts_update_details(struct contact *contact)
 
 		label = gtk_label_new(addr_str->str);
 		gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-		gtk_grid_attach(GTK_GRID(detail_grid), label, 1, detail_row, 1, 1);
+		gtk_grid_attach(GTK_GRID(grid), label, 1, detail_row, 1, 1);
 
 		g_string_free(addr_str, TRUE);
 	}
 
-	gtk_widget_show_all(detail_grid);
+	gtk_widget_show_all(grid);
+
+	if (detail_grid) {
+		gtk_container_remove(GTK_CONTAINER(contacts_window_grid), detail_grid);
+	}
+
+	detail_grid = grid;
+	gtk_grid_attach(GTK_GRID(contacts_window_grid), detail_grid, 1, 0, 1, 2);
 }
 
 static void search_entry_changed(GtkEditable *entry, gpointer user_data)
@@ -406,7 +427,6 @@ GtkWidget *details_view(void)
 
 void contacts(void)
 {
-	GtkWidget *grid;
 	GtkWidget *entry;
 	GtkWidget *scrolled;
 	GtkWidget *contacts_view;
@@ -436,12 +456,12 @@ void contacts(void)
 
 	contacts_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
-	grid = gtk_grid_new();
-	gtk_container_add(GTK_CONTAINER (contacts_window), grid);
+	contacts_window_grid = gtk_grid_new();
+	gtk_container_add(GTK_CONTAINER (contacts_window), contacts_window_grid);
 
 	/* Set standard spacing to 5 */
-	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
+	gtk_grid_set_row_spacing(GTK_GRID(contacts_window_grid), 5);
+	gtk_grid_set_column_spacing(GTK_GRID(contacts_window_grid), 5);
 
 	entry = gtk_entry_new();
 	g_signal_connect(G_OBJECT(entry), "icon-release", G_CALLBACK(entry_icon_released), NULL);
@@ -455,7 +475,7 @@ void contacts(void)
 #else
 	gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_PRIMARY, "edit-find-symbolic");
 #endif
-	gtk_grid_attach(GTK_GRID(grid), entry, 0, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(contacts_window_grid), entry, 0, 0, 1, 1);
 
 	scrolled = gtk_scrolled_window_new (NULL, NULL);
 	gtk_widget_set_vexpand(scrolled, TRUE);
@@ -464,10 +484,9 @@ void contacts(void)
 
 	gtk_container_add(GTK_CONTAINER(scrolled), contacts_view);
 	gtk_widget_set_size_request(scrolled, 300, -1);
-	gtk_grid_attach(GTK_GRID(grid), scrolled, 0, 1, 1, 1);
+	gtk_grid_attach(GTK_GRID(contacts_window_grid), scrolled, 0, 1, 1, 1);
 
-	detail_grid = details_view();
-	gtk_grid_attach(GTK_GRID(grid), detail_grid, 1, 0, 1, 2);
+	details_view();
 
 
 	g_signal_connect(contacts_window, "delete_event", G_CALLBACK(contacts_window_delete_event_cb), NULL);
