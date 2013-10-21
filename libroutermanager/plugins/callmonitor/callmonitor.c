@@ -222,6 +222,9 @@ gboolean callmonitor_connect(gpointer user_data)
 
 	sock = g_socket_get_fd(socket);
 
+	/* Set keep alive, otherwise the connection might drop silently */
+	g_socket_set_keepalive(socket, TRUE);
+
 #ifdef G_OS_WIN32
 	callmonitor_plugin->priv->channel = g_io_channel_win32_new_socket(sock);
 #else
