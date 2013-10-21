@@ -368,6 +368,7 @@ GtkWidget *contacts_list_view(GtkWidget *entry)
 	gtk_tree_view_append_column(GTK_TREE_VIEW(view), photo_column);
 
 	renderer = gtk_cell_renderer_text_new();
+	g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, NULL);
 	name_column = gtk_tree_view_column_new_with_attributes(_("Name"), renderer, "text", 1, NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(view), name_column);
 
