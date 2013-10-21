@@ -60,11 +60,7 @@ G_DEFINE_TYPE(Application, application, GTK_TYPE_APPLICATION)
 
 void app_show_contacts(void)
 {
-#if GTK_CHECK_VERSION(3, 10, 0)
 	contacts();
-#else
-	g_spawn_command_line_async("gnome-contacts", NULL);
-#endif
 }
 
 void app_show_preferences(void)

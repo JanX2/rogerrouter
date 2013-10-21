@@ -31,9 +31,8 @@
 #include <roger/uitools.h>
 #include <roger/phone.h>
 
-#if GTK_CHECK_VERSION(3, 10, 0)
-
 GdkPixbuf *image_get_scaled(GdkPixbuf *image, gint req_width, gint req_height);
+void contacts_fill_list(GtkListStore *list_store, const gchar *text);
 
 static GSList *contact_list = NULL;
 static GtkWidget *detail_grid = NULL;
@@ -41,7 +40,6 @@ static GtkWidget *detail_photo_image = NULL;
 static GtkWidget *detail_name_label = NULL;
 static gint detail_row = 1;
 static GtkWidget *contacts_window = NULL;
-
 
 void dial_clicked_cb(GtkWidget *button, gpointer user_data)
 {
@@ -141,24 +139,7 @@ void contacts_update_details(struct contact *contact)
 	gtk_widget_show_all(detail_grid);
 }
 
-void listbox_row_selected_cb(GtkListBox *listbox, GtkListBoxRow *row, gpointer user_data)
-{
-	struct contact *contact;
-	gint index;
-
-	if (!row) {
-		return;
-	}
-
-	g_assert(contact_list != NULL);
-	index = gtk_list_box_row_get_index(row);
-	contact = g_slist_nth_data(contact_list, index);
-	g_assert(contact != NULL);
-
-	contacts_update_details(contact);
-}
-
-static void search_entry_changed(GtkEditable *entry, GtkListBox *listbox)
+static void search_entry_changed(GtkEditable *entry, gpointer user_data)
 {
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 
@@ -172,23 +153,16 @@ static void search_entry_changed(GtkEditable *entry, GtkListBox *listbox)
 		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, NULL);
 	}
 
+#if GTK_CHECK_VERSION(3,10,0)
+	GtkListBox *listbox = user_data;
 	gtk_list_box_invalidate_filter(listbox);
-}
+#else
+	GtkTreeView *view = user_data;
+	GtkListStore *list_store = GTK_LIST_STORE(gtk_tree_view_get_model(view));
 
-gboolean listbox_filter_func(GtkListBoxRow *row, gpointer user_data)
-{
-	GtkEntry *entry = user_data;
-	const gchar *text = gtk_entry_get_text(entry);
-	struct contact *contact;
-	gint index;
-
-	g_return_if_fail(row != NULL);
-	g_assert(contact_list != NULL);
-	index = gtk_list_box_row_get_index(row);
-	contact = g_slist_nth_data(contact_list, index);
-	g_assert(contact != NULL);
-
-	return (g_strcasestr(contact->name, text) || g_strcasestr(contact->company, text)) ? TRUE : FALSE;
+	gtk_list_store_clear(list_store);
+	contacts_fill_list(list_store, text);
+#endif
 }
 
 static void entry_icon_released(GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEvent *event, gpointer user_data)
@@ -208,13 +182,232 @@ static gint contacts_window_delete_event_cb(GtkWidget *widget, GdkEvent event, g
 	return FALSE;
 }
 
+#if GTK_CHECK_VERSION(3,10,0)
+void listbox_row_selected_cb(GtkListBox *listbox, GtkListBoxRow *row, gpointer user_data)
+{
+	struct contact *contact;
+	gint index;
+
+	if (!row) {
+		return;
+	}
+
+	g_assert(contact_list != NULL);
+	index = gtk_list_box_row_get_index(row);
+	contact = g_slist_nth_data(contact_list, index);
+	g_assert(contact != NULL);
+
+	contacts_update_details(contact);
+}
+
+gboolean listbox_filter_func(GtkListBoxRow *row, gpointer user_data)
+{
+	GtkEntry *entry = user_data;
+	const gchar *text = gtk_entry_get_text(entry);
+	struct contact *contact;
+	gint index;
+
+	g_return_if_fail(row != NULL);
+	g_assert(contact_list != NULL);
+	index = gtk_list_box_row_get_index(row);
+	contact = g_slist_nth_data(contact_list, index);
+	g_assert(contact != NULL);
+
+	return (g_strcasestr(contact->name, text) || g_strcasestr(contact->company, text)) ? TRUE : FALSE;
+}
+
+GtkWidget *contacts_list_view(GtkWidget *entry)
+{
+	GSList *list;
+	GtkWidget *listbox = gtk_list_box_new();
+
+	gtk_list_box_set_filter_func(GTK_LIST_BOX(listbox), listbox_filter_func, entry, NULL);
+
+	g_signal_connect(entry, "changed", G_CALLBACK(search_entry_changed), listbox);
+
+	for (list = contact_list; list != NULL; list = list->next) {
+		struct contact *contact = list->data;
+		GtkWidget *label;
+
+		if (!EMPTY_STRING(contact->name)) {
+			GtkWidget *box = gtk_grid_new();
+			GtkWidget *photo_image = gtk_image_new();
+
+			gtk_grid_set_column_spacing(GTK_GRID(box), 5);
+
+			GdkPixbuf *buf = image_get_scaled(contact->image, -1, -1);
+			gtk_image_set_from_pixbuf(GTK_IMAGE(photo_image), buf);
+
+			gtk_grid_attach(GTK_GRID(box), photo_image, 0, 0, 1, 1);
+			label = gtk_label_new(contact->name);
+			gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+
+			gtk_grid_attach(GTK_GRID(box), label, 1, 0, 1, 1);
+			gtk_list_box_insert(GTK_LIST_BOX(listbox), box, -1);
+		}
+	}
+	g_signal_connect(listbox, "row-selected", G_CALLBACK(listbox_row_selected_cb), NULL);
+
+	return listbox;
+}
+#else
+
+
+void contacts_fill_list(GtkListStore *list_store, const gchar *text)
+{
+	GSList *list;
+	GSList *contact_list = address_book_get_contacts();
+
+	for (list = contact_list; list != NULL; list = list->next) {
+		struct contact *contact = list->data;
+		GtkTreeIter iter;
+
+		if (text && !g_strcasestr(contact->name, text)) {
+			continue;
+		}
+
+		gtk_list_store_append(list_store, &iter);
+		gtk_list_store_set(list_store, &iter, 0, image_get_scaled(contact->image, -1, -1), -1);
+		gtk_list_store_set(list_store, &iter, 1, contact->name, -1);
+		gtk_list_store_set(list_store, &iter, 2, contact, -1);
+	}
+}
+
+static gboolean contacts_list_button_press_event_cb(GtkTreeView *view, GdkEventButton *event, gpointer user_data)
+{
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(view);
+	GtkTreeModel *model = NULL;
+	GtkTreeIter iter;
+
+	if (!((event->type == GDK_BUTTON_PRESS && event->button == 1) || event->type == GDK_KEY_PRESS)) {
+		return FALSE;
+	}
+
+	if (gtk_tree_selection_count_selected_rows(selection) <= 1) {
+		GtkTreePath *path;
+
+		/* Get tree path for row that was clicked */
+		if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(view), (gint)event->x, (gint)event->y, &path, NULL, NULL, NULL)) {
+			gtk_tree_selection_unselect_all(selection);
+			gtk_tree_selection_select_path(selection, path);
+
+			model = gtk_tree_view_get_model(view);
+			if (gtk_tree_model_get_iter(model, &iter, path)) {
+				struct contact *contact;
+
+				gtk_tree_model_get(model, &iter, 2, &contact, -1);
+				contacts_update_details(contact);
+			}
+			gtk_tree_path_free(path);
+		}
+	}
+
+	return FALSE;
+}
+
+static gboolean contacts_list_move_cursor_cb(GtkTreeView *view, GtkMovementStep step, gint direction, gpointer user_data)
+{
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(view);
+	GtkTreeModel *model = NULL;
+	GtkTreeIter iter;
+
+	if (gtk_tree_selection_count_selected_rows(selection) <= 1) {
+		GtkTreePath *path;
+
+		if (step == GTK_MOVEMENT_DISPLAY_LINES) {
+			gtk_tree_view_get_cursor(view, &path, NULL);
+
+			if (path == NULL) {
+				return FALSE;
+			}
+
+			if (direction == 1) {
+				gtk_tree_path_next(path);
+			} else {
+				gtk_tree_path_prev(path);
+			}
+
+			model = gtk_tree_view_get_model(view);
+			if (gtk_tree_model_get_iter(model, &iter, path)) {
+				struct contact *contact;
+
+				gtk_tree_model_get(model, &iter, 2, &contact, -1);
+				contacts_update_details(contact);
+			}
+			gtk_tree_path_free(path);
+		}
+	}
+
+	return FALSE;
+}
+
+GtkWidget *contacts_list_view(GtkWidget *entry)
+{
+	GtkWidget *view = NULL;
+	GtkListStore *list_store;
+	GtkTreeModel *tree_model;
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *photo_column;
+	GtkTreeViewColumn *name_column;
+
+	view = gtk_tree_view_new();
+
+	list_store = gtk_list_store_new(3,
+		GDK_TYPE_PIXBUF,
+		G_TYPE_STRING,
+		G_TYPE_POINTER);
+
+	tree_model = GTK_TREE_MODEL(list_store);
+
+	gtk_tree_view_set_model(GTK_TREE_VIEW(view), GTK_TREE_MODEL(tree_model));
+
+	g_signal_connect(entry, "changed", G_CALLBACK(search_entry_changed), view);
+
+	renderer = gtk_cell_renderer_pixbuf_new();
+	photo_column = gtk_tree_view_column_new_with_attributes(_("Photo"), renderer, "pixbuf", 0, NULL);
+	gtk_tree_view_append_column(GTK_TREE_VIEW(view), photo_column);
+
+	renderer = gtk_cell_renderer_text_new();
+	name_column = gtk_tree_view_column_new_with_attributes(_("Name"), renderer, "text", 1, NULL);
+	gtk_tree_view_append_column(GTK_TREE_VIEW(view), name_column);
+
+	g_signal_connect(view, "button-press-event", G_CALLBACK(contacts_list_button_press_event_cb), list_store);
+	g_signal_connect(view, "move-cursor", (GCallback) contacts_list_move_cursor_cb, list_store);
+	contacts_fill_list(list_store, NULL);
+
+	return view;
+}
+#endif
+
+GtkWidget *details_view(void)
+{
+	GtkWidget *detail_grid = gtk_grid_new();
+
+	gtk_widget_set_margin_left(detail_grid, 25);
+	gtk_widget_set_margin_top(detail_grid, 25);
+	gtk_widget_set_margin_right(detail_grid, 25);
+	gtk_widget_set_margin_bottom(detail_grid, 25);
+
+	gtk_grid_set_row_spacing(GTK_GRID(detail_grid), 15);
+	gtk_grid_set_column_spacing(GTK_GRID(detail_grid), 15);
+	detail_photo_image = gtk_image_new();
+	gtk_grid_attach(GTK_GRID(detail_grid), detail_photo_image, 0, 0, 1, 1);
+
+	detail_name_label = gtk_label_new("");
+	gtk_label_set_ellipsize(GTK_LABEL(detail_name_label), PANGO_ELLIPSIZE_END);
+	gtk_misc_set_alignment(GTK_MISC(detail_name_label), 0, 0.5);
+	gtk_widget_set_hexpand(detail_name_label, TRUE);
+	gtk_grid_attach(GTK_GRID(detail_grid), detail_name_label, 1, 0, 1, 1);
+
+	return detail_grid;
+}
+
 void contacts(void)
 {
 	GtkWidget *grid;
 	GtkWidget *entry;
 	GtkWidget *scrolled;
-	GtkWidget *listbox;
-	GSList *list;
+	GtkWidget *contacts_view;
 
 	if (contacts_window) {
 		gtk_window_present(GTK_WINDOW(contacts_window));
@@ -265,66 +458,15 @@ void contacts(void)
 	scrolled = gtk_scrolled_window_new (NULL, NULL);
 	gtk_widget_set_vexpand(scrolled, TRUE);
 
-	listbox = gtk_list_box_new();
-	gtk_list_box_set_filter_func(GTK_LIST_BOX(listbox), listbox_filter_func, entry, NULL);
-	gtk_container_add(GTK_CONTAINER(scrolled), listbox);
-	gtk_widget_set_size_request(scrolled, 300, -1);
+	contacts_view = contacts_list_view(entry);
 
-	g_signal_connect(entry, "changed", G_CALLBACK(search_entry_changed), listbox);
+	gtk_container_add(GTK_CONTAINER(scrolled), contacts_view);
+	gtk_widget_set_size_request(scrolled, 300, -1);
 	gtk_grid_attach(GTK_GRID(grid), scrolled, 0, 1, 1, 1);
 
-	for (list = contact_list; list != NULL; list = list->next) {
-		struct contact *contact = list->data;
-		GtkWidget *label;
-
-		if (!EMPTY_STRING(contact->name)) {
-			GtkWidget *box = gtk_grid_new();
-			GtkWidget *photo_image = gtk_image_new();
-
-			gtk_grid_set_column_spacing(GTK_GRID(box), 5);
-
-			if (contact->image) {
-				GdkPixbuf *buf = image_get_scaled(contact->image, -1, -1);
-				gtk_image_set_from_pixbuf(GTK_IMAGE(photo_image), buf);
-			} else {
-				gtk_image_set_from_icon_name(GTK_IMAGE(photo_image), "user-info", GTK_ICON_SIZE_DIALOG);
-			}
-
-			gtk_grid_attach(GTK_GRID(box), photo_image, 0, 0, 1, 1);
-			label = gtk_label_new(contact->name);
-			gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
-
-			gtk_grid_attach(GTK_GRID(box), label, 1, 0, 1, 1);
-			gtk_list_box_insert(GTK_LIST_BOX(listbox), box, -1);
-		} else {
-			g_debug("Empty contact...");
-			if (g_slist_length(contact->numbers)) {
-				struct phone_number *number = contact->numbers->data;
-				g_debug("Number: %s", number->number);
-			}
-		}
-	}
-
-	detail_grid = gtk_grid_new();
-	gtk_widget_set_margin_left(detail_grid, 25);
-	gtk_widget_set_margin_top(detail_grid, 25);
-	gtk_widget_set_margin_right(detail_grid, 25);
-	gtk_widget_set_margin_bottom(detail_grid, 25);
-
-	gtk_grid_set_row_spacing(GTK_GRID(detail_grid), 15);
-	gtk_grid_set_column_spacing(GTK_GRID(detail_grid), 15);
-	detail_photo_image = gtk_image_new();
-	gtk_grid_attach(GTK_GRID(detail_grid), detail_photo_image, 0, 0, 1, 1);
-
-	detail_name_label = gtk_label_new("");
-	gtk_label_set_ellipsize(GTK_LABEL(detail_name_label), PANGO_ELLIPSIZE_END);
-	gtk_misc_set_alignment(GTK_MISC(detail_name_label), 0, 0.5);
-	gtk_widget_set_hexpand(detail_name_label, TRUE);
-	gtk_grid_attach(GTK_GRID(detail_grid), detail_name_label, 1, 0, 1, 1);
-
+	detail_grid = details_view();
 	gtk_grid_attach(GTK_GRID(grid), detail_grid, 1, 0, 1, 2);
 
-	g_signal_connect(listbox, "row-selected", G_CALLBACK(listbox_row_selected_cb), NULL);
 
 	g_signal_connect(contacts_window, "delete_event", G_CALLBACK(contacts_window_delete_event_cb), NULL);
 
@@ -333,9 +475,3 @@ void contacts(void)
 	gtk_widget_set_size_request(contacts_window, 800, 500);
 	gtk_widget_show_all(contacts_window);
 }
-
-#else
-void contacts(void)
-{
-}
-#endif
