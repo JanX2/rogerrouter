@@ -351,6 +351,7 @@ GtkWidget *contacts_list_view(GtkWidget *entry)
 	GtkTreeViewColumn *name_column;
 
 	view = gtk_tree_view_new();
+	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(view), FALSE);
 
 	list_store = gtk_list_store_new(3,
 		GDK_TYPE_PIXBUF,
