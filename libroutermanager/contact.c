@@ -66,6 +66,8 @@ void contact_copy(struct contact *src, struct contact *dst)
 	} else {
 		dst->city = NULL;
 	}
+
+	dst->priv = src->priv;
 }
 
 struct contact *contact_dup(struct contact *src)

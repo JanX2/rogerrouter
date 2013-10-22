@@ -190,9 +190,9 @@ void statusicon_popup_menu_cb(GtkStatusIcon *statusicon, guint button, guint act
 	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(statusicon_journal_cb), NULL);
 
 	/* Contacts */
-	/*item = gtk_menu_item_new_with_label(_("Contacts"));
+	item = gtk_menu_item_new_with_label(_("Contacts"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(app_show_contacts), NULL);*/
+	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(app_show_contacts), NULL);
 
 	/* Phone */
 	item = gtk_menu_item_new_with_label(_("Phone"));

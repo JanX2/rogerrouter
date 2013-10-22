@@ -39,6 +39,8 @@ struct contact {
 	gchar *street;
 	gchar *zip;
 	gchar *city;
+
+	gpointer priv;
 };
 
 void contact_copy(struct contact *src, struct contact *dst);
