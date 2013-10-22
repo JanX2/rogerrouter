@@ -761,86 +761,43 @@ static void phone_dtmf_clicked_cb(GtkWidget *widget, gpointer user_data)
 	}
 }
 
+static struct phone_label {
+	gchar *subtext;
+	gchar *text;
+	gchar chr;
+} phone_labels[] = {
+	{"<b>1</b>", "", '1'},
+	{"<b>2</b>", "ABC", '2'},
+	{"<b>3</b>", "DEF", '3'},
+	{"<b>4</b>", "GHI", '4'},
+	{"<b>5</b>", "JKL", '5'},
+	{"<b>6</b>", "MNO", '6'},
+	{"<b>7</b>", "PQRS", '7'},
+	{"<b>8</b>", "TUV", '8'},
+	{"<b>9</b>", "WXYZ", '9'},
+	{"<b>*</b>", "", '*'},
+	{"<b>0</b>", "", '0'},
+	{"<b>#</b>", "", '#'},
+	{NULL, NULL}
+};
+
 GtkWidget *phone_dialpad_frame(void)
 {
 	GtkWidget *grid = gtk_grid_new();
-	GtkWidget *button1;
-	GtkWidget *button2;
-	GtkWidget *button3;
-	GtkWidget *button4;
-	GtkWidget *button5;
-	GtkWidget *button6;
-	GtkWidget *button7;
-	GtkWidget *button8;
-	GtkWidget *button9;
-	GtkWidget *button_asterisk;
-	GtkWidget *button0;
-	GtkWidget *button_pound;
+	GtkWidget *button;
+	gint index;
 
 	/* Set standard spacing to 5 */
 	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
 	gtk_grid_set_column_homogeneous(GTK_GRID(grid), TRUE);
 
-	/* Button 1 */
-	button1 = phone_create_button("o_o", "<b>1</b>");
-	g_signal_connect(button1, "clicked", G_CALLBACK(phone_dtmf_clicked_cb), GINT_TO_POINTER('1'));
-	gtk_grid_attach(GTK_GRID(grid), button1, 0, 0, 1, 1);
-
-	/* Button 2 */
-	button2 = phone_create_button("ABC", "<b>2</b>");
-	g_signal_connect(button2, "clicked", G_CALLBACK(phone_dtmf_clicked_cb), GINT_TO_POINTER('2'));
-	gtk_grid_attach(GTK_GRID(grid), button2, 1, 0, 1, 1);
-
-	/* Button 3 */
-	button3 = phone_create_button("DEF", "<b>3</b>");
-	g_signal_connect(button3, "clicked", G_CALLBACK(phone_dtmf_clicked_cb), GINT_TO_POINTER('3'));
-	gtk_grid_attach(GTK_GRID(grid), button3, 2, 0, 1, 1);
-
-	/* Button 4 */
-	button4 = phone_create_button("GHI", "<b>4</b>");
-	g_signal_connect(button4, "clicked", G_CALLBACK(phone_dtmf_clicked_cb), GINT_TO_POINTER('4'));
-	gtk_grid_attach(GTK_GRID(grid), button4, 0, 1, 1, 1);
-
-	/* Button 5 */
-	button5 = phone_create_button("JKL", "<b>5</b>");
-	g_signal_connect(button5, "clicked", G_CALLBACK(phone_dtmf_clicked_cb), GINT_TO_POINTER('5'));
-	gtk_grid_attach(GTK_GRID(grid), button5, 1, 1, 1, 1);
-
-	/* Button 6 */
-	button6 = phone_create_button("MNO", "<b>6</b>");
-	g_signal_connect(button6, "clicked", G_CALLBACK(phone_dtmf_clicked_cb), GINT_TO_POINTER('6'));
-	gtk_grid_attach(GTK_GRID(grid), button6, 2, 1, 1, 1);
-
-	/* Button 7 */
-	button7 = phone_create_button("PQRS", "<b>7</b>");
-	g_signal_connect(button7, "clicked", G_CALLBACK(phone_dtmf_clicked_cb), GINT_TO_POINTER('7'));
-	gtk_grid_attach(GTK_GRID(grid), button7, 0, 2, 1, 1);
-
-	/* Button 8 */
-	button8 = phone_create_button("TUV", "<b>8</b>");
-	g_signal_connect(button8, "clicked", G_CALLBACK(phone_dtmf_clicked_cb), GINT_TO_POINTER('8'));
-	gtk_grid_attach(GTK_GRID(grid), button8, 1, 2, 1, 1);
-
-	/* Button 9 */
-	button9 = phone_create_button("WXYZ", "<b>9</b>");
-	g_signal_connect(button9, "clicked", G_CALLBACK(phone_dtmf_clicked_cb), GINT_TO_POINTER('9'));
-	gtk_grid_attach(GTK_GRID(grid), button9, 2, 2, 1, 1);
-
-	/* Button Asterisk */
-	button_asterisk = phone_create_button(_("DEL"), "<b>*</b>");
-	g_signal_connect(button_asterisk, "clicked", G_CALLBACK(phone_dtmf_clicked_cb), GINT_TO_POINTER('#'));
-	gtk_grid_attach(GTK_GRID(grid), button_asterisk, 0, 3, 1, 1);
-
-	/* Button 0 */
-	button0 = phone_create_button("", "<b>0</b>");
-	g_signal_connect(button0, "clicked", G_CALLBACK(phone_dtmf_clicked_cb), GINT_TO_POINTER('0'));
-	gtk_grid_attach(GTK_GRID(grid), button0, 1, 3, 1, 1);
-
-	/* Button Pound */
-	button_pound = phone_create_button(_("RETURN"), "<b>#</b>");
-	g_signal_connect(button_pound, "clicked", G_CALLBACK(phone_dtmf_clicked_cb), GINT_TO_POINTER('#'));
-	gtk_grid_attach(GTK_GRID(grid), button_pound, 2, 3, 1, 1);
+	/* Add buttons */
+	for (index = 0; phone_labels[index].text != NULL; index++) {
+		button = phone_create_button(phone_labels[index].text, phone_labels[index].subtext);
+		g_signal_connect(button, "clicked", G_CALLBACK(phone_dtmf_clicked_cb), GINT_TO_POINTER(phone_labels[index].chr));
+		gtk_grid_attach(GTK_GRID(grid), button, index % 3, index / 3, 1, 1);
+	}
 
 	gtk_widget_show_all(grid);
 

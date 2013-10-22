@@ -1,3 +1,9 @@
+roger - 1.8.2
+------------------------------------------------------------------------------------------------------------------
+* Ringtone bugfix (outgoing ringtone not working)
+* Set keep-alive in callmonitor (notifications lost connection)
+* Fix icons for Windows (missing icons)
+
 roger - 1.8.1
 ------------------------------------------------------------------------------------------------------------------
 * Ringtones

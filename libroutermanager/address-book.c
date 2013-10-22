@@ -45,6 +45,17 @@ GSList *address_book_get_contacts(void)
 	return list;
 }
 
+gboolean address_book_remove_contact(struct contact *contact)
+{
+	gboolean ret = FALSE;
+
+	if (internal_book && internal_book->remove_contact) {
+		ret = internal_book->remove_contact(contact);
+	}
+
+	return ret;
+}
+
 /**
  * \brief Register a new address book
  * \param book address book pointer
