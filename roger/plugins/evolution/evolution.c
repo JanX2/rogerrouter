@@ -155,6 +155,9 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 		return;
 	}
 
+	/* TODO: Free list */
+	contacts = NULL;
+
 	for (list = ebook_contacts; list != NULL; list = list -> next) {
 		const gchar *display_name;
 		struct contact *contact;
@@ -174,6 +177,8 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 
 		//contact = g_slice_new0(struct contact);
 		contact = g_malloc0(sizeof(struct contact));
+
+		contact->priv = (gpointer) e_contact_get_const(e_contact, E_CONTACT_UID);
 
 		photo = e_contact_get(e_contact, E_CONTACT_PHOTO);
 		if (photo) {
@@ -270,6 +275,7 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 	}
 
 	g_slist_free(ebook_contacts);
+	g_debug("done");
 }
 
 /**
@@ -416,11 +422,28 @@ GSList *evolution_get_contacts(void)
 {
 	GSList *list = contacts;
 
+	g_debug("get_contacts");
 	return list;
 }
 
+gboolean evolution_remove_contact(struct contact *contact)
+{
+	EBookClient *client = get_selected_ebook_client();
+	gboolean ret = FALSE;
+
+	ret = e_book_client_remove_contact_by_uid_sync(client, contact->priv, NULL, NULL);
+	g_debug("ret: %d", ret);
+	if (ret) {
+		g_debug("reread book");
+		ebook_read_book();
+	}
+
+	return ret;
+}
+
 struct address_book evolution_book = {
-	evolution_get_contacts
+	evolution_get_contacts,
+	evolution_remove_contact,
 };
 
 void impl_activate(PeasActivatable *plugin)
