@@ -803,6 +803,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	gtk_tree_view_append_column(GTK_TREE_VIEW(view), date_time_column);
 
 	renderer = gtk_cell_renderer_text_new();
+	g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, NULL);
 	name_column = gtk_tree_view_column_new_with_attributes(_("Name"), renderer, "text", JOURNAL_COL_NAME, NULL);
 	gtk_tree_view_column_set_cell_data_func(name_column, renderer, name_column_cell_data_func, NULL, NULL);
 	gtk_tree_view_column_set_resizable(name_column, TRUE);
@@ -811,6 +812,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	gtk_tree_view_append_column(GTK_TREE_VIEW(view), name_column);
 
 	renderer = gtk_cell_renderer_text_new();
+	g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, NULL);
 	company_column = gtk_tree_view_column_new_with_attributes(_("Company"), renderer, "text", JOURNAL_COL_COMPANY, NULL);
 	gtk_tree_view_column_set_resizable(company_column, TRUE);
 	//gtk_tree_view_column_set_reorderable(company_column, TRUE);
