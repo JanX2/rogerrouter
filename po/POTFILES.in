@@ -3,6 +3,7 @@
 roger/about.c
 roger/application.c
 roger/assistant.c
+roger/contacts.c
 roger/fax.c
 roger/journal.c
 roger/main_ui.c

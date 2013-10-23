@@ -111,7 +111,11 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 	GError *error = NULL;
 	GSList *ebook_contacts;
 
+	/* TODO: Free list */
+	contacts = NULL;
+
 	if (!client) {
+		g_debug("no callback!!!!");
 		return;
 	}
 
@@ -152,12 +156,9 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 	e_book_query_unref(query);
 
 	if (!ebook_contacts) {
+		g_debug("No contacts in book");
 		return;
 	}
-
-	/* TODO: Free list */
-	contacts = NULL;
-
 	for (list = ebook_contacts; list != NULL; list = list -> next) {
 		const gchar *display_name;
 		struct contact *contact;
@@ -275,11 +276,11 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 	}
 
 	g_slist_free(ebook_contacts);
-	g_debug("done");
+	g_debug("done (%d contacts)", g_slist_length(contacts));
 }
 
 /**
- * \brief Read ebook list
+ * \brief Read ebook list (async)
  * \return error code
  */
 gboolean ebook_read_book(void)
@@ -291,6 +292,27 @@ gboolean ebook_read_book(void)
 	}
 
 	e_client_open(E_CLIENT(client), TRUE, NULL, read_callback, NULL);
+
+	return TRUE;
+}
+
+/**
+ * \brief Read ebook list (sync)
+ * \return error code
+ */
+gboolean ebook_read_book_sync(void)
+{
+	EBookClient *client = get_selected_ebook_client();
+
+	g_debug("ebook_read_book_sync(): %p", client);
+	if (!client) {
+		return FALSE;
+	}
+
+	if (e_client_open_sync(E_CLIENT(client), TRUE, NULL, NULL)) {
+		g_debug("calling callback");
+		read_callback(G_OBJECT(client), NULL, NULL);
+	}
 
 	return TRUE;
 }
@@ -435,7 +457,7 @@ gboolean evolution_remove_contact(struct contact *contact)
 	g_debug("ret: %d", ret);
 	if (ret) {
 		g_debug("reread book");
-		ebook_read_book();
+		ebook_read_book_sync();
 	}
 
 	return ret;

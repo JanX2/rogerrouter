@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-16 22:55+0200\n"
+"POT-Creation-Date: 2013-10-23 23:31+0200\n"
 "PO-Revision-Date: 2013-09-07 19:34+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: German <jan.brummer@tabos.org>\n"
@@ -24,28 +24,31 @@ msgstr ""
 "FRITZ!Box Journal, Soft/phone und Fax\n"
 "Gewidmet meinem Vater"
 
-#: ../roger/application.c:185
+#. Contacts
+#: ../roger/application.c:184 ../roger/contacts.c:477
+#: ../roger/plugins/statusicon/gtk.c:193
+#: ../roger/plugins/indicator/indicator.c:216
 msgid "Contacts"
 msgstr "Kontakte"
 
 #. Help
-#: ../roger/application.c:186 ../roger/plugins/statusicon/gtk.c:228
+#: ../roger/application.c:185 ../roger/plugins/statusicon/gtk.c:228
 #: ../roger/plugins/indicator/indicator.c:252
 msgid "Help"
 msgstr "Hilfe"
 
-#: ../roger/application.c:187
+#: ../roger/application.c:186
 msgid "Donate"
 msgstr "Spenden"
 
 #. About
-#: ../roger/application.c:188 ../roger/plugins/statusicon/gtk.c:233
+#: ../roger/application.c:187 ../roger/plugins/statusicon/gtk.c:233
 #: ../roger/plugins/indicator/indicator.c:257
 msgid "About"
 msgstr "Über"
 
 #. Quit
-#: ../roger/application.c:189 ../roger/plugins/statusicon/gtk.c:242
+#: ../roger/application.c:188 ../roger/plugins/statusicon/gtk.c:242
 #: ../roger/plugins/indicator/indicator.c:266
 msgid "Quit"
 msgstr "Beenden"
@@ -172,6 +175,64 @@ msgstr "Zusammenfassung"
 msgid " Profile Assistant"
 msgstr " Profilassistent"
 
+#: ../roger/contacts.c:105
+msgid "Home"
+msgstr "Zuhause"
+
+#: ../roger/contacts.c:108
+msgid "Work"
+msgstr "Arbeit"
+
+#: ../roger/contacts.c:111
+msgid "Mobile"
+msgstr "Mobil"
+
+#. Fax
+#: ../roger/contacts.c:114 ../roger/fax.c:184 ../roger/pref.c:116
+#: ../libroutermanager/filter.c:441
+msgid "Fax"
+msgstr "Fax"
+
+#: ../roger/contacts.c:117
+msgid "Unknown"
+msgstr "Unbekannt"
+
+#: ../roger/contacts.c:133
+msgid "Address"
+msgstr "Adresse"
+
+#: ../roger/contacts.c:315
+msgid "Photo"
+msgstr "Foto"
+
+#. Name
+#: ../roger/contacts.c:320 ../roger/journal.c:807 ../roger/pref_action.c:193
+#: ../roger/pref_action.c:495 ../roger/pref_filters.c:209
+#: ../roger/pref_filters.c:506 ../roger/print.c:382
+msgid "Name"
+msgstr "Name"
+
+#: ../roger/contacts.c:367
+#, c-format
+msgid "Do you want to delete the entry '%s'?"
+msgstr "Wollen Sie den Eintrag '%s' löschen?"
+
+#: ../roger/contacts.c:368 ../roger/journal.c:405
+msgid "Delete entry"
+msgstr "Eintrag löschen"
+
+#: ../roger/contacts.c:456
+msgid "Add new contact"
+msgstr "Neuen Kontakt hinzufügen"
+
+#: ../roger/contacts.c:461
+msgid "Edit selected contact"
+msgstr "Ausgewählten Kontakt editieren"
+
+#: ../roger/contacts.c:466
+msgid "Remove selected contact"
+msgstr "Ausgewählten Kontakt löschen"
+
 #: ../roger/fax.c:44 ../roger/phone.c:170 ../roger-cli/main_cli.c:157
 #, c-format
 msgid "Connected"
@@ -197,11 +258,6 @@ msgstr "Faxübertragung erfolgreich"
 #: ../roger/fax.c:93
 msgid "Fax transfer failed"
 msgstr "Faxübertragung fehlgeschlagen"
-
-#. Fax
-#: ../roger/fax.c:184 ../roger/pref.c:116 ../libroutermanager/filter.c:441
-msgid "Fax"
-msgstr "Fax"
 
 #: ../roger/fax.c:205
 msgid "Information"
@@ -247,10 +303,6 @@ msgstr "Journal löschen"
 #: ../roger/journal.c:404
 msgid "Do you want to delete the selected entry?"
 msgstr "Wollen Sie den ausgewählten Eintrag löschen?"
-
-#: ../roger/journal.c:405
-msgid "Delete entry"
-msgstr "Eintrag löschen"
 
 #. Create dialog
 #: ../roger/journal.c:528 ../roger/pref_filters.c:60
@@ -301,37 +353,30 @@ msgstr "Typ"
 msgid "Date/Time"
 msgstr "Datum/Zeit"
 
-#. Name
-#: ../roger/journal.c:806 ../roger/pref_action.c:193
-#: ../roger/pref_action.c:495 ../roger/pref_filters.c:209
-#: ../roger/pref_filters.c:506 ../roger/print.c:382
-msgid "Name"
-msgstr "Name"
-
-#: ../roger/journal.c:814
+#: ../roger/journal.c:816
 msgid "Company"
 msgstr "Firma"
 
-#: ../roger/journal.c:821 ../roger/pref_action.c:256
+#: ../roger/journal.c:823 ../roger/pref_action.c:256
 #: ../roger/pref_filters.c:210 ../roger/print.c:386
 #: ../roger/plugins/notification/notification.c:471
 #: ../roger/plugins/gtknotify/gtknotify.c:587
 msgid "Number"
 msgstr "Nummer"
 
-#: ../roger/journal.c:828
+#: ../roger/journal.c:830
 msgid "City"
 msgstr "Stadt"
 
-#: ../roger/journal.c:835
+#: ../roger/journal.c:837
 msgid "Extension"
 msgstr "Nebenstelle"
 
-#: ../roger/journal.c:842
+#: ../roger/journal.c:844
 msgid "Line"
 msgstr "Leitung"
 
-#: ../roger/journal.c:849 ../roger/print.c:398
+#: ../roger/journal.c:851 ../roger/print.c:398
 msgid "Duration"
 msgstr "Dauer"
 
@@ -370,72 +415,62 @@ msgstr "Softphone"
 msgid "Idle"
 msgstr "Untätig"
 
-#: ../roger/phone.c:453 ../roger/phone.c:454
+#: ../roger/phone.c:460 ../roger/phone.c:461
 msgid "HOME"
 msgstr "Zuhause"
 
-#: ../roger/phone.c:457 ../roger/phone.c:458
+#: ../roger/phone.c:464 ../roger/phone.c:465
 msgid "WORK"
 msgstr "Arbeit"
 
-#: ../roger/phone.c:461 ../roger/phone.c:462
+#: ../roger/phone.c:468 ../roger/phone.c:469
 msgid "MOBILE"
 msgstr "Mobil"
 
-#: ../roger/phone.c:465 ../roger/phone.c:466
+#: ../roger/phone.c:472 ../roger/phone.c:473
 msgid "FAX"
 msgstr "Fax"
 
 #. Name label
-#: ../roger/phone.c:577
+#: ../roger/phone.c:584
 msgid "Connect to:"
 msgstr "Verbinden mit:"
 
-#: ../roger/phone.c:582
+#: ../roger/phone.c:589
 msgid "Use autocompletion while typing names from your address book"
 msgstr "Verwende Vervollständung aus dem Adressbuch während des Tippens"
 
-#: ../roger/phone.c:667
+#: ../roger/phone.c:674
 msgid "Pick up"
 msgstr "Abheben"
 
-#: ../roger/phone.c:679
+#: ../roger/phone.c:686
 msgid "Hang up"
 msgstr "Auflegen"
 
 #. Port label
-#: ../roger/phone.c:687
+#: ../roger/phone.c:694
 msgid "Extension:"
 msgstr "Nebenstelle:"
 
-#: ../roger/phone.c:692
+#: ../roger/phone.c:699
 msgid "Choose an extension for this call"
 msgstr "Wähle eine Nebenstelle für diesen Anruf"
 
 #. Port label
-#: ../roger/phone.c:706
+#: ../roger/phone.c:713
 msgid "Own number:"
 msgstr "Eigene Nummer:"
 
-#: ../roger/phone.c:710
+#: ../roger/phone.c:717
 msgid "Standard"
 msgstr "Standard"
 
-#: ../roger/phone.c:711
+#: ../roger/phone.c:718
 msgid "Suppress number"
 msgstr "Unterdrücke Rufnummer"
 
-#. Button Asterisk
-#: ../roger/phone.c:824
-msgid "DEL"
-msgstr "LÖS"
-
-#. Button Pound
-#: ../roger/phone.c:834
-msgid "RETURN"
-msgstr "EINGABE"
-
-#: ../roger/phone.c:904
+#: ../roger/phone.c:868
 msgid "Hold"
 msgstr "Halten"
 
@@ -446,33 +481,29 @@ msgstr "Halten"
 #. button = gtk_button_new_with_label(_("Conference"));
 #. g_signal_connect(button, "clicked", G_CALLBACK(conference_clicked_cb), NULL);
 #. gtk_grid_attach(GTK_GRID(grid), button, 0, 2, 1, 1);
-#: ../roger/phone.c:916
+#: ../roger/phone.c:880
 msgid "Record"
 msgstr "Aufnahme"
 
-#: ../roger/phone.c:920
+#: ../roger/phone.c:884
 msgid "Mute"
 msgstr "Stumm"
 
-#: ../roger/phone.c:938
+#: ../roger/phone.c:902
 msgid "Active calls"
 msgstr "Aktive Anrufe"
 
-#: ../roger/phone.c:953
+#: ../roger/phone.c:917
 msgid "A call is in progress. Still close this window?"
 msgstr "Ein Anruf ist aktiv. Möchten Sie das Fenster trotzdem schließen?"
 
-#. Contacts
-#. item = gtk_menu_item_new_with_label(_("Contacts"));
-#. gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-#. g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(app_show_contacts), NULL);
 #. Phone
-#: ../roger/phone.c:992 ../roger/plugins/statusicon/gtk.c:198
+#: ../roger/phone.c:956 ../roger/plugins/statusicon/gtk.c:198
 #: ../roger/plugins/indicator/indicator.c:221
 msgid "Phone"
 msgstr "Telefon"
 
-#: ../roger/phone.c:1020
+#: ../roger/phone.c:984
 msgid "Connection: Idle | Time: 00:00:00"
 msgstr "Verbindung: Untätig | Dauer: 00:00:00"
 
@@ -1092,12 +1123,12 @@ msgstr "Bitrate:"
 msgid "Message:"
 msgstr "Nachricht:"
 
-#: ../roger/plugins/evolution/evolution.c:468
+#: ../roger/plugins/evolution/evolution.c:514
 #: ../roger/plugins/fritzfon/fritzfon.c:422
 msgid "Book:"
 msgstr "Buch:"
 
-#: ../roger/plugins/evolution/evolution.c:481
+#: ../roger/plugins/evolution/evolution.c:527
 #: ../roger/plugins/fritzfon/fritzfon.c:435
 msgid "Contact book"
 msgstr "Kontaktbuch"
@@ -1353,6 +1384,12 @@ msgstr ""
 msgid "fritz;box;fritzbox;router;manager;fax;softphone;"
 msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
 
+#~ msgid "DEL"
+#~ msgstr "LÖS"
+
+#~ msgid "RETURN"
+#~ msgstr "EINGABE"
+
 #~ msgid "Print"
 #~ msgstr "Drucken"
 
@@ -1361,9 +1398,6 @@ msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
 
 #~ msgid "Delete"
 #~ msgstr "Löschen"
-
-#~ msgid "unknown"
-#~ msgstr "unbekannt"
 
 #~ msgid "Number '%s' not found in online database"
 #~ msgstr "Nummer '%s' wurde in der Online-Datenbank nicht gefunden"

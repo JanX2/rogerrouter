@@ -77,6 +77,7 @@ void contacts_update_details(struct contact *contact)
 	detail_photo_image = gtk_image_new();
 	gtk_grid_attach(GTK_GRID(grid), detail_photo_image, 0, 0, 1, 1);
 
+	if (contact) {
 	detail_name_label = gtk_label_new("");
 	gtk_label_set_ellipsize(GTK_LABEL(detail_name_label), PANGO_ELLIPSIZE_END);
 	gtk_misc_set_alignment(GTK_MISC(detail_name_label), 0, 0.5);
@@ -149,6 +150,7 @@ void contacts_update_details(struct contact *contact)
 		gtk_grid_attach(GTK_GRID(grid), label, 1, detail_row, 1, 1);
 
 		g_string_free(addr_str, TRUE);
+	}
 	}
 
 	gtk_widget_show_all(grid);
@@ -376,6 +378,7 @@ void button_remove_clicked_cb(GtkWidget *button, gpointer user_data)
 		address_book_remove_contact(contact);
 		gtk_list_store_clear(list_store);
 		contacts_fill_list(list_store, NULL);
+		contacts_update_details(NULL);
 
 		/* Remove contact */
 		g_value_unset(&name);
