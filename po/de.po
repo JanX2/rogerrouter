@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-23 23:31+0200\n"
+"POT-Creation-Date: 2013-10-24 00:01+0200\n"
 "PO-Revision-Date: 2013-09-07 19:34+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: German <jan.brummer@tabos.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Gewidmet meinem Vater"
 
 #. Contacts
-#: ../roger/application.c:184 ../roger/contacts.c:477
+#: ../roger/application.c:184 ../roger/contacts.c:478
 #: ../roger/plugins/statusicon/gtk.c:193
 #: ../roger/plugins/indicator/indicator.c:216
 msgid "Contacts"
@@ -197,39 +197,43 @@ msgstr "Fax"
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: ../roger/contacts.c:133
+#: ../roger/contacts.c:122
+msgid "Dial number"
+msgstr "Nummer wählen"
+
+#: ../roger/contacts.c:134
 msgid "Address"
 msgstr "Adresse"
 
-#: ../roger/contacts.c:315
+#: ../roger/contacts.c:316
 msgid "Photo"
 msgstr "Foto"
 
 #. Name
-#: ../roger/contacts.c:320 ../roger/journal.c:807 ../roger/pref_action.c:193
+#: ../roger/contacts.c:321 ../roger/journal.c:807 ../roger/pref_action.c:193
 #: ../roger/pref_action.c:495 ../roger/pref_filters.c:209
 #: ../roger/pref_filters.c:506 ../roger/print.c:382
 msgid "Name"
 msgstr "Name"
 
-#: ../roger/contacts.c:367
+#: ../roger/contacts.c:368
 #, c-format
 msgid "Do you want to delete the entry '%s'?"
 msgstr "Wollen Sie den Eintrag '%s' löschen?"
 
-#: ../roger/contacts.c:368 ../roger/journal.c:405
+#: ../roger/contacts.c:369 ../roger/journal.c:405
 msgid "Delete entry"
 msgstr "Eintrag löschen"
 
-#: ../roger/contacts.c:456
+#: ../roger/contacts.c:457
 msgid "Add new contact"
 msgstr "Neuen Kontakt hinzufügen"
 
-#: ../roger/contacts.c:461
+#: ../roger/contacts.c:462
 msgid "Edit selected contact"
 msgstr "Ausgewählten Kontakt editieren"
 
-#: ../roger/contacts.c:466
+#: ../roger/contacts.c:467
 msgid "Remove selected contact"
 msgstr "Ausgewählten Kontakt löschen"
 
