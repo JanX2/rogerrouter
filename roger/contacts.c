@@ -395,6 +395,7 @@ void contacts(void)
 	GtkWidget *button_remove;
 	GtkWidget *button_edit;
 	GtkWidget *contacts_view;
+	GtkWidget *image;
 
 	if (contacts_window) {
 		gtk_window_present(GTK_WINDOW(contacts_window));
@@ -453,17 +454,23 @@ void contacts(void)
 	gtk_grid_attach(GTK_GRID(contacts_window_grid), scrolled, 0, 1, 1, 1);
 
 	action_grid = gtk_grid_new();
-	button_add = gtk_button_new_from_icon_name("list-add-symbolic", GTK_ICON_SIZE_BUTTON);
+	button_add = gtk_button_new();
+	image = gtk_image_new_from_icon_name("list-add-symbolic", GTK_ICON_SIZE_BUTTON);
+	gtk_button_set_image(GTK_BUTTON(button_add), image);
 	gtk_button_set_relief(GTK_BUTTON(button_add), GTK_RELIEF_NONE);
 	gtk_widget_set_tooltip_text(button_add, _("Add new contact"));
 	gtk_grid_attach(GTK_GRID(action_grid), button_add, 0, 0, 1, 1);
 
-	button_edit = gtk_button_new_from_icon_name("document-properties-symbolic", GTK_ICON_SIZE_BUTTON);
+	button_edit = gtk_button_new();
+	image = gtk_image_new_from_icon_name("document-properties-symbolic", GTK_ICON_SIZE_BUTTON);
+	gtk_button_set_image(GTK_BUTTON(button_edit), image);
 	gtk_button_set_relief(GTK_BUTTON(button_edit), GTK_RELIEF_NONE);
 	gtk_widget_set_tooltip_text(button_edit, _("Edit selected contact"));
 	gtk_grid_attach(GTK_GRID(action_grid), button_edit, 1, 0, 1, 1);
 
-	button_remove = gtk_button_new_from_icon_name("list-remove-symbolic", GTK_ICON_SIZE_BUTTON);
+	button_remove = gtk_button_new();
+	image = gtk_image_new_from_icon_name("list-remove-symbolic", GTK_ICON_SIZE_BUTTON);
+	gtk_button_set_image(GTK_BUTTON(button_remove), image);
 	gtk_button_set_relief(GTK_BUTTON(button_remove), GTK_RELIEF_NONE);
 	gtk_widget_set_tooltip_text(button_remove, _("Remove selected contact"));
 	g_signal_connect(button_remove, "clicked", G_CALLBACK(button_remove_clicked_cb), NULL);
