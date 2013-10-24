@@ -184,13 +184,13 @@ void journal_add_call(struct call *call)
 	gtk_list_store_append(list_store, &iter);
 	gtk_list_store_set(list_store, &iter, JOURNAL_COL_TYPE, out_icon, -1);
 	gtk_list_store_set(list_store, &iter, JOURNAL_COL_DATETIME, call->date_time, -1);
-	gtk_list_store_set(list_store, &iter, JOURNAL_COL_NAME, call->remote.name, -1);
-	gtk_list_store_set(list_store, &iter, JOURNAL_COL_COMPANY, call->remote.company, -1);
-	gtk_list_store_set(list_store, &iter, JOURNAL_COL_NUMBER, call->remote.number, -1);
+	gtk_list_store_set(list_store, &iter, JOURNAL_COL_NAME, call->remote->name, -1);
+	gtk_list_store_set(list_store, &iter, JOURNAL_COL_COMPANY, call->remote->company, -1);
+	gtk_list_store_set(list_store, &iter, JOURNAL_COL_NUMBER, call->remote->number, -1);
 
-	gtk_list_store_set(list_store, &iter, JOURNAL_COL_CITY, call->remote.city, -1);
-	gtk_list_store_set(list_store, &iter, JOURNAL_COL_EXTENSION, call->local.name, -1);
-	gtk_list_store_set(list_store, &iter, JOURNAL_COL_LINE, call->local.number, -1);
+	gtk_list_store_set(list_store, &iter, JOURNAL_COL_CITY, call->remote->city, -1);
+	gtk_list_store_set(list_store, &iter, JOURNAL_COL_EXTENSION, call->local->name, -1);
+	gtk_list_store_set(list_store, &iter, JOURNAL_COL_LINE, call->local->number, -1);
 	gtk_list_store_set(list_store, &iter, JOURNAL_COL_DURATION, call->duration, -1);
 
 	gtk_list_store_set(list_store, &iter, JOURNAL_COL_CALL_PTR, call, -1);
@@ -256,8 +256,8 @@ static gboolean reload_journal(gpointer user_data)
 	while (valid) {
 		gtk_tree_model_get(GTK_TREE_MODEL(list_store), &iter, JOURNAL_COL_CALL_PTR, &call, -1);
 
-		if (call->remote.lookup) {
-			gtk_list_store_set(list_store, &iter, JOURNAL_COL_NAME, call->remote.name, -1);
+		if (call->remote->lookup) {
+			gtk_list_store_set(list_store, &iter, JOURNAL_COL_NAME, call->remote->name, -1);
 		}
 		valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(list_store), &iter);
 	}
@@ -283,10 +283,10 @@ static gpointer lookup_journal(gpointer user_data)
 		gchar *zip;
 		gchar *city;
 
-		if (EMPTY_STRING(call->remote.name)) {
-			if (routermanager_lookup(call->remote.number, &name, &address, &zip, &city)) {
-				call->remote.name = name;
-				call->remote.lookup = TRUE;
+		if (EMPTY_STRING(call->remote->name)) {
+			if (routermanager_lookup(call->remote->number, &name, &address, &zip, &city)) {
+				call->remote->name = name;
+				call->remote->lookup = TRUE;
 				found = TRUE;
 				g_free(address);
 				g_free(zip);
@@ -386,7 +386,7 @@ void delete_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, g
 
 	switch (call->type) {
 		case CALL_TYPE_VOICE:
-			router_delete_voice(profile_get_active(), call->local.name);
+			router_delete_voice(profile_get_active(), call->local->name);
 			break;
 		case CALL_TYPE_FAX:
 			router_delete_fax(profile_get_active(), call->priv);
@@ -565,10 +565,10 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 			break;
 		}
 		case CALL_TYPE_VOICE:
-			journal_play_voice(call->local.name);
+			journal_play_voice(call->local->name);
 			break;
 		default:
-			app_show_phone_window(&call->remote);
+			app_show_phone_window(call->remote);
 			break;
 	}
 }
@@ -632,7 +632,7 @@ static void name_column_cell_data_func(GtkTreeViewColumn *column, GtkCellRendere
 
 	gtk_tree_model_get(model, iter, JOURNAL_COL_CALL_PTR, &call, -1);
 
-	if (call && call->remote.lookup) {
+	if (call && call->remote->lookup) {
 		g_object_set(renderer, "foreground", "darkgrey", "foreground-set", TRUE, NULL);
 	} else {
 		g_object_set(renderer, "foreground-set", FALSE, NULL);

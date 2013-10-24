@@ -49,8 +49,8 @@ struct call {
 	gchar *date_time;
 	gchar *duration;
 
-	struct contact remote;
-	struct contact local;
+	struct contact *remote;
+	struct contact *local;
 
 	/* Private (e.g. original filename) */
 	gchar *priv;

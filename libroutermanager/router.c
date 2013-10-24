@@ -362,9 +362,8 @@ void router_process_journal(GSList *journal)
 
 	for (list = journal; list; list = list->next) {
 		struct call *call = list->data;
-		struct contact *contact = &call->remote;
 
-		emit_contact_process(contact);
+		emit_contact_process(call->remote);
 	}
 
 	/* Emit "journal-loaded" signal */

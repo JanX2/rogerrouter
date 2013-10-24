@@ -208,17 +208,17 @@ gboolean filter_rule_match(struct filter *filter, struct call *call)
 			case JOURNAL_TYPE_REMOTE_NAME:
 				/* Remote name */
 				remote_name = TRUE;
-				remote_name_valid = filter_compare(rule, call->remote.name);
+				remote_name_valid = filter_compare(rule, call->remote->name);
 				break;
 			case JOURNAL_TYPE_REMOTE_NUMBER:
 				/* Remote number */
 				remote_number = TRUE;
-				remote_number_valid = filter_compare(rule, call->remote.number);
+				remote_number_valid = filter_compare(rule, call->remote->number);
 				break;
 			case JOURNAL_TYPE_LOCAL_NUMBER:
 				/* Local number */
 				local_number = TRUE;
-				local_number_valid = filter_compare(rule, call->local.number);
+				local_number_valid = filter_compare(rule, call->local->number);
 				break;
 			default:
 				break;

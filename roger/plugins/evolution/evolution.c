@@ -364,61 +364,6 @@ void evolution_contact_process_cb(AppObject *obj, struct contact *contact, gpoin
 			return;
 		}
 	} else {
-#if 0
-		EBookClient *client = get_selected_ebook_client();
-		EContactPhoto *photo;
-		GdkPixbufLoader *loader;
-		GSList *list;
-		GSList *e_contacts = NULL;
-		const gchar *sexp = NULL;
-		gchar *str = g_strdup_printf("(contains \"phone\" \"%s\")", contact->number);
-		EBookQuery *query = e_book_query_from_string(str);
-
-		if (!client) {
-			return;
-		}
-
-		eds_contact = g_slice_new0(struct contact);
-
-		sexp = e_book_query_to_string(query);
-		e_book_client_get_contacts_sync(client, sexp, &e_contacts, NULL, NULL);
-
-		if (e_contacts) {
-			EContact *e_contact;
-			EContactAddress *address;
-			const gchar *tmp;
-
-			g_return_if_fail(E_IS_CONTACT(e_contacts -> data));
-			e_contact = E_CONTACT(e_contacts -> data);
-
-			eds_contact->name = g_strdup(e_contact_get_const(e_contact, E_CONTACT_FULL_NAME));
-			contact->name = g_strdup(eds_contact->name);
-			eds_contact->company = g_strdup(e_contact_get_const(e_contact, E_CONTACT_ORG));
-			contact->company = g_strdup(eds_contact->company);
-
-			g_hash_table_insert(table, contact->number, eds_contact);
-
-			address = e_contact_get(e_contact, E_CONTACT_ADDRESS_HOME);
-			if (address) {
-				contact->street = g_strdup(address->street);
-			}
-
-			photo = e_contact_get(e_contact, E_CONTACT_PHOTO);
-			if (photo) {
-				loader = gdk_pixbuf_loader_new();
-				if (gdk_pixbuf_loader_write(loader, photo->data.inlined.data, photo->data.inlined.length, NULL)) {
-					contact->image = gdk_pixbuf_loader_get_pixbuf(loader);
-				}
-				gdk_pixbuf_loader_close(loader, NULL);
-				e_contact_photo_free(photo);
-			}
-		} else {
-			/* We have found no entry, mark it in table to speedup further lookup */
-			g_hash_table_insert(table, contact->number, eds_contact);
-		}
-
-		g_free(str);
-#else
 		GSList *list;
 		gchar *full_number = call_full_number(contact->number, FALSE);
 
@@ -436,7 +381,6 @@ void evolution_contact_process_cb(AppObject *obj, struct contact *contact, gpoin
 		}
 
 		g_free(full_number);
-#endif
 	}
 }
 

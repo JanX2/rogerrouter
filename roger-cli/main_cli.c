@@ -77,11 +77,11 @@ void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
 
 		g_printf("%15s %20s %20s %20s %20s %20s %5s\n",
 			call->date_time,
-			call->remote.name,
-			call->remote.number,
-			call->remote.city,
-			call->local.name,
-			call->local.number,
+			call->remote->name,
+			call->remote->number,
+			call->remote->city,
+			call->local->name,
+			call->local->number,
 			call->duration);
 	}
 

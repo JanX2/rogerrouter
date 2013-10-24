@@ -111,7 +111,7 @@ GSList *call_add(GSList *journal, gint type, const gchar *date_time, const gchar
 		call = list->data;
 
 		/* Easier compare method, we are just interested in the complete date_time, local_number and type field */
-		if ((call->type == type) && !strcmp(call->date_time, date_time) && !strcmp(call->local.number, local_number)) {
+		if ((call->type == type) && !strcmp(call->date_time, date_time) && !strcmp(call->local->number, local_number)) {
 			/* Call already exists, return unchanged journal */
 			return journal;
 		}
@@ -122,16 +122,18 @@ GSList *call_add(GSList *journal, gint type, const gchar *date_time, const gchar
 
 	/* Set entries */
 	call->type = type;
-	call->date_time = g_strdup(date_time);
-	call->remote.name = g_convert_utf8(remote_name);
-	call->remote.number = g_strdup(remote_number);
-	call->local.name = g_strdup(local_name);
-	call->local.number = g_strdup(local_number);
-	call->duration = g_strdup(duration);
+	call->date_time = date_time ? g_strdup(date_time) : g_strdup("");
+	call->remote = g_slice_new0(struct contact);
+	call->remote->name = remote_name ? g_convert_utf8(remote_name) : g_strdup("");
+	call->remote->number = remote_number ? g_strdup(remote_number) : g_strdup("");
+	call->local = g_slice_new0(struct contact);
+	call->local->name = local_name ? g_strdup(local_name) : g_strdup("");
+	call->local->number = local_number ? g_strdup(local_number) : g_strdup("");
+	call->duration = duration ? g_strdup(duration) : g_strdup("");
 
 	/* Extended */
-	call->remote.company = g_strdup("");
-	call->remote.city = g_strdup("");
+	call->remote->company = g_strdup("");
+	call->remote->city = g_strdup("");
 	call->priv = priv;
 
 	/* Append call sorted to the list */
@@ -151,17 +153,19 @@ void call_free(gpointer data)
 
 	/* Free entries */
 	g_free(call->date_time);
-	g_free(call->remote.name);
-	g_free(call->remote.number);
-	g_free(call->local.name);
-	g_free(call->local.number);
+	g_free(call->remote->name);
+	g_free(call->remote->number);
+	g_free(call->local->name);
+	g_free(call->local->number);
 	g_free(call->duration);
 
 	/* Extended */
-	g_free(call->remote.company);
-	g_free(call->remote.city);
+	g_free(call->remote->company);
+	g_free(call->remote->city);
 
 	/* Free structure */
+	g_slice_free(struct contact, call->remote);
+	g_slice_free(struct contact, call->local);
 	g_slice_free(struct call, call);
 }
 

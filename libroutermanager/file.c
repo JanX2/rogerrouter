@@ -73,12 +73,14 @@ gchar *file_load(gchar *name, gsize *size)
 
 	file_info = g_file_query_info(file, G_FILE_ATTRIBUTE_STANDARD_SIZE, G_FILE_QUERY_INFO_NONE, NULL, NULL);
 	file_size = g_file_info_get_size(file_info);
-	data = g_malloc0(file_size);
-	input_stream = g_file_read(file, NULL, NULL);
+	if (file_size) {
+		data = g_malloc0(file_size);
+		input_stream = g_file_read(file, NULL, NULL);
 
-	g_input_stream_read_all(G_INPUT_STREAM(input_stream), data, file_size, size, NULL, NULL);
+		g_input_stream_read_all(G_INPUT_STREAM(input_stream), data, file_size, size, NULL, NULL);
 
-	g_object_unref(input_stream);
+		g_object_unref(input_stream);
+	}
 	g_object_unref(file_info);
 	g_object_unref(file);
 

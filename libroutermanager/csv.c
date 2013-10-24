@@ -133,14 +133,14 @@ gboolean csv_save_journal(GSList *journal)
 			continue;
 		}
 
-		gchar *name = g_convert(call->remote.name, -1, "iso-8859-1", "UTF-8", NULL, NULL, NULL);
+		gchar *name = g_convert(call->remote->name, -1, "iso-8859-1", "UTF-8", NULL, NULL, NULL);
 		fprintf(file, "%d;%s;%s;%s;%s;%s;%s\n",
 			    call->type,
 			    call->date_time,
 			    name,
-			    call->remote.number,
-			    call->local.name,
-			    call->local.number,
+			    call->remote->number,
+			    call->local->name,
+			    call->local->number,
 			    call->duration);
 		g_free(name);
 	}
