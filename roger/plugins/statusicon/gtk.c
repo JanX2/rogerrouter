@@ -162,7 +162,9 @@ GtkWidget* statusicon_menu_last_calls(void)
 
 void statusicon_activate_cb(void)
 {
-	gtk_status_icon_set_from_pixbuf(statusicon, journal_get_call_icon(CALL_TYPE_OUTGOING));
+	gchar *path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "app.png", NULL);
+	gtk_status_icon_set_from_pixbuf(statusicon, gdk_pixbuf_new_from_file(path, NULL));
+	g_free(path);
 
 	gtk_widget_set_visible(GTK_WIDGET(journal_win), !gtk_widget_get_visible(GTK_WIDGET(journal_win)));
 }
