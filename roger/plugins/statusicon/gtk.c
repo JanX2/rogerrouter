@@ -269,6 +269,7 @@ void statusicon_connection_notify_cb(AppObject *obj, struct connection *connecti
 void impl_activate(PeasActivatable *plugin)
 {
 	RouterManagerStatusIconPlugin *statusicon_plugin;
+	gchar *path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "app.png", NULL);
 
 	journal_set_hide_on_quit(TRUE);
 
@@ -280,7 +281,8 @@ void impl_activate(PeasActivatable *plugin)
 	g_signal_connect(G_OBJECT(statusicon), "popup-menu", G_CALLBACK(statusicon_popup_menu_cb), NULL);
 	g_signal_connect(G_OBJECT(statusicon), "activate", G_CALLBACK(statusicon_activate_cb), NULL);
 
-	gtk_status_icon_set_from_pixbuf(statusicon, journal_get_call_icon(CALL_TYPE_OUTGOING));
+	gtk_status_icon_set_from_pixbuf(statusicon, gdk_pixbuf_new_from_file(path, NULL));
+	g_free(path);
 	gtk_status_icon_set_tooltip_text(statusicon, _("Roger Router"));
 	gtk_status_icon_set_visible(statusicon, TRUE);
 
