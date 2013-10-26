@@ -387,12 +387,14 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 	g_assert(data != NULL);
 
 	gchar **numbers = xml_extract_tags(data, "td title=\"[^\"]*\"", "td");
-	gint idx;
-	for (idx = 0; idx < g_strv_length(numbers); idx++) {
-		g_debug("Adding MSN '%s'", call_scramble_number(numbers[idx]));
-	}
+	if (g_strv_length(numbers)) {
+		gint idx;
+		for (idx = 0; idx < g_strv_length(numbers); idx++) {
+			g_debug("Adding MSN '%s'", call_scramble_number(numbers[idx]));
+		}
 
-	g_settings_set_strv(profile->settings, "numbers", (const gchar *const *)numbers);
+		g_settings_set_strv(profile->settings, "numbers", (const gchar *const *)numbers);
+	}
 
 	/* Extract phone names, default controller */
 	url = g_strdup_printf("http://%s/fon_devices/fondevices_list.lua", router_get_host(profile));
