@@ -21,6 +21,8 @@
 
 #include <gtk/gtk.h>
 
+#include <libroutermanager/routermanager.h>
+
 #include <roger/main.h>
 
 #include <config.h>
@@ -49,6 +51,7 @@ void app_show_about(void) {
 	};
 	char *translators =
 		"Jan-Michael Brummer <jan.brummer@tabos.org>";
+	gchar *path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "app.png", NULL);
 
 	/* create about dialog */
 	dialog = gtk_about_dialog_new();
@@ -63,6 +66,8 @@ void app_show_about(void) {
 	gtk_about_dialog_set_documenters(GTK_ABOUT_DIALOG(dialog), documenters);
 	gtk_about_dialog_set_translator_credits(GTK_ABOUT_DIALOG(dialog), g_locale_to_utf8(translators, -1, 0, 0, 0));
 	gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog), PACKAGE_BUGREPORT);
+	gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(dialog), gdk_pixbuf_new_from_file(path, NULL));
+	g_free(path);
 	g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(about_response), dialog);
 
 	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
