@@ -392,8 +392,8 @@ void contact_edit_dialog(struct contact *contact)
 		GtkWidget *type_box;
 
 		type_box = gtk_combo_box_text_new();
-		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Home"));
-		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Work"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Private"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Business"));
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Mobile"));
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Fax"));
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Other"));
@@ -407,7 +407,6 @@ void contact_edit_dialog(struct contact *contact)
 		gtk_widget_set_tooltip_text(remove, _("Remove number"));
 		phone_image = gtk_image_new_from_icon_name("user-trash-symbolic", GTK_ICON_SIZE_BUTTON);
 		gtk_button_set_image(GTK_BUTTON(remove), phone_image);
-		gtk_button_set_relief(GTK_BUTTON(remove), GTK_RELIEF_NONE);
 		//g_signal_connect(dial, "clicked", G_CALLBACK(dial_clicked_cb), phone_number->number);
 		gtk_grid_attach(GTK_GRID(grid), type_box, 0, detail_row, 1, 1);
 		gtk_grid_attach(GTK_GRID(grid), number, 1, detail_row, 1, 1);
@@ -424,17 +423,16 @@ void contact_edit_dialog(struct contact *contact)
 		GtkWidget *type_box;
 
 		type_box = gtk_combo_box_text_new();
-		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Home"));
-		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Work"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Private"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Business"));
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Other"));
 		gtk_combo_box_set_active(GTK_COMBO_BOX(type_box), 0);
 
 		gtk_grid_attach(GTK_GRID(grid), type_box, 0, detail_row, 1, 1);
 		remove = gtk_button_new();
-		gtk_widget_set_tooltip_text(remove, _("Remove number"));
+		gtk_widget_set_tooltip_text(remove, _("Remove address"));
 		phone_image = gtk_image_new_from_icon_name("user-trash-symbolic", GTK_ICON_SIZE_BUTTON);
 		gtk_button_set_image(GTK_BUTTON(remove), phone_image);
-		gtk_button_set_relief(GTK_BUTTON(remove), GTK_RELIEF_NONE);
 		gtk_grid_attach(GTK_GRID(grid), remove, 2, detail_row, 1, 1);
 
 		gtk_grid_attach(GTK_GRID(grid), street, 1, detail_row, 1, 1);
@@ -457,6 +455,8 @@ void contact_edit_dialog(struct contact *contact)
 
 	GtkWidget *add_detail_button = gtk_combo_box_text_new();
 	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(add_detail_button), _("Add detail"));
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(add_detail_button), _("Phone"));
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(add_detail_button), _("Address"));
 	gtk_combo_box_set_active(GTK_COMBO_BOX(add_detail_button), 0);
 	gtk_grid_attach(GTK_GRID(grid), add_detail_button, 0, detail_row, 1, 1);
 

@@ -407,9 +407,50 @@ gboolean evolution_remove_contact(struct contact *contact)
 	return ret;
 }
 
+gboolean evolution_modify_contact(struct contact *contact)
+{
+	EBookClient *client = get_selected_ebook_client();
+	EContact *e_contact;
+	GError *error = NULL;
+	gboolean ret = FALSE;
+
+	ret = e_book_client_get_contact_sync(client, contact->priv, &e_contact, NULL, &error);
+	if (!ret) {
+		g_debug("Error: %s", error->message);
+		return FALSE;
+	}
+
+	g_debug("ret: %d", ret);
+	if (ret) {
+		g_debug("reread book");
+		ebook_read_book_sync();
+	}
+
+	return ret;
+}
+
+gboolean evolution_create_contact(struct contact *contact)
+{
+	EBookClient *client = get_selected_ebook_client();
+	EContact *new_contact = e_contact_new();
+	GError *error = NULL;
+	gboolean ret = FALSE;
+
+	e_book_client_add_contact_sync(client, new_contact, NULL, NULL, &error);
+	g_debug("ret: %d", ret);
+	if (ret) {
+		g_debug("reread book");
+		ebook_read_book_sync();
+	}
+
+	return ret;
+}
+
 struct address_book evolution_book = {
 	evolution_get_contacts,
 	evolution_remove_contact,
+	evolution_modify_contact,
+	evolution_create_contact,
 };
 
 void impl_activate(PeasActivatable *plugin)
