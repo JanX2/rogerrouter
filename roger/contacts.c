@@ -363,11 +363,11 @@ void contact_edit_dialog(struct contact *contact)
 	dialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
 	gtk_widget_set_margin_left(grid, 25);
-	gtk_widget_set_margin_top(grid, 25);
+	gtk_widget_set_margin_top(grid, 15);
 	gtk_widget_set_margin_right(grid, 25);
-	gtk_widget_set_margin_bottom(grid, 25);
+	gtk_widget_set_margin_bottom(grid, 15);
 
-	gtk_grid_set_row_spacing(GTK_GRID(grid), 15);
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 10);
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 15);
 	photo_button = gtk_button_new();
 	detail_photo_image = gtk_image_new();
@@ -415,29 +415,45 @@ void contact_edit_dialog(struct contact *contact)
 		detail_row++;
 	}
 
-	/*if (contact && (contact->street || contact->zip || contact->city)) {
-		GtkWidget *address = ui_label_new(_("Address"));
-		GString *addr_str = g_string_new("");
-		GtkWidget *label;
+	if (contact && (contact->street || contact->zip || contact->city)) {
+		GtkWidget *street = gtk_entry_new();
+		GtkWidget *zip = gtk_entry_new();
+		GtkWidget *city = gtk_entry_new();
+		GtkWidget *remove;
+		GtkWidget *phone_image;
+		GtkWidget *type_box;
 
-		gtk_grid_attach(GTK_GRID(grid), address, 0, detail_row, 1, 1);
+		type_box = gtk_combo_box_text_new();
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Home"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Work"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Other"));
+		gtk_combo_box_set_active(GTK_COMBO_BOX(type_box), 0);
+
+		gtk_grid_attach(GTK_GRID(grid), type_box, 0, detail_row, 1, 1);
+		remove = gtk_button_new();
+		gtk_widget_set_tooltip_text(remove, _("Remove number"));
+		phone_image = gtk_image_new_from_icon_name("user-trash-symbolic", GTK_ICON_SIZE_BUTTON);
+		gtk_button_set_image(GTK_BUTTON(remove), phone_image);
+		gtk_button_set_relief(GTK_BUTTON(remove), GTK_RELIEF_NONE);
+		gtk_grid_attach(GTK_GRID(grid), remove, 2, detail_row, 1, 1);
+
+		gtk_grid_attach(GTK_GRID(grid), street, 1, detail_row, 1, 1);
+		detail_row++;
+		gtk_grid_attach(GTK_GRID(grid), zip, 1, detail_row, 1, 1);
+		detail_row++;
+		gtk_grid_attach(GTK_GRID(grid), city, 1, detail_row, 1, 1);
+		detail_row++;
+
 		if (contact->street) {
-			g_string_append_printf(addr_str, "%s\n", contact->street);
+			gtk_entry_set_text(GTK_ENTRY(street), contact->street);
 		}
-		if (!EMPTY_STRING(contact->zip)) {
-			g_string_append_printf(addr_str, "%s ", contact->zip);
+		if (contact->zip) {
+			gtk_entry_set_text(GTK_ENTRY(zip), contact->zip);
 		}
 		if (contact->city) {
-			g_string_append_printf(addr_str, "%s ", contact->city);
+			gtk_entry_set_text(GTK_ENTRY(city), contact->city);
 		}
-
-		label = gtk_label_new(addr_str->str);
-		gtk_label_set_selectable(GTK_LABEL(label), TRUE);
-		gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-		gtk_grid_attach(GTK_GRID(grid), label, 1, detail_row, 1, 1);
-
-		g_string_free(addr_str, TRUE);
-	}*/
+	}
 
 	GtkWidget *add_detail_button = gtk_combo_box_text_new();
 	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(add_detail_button), _("Add detail"));
