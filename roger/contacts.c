@@ -353,14 +353,15 @@ GtkWidget *details_view(void)
 	return detail_grid;
 }
 
-void contact_edit_dialog(struct contact *contact)
+static GtkWidget *edit_dialog;
+static GtkWidget *edit_grid = NULL;
+void add_detail_button_clicked_cb(GtkComboBox *box, gpointer user_data);
+
+void refresh_edit_dialog(struct contact *contact)
 {
 	GSList *numbers;
-	GtkWidget *grid = gtk_grid_new();
 	GtkWidget *photo_button;
-	GtkWidget *dialog;
-
-	dialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	GtkWidget *grid = gtk_grid_new();
 
 	gtk_widget_set_margin_left(grid, 25);
 	gtk_widget_set_margin_top(grid, 15);
@@ -458,21 +459,64 @@ void contact_edit_dialog(struct contact *contact)
 	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(add_detail_button), _("Phone"));
 	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(add_detail_button), _("Address"));
 	gtk_combo_box_set_active(GTK_COMBO_BOX(add_detail_button), 0);
+	g_signal_connect(add_detail_button, "changed", G_CALLBACK(add_detail_button_clicked_cb), contact);
 	gtk_grid_attach(GTK_GRID(grid), add_detail_button, 0, detail_row, 1, 1);
 
 	gtk_widget_show_all(grid);
 
-	gtk_container_add(GTK_CONTAINER(dialog), grid);
 
-	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-	gtk_window_set_title(GTK_WINDOW(dialog), contact ? _("Modify contact") : _("Add contact"));
-	gtk_widget_set_size_request(dialog, 500, 500);
-	gtk_widget_show_all(dialog);
+	if (edit_grid) {
+		gtk_container_remove(GTK_CONTAINER(edit_dialog), edit_grid);
+		//gtk_widget_destroy(edit_grid);
+	}
+
+	edit_grid = grid;
+
+	gtk_container_add(GTK_CONTAINER(edit_dialog), grid);
+}
+
+void add_detail_button_clicked_cb(GtkComboBox *box, gpointer user_data)
+{
+	gint active = gtk_combo_box_get_active(box);
+	struct contact *contact = user_data;
+
+	if (active == 1) {
+		/* Add phone number */
+		struct phone_number *phone_number;
+
+		phone_number = g_slice_new(struct phone_number);
+		phone_number->type = PHONE_NUMBER_HOME;
+		phone_number->number = g_strdup("");
+
+		contact->numbers = g_slist_prepend(contact->numbers, phone_number);
+
+		refresh_edit_dialog(contact);
+	} else if (active == 2) {
+		/* Add address */
+		contact->street = g_strdup("");
+		contact->zip = g_strdup("");
+		contact->city = g_strdup("");
+
+		refresh_edit_dialog(contact);
+	}
+}
+
+void contact_edit_dialog(struct contact *contact)
+{
+	edit_dialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+
+	refresh_edit_dialog(contact);
+
+	gtk_window_set_position(GTK_WINDOW(edit_dialog), GTK_WIN_POS_CENTER);
+	gtk_window_set_title(GTK_WINDOW(edit_dialog), contact ? _("Modify contact") : _("Add contact"));
+	gtk_widget_set_size_request(edit_dialog, 500, 500);
+	gtk_widget_show_all(edit_dialog);
 }
 
 void button_add_clicked_cb(GtkWidget *button, gpointer user_data)
 {
-	contact_edit_dialog(NULL);
+	struct contact *contact = g_slice_new0(struct contact);
+	contact_edit_dialog(contact);
 }
 
 void button_edit_clicked_cb(GtkWidget *button, gpointer user_data)
