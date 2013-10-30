@@ -102,10 +102,10 @@ void contacts_update_details(struct contact *contact)
 
 		switch (phone_number->type) {
 			case PHONE_NUMBER_HOME:
-				type = ui_label_new(_("Home"));
+				type = ui_label_new(_("Private"));
 				break;
 			case PHONE_NUMBER_WORK:
-				type = ui_label_new(_("Work"));
+				type = ui_label_new(_("Business"));
 				break;
 			case PHONE_NUMBER_MOBILE:
 				type = ui_label_new(_("Mobile"));
@@ -139,10 +139,10 @@ void contacts_update_details(struct contact *contact)
 
 		switch (address->type) {
 			case 0:
-				type = ui_label_new(_("Home"));
+				type = ui_label_new(_("Private"));
 				break;
 			case 1:
-				type = ui_label_new(_("Work"));
+				type = ui_label_new(_("Business"));
 				break;
 			default:
 				type = ui_label_new(_("Other"));
@@ -492,12 +492,12 @@ void refresh_edit_dialog(struct contact *contact)
 
 
 	if (edit_grid) {
-		gtk_container_remove(GTK_CONTAINER(edit_dialog), edit_grid);
+		gtk_container_remove(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(edit_dialog))), edit_grid);
 	}
 
 	edit_grid = grid;
 
-	gtk_container_add(GTK_CONTAINER(edit_dialog), grid);
+	gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(edit_dialog))), grid);
 }
 
 void add_detail_button_clicked_cb(GtkComboBox *box, gpointer user_data)
@@ -540,15 +540,29 @@ static gint contacts_edit_window_delete_event_cb(GtkWidget *widget, GdkEvent eve
 	return FALSE;
 }
 
+void contact_edit_response_cb(GtkWidget *dialog, gint response, gpointer user_data)
+{
+	struct contact *contact = user_data;
+
+	if (response == GTK_RESPONSE_ACCEPT) {
+		address_book_modify_contact(contact);
+	}
+
+	gtk_widget_destroy(dialog);
+	edit_dialog = NULL;
+}
+
 void contact_edit_dialog(struct contact *contact)
 {
-	edit_dialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	//edit_dialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	edit_dialog = gtk_dialog_new_with_buttons(_("Edit contact"), NULL, GTK_DIALOG_MODAL, _("_Save"), GTK_RESPONSE_ACCEPT, _("Cancel"), GTK_RESPONSE_REJECT, NULL);
 
 	refresh_edit_dialog(contact);
 
 	gtk_window_set_position(GTK_WINDOW(edit_dialog), GTK_WIN_POS_CENTER);
+	g_signal_connect(edit_dialog, "response", G_CALLBACK(contact_edit_response_cb), contact);
 	g_signal_connect(edit_dialog, "delete_event", G_CALLBACK(contacts_edit_window_delete_event_cb), NULL);
-	gtk_window_set_title(GTK_WINDOW(edit_dialog), contact ? _("Modify contact") : _("Add contact"));
+	//gtk_window_set_title(GTK_WINDOW(edit_dialog), _("Edit contact"));
 	gtk_widget_set_size_request(edit_dialog, 500, 500);
 	gtk_widget_show_all(edit_dialog);
 }
