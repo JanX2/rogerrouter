@@ -24,21 +24,28 @@
 
 G_BEGIN_DECLS
 
+struct contact_address {
+	gint type;
+	gchar *street;
+	gchar *zip;
+	gchar *city;
+};
+
 struct contact {
 	gchar *name;
-
-	/* currently active number */
-	gchar *number;
-	gboolean lookup;
-
 	gpointer image;
 	gsize image_len;
 
-	GSList *numbers;
+	/* currently active number */
+	gchar *number;
 	gchar *company;
 	gchar *street;
 	gchar *zip;
 	gchar *city;
+	gboolean lookup;
+
+	GSList *numbers;
+	GSList *addresses;
 
 	gpointer priv;
 };

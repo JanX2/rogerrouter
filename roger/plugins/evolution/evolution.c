@@ -266,9 +266,22 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 
 		address = e_contact_get(e_contact, E_CONTACT_ADDRESS_HOME);
 		if (address) {
-			contact->street = g_strdup(address->street);
-			contact->zip = g_strdup(address->code);
-			contact->city = g_strdup(address->locality);
+			struct contact_address *c_address = g_slice_new(struct contact_address);
+			c_address->type = 0;
+			c_address->street = g_strdup(address->street);
+			c_address->zip = g_strdup(address->code);
+			c_address->city = g_strdup(address->locality);
+			contact->addresses = g_slist_prepend(contact->addresses, c_address);
+		}
+
+		address = e_contact_get(e_contact, E_CONTACT_ADDRESS_WORK);
+		if (address) {
+			struct contact_address *c_address = g_slice_new(struct contact_address);
+			c_address->type = 1;
+			c_address->street = g_strdup(address->street);
+			c_address->zip = g_strdup(address->code);
+			c_address->city = g_strdup(address->locality);
+			contact->addresses = g_slist_prepend(contact->addresses, c_address);
 		}
 
 		//contacts = g_slist_prepend(contacts, contact);
