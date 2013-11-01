@@ -29,6 +29,45 @@
 #include <libroutermanager/routermanager.h>
 #include <libroutermanager/fax_printer.h>
 
+//#define SPOOLER_DEBUG 1
+
+#ifdef SPOOLER_DEBUG
+/** translations from event to text for file monitor events */
+struct event_translate {
+	GFileMonitorEvent event;
+	gchar *text;
+};
+
+/** text values of file monitor events */
+struct event_translate event_translation_table[] = {
+	{G_FILE_MONITOR_EVENT_CHANGED , "file changed"},
+	{G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT, "file changes finished"},
+	{G_FILE_MONITOR_EVENT_DELETED,"file deleted"},
+	{G_FILE_MONITOR_EVENT_CREATED, "file created"},
+	{G_FILE_MONITOR_EVENT_ATTRIBUTE_CHANGED, "file attrbutes changed"},
+	{G_FILE_MONITOR_EVENT_PRE_UNMOUNT, "file system about to be unmounted"},
+	{G_FILE_MONITOR_EVENT_UNMOUNTED, "file system unmounted"},
+	{-1, "" }
+};
+
+static const char *event_to_text(GFileMonitorEvent event)
+{
+	int index;
+
+	if (event == -1) {
+		return "empty";
+	}
+
+	for (index = 0; event_translation_table[index].event != -1; index++) {
+		if (event_translation_table[index].event == event) {
+			return event_translation_table[index].text;
+		}
+	}
+
+	return "Undefined event";
+}
+#endif
+
 /**
  * \brief Check if given file name ends with the requested extension
  * \param file file name
@@ -64,36 +103,38 @@ gboolean has_file_extension(const char *file, const char *ext)
  */
 static void fax_spooler_changed_cb(GFileMonitor *monitor, GFile *file, GFile *other_file, GFileMonitorEvent event_type, gpointer user_data)
 {
-	gchar *file_name = g_file_get_path(file);
-	const gchar *user_name = g_get_user_name();
+	gchar *file_name = NULL;
+	const gchar *user_name = NULL;
 	gchar *name = NULL;
-	static int type = -1;
 
-	g_debug("fax_spooler_changed_cb()");
-	/* Return if there is no valid file or user name */
-	if (!file_name || !user_name) {
-		goto end;
+	g_debug("fax_spooler_changed_cb(): event type: %d", event_type);
+#ifdef SPOOLER_DEBUG
+	g_debug("=> %s", event_to_text(event_type));
+#endif
+	if (event_type != G_FILE_MONITOR_EVENT_CREATED) {
+		return;
 	}
 
+	file_name = g_file_get_path(file);
+	g_assert(file_name != NULL);
+
 	/* Sort out invalid files */
-	name = g_strdup_printf("%s-", user_name);
-	if (has_file_extension(file_name, ".tif") || strncmp(g_path_get_basename(file_name), name, strlen(name))) {
+	if (has_file_extension(file_name, ".tmp") || has_file_extension(file_name, ".tif")) {
 		/* Skip it */
 		goto end;
 	}
 
-	if (type == -1 && event_type == G_FILE_MONITOR_EVENT_CREATED) {
-		type = event_type;
+	user_name = g_get_user_name();
+	g_assert(user_name != NULL);
+	name = g_strdup_printf("%s-", user_name);
+
+	if (strncmp(g_path_get_basename(file_name), name, strlen(name))) {
+		/* Skip it */
+		goto end;
 	}
 
-	if (event_type == G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT) {
-		if (type == G_FILE_MONITOR_EVENT_CREATED) {
-			type = event_type;
-			g_debug("Print job received on spooler");
-			emit_fax_process(file_name);
-		}
-		type = -1;
-	}
+	g_debug("Print job received on spooler");
+	emit_fax_process(file_name);
 
 end:
 	g_free(name);

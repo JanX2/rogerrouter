@@ -60,6 +60,15 @@ void remove_address_clicked_cb(GtkWidget *button, gpointer user_data)
 	refresh_edit_dialog(contact);
 }
 
+void number_entry_changed_cb(GtkWidget *entry, gpointer user_data)
+{
+	struct phone_number *number = user_data;
+	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
+
+	g_free(number->number);
+	number->number = g_strdup(text);
+}
+
 void refresh_edit_dialog(struct contact *contact)
 {
 	GSList *numbers;
@@ -116,6 +125,7 @@ void refresh_edit_dialog(struct contact *contact)
 		gtk_entry_set_placeholder_text(GTK_ENTRY(number), _("Number"));
 		gtk_grid_attach(GTK_GRID(grid), number, 1, detail_row, 1, 1);
 		gtk_entry_set_text(GTK_ENTRY(number), phone_number->number);
+		g_signal_connect(G_OBJECT(number), "changed", G_CALLBACK(number_entry_changed_cb), phone_number);
 
 		remove = gtk_button_new();
 		gtk_widget_set_tooltip_text(remove, _("Remove number"));
