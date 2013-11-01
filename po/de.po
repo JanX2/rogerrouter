@@ -253,7 +253,7 @@ msgstr "Adresse entfernen"
 
 #: ../roger/contact_edit.c:154
 msgid "Street"
-msgstr "Straße:"
+msgstr "Straße"
 
 #: ../roger/contact_edit.c:155
 msgid "ZIP"
