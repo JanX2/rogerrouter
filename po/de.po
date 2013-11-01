@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-01 16:59+0100\n"
+"POT-Creation-Date: 2013-11-01 17:00+0100\n"
 "PO-Revision-Date: 2013-09-07 19:34+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: German <jan.brummer@tabos.org>\n"
@@ -123,6 +123,7 @@ msgstr " an: "
 
 #. In every case add also an other button + entry box
 #: ../roger/assistant.c:337 ../roger/contacts.c:149
+#: ../roger/contact_edit.c:110 ../roger/contact_edit.c:142
 msgid "Other"
 msgstr "Andere"
 
@@ -175,21 +176,23 @@ msgstr "Zusammenfassung"
 msgid " Profile Assistant"
 msgstr " Profilassistent"
 
-#: ../roger/contacts.c:106 ../roger/contacts.c:143
+#: ../roger/contacts.c:106 ../roger/contacts.c:143 ../roger/contact_edit.c:106
+#: ../roger/contact_edit.c:140
 msgid "Private"
 msgstr "Privat"
 
-#: ../roger/contacts.c:109 ../roger/contacts.c:146
+#: ../roger/contacts.c:109 ../roger/contacts.c:146 ../roger/contact_edit.c:107
+#: ../roger/contact_edit.c:141
 msgid "Business"
 msgstr "Geschäftlich"
 
-#: ../roger/contacts.c:112
+#: ../roger/contacts.c:112 ../roger/contact_edit.c:108
 msgid "Mobile"
 msgstr "Mobil"
 
 #. Fax
-#: ../roger/contacts.c:115 ../roger/fax.c:184 ../roger/pref.c:116
-#: ../libroutermanager/filter.c:441
+#: ../roger/contacts.c:115 ../roger/contact_edit.c:109 ../roger/fax.c:184
+#: ../roger/pref.c:116 ../libroutermanager/filter.c:441
 msgid "Fax"
 msgstr "Fax"
 
@@ -232,6 +235,60 @@ msgstr "Ausgewählten Kontakt editieren"
 #: ../roger/contacts.c:513
 msgid "Remove selected contact"
 msgstr "Ausgewählten Kontakt löschen"
+
+#: ../roger/contact_edit.c:116 ../roger/journal.c:823
+#: ../roger/pref_action.c:256 ../roger/pref_filters.c:210 ../roger/print.c:386
+#: ../roger/plugins/notification/notification.c:471
+#: ../roger/plugins/gtknotify/gtknotify.c:587
+msgid "Number"
+msgstr "Nummer"
+
+#: ../roger/contact_edit.c:121
+msgid "Remove number"
+msgstr "Entferne Nummer"
+
+#: ../roger/contact_edit.c:147
+msgid "Remove address"
+msgstr "Adresse entfernen"
+
+#: ../roger/contact_edit.c:154
+msgid "Street"
+msgstr "Straße:"
+
+#: ../roger/contact_edit.c:155
+msgid "ZIP"
+msgstr "PLZ"
+
+#: ../roger/contact_edit.c:156 ../roger/journal.c:830
+msgid "City"
+msgstr "Stadt"
+
+#: ../roger/contact_edit.c:171
+msgid "Add detail"
+msgstr "Detail hinzufügen"
+
+#. Phone
+#: ../roger/contact_edit.c:172 ../roger/phone.c:956
+#: ../roger/plugins/statusicon/gtk.c:200
+#: ../roger/plugins/indicator/indicator.c:221
+msgid "Phone"
+msgstr "Telefon"
+
+#: ../roger/contact_edit.c:173
+msgid "Address"
+msgstr "Adresse"
+
+#: ../roger/contact_edit.c:243
+msgid "Edit contact"
+msgstr "Kontakt editieren"
+
+#: ../roger/contact_edit.c:243
+msgid "_Save"
+msgstr "_Speichern"
+
+#: ../roger/contact_edit.c:243
+msgid "Cancel"
+msgstr "A_bbrechen"
 
 #: ../roger/fax.c:44 ../roger/phone.c:170 ../roger-cli/main_cli.c:157
 #, c-format
@@ -356,17 +413,6 @@ msgstr "Datum/Zeit"
 #: ../roger/journal.c:816
 msgid "Company"
 msgstr "Firma"
-
-#: ../roger/journal.c:823 ../roger/pref_action.c:256
-#: ../roger/pref_filters.c:210 ../roger/print.c:386
-#: ../roger/plugins/notification/notification.c:471
-#: ../roger/plugins/gtknotify/gtknotify.c:587
-msgid "Number"
-msgstr "Nummer"
-
-#: ../roger/journal.c:830
-msgid "City"
-msgstr "Stadt"
 
 #: ../roger/journal.c:837
 msgid "Extension"
@@ -496,12 +542,6 @@ msgstr "Aktive Anrufe"
 #: ../roger/phone.c:917
 msgid "A call is in progress. Still close this window?"
 msgstr "Ein Anruf ist aktiv. Möchten Sie das Fenster trotzdem schließen?"
-
-#. Phone
-#: ../roger/phone.c:956 ../roger/plugins/statusicon/gtk.c:200
-#: ../roger/plugins/indicator/indicator.c:221
-msgid "Phone"
-msgstr "Telefon"
 
 #: ../roger/phone.c:984
 msgid "Connection: Idle | Time: 00:00:00"
@@ -1383,27 +1423,6 @@ msgstr ""
 #: ../roger.desktop.in.h:3
 msgid "fritz;box;fritzbox;router;manager;fax;softphone;"
 msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
-
-#~ msgid "Remove number"
-#~ msgstr "Entferne Nummer"
-
-#~ msgid "Remove address"
-#~ msgstr "Adresse entfernen"
-
-#~ msgid "Add detail"
-#~ msgstr "Detail hinzufügen"
-
-#~ msgid "Address"
-#~ msgstr "Adresse"
-
-#~ msgid "Edit contact"
-#~ msgstr "Kontakt editieren"
-
-#~ msgid "_Save"
-#~ msgstr "_Speichern"
-
-#~ msgid "Cancel"
-#~ msgstr "A_bbrechen"
 
 #~ msgid "Home"
 #~ msgstr "Zuhause"
