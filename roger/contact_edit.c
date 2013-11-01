@@ -113,6 +113,7 @@ void refresh_edit_dialog(struct contact *contact)
 		gtk_grid_attach(GTK_GRID(grid), type_box, 0, detail_row, 1, 1);
 
 		number = gtk_entry_new();
+		gtk_entry_set_placeholder_text(GTK_ENTRY(number), _("Number"));
 		gtk_grid_attach(GTK_GRID(grid), number, 1, detail_row, 1, 1);
 		gtk_entry_set_text(GTK_ENTRY(number), phone_number->number);
 
@@ -149,6 +150,10 @@ void refresh_edit_dialog(struct contact *contact)
 		g_signal_connect(remove, "clicked", G_CALLBACK(remove_address_clicked_cb), contact);
 		g_object_set_data(G_OBJECT(remove), "address", address);
 		gtk_grid_attach(GTK_GRID(grid), remove, 2, detail_row, 1, 1);
+
+		gtk_entry_set_placeholder_text(GTK_ENTRY(street), _("Street"));
+		gtk_entry_set_placeholder_text(GTK_ENTRY(zip), _("ZIP"));
+		gtk_entry_set_placeholder_text(GTK_ENTRY(city), _("City"));
 
 		gtk_grid_attach(GTK_GRID(grid), street, 1, detail_row, 1, 1);
 		detail_row++;
