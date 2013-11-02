@@ -11,6 +11,6 @@ plugin_LTLIBRARIES = libstatusicon.la
 libstatusicon_la_SOURCES = \
 	gtk.c
 
-libstatusicon_la_CFLAGS = $(plugin_cflags) -Werror
+libstatusicon_la_CFLAGS = $(plugin_cflags)
 libstatusicon_la_LDFLAGS = $(plugin_ldflags)
 libstatusicon_la_LIBADD  = $(plugin_libadd)

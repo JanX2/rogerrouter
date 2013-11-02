@@ -16,6 +16,6 @@ libareacodes_global_la_SOURCES = \
 	csv.c \
 	csv.h
 
-libareacodes_global_la_CFLAGS = $(plugin_cflags) -Wall -Werror -DPLUGIN_DIR=\"$(plugindir)\"
+libareacodes_global_la_CFLAGS = $(plugin_cflags) -DPLUGIN_DIR=\"$(plugindir)\"
 libareacodes_global_la_LDFLAGS = $(plugin_ldflags)
 libareacodes_global_la_LIBADD  = $(plugin_libadd)

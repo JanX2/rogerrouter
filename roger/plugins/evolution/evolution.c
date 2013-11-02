@@ -107,8 +107,6 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 	EContactPhoto *photo;
 	GdkPixbufLoader *loader;
 	GSList *list;
-	EBookClientView *view;
-	GError *error = NULL;
 	GSList *ebook_contacts;
 
 	/* TODO: Free list */
@@ -127,6 +125,9 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 	sexp = e_book_query_to_string(query);
 
 #ifdef HAVE_EBOOK_SOURCE_REGISTRY
+	EBookClientView *view;
+	GError *error = NULL;
+
 	if (!e_book_client_get_view_sync(client, sexp, &view, NULL, &error)) {
 		g_error("get_view_sync");
 	}

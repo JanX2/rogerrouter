@@ -9,6 +9,6 @@ plugin_LTLIBRARIES = libpulseaudio.la
 libpulseaudio_la_SOURCES = \
 	pulseaudio.c
 
-libpulseaudio_la_CFLAGS = $(plugin_cflags) -Wall -Werror
+libpulseaudio_la_CFLAGS = $(plugin_cflags)
 libpulseaudio_la_LDFLAGS = $(plugin_ldflags)
 libpulseaudio_la_LIBADD  = $(plugin_libadd) $(PULSEAUDIO_LIBS)

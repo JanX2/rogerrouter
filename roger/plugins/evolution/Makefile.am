@@ -18,6 +18,6 @@ else
 libevolution_la_SOURCES += sources-list.c
 endif
 
-libevolution_la_CFLAGS = $(plugin_cflags) -Werror $(EBOOK_CFLAGS)
+libevolution_la_CFLAGS = $(plugin_cflags) $(EBOOK_CFLAGS)
 libevolution_la_LDFLAGS = $(plugin_ldflags)  $(EBOOK_FLAGS)
 libevolution_la_LIBADD  = $(plugin_libadd) $(EBOOK_LIBS)

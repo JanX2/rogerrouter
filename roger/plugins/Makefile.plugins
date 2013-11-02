@@ -11,12 +11,14 @@ AM_CFLAGS = \
 	$(GTK_CFLAGS) \
 	$(PEAS_CFLAGS)		\
 	$(OS_CFLAGS) \
+	$(EXTRA_CFLAGS) \
 	-I$(top_srcdir)/
 
 plugin_cflags =			\
 	$(GTK_CFLAGS) \
 	$(PEAS_CFLAGS)		\
 	$(OS_CFLAGS) \
+	$(EXTRA_CFLAGS) \
 	-I$(top_srcdir)/
 
 plugin_ldflags = \
