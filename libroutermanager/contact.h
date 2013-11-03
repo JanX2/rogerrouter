@@ -35,6 +35,7 @@ struct contact {
 	gchar *name;
 	gpointer image;
 	gsize image_len;
+	gchar *image_uri;
 
 	/* currently active number */
 	gchar *number;

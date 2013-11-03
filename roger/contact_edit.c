@@ -66,6 +66,47 @@ void number_entry_changed_cb(GtkWidget *entry, gpointer user_data)
 	number->number = g_strdup(text);
 }
 
+void photo_button_clicked_cb(GtkWidget *button, gpointer user_data)
+{
+	GtkWidget *file_chooser;
+	GtkFileFilter *filter;
+	gint result;
+	struct contact *contact = user_data;
+
+	file_chooser = gtk_file_chooser_dialog_new(_( "Open image" ), (GtkWindow *) gtk_widget_get_ancestor(button, GTK_TYPE_WINDOW),
+		GTK_FILE_CHOOSER_ACTION_OPEN, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Open"), GTK_RESPONSE_ACCEPT, _("_No image"), 1, NULL);
+
+	filter = gtk_file_filter_new();
+
+	gtk_file_filter_add_mime_type(filter, "image/gif");
+	gtk_file_filter_add_mime_type(filter, "image/jpeg");
+	gtk_file_filter_add_mime_type(filter, "image/png");
+	gtk_file_filter_add_mime_type(filter, "image/tiff");
+	gtk_file_filter_add_mime_type(filter, "image/ief");
+	gtk_file_filter_add_mime_type(filter, "image/cgm");
+	gtk_file_chooser_set_filter(GTK_FILE_CHOOSER(file_chooser), filter);
+
+	result = gtk_dialog_run(GTK_DIALOG(file_chooser));
+
+	if (result == GTK_RESPONSE_ACCEPT) {
+		if (contact->image_uri != NULL) {
+			g_free(contact->image_uri);
+			contact->image_uri = NULL;
+		}
+		contact->image_uri = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(file_chooser));
+		if (contact->image_uri != NULL) {
+			contact->image = gdk_pixbuf_new_from_file(contact->image_uri, NULL);
+		}
+	} else if (result == 1) {
+		if (contact->image != NULL) {
+			contact->image = NULL;
+		}
+	}
+	refresh_edit_dialog(contact);
+
+	gtk_widget_destroy(file_chooser);
+}
+
 void refresh_edit_dialog(struct contact *contact)
 {
 	GSList *numbers;
@@ -76,6 +117,7 @@ void refresh_edit_dialog(struct contact *contact)
 	gint detail_row = 1;
 	GtkWidget *detail_photo_image = NULL;
 	GtkWidget *detail_name_label = NULL;
+	GtkWidget *content;
 
 	scrolled = gtk_scrolled_window_new(NULL, NULL);
 	gtk_widget_set_vexpand(scrolled, TRUE);
@@ -92,6 +134,7 @@ void refresh_edit_dialog(struct contact *contact)
 	photo_button = gtk_button_new();
 	detail_photo_image = gtk_image_new();
 	gtk_button_set_image(GTK_BUTTON(photo_button), detail_photo_image);
+	g_signal_connect(photo_button, "clicked", G_CALLBACK(photo_button_clicked_cb), contact);
 	gtk_grid_attach(GTK_GRID(grid), photo_button, 0, 0, 1, 1);
 
 	detail_name_label = gtk_entry_new();
@@ -183,15 +226,15 @@ void refresh_edit_dialog(struct contact *contact)
 	g_signal_connect(add_detail_button, "changed", G_CALLBACK(add_detail_button_clicked_cb), contact);
 	gtk_grid_attach(GTK_GRID(grid), add_detail_button, 0, detail_row, 1, 1);
 
-	gtk_widget_show_all(scrolled);
-
+	content = gtk_dialog_get_content_area(GTK_DIALOG(edit_dialog));
 	if (edit_widget) {
-		gtk_container_remove(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(edit_dialog))), edit_widget);
+		gtk_widget_destroy(edit_widget);
 	}
 
 	edit_widget = scrolled;
 
-	gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(edit_dialog))), scrolled);
+	gtk_container_add(GTK_CONTAINER(content), scrolled);
+	gtk_widget_show_all(scrolled);
 }
 
 void add_detail_button_clicked_cb(GtkComboBox *box, gpointer user_data)
@@ -238,10 +281,10 @@ void contact_editor(struct contact *contact)
 	gtk_widget_set_size_request(edit_dialog, 500, 500);
 	int response = gtk_dialog_run(GTK_DIALOG(edit_dialog));
 	if (response == GTK_RESPONSE_ACCEPT) {
-		address_book_modify_contact(contact);
+		//address_book_modify_contact(contact);
+	} else {
+		address_book_reload_contacts();
 	}
-
-	address_book_reload_contacts();
 	gtk_widget_destroy(edit_dialog);
 	edit_dialog = NULL;
 	edit_widget = NULL;

@@ -337,11 +337,36 @@ GtkWidget *contacts_list_view(GtkWidget *entry)
 	return view;
 }
 
+void contacts_select(GtkListStore *store, struct contact *contact)
+{
+	GtkTreeIter iter;
+	GtkTreeModel *model = GTK_TREE_MODEL(store);
+	gboolean valid = gtk_tree_model_get_iter_first(model, &iter);
+	struct contact *iter_contact;
+
+	while (valid) {
+		gtk_tree_model_get(model, &iter, 2, &iter_contact, -1);
+		if (iter_contact == contact) {
+			contacts_update_details(contact);
+			break;
+		}
+		valid = gtk_tree_model_iter_next(model, &iter);
+	}
+}
+
 void button_add_clicked_cb(GtkWidget *button, gpointer user_data)
 {
+	GtkWidget *view = user_data;
+	GtkListStore *list_store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(view)));
 	struct contact *contact = g_slice_new0(struct contact);
+
 	contact->name = g_strdup("");
 	contact_editor(contact);
+
+	gtk_list_store_clear(list_store);
+	contacts_fill_list(list_store, NULL);
+	contacts_select(list_store, contact);
+	contacts_clear_details();
 }
 
 void button_edit_clicked_cb(GtkWidget *button, gpointer user_data)
@@ -361,6 +386,7 @@ void button_edit_clicked_cb(GtkWidget *button, gpointer user_data)
 		gtk_list_store_clear(list_store);
 		contacts_fill_list(list_store, NULL);
 		contacts_clear_details();
+		contacts_select(list_store, contact);
 	}
 }
 
@@ -381,7 +407,6 @@ void button_remove_clicked_cb(GtkWidget *button, gpointer user_data)
 
 		GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Do you want to delete the entry '%s'?"), g_value_get_string(&name));
 		gtk_window_set_title(GTK_WINDOW(dialog), _("Delete entry"));
-		//gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW( psAddressBook ));
 		gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
 		gint result = gtk_dialog_run(GTK_DIALOG(dialog));
 		gtk_widget_destroy(dialog);
