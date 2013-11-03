@@ -448,88 +448,85 @@ static void evolution_set_image(EContact *e_contact, struct contact *contact)
 gboolean evolution_save_contact(struct contact *contact)
 {
 	EBookClient *client = get_selected_ebook_client();
+	EContact *e_contact;
 	gboolean ret = FALSE;
+	GError *error = NULL;
+	GSList *numbers;
+	GSList *addresses;
+	GSList *list;
 
 	if (!contact->priv) {
-		EContact *new_contact = e_contact_new();
-		GError *error = NULL;
-		GSList *numbers;
-		GSList *addresses;
-		GSList *list;
-
-		e_contact_set(new_contact, E_CONTACT_FULL_NAME, contact->name ? contact->name : "");
-
-		for (numbers = contact->numbers; numbers != NULL; numbers = numbers->next) {
-			struct phone_number *number = numbers->data;
-			gint type;
-
-			switch (number->type) {
-				case PHONE_NUMBER_HOME:
-					type = E_CONTACT_PHONE_HOME;
-					break;
-				case PHONE_NUMBER_WORK:
-					type = E_CONTACT_PHONE_BUSINESS;
-					break;
-				case PHONE_NUMBER_MOBILE:
-					type = E_CONTACT_PHONE_MOBILE;
-					break;
-				case PHONE_NUMBER_FAX:
-					type = E_CONTACT_PHONE_HOME_FAX;
-					break;
-				default:
-					continue;
-			}
-			e_contact_set(new_contact, type, number->number);
-		}
-
-		for (addresses = contact->addresses; addresses != NULL; addresses = addresses->next) {
-			struct contact_address *address = addresses->data;
-			EContactAddress e_address;
-			EContactAddress *ep_address = &e_address;
-			gint type;
-
-			memset(ep_address, 0, sizeof(EContactAddress));
-
-			switch (address->type) {
-				case 0:
-					type = E_CONTACT_ADDRESS_HOME;
-					break;
-				case 1:
-					type = E_CONTACT_ADDRESS_WORK;
-					break;
-				default:
-					continue;
-			}
-			ep_address->street = address->street;
-			ep_address->locality = address->city;
-			ep_address->code = address->zip;
-			e_contact_set(new_contact, type, ep_address);
-		}
-
-		evolution_set_image(new_contact, contact);
-
-		e_book_client_add_contact_sync(client, new_contact, NULL, NULL, &error);
-		g_debug("ret: %d", ret);
-		if (ret) {
-			g_debug("reread book");
-			ebook_read_book_sync();
-		}
+		e_contact = e_contact_new();
 	} else {
-		/*EContact *e_contact;
-		GError *error = NULL;
-		gboolean ret = FALSE;
-
 		ret = e_book_client_get_contact_sync(client, contact->priv, &e_contact, NULL, &error);
 		if (!ret) {
-			g_debug("Error: %s", error->message);
 			return FALSE;
 		}
+	}
 
-		g_debug("ret: %d", ret);
-		if (ret) {
-			g_debug("reread book");
-			ebook_read_book_sync();
-		}*/
+	e_contact_set(e_contact, E_CONTACT_FULL_NAME, contact->name ? contact->name : "");
+
+	for (numbers = contact->numbers; numbers != NULL; numbers = numbers->next) {
+		struct phone_number *number = numbers->data;
+		gint type;
+
+		switch (number->type) {
+			case PHONE_NUMBER_HOME:
+				type = E_CONTACT_PHONE_HOME;
+				break;
+			case PHONE_NUMBER_WORK:
+				type = E_CONTACT_PHONE_BUSINESS;
+				break;
+			case PHONE_NUMBER_MOBILE:
+				type = E_CONTACT_PHONE_MOBILE;
+				break;
+			case PHONE_NUMBER_FAX:
+				type = E_CONTACT_PHONE_HOME_FAX;
+				break;
+			default:
+				continue;
+		}
+		e_contact_set(e_contact, type, number->number);
+	}
+
+	for (addresses = contact->addresses; addresses != NULL; addresses = addresses->next) {
+		struct contact_address *address = addresses->data;
+		EContactAddress e_address;
+		EContactAddress *ep_address = &e_address;
+		gint type;
+
+		memset(ep_address, 0, sizeof(EContactAddress));
+
+		switch (address->type) {
+			case 0:
+				type = E_CONTACT_ADDRESS_HOME;
+				break;
+			case 1:
+				type = E_CONTACT_ADDRESS_WORK;
+				break;
+			default:
+				continue;
+		}
+		ep_address->street = address->street;
+		ep_address->locality = address->city;
+		ep_address->code = address->zip;
+		e_contact_set(e_contact, type, ep_address);
+	}
+
+	evolution_set_image(e_contact, contact);
+
+	if (!contact->priv) {
+		e_book_client_add_contact_sync(client, e_contact, NULL, NULL, &error);
+	} else {
+		e_book_client_modify_contact_sync(client, e_contact, NULL, &error);
+	}
+
+	g_object_unref(client);
+
+	g_debug("ret: %d", ret);
+	if (ret) {
+		g_debug("reread book");
+		ebook_read_book_sync();
 	}
 
 	return ret;
