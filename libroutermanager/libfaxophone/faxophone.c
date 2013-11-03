@@ -1322,6 +1322,23 @@ static void capi_confirmation(_cmsg capi_message) {
 	}
 }
 
+static int capi_init(int controller);
+
+/**
+ * \brief Our connection seems to be broken - reconnect
+ * \param session faxophone session pointer
+ * \return error code
+ */
+static void faxophone_reconnect(struct session *session)
+{
+	isdn_lock();
+	capi_close();
+
+	session->appl_id = capi_init(-1);
+
+	isdn_unlock();
+}
+
 /**
  * \brief Main capi loop function
  * \param user_data unused pointer
@@ -1357,8 +1374,9 @@ static gpointer capi_loop(void *user_data) {
 					}
 					break;
 				case CapiReceiveQueueEmpty:
-					g_warning("Empty queue, even if message pending.. sleeping 1 second");
+					g_warning("Empty queue, even if message pending.. reconnecting");
 					g_usleep(1 * G_USEC_PER_SEC);
+					faxophone_reconnect(session);
 					break;
 				default:
 					return NULL;
