@@ -35,14 +35,9 @@
 GdkPixbuf *image_get_scaled(GdkPixbuf *image, gint req_width, gint req_height);
 void contacts_fill_list(GtkListStore *list_store, const gchar *text);
 
-static GSList *contact_list = NULL;
 static GtkWidget *detail_grid = NULL;
-static GtkWidget *detail_photo_image = NULL;
-static GtkWidget *detail_name_label = NULL;
-static gint detail_row = 1;
 static GtkWidget *contacts_window = NULL;
-static GtkWidget *contacts_window_grid;
-static GtkWidget *view = NULL;
+static GtkWidget *contacts_window_grid = NULL;
 
 void dial_clicked_cb(GtkWidget *button, gpointer user_data)
 {
@@ -62,12 +57,23 @@ void dial_clicked_cb(GtkWidget *button, gpointer user_data)
 	g_free(full_number);
 }
 
+void contacts_clear_details(void)
+{
+	if (detail_grid) {
+		gtk_container_remove(GTK_CONTAINER(contacts_window_grid), detail_grid);
+		detail_grid = NULL;
+	}
+}
+
 void contacts_update_details(struct contact *contact)
 {
+	GtkWidget *detail_photo_image = NULL;
+	GtkWidget *detail_name_label = NULL;
 	GSList *numbers;
 	GSList *addresses;
 	GtkWidget *grid = gtk_grid_new();
 	gchar *markup;
+	gint detail_row = 1;
 
 	gtk_widget_set_margin_left(grid, 25);
 	gtk_widget_set_margin_top(grid, 25);
@@ -91,8 +97,6 @@ void contacts_update_details(struct contact *contact)
 	markup = g_markup_printf_escaped("<span size=\"x-large\">%s</span>", contact->name);
 	gtk_label_set_markup(GTK_LABEL(detail_name_label), markup);
 	g_free(markup);
-
-	detail_row = 1;
 
 	for (numbers = contact->numbers; numbers != NULL; numbers = numbers->next) {
 		GtkWidget *type;
@@ -206,12 +210,6 @@ static void entry_icon_released(GtkEntry *entry, GtkEntryIconPosition icon_pos, 
 	}
 }
 
-static gint contacts_window_delete_event_cb(GtkWidget *widget, GdkEvent event, gpointer data)
-{
-	contacts_window = NULL;
-	return FALSE;
-}
-
 void contacts_fill_list(GtkListStore *list_store, const gchar *text)
 {
 	GSList *list;
@@ -307,6 +305,7 @@ GtkWidget *contacts_list_view(GtkWidget *entry)
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *photo_column;
 	GtkTreeViewColumn *name_column;
+	GtkWidget *view;
 
 	view = gtk_tree_view_new();
 	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(view), FALSE);
@@ -338,29 +337,6 @@ GtkWidget *contacts_list_view(GtkWidget *entry)
 	return view;
 }
 
-GtkWidget *details_view(void)
-{
-	GtkWidget *detail_grid = gtk_grid_new();
-
-	gtk_widget_set_margin_left(detail_grid, 25);
-	gtk_widget_set_margin_top(detail_grid, 25);
-	gtk_widget_set_margin_right(detail_grid, 25);
-	gtk_widget_set_margin_bottom(detail_grid, 25);
-
-	gtk_grid_set_row_spacing(GTK_GRID(detail_grid), 15);
-	gtk_grid_set_column_spacing(GTK_GRID(detail_grid), 15);
-	detail_photo_image = gtk_image_new();
-	gtk_grid_attach(GTK_GRID(detail_grid), detail_photo_image, 0, 0, 1, 1);
-
-	detail_name_label = gtk_label_new("");
-	gtk_label_set_ellipsize(GTK_LABEL(detail_name_label), PANGO_ELLIPSIZE_END);
-	gtk_misc_set_alignment(GTK_MISC(detail_name_label), 0, 0.5);
-	gtk_widget_set_hexpand(detail_name_label, TRUE);
-	gtk_grid_attach(GTK_GRID(detail_grid), detail_name_label, 1, 0, 1, 1);
-
-	return detail_grid;
-}
-
 void button_add_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 	struct contact *contact = g_slice_new0(struct contact);
@@ -372,6 +348,7 @@ void button_edit_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 	GtkTreeIter iter;
 	GtkTreeModel *model;
+	GtkWidget *view = user_data;
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(view));
 
 	if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
@@ -383,12 +360,13 @@ void button_edit_clicked_cb(GtkWidget *button, gpointer user_data)
 
 		gtk_list_store_clear(list_store);
 		contacts_fill_list(list_store, NULL);
-		contacts_update_details(contact);
+		contacts_clear_details();
 	}
 }
 
 void button_remove_clicked_cb(GtkWidget *button, gpointer user_data)
 {
+	GtkWidget *view = user_data;
 	GtkTreeIter iter;
 	GtkTreeModel *model;
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(view));
@@ -422,6 +400,14 @@ void button_remove_clicked_cb(GtkWidget *button, gpointer user_data)
 	}
 }
 
+static gint contacts_window_delete_event_cb(GtkWidget *widget, GdkEvent event, gpointer data)
+{
+	contacts_window = NULL;
+	contacts_window_grid = NULL;
+	detail_grid = NULL;
+	return FALSE;
+}
+
 void contacts(void)
 {
 	GtkWidget *entry;
@@ -453,8 +439,6 @@ void contacts(void)
 	 * ...             |  <ZIP>                  |
 	 * -------------------------------------------
 	 */
-
-	contact_list = address_book_get_contacts();
 
 	contacts_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
@@ -495,7 +479,7 @@ void contacts(void)
 	gtk_button_set_image(GTK_BUTTON(button_add), image);
 	gtk_button_set_relief(GTK_BUTTON(button_add), GTK_RELIEF_NONE);
 	gtk_widget_set_tooltip_text(button_add, _("Add new contact"));
-	g_signal_connect(button_add, "clicked", G_CALLBACK(button_add_clicked_cb), NULL);
+	g_signal_connect(button_add, "clicked", G_CALLBACK(button_add_clicked_cb), contacts_view);
 	gtk_grid_attach(GTK_GRID(action_grid), button_add, 0, 0, 1, 1);
 
 	button_edit = gtk_button_new();
@@ -503,7 +487,7 @@ void contacts(void)
 	gtk_button_set_image(GTK_BUTTON(button_edit), image);
 	gtk_button_set_relief(GTK_BUTTON(button_edit), GTK_RELIEF_NONE);
 	gtk_widget_set_tooltip_text(button_edit, _("Edit selected contact"));
-	g_signal_connect(button_edit, "clicked", G_CALLBACK(button_edit_clicked_cb), NULL);
+	g_signal_connect(button_edit, "clicked", G_CALLBACK(button_edit_clicked_cb), contacts_view);
 	gtk_grid_attach(GTK_GRID(action_grid), button_edit, 1, 0, 1, 1);
 
 	button_remove = gtk_button_new();
@@ -511,12 +495,10 @@ void contacts(void)
 	gtk_button_set_image(GTK_BUTTON(button_remove), image);
 	gtk_button_set_relief(GTK_BUTTON(button_remove), GTK_RELIEF_NONE);
 	gtk_widget_set_tooltip_text(button_remove, _("Remove selected contact"));
-	g_signal_connect(button_remove, "clicked", G_CALLBACK(button_remove_clicked_cb), NULL);
+	g_signal_connect(button_remove, "clicked", G_CALLBACK(button_remove_clicked_cb), contacts_view);
 	gtk_grid_attach(GTK_GRID(action_grid), button_remove, 2, 0, 1, 1);
 
 	gtk_grid_attach(GTK_GRID(contacts_window_grid), action_grid, 0, 2, 1, 1);
-
-	details_view();
 
 	g_signal_connect(contacts_window, "delete_event", G_CALLBACK(contacts_window_delete_event_cb), NULL);
 

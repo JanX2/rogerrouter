@@ -33,10 +33,7 @@
 
 GdkPixbuf *image_get_scaled(GdkPixbuf *image, gint req_width, gint req_height);
 
-static GtkWidget *detail_photo_image = NULL;
-static GtkWidget *detail_name_label = NULL;
-static gint detail_row = 1;
-static GtkWidget *edit_dialog;
+static GtkWidget *edit_dialog = NULL;
 static GtkWidget *edit_widget = NULL;
 
 void add_detail_button_clicked_cb(GtkComboBox *box, gpointer user_data);
@@ -76,6 +73,9 @@ void refresh_edit_dialog(struct contact *contact)
 	GtkWidget *photo_button;
 	GtkWidget *grid = gtk_grid_new();
 	GtkWidget *scrolled;
+	gint detail_row = 1;
+	GtkWidget *detail_photo_image = NULL;
+	GtkWidget *detail_name_label = NULL;
 
 	scrolled = gtk_scrolled_window_new(NULL, NULL);
 	gtk_widget_set_vexpand(scrolled, TRUE);
@@ -101,8 +101,6 @@ void refresh_edit_dialog(struct contact *contact)
 
 	GdkPixbuf *buf = image_get_scaled(contact ? contact->image : NULL, 96, 96);
 	gtk_image_set_from_pixbuf(GTK_IMAGE(detail_photo_image), buf);
-
-	detail_row = 1;
 
 	for (numbers = contact ? contact->numbers : NULL; numbers != NULL; numbers = numbers->next) {
 		GtkWidget *number;
@@ -230,24 +228,6 @@ void add_detail_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 	}
 }
 
-static gint contacts_edit_window_delete_event_cb(GtkWidget *widget, GdkEvent event, gpointer data)
-{
-	edit_widget = NULL;
-	return FALSE;
-}
-
-void contact_edit_response_cb(GtkWidget *dialog, gint response, gpointer user_data)
-{
-	struct contact *contact = user_data;
-
-	if (response == GTK_RESPONSE_ACCEPT) {
-		address_book_modify_contact(contact);
-	}
-
-	gtk_widget_destroy(dialog);
-	edit_dialog = NULL;
-}
-
 void contact_editor(struct contact *contact)
 {
 	edit_dialog = gtk_dialog_new_with_buttons(_("Edit contact"), NULL, GTK_DIALOG_MODAL, _("_Save"), GTK_RESPONSE_ACCEPT, _("Cancel"), GTK_RESPONSE_REJECT, NULL);
@@ -255,8 +235,14 @@ void contact_editor(struct contact *contact)
 	refresh_edit_dialog(contact);
 
 	gtk_window_set_position(GTK_WINDOW(edit_dialog), GTK_WIN_POS_CENTER);
-	g_signal_connect(edit_dialog, "response", G_CALLBACK(contact_edit_response_cb), contact);
-	g_signal_connect(edit_dialog, "delete_event", G_CALLBACK(contacts_edit_window_delete_event_cb), NULL);
 	gtk_widget_set_size_request(edit_dialog, 500, 500);
-	gtk_widget_show_all(edit_dialog);
+	int response = gtk_dialog_run(GTK_DIALOG(edit_dialog));
+	if (response == GTK_RESPONSE_ACCEPT) {
+		address_book_modify_contact(contact);
+	}
+
+	address_book_reload_contacts();
+	gtk_widget_destroy(edit_dialog);
+	edit_dialog = NULL;
+	edit_widget = NULL;
 }

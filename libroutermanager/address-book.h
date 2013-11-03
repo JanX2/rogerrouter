@@ -26,12 +26,14 @@ G_BEGIN_DECLS
 
 struct address_book {
 	GSList *(*get_contacts)(void);
+	gboolean (*reload_contacts)(void);
 	gboolean (*remove_contact)(struct contact *contact);
 	gboolean (*modify_contact)(struct contact *contact);
 	gboolean (*create_contact)(struct contact *contact);
 };
 
 GSList *address_book_get_contacts(void);
+gboolean address_book_reload_contacts(void);
 gboolean address_book_remove_contact(struct contact *contact);
 gboolean address_book_modify_contact(struct contact *contact);
 gboolean address_book_create_contact(struct contact *contact);

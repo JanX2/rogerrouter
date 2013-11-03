@@ -406,6 +406,13 @@ GSList *evolution_get_contacts(void)
 	return list;
 }
 
+gboolean evolution_reload(void)
+{
+	ebook_read_book_sync();
+
+	return TRUE;
+}
+
 gboolean evolution_remove_contact(struct contact *contact)
 {
 	EBookClient *client = get_selected_ebook_client();
@@ -462,6 +469,7 @@ gboolean evolution_create_contact(struct contact *contact)
 
 struct address_book evolution_book = {
 	evolution_get_contacts,
+	evolution_reload,
 	evolution_remove_contact,
 	evolution_modify_contact,
 	evolution_create_contact,

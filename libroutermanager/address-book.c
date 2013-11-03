@@ -78,6 +78,17 @@ gboolean address_book_create_contact(struct contact *contact)
 	return ret;
 }
 
+gboolean address_book_reload_contacts(void)
+{
+	gboolean ret = FALSE;
+
+	if (internal_book && internal_book->reload_contacts) {
+		ret = internal_book->reload_contacts();
+	}
+
+	return ret;
+}
+
 /**
  * \brief Register a new address book
  * \param book address book pointer
