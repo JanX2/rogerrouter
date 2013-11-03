@@ -56,23 +56,12 @@ gboolean address_book_remove_contact(struct contact *contact)
 	return ret;
 }
 
-gboolean address_book_modify_contact(struct contact *contact)
+gboolean address_book_save_contact(struct contact *contact)
 {
 	gboolean ret = FALSE;
 
-	if (internal_book && internal_book->modify_contact) {
-		ret = internal_book->modify_contact(contact);
-	}
-
-	return ret;
-}
-
-gboolean address_book_create_contact(struct contact *contact)
-{
-	gboolean ret = FALSE;
-
-	if (internal_book && internal_book->create_contact) {
-		ret = internal_book->create_contact(contact);
+	if (internal_book && internal_book->save_contact) {
+		ret = internal_book->save_contact(contact);
 	}
 
 	return ret;

@@ -281,7 +281,7 @@ void contact_editor(struct contact *contact)
 	gtk_widget_set_size_request(edit_dialog, 500, 500);
 	int response = gtk_dialog_run(GTK_DIALOG(edit_dialog));
 	if (response == GTK_RESPONSE_ACCEPT) {
-		//address_book_modify_contact(contact);
+		address_book_save_contact(contact);
 	} else {
 		address_book_reload_contacts();
 	}
