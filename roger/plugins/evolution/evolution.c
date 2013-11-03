@@ -160,7 +160,7 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 		g_debug("No contacts in book");
 		return;
 	}
-	for (list = ebook_contacts; list != NULL; list = list -> next) {
+	for (list = ebook_contacts; list != NULL; list = list->next) {
 		const gchar *display_name;
 		struct contact *contact;
 		struct phone_number *phone_number;
@@ -168,8 +168,8 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 		const gchar *company;
 		EContactAddress *address;
 
-		g_return_if_fail(E_IS_CONTACT(list -> data));
-		e_contact = E_CONTACT(list -> data);
+		g_return_if_fail(E_IS_CONTACT(list->data));
+		e_contact = E_CONTACT(list->data);
 
 		display_name = e_contact_get_const(e_contact, E_CONTACT_FULL_NAME);
 
@@ -426,6 +426,25 @@ gboolean evolution_remove_contact(struct contact *contact)
 	return ret;
 }
 
+static void evolution_set_image(EContact *e_contact, struct contact *contact)
+{
+	if (contact -> image_uri != NULL) {
+		EContactPhoto photo;
+		guchar **data;
+		gsize *length;
+
+		photo.type = E_CONTACT_PHOTO_TYPE_INLINED;
+		data = &photo.data.inlined.data;
+		length = (gsize *) &photo.data.inlined.length;
+		photo.data.inlined.mime_type = NULL;
+		if (g_file_get_contents(contact -> image_uri, (gchar **) data, (gsize *) length, NULL)) {
+			e_contact_set(e_contact, E_CONTACT_PHOTO, &photo);
+		}
+	} else if (contact->image == NULL) {
+		e_contact_set(e_contact, E_CONTACT_PHOTO, NULL);
+	}
+}
+
 gboolean evolution_save_contact(struct contact *contact)
 {
 	EBookClient *client = get_selected_ebook_client();
@@ -434,6 +453,60 @@ gboolean evolution_save_contact(struct contact *contact)
 	if (!contact->priv) {
 		EContact *new_contact = e_contact_new();
 		GError *error = NULL;
+		GSList *numbers;
+		GSList *addresses;
+		GSList *list;
+
+		e_contact_set(new_contact, E_CONTACT_FULL_NAME, contact->name ? contact->name : "");
+
+		for (numbers = contact->numbers; numbers != NULL; numbers = numbers->next) {
+			struct phone_number *number = numbers->data;
+			gint type;
+
+			switch (number->type) {
+				case PHONE_NUMBER_HOME:
+					type = E_CONTACT_PHONE_HOME;
+					break;
+				case PHONE_NUMBER_WORK:
+					type = E_CONTACT_PHONE_BUSINESS;
+					break;
+				case PHONE_NUMBER_MOBILE:
+					type = E_CONTACT_PHONE_MOBILE;
+					break;
+				case PHONE_NUMBER_FAX:
+					type = E_CONTACT_PHONE_HOME_FAX;
+					break;
+				default:
+					continue;
+			}
+			e_contact_set(new_contact, type, number->number);
+		}
+
+		for (addresses = contact->addresses; addresses != NULL; addresses = addresses->next) {
+			struct contact_address *address = addresses->data;
+			EContactAddress e_address;
+			EContactAddress *ep_address = &e_address;
+			gint type;
+
+			memset(ep_address, 0, sizeof(EContactAddress));
+
+			switch (address->type) {
+				case 0:
+					type = E_CONTACT_ADDRESS_HOME;
+					break;
+				case 1:
+					type = E_CONTACT_ADDRESS_WORK;
+					break;
+				default:
+					continue;
+			}
+			ep_address->street = address->street;
+			ep_address->locality = address->city;
+			ep_address->code = address->zip;
+			e_contact_set(new_contact, type, ep_address);
+		}
+
+		evolution_set_image(new_contact, contact);
 
 		e_book_client_add_contact_sync(client, new_contact, NULL, NULL, &error);
 		g_debug("ret: %d", ret);
@@ -515,7 +588,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	gtk_label_set_markup(GTK_LABEL(label), _("Book:"));
 	gtk_box_pack_start(GTK_BOX(box), label, FALSE, TRUE, 10);
 
-	for (source = sources; source != NULL; source = source -> next) {
+	for (source = sources; source != NULL; source = source->next) {
 		struct ebook_data *ebook_data = source->data;
 
 		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box), ebook_data->id, ebook_data->name);

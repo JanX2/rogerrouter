@@ -57,6 +57,15 @@ void remove_address_clicked_cb(GtkWidget *button, gpointer user_data)
 	refresh_edit_dialog(contact);
 }
 
+void name_entry_changed_cb(GtkWidget *entry, gpointer user_data)
+{
+	struct contact *contact = user_data;
+	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
+
+	g_free(contact->name);
+	contact->name = g_strdup(text);
+}
+
 void number_entry_changed_cb(GtkWidget *entry, gpointer user_data)
 {
 	struct phone_number *number = user_data;
@@ -64,6 +73,47 @@ void number_entry_changed_cb(GtkWidget *entry, gpointer user_data)
 
 	g_free(number->number);
 	number->number = g_strdup(text);
+}
+
+void street_entry_changed_cb(GtkWidget *entry, gpointer user_data)
+{
+	struct contact_address *address = user_data;
+	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
+
+	g_free(address->street);
+	address->street = g_strdup(text);
+}
+
+void zip_entry_changed_cb(GtkWidget *entry, gpointer user_data)
+{
+	struct contact_address *address = user_data;
+	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
+
+	g_free(address->zip);
+	address->zip = g_strdup(text);
+}
+
+void city_entry_changed_cb(GtkWidget *entry, gpointer user_data)
+{
+	struct contact_address *address = user_data;
+	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
+
+	g_free(address->city);
+	address->city = g_strdup(text);
+}
+
+void number_type_changed_cb(GtkWidget *combobox, gpointer user_data)
+{
+	struct phone_number *number = user_data;
+
+	number->type = gtk_combo_box_get_active(GTK_COMBO_BOX(combobox));
+}
+
+void address_type_changed_cb(GtkWidget *combobox, gpointer user_data)
+{
+	struct contact_address *address = user_data;
+
+	address->type = gtk_combo_box_get_active(GTK_COMBO_BOX(combobox));
 }
 
 void photo_button_clicked_cb(GtkWidget *button, gpointer user_data)
@@ -139,6 +189,7 @@ void refresh_edit_dialog(struct contact *contact)
 
 	detail_name_label = gtk_entry_new();
 	gtk_entry_set_text(GTK_ENTRY(detail_name_label), contact ? contact->name : "");
+	g_signal_connect(G_OBJECT(detail_name_label), "changed", G_CALLBACK(name_entry_changed_cb), contact);
 	gtk_widget_set_hexpand(detail_name_label, TRUE);
 	gtk_grid_attach(GTK_GRID(grid), detail_name_label, 1, 0, 1, 1);
 
@@ -159,6 +210,7 @@ void refresh_edit_dialog(struct contact *contact)
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Fax"));
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Other"));
 
+		g_signal_connect(G_OBJECT(type_box), "changed", G_CALLBACK(number_type_changed_cb), phone_number);
 		gtk_combo_box_set_active(GTK_COMBO_BOX(type_box), phone_number->type);
 		gtk_grid_attach(GTK_GRID(grid), type_box, 0, detail_row, 1, 1);
 
@@ -192,13 +244,14 @@ void refresh_edit_dialog(struct contact *contact)
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Business"));
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Other"));
 		gtk_combo_box_set_active(GTK_COMBO_BOX(type_box), address->type);
+		g_signal_connect(G_OBJECT(type_box), "changed", G_CALLBACK(address_type_changed_cb), contact);
 		gtk_grid_attach(GTK_GRID(grid), type_box, 0, detail_row, 1, 1);
 
 		remove = gtk_button_new();
 		gtk_widget_set_tooltip_text(remove, _("Remove address"));
 		phone_image = gtk_image_new_from_icon_name("user-trash-symbolic", GTK_ICON_SIZE_BUTTON);
 		gtk_button_set_image(GTK_BUTTON(remove), phone_image);
-		g_signal_connect(remove, "clicked", G_CALLBACK(remove_address_clicked_cb), contact);
+		g_signal_connect(remove, "clicked", G_CALLBACK(remove_address_clicked_cb), address);
 		g_object_set_data(G_OBJECT(remove), "address", address);
 		gtk_grid_attach(GTK_GRID(grid), remove, 2, detail_row, 1, 1);
 
@@ -216,6 +269,10 @@ void refresh_edit_dialog(struct contact *contact)
 		gtk_entry_set_text(GTK_ENTRY(street), address->street);
 		gtk_entry_set_text(GTK_ENTRY(zip), address->zip);
 		gtk_entry_set_text(GTK_ENTRY(city), address->city);
+
+		g_signal_connect(street, "changed", G_CALLBACK(street_entry_changed_cb), address);
+		g_signal_connect(zip, "changed", G_CALLBACK(zip_entry_changed_cb), address);
+		g_signal_connect(city, "changed", G_CALLBACK(city_entry_changed_cb), address);
 	}
 
 	GtkWidget *add_detail_button = gtk_combo_box_text_new();
@@ -282,6 +339,7 @@ void contact_editor(struct contact *contact)
 	int response = gtk_dialog_run(GTK_DIALOG(edit_dialog));
 	if (response == GTK_RESPONSE_ACCEPT) {
 		address_book_save_contact(contact);
+		address_book_reload_contacts();
 	} else {
 		address_book_reload_contacts();
 	}
