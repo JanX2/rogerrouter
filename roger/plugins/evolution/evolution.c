@@ -462,6 +462,15 @@ gboolean evolution_save_contact(struct contact *contact)
 		if (!ret) {
 			return FALSE;
 		}
+
+		/* Remove entries we can fill */
+		e_contact_set(e_contact, E_CONTACT_PHONE_HOME, "");
+		e_contact_set(e_contact, E_CONTACT_PHONE_BUSINESS, "");
+		e_contact_set(e_contact, E_CONTACT_PHONE_MOBILE, "");
+		e_contact_set(e_contact, E_CONTACT_PHONE_HOME_FAX, "");
+
+		e_contact_set(e_contact, E_CONTACT_ADDRESS_HOME, NULL);
+		e_contact_set(e_contact, E_CONTACT_ADDRESS_WORK, NULL);
 	}
 
 	e_contact_set(e_contact, E_CONTACT_FULL_NAME, contact->name ? contact->name : "");

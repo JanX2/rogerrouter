@@ -244,14 +244,14 @@ void refresh_edit_dialog(struct contact *contact)
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Business"));
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Other"));
 		gtk_combo_box_set_active(GTK_COMBO_BOX(type_box), address->type);
-		g_signal_connect(G_OBJECT(type_box), "changed", G_CALLBACK(address_type_changed_cb), contact);
+		g_signal_connect(G_OBJECT(type_box), "changed", G_CALLBACK(address_type_changed_cb), address);
 		gtk_grid_attach(GTK_GRID(grid), type_box, 0, detail_row, 1, 1);
 
 		remove = gtk_button_new();
 		gtk_widget_set_tooltip_text(remove, _("Remove address"));
 		phone_image = gtk_image_new_from_icon_name("user-trash-symbolic", GTK_ICON_SIZE_BUTTON);
 		gtk_button_set_image(GTK_BUTTON(remove), phone_image);
-		g_signal_connect(remove, "clicked", G_CALLBACK(remove_address_clicked_cb), address);
+		g_signal_connect(remove, "clicked", G_CALLBACK(remove_address_clicked_cb), contact);
 		g_object_set_data(G_OBJECT(remove), "address", address);
 		gtk_grid_attach(GTK_GRID(grid), remove, 2, detail_row, 1, 1);
 

@@ -71,10 +71,13 @@ void contacts_update_details(struct contact *contact)
 	GtkWidget *detail_name_label = NULL;
 	GSList *numbers;
 	GSList *addresses;
-	GtkWidget *grid = gtk_grid_new();
+	GtkWidget *grid;
 	gchar *markup;
 	gint detail_row = 1;
 
+	grid = gtk_grid_new();
+
+	if (contact) {
 	gtk_widget_set_margin_left(grid, 25);
 	gtk_widget_set_margin_top(grid, 25);
 	gtk_widget_set_margin_right(grid, 25);
@@ -167,6 +170,7 @@ void contacts_update_details(struct contact *contact)
 
 		g_string_free(addr_str, TRUE);
 		detail_row++;
+	}
 	}
 	gtk_widget_show_all(grid);
 
