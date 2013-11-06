@@ -62,6 +62,8 @@ void name_entry_changed_cb(GtkWidget *entry, gpointer user_data)
 	struct contact *contact = user_data;
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 
+	gtk_dialog_set_response_sensitive(GTK_DIALOG(edit_dialog), GTK_RESPONSE_ACCEPT, strlen(text) > 0);
+
 	g_free(contact->name);
 	contact->name = g_strdup(text);
 }
@@ -189,6 +191,7 @@ void refresh_edit_dialog(struct contact *contact)
 
 	detail_name_label = gtk_entry_new();
 	gtk_entry_set_text(GTK_ENTRY(detail_name_label), contact ? contact->name : "");
+	gtk_entry_set_placeholder_text(GTK_ENTRY(detail_name_label), _("Name"));
 	g_signal_connect(G_OBJECT(detail_name_label), "changed", G_CALLBACK(name_entry_changed_cb), contact);
 	gtk_widget_set_hexpand(detail_name_label, TRUE);
 	gtk_grid_attach(GTK_GRID(grid), detail_name_label, 1, 0, 1, 1);
@@ -208,7 +211,6 @@ void refresh_edit_dialog(struct contact *contact)
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Business"));
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Mobile"));
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Fax"));
-		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Other"));
 
 		g_signal_connect(G_OBJECT(type_box), "changed", G_CALLBACK(number_type_changed_cb), phone_number);
 		gtk_combo_box_set_active(GTK_COMBO_BOX(type_box), phone_number->type);
@@ -242,7 +244,6 @@ void refresh_edit_dialog(struct contact *contact)
 		type_box = gtk_combo_box_text_new();
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Private"));
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Business"));
-		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Other"));
 		gtk_combo_box_set_active(GTK_COMBO_BOX(type_box), address->type);
 		g_signal_connect(G_OBJECT(type_box), "changed", G_CALLBACK(address_type_changed_cb), address);
 		gtk_grid_attach(GTK_GRID(grid), type_box, 0, detail_row, 1, 1);
@@ -337,13 +338,20 @@ void contact_editor(struct contact *contact)
 	gtk_window_set_position(GTK_WINDOW(edit_dialog), GTK_WIN_POS_CENTER);
 	gtk_widget_set_size_request(edit_dialog, 500, 500);
 	int response = gtk_dialog_run(GTK_DIALOG(edit_dialog));
-	if (response == GTK_RESPONSE_ACCEPT) {
-		address_book_save_contact(contact);
-		address_book_reload_contacts();
-	} else {
-		address_book_reload_contacts();
-	}
 	gtk_widget_destroy(edit_dialog);
+
 	edit_dialog = NULL;
 	edit_widget = NULL;
+
+	if (response == GTK_RESPONSE_ACCEPT) {
+		GtkWidget *info_dialog = gtk_message_dialog_new(NULL, 0, GTK_MESSAGE_INFO, GTK_BUTTONS_OK_CANCEL, _("Note: Depending on the address book plugin not all information might be saved"));
+
+		response = gtk_dialog_run(GTK_DIALOG(info_dialog));
+		gtk_widget_destroy(info_dialog);
+		if (response == GTK_RESPONSE_OK) {
+			address_book_save_contact(contact);
+		}
+	}
+
+	address_book_reload_contacts();
 }

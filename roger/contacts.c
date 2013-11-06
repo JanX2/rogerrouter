@@ -429,6 +429,18 @@ void button_remove_clicked_cb(GtkWidget *button, gpointer user_data)
 	}
 }
 
+void button_reload_clicked_cb(GtkWidget *button, gpointer user_data)
+{
+	GtkWidget *view = user_data;
+	GtkListStore *list_store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(view)));
+
+	address_book_reload_contacts();
+
+	gtk_list_store_clear(list_store);
+	contacts_fill_list(list_store, NULL);
+	contacts_update_details(NULL);
+}
+
 static gint contacts_window_delete_event_cb(GtkWidget *widget, GdkEvent event, gpointer data)
 {
 	contacts_window = NULL;
@@ -445,6 +457,7 @@ void contacts(void)
 	GtkWidget *button_add;
 	GtkWidget *button_remove;
 	GtkWidget *button_edit;
+	GtkWidget *button_reload;
 	GtkWidget *contacts_view;
 	GtkWidget *image;
 
@@ -526,6 +539,14 @@ void contacts(void)
 	gtk_widget_set_tooltip_text(button_remove, _("Remove selected contact"));
 	g_signal_connect(button_remove, "clicked", G_CALLBACK(button_remove_clicked_cb), contacts_view);
 	gtk_grid_attach(GTK_GRID(action_grid), button_remove, 2, 0, 1, 1);
+
+	button_reload = gtk_button_new();
+	image = gtk_image_new_from_icon_name("view-refresh-symbolic", GTK_ICON_SIZE_BUTTON);
+	gtk_button_set_image(GTK_BUTTON(button_reload), image);
+	gtk_button_set_relief(GTK_BUTTON(button_reload), GTK_RELIEF_NONE);
+	gtk_widget_set_tooltip_text(button_remove, _("Reload address book"));
+	g_signal_connect(button_reload, "clicked", G_CALLBACK(button_reload_clicked_cb), contacts_view);
+	gtk_grid_attach(GTK_GRID(action_grid), button_reload, 3, 0, 1, 1);
 
 	gtk_grid_attach(GTK_GRID(contacts_window_grid), action_grid, 0, 2, 1, 1);
 

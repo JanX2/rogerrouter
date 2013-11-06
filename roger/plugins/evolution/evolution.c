@@ -290,7 +290,6 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 	}
 
 	g_slist_free(ebook_contacts);
-	g_debug("done (%d contacts)", g_slist_length(contacts));
 }
 
 /**
@@ -318,13 +317,11 @@ gboolean ebook_read_book_sync(void)
 {
 	EBookClient *client = get_selected_ebook_client();
 
-	g_debug("ebook_read_book_sync(): %p", client);
 	if (!client) {
 		return FALSE;
 	}
 
 	if (e_client_open_sync(E_CLIENT(client), TRUE, NULL, NULL)) {
-		g_debug("calling callback");
 		read_callback(G_OBJECT(client), NULL, NULL);
 	}
 
@@ -402,7 +399,6 @@ GSList *evolution_get_contacts(void)
 {
 	GSList *list = contacts;
 
-	g_debug("get_contacts");
 	return list;
 }
 
@@ -525,16 +521,18 @@ gboolean evolution_save_contact(struct contact *contact)
 	evolution_set_image(e_contact, contact);
 
 	if (!contact->priv) {
-		e_book_client_add_contact_sync(client, e_contact, NULL, NULL, &error);
+		ret = e_book_client_add_contact_sync(client, e_contact, NULL, NULL, &error);
 	} else {
-		e_book_client_modify_contact_sync(client, e_contact, NULL, &error);
+		ret = e_book_client_modify_contact_sync(client, e_contact, NULL, &error);
+	}
+
+	if (!ret && error) {
+		g_debug("Error saving contact. '%s'", error->message);
 	}
 
 	g_object_unref(client);
 
-	g_debug("ret: %d", ret);
 	if (ret) {
-		g_debug("reread book");
 		ebook_read_book_sync();
 	}
 
