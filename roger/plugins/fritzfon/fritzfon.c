@@ -31,6 +31,7 @@
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/ftp.h>
 #include <libroutermanager/xml.h>
+#include <libroutermanager/logging.h>
 
 #include <roger/main.h>
 
@@ -201,6 +202,11 @@ static gint fritzfon_read_book(void) {
 	gint read = msg->response_body->length;
 
 	g_return_val_if_fail(data != NULL, -2);
+	if (read > 0) {
+		log_save_data("test-in.xml", data, read);
+	}
+
+
 	node = xmlnode_from_str(data, read);
 	if (node == NULL) {
 		g_object_unref(msg);
@@ -377,11 +383,178 @@ gboolean fritzfon_reload_contacts(void)
 	return fritzfon_read_book() == 0;
 }
 
+
+xmlnode *create_phone(char *type, char *number) {
+	xmlnode *number_node;
+
+	number_node = xmlnode_new("number");
+	xmlnode_set_attrib(number_node, "type", type);
+
+	/* For the meantime set priority to 0, TODO */
+	xmlnode_set_attrib(number_node, "prio", "0");
+	xmlnode_insert_data(number_node, number, -1);
+
+	return number_node;
+}
+
+/**
+ * \brief Convert person structure to xml node
+ * \param contact person structure
+ * \return xml node
+ */
+static xmlnode *contact_to_xmlnode(struct contact *contact) {
+	xmlnode *node;
+	xmlnode *contact_node;
+	xmlnode *realname_node;
+	xmlnode *image_node;
+	xmlnode *telephony_node;
+	xmlnode *category;
+	GSList *list;
+
+	/* Main contact entry */
+	node = xmlnode_new("contact");
+
+	/* Category */
+	category = xmlnode_new("category");
+	/* FIXME: Save and set category */
+	xmlnode_insert_data(category, "0"/*contact->priv->category*/, -1);
+	xmlnode_insert_child(node, category);
+
+	/* Person */
+	contact_node = xmlnode_new("person");
+
+	realname_node = xmlnode_new("realName");
+	xmlnode_insert_data(realname_node, contact->name, -1);
+	xmlnode_insert_child(contact_node, realname_node);
+
+	/* ImageURL stub */
+	image_node = xmlnode_new("ImageURL");
+	xmlnode_insert_child(contact_node, image_node);
+
+	/* Insert person to main node */
+	xmlnode_insert_child(node, contact_node);
+
+	/* Telephony */
+	telephony_node = xmlnode_new("telephony");
+
+	for (list = contact->numbers; list != NULL; list = list->next) {
+		struct phone_number *number = list->data;
+		xmlnode *number_node;
+
+		number_node = xmlnode_new("number");
+		/* For the meantime set priority to 0, TODO */
+		xmlnode_set_attrib(number_node, "prio", "0");
+
+		switch (number->type) {
+			case PHONE_NUMBER_HOME:
+				xmlnode_set_attrib(number_node, "type", "home");
+				break;
+			case PHONE_NUMBER_WORK:
+				xmlnode_set_attrib(number_node, "type", "work");
+				break;
+			case PHONE_NUMBER_MOBILE:
+				xmlnode_set_attrib(number_node, "type", "mobile");
+				break;
+			case PHONE_NUMBER_FAX:
+				xmlnode_set_attrib(number_node, "type", "fax_work");
+				break;
+			default:
+				continue;
+		}
+
+		xmlnode_insert_data(number_node, number->number, -1);
+		xmlnode_insert_child(telephony_node, number_node);
+	}
+
+	xmlnode_insert_child(node, telephony_node);
+
+	return node;
+}
+
+/**
+ * \brief Convert phonebooks to xml node
+ * \return xml node
+ */
+xmlnode *phonebook_to_xmlnode(void) {
+	xmlnode *node;
+	xmlnode *child;
+	xmlnode *book;
+	GSList *list;
+
+	/* Create general phonebooks node */
+	node = xmlnode_new("phonebooks");
+
+	/* Currently we only support one phonebook, TODO */
+	book = xmlnode_new("phonebook");
+	xmlnode_set_attrib(book, "name", g_settings_get_string(fritzfon_settings, "book"));
+	xmlnode_insert_child(node, book);
+
+	/* Loop through persons list and add only non-deleted entries */
+	for (list = contacts; list != NULL; list = list->next) {
+		struct contact *contact = list->data;
+
+		/* Convert each contact and add it to current phone book */
+		child = contact_to_xmlnode(contact);
+		xmlnode_insert_child(book, child);
+	}
+
+	return node;
+}
+
+gboolean fritzfon_remove_contact(struct contact *contact)
+{
+	xmlnode *node;
+	gchar uri[1024];
+	struct profile *profile = profile_get_active();
+	gchar *file;
+	gchar *data;
+	gint len;
+
+	if (!router_login(profile)) {
+		return FALSE;
+	}
+
+	contacts = g_slist_remove(contacts, contact);
+
+	node = phonebook_to_xmlnode();
+
+	data = xmlnode_to_formatted_str(node, &len);
+	g_debug("len: %d", len);
+	if (len > 0) {
+		log_save_data("test.xml", data, len);
+	}
+
+	if (1 == 0) {
+	snprintf(uri, sizeof(uri), "http://%s/cgi-bin/firmwarecfg", router_get_host(profile));
+
+	SoupMultipart *multipart = soup_multipart_new(SOUP_FORM_MIME_TYPE_MULTIPART);
+	soup_multipart_append_form_string(multipart, "sid", profile->router_info->session_id);
+	soup_multipart_append_form_string(multipart, "PhonebookId", g_settings_get_string(fritzfon_settings, "book"));
+	soup_multipart_append_form_string(multipart, "PhonebookImportFile", file);
+	SoupMessage *msg = soup_form_request_new_from_multipart(uri, multipart);
+
+	soup_session_send_message(soup_session_sync, msg);
+	if (msg->status_code != 200) {
+		g_warning("Could not send phonebook");
+		g_object_unref(msg);
+		g_free(uri);
+		return FALSE;
+	}
+	}
+
+	return FALSE;
+}
+
+gboolean fritzfon_save_contact(struct contact *contact)
+{
+	return FALSE;
+}
+
 struct address_book fritzfon_book = {
 	fritzfon_get_contacts,
 	fritzfon_reload_contacts,
-	NULL,
-	NULL
+	fritzfon_remove_contact,
+	fritzfon_save_contact
 };
 
 void impl_activate(PeasActivatable *plugin)

@@ -55,5 +55,8 @@ const char *xmlnode_get_attrib(xmlnode *node, const char *attr);
 xmlnode *xmlnode_from_str(const char *str, gssize size);
 void xmlnode_insert_data(xmlnode *node, const char *data, gssize size);
 void xmlnode_free(xmlnode *node);
+void xmlnode_set_attrib(xmlnode *node, const char *attr, const char *value);
+void xmlnode_insert_child(xmlnode *parent, xmlnode *child);
+char *xmlnode_to_formatted_str(xmlnode *node, int *len);
 
 #endif
