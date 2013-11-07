@@ -417,7 +417,7 @@ static xmlnode *contact_to_xmlnode(struct contact *contact) {
 	/* Category */
 	category = xmlnode_new("category");
 	/* FIXME: Save and set category */
-	xmlnode_insert_data(category, "0"/*contact->priv->category*/, -1);
+	//xmlnode_insert_data(category, "0"/*contact->priv->category*/, -1);
 	xmlnode_insert_child(node, category);
 
 	/* Person */
@@ -428,45 +428,51 @@ static xmlnode *contact_to_xmlnode(struct contact *contact) {
 	xmlnode_insert_child(contact_node, realname_node);
 
 	/* ImageURL stub */
-	image_node = xmlnode_new("ImageURL");
-	xmlnode_insert_child(contact_node, image_node);
+	if (contact->image) {
+		image_node = xmlnode_new("ImageURL");
+		xmlnode_insert_child(contact_node, image_node);
+	}
 
 	/* Insert person to main node */
 	xmlnode_insert_child(node, contact_node);
 
 	/* Telephony */
-	telephony_node = xmlnode_new("telephony");
+	if (contact->numbers) {
+		gchar *tmp = g_strdup_printf("%d", g_slist_length(contact->numbers));
+		telephony_node = xmlnode_new("telephony");
+		xmlnode_set_attrib(telephony_node, "nid", tmp);
+		g_free(tmp);
 
-	for (list = contact->numbers; list != NULL; list = list->next) {
-		struct phone_number *number = list->data;
-		xmlnode *number_node;
+		for (list = contact->numbers; list != NULL; list = list->next) {
+			struct phone_number *number = list->data;
+			xmlnode *number_node;
 
-		number_node = xmlnode_new("number");
-		/* For the meantime set priority to 0, TODO */
-		xmlnode_set_attrib(number_node, "prio", "0");
+			number_node = xmlnode_new("number");
+			/* For the meantime set priority to 0, TODO */
+			xmlnode_set_attrib(number_node, "prio", "0");
 
-		switch (number->type) {
-			case PHONE_NUMBER_HOME:
-				xmlnode_set_attrib(number_node, "type", "home");
-				break;
-			case PHONE_NUMBER_WORK:
-				xmlnode_set_attrib(number_node, "type", "work");
-				break;
-			case PHONE_NUMBER_MOBILE:
-				xmlnode_set_attrib(number_node, "type", "mobile");
-				break;
-			case PHONE_NUMBER_FAX:
-				xmlnode_set_attrib(number_node, "type", "fax_work");
-				break;
-			default:
-				continue;
+			switch (number->type) {
+				case PHONE_NUMBER_HOME:
+					xmlnode_set_attrib(number_node, "type", "home");
+					break;
+				case PHONE_NUMBER_WORK:
+					xmlnode_set_attrib(number_node, "type", "work");
+					break;
+				case PHONE_NUMBER_MOBILE:
+					xmlnode_set_attrib(number_node, "type", "mobile");
+					break;
+				case PHONE_NUMBER_FAX:
+					xmlnode_set_attrib(number_node, "type", "fax_work");
+					break;
+				default:
+					continue;
+			}
+
+			xmlnode_insert_data(number_node, number->number, -1);
+			xmlnode_insert_child(telephony_node, number_node);
 		}
-
-		xmlnode_insert_data(number_node, number->number, -1);
-		xmlnode_insert_child(telephony_node, number_node);
+		xmlnode_insert_child(node, telephony_node);
 	}
-
-	xmlnode_insert_child(node, telephony_node);
 
 	return node;
 }
