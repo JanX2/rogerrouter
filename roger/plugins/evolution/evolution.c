@@ -449,7 +449,6 @@ gboolean evolution_save_contact(struct contact *contact)
 	GError *error = NULL;
 	GSList *numbers;
 	GSList *addresses;
-	GSList *list;
 
 	if (!contact->priv) {
 		e_contact = e_contact_new();
