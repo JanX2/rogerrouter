@@ -550,6 +550,12 @@ void contacts(void)
 
 	gtk_grid_attach(GTK_GRID(contacts_window_grid), action_grid, 0, 2, 1, 1);
 
+	if (!address_book_can_save()) {
+		gtk_widget_set_sensitive(button_add, FALSE);
+		gtk_widget_set_sensitive(button_edit, FALSE);
+		gtk_widget_set_sensitive(button_remove, FALSE);
+	}
+
 	g_signal_connect(contacts_window, "delete_event", G_CALLBACK(contacts_window_delete_event_cb), NULL);
 
 	gtk_window_set_position(GTK_WINDOW(contacts_window), GTK_WIN_POS_CENTER);

@@ -372,8 +372,16 @@ void fritzfon_contact_process_cb(AppObject *obj, struct contact *contact, gpoint
 	}
 }
 
+gboolean fritzfon_reload_contacts(void)
+{
+	return fritzfon_read_book() == 0;
+}
+
 struct address_book fritzfon_book = {
-	fritzfon_get_contacts
+	fritzfon_get_contacts,
+	fritzfon_reload_contacts,
+	NULL,
+	NULL
 };
 
 void impl_activate(PeasActivatable *plugin)

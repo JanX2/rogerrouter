@@ -78,6 +78,17 @@ gboolean address_book_reload_contacts(void)
 	return ret;
 }
 
+gboolean address_book_can_save(void)
+{
+	gboolean ret = FALSE;
+
+	if (internal_book && internal_book->save_contact && internal_book->remove_contact) {
+		ret = TRUE;
+	}
+
+	return ret;
+}
+
 /**
  * \brief Register a new address book
  * \param book address book pointer

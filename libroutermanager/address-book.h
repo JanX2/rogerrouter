@@ -35,6 +35,7 @@ GSList *address_book_get_contacts(void);
 gboolean address_book_reload_contacts(void);
 gboolean address_book_remove_contact(struct contact *contact);
 gboolean address_book_save_contact(struct contact *contact);
+gboolean address_book_can_save(void);
 void routermanager_address_book_register(struct address_book *book);
 
 G_END_DECLS
