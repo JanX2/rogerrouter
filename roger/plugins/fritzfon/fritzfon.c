@@ -552,7 +552,7 @@ xmlnode *phonebook_to_xmlnode(void) {
 	return node;
 }
 
-gboolean fritzfon_remove_contact(struct contact *contact)
+gboolean fritzfon_save(void)
 {
 	xmlnode *node;
 	gchar uri[1024];
@@ -564,8 +564,6 @@ gboolean fritzfon_remove_contact(struct contact *contact)
 	if (!router_login(profile)) {
 		return FALSE;
 	}
-
-	contacts = g_slist_remove(contacts, contact);
 
 	node = phonebook_to_xmlnode();
 
@@ -596,9 +594,15 @@ gboolean fritzfon_remove_contact(struct contact *contact)
 	return FALSE;
 }
 
+gboolean fritzfon_remove_contact(struct contact *contact)
+{
+	contacts = g_slist_remove(contacts, contact);
+	return fritzfon_save();
+}
+
 gboolean fritzfon_save_contact(struct contact *contact)
 {
-	return FALSE;
+	return fritzfon_save();
 }
 
 struct address_book fritzfon_book = {
