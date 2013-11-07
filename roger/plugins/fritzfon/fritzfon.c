@@ -58,6 +58,12 @@ struct fritzfon_book {
 	gchar *name;
 };
 
+struct fritzfon_priv {
+	gchar *services;
+	gchar *setup;
+	gchar *unique_id;
+};
+
 static GSList *fritzfon_books = NULL;
 
 static void contact_add(struct profile *profile, xmlnode *node, gint count)
@@ -67,10 +73,12 @@ static void contact_add(struct profile *profile, xmlnode *node, gint count)
 	xmlnode *image;
 	xmlnode *telephony;
 	xmlnode *child;
+	xmlnode *tmp;
 	gchar *number = NULL;
 	gchar *image_ptr;
 	struct contact *contact;
 	struct phone_number *phone_number;
+	struct fritzfon_priv *priv;
 
 	/* Get person entry */
 	person = xmlnode_get_child(node, "person");
@@ -88,6 +96,9 @@ static void contact_add(struct profile *profile, xmlnode *node, gint count)
 
 	contact->name = xmlnode_get_data(name);
 	contact->numbers = NULL;
+
+	priv = g_slice_new0(struct fritzfon_priv);
+	contact->priv = priv;
 
 	telephony = xmlnode_get_child(node, "telephony");
 	if (telephony) {
@@ -158,6 +169,9 @@ static void contact_add(struct profile *profile, xmlnode *node, gint count)
 			g_free(image_ptr);
 		}
 	}
+
+	tmp = xmlnode_get_child(person, "unique_id");
+	priv->unique_id = xmlnode_get_data(tmp);
 
 	contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
 }
@@ -412,6 +426,7 @@ static xmlnode *contact_to_xmlnode(struct contact *contact) {
 	xmlnode *tmp_node;
 	GSList *list;
 	gchar *tmp;
+	struct fritzfon_priv *priv = contact->priv;
 
 	/* Main contact entry */
 	node = xmlnode_new("contact");
@@ -500,7 +515,7 @@ static xmlnode *contact_to_xmlnode(struct contact *contact) {
 	g_free(tmp);
 
 	tmp_node = xmlnode_new("uniqueid");
-	xmlnode_insert_data(tmp_node, "0"/*contact->priv->uniqueid*/, -1);
+	xmlnode_insert_data(tmp_node, priv->unique_id, -1);
 	xmlnode_insert_child(node, tmp_node);
 
 	return node;
