@@ -170,8 +170,9 @@ static void contact_add(struct profile *profile, xmlnode *node, gint count)
 		}
 	}
 
-	tmp = xmlnode_get_child(person, "unique_id");
+	tmp = xmlnode_get_child(node, "uniqueid");
 	priv->unique_id = xmlnode_get_data(tmp);
+	g_debug("uniqueid: %s", priv->unique_id);
 
 	contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
 }
