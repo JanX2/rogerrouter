@@ -408,17 +408,19 @@ static xmlnode *contact_to_xmlnode(struct contact *contact) {
 	xmlnode *realname_node;
 	xmlnode *image_node;
 	xmlnode *telephony_node;
-	xmlnode *category;
+	xmlnode *category_node;
+	xmlnode *tmp_node;
 	GSList *list;
+	gchar *tmp;
 
 	/* Main contact entry */
 	node = xmlnode_new("contact");
 
 	/* Category */
-	category = xmlnode_new("category");
+	category_node = xmlnode_new("category");
 	/* FIXME: Save and set category */
-	//xmlnode_insert_data(category, "0"/*contact->priv->category*/, -1);
-	xmlnode_insert_child(node, category);
+	//xmlnode_insert_data(category_node, "0"/*contact->priv->category*/, -1);
+	xmlnode_insert_child(node, category_node);
 
 	/* Person */
 	contact_node = xmlnode_new("person");
@@ -438,7 +440,10 @@ static xmlnode *contact_to_xmlnode(struct contact *contact) {
 
 	/* Telephony */
 	if (contact->numbers) {
+		gboolean first = TRUE;
+		gint id = 0;
 		gchar *tmp = g_strdup_printf("%d", g_slist_length(contact->numbers));
+
 		telephony_node = xmlnode_new("telephony");
 		xmlnode_set_attrib(telephony_node, "nid", tmp);
 		g_free(tmp);
@@ -448,8 +453,6 @@ static xmlnode *contact_to_xmlnode(struct contact *contact) {
 			xmlnode *number_node;
 
 			number_node = xmlnode_new("number");
-			/* For the meantime set priority to 0, TODO */
-			xmlnode_set_attrib(number_node, "prio", "0");
 
 			switch (number->type) {
 				case PHONE_NUMBER_HOME:
@@ -468,11 +471,37 @@ static xmlnode *contact_to_xmlnode(struct contact *contact) {
 					continue;
 			}
 
+			if (first) {
+				/* For the meantime set priority to 1 */
+				xmlnode_set_attrib(number_node, "prio", "1");
+				first = FALSE;
+			}
+
+			tmp = g_strdup_printf("%d", id++);
+			xmlnode_set_attrib(number_node, "id", tmp);
+			g_free(tmp);
+
 			xmlnode_insert_data(number_node, number->number, -1);
 			xmlnode_insert_child(telephony_node, number_node);
 		}
 		xmlnode_insert_child(node, telephony_node);
 	}
+
+	tmp_node = xmlnode_new("services");
+	xmlnode_insert_child(node, tmp_node);
+
+	tmp_node = xmlnode_new("setup");
+	xmlnode_insert_child(node, tmp_node);
+
+	tmp_node = xmlnode_new("mod_time");
+	tmp = g_strdup_printf("%u", (unsigned)time(NULL));
+	xmlnode_insert_data(tmp_node, tmp, -1);
+	xmlnode_insert_child(node, tmp_node);
+	g_free(tmp);
+
+	tmp_node = xmlnode_new("uniqueid");
+	xmlnode_insert_data(tmp_node, "0"/*contact->priv->uniqueid*/, -1);
+	xmlnode_insert_child(node, tmp_node);
 
 	return node;
 }
