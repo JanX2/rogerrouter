@@ -28,6 +28,7 @@
 #include <libroutermanager/osdep.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/net_monitor.h>
 
 #include <roger/journal.h>
 #include <roger/assistant.h>
@@ -274,7 +275,7 @@ static void app_init(Application *app)
 
 	journal_window(G_APPLICATION(app), NULL);
 
-	if (!profile_get_active()) {
+	if (net_is_online() && !profile_get_active()) {
 		assistant();
 	}
 }
