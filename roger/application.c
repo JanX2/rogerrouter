@@ -338,6 +338,7 @@ static gint application_command_line_cb(GApplication *app, GApplicationCommandLi
 	g_option_context_set_help_enabled(context, TRUE);
 	if (g_option_context_parse(context, &argc, &argv, NULL) == FALSE) {
 		g_option_context_free(context);
+		g_strfreev(argv);
 		return 1;
 	}
 
