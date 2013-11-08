@@ -67,7 +67,7 @@ gchar *password_manager_get_password(struct profile *profile, const gchar *name)
 gboolean password_manager_remove_password(struct profile *profile, const gchar *name)
 {
 	if (internal_password_manager) {
-		return internal_password_manager->remove_password(profile, name);;
+		return internal_password_manager->remove_password(profile, name);
 	}
 
 	/* Fallback: Use gsettings */

@@ -259,10 +259,10 @@ gchar *call_format_number(struct profile *profile, const gchar *number, enum num
 {
 	gchar *tmp;
 	gchar *canonized;
-	const gchar *international_prefix = router_get_international_prefix(profile);
-	const gchar *national_prefix = router_get_national_prefix(profile);
-	const gchar *my_country_code = router_get_country_code(profile);
-	const gchar *my_area_code = router_get_area_code(profile);
+	gchar *international_prefix;
+	gchar *national_prefix;
+	gchar *my_country_code;
+	gchar *my_area_code;
 	gint number_format = NUMBER_FORMAT_UNKNOWN;
 	const gchar *my_prefix;
 	gchar *result = NULL;
@@ -273,6 +273,11 @@ gchar *call_format_number(struct profile *profile, const gchar *number, enum num
 	}
 
 	canonized = tmp = call_canonize_number(number);
+
+	international_prefix = router_get_international_prefix(profile);
+	national_prefix = router_get_national_prefix(profile);
+	my_country_code = router_get_country_code(profile);
+	my_area_code = router_get_area_code(profile);
 
 	/* we only need to check for international prefix, as call_canonize_number() already replaced '+'
 	 * Example of the following:
@@ -373,6 +378,11 @@ gchar *call_format_number(struct profile *profile, const gchar *number, enum num
 			g_assert(output_format);
 			break;
 	}
+
+	g_free(international_prefix);
+	g_free(national_prefix);
+	g_free(my_country_code);
+	g_free(my_area_code);
 
 	g_free(canonized);
 	g_assert(result != NULL);
