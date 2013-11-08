@@ -73,7 +73,6 @@ libroutermanager_la_SOURCES = \
 	profile.h\
 	router.c\
 	router.h\
-	ui_ops.h\
 	voxplay.c\
 	voxplay.h\
 	xml.c\
