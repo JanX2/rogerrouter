@@ -210,18 +210,22 @@ gchar *call_scramble_number(const gchar *number)
  */
 gint call_by_call_prefix_length(const gchar *number)
 {
-	const gchar *my_country_code = router_get_country_code(profile_get_active());
+	gchar *my_country_code = router_get_country_code(profile_get_active());
 	struct call_by_call_entry *entry;
 
 	if (EMPTY_STRING(my_country_code)) {
+		g_free(my_country_code);
 		return 0;
 	}
 
 	for (entry = call_by_call_table; strlen(entry->country_code); entry++) {
 		if (!strcmp(my_country_code, entry->country_code) && !strncmp(number, entry->prefix, strlen(entry->prefix))) {
+			g_free(my_country_code);
 			return entry->prefix_length;
 		}
 	}
+
+	g_free(my_country_code);
 
 	return 0;
 }
