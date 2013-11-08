@@ -32,6 +32,7 @@
 #include <libroutermanager/ftp.h>
 #include <libroutermanager/xml.h>
 #include <libroutermanager/logging.h>
+#include <libroutermanager/file.h>
 
 #include <roger/main.h>
 
@@ -59,9 +60,11 @@ struct fritzfon_book {
 };
 
 struct fritzfon_priv {
+	gchar *category;
 	gchar *services;
 	gchar *setup;
 	gchar *unique_id;
+	gchar *image_url;
 };
 
 static GSList *fritzfon_books = NULL;
@@ -137,6 +140,7 @@ static void contact_add(struct profile *profile, xmlnode *node, gint count)
 	image = xmlnode_get_child(person, "imageURL");
 	if (image != NULL) {
 		image_ptr = xmlnode_get_data(image);
+		priv->image_url = image_ptr;
 		if (image_ptr != NULL) {
 			/* file:///var/InternerSpeicher/FRITZ/fonpix/946684999-0.jpg */
 			if (!strncmp(image_ptr, "file://", 7) && strlen(image_ptr) > 28) {
@@ -163,16 +167,12 @@ static void contact_add(struct profile *profile, xmlnode *node, gint count)
 					contact->image_len = len;
 				}
 				gdk_pixbuf_loader_close(loader, NULL);
-			}/* else {
-				g_debug("Unhandled image utl: '%s'", image_ptr);
-			}*/
-			g_free(image_ptr);
+			}
 		}
 	}
 
 	tmp = xmlnode_get_child(node, "uniqueid");
 	priv->unique_id = xmlnode_get_data(tmp);
-	g_debug("uniqueid: %s", priv->unique_id);
 
 	contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
 }
@@ -192,6 +192,8 @@ static gint fritzfon_read_book(void) {
 	xmlnode *child;
 	struct profile *profile = profile_get_active();
 
+	contacts = NULL;
+
 	if (!router_login(profile)) {
 		return -1;
 	}
@@ -200,14 +202,14 @@ static gint fritzfon_read_book(void) {
 
 	SoupMultipart *multipart = soup_multipart_new(SOUP_FORM_MIME_TYPE_MULTIPART);
 	soup_multipart_append_form_string(multipart, "sid", profile->router_info->session_id);
-	soup_multipart_append_form_string(multipart, "PhonebookId", g_settings_get_string(fritzfon_settings, "book"));
-	soup_multipart_append_form_string(multipart, "PhonebookExportName", "Dummy");
+	soup_multipart_append_form_string(multipart, "PhonebookId", g_settings_get_string(fritzfon_settings, "book-owner"));
+	soup_multipart_append_form_string(multipart, "PhonebookExportName", g_settings_get_string(fritzfon_settings, "book-name"));
 	soup_multipart_append_form_string(multipart, "PhonebookExport", "");
 	SoupMessage *msg = soup_form_request_new_from_multipart(uri, multipart);
 
 	soup_session_send_message(soup_session_sync, msg);
 	if (msg->status_code != 200) {
-		g_warning("Could not read boxinfo file");
+		g_warning("Could not firmware file");
 		g_object_unref(msg);
 		g_free(uri);
 		return FALSE;
@@ -266,15 +268,15 @@ static gint fritzfon_get_books(void) {
 
 	soup_session_send_message(soup_session_sync, msg);
 	if (msg->status_code != 200) {
-		g_warning("Could not read boxinfo file");
+		g_warning("Could not fonbook file");
 		g_object_unref(msg);
 		goto end;
 	}
 	
 	const gchar *data = msg->response_body->data;
 
-	//gint read = msg->response_body->length;
-	//log_save_data("fritzfon-getbooks.html", data, read);
+	gint read = msg->response_body->length;
+	log_save_data("fritzfon-getbooks.html", data, read);
 
 	g_return_val_if_fail(data != NULL, -2);
 
@@ -331,7 +333,8 @@ void fritzfon_combobox_changed_cb(GtkComboBox *widget, gpointer user_data)
 	/* GSettings has not written the changed value to its container, so we explicit set it here */
 	GtkWidget *combo_box = user_data;
 
-	g_settings_set_string(fritzfon_settings, "book", gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_box)));
+	g_settings_set_string(fritzfon_settings, "book-owner", gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_box)));
+	g_settings_set_string(fritzfon_settings, "book-name", gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(combo_box)));
 
 	contacts = NULL;
 	fritzfon_read_book();
@@ -434,8 +437,9 @@ static xmlnode *contact_to_xmlnode(struct contact *contact) {
 
 	/* Category */
 	category_node = xmlnode_new("category");
-	/* FIXME: Save and set category */
-	//xmlnode_insert_data(category_node, "0"/*contact->priv->category*/, -1);
+	if (priv && priv->category) {
+		xmlnode_insert_data(category_node, priv->category, -1);
+	}
 	xmlnode_insert_child(node, category_node);
 
 	/* Person */
@@ -445,9 +449,10 @@ static xmlnode *contact_to_xmlnode(struct contact *contact) {
 	xmlnode_insert_data(realname_node, contact->name, -1);
 	xmlnode_insert_child(contact_node, realname_node);
 
-	/* ImageURL stub */
-	if (contact->image) {
-		image_node = xmlnode_new("ImageURL");
+	/* ImageURL */
+	if (contact->image && priv && priv->image_url) {
+		image_node = xmlnode_new("imageURL");
+		xmlnode_insert_data(image_node, priv->image_url, -1);
 		xmlnode_insert_child(contact_node, image_node);
 	}
 
@@ -516,7 +521,9 @@ static xmlnode *contact_to_xmlnode(struct contact *contact) {
 	g_free(tmp);
 
 	tmp_node = xmlnode_new("uniqueid");
-	xmlnode_insert_data(tmp_node, priv->unique_id, -1);
+	if (priv && priv->unique_id) {
+		xmlnode_insert_data(tmp_node, priv->unique_id, -1);
+	}
 	xmlnode_insert_child(node, tmp_node);
 
 	return node;
@@ -537,7 +544,8 @@ xmlnode *phonebook_to_xmlnode(void) {
 
 	/* Currently we only support one phonebook, TODO */
 	book = xmlnode_new("phonebook");
-	xmlnode_set_attrib(book, "name", g_settings_get_string(fritzfon_settings, "book"));
+	xmlnode_set_attrib(book, "owner", g_settings_get_string(fritzfon_settings, "book-owner"));
+	xmlnode_set_attrib(book, "name", g_settings_get_string(fritzfon_settings, "book-name"));
 	xmlnode_insert_child(node, book);
 
 	/* Loop through persons list and add only non-deleted entries */
@@ -555,11 +563,10 @@ xmlnode *phonebook_to_xmlnode(void) {
 gboolean fritzfon_save(void)
 {
 	xmlnode *node;
-	gchar uri[1024];
 	struct profile *profile = profile_get_active();
-	gchar *file;
 	gchar *data;
 	gint len;
+	SoupBuffer *buffer;
 
 	if (!router_login(profile)) {
 		return FALSE;
@@ -568,30 +575,38 @@ gboolean fritzfon_save(void)
 	node = phonebook_to_xmlnode();
 
 	data = xmlnode_to_formatted_str(node, &len);
+#define FRITZFON_DEBUG 1
+#ifdef FRITZFON_DEBUG
+	gchar *file;
 	g_debug("len: %d", len);
+	file = g_strdup("/tmp/test.xml");
 	if (len > 0) {
-		log_save_data("test.xml", data, len);
+		file_save(file, data, len);
 	}
+	g_free(file);
+#endif
 
-	if (1 == 0) {
-	snprintf(uri, sizeof(uri), "http://%s/cgi-bin/firmwarecfg", router_get_host(profile));
+	buffer = soup_buffer_new(SOUP_MEMORY_TAKE, data, len);
 
+	/* Create POST message */
+	gchar *url = g_strdup_printf("http://%s/cgi-bin/firmwarecfg", router_get_host(profile));
 	SoupMultipart *multipart = soup_multipart_new(SOUP_FORM_MIME_TYPE_MULTIPART);
 	soup_multipart_append_form_string(multipart, "sid", profile->router_info->session_id);
-	soup_multipart_append_form_string(multipart, "PhonebookId", g_settings_get_string(fritzfon_settings, "book"));
-	soup_multipart_append_form_string(multipart, "PhonebookImportFile", file);
-	SoupMessage *msg = soup_form_request_new_from_multipart(uri, multipart);
+	soup_multipart_append_form_string(multipart, "PhonebookId", g_settings_get_string(fritzfon_settings, "book-owner"));
+	soup_multipart_append_form_file(multipart, "PhonebookImportFile", "dummy", "text/xml", buffer);
+	SoupMessage *msg = soup_form_request_new_from_multipart(url, multipart);
 
 	soup_session_send_message(soup_session_sync, msg);
+	soup_buffer_free(buffer);
+	g_free(url);
+
 	if (msg->status_code != 200) {
 		g_warning("Could not send phonebook");
 		g_object_unref(msg);
-		g_free(uri);
 		return FALSE;
 	}
-	}
 
-	return FALSE;
+	return TRUE;
 }
 
 gboolean fritzfon_remove_contact(struct contact *contact)
@@ -600,8 +615,48 @@ gboolean fritzfon_remove_contact(struct contact *contact)
 	return fritzfon_save();
 }
 
+void fritzfon_set_image(struct contact *contact)
+{
+		struct fritzfon_priv *priv = g_slice_new0(struct fritzfon_priv);
+		struct profile *profile = profile_get_active();
+		struct ftp *client = ftp_init(router_get_host(profile));
+		gchar *volume_path;
+		gchar *path;
+		gchar *file_name;
+		gchar *hash;
+		gchar *data;
+		gsize size;
+
+		contact->priv = priv;
+		ftp_login(client, router_get_ftp_user(profile), router_get_ftp_password(profile));
+
+		volume_path = g_settings_get_string(profile->settings, "fax-volume");
+		hash = g_strdup_printf("%s%s", volume_path, contact->image_uri);
+		file_name = g_strdup_printf("%d.jpg", g_str_hash(hash));
+		g_free(hash);
+		path = g_strdup_printf("%s/FRITZ/fonpix/", volume_path);
+		g_free(volume_path);
+
+		data = file_load(contact->image_uri, &size);
+		ftp_put_file(client, file_name, path, data, size);
+
+		priv->image_url = g_strdup_printf("file:///var/media/ftp/%s%s", path, file_name);
+		g_free(path);
+		g_free(file_name);
+}
+
 gboolean fritzfon_save_contact(struct contact *contact)
 {
+	if (!contact->priv) {
+		if (contact->image_uri) {
+			fritzfon_set_image(contact);
+		}
+		contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
+	} else {
+		if (contact->image_uri) {
+			fritzfon_set_image(contact);
+		}
+	}
 	return fritzfon_save();
 }
 
@@ -665,7 +720,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	}
 
 	gtk_box_pack_start(GTK_BOX(box), combo_box, FALSE, TRUE, 5);
-	g_settings_bind(fritzfon_settings, "book", combo_box, "active-id", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(fritzfon_settings, "book-owner", combo_box, "active-id", G_SETTINGS_BIND_DEFAULT);
 	g_signal_connect(combo_box, "changed", G_CALLBACK(fritzfon_combobox_changed_cb), combo_box);
 
 	group = pref_group_create(box, _("Contact book"), TRUE, FALSE);
