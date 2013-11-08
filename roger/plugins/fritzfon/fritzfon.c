@@ -575,7 +575,7 @@ gboolean fritzfon_save(void)
 	node = phonebook_to_xmlnode();
 
 	data = xmlnode_to_formatted_str(node, &len);
-#define FRITZFON_DEBUG 1
+//#define FRITZFON_DEBUG 1
 #ifdef FRITZFON_DEBUG
 	gchar *file;
 	g_debug("len: %d", len);
