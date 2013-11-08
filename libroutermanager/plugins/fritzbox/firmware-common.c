@@ -256,6 +256,7 @@ gboolean fritzbox_present(struct router_info *router_info)
 	gchar *lang;
 	gchar *serial;
 	gchar *url;
+	gboolean ret = FALSE;
 
 	if (router_info->name != NULL) {
 		g_free(router_info->name);
@@ -278,7 +279,8 @@ gboolean fritzbox_present(struct router_info *router_info)
 		g_warning("Could not read boxinfo file");
 		g_object_unref(msg);
 		g_free(url);
-		return FALSE;
+
+		return ret;
 	}
 	data = msg->response_body->data;
 	read = msg->response_body->length;
@@ -287,11 +289,8 @@ gboolean fritzbox_present(struct router_info *router_info)
 	g_return_val_if_fail(data != NULL, FALSE);
 
 	name = xml_extract_tag(data, "j:Name");
-
 	version = xml_extract_tag(data, "j:Version");
-
 	lang = xml_extract_tag(data, "j:Lang");
-
 	serial = xml_extract_tag(data, "j:Serial");
 
 	g_object_unref(msg);
@@ -300,10 +299,10 @@ gboolean fritzbox_present(struct router_info *router_info)
 	if (name && version && lang && serial) {
 		gchar **split;
 
-		router_info->name = name;
-		router_info->version = version;
-		router_info->lang = lang;
-		router_info->serial = serial;
+		router_info->name = g_strdup(name);
+		router_info->version = g_strdup(version);
+		router_info->lang = g_strdup(lang);
+		router_info->serial = g_strdup(serial);
 
 		/* Version: Box.Major.Minor(-XXXXX) */
 
@@ -314,16 +313,17 @@ gboolean fritzbox_present(struct router_info *router_info)
 		router_info->min_ver_id = atoi(split[2]);
 
 		g_strfreev(split);
-
-		return TRUE;
+		ret = TRUE;
+	} else {
+		g_warning("name, version, lang or serial not valid");
 	}
-	g_warning("name, version, lang or serial not valid");
 
-	g_free(name);
-	g_free(version);
+	g_free(serial);
 	g_free(lang);
+	g_free(version);
+	g_free(name);
 
-	return FALSE;
+	return ret;
 }
 
 /**
