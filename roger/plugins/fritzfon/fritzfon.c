@@ -521,9 +521,11 @@ static xmlnode *contact_to_xmlnode(struct contact *contact) {
 	}
 	xmlnode_insert_child(node, tmp_node);
 
-	for (list = priv->nodes; list != NULL; list = list->next) {
-		xmlnode *priv_node = list->data;
-		xmlnode_insert_child(node, priv_node);
+	if (priv) {
+		for (list = priv->nodes; list != NULL; list = list->next) {
+			xmlnode *priv_node = list->data;
+			xmlnode_insert_child(node, priv_node);
+		}
 	}
 
 	return node;
@@ -567,6 +569,11 @@ gboolean fritzfon_save(void)
 	gchar *data;
 	gint len;
 	SoupBuffer *buffer;
+
+	if (strlen(g_settings_get_string(fritzfon_settings, "book-owner")) > 2) {
+		g_warning("Cannot save online address books");
+		return FALSE;
+	}
 
 	if (!router_login(profile)) {
 		return FALSE;
