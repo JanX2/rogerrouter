@@ -210,8 +210,6 @@ gboolean profile_detect_active(void)
 	struct profile *profile;
 	struct router_info *router_info;
 
-	router_info = g_slice_new(struct router_info);
-
 	/* Workaround: Wait a little longer so that wifi is ready */
 	if (list) {
 		g_usleep(0.5f * G_USEC_PER_SEC);
@@ -221,7 +219,7 @@ gboolean profile_detect_active(void)
 	while (list) {
 		profile = list->data;
 
-		memset(router_info, 0, sizeof(struct router_info));
+		router_info = g_slice_new0(struct router_info);
 		router_info->host = g_settings_get_string(profile->settings, "host");
 
 		/* Check if router is present */
@@ -229,17 +227,20 @@ gboolean profile_detect_active(void)
 			if (!strcmp(router_info->serial, g_settings_get_string(profile->settings, "serial"))) {
 				g_debug("Router detected: %s", router_info->name);
 				g_debug("Firmware: %d.%d.%d", router_info->box_id, router_info->maj_ver_id, router_info->min_ver_id);
-				g_slice_free(struct router_info, router_info);
+
+				router_info_free(router_info);
+
 				profile_set_active(profile);
 				return TRUE;
 			}
 		}
 
+		router_info_free(router_info);
+
 		list = list->next;
 	}
 
 	g_debug("Router not found!");
-	g_slice_free(struct router_info, router_info);
 
 	return FALSE;
 }

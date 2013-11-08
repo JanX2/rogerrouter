@@ -436,3 +436,18 @@ gboolean router_delete_voice(struct profile *profile, const gchar *filename)
 {
 	return router->delete_voice(profile, filename);
 }
+
+gboolean router_info_free(struct router_info *info)
+{
+	if (info) {
+		/* FIXME */
+		g_free(info->name);
+		g_free(info->serial);
+		g_free(info->version);
+		g_free(info->lang);
+		g_slice_free(struct router_info, info);
+		return TRUE;
+	}
+
+	return FALSE;
+}

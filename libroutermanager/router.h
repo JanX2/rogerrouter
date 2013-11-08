@@ -140,6 +140,8 @@ gboolean routermanager_router_register(struct router *router_new);
 gchar *router_load_fax(struct profile *profile, const gchar *filename, gsize *len);
 gchar *router_load_voice(struct profile *profile, const gchar *filename, gsize *len);
 
+gboolean router_info_free(struct router_info *info);
+
 G_END_DECLS
 
 #endif
