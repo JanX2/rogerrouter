@@ -199,6 +199,8 @@ static gint fritzfon_read_book(void) {
 	xmlnode *node = NULL;
 	xmlnode *child;
 	struct profile *profile = profile_get_active();
+	gchar *owner;
+	gchar *name;
 
 	contacts = NULL;
 
@@ -206,16 +208,23 @@ static gint fritzfon_read_book(void) {
 		return -1;
 	}
 
+	owner = g_settings_get_string(fritzfon_settings, "book-owner");
+	name = g_settings_get_string(fritzfon_settings, "book-name");
+
 	snprintf(uri, sizeof(uri), "http://%s/cgi-bin/firmwarecfg", router_get_host(profile));
 
 	SoupMultipart *multipart = soup_multipart_new(SOUP_FORM_MIME_TYPE_MULTIPART);
 	soup_multipart_append_form_string(multipart, "sid", profile->router_info->session_id);
-	soup_multipart_append_form_string(multipart, "PhonebookId", g_settings_get_string(fritzfon_settings, "book-owner"));
-	soup_multipart_append_form_string(multipart, "PhonebookExportName", g_settings_get_string(fritzfon_settings, "book-name"));
+	soup_multipart_append_form_string(multipart, "PhonebookId", owner);
+	soup_multipart_append_form_string(multipart, "PhonebookExportName", name);
 	soup_multipart_append_form_string(multipart, "PhonebookExport", "");
 	SoupMessage *msg = soup_form_request_new_from_multipart(uri, multipart);
 
 	soup_session_send_message(soup_session_sync, msg);
+
+	g_free(owner);
+	g_free(name);
+
 	if (msg->status_code != 200) {
 		g_warning("Could not firmware file");
 		g_object_unref(msg);
