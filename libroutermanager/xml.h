@@ -31,18 +31,18 @@ typedef enum _XMLNodeType {
 	XMLNODE_TYPE_DATA
 } XMLNodeType;
 
-typedef struct sXmlNode {
+typedef struct xml_node {
 	char *name;
 	char *xml_ns;
 	XMLNodeType type;
 	char *data;
 	size_t data_size;
-	struct sXmlNode *parent;
-	struct sXmlNode *child;
-	struct sXmlNode *last_child;
-	struct sXmlNode *next;
+	struct xml_node *parent;
+	struct xml_node *child;
+	struct xml_node *last_child;
+	struct xml_node *next;
 	char *prefix;
-	GHashTable *name_space_map;
+	GHashTable *namespace_map;
 } xmlnode;
 
 xmlnode *xmlnode_new(const char *name);
@@ -58,5 +58,6 @@ void xmlnode_free(xmlnode *node);
 void xmlnode_set_attrib(xmlnode *node, const char *attr, const char *value);
 void xmlnode_insert_child(xmlnode *parent, xmlnode *child);
 char *xmlnode_to_formatted_str(xmlnode *node, int *len);
+xmlnode *xmlnode_copy(const xmlnode *node);
 
 #endif

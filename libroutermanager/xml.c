@@ -137,8 +137,8 @@ void xmlnode_free(xmlnode *node) {
 	g_free(node->xml_ns);
 	g_free(node->prefix);
 
-	if (node->name_space_map) {
-		g_hash_table_destroy(node->name_space_map);
+	if (node->namespace_map) {
+		g_hash_table_destroy(node->namespace_map);
 	}
 
 	g_free(node);
@@ -249,8 +249,8 @@ static char *xmlnode_to_str_helper(xmlnode *node, int *pnLen, gboolean bFormatti
 		g_string_append_printf(psText, "<%s", pnNodeName);
 	}
 
-	if (node->name_space_map) {
-		g_hash_table_foreach(node->name_space_map, (GHFunc) xmlnode_to_str_foreach_append_ns, psText);
+	if (node->namespace_map) {
+		g_hash_table_foreach(node->namespace_map, (GHFunc) xmlnode_to_str_foreach_append_ns, psText);
 	} else if (node->xml_ns) {
 		if (!node->parent || !node->parent->xml_ns || strcmp(node->xml_ns, node->parent->xml_ns)) {
 			char *xml_ns = g_markup_escape_text(node->xml_ns, -1);
@@ -499,12 +499,12 @@ static void xmlnode_parser_element_start_libxml(void *user_data, const xmlChar *
 		xmlnode_set_prefix(node, (const char *) prefix);
 
 		if (nNbNamespaces != 0) {
-			node->name_space_map = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
+			node->namespace_map = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
 
 			for (nI = 0, nJ = 0; nI < nNbNamespaces; nI++, nJ += 2) {
 				const char *pnKey = (const char *) ppsNamespaces[nJ];
 				const char *pnVal = (const char *) ppsNamespaces[nJ + 1];
-				g_hash_table_insert(node->name_space_map, g_strdup(pnKey ? pnKey : ""), g_strdup(pnVal ? pnVal : ""));
+				g_hash_table_insert(node->namespace_map, g_strdup(pnKey ? pnKey : ""), g_strdup(pnVal ? pnVal : ""));
 			}
 		}
 
@@ -889,3 +889,51 @@ xmlnode *read_xml_from_file(const char *file_name) {
 
 	return node;
 }
+
+static void xmlnode_copy_foreach_ns(gpointer key, gpointer value, gpointer user_data)
+{
+	GHashTable *ret = (GHashTable *)user_data;
+	g_hash_table_insert(ret, g_strdup(key), g_strdup(value));
+}
+
+xmlnode *xmlnode_copy(const xmlnode *src)
+{
+	xmlnode *ret;
+	xmlnode *child;
+	xmlnode *sibling = NULL;
+
+	g_return_val_if_fail(src != NULL, NULL);
+
+	ret = new_node(src->name, src->type);
+	ret->xml_ns = g_strdup(src->xml_ns);
+	if (src->data) {
+		if (src->data_size) {
+			ret->data = g_memdup(src->data, src->data_size);
+			ret->data_size = src->data_size;
+		} else {
+			ret->data = g_strdup(src->data);
+		}
+	}
+	ret->prefix = g_strdup(src->prefix);
+	if (src->namespace_map) {
+		ret->namespace_map = g_hash_table_new_full(g_str_hash, g_str_equal,
+		                                           g_free, g_free);
+		g_hash_table_foreach(src->namespace_map, xmlnode_copy_foreach_ns, ret->namespace_map);
+	}
+
+	for (child = src->child; child; child = child->next) {
+		if (sibling) {
+			sibling->next = xmlnode_copy(child);
+			sibling = sibling->next;
+		} else {
+			ret->child = xmlnode_copy(child);
+			sibling = ret->child;
+		}
+		sibling->parent = ret;
+	}
+
+	ret->last_child = sibling;
+
+	return ret;
+}
+

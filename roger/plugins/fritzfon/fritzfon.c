@@ -60,81 +60,23 @@ struct fritzfon_book {
 };
 
 struct fritzfon_priv {
-	gchar *category;
-	gchar *services;
-	gchar *setup;
 	gchar *unique_id;
 	gchar *image_url;
+	GSList *nodes;
 };
 
 static GSList *fritzfon_books = NULL;
 
-static void contact_add(struct profile *profile, xmlnode *node, gint count)
+static void parse_person(struct contact *contact, xmlnode *person)
 {
-	xmlnode *person;
 	xmlnode *name;
 	xmlnode *image;
-	xmlnode *telephony;
-	xmlnode *child;
-	xmlnode *tmp;
-	gchar *number = NULL;
 	gchar *image_ptr;
-	struct contact *contact;
-	struct phone_number *phone_number;
-	struct fritzfon_priv *priv;
-
-	/* Get person entry */
-	person = xmlnode_get_child(node, "person");
-	if (person == NULL) {
-		return;
-	}
+	struct fritzfon_priv *priv = contact->priv;
 
 	/* Get real name entry */
 	name = xmlnode_get_child(person, "realName");
-	if (name == NULL) {
-		return;
-	}
-
-	contact = g_malloc0(sizeof(struct contact));
-
-	contact->name = xmlnode_get_data(name);
-	contact->numbers = NULL;
-
-	priv = g_slice_new0(struct fritzfon_priv);
-	contact->priv = priv;
-
-	telephony = xmlnode_get_child(node, "telephony");
-	if (telephony) {
-		/* Check for numbers */
-		for (child = xmlnode_get_child(telephony, "number"); child != NULL; child = xmlnode_get_next_twin(child)) {
-			const gchar *type;
-
-			type = xmlnode_get_attrib(child, "type");
-			if (type == NULL) {
-				continue;
-			}
-
-			number = xmlnode_get_data(child);
-			if (!EMPTY_STRING(number)) {
-				phone_number = g_slice_new(struct phone_number);
-				if (strcmp(type, "mobile") == 0) {
-					phone_number->type = PHONE_NUMBER_MOBILE;
-				} else if (strcmp(type, "home") == 0) {
-					phone_number->type = PHONE_NUMBER_HOME;
-				} else if (strcmp(type, "work") == 0) {
-					phone_number->type = PHONE_NUMBER_WORK;
-				} else if (strcmp(type, "fax_work") == 0) {
-					phone_number->type = PHONE_NUMBER_FAX;
-				} else {
-					phone_number->type = -1;
-				}
-				phone_number->number = call_full_number(number, FALSE);
-				contact->numbers = g_slist_prepend(contact->numbers, phone_number);
-			}
-
-			g_free(number);
-		}
-	}
+	contact->name = name ? xmlnode_get_data(name) : g_strdup("");
 
 	/* Get image */
 	image = xmlnode_get_child(person, "imageURL");
@@ -144,6 +86,7 @@ static void contact_add(struct profile *profile, xmlnode *node, gint count)
 		if (image_ptr != NULL) {
 			/* file:///var/InternerSpeicher/FRITZ/fonpix/946684999-0.jpg */
 			if (!strncmp(image_ptr, "file://", 7) && strlen(image_ptr) > 28) {
+				struct profile *profile = profile_get_active();
 				gchar *url = strstr(image_ptr, "/ftp/");
 				gsize len;
 				guchar *buffer;
@@ -170,9 +113,74 @@ static void contact_add(struct profile *profile, xmlnode *node, gint count)
 			}
 		}
 	}
+}
 
-	tmp = xmlnode_get_child(node, "uniqueid");
-	priv->unique_id = xmlnode_get_data(tmp);
+static void parse_telephony(struct contact *contact, xmlnode *telephony)
+{
+	xmlnode *child;
+	gchar *number = NULL;
+
+	/* Check for numbers */
+	for (child = xmlnode_get_child(telephony, "number"); child != NULL; child = xmlnode_get_next_twin(child)) {
+		const gchar *type;
+
+		type = xmlnode_get_attrib(child, "type");
+		if (type == NULL) {
+			continue;
+		}
+
+		number = xmlnode_get_data(child);
+		if (!EMPTY_STRING(number)) {
+			struct phone_number *phone_number;
+
+			phone_number = g_slice_new(struct phone_number);
+			if (strcmp(type, "mobile") == 0) {
+				phone_number->type = PHONE_NUMBER_MOBILE;
+			} else if (strcmp(type, "home") == 0) {
+				phone_number->type = PHONE_NUMBER_HOME;
+			} else if (strcmp(type, "work") == 0) {
+				phone_number->type = PHONE_NUMBER_WORK;
+			} else if (strcmp(type, "fax_work") == 0) {
+				phone_number->type = PHONE_NUMBER_FAX;
+			} else {
+				phone_number->type = -1;
+			}
+			phone_number->number = call_full_number(number, FALSE);
+			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
+		}
+
+		g_free(number);
+	}
+}
+
+static void contact_add(struct profile *profile, xmlnode *node, gint count)
+{
+	xmlnode *tmp;
+	struct contact *contact;
+	struct fritzfon_priv *priv;
+
+	contact = g_slice_new0(struct contact);
+	priv = g_slice_new0(struct fritzfon_priv);
+	contact->priv = priv;
+
+	for (tmp = node->child; tmp != NULL; tmp = tmp->next) {
+		if (tmp->name == NULL) {
+			continue;
+		}
+
+		if (!strcmp(tmp->name, "person")) {
+			parse_person(contact, tmp);
+		} else if (!strcmp(tmp->name, "telephony")) {
+			parse_telephony(contact, tmp);
+		} else if (!strcmp(tmp->name, "uniqueid")) {
+			priv->unique_id = xmlnode_get_data(tmp);
+		} else if (!strcmp(tmp->name, "mod_time")) {
+			/* empty */
+		} else {
+			/* Unhandled node, save it */
+			priv->nodes = g_slist_prepend(priv->nodes, xmlnode_copy(tmp));
+		}
+	}
 
 	contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
 }
@@ -219,10 +227,11 @@ static gint fritzfon_read_book(void) {
 	gint read = msg->response_body->length;
 
 	g_return_val_if_fail(data != NULL, -2);
+#if FRITZFON_DEBUG
 	if (read > 0) {
 		log_save_data("test-in.xml", data, read);
 	}
-
+#endif
 
 	node = xmlnode_from_str(data, read);
 	if (node == NULL) {
@@ -426,7 +435,6 @@ static xmlnode *contact_to_xmlnode(struct contact *contact) {
 	xmlnode *realname_node;
 	xmlnode *image_node;
 	xmlnode *telephony_node;
-	xmlnode *category_node;
 	xmlnode *tmp_node;
 	GSList *list;
 	gchar *tmp;
@@ -434,13 +442,6 @@ static xmlnode *contact_to_xmlnode(struct contact *contact) {
 
 	/* Main contact entry */
 	node = xmlnode_new("contact");
-
-	/* Category */
-	category_node = xmlnode_new("category");
-	if (priv && priv->category) {
-		xmlnode_insert_data(category_node, priv->category, -1);
-	}
-	xmlnode_insert_child(node, category_node);
 
 	/* Person */
 	contact_node = xmlnode_new("person");
@@ -450,7 +451,7 @@ static xmlnode *contact_to_xmlnode(struct contact *contact) {
 	xmlnode_insert_child(contact_node, realname_node);
 
 	/* ImageURL */
-	if (contact->image && priv && priv->image_url) {
+	if (priv && priv->image_url) {
 		image_node = xmlnode_new("imageURL");
 		xmlnode_insert_data(image_node, priv->image_url, -1);
 		xmlnode_insert_child(contact_node, image_node);
@@ -508,12 +509,6 @@ static xmlnode *contact_to_xmlnode(struct contact *contact) {
 		xmlnode_insert_child(node, telephony_node);
 	}
 
-	tmp_node = xmlnode_new("services");
-	xmlnode_insert_child(node, tmp_node);
-
-	tmp_node = xmlnode_new("setup");
-	xmlnode_insert_child(node, tmp_node);
-
 	tmp_node = xmlnode_new("mod_time");
 	tmp = g_strdup_printf("%u", (unsigned)time(NULL));
 	xmlnode_insert_data(tmp_node, tmp, -1);
@@ -525,6 +520,11 @@ static xmlnode *contact_to_xmlnode(struct contact *contact) {
 		xmlnode_insert_data(tmp_node, priv->unique_id, -1);
 	}
 	xmlnode_insert_child(node, tmp_node);
+
+	for (list = priv->nodes; list != NULL; list = list->next) {
+		xmlnode *priv_node = list->data;
+		xmlnode_insert_child(node, priv_node);
+	}
 
 	return node;
 }
@@ -585,6 +585,7 @@ gboolean fritzfon_save(void)
 	}
 	g_free(file);
 #endif
+//	return FALSE;
 
 	buffer = soup_buffer_new(SOUP_MEMORY_TAKE, data, len);
 
