@@ -1,4 +1,4 @@
-SUBDIRS = statusicon fritzfon gtknotify
+SUBDIRS = statusicon fritzfon gtknotify vcard
 
 plugindir = ${libdir}/roger/
 

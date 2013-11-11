@@ -447,6 +447,8 @@ AC_OUTPUT([
     roger/plugins/gtknotify/data/Makefile
     roger/plugins/indicator/Makefile
     roger/plugins/indicator/data/Makefile
+    roger/plugins/vcard/Makefile
+    roger/plugins/vcard/data/Makefile
     macosx/roger.plist
     macosx/package
 ])
