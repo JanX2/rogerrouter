@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce configure.
-AC_INIT(Roger Router, 1.8.1, http://www.tabos.org/roger)
+AC_INIT([Roger Router],[1.8.1],[http://www.tabos.org/roger])
 AC_PREFIX_DEFAULT(/usr)
 AM_INIT_AUTOMAKE([1.11 no-dist-gzip dist-xz])
 AC_CONFIG_HEADERS(config.h)
@@ -411,7 +411,7 @@ then
 	EXTRA_CFLAGS+="-Werror"
 fi
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
     Makefile
     win32/roger.nsi
     doc/Makefile
@@ -452,6 +452,7 @@ AC_OUTPUT([
     macosx/roger.plist
     macosx/package
 ])
+AC_OUTPUT
 
 
 printf "\n"

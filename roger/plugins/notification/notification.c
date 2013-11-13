@@ -140,7 +140,7 @@ static gpointer notification_reverse_lookup_thread(gpointer data)
 				zip ? " " : "",
 				city ? city : "");
 
-			notify_notification_update(connection->notification, connection->type == CALL_TYPE_INCOMING ? _("Incoming call") : _("Outgoing call"), text, "gtk-dialog-info");
+			notify_notification_update(connection->notification, connection->type == CALL_TYPE_INCOMING ? _("Incoming call") : _("Outgoing call"), text, "dialog-information");
 
 			notify_notification_show(connection->notification, NULL);
 			g_free(text);
