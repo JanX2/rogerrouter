@@ -22,7 +22,6 @@
 #include <libroutermanager/profile.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/plugins.h>
-#include <libroutermanager/bluetooth.h>
 
 #include <roger/main.h>
 #include <roger/pref.h>
@@ -41,14 +40,6 @@ GtkWidget *pref_page_softphone(void)
 	GtkWidget *phone_number_combobox;
 	GtkWidget *controller_label;
 	GtkWidget *controller_combobox;
-
-#ifdef HAVE_DBUS
-	GtkWidget *bluetooth_grid = gtk_grid_new();
-	GtkWidget *button_label;
-	GtkWidget *headset_combobox;
-	GSList *device_list;
-	GSList *list;
-#endif
 
 	/* General:
 	 * Phone number: <COMBOBOX>
@@ -91,37 +82,6 @@ GtkWidget *pref_page_softphone(void)
 	gtk_grid_attach(GTK_GRID(general_grid), controller_combobox, 1, 1, 1, 1);
 
 	gtk_grid_attach(GTK_GRID(grid), pref_group_create(general_grid, _("General"), TRUE, TRUE), 0, 0, 1, 1);
-
-#ifdef HAVE_DBUS
-	/* Bluetooth */
-	gtk_grid_set_row_spacing(GTK_GRID(bluetooth_grid), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(bluetooth_grid), 15);
-
-	button_label = ui_label_new(_("Use buttons of"));
-	gtk_grid_attach(GTK_GRID(bluetooth_grid), button_label, 0, 0, 1, 1);
-
-	headset_combobox = gtk_combo_box_text_new();
-	gtk_widget_set_hexpand(headset_combobox, TRUE);
-
-
-	device_list = bluetooth_create_list();
-	if (device_list) {
-		for (list = device_list; list; list = list->next) {
-			struct bluetooth_device_info *info = list->data;
-
-			gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(headset_combobox), info->path, info->name);
-		}
-
-		if (gtk_combo_box_get_active(GTK_COMBO_BOX(headset_combobox)) == -1) {
-			gtk_combo_box_set_active(GTK_COMBO_BOX(headset_combobox), 0);
-		}
-	}
-
-	g_settings_bind(profile_get_active()->settings, "bluetooth-headset", headset_combobox, "active_id", G_SETTINGS_BIND_DEFAULT);
-	gtk_grid_attach(GTK_GRID(bluetooth_grid), headset_combobox, 1, 0, 1, 1);
-
-	gtk_grid_attach(GTK_GRID(grid), pref_group_create(bluetooth_grid, _("Bluetooth headset"), TRUE, TRUE), 0, 1, 1, 1);
-#endif
 
 	return grid;
 }

@@ -37,7 +37,6 @@
 #include <roger/about.h>
 #include <roger/fax.h>
 #include <roger/contacts.h>
-#include <roger/dbus.h>
 
 #include <config.h>
 
@@ -267,10 +266,6 @@ static void app_init(Application *app)
 	}
 
 	fax_process_init();
-
-#ifdef HAVE_DBUS
-	dbus_init();
-#endif
 
 	journal_window(G_APPLICATION(app), NULL);
 

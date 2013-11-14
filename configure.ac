@@ -340,38 +340,6 @@ AC_MSG_RESULT($with_faxophone)
 AM_CONDITIONAL(WITH_FAXOPHONE, test "x$with_faxophone" != "xno")
 
 dnl ********************************************************************
-dnl dbus-glib is optional
-dnl ********************************************************************
-AC_ARG_WITH([dbus],
-	[AS_HELP_STRING([--with-dbus=@<:@ARG@:>@],
-	[Use dbus (possible values: no, yes, check, or the path to dbus-glib-1) @<:@default=check@:>@])],
-	[],
-	[with_dbus=check])
-
-AC_MSG_CHECKING(for dbus-glib-1)
-AS_IF([test "x$with_dbus" != xsuper],
-	[if test "x$with_dbus" = xcheck; then
-		$PKG_CONFIG --exists dbus-glib-1 && with_dbus=yes
-	elif test "x$with_dbus" = xyes; then
-		( $PKG_CONFIG --exists dbus-glib-1 ) || AC_MSG_FAILURE(
-			[--with-dbus=yes was given, but test for dbus-glib-1 failed])
-	fi
-	if test "x$with_dbus" = xyes; then
-		AC_SUBST([DBUS_CFLAGS], ["`$PKG_CONFIG --cflags dbus-glib-1`"])
-		AC_SUBST([DBUS_LIBS], ["`$PKG_CONFIG --libs dbus-glib-1`"])
-		AC_DEFINE([HAVE_DBUS], 1, [Have dbus-glib-1])
-		ROGER_FEATURES_YES="\tdbus\n$ROGER_FEATURES_YES"
-	else
-		with_dbus=no
-		ROGER_FEATURES_NO="\tdbus\n$ROGER_FEATURES_NO"
-	fi
-])
-
-AC_MSG_RESULT($with_dbus)
-
-AM_CONDITIONAL(WITH_DBUS, test "x$with_dbus" != "xno")
-
-dnl ********************************************************************
 dnl appindicator is optional
 dnl ********************************************************************
 AC_ARG_WITH([appindicator3],

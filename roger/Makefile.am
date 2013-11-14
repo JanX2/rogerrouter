@@ -29,8 +29,6 @@ roger_core_SOURCES =\
 	contacts.h\
 	contact_edit.c\
 	contact_edit.h\
-	dbus.c\
-	dbus.h\
 	fax.c\
 	fax.h\
 	journal.c\

@@ -88,12 +88,6 @@ libroutermanager_la_SOURCES = \
 	libfaxophone/ringtone.c \
 	libfaxophone/ringtone.h
 
-if WITH_DBUS
-libroutermanager_la_SOURCES += \
-	bluetooth.c\
-	bluetooth.h
-endif
-
 libroutermanager_la_LDFLAGS = -rdynamic
 libroutermanager_la_LIBADD = -lc $(EXTRA_LIBS) $(PEAS_LIBS) $(SOUP_LIBS) $(CAPI_LIBS) $(SPANDSP_LIBS) $(DBUS_LIBS) $(OS_LIBS)
 libroutermanager_la_CFLAGS = -fno-strict-aliasing $(EXTRA_CFLAGS) $(APP_CFLAGS) $(PEAS_CFLAGS) -Wall $(SOUP_CFLAGS) $(CAPI_CFLAGS) $(SPANDSP_CFLAGS) $(AM_CFLAGS) $(DBUS_CFLAGS) $(OS_CFLAGS) $(GTK_CFLAGS)
