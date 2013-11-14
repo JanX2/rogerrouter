@@ -20,8 +20,6 @@
 #ifndef LIBROUTERMANAGER_ROUTERMANAGER_H
 #define LIBROUTERMANAGER_ROUTERMANAGER_H
 
-#include <libroutermanager/ui_ops.h>
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif

@@ -20,8 +20,6 @@
 #ifndef LIBROUTERMANAGER_LOGGING_H
 #define LIBROUTERMANAGER_LOGGING_H
 
-#include <libroutermanager/ui_ops.h>
-
 G_BEGIN_DECLS
 
 void log_save_data(gchar *name, const gchar *data, gsize len);

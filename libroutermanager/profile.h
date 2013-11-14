@@ -22,8 +22,6 @@
 
 #include <gio/gio.h>
 
-#include <libroutermanager/ui_ops.h>
-
 G_BEGIN_DECLS
 
 struct profile {
