@@ -39,8 +39,8 @@
 		<lookup>
 			<service>11880.com</service>
 			<prefix>0</prefix>
-			<url>http://www.11880.com/inverssuche/index/search?_dvform_posted=1&amp;phoneNumber=%NUMBER%</url>
-			<pattern>&lt;a class=&quot;namelink&quot;\s+href=&quot;/[^&quot;]*.html&quot;&gt;&lt;strong&gt;(?P&lt;name&gt;[^&lt;]+)&lt;/strong&gt;&lt;/a&gt;.{10,900}&lt;p class=&quot;data track&quot;&gt;\s*(?P&lt;street&gt;(.+))&lt;br /&gt;\s*(?P&lt;zip&gt;\d{5}) (?P&lt;city&gt;[^&lt;\n]+)\s*&lt;/p&gt;</pattern>
+			<url>http://www.11880.com/rueckwaertssuche/%NUMBER%</url>
+			<pattern>&lt;h4&gt;&lt;a href=[^&gt;]*&gt;\d+.\s(?P&lt;name&gt;[^&lt;]+)&lt;/a&gt;&lt;/h4&gt;.+[^&lt;]&lt;p&gt;\s+(?P&lt;street&gt;.+)\s+[^&lt;]&lt;br&gt;\s+(?P&lt;zip&gt;\d+)\s+(?P&lt;city&gt;.+)&lt;/p&gt;</pattern>
 		</lookup>
 		<lookup>
 		 	<service>Das Oertliche</service>
