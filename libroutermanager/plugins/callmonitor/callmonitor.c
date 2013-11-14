@@ -26,7 +26,6 @@
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/profile.h>
-#include <libroutermanager/ui_ops.h>
 #include <libroutermanager/net_monitor.h>
 #include <libroutermanager/connection.h>
 

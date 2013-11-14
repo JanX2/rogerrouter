@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-06 20:16+0100\n"
+"POT-Creation-Date: 2013-11-14 20:15+0100\n"
 "PO-Revision-Date: 2013-09-07 19:34+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: German <jan.brummer@tabos.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Gewidmet meinem Vater"
 
 #. Contacts
-#: ../roger/application.c:184 ../roger/contacts.c:556
+#: ../roger/application.c:184 ../roger/contacts.c:562
 #: ../roger/plugins/statusicon/gtk.c:195
 #: ../roger/plugins/indicator/indicator.c:216
 msgid "Contacts"
@@ -246,10 +246,12 @@ msgstr "Bild öffnen"
 
 #: ../roger/contact_edit.c:129 ../roger/pref_action.c:164
 #: ../roger/pref_fax.c:54 ../roger/pref_filters.c:368 ../roger/pref_misc.c:49
+#: ../roger/plugins/vcard/vcard.c:1203
 msgid "_Cancel"
 msgstr "A_bbrechen"
 
 #: ../roger/contact_edit.c:129 ../roger/pref_fax.c:54 ../roger/pref_misc.c:49
+#: ../roger/plugins/vcard/vcard.c:1203
 msgid "_Open"
 msgstr "_Öffnen"
 
@@ -314,7 +316,9 @@ msgstr "A_bbrechen"
 #: ../roger/contact_edit.c:347
 msgid ""
 "Note: Depending on the address book plugin not all information might be saved"
-msgstr "Hinweis: Je nach Adressbuchplugin können nicht alle Informationen gespeichert werden"
+msgstr ""
+"Hinweis: Je nach Adressbuchplugin können nicht alle Informationen "
+"gespeichert werden"
 
 #: ../roger/fax.c:44 ../roger/phone.c:170 ../roger-cli/main_cli.c:157
 #, c-format
@@ -773,6 +777,7 @@ msgid "Select report directory"
 msgstr "Wähle Berichtsverzeichnis"
 
 #: ../roger/pref_fax.c:174 ../roger/pref_misc.c:89
+#: ../roger/plugins/vcard/vcard.c:1232
 msgid "Select"
 msgstr "Auswählen"
 
@@ -1180,13 +1185,14 @@ msgstr "Bitrate:"
 msgid "Message:"
 msgstr "Nachricht:"
 
-#: ../roger/plugins/evolution/evolution.c:592
-#: ../roger/plugins/fritzfon/fritzfon.c:422
+#: ../roger/plugins/evolution/evolution.c:591
+#: ../roger/plugins/fritzfon/fritzfon.c:730
 msgid "Book:"
 msgstr "Buch:"
 
-#: ../roger/plugins/evolution/evolution.c:605
-#: ../roger/plugins/fritzfon/fritzfon.c:435
+#: ../roger/plugins/evolution/evolution.c:604
+#: ../roger/plugins/fritzfon/fritzfon.c:743
+#: ../roger/plugins/vcard/vcard.c:1242
 msgid "Contact book"
 msgstr "Kontaktbuch"
 
@@ -1358,6 +1364,22 @@ msgstr "Application Indicator"
 msgid "Status icon plugin using AppIndicator support"
 msgstr "Statusicon-Plugin mit AppIndicator-Unterstützung"
 
+#: ../roger/plugins/vcard/vcard.c:1203
+msgid "Select vcard file"
+msgstr "VCard-Datei auswählen"
+
+#: ../roger/plugins/vcard/vcard.c:1228
+msgid "VCard file"
+msgstr "VCard-Datei"
+
+#: ../roger/plugins/vcard/vcard.plugin.in.h:1
+msgid "VCard"
+msgstr "VCard"
+
+#: ../roger/plugins/vcard/vcard.plugin.in.h:2
+msgid "VCard address book support"
+msgstr "VCard Adressbuch-Support"
+
 #: ../roger-cli/main_cli.c:195
 msgid "Transfer starting:"
 msgstr "Übertragung beginnt:"
@@ -1503,9 +1525,6 @@ msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
 
 #~ msgid "Do you want to delete the profile '%s'?"
 #~ msgstr "Wollen Sie das Profil '%s' löschen?"
-
-#~ msgid "Delete profile"
-#~ msgstr "Profil löschen"
 
 #~ msgid "Manage profiles"
 #~ msgstr "Profile verwalten"

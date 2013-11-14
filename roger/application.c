@@ -22,7 +22,6 @@
 #include <gtk/gtk.h>
 
 #include <libroutermanager/profile.h>
-#include <libroutermanager/ui_ops.h>
 #include <libroutermanager/routermanager.h>
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/osdep.h>
