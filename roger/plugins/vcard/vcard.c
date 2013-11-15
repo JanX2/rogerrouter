@@ -521,6 +521,7 @@ static void process_data(struct vcard_data *card_data) {
 		return;
 	}
 
+	g_debug("Header: '%s'", card_data->header);
 	if (strcasecmp(card_data->header, "BEGIN") == 0) {
 		/* Begin of vcard */
 		vcard = g_list_append(NULL, card_data);
@@ -790,6 +791,15 @@ GList *vcard_find_entry(const gchar *uid) {
 
 	for (list1 = vcard_list; list1 != NULL && list1->data != NULL; list1 = list1->next) {
 		card = list1->data;
+		for (list2 = card; list2 != NULL && list2->data != NULL; list2 = list2->next) {
+			data = list2->data;
+
+			g_debug("UID check '%s'<->'%s'", data->header, "UID");
+		}
+	}
+
+	for (list1 = vcard_list; list1 != NULL && list1->data != NULL; list1 = list1->next) {
+		card = list1->data;
 
 		for (list2 = card; list2 != NULL && list2->data != NULL; list2 = list2->next) {
 			data = list2->data;
@@ -821,13 +831,36 @@ struct vcard_data *find_card_data(GList *list, gchar *header, gchar *option) {
 		data = tmp->data;
 
 		if(strcmp(data->header, header) == 0) {
-			if (option != NULL && data->options != NULL && strstr(data->options, option)) {
+			if (!option || (data->options != NULL && strstr(data->options, option))) {
 				return data;
 			}
 		}
 	}
 
 	return NULL;
+}
+
+gboolean vcard_modify_data(GList *list, gchar *header, gchar *entry)
+{
+	struct vcard_data *card_data;
+
+	card_data = find_card_data(list, header, NULL);
+
+	if (card_data == NULL) {
+		card_data = g_malloc0(sizeof(struct vcard_data));
+		card_data->header = g_strdup(header);
+		list = g_list_append(list, card_data);
+	} else {
+		g_free(card_data->entry);
+	}
+
+	if (entry) {
+		card_data->entry = g_strdup(entry);
+	} else {
+		card_data->entry = g_strdup("");
+	}
+
+	return TRUE;
 }
 
 /**
@@ -870,20 +903,11 @@ void vcard_write_file(char *file_name) {
 			continue;
 		}
 
+		vcard_modify_data(entry, "VERSION", "4.0");
+
 		/* Fullname */
-		g_debug("set fullname");
-		card_data = find_card_data(entry, "FN", NULL);
-		if (card_data == NULL) {
-			card_data = g_malloc0(sizeof(struct vcard_data));
-			card_data->header = g_strdup("FN");
-			entry = g_list_append(entry, card_data);
-		} else {
-			g_free(card_data->entry);
-		}
-
-		g_debug("adding entry");
-		card_data->entry = g_strdup_printf("%s", contact->name);
-
+		vcard_modify_data(entry, "FN", contact->name);
+		vcard_modify_data(entry, "N", NULL);
 #if 0
 		/* Name */
 		card_data = find_card_data(entry, "N", NULL);
@@ -1055,7 +1079,7 @@ void vcard_write_file(char *file_name) {
 		for (list2 = entry; list2 != NULL && list2->data != NULL; list2 = list2->next) {
 			card_data = list2->data;
 
-			if (strcmp(card_data->header, "BEGIN") && strcmp(card_data->header, "END")) {
+			if (strcmp(card_data->header, "BEGIN") && strcmp(card_data->header, "END") && !EMPTY_STRING(card_data->entry)) {
 				if (card_data->options != NULL) {
 					vcard_print(data, "%s;%s:%s\n", card_data->header, card_data->options, card_data->entry);
 				} else {
