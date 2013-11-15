@@ -39,7 +39,7 @@
 #define ROUTERMANAGER_TYPE_REVERSE_LOOKUP_PLUGIN (routermanager_reverse_lookup_plugin_get_type ())
 #define ROUTERMANAGER_REVERSE_LOOKUP_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_REVERSE_LOOKUP_PLUGIN, RouterManagerReverseLookupPlugin))
 
-//#define RL_DEBUG 1
+#define RL_DEBUG 1
 
 typedef struct {
 	guint signal_id;
@@ -135,7 +135,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 
 	if (!g_regex_match(reg, data, 0, &info)) {
 #ifdef RL_DEBUG
-		gchar *tmp_file = g_strdup_printf("rl-%s.html", number);
+		gchar *tmp_file = g_strdup_printf("rl-%s-%s.html", lookup->service, number);
 		log_save_data(tmp_file, data, msg->response_body->length);
 		g_free(tmp_file);
 #endif
@@ -143,7 +143,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 	}
 
 #ifdef RL_DEBUG
-	gchar *tmp_file = g_strdup_printf("rl-found-%s.html", number);
+	gchar *tmp_file = g_strdup_printf("rl-found-%s-%s.html", lookup->service, number);
 	log_save_data(tmp_file, data, msg->response_body->length);
 	g_free(tmp_file);
 #endif
