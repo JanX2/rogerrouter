@@ -480,8 +480,6 @@ static void process_card_end(struct contact *contact) {
 	if (!contact->name && first_name != NULL && last_name != NULL) {
 		contact->name = g_strdup_printf("%s %s", first_name->str, last_name->str);
 	}
-	g_debug("Adding: '%s'", contact->name);
-
 	contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
 
 	/* Free firstname */
@@ -521,7 +519,6 @@ static void process_data(struct vcard_data *card_data) {
 		return;
 	}
 
-	g_debug("Header: '%s'", card_data->header);
 	if (strcasecmp(card_data->header, "BEGIN") == 0) {
 		/* Begin of vcard */
 		vcard = g_list_append(NULL, card_data);
@@ -664,8 +661,6 @@ void vcard_load_file(char *file_name) {
 	gboolean fold = FALSE;
 	gint index;
 
-	g_debug("opening: '%s'", file_name);
-
 	/* Open file */
 	file = g_file_new_for_path(file_name);
 	file_info = g_file_query_info(file, G_FILE_ATTRIBUTE_STANDARD_SIZE, G_FILE_QUERY_INFO_NONE, NULL, NULL);
@@ -791,15 +786,6 @@ GList *vcard_find_entry(const gchar *uid) {
 
 	for (list1 = vcard_list; list1 != NULL && list1->data != NULL; list1 = list1->next) {
 		card = list1->data;
-		for (list2 = card; list2 != NULL && list2->data != NULL; list2 = list2->next) {
-			data = list2->data;
-
-			g_debug("UID check '%s'<->'%s'", data->header, "UID");
-		}
-	}
-
-	for (list1 = vcard_list; list1 != NULL && list1->data != NULL; list1 = list1->next) {
-		card = list1->data;
 
 		for (list2 = card; list2 != NULL && list2->data != NULL; list2 = list2->next) {
 			data = list2->data;
@@ -873,7 +859,6 @@ again:
 		data = tmp->data;
 
 		if(data->header && !strcmp(data->header, header)) {
-			g_debug("Removing header '%s' entry '%s'", data->header, data->entry);
 			list = g_list_remove(list, data);
 			goto again;
 		}
@@ -904,7 +889,6 @@ void vcard_write_file(char *file_name) {
 	for (list = contacts; list != NULL && list->data != NULL; list = list->next) {
 		contact = list->data;
 
-		g_debug("contact: '%s', priv: %p", contact->name, contact->priv);
 		if (!contact->priv) {
 			struct vcard_data *card_data = g_malloc0(sizeof(struct vcard_data));
 			card_data->header = g_strdup("UID");
@@ -916,9 +900,7 @@ void vcard_write_file(char *file_name) {
 			vcard_list = g_list_append(vcard_list, vcard);
 		}
 
-		g_debug("find entry");
 		entry = vcard_find_entry(contact->priv);
-		g_debug("find entry: %p", entry);
 		if (entry == NULL) {
 			continue;
 		}
@@ -998,7 +980,6 @@ void vcard_write_file(char *file_name) {
 		}
 
 		/* Handle photos with care, in case the type is url skip it */
-		g_debug("image_uri: '%s'", contact->image_uri ? contact->image_uri : "");
 		if (contact->image_uri != NULL) {
 			/* Ok, new image set */
 			gchar *data = NULL;
@@ -1041,7 +1022,6 @@ void vcard_write_file(char *file_name) {
 		for (list2 = entry; list2 != NULL && list2->data != NULL; list2 = list2->next) {
 			struct vcard_data *card_data = list2->data;
 
-			g_debug("header -> '%s'", card_data->header);
 			if (card_data->options != NULL) {
 				vcard_print(data, "%s;%s:%s\n", card_data->header, card_data->options, card_data->entry);
 			} else {
@@ -1052,7 +1032,6 @@ void vcard_write_file(char *file_name) {
 		vcard_print(data, "END:VCARD\n\n");
 	}
 
-	g_debug("Saving file....");
 	file_save(file_name, data->str, data->len);
 
 	g_string_free(data, TRUE);
