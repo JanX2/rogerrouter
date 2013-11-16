@@ -37,6 +37,10 @@ struct vcard_data {
 	gchar *entry;
 };
 
+struct vcard {
+	GSList *data;
+};
+
 GString *vcard_create_uid(void);
 void vcard_load_file(gchar *file_name);
 void vcard_write_file(gchar *file_name);

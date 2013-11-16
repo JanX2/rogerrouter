@@ -137,10 +137,10 @@ static void process_first_last_name(struct vcard_data *card_data) {
 }
 
 /**
- * \brief Process full name structure
+ * \brief Process formatted name structure
  * \param card_data pointer to card structure
  */
-static void process_full_name(struct vcard_data *card_data, struct contact *contact) {
+static void process_formatted_name(struct vcard_data *card_data, struct contact *contact) {
 	GString *str;
 	gint len = 0;
 	gint index = 0;
@@ -150,7 +150,7 @@ static void process_full_name(struct vcard_data *card_data, struct contact *cont
 
 	len = strlen(card_data->entry);
 
-	/* Create fullname string */
+	/* Create formattedname string */
 	str = g_string_new("");
 	for (index = 0; index < len; index++) {
 		if (
@@ -535,7 +535,7 @@ static void process_data(struct vcard_data *card_data) {
 
 	if (strcasecmp(card_data->header, "FN") == 0) {
 		/* Full name */
-		process_full_name(card_data, contact);
+		process_formatted_name(card_data, contact);
 	} else if (strcasecmp(card_data->header, "END") == 0) {
 		/* End of vcard */
 		process_card_end(contact);
@@ -718,10 +718,10 @@ void vcard_load_file(char *file_name) {
  * \param chr put char
  */
 static void vcard_put_char(GString *data, gint chr) {
-	//if (current_position == 74 && chr != '\r') {
-	//	g_string_append(data, "\n ");
-	//	current_position = 1;
-	/*} else*/ if (chr == '\n') {
+	if (current_position == 74 && chr != '\r') {
+		g_string_append(data, "\n ");
+		current_position = 1;
+	} else if (chr == '\n') {
 		current_position = 0;
 	}
 
@@ -1049,7 +1049,7 @@ void vcard_write_file(char *file_name) {
 			}
 		}
 
-		vcard_print(data, "END:VCARD\n");
+		vcard_print(data, "END:VCARD\n\n");
 	}
 
 	g_debug("Saving file....");
