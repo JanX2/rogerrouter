@@ -804,7 +804,7 @@ GList *vcard_find_entry(const gchar *uid) {
 		for (list2 = card; list2 != NULL && list2->data != NULL; list2 = list2->next) {
 			data = list2->data;
 
-			if (strcmp(data->header, "UID") == 0) {
+			if (data->header && strcmp(data->header, "UID") == 0) {
 				current_uid = data->entry;
 				if (current_uid != NULL && !strcmp(current_uid, uid)) {
 					return card;
@@ -830,7 +830,7 @@ struct vcard_data *find_card_data(GList *list, gchar *header, gchar *option) {
 	for (tmp = list; tmp != NULL && tmp->data != NULL; tmp = tmp->next) {
 		data = tmp->data;
 
-		if(strcmp(data->header, header) == 0) {
+		if(data->header && strcmp(data->header, header) == 0) {
 			if (!option || (data->options != NULL && strstr(data->options, option))) {
 				return data;
 			}
@@ -863,6 +863,25 @@ gboolean vcard_modify_data(GList *list, gchar *header, gchar *entry)
 	return TRUE;
 }
 
+GList *vcard_remove_data(GList *list, gchar *header)
+{
+	GList *tmp = NULL;
+	struct vcard_data *data = NULL;
+
+again:
+	for (tmp = list; tmp != NULL && tmp->data != NULL; tmp = tmp->next) {
+		data = tmp->data;
+
+		if(data->header && !strcmp(data->header, header)) {
+			g_debug("Removing header '%s' entry '%s'", data->header, data->entry);
+			list = g_list_remove(list, data);
+			goto again;
+		}
+	}
+
+	return list;
+}
+
 /**
  * \brief Write card file information
  * \param file_name file name to read
@@ -873,11 +892,12 @@ void vcard_write_file(char *file_name) {
 	struct contact *contact = NULL;
 	GList *entry = NULL;
 	GList *list2 = NULL;
-	struct vcard_data *card_data = NULL;
+	GSList *numbers;
+	GSList *addresses;
 
 	data = g_string_new("");
 
-	file_name = g_strdup("/home/buzz/roger-test.vcf");
+	//file_name = g_strdup("~/roger-test.vcf");
 
 	current_position = 0;
 
@@ -886,7 +906,7 @@ void vcard_write_file(char *file_name) {
 
 		g_debug("contact: '%s', priv: %p", contact->name, contact->priv);
 		if (!contact->priv) {
-			card_data = g_malloc0(sizeof(struct vcard_data));
+			struct vcard_data *card_data = g_malloc0(sizeof(struct vcard_data));
 			card_data->header = g_strdup("UID");
 			GString *uid = vcard_create_uid();
 			contact->priv = g_string_free(uid, FALSE);
@@ -903,188 +923,129 @@ void vcard_write_file(char *file_name) {
 			continue;
 		}
 
-		vcard_modify_data(entry, "VERSION", "4.0");
-
-		/* Fullname */
-		vcard_modify_data(entry, "FN", contact->name);
-		vcard_modify_data(entry, "N", NULL);
-#if 0
-		/* Name */
-		card_data = find_card_data(entry, "N", NULL);
-		if (card_data == NULL) {
-			card_data = g_malloc0(sizeof(struct vcard_data));
-			card_data->header = g_strdup("N");
-			entry = g_list_append(entry, card_data);
-		} else {
-			g_free(card_data->entry);
-		}
-		card_data->entry = g_strdup_printf("%s;%s;;;", contact->pnLastName, contact->pnFirstName);
-
-		/* Title */
-		card_data = find_card_data(entry, "TITLE", NULL);
-		if (card_data == NULL) {
-			card_data = g_malloc0(sizeof(struct vcard_data));
-			card_data->header = g_strdup("TITLE");
-			entry = g_list_append(entry, card_data);
-		} else {
-			g_free(card_data->entry);
-		}
-		card_data->entry = g_strdup_printf("%s", contact->pnTitle);
-
-		/* Organization */
-		card_data = find_card_data(entry, "ORG", NULL);
-		if (card_data == NULL) {
-			card_data = g_malloc0(sizeof(struct vcard_data));
-			card_data->header = g_strdup("ORG");
-			entry = g_list_append(entry, card_data);
-		} else {
-			g_free(card_data->entry);
-		}
-		card_data->entry = g_strdup_printf("%s", contact->pnCompany);
-
-		/* Photo */
-		if (contact->pnNewImage != NULL) {
-			gchar *data = NULL;
-			gsize len = 0;
-
-			card_data = find_card_data(entry, "PHOTO", NULL);
-			if (card_data == NULL) {
-				card_data = g_malloc0(sizeof(struct vcard_data));
-				card_data->header = g_strdup("PHOTO");
-				entry = g_list_append(entry, card_data);
-			} else {
-				g_free(card_data->entry);
-			}
-
-			if (g_file_get_contents(contact->pnNewImage, &data, &len, NULL)) {
-				gchar *base64 = g_base64_encode((const guchar *) data, len);
-				if (card_data->options != NULL) {
-					g_free(card_data->options);
-				}
-				card_data->options = g_strdup("ENCODING=b");
-				card_data->entry = g_strdup(base64);
-				g_free(tmp);
-				g_free(base64);
-			}
-		} else if (contact->image == NULL) {
-			card_data = find_card_data(entry, "PHOTO", NULL);
-			if (card_data != NULL) {
-				entry = g_list_remove(entry, card_data);
-			}
-		}
-
-		/* Telephone */
-		if (contact->pnPrivatePhone != NULL && strlen(contact->pnPrivatePhone) > 0) {
-			card_data = find_card_data(entry, "TEL", "TYPE=HOME,VOICE");
-			if (card_data == NULL) {
-				card_data = g_malloc0(sizeof(struct vcard_data));
-				card_data->header = g_strdup("TEL");
-				card_data->options = g_strdup("TYPE=HOME,VOICE");
-				entry = g_list_append(entry, card_data);
-			} else {
-				g_free(card_data->entry);
-			}
-			card_data->entry = g_strdup(contact->pnPrivatePhone);
-		}
-		if (contact->pnBusinessPhone != NULL && strlen(contact->pnBusinessPhone) > 0) {
-			card_data = find_card_data(entry, "TEL", "TYPE=WORK,VOICE");
-			if (card_data == NULL) {
-				card_data = g_malloc0(sizeof(struct vcard_data));
-				card_data->header = g_strdup("TEL");
-				card_data->options = g_strdup("TYPE=WORK,VOICE");
-				entry = g_list_append(entry, card_data);
-			} else {
-				g_free(card_data->entry);
-			}
-			card_data->entry = g_strdup(contact->pnBusinessPhone);
-		}
-		if (contact->pnPrivateMobile != NULL && strlen(contact->pnPrivateMobile) > 0) {
-			card_data = find_card_data(entry, "TEL", "TYPE=CELL");
-			if (card_data == NULL) {
-				card_data = g_malloc0(sizeof(struct vcard_data));
-				card_data->header = g_strdup("TEL");
-				card_data->options = g_strdup("TYPE=CELL");
-				entry = g_list_append(entry, card_data);
-			} else {
-				g_free(card_data->entry);
-			}
-			card_data->entry = g_strdup(contact->pnPrivateMobile);
-		}
-		if (contact->pnPrivateFax != NULL && strlen(contact->pnPrivateFax) > 0) {
-			card_data = find_card_data(entry, "TEL", "TYPE=HOME,FAX");
-			if (card_data == NULL) {
-				card_data = g_malloc0(sizeof(struct vcard_data));
-				card_data->header = g_strdup("TEL");
-				card_data->options = g_strdup("TYPE=HOME,FAX");
-				entry = g_list_append(entry, card_data);
-			} else {
-				g_free(card_data->entry);
-			}
-			card_data->entry = g_strdup(contact->pnPrivateFax);
-		}
-		if (contact->pnBusinessFax != NULL && strlen(contact->pnBusinessFax) > 0) {
-			card_data = find_card_data(entry, "TEL", "TYPE=WORK,FAX");
-			if (card_data == NULL) {
-				card_data = g_malloc0(sizeof(struct vcard_data));
-				card_data->header = g_strdup("TEL");
-				card_data->options = g_strdup("TYPE=WORK,FAX");
-				entry = g_list_append(entry, card_data);
-			} else {
-				g_free(card_data->entry);
-			}
-			card_data->entry = g_strdup(contact->pnBusinessFax);
-		}
-
-		/* Address */
-		card_data = find_card_data(entry, "ADR", "TYPE=HOME");
-		if (card_data == NULL) {
-			card_data = g_malloc0(sizeof(struct vcard_data));
-			card_data->header = g_strdup("ADR");
-			card_data->options = g_strdup("TYPE=HOME");
-			entry = g_list_append(entry, card_data);
-		} else {
-			g_free(card_data->entry);
-		}
-		card_data->entry = g_strdup_printf(";;%s;%s;;%s;%s",
-			contact->private_street ? contact->private_street : "",
-			    contact->pnPrivateCity ? contact->pnPrivateCity : "",
-			    contact->pnPrivateZipCode ? contact->pnPrivateZipCode : "",
-			    contact->pnPrivateCountry ? contact->pnPrivateCountry : "");
-
-		card_data = find_card_data(entry, "ADR", "TYPE=WORK");
-		if (card_data == NULL) {
-			card_data = g_malloc0(sizeof(struct vcard_data));
-			card_data->header = g_strdup("ADR");
-			card_data->options = g_strdup("TYPE=WORK");
-			entry = g_list_append(entry, card_data);
-		} else {
-			g_free(card_data->entry);
-		}
-		card_data->entry = g_strdup_printf(";;%s;%s;;%s;%s",
-				contact->pnBusinessStreet ? contact->pnBusinessStreet : "",
-			    contact->pnBusinessCity ? contact->pnBusinessCity : "",
-			    contact->pnBusinessZipCode ? contact->pnBusinessZipCode : "",
-			    contact->pnBusinessCountry ? contact->pnBusinessCountry : "");
-
-		entry = vcard_find_entry(contact->id);
-		if (entry == NULL) {
-			g_warning("UNCHANGED: Entry is NULL!!");
-			continue;
-		}
-#endif
-
-		g_debug("creating vcard entry");
 		vcard_print(data, "BEGIN:VCARD\n");
 
-		for (list2 = entry; list2 != NULL && list2->data != NULL; list2 = list2->next) {
-			card_data = list2->data;
+		/* Set version to 4.0 and remove obsolete entries */
+		vcard_print(data, "VERSION:4.0\n");
 
-			if (strcmp(card_data->header, "BEGIN") && strcmp(card_data->header, "END") && !EMPTY_STRING(card_data->entry)) {
-				if (card_data->options != NULL) {
-					vcard_print(data, "%s;%s:%s\n", card_data->header, card_data->options, card_data->entry);
+		entry = vcard_remove_data(entry, "BEGIN");
+		entry = vcard_remove_data(entry, "END");
+		entry = vcard_remove_data(entry, "VERSION");
+		entry = vcard_remove_data(entry, "N");
+		entry = vcard_remove_data(entry, "LABEL");
+		entry = vcard_remove_data(entry, "AGENT");
+
+		/* formatted name */
+		vcard_modify_data(entry, "FN", contact->name);
+
+		/* telephone */
+		entry = vcard_remove_data(entry, "TEL");
+		for (numbers = contact->numbers; numbers != NULL; numbers = numbers->next) {
+			struct phone_number *number = numbers->data;
+			struct vcard_data *card_data;
+
+			card_data = g_malloc0(sizeof(struct vcard_data));
+			card_data->header = g_strdup("TEL");
+
+			switch (number->type) {
+				case PHONE_NUMBER_HOME:
+					card_data->options = g_strdup("TYPE=HOME,VOICE");
+					break;
+				case PHONE_NUMBER_WORK:
+					card_data->options = g_strdup("TYPE=WORK,VOICE");
+					break;
+				case PHONE_NUMBER_MOBILE:
+					card_data->options = g_strdup("TYPE=CELL");
+					break;
+				case PHONE_NUMBER_FAX:
+					card_data->options = g_strdup("TYPE=HOME,FAX");
+					break;
+				default:
+					continue;
+			}
+
+			card_data->entry = g_strdup(number->number);
+			entry = g_list_append(entry, card_data);
+		}
+
+		/* address */
+		entry = vcard_remove_data(entry, "ADR");
+		for (addresses = contact->addresses; addresses != NULL; addresses = addresses->next) {
+			struct contact_address *address = addresses->data;
+			struct vcard_data *card_data;
+
+			card_data = g_malloc0(sizeof(struct vcard_data));
+			card_data->header = g_strdup("ADR");
+
+			switch (address->type) {
+				case 0:
+					card_data->options = g_strdup("TYPE=HOME");
+					break;
+				case 1:
+					card_data->options = g_strdup("TYPE=WORK");
+					break;
+				default:
+					continue;
+			}
+
+			card_data->entry = g_strdup_printf(";;%s;%s;;%s;%s",
+				address->street,
+				address->city,
+				address->zip,
+				/*address->country*/"");
+
+			entry = g_list_append(entry, card_data);
+		}
+
+		/* Handle photos with care, in case the type is url skip it */
+		g_debug("image_uri: '%s'", contact->image_uri ? contact->image_uri : "");
+		if (contact->image_uri != NULL) {
+			/* Ok, new image set */
+			gchar *data = NULL;
+			gsize len = 0;
+			struct vcard_data *card_data;
+
+			card_data = find_card_data(entry, "PHOTO", NULL);
+			if (card_data && card_data->options && strstr(card_data->options, "VALUE=URL")) {
+				/* Sorry, we cannot handled URL photos yet */
+			} else {
+				if (!card_data) {
+					card_data = g_malloc0(sizeof(struct vcard_data));
+					card_data->header = g_strdup("PHOTO");
+					entry = g_list_append(entry, card_data);
 				} else {
-					vcard_print(data, "%s:%s\n", card_data->header, card_data->entry);
+					g_free(card_data->entry);
 				}
+
+				if (g_file_get_contents(contact->image_uri, &data, &len, NULL)) {
+					gchar *base64 = g_base64_encode((const guchar *) data, len);
+					if (card_data->options != NULL) {
+						g_free(card_data->options);
+					}
+					card_data->options = g_strdup("ENCODING=b");
+					card_data->entry = g_strdup(base64);
+					g_free(base64);
+				}
+			}
+		} else if (contact->image == NULL) {
+			/* No image available, check if contact had an image */
+			struct vcard_data *card_data = find_card_data(entry, "PHOTO", NULL);
+
+			if (card_data && card_data->options && !strstr(card_data->options, "VALUE=URL")) {
+				/* Only remove previous image if it is non URL based */
+				entry = vcard_remove_data(entry, "PHOTO");
+			}
+		}
+
+		/* Lets add the additional data */
+		for (list2 = entry; list2 != NULL && list2->data != NULL; list2 = list2->next) {
+			struct vcard_data *card_data = list2->data;
+
+			g_debug("header -> '%s'", card_data->header);
+			if (card_data->options != NULL) {
+				vcard_print(data, "%s;%s:%s\n", card_data->header, card_data->options, card_data->entry);
+			} else {
+				vcard_print(data, "%s:%s\n", card_data->header, card_data->entry);
 			}
 		}
 
@@ -1129,6 +1090,10 @@ gboolean vcard_remove_contact(struct contact *contact)
 gboolean vcard_save_contact(struct contact *contact)
 {
 	gchar *name;
+
+	if (!contact->priv) {
+		contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
+	}
 
 	name = g_settings_get_string(vcard_settings, "filename");
 	vcard_write_file(name);
@@ -1235,6 +1200,12 @@ void impl_deactivate(PeasActivatable *plugin)
 void filename_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
 	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Select vcard file"), pref_get_window(), GTK_FILE_CHOOSER_ACTION_OPEN, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Open"), GTK_RESPONSE_ACCEPT, NULL);
+	GtkFileFilter *filter;
+
+	filter = gtk_file_filter_new();
+
+	gtk_file_filter_add_mime_type(filter, "text/vcard");
+	gtk_file_chooser_set_filter(GTK_FILE_CHOOSER(dialog), filter);
 
 	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
 		gchar *folder = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
