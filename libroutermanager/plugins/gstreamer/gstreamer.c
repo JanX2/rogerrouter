@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <gst/base/gstadapter.h>
 #include <gst/app/gstappsrc.h>
 #include <gst/app/gstappsink.h>
 #include <gst/app/gstappbuffer.h>
@@ -41,8 +42,6 @@ typedef struct {
 
 ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_GSTREAMER_PLUGIN, RouterManagerGStreamerPlugin, routermanager_gstreamer_plugin)
 
-/** This flag informs about gstreamer initialization status */
-static gboolean audio_init = FALSE;
 /** predefined backup values */
 static gint gstreamer_channels = 2;
 static gint gstreamer_sample_rate = 8000;
@@ -77,6 +76,7 @@ struct pipes {
 	GstElement *out_pipe;
 	GstElement *in_bin;
 	GstElement *out_bin;
+	GstAdapter *adapter;
 };
 
 /**
@@ -106,22 +106,10 @@ static gboolean pipeline_cleaner(GstBus *bus, GstMessage *message, gpointer pipe
  */
 static GSList *gstreamer_detect_devices(void)
 {
-	GError *error = NULL;
 	GSList *devices = NULL;
 	struct audio_device *audio_device;
 	int index = 0;
 	int device_index = 0;
-
-	/* initialize gstreamer */
-	audio_init = gst_init_check(NULL, NULL, &error);
-	if (!audio_init) {
-		g_warning("GStreamer failed to initialized (%s)", error ? error->message : "");
-		if (error != NULL) {
-			g_error_free(error);
-		}
-
-		return devices;
-	}
 
 	for (device_index = 0; device_test[device_index].type != 0; device_index++) {
 		GstElement *element = NULL;
@@ -134,8 +122,6 @@ static GSList *gstreamer_detect_devices(void)
 
 		/* Set playback mode to pause */
 		gst_element_set_state(element, GST_STATE_PAUSED);
-
-		g_debug("long name: %s", gst_element_get_name(element));
 
 		GstPropertyProbe *probe = NULL;
 		const GParamSpec *spec = NULL;
@@ -153,11 +139,9 @@ static GSList *gstreamer_detect_devices(void)
 				device_val = g_value_array_get_nth(array, index);
 				g_object_set(G_OBJECT(element), "device", g_value_get_string(device_val), NULL);
 				g_object_get(G_OBJECT(element), "device-name", &name, NULL);
-				g_debug("id: '%s'", g_value_get_string(device_val));
-				g_debug("name: '%s'", name);
 				if (name != NULL) {
 					audio_device = g_slice_new0(struct audio_device);
-					audio_device->internal_name = g_strdup_printf("%s index=%s", device_test[device_index].pipe, g_value_get_string(device_val));
+					audio_device->internal_name = g_strdup_printf("%s device=%s", device_test[device_index].pipe, g_value_get_string(device_val));
 					audio_device->name = g_strdup(name);
 
 					audio_device->type = device_test[device_index].type == 1 ? AUDIO_OUTPUT : AUDIO_INPUT;
@@ -251,6 +235,43 @@ void gstreamer_set_properties(GstElement *element)
 #endif
 }
 
+static gboolean gstreamer_start_pipeline(struct pipes *pipes, gchar *command)
+{
+	GstElement *pipe;
+	GstElement *bin;
+	GError *error = NULL;
+
+	/* Start pipeline */
+	pipe = gst_parse_launch(command, &error);
+
+	if (error != NULL || !pipe) {
+		g_debug("Error: Could not launch output pipe. => %s", error->message);
+		g_error_free(error);
+
+		return FALSE;
+	}
+
+	/* Try to set pipeline state to playing */
+	gst_element_set_state(pipe, GST_STATE_PLAYING);
+
+	gstreamer_set_properties(pipe);
+
+	bin = gst_bin_get_by_name(GST_BIN(pipe), "routermanager_src");
+	if (bin) {
+		pipes->out_pipe = pipe;
+		pipes->out_bin = bin;
+		gstreamer_set_buffer_output_size(pipe, 160);
+	} else {
+		bin = gst_bin_get_by_name(GST_BIN(pipe), "routermanager_sink");
+
+		pipes->in_pipe = pipe;
+		pipes->in_bin = bin;
+		gstreamer_set_buffer_input_size(pipe, 160);
+	}
+
+	return TRUE;
+}
+
 /**
  * \brief Open audio device
  * \return private data or NULL on error
@@ -258,30 +279,24 @@ void gstreamer_set_properties(GstElement *element)
 static void *gstreamer_open(void)
 {
 	gchar *command = NULL;
-	GError *error = NULL;
-	GstState current;
 	struct pipes *pipes = NULL;
 	struct profile *profile = profile_get_active();
 	gchar *output;
 	gchar *input;
-
-	g_debug("started");
 
 	pipes = g_malloc(sizeof(struct pipes));
 	if (pipes == NULL) {
 		return NULL;
 	}
 
-	output = g_settings_get_string(profile_get_active()->settings, "audio-output");
-	input = g_settings_get_string(profile_get_active()->settings, "audio-input");
-	g_debug("output: '%s'", output);
-	//if (EMPTY_STRING(output)) {
+	output = g_settings_get_string(profile->settings, "audio-output");
+	input = g_settings_get_string(profile->settings, "audio-input");
+	if (EMPTY_STRING(output)) {
 		output = g_strdup("autoaudiosink");
-	//}
-	g_debug("input: '%s'", input);
-	//if (EMPTY_STRING(input)) {
+	}
+	if (EMPTY_STRING(input)) {
 		input = g_strdup("autoaudiosrc");
-	//}
+	}
 
 	/* Create command for output pipeline */
 	command = g_strdup_printf("appsrc is-live=true format=time do-timestamp=true min-latency=1 max-latency=5000000 name=routermanager_src"
@@ -294,45 +309,12 @@ static void *gstreamer_open(void)
 		" ! %s",
 		gstreamer_sample_rate, gstreamer_channels, gstreamer_bits_per_sample, gstreamer_bits_per_sample,
 		output);
-	g_debug("command %s", command);
-	
-	/* Start pipeline */
-	pipes->out_pipe = gst_parse_launch(command, &error);
+
+	gstreamer_start_pipeline(pipes, command);
 	g_free(command);
-	if (error == NULL) {
-		/* Try to set pipeline state to playing */
-		gst_element_set_state(pipes->out_pipe, GST_STATE_PLAYING);
 
-		/* Now read the current state and verify that we have a good pipeline */
-		gst_element_get_state(pipes->out_pipe, &current, NULL, GST_SECOND);
-
-		if (!(current == GST_STATE_PLAYING || current == GST_STATE_PAUSED)) {
-			gst_element_set_state(pipes->out_pipe, GST_STATE_NULL);
-			gst_object_unref(GST_OBJECT(pipes->out_pipe));
-			pipes->out_pipe = NULL;
-			g_free(pipes);
-			pipes = NULL;
-			g_debug("Error: Could not start output pipe (%d)", current);
-			return NULL;
-		} else {
-			gstreamer_set_buffer_output_size(pipes->out_pipe, 160);
-
-			//g_debug("Ok");
-		}
-	} else {
-		g_error_free(error);
-		pipes->out_pipe = NULL;
-
-		g_free(pipes);
-		pipes = NULL;
-		g_debug("Error: Could not launch output pipe");
-
-		return NULL;
-	}
-	gstreamer_set_properties(pipes->out_pipe);
-	pipes->out_bin = gst_bin_get_by_name(GST_BIN(pipes->out_pipe), "routermanager_src");
 	/* Create command for input pipeline */
-	command = g_strdup_printf("%s ! appsink drop=true max_buffers=1"
+	command = g_strdup_printf("%s ! appsink drop=true max_buffers=2"
 		" caps=audio/x-raw-int"
 		",rate=%d"
 		",channels=%d"
@@ -340,42 +322,11 @@ static void *gstreamer_open(void)
 		" name=routermanager_sink",
 		input,
 		gstreamer_sample_rate, gstreamer_channels, gstreamer_bits_per_sample);
-	g_debug("command %s", command);
-	
-	/* Start pipeline */
-	pipes->in_pipe = gst_parse_launch(command, &error);
-	if (error == NULL) {
-		/* Try to set pipeline state to playing */
-		gst_element_set_state(pipes->in_pipe, GST_STATE_PLAYING);
 
-		/* Now read the current state and verify that we have a good pipeline */
-		gst_element_get_state(pipes->in_pipe, &current, NULL, GST_SECOND);
-
-		if (current != GST_STATE_PLAYING) {
-			gst_element_set_state(pipes->in_pipe, GST_STATE_NULL);
-			gst_object_unref(GST_OBJECT(pipes->in_pipe));
-			pipes->in_pipe = NULL;
-			/* TODO: free output pipe */
-			g_free(pipes);
-			pipes = NULL;
-			g_debug("Error: Could not start input pipe");
-		} else {
-			gstreamer_set_buffer_input_size(pipes->in_pipe, 160);
-
-			//g_debug("Ok");
-		}
-	} else {
-		g_error_free(error);
-		pipes->in_pipe = NULL;
-
-		g_free(pipes);
-		pipes = NULL;
-		g_debug("Error: Could not launch input pipe");
-	}
-	gstreamer_set_properties(pipes->in_pipe);
-	pipes->in_bin = gst_bin_get_by_name(GST_BIN(pipes->out_pipe), "routermanager_sink");
-
+	gstreamer_start_pipeline(pipes, command);
 	g_free(command);
+
+	pipes->adapter = gst_adapter_new();
 
 	return pipes;
 }
@@ -392,14 +343,17 @@ static gsize gstreamer_write(void *priv, guchar *data, gsize size)
 	gchar *tmp = NULL;
 	GstBuffer *buffer = NULL;
 	struct pipes *pipes = priv;
-	GstElement *src = pipes->in_bin;
+	GstElement *src = pipes->out_bin;
 	unsigned int written = -1;
 
-	memcpy((char *) tmp, (char *) data, size);
-	buffer = gst_app_buffer_new(tmp, size, (GstAppBufferFinalizeFunc) g_free, tmp);
-	gst_app_src_push_buffer(GST_APP_SRC(src), buffer);
-	written = size;
-	g_object_unref(src);
+	if (src) {
+		tmp = g_malloc0(size);
+		memcpy((char *) tmp, (char *) data, size);
+		buffer = gst_app_buffer_new(tmp, size, (GstAppBufferFinalizeFunc) g_free, tmp);
+		gst_app_src_push_buffer(GST_APP_SRC(src), buffer);
+		written = size;
+	}
+	g_usleep (20 * G_TIME_SPAN_MILLISECOND);
 
 	return written;
 }
@@ -408,16 +362,19 @@ static gsize gstreamer_read(void *priv, guchar *data, gsize size)
 {
 	GstBuffer *buffer = NULL;
 	struct pipes *pipes = priv;
-	GstElement *sink = pipes->out_bin;
+	GstElement *sink = pipes->in_bin;
 	unsigned int read =  0;
 
 	buffer = gst_app_sink_pull_buffer(GST_APP_SINK(sink));
 	if (buffer != NULL) {
-		read = MIN(GST_BUFFER_SIZE(buffer), size);
-		memcpy(data, GST_BUFFER_DATA(buffer), read);
-		gst_buffer_unref(buffer);
+		gst_adapter_push(pipes->adapter, buffer);
 	}
-	g_object_unref(sink);
+
+	read = MIN(gst_adapter_available(pipes->adapter), size);
+	gst_adapter_copy(pipes->adapter, data, 0, read);
+	gst_adapter_flush(pipes->adapter, read);
+
+	g_usleep (20 * G_TIME_SPAN_MILLISECOND);
 
 	return read;
 }
@@ -435,15 +392,13 @@ int gstreamer_close(void *priv, gboolean force) {
 		return 0;
 	}
 
-	if (pipes->out_pipe != NULL) {
-		GstElement *src = gst_bin_get_by_name(GST_BIN(pipes->out_pipe), "routermanager_src");
-		if (src != NULL) {
-			GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(pipes->out_pipe));
-			gst_bus_add_watch(bus, pipeline_cleaner, pipes->out_pipe);
-			gst_app_src_end_of_stream(GST_APP_SRC(src));
-			gst_object_unref(bus);
-			pipes->out_pipe = NULL;
-		}
+	GstElement *src = pipes->out_bin;
+	if (src != NULL) {
+		GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(pipes->out_pipe));
+		gst_bus_add_watch(bus, pipeline_cleaner, pipes->out_pipe);
+		gst_app_src_end_of_stream(GST_APP_SRC(src));
+		gst_object_unref(bus);
+		pipes->out_pipe = NULL;
 	}
 
 	if (pipes->in_pipe != NULL) {
@@ -480,9 +435,8 @@ struct audio gstreamer = {
  */
 static void impl_activate(PeasActivatable *plugin)
 {
-	//RouterManagerGStreamerPlugin *gstreamer_plugin = ROUTERMANAGER_GSTREAMER_PLUGIN(plugin);
-
 	gst_init_check(NULL, NULL, NULL);
+
 	g_setenv("PULSE_PROP_media.role", "phone", TRUE);
 	g_setenv("PULSE_PROP_filter.want", "echo-cancel", TRUE);
 
@@ -495,5 +449,4 @@ static void impl_activate(PeasActivatable *plugin)
  */
 static void impl_deactivate(PeasActivatable *plugin)
 {
-	//RouterManagerGStreamerPlugin *gstreamer_plugin = ROUTERMANAGER_GSTREAMER_PLUGIN(plugin);
 }
