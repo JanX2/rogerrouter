@@ -197,17 +197,17 @@ AC_ARG_WITH([gstreamer],
 	[],
 	[with_gstreamer=no])
 
-AC_MSG_CHECKING(for gstreamer-1.0 and gstreamer-app-1.0)
+AC_MSG_CHECKING(for gstreamer-0.10 and gstreamer-app-0.10)
 AS_IF([test "x$with_gstreamer" != xsuper],
 	[if test "x$with_gstreamer" = xcheck; then
-		pkg-config --exists gstreamer-1.0 && pkg-config --exists gstreamer-app-1.0 && with_gstreamer=yes
+		pkg-config --exists gstreamer-0.10 && pkg-config --exists gstreamer-app-0.10 && with_gstreamer=yes
 	elif test "x$with_gstreamer" = xyes; then
-		( pkg-config --exists gstreamer-1.0 && pkg-config --exists gstreamer-app-1.0 ) || AC_MSG_FAILURE(
-			[--with-gstreamer=yes was given, but test for gstreamer-1.0 and gstreamer-app-1.0 failed])
+		( pkg-config --exists gstreamer-0.10 && pkg-config --exists gstreamer-app-0.10 gstreamer-interfaces-0.10 ) || AC_MSG_FAILURE(
+			[--with-gstreamer=yes was given, but test for gstreamer-0.10 and gstreamer-app-0.10 failed])
 	fi
 	if test "x$with_gstreamer" = xyes; then
-		AC_SUBST([GSTREAMER_CFLAGS], ["`pkg-config --cflags gstreamer-1.0 gstreamer-app-1.0`"])
-		AC_SUBST([GSTREAMER_LIBS], ["`pkg-config --libs gstreamer-1.0 gstreamer-app-1.0`"])
+		AC_SUBST([GSTREAMER_CFLAGS], ["`pkg-config --cflags gstreamer-0.10 gstreamer-app-0.10 gstreamer-interfaces-0.10`"])
+		AC_SUBST([GSTREAMER_LIBS], ["`pkg-config --libs gstreamer-0.10 gstreamer-app-0.10 gstreamer-interfaces-0.10`"])
 		AC_DEFINE([HAVE_GSTREAMER], 1, [Have gstreamer])
 		ROGER_FEATURES_YES="\tgstreamer\n$ROGER_FEATURES_YES"
 	else
