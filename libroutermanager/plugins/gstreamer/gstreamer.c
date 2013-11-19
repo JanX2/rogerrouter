@@ -22,6 +22,10 @@
 
 #include <gst/app/gstappsrc.h>
 #include <gst/app/gstappsink.h>
+#include <gst/app/gstappbuffer.h>
+#include <gst/interfaces/propertyprobe.h>
+
+#include <pulse/pulseaudio.h>
 
 #include <libroutermanager/profile.h>
 #include <libroutermanager/plugins.h>
@@ -58,17 +62,21 @@ struct device_test {
 	gchar *test;
 } device_test[] = {
 	{1, "pulsesink", "pulsesinkpresencetest"},
-	{1, "alsasink", "alsasinkpresencetest"},
-	{1, "osxaudiosink", "osxaudioinkpresencetest"},
 	{2, "pulsesrc", "pulsesrcpresencetest"},
+	{1, "alsasink", "alsasinkpresencetest"},
 	{2, "alsasrc", "alsasrcpresencetest"},
+	{1, "osxaudiosink", "osxaudiosinkpresencetest"},
 	{2, "osxaudiosrc", "osxaudiosrcpresencetest"},
+	{1, "directsoundsink", "directsoundsinkpresencetest"},
+	{2, "directsoundsrc", "directsoundsrcpresencetest"},
 	{0, NULL, NULL}
 };
 
 struct pipes {
 	GstElement *in_pipe;
 	GstElement *out_pipe;
+	GstElement *in_bin;
+	GstElement *out_bin;
 };
 
 /**
@@ -102,6 +110,7 @@ static GSList *gstreamer_detect_devices(void)
 	GSList *devices = NULL;
 	struct audio_device *audio_device;
 	int index = 0;
+	int device_index = 0;
 
 	/* initialize gstreamer */
 	audio_init = gst_init_check(NULL, NULL, &error);
@@ -114,11 +123,11 @@ static GSList *gstreamer_detect_devices(void)
 		return devices;
 	}
 
-	for (index = 0; device_test[index].type != 0; index++) {
+	for (device_index = 0; device_test[device_index].type != 0; device_index++) {
 		GstElement *element = NULL;
 
 		/* check if we have a sink within gstreamer */
-		element = gst_element_factory_make(device_test[index].pipe, device_test[index].test);
+		element = gst_element_factory_make(device_test[device_index].pipe, device_test[device_index].test);
 		if (!element) {
 			continue;
 		}
@@ -128,12 +137,11 @@ static GSList *gstreamer_detect_devices(void)
 
 		g_debug("long name: %s", gst_element_get_name(element));
 
-#if 0
 		GstPropertyProbe *probe = NULL;
 		const GParamSpec *spec = NULL;
 		GValueArray *array = NULL;
 		probe = GST_PROPERTY_PROBE(element);
-		spec = gst_property_probe_get_property(probe, "index");
+		spec = gst_property_probe_get_property(probe, "device");
 
 		/* now try to receive the index name and add it to the internal list */
 		array = gst_property_probe_probe_and_get_values(probe, spec);
@@ -143,37 +151,29 @@ static GSList *gstreamer_detect_devices(void)
 				gchar *name = NULL;
 
 				device_val = g_value_array_get_nth(array, index);
-				g_object_set_property(G_OBJECT(element), "index", device_val);
-				if (device_test[index].type == 1) {
-					g_object_get(G_OBJECT(element), "index-name", &name, NULL);
-				}
-				if (name == NULL) {
-					g_object_get(G_OBJECT(element), "index", &name, NULL);
-				}
+				g_object_set(G_OBJECT(element), "device", g_value_get_string(device_val), NULL);
+				g_object_get(G_OBJECT(element), "device-name", &name, NULL);
+				g_debug("id: '%s'", g_value_get_string(device_val));
+				g_debug("name: '%s'", name);
 				if (name != NULL) {
 					audio_device = g_slice_new0(struct audio_device);
-					audio_device->internal_name = g_strdup_printf("%s index=%s", device_test[index].pipe, g_value_get_string(device_val));
-					if (index == 0) {
-						gchar *spec = strrchr(name, '.');
-						if (spec != NULL) {
-							audio_device->name = g_strdup_printf("Pulseaudio (%s)", spec + 1);
-						} else {
-							audio_device->name = g_strdup("Pulseaudio");
-						}
-					} else {
-						audio_device->name = g_strdup(name);
-					}
+					audio_device->internal_name = g_strdup_printf("%s index=%s", device_test[device_index].pipe, g_value_get_string(device_val));
+					audio_device->name = g_strdup(name);
 
-					audio_device->type = device_test[index].type == 1 ? AUDIO_OUTPUT : AUDIO_INPUT;
+					audio_device->type = device_test[device_index].type == 1 ? AUDIO_OUTPUT : AUDIO_INPUT;
 					devices = g_slist_prepend(devices, audio_device);
-						g_free(name);
+					g_free(name);
 				}
 			}
 			g_value_array_free(array);
 		}
-#endif
+
 		gst_element_set_state(element, GST_STATE_NULL);
 		gst_object_unref(GST_OBJECT(element));
+
+		if (device_test[device_index].type == 2  && g_slist_length(devices) > 0) {
+			break;
+		}
 	}
 
 	return devices;
@@ -228,6 +228,29 @@ static int gstreamer_init(unsigned char channels, unsigned short sample_rate, un
 	return 0;
 }
 
+void gstreamer_set_properties(GstElement *element)
+{
+	GstStructure *props;
+
+	return;
+#if 1
+	props = gst_structure_new("stream-properties", "media.role", "phone", NULL);
+
+	gst_structure_set(props, "filter.want", G_TYPE_STRING, "echo-cancel", NULL);
+	gst_structure_set(props, "media.role", G_TYPE_STRING, "phone", NULL);
+
+	g_object_set(element, "stream-properties", props, NULL);
+	gst_structure_free(props);
+#else
+	gchar *tmp = g_strdup_printf("props,media.role=phone,filter.want=echo-cancel");
+	props = gst_structure_from_string (tmp, NULL);
+	g_object_set(element, "stream-properties", props, NULL);
+	gst_structure_free(props);
+
+	g_free(tmp);
+#endif
+}
+
 /**
  * \brief Open audio device
  * \return private data or NULL on error
@@ -238,24 +261,31 @@ static void *gstreamer_open(void)
 	GError *error = NULL;
 	GstState current;
 	struct pipes *pipes = NULL;
+	struct profile *profile = profile_get_active();
+	gchar *output;
+	gchar *input;
 
 	g_debug("started");
-	/*if (gstreamerGetSelectedOutputDevice(profile_get_active()) == NULL) {
-		return NULL;
-	}
-
-	if (gstreamerGetSelectedInputDevice(profile_get_active()) == NULL) {
-		return NULL;
-	}*/
 
 	pipes = g_malloc(sizeof(struct pipes));
 	if (pipes == NULL) {
 		return NULL;
 	}
 
+	output = g_settings_get_string(profile_get_active()->settings, "audio-output");
+	input = g_settings_get_string(profile_get_active()->settings, "audio-input");
+	g_debug("output: '%s'", output);
+	//if (EMPTY_STRING(output)) {
+		output = g_strdup("autoaudiosink");
+	//}
+	g_debug("input: '%s'", input);
+	//if (EMPTY_STRING(input)) {
+		input = g_strdup("autoaudiosrc");
+	//}
+
 	/* Create command for output pipeline */
-	command = g_strdup_printf("appsrc is-live=true name=routermanager_src"
-		" ! audio/x-raw-int"
+	command = g_strdup_printf("appsrc is-live=true format=time do-timestamp=true min-latency=1 max-latency=5000000 name=routermanager_src"
+		" caps=audio/x-raw-int"
 		",rate=%d"
 		",channels=%d"
 		",width=%d"
@@ -263,7 +293,7 @@ static void *gstreamer_open(void)
 		",signed=true,endianness=1234"
 		" ! %s",
 		gstreamer_sample_rate, gstreamer_channels, gstreamer_bits_per_sample, gstreamer_bits_per_sample,
-		/*gstreamerGetSelectedOutputDevice(profile_get_active())*/"pulsesrc");
+		output);
 	g_debug("command %s", command);
 	
 	/* Start pipeline */
@@ -299,7 +329,8 @@ static void *gstreamer_open(void)
 
 		return NULL;
 	}
-
+	gstreamer_set_properties(pipes->out_pipe);
+	pipes->out_bin = gst_bin_get_by_name(GST_BIN(pipes->out_pipe), "routermanager_src");
 	/* Create command for input pipeline */
 	command = g_strdup_printf("%s ! appsink drop=true max_buffers=1"
 		" caps=audio/x-raw-int"
@@ -307,7 +338,7 @@ static void *gstreamer_open(void)
 		",channels=%d"
 		",width=%d"
 		" name=routermanager_sink",
-		/*gstreamerGetSelectedInputDevice(profile_get_active())*/"pulsesink",
+		input,
 		gstreamer_sample_rate, gstreamer_channels, gstreamer_bits_per_sample);
 	g_debug("command %s", command);
 	
@@ -341,6 +372,8 @@ static void *gstreamer_open(void)
 		pipes = NULL;
 		g_debug("Error: Could not launch input pipe");
 	}
+	gstreamer_set_properties(pipes->in_pipe);
+	pipes->in_bin = gst_bin_get_by_name(GST_BIN(pipes->out_pipe), "routermanager_sink");
 
 	g_free(command);
 
@@ -356,62 +389,37 @@ static void *gstreamer_open(void)
  */
 static gsize gstreamer_write(void *priv, guchar *data, gsize size)
 {
-#if 0
 	gchar *tmp = NULL;
 	GstBuffer *buffer = NULL;
-	GstElement *src = NULL;
 	struct pipes *pipes = priv;
+	GstElement *src = pipes->in_bin;
 	unsigned int written = -1;
 
-	if (pipes == NULL) {
-		return 0;
-	}
-
-	g_return_val_if_fail(GST_IS_BIN(pipes->out_pipe), -2);
-
-	src = gst_bin_get_by_name(GST_BIN(pipes->out_pipe), "routermanager_src");
-	if (src != NULL) {
-		tmp = (gchar *) g_malloc0(size);
-		memcpy((char *) tmp, (char *) data, size);
-		buffer = gst_app_buffer_new(tmp, size, (GstAppBufferFinalizeFunc) g_free, tmp);
-		gst_app_src_push_buffer(GST_APP_SRC(src), buffer);
-		written = size;
-		g_object_unref(src);
-	}
+	memcpy((char *) tmp, (char *) data, size);
+	buffer = gst_app_buffer_new(tmp, size, (GstAppBufferFinalizeFunc) g_free, tmp);
+	gst_app_src_push_buffer(GST_APP_SRC(src), buffer);
+	written = size;
+	g_object_unref(src);
 
 	return written;
-#endif
-	return 0;
 }
 
 static gsize gstreamer_read(void *priv, guchar *data, gsize size)
 {
-#if 0
 	GstBuffer *buffer = NULL;
-	GstElement *sink = NULL;
 	struct pipes *pipes = priv;
+	GstElement *sink = pipes->out_bin;
 	unsigned int read =  0;
 
-	if (pipes == NULL) {
-		return 0;
+	buffer = gst_app_sink_pull_buffer(GST_APP_SINK(sink));
+	if (buffer != NULL) {
+		read = MIN(GST_BUFFER_SIZE(buffer), size);
+		memcpy(data, GST_BUFFER_DATA(buffer), read);
+		gst_buffer_unref(buffer);
 	}
-
-	g_return_val_if_fail(GST_IS_BIN(pipes->in_pipe), -2);
-
-	sink = gst_bin_get_by_name(GST_BIN(pipes->in_pipe), "routermanager_sink");
-	if (sink != NULL) {
-		buffer = gst_app_sink_pull_buffer(GST_APP_SINK(sink));
-		if (buffer != NULL) {
-			read = MIN(GST_BUFFER_SIZE(buffer), size);
-			memcpy(data, GST_BUFFER_DATA(buffer), read);
-			gst_buffer_unref(buffer);
-		}
-		g_object_unref(sink);
-	}
+	g_object_unref(sink);
 
 	return read;
-#endif
-	return 0;
 }
 
 /**
@@ -473,6 +481,10 @@ struct audio gstreamer = {
 static void impl_activate(PeasActivatable *plugin)
 {
 	//RouterManagerGStreamerPlugin *gstreamer_plugin = ROUTERMANAGER_GSTREAMER_PLUGIN(plugin);
+
+	gst_init_check(NULL, NULL, NULL);
+	g_setenv("PULSE_PROP_media.role", "phone", TRUE);
+	g_setenv("PULSE_PROP_filter.want", "echo-cancel", TRUE);
 
 	routermanager_audio_register(&gstreamer);
 }
