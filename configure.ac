@@ -89,6 +89,42 @@ PKG_CHECK_MODULES([PEAS_GTK], [libpeas-gtk-1.0])
 #	enable_introspection=no
 #fi
 
+dnl *******************************************************************
+dnl Check for cups
+dnl *******************************************************************
+AC_CHECK_LIB(cups, cupsDoRequest,, AC_MSG_ERROR(CUPS library not found),)
+
+# Check for backend directory
+AC_ARG_WITH(cupsbackenddir,
+	AC_HELP_STRING([--with-cupsbackenddir=DIR],
+		[ cups-backends directory (auto)]),
+	[ cupsbackenddir="${withval}" ],
+	[ cupsbackenddir=`cups-config --serverbin`/backend ]
+)
+echo done
+
+if test -d "$cupsbackenddir"; then
+	echo found Cups backend directory $cupsbackenddir
+	AC_SUBST([cupsbackenddir])
+else
+	AC_MSG_ERROR([Cups backend directory not found!])
+fi
+
+# Check for unistd.h
+AC_CHECK_HEADERS([unistd.h])
+
+#  Check for sigaction and sigset
+AC_CHECK_FUNCS(sigaction, [ have_sigaction="1" ], [ have_sigaction="0" ])
+
+AC_CACHE_CHECK([for sigset()],[ac_cv_sigset],[
+	AC_TRY_COMPILE([#include <signal.h>],[sigset(SIGTERM,SIG_IGN);],
+	[ac_cv_sigset=yes], [ac_cv_sigset=no])
+])
+if test x"ac_cv_sigset" = xyes; then
+	AC_DEFINE([HAVE_SIGSET],1,[Define to 1 if you have the `sigset' function.])
+fi
+	
+
 dnl ********************************************************************
 dnl libnotify is optional
 dnl ********************************************************************
@@ -417,6 +453,7 @@ AC_CONFIG_FILES([
     roger/plugins/indicator/data/Makefile
     roger/plugins/vcard/Makefile
     roger/plugins/vcard/data/Makefile
+    cups-backend/Makefile
     macosx/roger.plist
     macosx/package
 ])

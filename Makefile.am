@@ -1,4 +1,4 @@
-SUBDIRS = libroutermanager roger roger-cli po doc
+SUBDIRS = libroutermanager roger cups-backend roger-cli po doc
 
 EXTRA_DIST = \
 	autogen.sh \
