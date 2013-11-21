@@ -412,6 +412,10 @@ static void process_photo(struct vcard_data *card_data, struct contact *contact)
 	gsize len;
 	GError *error = NULL;
 
+	if (!contact) {
+		return;
+	}
+
 	if (card_data->options) {
 		if (g_strcasestr(card_data->options, "VALUE=URL") != NULL) {
 			return;
@@ -455,8 +459,11 @@ GString *vcard_create_uid(void) {
 /**
  * \brief Parse end of vcard, check for valid entry and add person
  */
-static void process_card_end(struct contact *contact) {
-
+static void process_card_end(struct contact *contact)
+{
+	if (!contact) {
+		return;
+	}
 	if (!contact->priv) {
 		struct vcard_data *card_data = g_malloc0(sizeof(struct vcard_data));
 		card_data->header = g_strdup("UID");
@@ -704,7 +711,7 @@ void vcard_load_file(char *file_name) {
 	/* Ensure we get a '\n' */
 	parse_char('\n');
 
-	//fclose(file);
+	g_input_stream_close(G_INPUT_STREAM(input_stream), NULL, NULL);
 }
 
 /**
@@ -882,7 +889,7 @@ void vcard_write_file(char *file_name) {
 
 	data = g_string_new("");
 
-	//file_name = g_strdup("~/roger-test.vcf");
+	file_name = g_strdup("/home/buzz/roger-test.vcf");
 
 	current_position = 0;
 

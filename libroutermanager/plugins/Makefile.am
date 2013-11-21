@@ -8,7 +8,7 @@ if WITH_PORTAUDIO
 SUBDIRS += portaudio
 endif
 
-if WITH_GSTREAMER
+if WITH_GSTREAMER0
 SUBDIRS += gstreamer
 endif
 

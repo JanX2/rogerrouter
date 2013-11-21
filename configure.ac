@@ -225,36 +225,36 @@ AM_CONDITIONAL(WITH_EBOOK, test "x$with_ebook" != "xno")
 AM_CONDITIONAL(HAVE_EBOOK_SOURCE_REGISTRY, test "x$with_ebook_registry" = "xyes")
 
 dnl ********************************************************************
-dnl gstreamer is optional
+dnl gstreamer-0.10 is optional
 dnl ********************************************************************
-AC_ARG_WITH([gstreamer],
-	[AS_HELP_STRING([--with-gstreamer=@<:@ARG@:>@],
-	[Use gstreamer (possible values: no, yes, check, or the path to gstreamer) @<:@default=check@:>@])],
+AC_ARG_WITH([gstreamer0],
+	[AS_HELP_STRING([--with-gstreamer0=@<:@ARG@:>@],
+	[Use gstreamer-0.10 (possible values: no, yes, check, or the path to gstreamer) @<:@default=check@:>@])],
 	[],
-	[with_gstreamer=no])
+	[with_gstreamer0=no])
 
 AC_MSG_CHECKING(for gstreamer-0.10 and gstreamer-app-0.10)
-AS_IF([test "x$with_gstreamer" != xsuper],
-	[if test "x$with_gstreamer" = xcheck; then
-		pkg-config --exists gstreamer-0.10 && pkg-config --exists gstreamer-app-0.10 && with_gstreamer=yes
-	elif test "x$with_gstreamer" = xyes; then
+AS_IF([test "x$with_gstreamer0" != xno],
+	[if test "x$with_gstreamer0" = xcheck; then
+		pkg-config --exists gstreamer-0.10 && pkg-config --exists gstreamer-app-0.10 && with_gstreamer0=yes
+	elif test "x$with_gstreamer0" = xyes; then
 		( pkg-config --exists gstreamer-0.10 && pkg-config --exists gstreamer-app-0.10 gstreamer-interfaces-0.10 ) || AC_MSG_FAILURE(
-			[--with-gstreamer=yes was given, but test for gstreamer-0.10 and gstreamer-app-0.10 failed])
+			[--with-gstreamer-0.10=yes was given, but test for gstreamer-0.10 and gstreamer-app-0.10 failed])
 	fi
-	if test "x$with_gstreamer" = xyes; then
-		AC_SUBST([GSTREAMER_CFLAGS], ["`pkg-config --cflags gstreamer-0.10 gstreamer-app-0.10 gstreamer-interfaces-0.10`"])
-		AC_SUBST([GSTREAMER_LIBS], ["`pkg-config --libs gstreamer-0.10 gstreamer-app-0.10 gstreamer-interfaces-0.10`"])
-		AC_DEFINE([HAVE_GSTREAMER], 1, [Have gstreamer])
-		ROGER_FEATURES_YES="\tgstreamer\n$ROGER_FEATURES_YES"
+	if test "x$with_gstreamer0" = xyes; then
+		AC_SUBST([GSTREAMER0_CFLAGS], ["`pkg-config --cflags gstreamer-0.10 gstreamer-app-0.10 gstreamer-interfaces-0.10`"])
+		AC_SUBST([GSTREAMER0_LIBS], ["`pkg-config --libs gstreamer-0.10 gstreamer-app-0.10 gstreamer-interfaces-0.10`"])
+		AC_DEFINE([HAVE_GSTREAMER0], 1, [Have gstreamer 0.10])
+		ROGER_FEATURES_YES="\tgstreamer 0.10\n$ROGER_FEATURES_YES"
 	else
-		with_gstreamer=no
-		ROGER_FEATURES_NO="\tgstreamer\n$ROGER_FEATURES_NO"
+		with_gstreamer0=no
+		ROGER_FEATURES_NO="\tgstreamer 0.10\n$ROGER_FEATURES_NO"
 	fi
 ])
 
-AC_MSG_RESULT($with_gstreamer)
+AC_MSG_RESULT($with_gstreamer0)
 
-AM_CONDITIONAL(WITH_GSTREAMER, test "x$with_gstreamer" != "xno")
+AM_CONDITIONAL(WITH_GSTREAMER0, test "x$with_gstreamer0" != "xno")
 
 dnl ********************************************************************
 dnl pulseaudio is optional
