@@ -115,6 +115,7 @@ static GSList *gstreamer_detect_devices(void)
 		GstElement *element = NULL;
 
 		/* check if we have a sink within gstreamer */
+		g_debug("Factory for: '%s'", device_test[device_index].pipe);
 		element = gst_element_factory_make(device_test[device_index].pipe, device_test[device_index].test);
 		if (!element) {
 			continue;
@@ -131,7 +132,9 @@ static GSList *gstreamer_detect_devices(void)
 
 		/* now try to receive the index name and add it to the internal list */
 		array = gst_property_probe_probe_and_get_values(probe, spec);
+		g_debug("array: %p", array);
 		if (array != NULL) {
+			g_debug("array values: %d", array->n_values);
 			for (index = 0; index < array->n_values; index++) {
 				GValue *device_val = NULL;
 				gchar *name = NULL;
@@ -139,7 +142,10 @@ static GSList *gstreamer_detect_devices(void)
 				device_val = g_value_array_get_nth(array, index);
 				g_object_set(G_OBJECT(element), "device", g_value_get_string(device_val), NULL);
 				g_object_get(G_OBJECT(element), "device-name", &name, NULL);
+				g_debug("device %p", g_value_get_string(device_val));
+				g_debug("device-name %p", name);
 				if (name != NULL) {
+					g_debug("name: %s", name);
 					audio_device = g_slice_new0(struct audio_device);
 					audio_device->internal_name = g_strdup_printf("%s device=%s", device_test[device_index].pipe, g_value_get_string(device_val));
 					audio_device->name = g_strdup(name);
@@ -156,7 +162,7 @@ static GSList *gstreamer_detect_devices(void)
 		gst_object_unref(GST_OBJECT(element));
 
 		if (device_test[device_index].type == 2  && g_slist_length(devices) > 0) {
-			break;
+		//	break;
 		}
 	}
 
