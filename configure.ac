@@ -90,24 +90,58 @@ PKG_CHECK_MODULES([PEAS_GTK], [libpeas-gtk-1.0])
 #fi
 
 dnl *******************************************************************
-dnl Check for cups
+dnl CUPS backend is optional
 dnl *******************************************************************
-AC_CHECK_LIB(cups, cupsDoRequest,, AC_MSG_ERROR(CUPS library not found),)
+AC_ARG_WITH([cups],
+	[AS_HELP_STRING([--with-cups=@<:@ARG@:>@],
+	[Use cups (possible values: no, yes or check) @<:@default=check@:>@])],
+	[],
+	[with_cups=check])
 
-# Check for backend directory
-AC_ARG_WITH(cupsbackenddir,
-	AC_HELP_STRING([--with-cupsbackenddir=DIR],
-		[ cups-backends directory (auto)]),
-	[ cupsbackenddir="${withval}" ],
-	[ cupsbackenddir=`cups-config --serverbin`/backend ]
-)
-echo done
+AC_MSG_CHECKING(for cups)
+AS_IF([test "x$with_cups" != xsuper],
+[
+        if test "x$with_cups" = xcheck; then
+		if test -n "`cups-config --build 2> /dev/null`"; then
+			with_cups=yes
+		fi	
+        elif test "x$with_cups" = xyes; then
+		if ! test -n "`cups-config --build 2> /dev/null`"; then
+			AC_MSG_FAILURE([--with-cups=yes was given, but test for cups-config failed])
+		fi
+        fi
+        if test "x$with_cups" = xyes; then
+                AC_SUBST([CUPS_CFLAGS], ["`cups-config --cflags`"])
+                AC_SUBST([CUPS_LIBS], ["`cups-config --libs`"])
+                ROGER_FEATURES_YES="\tcups backerd\n$ROGER_FEATURES_YES"
+        else
+                with_cups=no
+                ROGER_FEATURES_NO="\tcups backerd\n$ROGER_FEATURES_NO"
+        fi
 
-if test -d "$cupsbackenddir"; then
-	echo found Cups backend directory $cupsbackenddir
-	AC_SUBST([cupsbackenddir])
-else
-	AC_MSG_ERROR([Cups backend directory not found!])
+])
+
+AC_MSG_RESULT($with_cups)
+AM_CONDITIONAL(WITH_CUPS, test "x$with_cups" != "xno")
+
+dnl *******************************************************************
+dnl Check for cups backend directory if cups is found
+dnl *******************************************************************
+
+if test "x$with_cups" = xyes; then
+	AC_MSG_CHECKING(for cups backend  directory)
+	AC_ARG_WITH(cupsbackenddir,
+		AC_HELP_STRING([--with-cupsbackenddir=DIR],
+			[ cups-backends directory (auto)]),
+		[ cupsbackenddir="${withval}" ],
+		[ cupsbackenddir=`cups-config --serverbin`/backend ]
+	)
+	if test -d "$cupsbackenddir"; then
+		AC_SUBST([cupsbackenddir])
+		AC_MSG_RESULT([$cupsbackenddir])
+	else
+		AC_MSG_FAILURE([Cups backend directory not found!])
+	fi
 fi
 
 # Check for unistd.h
@@ -123,6 +157,7 @@ AC_CACHE_CHECK([for sigset()],[ac_cv_sigset],[
 if test x"ac_cv_sigset" = xyes; then
 	AC_DEFINE([HAVE_SIGSET],1,[Define to 1 if you have the `sigset' function.])
 fi
+
 	
 
 dnl ********************************************************************
@@ -209,11 +244,6 @@ AS_IF([test "x$with_ebook" != xno],
 		AC_SUBST([EBOOK_CFLAGS], ["`$PKG_CONFIG --cflags libebook-1.2`"])
 		AC_SUBST([EBOOK_LIBS], ["`$PKG_CONFIG --libs libebook-1.2`"])
 
-		$PKG_CONFIG --atleast-version=3.5.4 libebook-1.2 && with_ebook_registry=yes
-		if test "x$with_ebook_registry" = xyes; then
-			AC_DEFINE([HAVE_EBOOK_SOURCE_REGISTRY], 1, [Have libebook >= 3.5.4])
-			PKG_CHECK_MODULES([EVO_SHELL], evolution-shell-3.0 >= 3.5.4,, AC_MSG_ERROR([libebook >= 3.5.4 requires evolution-shell]))
-		fi
 		ROGER_FEATURES_YES="\tebook\n$ROGER_FEATURES_YES"
 	else
 		with_ebook=no
@@ -222,7 +252,16 @@ AS_IF([test "x$with_ebook" != xno],
 ])
 AC_MSG_RESULT($with_ebook)
 AM_CONDITIONAL(WITH_EBOOK, test "x$with_ebook" != "xno")
+
+AS_IF([test "x$with_ebook" != xno],
+	[$PKG_CONFIG --atleast-version=3.5.4 libebook-1.2 && with_ebook_registry=yes
+	if test "x$with_ebook_registry" = xyes; then
+		AC_DEFINE([HAVE_EBOOK_SOURCE_REGISTRY], 1, [Have libebook >= 3.5.4])
+		PKG_CHECK_MODULES([EVO_SHELL], evolution-shell-3.0 >= 3.5.4,, AC_MSG_ERROR([libebook >= 3.5.4 requires evolution-shell]))
+	fi
+])
 AM_CONDITIONAL(HAVE_EBOOK_SOURCE_REGISTRY, test "x$with_ebook_registry" = "xyes")
+
 
 dnl ********************************************************************
 dnl gstreamer-0.10 is optional
@@ -330,48 +369,48 @@ AC_ARG_WITH([faxophone],
 	[Use faxophone (possible values: yes or no) @<:@default=yes@:>@])],
 	[],
 	[with_faxophone=yes])
+AC_MSG_RESULT($with_faxophone)
 
 # Faxophone test
 if test "x$with_faxophone" = xyes; then
-AC_DEFINE([HAVE_FAXOPHONE], 1, [Have faxophone])
-ROGER_FEATURES_YES="\tfaxophone\n$ROGER_FEATURES_YES"
+	AC_DEFINE([HAVE_FAXOPHONE], 1, [Have faxophone])
+	ROGER_FEATURES_YES="\tfaxophone\n$ROGER_FEATURES_YES"
 
-PKG_CHECK_MODULES([CAPI], [capi20 >= 3.6],
-	[AC_DEFINE([HAVE_CAPI_36], 1, [Use new CAPI])],
-	[PKG_CHECK_MODULES([CAPI], [capi20 >= 3.5])])
+	PKG_CHECK_MODULES([CAPI], [capi20 >= 3.6],
+		[AC_DEFINE([HAVE_CAPI_36], 1, [Use new CAPI])],
+		[PKG_CHECK_MODULES([CAPI], [capi20 >= 3.5])])
 
-dnl ********************************************************************
-dnl spandsp
-dnl ********************************************************************
-AC_ARG_WITH([spandsp],
-	[AS_HELP_STRING([--with-spandsp=@<:@ARG@:>@],
-	[Use spandsp (possible values: yes, check, or the path to spandsp) @<:@default=check@:>@])],
-	[],
-	[with_spandsp=check])
+	dnl ********************************************************************
+	dnl spandsp
+	dnl ********************************************************************
+	AC_ARG_WITH([spandsp],
+		[AS_HELP_STRING([--with-spandsp=@<:@ARG@:>@],
+		[Use spandsp (possible values: yes, check, or the path to spandsp) @<:@default=check@:>@])],
+		[],
+		[with_spandsp=check])
 
-AC_MSG_CHECKING(for spandsp)
-AS_IF([test "x$with_spandsp" != xsuper],
-	[if test "x$with_spandsp" = xcheck; then
-		$PKG_CONFIG --exists spandsp && with_spandsp=yes
-	elif test "x$with_spandsp" = xyes; then
-		( $PKG_CONFIG --exists spandsp ) || AC_MSG_FAILURE(
-			[--with-spandsp=yes was given, but test for spandsp])
-	fi
-	if test "x$with_spandsp" = xyes; then
-		AC_SUBST([SPANDSP_CFLAGS], ["`$PKG_CONFIG --cflags spandsp`"])
-		AC_SUBST([SPANDSP_LIBS], ["`$PKG_CONFIG --libs spandsp`"])
-		AC_MSG_RESULT($with_spandsp)
-	else
-		AC_MSG_RESULT($with_spandsp)
-		AC_CHECK_LIB(spandsp, fax_init, [with_spandsp=yes], AC_MSG_ERROR([spandsp is required by this package]))
-		AC_SUBST([SPANDSP_CFLAGS], [""])
-		AC_SUBST([SPANDSP_LIBS], ["-lspandsp"])
-	fi
-])
+	AC_MSG_CHECKING(for spandsp)
+	AS_IF([test "x$with_spandsp" != xsuper],
+		[if test "x$with_spandsp" = xcheck; then
+			$PKG_CONFIG --exists spandsp && with_spandsp=yes
+		elif test "x$with_spandsp" = xyes; then
+			( $PKG_CONFIG --exists spandsp ) || AC_MSG_FAILURE(
+				[--with-spandsp=yes was given, but test for spandsp])
+		fi
+		if test "x$with_spandsp" = xyes; then
+			AC_SUBST([SPANDSP_CFLAGS], ["`$PKG_CONFIG --cflags spandsp`"])
+			AC_SUBST([SPANDSP_LIBS], ["`$PKG_CONFIG --libs spandsp`"])
+			AC_MSG_RESULT($with_spandsp)
+		else
+			AC_MSG_RESULT($with_spandsp)
+			AC_CHECK_LIB(spandsp, fax_init, [with_spandsp=yes], AC_MSG_ERROR([spandsp is required by this package]))
+			AC_SUBST([SPANDSP_CFLAGS], [""])
+			AC_SUBST([SPANDSP_LIBS], ["-lspandsp"])
+		fi
+	])
 else
 	ROGER_FEATURES_NO="\tfaxophone\n$ROGER_FEATURES_NO"
 fi
-AC_MSG_RESULT($with_faxophone)
 
 AM_CONDITIONAL(WITH_FAXOPHONE, test "x$with_faxophone" != "xno")
 
