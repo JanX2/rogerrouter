@@ -31,7 +31,7 @@
 #include <libfaxophone/fax.h>
 #include <libfaxophone/isdn-convert.h>
 
-static int8_t *_linear16_2_law = (int8_t*)&linear16_2_law[32768];
+static int8_t *_linear16_2_law = (int8_t *) &linear16_2_law[32768];
 static uint16_t *_law_2_linear16 = &law_2_linear16[0];
 
 static gint log_level = 0;
@@ -86,7 +86,8 @@ static void real_time_frame_handler(t30_state_t *state, void *user_data, gint di
  * \param result result
  * \return error code
  */
-static gint phase_handler_b(t30_state_t *state, void *user_data, gint result) {
+static gint phase_handler_b(t30_state_t *state, void *user_data, gint result)
+{
 	struct capi_connection *connection = user_data;
 	struct fax_status *status = connection->priv;
 	struct session *session = faxophone_get_session();
@@ -145,7 +146,8 @@ static gint phase_handler_b(t30_state_t *state, void *user_data, gint result) {
  * \param result result
  * \return error code
  */
-static gint phase_handler_d(t30_state_t *state, void *user_data, gint result) {
+static gint phase_handler_d(t30_state_t *state, void *user_data, gint result)
+{
 	struct capi_connection *connection = user_data;
 	struct fax_status *status = connection->priv;
 	struct session *session = faxophone_get_session();
@@ -187,7 +189,8 @@ static gint phase_handler_d(t30_state_t *state, void *user_data, gint result) {
  * \param user_data pointer to current capi connection
  * \param result result code
  */
-static void phase_handler_e(t30_state_t *state, void *user_data, gint result) {
+static void phase_handler_e(t30_state_t *state, void *user_data, gint result)
+{
 	struct capi_connection *connection = user_data;
 	struct fax_status *status = connection->priv;
 	struct session *session = faxophone_get_session();
@@ -334,7 +337,7 @@ gint spandsp_init(const gchar *tiff_file, gboolean sending, gchar modem, gchar e
 		t30_set_supported_compressions(t30, T30_SUPPORT_T4_1D_COMPRESSION | T30_SUPPORT_T4_2D_COMPRESSION | T30_SUPPORT_T6_COMPRESSION);
 #endif
 
-		t30_set_ecm_capability(t30, ecm);
+		                               t30_set_ecm_capability(t30, ecm);
 	}
 
 	t30_set_supported_t30_features(t30, T30_SUPPORT_IDENTIFICATION | T30_SUPPORT_SELECTIVE_POLLING | T30_SUPPORT_SUB_ADDRESSING);

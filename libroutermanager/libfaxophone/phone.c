@@ -39,7 +39,8 @@ int recording_close(struct recorder *recorder);
  * \param data capi connection pointer
  * \return NULL
  */
-gpointer phone_input_thread(gpointer data) {
+gpointer phone_input_thread(gpointer data)
+{
 	struct session *session = faxophone_get_session();
 	struct capi_connection *connection = data;
 	guchar audio_buffer_rx[CAPI_PACKETS];
@@ -90,7 +91,8 @@ void phone_init_data(struct capi_connection *connection)
  * \param connection active capi connection
  * \param sCapiMessage current capi message
  */
-void phone_transfer(struct capi_connection *connection, _cmsg capi_message) {
+void phone_transfer(struct capi_connection *connection, _cmsg capi_message)
+{
 	struct session *session = faxophone_get_session();
 	_cmsg cmsg;
 	guchar audio_buffer[CAPI_PACKETS * 2];
@@ -117,7 +119,8 @@ void phone_transfer(struct capi_connection *connection, _cmsg capi_message) {
  * \param anonymous anonymous flag (suppress number)
  * \return seee capiCall
  */
-struct capi_connection *phone_call(guchar controller, const char *source, const char *target, gboolean anonymous) {
+struct capi_connection *phone_call(guchar controller, const char *source, const char *target, gboolean anonymous)
+{
 	return capi_call(controller, source, target, anonymous, SESSION_PHONE, PHONE_CIP);
 }
 
@@ -126,7 +129,8 @@ struct capi_connection *phone_call(guchar controller, const char *source, const 
  * \param connection active capi connection
  * \param mute mute flag
  */
-void phone_mute(struct capi_connection *connection, guchar mute) {
+void phone_mute(struct capi_connection *connection, guchar mute)
+{
 	/* Just set the flag, the audio input thread handle the mute case */
 	connection->mute = mute;
 }
@@ -135,7 +139,8 @@ void phone_mute(struct capi_connection *connection, guchar mute) {
  * \brief Return current time in microseconds
  * \return time in microseconds
  */
-guint64 microsec_time(void) {
+guint64 microsec_time(void)
+{
 	struct timeval time_val;
 
 	gettimeofday(&time_val, 0);
@@ -148,7 +153,8 @@ guint64 microsec_time(void) {
  * \param recorder pointer to recorder structure
  * \return 0
  */
-int recording_init(struct recorder *recorder) {
+int recording_init(struct recorder *recorder)
+{
 	memset(recorder, 0, sizeof(struct recorder));
 
 	return 0;
@@ -160,7 +166,8 @@ int recording_init(struct recorder *recorder) {
  * \param file record file
  * \return 0 on success, otherwise error
  */
-int recording_open(struct recorder *recorder, char *file) {
+int recording_open(struct recorder *recorder, char *file)
+{
 	SF_INFO sInfo;
 
 	if (access(file, F_OK)) {
@@ -204,7 +211,8 @@ int recording_open(struct recorder *recorder, char *file) {
  * \param channel channel type (local/remote)
  * \return 0 on success, otherwise error
  */
-int recording_write(struct recorder *recorder, short *buf, int size, int channel) {
+int recording_write(struct recorder *recorder, short *buf, int size, int channel)
+{
 	gint64 start = recorder->start_time;
 	gint64 current, start_pos, position, end_pos;
 	int buf_pos, split, delta;
@@ -220,15 +228,15 @@ int recording_write(struct recorder *recorder, short *buf, int size, int channel
 	}
 
 	switch (channel) {
-		case RECORDING_LOCAL:
-			buffer = &recorder->local;
-			break;
-		case RECORDING_REMOTE:
-			buffer = &recorder->remote;
-			break;
-		default:
-			printf("Recording to unknown channel!\n");
-			return -1;
+	case RECORDING_LOCAL:
+		buffer = &recorder->local;
+		break;
+	case RECORDING_REMOTE:
+		buffer = &recorder->remote;
+		break;
+	default:
+		printf("Recording to unknown channel!\n");
+		return -1;
 	}
 
 	current = microsec_time() - start;
@@ -275,7 +283,8 @@ int recording_write(struct recorder *recorder, short *buf, int size, int channel
  * \param last last call flag
  * \return 0 on success, otherwise error
  */
-int recording_flush(struct recorder *recorder, guint last) {
+int recording_flush(struct recorder *recorder, guint last)
+{
 	gint64 max_position = recorder->local.position;
 	gint64 tmp = recorder->remote.position;
 	gint64 start_position = recorder->last_write;
@@ -298,7 +307,7 @@ int recording_flush(struct recorder *recorder, guint last) {
 		max_position -= RECORDING_BUFSIZE / 8;
 	}
 
-	size = (gint64) (max_position - start_position);
+	size = (gint64)(max_position - start_position);
 	if (max_position == 0 || start_position >= max_position || (!last && size < RECORDING_BUFSIZE / 8)) {
 		return 0;
 	}
@@ -306,7 +315,7 @@ int recording_flush(struct recorder *recorder, guint last) {
 	dst_ptr = 0;
 	src_ptr = start_position % RECORDING_BUFSIZE;
 
-	while  (--size) {
+	while (--size) {
 		rec_buf[dst_ptr++] = recorder->local.buffer[src_ptr];
 		recorder->local.buffer[src_ptr] = 0;
 		rec_buf[dst_ptr++] = recorder->remote.buffer[src_ptr];
@@ -329,7 +338,8 @@ int recording_flush(struct recorder *recorder, guint last) {
  * \param recorder recorder structure
  * \return 0 on success, otherwise error
  */
-int recording_close(struct recorder *recorder) {
+int recording_close(struct recorder *recorder)
+{
 	int result = 0;
 
 	if (recorder->start_time) {
@@ -356,7 +366,8 @@ int recording_close(struct recorder *recorder) {
  * \brief Flush connection recorder
  * \param connection capi connection
  */
-void phone_flush(struct capi_connection *connection) {
+void phone_flush(struct capi_connection *connection)
+{
 	if (connection != NULL) {
 		recording_flush(&connection->recorder, 0);
 	}
@@ -368,7 +379,8 @@ void phone_flush(struct capi_connection *connection) {
  * \param record record flag
  * \param dir storage directory
  */
-void phone_record(struct capi_connection *connection, guchar record, const char *dir) {
+void phone_record(struct capi_connection *connection, guchar record, const char *dir)
+{
 	if (record == 1) {
 		gchar *file = NULL;
 		struct tm *time_val = localtime(&connection->connect_time);
@@ -378,9 +390,9 @@ void phone_record(struct capi_connection *connection, guchar record, const char 
 		}
 
 		file = g_strdup_printf("%s/%2.2d.%2.2d.%4.4d-%2.2d-%2.2d-%s-%s.wav",
-			dir,
-			time_val->tm_mday, time_val->tm_mon, 1900 + time_val->tm_year,
-			time_val->tm_hour, time_val->tm_min, connection->source, connection->target);
+		                       dir,
+		                       time_val->tm_mday, time_val->tm_mon, 1900 + time_val->tm_year,
+		                       time_val->tm_hour, time_val->tm_min, connection->source, connection->target);
 
 		recording_open(&connection->recorder, file);
 		g_free(file);
@@ -398,7 +410,8 @@ void phone_record(struct capi_connection *connection, guchar record, const char 
  * \param connection active capi connection
  * \param hold hold flag
  */
-void phone_hold(struct capi_connection *connection, guchar hold) {
+void phone_hold(struct capi_connection *connection, guchar hold)
+{
 	struct session *session = faxophone_get_session();
 	_cmsg message;
 	_cbyte fac[9];
@@ -428,7 +441,8 @@ void phone_hold(struct capi_connection *connection, guchar hold) {
  * \param connection active capi connection
  * \param code DTMF code
  */
-void phone_send_dtmf_code(struct capi_connection *connection, guchar code) {
+void phone_send_dtmf_code(struct capi_connection *connection, guchar code)
+{
 	capi_send_dtmf_code(connection, code);
 }
 
@@ -436,7 +450,8 @@ void phone_send_dtmf_code(struct capi_connection *connection, guchar code) {
  * \brief Hangup phone connection
  * \param connection active capi connection
  */
-void phone_hangup(struct capi_connection *connection) {
+void phone_hangup(struct capi_connection *connection)
+{
 	if (connection == NULL) {
 		return;
 	}
@@ -450,7 +465,8 @@ void phone_hangup(struct capi_connection *connection) {
  * \param connection active capi connection
  * \return see capiPickup
  */
-int phone_pickup(struct capi_connection *connection) {
+int phone_pickup(struct capi_connection *connection)
+{
 	if (connection == NULL) {
 		return -1;
 	}

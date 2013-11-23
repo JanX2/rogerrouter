@@ -109,62 +109,62 @@ unsigned char fx_generate(gint type, int index, double seconds)
 	unsigned char x = 0;
 
 	switch (type) {
-		case CONNECTION_TYPE_INCOMING:
-			/* 4 sec period */
-			rest = fmod(seconds, RING_PERIOD);
-			/* short period */
-			rest2 = fmod(seconds, RING_SHORT_PERIOD);
+	case CONNECTION_TYPE_INCOMING:
+		/* 4 sec period */
+		rest = fmod(seconds, RING_PERIOD);
+		/* short period */
+		rest2 = fmod(seconds, RING_SHORT_PERIOD);
 
-			if (rest < RING_FADE_LENGTH) {
-				/* Fade in */
-				factor = -cos(rest * M_PI / RING_FADE_LENGTH) / 2 + 0.5;
-			} else if (rest > RING_LENGTH - RING_FADE_LENGTH && rest < RING_LENGTH) {
-				/* Fade out */
-				factor = -cos((RING_LENGTH - rest) * 2 * M_PI / (RING_FADE_LENGTH * 2)) / 2 + 0.5;
-			} else if (rest >= RING_LENGTH) {
-				/* Pause */
-				factor = 0;
-			} else {
-				/* Beep */
-				factor = 1;
-			}
+		if (rest < RING_FADE_LENGTH) {
+			/* Fade in */
+			factor = -cos(rest * M_PI / RING_FADE_LENGTH) / 2 + 0.5;
+		} else if (rest > RING_LENGTH - RING_FADE_LENGTH && rest < RING_LENGTH) {
+			/* Fade out */
+			factor = -cos((RING_LENGTH - rest) * 2 * M_PI / (RING_FADE_LENGTH * 2)) / 2 + 0.5;
+		} else if (rest >= RING_LENGTH) {
+			/* Pause */
+			factor = 0;
+		} else {
+			/* Beep */
+			factor = 1;
+		}
 
-			if (rest2 > RING_SHORT_PERIOD - 0.5 * RING_FADE_LENGTH) {
-				/* Fade in short (1/1) */
-				factor2 = -sin((RING_SHORT_PERIOD - rest2) * 2 * M_PI / (RING_FADE_LENGTH * 2)) / 2 + 0.5;
-			} else if (rest2 < 0.5 * RING_FADE_LENGTH) {
-				/* Fade in short (2/2) */
-				factor2 = sin(rest2 * 2 * M_PI / (RING_FADE_LENGTH * 2)) / 2 + 0.5;
-			} else if (rest2 > RING_SHORT_LENGTH - 0.5 * RING_FADE_LENGTH && rest2 < RING_SHORT_LENGTH + 0.5 * RING_FADE_LENGTH) {
-				factor2 = -sin((rest2 - RING_SHORT_LENGTH) * 2 * M_PI / (RING_FADE_LENGTH * 2)) / 2 + 0.5;
-			} else if (rest2 <= RING_SHORT_LENGTH) {
-				/* Beep */
-				factor2 = 1;
-			} else {
-				/* Pause */
-				factor2 = 0;
-			}
+		if (rest2 > RING_SHORT_PERIOD - 0.5 * RING_FADE_LENGTH) {
+			/* Fade in short (1/1) */
+			factor2 = -sin((RING_SHORT_PERIOD - rest2) * 2 * M_PI / (RING_FADE_LENGTH * 2)) / 2 + 0.5;
+		} else if (rest2 < 0.5 * RING_FADE_LENGTH) {
+			/* Fade in short (2/2) */
+			factor2 = sin(rest2 * 2 * M_PI / (RING_FADE_LENGTH * 2)) / 2 + 0.5;
+		} else if (rest2 > RING_SHORT_LENGTH - 0.5 * RING_FADE_LENGTH && rest2 < RING_SHORT_LENGTH + 0.5 * RING_FADE_LENGTH) {
+			factor2 = -sin((rest2 - RING_SHORT_LENGTH) * 2 * M_PI / (RING_FADE_LENGTH * 2)) / 2 + 0.5;
+		} else if (rest2 <= RING_SHORT_LENGTH) {
+			/* Beep */
+			factor2 = 1;
+		} else {
+			/* Pause */
+			factor2 = 0;
+		}
 
-			factor = factor * factor2;
+		factor = factor * factor2;
 
-			x = audio_lut_generate[(int)(sin(seconds * 2 * M_PI * RING_FREQUENCY) * factor * 127.5 + 127.5)];
-			break;
-		case CONNECTION_TYPE_OUTGOING:
-			/* waiting for the other end to pick up the phone */
-			rest = fmod(seconds, 5);
+		x = audio_lut_generate[(int)(sin(seconds * 2 * M_PI * RING_FREQUENCY) * factor * 127.5 + 127.5)];
+		break;
+	case CONNECTION_TYPE_OUTGOING:
+		/* waiting for the other end to pick up the phone */
+		rest = fmod(seconds, 5);
 
-			if (rest >= 2 && rest < 3) {
-				/* beep */
-				x = audio_lut_generate[(int)(sin(seconds * 2 * M_PI * RINGING_FREQUENCY) * 127.5 + 127.5)];
-			} else {
-				/* pause */
-				x = audio_lut_generate[128];
-			}
-			break;
-		default:
-			g_warning("Unknown effect %d", type);
-			x = 0;
-			break;
+		if (rest >= 2 && rest < 3) {
+			/* beep */
+			x = audio_lut_generate[(int)(sin(seconds * 2 * M_PI * RINGING_FREQUENCY) * 127.5 + 127.5)];
+		} else {
+			/* pause */
+			x = audio_lut_generate[128];
+		}
+		break;
+	default:
+		g_warning("Unknown effect %d", type);
+		x = 0;
+		break;
 	}
 
 	return x;

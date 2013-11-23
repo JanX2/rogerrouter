@@ -38,7 +38,8 @@ unsigned short law_2_linear16[256];
  * \param sign sign
  * \param mag magnitude
  */
-static inline void alaw_get_sign_mag(short sample, unsigned *sign, unsigned *mag) {
+static inline void alaw_get_sign_mag(short sample, unsigned *sign, unsigned *mag)
+{
 	if (sample < 0) {
 		*mag = -sample;
 		*sign = 0;
@@ -53,7 +54,8 @@ static inline void alaw_get_sign_mag(short sample, unsigned *sign, unsigned *mag
  * \param sample linear sample value
  * \return alaw sample value
  */
-static unsigned char linear2alaw(short sample) {
+static unsigned char linear2alaw(short sample)
+{
 	unsigned sign, exponent, mantissa, mag;
 	unsigned char alaw_byte;
 	static const unsigned exp_lut[128] = {
@@ -98,7 +100,8 @@ static unsigned char linear2alaw(short sample) {
  * \param alaw_byte alaw value
  * \return linear value
  */
-static short alaw2linear(unsigned char alaw_byte) {
+static short alaw2linear(unsigned char alaw_byte)
+{
 	int t;
 	int seg;
 
@@ -119,8 +122,9 @@ static short alaw2linear(unsigned char alaw_byte) {
 /**
  * \brief Create lookup table buffer
  */
-void create_table_buffer(void) {
-	signed char *_linear16_2_law = (signed char*)&linear16_2_law[32768];
+void create_table_buffer(void)
+{
+	signed char *_linear16_2_law = (signed char *)&linear16_2_law[32768];
 	long index;
 	int buf_size_in = 0;
 	int buf_size_out = 0;
@@ -170,7 +174,8 @@ void create_table_buffer(void) {
  * \brief Get line level input value
  * \return line level input state
  */
-double get_line_level_in(struct capi_connection *connection) {
+double get_line_level_in(struct capi_connection *connection)
+{
 	return connection->line_level_in_state;
 }
 
@@ -178,7 +183,8 @@ double get_line_level_in(struct capi_connection *connection) {
  * \brief Get line level output value
  * \return line level output state
  */
-double get_line_level_out(struct capi_connection *connection) {
+double get_line_level_out(struct capi_connection *connection)
+{
 	return connection->line_level_out_state;
 }
 
@@ -189,7 +195,8 @@ double get_line_level_out(struct capi_connection *connection) {
  * \param out_buffer output buffer
  * \param out_buf_len pointer to output buffer len
  */
-void convert_isdn_to_audio(struct capi_connection *connection, unsigned char *in_buf, unsigned int in_buf_len, unsigned char *out_buf, unsigned int *out_buf_len, short *rec_buf) {
+void convert_isdn_to_audio(struct capi_connection *connection, unsigned char *in_buf, unsigned int in_buf_len, unsigned char *out_buf, unsigned int *out_buf_len, short *rec_buf)
+{
 	struct recorder *recorder = &connection->recorder;
 	unsigned int index;
 	unsigned int to_process;
@@ -248,7 +255,8 @@ void convert_isdn_to_audio(struct capi_connection *connection, unsigned char *in
  * \param out_buffer output buffer
  * \param out_buf_len pointer to output buffer len
  */
-void convert_audio_to_isdn(struct capi_connection *connection, unsigned char *in_buf, unsigned int in_buf_len, unsigned char *out_buf, unsigned int *out_buf_len, short *rec_buf) {
+void convert_audio_to_isdn(struct capi_connection *connection, unsigned char *in_buf, unsigned int in_buf_len, unsigned char *out_buf, unsigned int *out_buf_len, short *rec_buf)
+{
 	unsigned int index;
 	unsigned int to_process;
 	unsigned int out_ptr = 0;
