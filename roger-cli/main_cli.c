@@ -76,13 +76,13 @@ void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
 		struct call *call = list->data;
 
 		g_printf("%15s %20s %20s %20s %20s %20s %5s\n",
-			call->date_time,
-			call->remote->name,
-			call->remote->number,
-			call->remote->city,
-			call->local->name,
-			call->local->number,
-			call->duration);
+		         call->date_time,
+		         call->remote->name,
+		         call->remote->number,
+		         call->remote->city,
+		         call->local->name,
+		         call->local->number,
+		         call->duration);
 	}
 
 	/* Exit main loop */
@@ -188,33 +188,33 @@ void fax_connection_status_cb(AppObject *object, gint status, struct capi_connec
 
 	if (!status && !fax_status->done) {
 		switch (fax_status->phase) {
-			case PHASE_B:
-				g_debug("Ident: %s", fax_status->remote_ident);
-				snprintf(buffer, sizeof(buffer), "%d/%d", fax_status->page_current, fax_status->page_total);
+		case PHASE_B:
+			g_debug("Ident: %s", fax_status->remote_ident);
+			snprintf(buffer, sizeof(buffer), "%d/%d", fax_status->page_current, fax_status->page_total);
 
-				g_message(_("Transfer starting:"));
-				g_message("%s", buffer);
-				break;
-			case PHASE_D:
-				snprintf(buffer, sizeof(buffer), "%d", fax_status->page_current);
-				g_message(_("Transferring page"));
-				g_message("%s", buffer);
-				break;
-			case PHASE_E:
-				if (!fax_status->error_code) {
-					g_message("%s", "Fax transfer successful");
-					success = TRUE;
-				} else {
-					g_message("%s", "Fax transfer failed");
-					success = FALSE;
-				}
-				phone_hangup(connection);
-				fax_status->done = TRUE;
-				g_main_loop_quit(main_loop);
-				break;
-			default:
-				g_debug("Unhandled phase (%d)", fax_status->phase);
-				break;
+			g_message(_("Transfer starting:"));
+			g_message("%s", buffer);
+			break;
+		case PHASE_D:
+			snprintf(buffer, sizeof(buffer), "%d", fax_status->page_current);
+			g_message(_("Transferring page"));
+			g_message("%s", buffer);
+			break;
+		case PHASE_E:
+			if (!fax_status->error_code) {
+				g_message("%s", "Fax transfer successful");
+				success = TRUE;
+			} else {
+				g_message("%s", "Fax transfer failed");
+				success = FALSE;
+			}
+			phone_hangup(connection);
+			fax_status->done = TRUE;
+			g_main_loop_quit(main_loop);
+			break;
+		default:
+			g_debug("Unhandled phase (%d)", fax_status->phase);
+			break;
 		}
 	} else if (status == 1) {
 		float percentage = 0.0f;
