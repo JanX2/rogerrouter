@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-14 20:15+0100\n"
+"POT-Creation-Date: 2013-11-23 23:34+0100\n"
 "PO-Revision-Date: 2013-09-07 19:34+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: German <jan.brummer@tabos.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../roger/about.c:62
+#: ../roger/about.c:64
 msgid ""
 "FRITZ!Box Journal, Soft/phone, and Fax\n"
 "Dedicated to my father"
@@ -25,30 +25,30 @@ msgstr ""
 "Gewidmet meinem Vater"
 
 #. Contacts
-#: ../roger/application.c:184 ../roger/contacts.c:562
+#: ../roger/application.c:183 ../roger/contacts.c:562
 #: ../roger/plugins/statusicon/gtk.c:195
 #: ../roger/plugins/indicator/indicator.c:216
 msgid "Contacts"
 msgstr "Kontakte"
 
 #. Help
-#: ../roger/application.c:185 ../roger/plugins/statusicon/gtk.c:230
+#: ../roger/application.c:184 ../roger/plugins/statusicon/gtk.c:230
 #: ../roger/plugins/indicator/indicator.c:252
 msgid "Help"
 msgstr "Hilfe"
 
-#: ../roger/application.c:186
+#: ../roger/application.c:185
 msgid "Donate"
 msgstr "Spenden"
 
 #. About
-#: ../roger/application.c:187 ../roger/plugins/statusicon/gtk.c:235
+#: ../roger/application.c:186 ../roger/plugins/statusicon/gtk.c:235
 #: ../roger/plugins/indicator/indicator.c:257
 msgid "About"
 msgstr "Über"
 
 #. Quit
-#: ../roger/application.c:188 ../roger/plugins/statusicon/gtk.c:244
+#: ../roger/application.c:187 ../roger/plugins/statusicon/gtk.c:244
 #: ../roger/plugins/indicator/indicator.c:266
 msgid "Quit"
 msgstr "Beenden"
@@ -246,12 +246,12 @@ msgstr "Bild öffnen"
 
 #: ../roger/contact_edit.c:129 ../roger/pref_action.c:164
 #: ../roger/pref_fax.c:54 ../roger/pref_filters.c:368 ../roger/pref_misc.c:49
-#: ../roger/plugins/vcard/vcard.c:1203
+#: ../roger/plugins/vcard/vcard.c:1206
 msgid "_Cancel"
 msgstr "A_bbrechen"
 
 #: ../roger/contact_edit.c:129 ../roger/pref_fax.c:54 ../roger/pref_misc.c:49
-#: ../roger/plugins/vcard/vcard.c:1203
+#: ../roger/plugins/vcard/vcard.c:1206
 msgid "_Open"
 msgstr "_Öffnen"
 
@@ -291,7 +291,7 @@ msgid "Add detail"
 msgstr "Detail hinzufügen"
 
 #. Phone
-#: ../roger/contact_edit.c:281 ../roger/phone.c:956
+#: ../roger/contact_edit.c:281 ../roger/phone.c:968
 #: ../roger/plugins/statusicon/gtk.c:200
 #: ../roger/plugins/indicator/indicator.c:221
 msgid "Phone"
@@ -466,7 +466,7 @@ msgstr "Verbindung: %s | Dauer: %s"
 msgid "%d active call(s)"
 msgstr "%d aktive Anrufe"
 
-#: ../roger/phone.c:215 ../roger/phone.c:337
+#: ../roger/phone.c:215 ../roger/phone.c:347
 #, c-format
 msgid "Dialing"
 msgstr "Wählen"
@@ -481,72 +481,80 @@ msgstr "Hergestellt"
 msgid "Terminated"
 msgstr "Beendet"
 
-#: ../roger/phone.c:284 ../roger/phone.c:307 ../roger/phone.c:361
+#: ../roger/phone.c:284 ../roger/phone.c:315 ../roger/phone.c:373
 #: ../roger/pref.c:119
 msgid "Softphone"
 msgstr "Softphone"
 
-#: ../roger/phone.c:378
+#: ../roger/phone.c:293
+msgid ""
+"Could not dial out. Is CAPI port enabled?\n"
+"Dial #96*3* with your phone"
+msgstr ""
+"Konnte nicht herauswählen. Ist der CAPI-Port aktiviert?\n"
+"Wähle #96*3* mit deinem Telefon"
+
+#: ../roger/phone.c:390
 #, c-format
 msgid "Idle"
 msgstr "Untätig"
 
-#: ../roger/phone.c:460 ../roger/phone.c:461
+#: ../roger/phone.c:472 ../roger/phone.c:473
 msgid "HOME"
 msgstr "Zuhause"
 
-#: ../roger/phone.c:464 ../roger/phone.c:465
+#: ../roger/phone.c:476 ../roger/phone.c:477
 msgid "WORK"
 msgstr "Arbeit"
 
-#: ../roger/phone.c:468 ../roger/phone.c:469
+#: ../roger/phone.c:480 ../roger/phone.c:481
 msgid "MOBILE"
 msgstr "Mobil"
 
-#: ../roger/phone.c:472 ../roger/phone.c:473
+#: ../roger/phone.c:484 ../roger/phone.c:485
 msgid "FAX"
 msgstr "Fax"
 
 #. Name label
-#: ../roger/phone.c:584
+#: ../roger/phone.c:596
 msgid "Connect to:"
 msgstr "Verbinden mit:"
 
-#: ../roger/phone.c:589
+#: ../roger/phone.c:601
 msgid "Use autocompletion while typing names from your address book"
 msgstr "Verwende Vervollständung aus dem Adressbuch während des Tippens"
 
-#: ../roger/phone.c:674
+#: ../roger/phone.c:686
 msgid "Pick up"
 msgstr "Abheben"
 
-#: ../roger/phone.c:686
+#: ../roger/phone.c:698
 msgid "Hang up"
 msgstr "Auflegen"
 
 #. Port label
-#: ../roger/phone.c:694
+#: ../roger/phone.c:706
 msgid "Extension:"
 msgstr "Nebenstelle:"
 
-#: ../roger/phone.c:699
+#: ../roger/phone.c:711
 msgid "Choose an extension for this call"
 msgstr "Wähle eine Nebenstelle für diesen Anruf"
 
 #. Port label
-#: ../roger/phone.c:713
+#: ../roger/phone.c:725
 msgid "Own number:"
 msgstr "Eigene Nummer:"
 
-#: ../roger/phone.c:717
+#: ../roger/phone.c:729
 msgid "Standard"
 msgstr "Standard"
 
-#: ../roger/phone.c:718
+#: ../roger/phone.c:730
 msgid "Suppress number"
 msgstr "Unterdrücke Rufnummer"
 
-#: ../roger/phone.c:868
+#: ../roger/phone.c:880
 msgid "Hold"
 msgstr "Halten"
 
@@ -557,23 +565,23 @@ msgstr "Halten"
 #. button = gtk_button_new_with_label(_("Conference"));
 #. g_signal_connect(button, "clicked", G_CALLBACK(conference_clicked_cb), NULL);
 #. gtk_grid_attach(GTK_GRID(grid), button, 0, 2, 1, 1);
-#: ../roger/phone.c:880
+#: ../roger/phone.c:892
 msgid "Record"
 msgstr "Aufnahme"
 
-#: ../roger/phone.c:884
+#: ../roger/phone.c:896
 msgid "Mute"
 msgstr "Stumm"
 
-#: ../roger/phone.c:902
+#: ../roger/phone.c:914
 msgid "Active calls"
 msgstr "Aktive Anrufe"
 
-#: ../roger/phone.c:917
+#: ../roger/phone.c:929
 msgid "A call is in progress. Still close this window?"
 msgstr "Ein Anruf ist aktiv. Möchten Sie das Fenster trotzdem schließen?"
 
-#: ../roger/phone.c:984
+#: ../roger/phone.c:996
 msgid "Connection: Idle | Time: 00:00:00"
 msgstr "Verbindung: Untätig | Dauer: 00:00:00"
 
@@ -644,7 +652,7 @@ msgstr ""
 "%COMPANY% - Anruferfirma"
 
 #: ../roger/pref_action.c:221 ../roger/pref_fax.c:139
-#: ../roger/pref_softphone.c:93
+#: ../roger/pref_softphone.c:84
 msgid "General"
 msgstr "Allgemein"
 
@@ -777,7 +785,7 @@ msgid "Select report directory"
 msgstr "Wähle Berichtsverzeichnis"
 
 #: ../roger/pref_fax.c:174 ../roger/pref_misc.c:89
-#: ../roger/plugins/vcard/vcard.c:1232
+#: ../roger/plugins/vcard/vcard.c:1241
 msgid "Select"
 msgstr "Auswählen"
 
@@ -786,7 +794,7 @@ msgid "Report"
 msgstr "Bericht"
 
 #. MSN
-#: ../roger/pref_fax.c:194 ../roger/pref_softphone.c:66
+#: ../roger/pref_fax.c:194 ../roger/pref_softphone.c:57
 msgid "MSN"
 msgstr "MSN"
 
@@ -794,27 +802,27 @@ msgstr "MSN"
 msgid "Bitrate"
 msgstr "Bitrate"
 
-#: ../roger/pref_fax.c:225 ../roger/pref_softphone.c:80
+#: ../roger/pref_fax.c:225 ../roger/pref_softphone.c:71
 msgid "Controller"
 msgstr "Kontroller"
 
-#: ../roger/pref_fax.c:229 ../roger/pref_softphone.c:84
+#: ../roger/pref_fax.c:229 ../roger/pref_softphone.c:75
 msgid "ISDN-Controller 1"
 msgstr "ISDN-Kontroller 1"
 
-#: ../roger/pref_fax.c:230 ../roger/pref_softphone.c:85
+#: ../roger/pref_fax.c:230 ../roger/pref_softphone.c:76
 msgid "ISDN-Controller 2"
 msgstr "ISDN-Kontroller 2"
 
-#: ../roger/pref_fax.c:231 ../roger/pref_softphone.c:86
+#: ../roger/pref_fax.c:231 ../roger/pref_softphone.c:77
 msgid "Outside line ISDN"
 msgstr "ISDN-Amt"
 
-#: ../roger/pref_fax.c:232 ../roger/pref_softphone.c:87
+#: ../roger/pref_fax.c:232 ../roger/pref_softphone.c:78
 msgid "Outside line Analog"
 msgstr "Analog-Amt"
 
-#: ../roger/pref_fax.c:233 ../roger/pref_softphone.c:88
+#: ../roger/pref_fax.c:233 ../roger/pref_softphone.c:79
 msgid "Internet"
 msgstr "Internet"
 
@@ -1094,14 +1102,6 @@ msgstr "Einstellungen erneuern"
 msgid "%s (Firmware: %s)"
 msgstr "%s (Firmware: %s)"
 
-#: ../roger/pref_softphone.c:100
-msgid "Use buttons of"
-msgstr "Verwende Tasten von"
-
-#: ../roger/pref_softphone.c:123
-msgid "Bluetooth headset"
-msgstr "Bluetooth-Headset"
-
 #: ../roger/pref_misc.c:49
 msgid "Select ghostscript executable"
 msgstr "Wähle das Ghostscript-Programm aus"
@@ -1185,14 +1185,14 @@ msgstr "Bitrate:"
 msgid "Message:"
 msgstr "Nachricht:"
 
-#: ../roger/plugins/evolution/evolution.c:591
-#: ../roger/plugins/fritzfon/fritzfon.c:730
+#: ../roger/plugins/evolution/evolution.c:592
+#: ../roger/plugins/fritzfon/fritzfon.c:736
 msgid "Book:"
 msgstr "Buch:"
 
-#: ../roger/plugins/evolution/evolution.c:604
-#: ../roger/plugins/fritzfon/fritzfon.c:743
-#: ../roger/plugins/vcard/vcard.c:1242
+#: ../roger/plugins/evolution/evolution.c:605
+#: ../roger/plugins/fritzfon/fritzfon.c:749
+#: ../roger/plugins/vcard/vcard.c:1251
 msgid "Contact book"
 msgstr "Kontaktbuch"
 
@@ -1364,11 +1364,11 @@ msgstr "Application Indicator"
 msgid "Status icon plugin using AppIndicator support"
 msgstr "Statusicon-Plugin mit AppIndicator-Unterstützung"
 
-#: ../roger/plugins/vcard/vcard.c:1203
+#: ../roger/plugins/vcard/vcard.c:1206
 msgid "Select vcard file"
 msgstr "VCard-Datei auswählen"
 
-#: ../roger/plugins/vcard/vcard.c:1228
+#: ../roger/plugins/vcard/vcard.c:1237
 msgid "VCard file"
 msgstr "VCard-Datei"
 
@@ -1462,6 +1462,12 @@ msgstr ""
 #: ../roger.desktop.in.h:3
 msgid "fritz;box;fritzbox;router;manager;fax;softphone;"
 msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
+
+#~ msgid "Use buttons of"
+#~ msgstr "Verwende Tasten von"
+
+#~ msgid "Bluetooth headset"
+#~ msgstr "Bluetooth-Headset"
 
 #~ msgid "Open"
 #~ msgstr "_Öffnen"

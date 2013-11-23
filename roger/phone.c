@@ -288,6 +288,14 @@ void phone_fill_combobox(GtkWidget *port_combobox, struct phone_state *state)
 	g_settings_bind(profile->settings, "port", port_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 }
 
+static void phone_connection_failed(void)
+{
+	GtkWidget *error_dialog = gtk_message_dialog_new(NULL, 0, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, _("Could not dial out. Is CAPI port enabled?\nDial #96*3* with your phone"));
+
+	gtk_dialog_run(GTK_DIALOG(error_dialog));
+	gtk_widget_destroy(error_dialog);
+}
+
 static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 	struct profile *profile = profile_get_active();
@@ -317,6 +325,8 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 					if (connection) {
 						phone_add_connection(connection);
 						//gtk_widget_set_sensitive(state->port_combobox, FALSE);
+					} else {
+						phone_connection_failed();
 					}
 				}
 			} else {
@@ -338,6 +348,8 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 				fax_window_clear();
 				//state->connection = 1;
 				phone_setup_timer(state);
+			} else {
+				phone_connection_failed();
 			}
 			break;
 		}
