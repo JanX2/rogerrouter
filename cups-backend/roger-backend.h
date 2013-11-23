@@ -56,6 +56,10 @@
 #define ROGER_BACKEND_ARGS_MAX 128       /* max size of argument string */
 #define ROGER_BACKEND_PRINTBUF_MAX 16536 /* max size of printbuffer */
 #define ROGER_BACKEND_DIRECTORY "/var/spool/roger"
+#define ROGER_BACKEND_DEVICE_ID "MFG:Roger-Router;MDL:Roger-fax;" \
+                    "DES:Roger-Router Fax Printer for Fritz!Box routers;" \
+                    "CLS:PRINTER;CMD:POSTSCRIPT;"
+
 
 #define USLEEP_MS 1000                  /* sleep for 1 msec */
 

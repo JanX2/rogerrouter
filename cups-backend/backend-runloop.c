@@ -188,6 +188,14 @@ ssize_t roger_backend_run_loop(int input_fd, int output_fd, char *output_name)
 					                     1.0);
 					break;
 
+				case CUPS_SC_CMD_GET_DEVICE_ID:
+					status = CUPS_SC_STATUS_OK;
+					strncpy(data, ROGER_BACKEND_DEVICE_ID, 16535);
+					data[16535] = '\0';
+					cupsSideChannelWrite(command, status, data, strlen(data),
+					                     1.0);
+					break;
+
 
 #if ROGER_BACKEND_CUPS_VERSION >= 105
 				case CUPS_SC_CMD_GET_CONNECTED:
@@ -204,7 +212,6 @@ ssize_t roger_backend_run_loop(int input_fd, int output_fd, char *output_name)
 					 *
 					 * case CUPS_SC_CMD_GET_STATE:
 					 * case CUPS_SC_CMD_SOFT_RESET:
-					 * case CUPS_SC_CMD_GET_DEVICE_ID:
 					 * for CUPS 1.4 and later
 					 *
 					 * case CUPS_SC_CMD_SNMP_GET:
