@@ -58,10 +58,10 @@
 
 int main ( int argc, char *argv[] )
 {
-	char method[ROGER_SPOOLER_METHOD_MAX];
-	char hostname[ROGER_SPOOLER_HOST_MAX];
-	char username[ROGER_SPOOLER_USER_MAX];
-	char resource[ROGER_SPOOLER_ARGS_MAX];
+	char method[ROGER_BACKEND_METHOD_MAX];
+	char hostname[ROGER_BACKEND_HOST_MAX];
+	char username[ROGER_BACKEND_USER_MAX];
+	char resource[ROGER_BACKEND_ARGS_MAX];
 	int port;
 	char *options;
 	// char *option_name;
@@ -103,8 +103,17 @@ int main ( int argc, char *argv[] )
 	 */
 
 	if ( argc == 1 ) {
-		/* TODO: add device-Id for ppd selection */
-		puts ( "file roger-fax:/ \"Unknown\" \"Tabos.org Roger Router Fax Printer\"" );
+		puts ( 
+			/* device-class device-uril */
+			"file roger-cups:/ "
+			/* device make and model */
+			"\"tabos.org Roger-Router fax\" "
+			/* device-info */
+			"\"Roger Router Fax\" "
+			/* device-id */
+			"\"MFG:tabos.org;MDL:Roger-Router Fax;"
+			"DES:Roger-Router Fax Printer for Fritz!Box routers;CLS:"
+			"PRINTER;CMD:POSTSCRIPT;\"" );
 		return ( CUPS_BACKEND_OK );
 	} else if ( argc < 6 || argc > 7 ) {
 		fprintf ( stderr, _("roger-fax backend - version %s\n") , VERSION );

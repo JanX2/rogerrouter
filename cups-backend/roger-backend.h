@@ -14,8 +14,8 @@
  * Contents:
  * <to be added>
  */
-#ifndef _CUPS_ROGER_SPOOLER_H_
-#define _CUPS_ROGER_SPOOLER_H_
+#ifndef _CUPS_ROGER_BACKEND_H_
+#define _CUPS_ROGER_BACKEND_H_
 
 #include <config.h>
 #include <libintl.h>
@@ -23,9 +23,9 @@
 #include <cups/backend.h>
 #include <cups/http.h>
 
-#define ROGER_SPOOLER_CUPS_VERSION  (100 * CUPS_VERSION_MAJOR + CUPS_VERSION_MINOR )
+#define ROGER_BACKEND_CUPS_VERSION  (100 * CUPS_VERSION_MAJOR + CUPS_VERSION_MINOR )
 
-#if ROGER_SPOOLER_CUPS_VERSION  >= 103
+#if ROGER_BACKEND_CUPS_VERSION  >= 103
 #include <cups/sidechannel.h>
 #endif
 
@@ -33,24 +33,24 @@
 #define _(text) gettext(text)
 
 /* 
- *  ROGER_SPOOLER definitions 
+ *  ROGER_BACKEND definitions 
  */
 
-#define ROGER_SPOOLER_METHOD_MAX 16      /* max length of method */
-#define ROGER_SPOOLER_HOST_MAX 128       /* max length of hostname or address */
-#define ROGER_SPOOLER_PORT_MAX 64        /* max length of port string */
-#define ROGER_SPOOLER_USER_MAX 64        /* max length of user string */
-#define ROGER_SPOOLER_ARGS_MAX 128       /* max size of argument string */
-#define ROGER_SPOOLER_PRINTBUF_MAX 16536 /* max size of printbuffer */
-#define ROGER_SPOOLER_DIRECTORY "/var/spool/roger"
+#define ROGER_BACKEND_METHOD_MAX 16      /* max length of method */
+#define ROGER_BACKEND_HOST_MAX 128       /* max length of hostname or address */
+#define ROGER_BACKEND_PORT_MAX 64        /* max length of port string */
+#define ROGER_BACKEND_USER_MAX 64        /* max length of user string */
+#define ROGER_BACKEND_ARGS_MAX 128       /* max size of argument string */
+#define ROGER_BACKEND_PRINTBUF_MAX 16536 /* max size of printbuffer */
+#define ROGER_BACKEND_DIRECTORY "/var/spool/roger"
 
 #define USLEEP_MS 1000                  /* sleep for 1 msec */
 
 typedef enum roger_paper_status_e
 {
-  ROGER_SPOOLER_PAPER_UNKNOWN = -1,
-  ROGER_SPOOLER_PAPER_OK = 0,
-  ROGER_SPOOLER_PAPER_OUT = 1
+  ROGER_BACKEND_PAPER_UNKNOWN = -1,
+  ROGER_BACKEND_PAPER_OK = 0,
+  ROGER_BACKEND_PAPER_OUT = 1
 } roger_paper_status_t;
 
 
@@ -85,4 +85,4 @@ char * get_output_name( void );
 #  define CUPS_LLCAST	(long)
 #endif
 
-#endif /* ! CUPS_ROGER_SPOOLER_H_ */
+#endif /* ! CUPS_ROGER_BACKEND_H_ */

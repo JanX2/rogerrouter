@@ -47,7 +47,7 @@ static char * get_directory ( char *user )
 {
 	/* check existance of roger spool directory */
 
-	gchar *spool_dir_name = g_strdup_printf ( ROGER_SPOOLER_DIRECTORY );
+	gchar *spool_dir_name = g_strdup_printf ( ROGER_BACKEND_DIRECTORY );
 	gchar *dir_name = NULL;
 
 	if ( pwd_entry == NULL ) {
@@ -66,7 +66,7 @@ static char * get_directory ( char *user )
 
 	/* now check for the users own spool directory */
 
-	dir_name = g_strdup_printf ( "%s/%s", ROGER_SPOOLER_DIRECTORY, user );
+	dir_name = g_strdup_printf ( "%s/%s", ROGER_BACKEND_DIRECTORY, user );
 
 	if ( !g_file_test ( dir_name, G_FILE_TEST_IS_DIR ) ) {
 		if ( g_file_test ( dir_name, G_FILE_TEST_EXISTS ) ) {

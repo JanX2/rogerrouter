@@ -56,7 +56,7 @@ ssize_t roger_backend_run_loop ( int input_fd, int output_fd, char *output_name 
 	ssize_t total_bytes_written;
 	ssize_t bytes_written;
 	int draining;
-	char print_buffer[ROGER_SPOOLER_PRINTBUF_MAX];
+	char print_buffer[ROGER_BACKEND_PRINTBUF_MAX];
 	char *print_ptr;
 	int result;
 
@@ -64,7 +64,7 @@ ssize_t roger_backend_run_loop ( int input_fd, int output_fd, char *output_name 
 	struct sigaction action;	/* Actions for POSIX signals */
 #endif /* HAVE_SIGACTION && !HAVE_SIGSET */
 
-#if ROGER_SPOOLER_CUPS_VERSION >= 103
+#if ROGER_BACKEND_CUPS_VERSION >= 103
 	int side_channel_open;		/* side channel status */
 	cups_sc_command_t command;	
 	cups_sc_status_t status;	
@@ -129,7 +129,7 @@ ssize_t roger_backend_run_loop ( int input_fd, int output_fd, char *output_name 
 		 * Accept side channel data, unless there is print data pending (cups >= 1.3)
 		 */
 
-#if  ROGER_SPOOLER_CUPS_VERSION >= 103
+#if  ROGER_BACKEND_CUPS_VERSION >= 103
 		if ( side_channel_open && !draining ) {
 			FD_SET ( CUPS_SC_FD, &input_set );
 		}
@@ -145,7 +145,7 @@ ssize_t roger_backend_run_loop ( int input_fd, int output_fd, char *output_name 
         	}
 
 
-#if  ROGER_SPOOLER_CUPS_VERSION >= 103
+#if  ROGER_BACKEND_CUPS_VERSION >= 103
 		/*
 		 * Check if we have a side-channel request ready (cups >= 1.3)...
 		 */
@@ -189,7 +189,7 @@ ssize_t roger_backend_run_loop ( int input_fd, int output_fd, char *output_name 
 						break;
 
 
-#if ROGER_SPOOLER_CUPS_VERSION >= 105
+#if ROGER_BACKEND_CUPS_VERSION >= 105
 					case CUPS_SC_CMD_GET_CONNECTED:
 						status = CUPS_SC_STATUS_OK;
 						data[0] = ( output_fd != -1 );
@@ -247,7 +247,7 @@ ssize_t roger_backend_run_loop ( int input_fd, int output_fd, char *output_name 
 				 * End of input file, break out of the loop
 				 */
 
-#if ROGER_SPOOLER_CUPS_VERSION >= 103
+#if ROGER_BACKEND_CUPS_VERSION >= 103
 				if ( draining ) {
 					command = CUPS_SC_CMD_DRAIN_OUTPUT;
 					status = CUPS_SC_STATUS_OK;
