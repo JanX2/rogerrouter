@@ -7,11 +7,11 @@
 *LanguageEncoding: ISOLatin1
 *PCFileName: "roger-fax.ppd"
 *Product: "(Roger fax)"
-*Manufacturer: "Roger"
-*ModelName: "Roger fax"
-*ShortNickName: "Roger fax printer"
+*Manufacturer: "RogerRouter"
+*ModelName: "Fax"
+*ShortNickName: "Roger-Router fax printer"
 *NickName: "roger fax printer, 1.0"
-*1284DeviceID:  "MFG:tabos.org;MDL:Roger-Router Fax Printer;DES:Roger-Router Fax Printer for Fritz!Box routers;CLS:PRINTER;CMD:POSTSCRIPT;"
+*1284DeviceID:  "MFG:Roger-Router;MDL:Roger-fax;DES:Roger-Router Fax Printer for Fritz!Box routers;CLS:PRINTER;CMD:POSTSCRIPT;"
 *PSVersion: "(3010) 0"
 *LanguageLevel: "3"
 *ColorDevice: False

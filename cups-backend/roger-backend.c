@@ -105,15 +105,16 @@ int main ( int argc, char *argv[] )
 	if ( argc == 1 ) {
 		puts ( 
 			/* device-class device-uril */
+			/* TODO: use command line/device-uri? */
 			"file roger-cups:/ "
 			/* device make and model */
-			"\"tabos.org Roger-Router fax\" "
+			"\"Roger-Router Fax\" "
 			/* device-info */
-			"\"Roger Router Fax\" "
+			"\"Roger Router Fax Fritz!Box\" "
 			/* device-id */
-			"\"MFG:tabos.org;MDL:Roger-Router Fax;"
-			"DES:Roger-Router Fax Printer for Fritz!Box routers;CLS:"
-			"PRINTER;CMD:POSTSCRIPT;\"" );
+			"\"MFG:Roger-Router;MDL:Roger-fax;"
+			"DES:Roger-Router Fax Printer for Fritz!Box routers;"
+			"CLS:PRINTER;CMD:POSTSCRIPT;\"" );
 		return ( CUPS_BACKEND_OK );
 	} else if ( argc < 6 || argc > 7 ) {
 		fprintf ( stderr, _("roger-fax backend - version %s\n") , VERSION );
@@ -204,7 +205,7 @@ int main ( int argc, char *argv[] )
 	output_fd = open_fax_output ( copies, argv[1], argv[2], argv[3], O_WRONLY | O_CREAT);
 
 	if ( output_fd < 0 ) {
-		/* TODO: improve backend return value setting */
+		/* TODO: improve backend return value setting? */
 		return ( CUPS_BACKEND_STOP );
 	}
 
