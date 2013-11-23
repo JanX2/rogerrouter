@@ -1,19 +1,32 @@
-/*
- *   Data structures and definitions for
- *   roger backend for the Common UNIX Printing System (CUPS).
- *   Copyright 2008 by Louis Lagendijk
+/**
+ * Roger print spooler backend
+ * Copyright (c) 2013 Louis Lagendijk
  *
- *   These coded instructions, statements, and computer programs are the
- *   property of Louis Lagendijk and are protected by Federal copyright
- *   law.  Distribution and use rights are outlined in the file "LICENSE.txt"
- *   "LICENSE" which should have been included with this file.  If this
- *   file is missing or damaged, see the license at "http://www.cups.org/".
+ * This file is part of Roger Router.
  *
- *   This file is subject to the Apple OS-Developed Software exception.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 only.
  *
- * Contents:
- * <to be added>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Based on cups AppSocket sources
+ * Copyright 2007 by Apple Inc.
+ * Copyright 1997-2007 by Easy Software Products, all rights reserved.
+ *
+ * These coded instructions, statements, and computer programs are the
+ * property of Apple Inc. and are protected by Federal copyright
+ * law.  Distribution and use rights are outlined in the file 
+ * "COPYING" which should have been included with this file.  If this
+ * file is missing or damaged, see the license at "http://www.cups.org/".
  */
+
 #ifndef _CUPS_ROGER_BACKEND_H_
 #define _CUPS_ROGER_BACKEND_H_
 
