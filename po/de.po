@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-23 23:34+0100\n"
+"POT-Creation-Date: 2013-11-23 23:41+0100\n"
 "PO-Revision-Date: 2013-09-07 19:34+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: German <jan.brummer@tabos.org>\n"
@@ -291,7 +291,7 @@ msgid "Add detail"
 msgstr "Detail hinzufügen"
 
 #. Phone
-#: ../roger/contact_edit.c:281 ../roger/phone.c:968
+#: ../roger/contact_edit.c:281 ../roger/phone.c:969
 #: ../roger/plugins/statusicon/gtk.c:200
 #: ../roger/plugins/indicator/indicator.c:221
 msgid "Phone"
@@ -466,7 +466,7 @@ msgstr "Verbindung: %s | Dauer: %s"
 msgid "%d active call(s)"
 msgstr "%d aktive Anrufe"
 
-#: ../roger/phone.c:215 ../roger/phone.c:347
+#: ../roger/phone.c:215 ../roger/phone.c:348
 #, c-format
 msgid "Dialing"
 msgstr "Wählen"
@@ -481,80 +481,84 @@ msgstr "Hergestellt"
 msgid "Terminated"
 msgstr "Beendet"
 
-#: ../roger/phone.c:284 ../roger/phone.c:315 ../roger/phone.c:373
+#: ../roger/phone.c:284 ../roger/phone.c:316 ../roger/phone.c:374
 #: ../roger/pref.c:119
 msgid "Softphone"
 msgstr "Softphone"
 
 #: ../roger/phone.c:293
-msgid ""
-"Could not dial out. Is CAPI port enabled?\n"
-"Dial #96*3* with your phone"
-msgstr ""
-"Konnte nicht herauswählen. Ist der CAPI-Port aktiviert?\n"
-"Wähle #96*3* mit deinem Telefon"
+msgid "Could not dial out"
+msgstr "Konnte nicht herauswählen"
 
-#: ../roger/phone.c:390
+#: ../roger/phone.c:294
+msgid ""
+"Is CAPI port enabled? - Dial #96*3* with your phone\n"
+"Are phone numbers valid? - Check settings"
+msgstr ""
+"Ist der CAPI-Port aktiviert? - Wähle #96*3* mit dem Telefon\n"
+"Sind die Telefonnummer korrekt? - Überprüfe die Einstellungen"
+
+#: ../roger/phone.c:391
 #, c-format
 msgid "Idle"
 msgstr "Untätig"
 
-#: ../roger/phone.c:472 ../roger/phone.c:473
+#: ../roger/phone.c:473 ../roger/phone.c:474
 msgid "HOME"
 msgstr "Zuhause"
 
-#: ../roger/phone.c:476 ../roger/phone.c:477
+#: ../roger/phone.c:477 ../roger/phone.c:478
 msgid "WORK"
 msgstr "Arbeit"
 
-#: ../roger/phone.c:480 ../roger/phone.c:481
+#: ../roger/phone.c:481 ../roger/phone.c:482
 msgid "MOBILE"
 msgstr "Mobil"
 
-#: ../roger/phone.c:484 ../roger/phone.c:485
+#: ../roger/phone.c:485 ../roger/phone.c:486
 msgid "FAX"
 msgstr "Fax"
 
 #. Name label
-#: ../roger/phone.c:596
+#: ../roger/phone.c:597
 msgid "Connect to:"
 msgstr "Verbinden mit:"
 
-#: ../roger/phone.c:601
+#: ../roger/phone.c:602
 msgid "Use autocompletion while typing names from your address book"
 msgstr "Verwende Vervollständung aus dem Adressbuch während des Tippens"
 
-#: ../roger/phone.c:686
+#: ../roger/phone.c:687
 msgid "Pick up"
 msgstr "Abheben"
 
-#: ../roger/phone.c:698
+#: ../roger/phone.c:699
 msgid "Hang up"
 msgstr "Auflegen"
 
 #. Port label
-#: ../roger/phone.c:706
+#: ../roger/phone.c:707
 msgid "Extension:"
 msgstr "Nebenstelle:"
 
-#: ../roger/phone.c:711
+#: ../roger/phone.c:712
 msgid "Choose an extension for this call"
 msgstr "Wähle eine Nebenstelle für diesen Anruf"
 
 #. Port label
-#: ../roger/phone.c:725
+#: ../roger/phone.c:726
 msgid "Own number:"
 msgstr "Eigene Nummer:"
 
-#: ../roger/phone.c:729
+#: ../roger/phone.c:730
 msgid "Standard"
 msgstr "Standard"
 
-#: ../roger/phone.c:730
+#: ../roger/phone.c:731
 msgid "Suppress number"
 msgstr "Unterdrücke Rufnummer"
 
-#: ../roger/phone.c:880
+#: ../roger/phone.c:881
 msgid "Hold"
 msgstr "Halten"
 
@@ -565,23 +569,23 @@ msgstr "Halten"
 #. button = gtk_button_new_with_label(_("Conference"));
 #. g_signal_connect(button, "clicked", G_CALLBACK(conference_clicked_cb), NULL);
 #. gtk_grid_attach(GTK_GRID(grid), button, 0, 2, 1, 1);
-#: ../roger/phone.c:892
+#: ../roger/phone.c:893
 msgid "Record"
 msgstr "Aufnahme"
 
-#: ../roger/phone.c:896
+#: ../roger/phone.c:897
 msgid "Mute"
 msgstr "Stumm"
 
-#: ../roger/phone.c:914
+#: ../roger/phone.c:915
 msgid "Active calls"
 msgstr "Aktive Anrufe"
 
-#: ../roger/phone.c:929
+#: ../roger/phone.c:930
 msgid "A call is in progress. Still close this window?"
 msgstr "Ein Anruf ist aktiv. Möchten Sie das Fenster trotzdem schließen?"
 
-#: ../roger/phone.c:996
+#: ../roger/phone.c:997
 msgid "Connection: Idle | Time: 00:00:00"
 msgstr "Verbindung: Untätig | Dauer: 00:00:00"
 
@@ -1462,6 +1466,13 @@ msgstr ""
 #: ../roger.desktop.in.h:3
 msgid "fritz;box;fritzbox;router;manager;fax;softphone;"
 msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
+
+#~ msgid ""
+#~ "Could not dial out. Is CAPI port enabled?\n"
+#~ "Dial #96*3* with your phone"
+#~ msgstr ""
+#~ "Konnte nicht herauswählen. Ist der CAPI-Port aktiviert?\n"
+#~ "Wähle #96*3* mit deinem Telefon"
 
 #~ msgid "Use buttons of"
 #~ msgstr "Verwende Tasten von"

@@ -290,7 +290,8 @@ void phone_fill_combobox(GtkWidget *port_combobox, struct phone_state *state)
 
 static void phone_connection_failed(void)
 {
-	GtkWidget *error_dialog = gtk_message_dialog_new(NULL, 0, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, _("Could not dial out. Is CAPI port enabled?\nDial #96*3* with your phone"));
+	GtkWidget *error_dialog = gtk_message_dialog_new(NULL, 0, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, _("Could not dial out"));
+	gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(error_dialog), _("Is CAPI port enabled? - Dial #96*3* with your phone\nAre phone numbers valid? - Check settings"));
 
 	gtk_dialog_run(GTK_DIALOG(error_dialog));
 	gtk_widget_destroy(error_dialog);
