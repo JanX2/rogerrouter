@@ -102,6 +102,10 @@ struct capi_connection *capi_get_free_connection(void)
 {
 	int i;
 
+	if (!session) {
+		return NULL;
+	}
+
 	for (i = 0; i < CAPI_CONNECTIONS; i++) {
 		if (session->connection[i].plci == 0 && session->connection[i].ncci == 0) {
 			session->connection[i].id = id++;
@@ -231,6 +235,10 @@ struct capi_connection *capi_call(unsigned controller, const char *src_no, const
 	struct capi_connection *connection = NULL;
 	int err = 0;
 	int intern = (trg_no[0] == '*') || (trg_no[0] == '#');
+
+	if (!session) {
+		return NULL;
+	}
 
 	if (src_no == NULL || strlen(src_no) < 1 || trg_no == NULL || strlen(trg_no) < 1) {
 		g_debug("Wrong phone numbers!");
