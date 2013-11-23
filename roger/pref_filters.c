@@ -51,51 +51,51 @@ static void type_box_changed_cb(GtkWidget *widget, gpointer next)
 	}
 
 	switch (active) {
-		case 0:
-			/* Type */
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("All"));
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Incoming"));
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Missed"));
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Outgoing"));
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Voice box"));
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Fax box"));
-			gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 0);
-			if (entry != NULL) {
-				gtk_widget_set_sensitive(entry, FALSE);
-			}
-			break;
-		case 1:
-			/* Date */
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is"));
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is not"));
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is after"));
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is before"));
-			gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 0);
-			break;
-		case 2:
-			/* Name */
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is"));
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is not"));
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Starts with"));
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Contains"));
-			gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 0);
-			break;
-		case 3:
-			/* Number */
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is"));
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is not"));
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Starts with"));
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Contains"));
-			gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 0);
-			break;
-		case 4:
-			/* Local number */
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is"));
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is not"));
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Starts with"));
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Contains"));
-			gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 0);
-			break;
+	case 0:
+		/* Type */
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("All"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Incoming"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Missed"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Outgoing"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Voice box"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Fax box"));
+		gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 0);
+		if (entry != NULL) {
+			gtk_widget_set_sensitive(entry, FALSE);
+		}
+		break;
+	case 1:
+		/* Date */
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is not"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is after"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is before"));
+		gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 0);
+		break;
+	case 2:
+		/* Name */
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is not"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Starts with"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Contains"));
+		gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 0);
+		break;
+	case 3:
+		/* Number */
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is not"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Starts with"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Contains"));
+		gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 0);
+		break;
+	case 4:
+		/* Local number */
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is not"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Starts with"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Contains"));
+		gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 0);
+		break;
 	}
 }
 

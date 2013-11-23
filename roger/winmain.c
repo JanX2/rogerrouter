@@ -24,8 +24,8 @@
 #include <roger/main.h>
 
 typedef int (CALLBACK *LPFNROGERMAIN)(HINSTANCE, int, char **);
-typedef BOOL (WINAPI* LPFNSETPROCESSDEPPOLICY)(DWORD);
-typedef BOOL (WINAPI* LPFNATTACHCONSOLE)(DWORD);
+typedef BOOL (WINAPI *LPFNSETPROCESSDEPPOLICY)(DWORD);
+typedef BOOL (WINAPI *LPFNATTACHCONSOLE)(DWORD);
 
 /**
  * \brief Convert language id to posix code
@@ -38,15 +38,15 @@ static wchar_t *win_lcid_to_posix(LCID lcid)
 	int lang_id = PRIMARYLANGID(lcid);
 
 	switch (lang_id) {
-		case LANG_GERMAN:
-			posix = L"de";
-			break;
-		case LANG_ENGLISH:
-			posix = L"en";
-			break;
-		case LANG_DUTCH:
-			posix = L"nl";
-			break;
+	case LANG_GERMAN:
+		posix = L"de";
+		break;
+	case LANG_ENGLISH:
+		posix = L"en";
+		break;
+	case LANG_DUTCH:
+		posix = L"nl";
+		break;
 	}
 
 	return posix;
@@ -79,8 +79,8 @@ static const wchar_t *get_win32_error_message(DWORD err)
 	static wchar_t err_msg[512];
 
 	FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM, NULL, err,
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		(LPWSTR) &err_msg, sizeof(err_msg) / sizeof(wchar_t), NULL );
+	               MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+	               (LPWSTR) &err_msg, sizeof(err_msg) / sizeof(wchar_t), NULL);
 
 	return err_msg;
 }
@@ -110,15 +110,18 @@ int _stdcall WinMain(struct HINSTANCE__ *hInstance, struct HINSTANCE__ *hPrevIns
 		if (strlen(__argv[i]) > 1 && __argv[i][0] == '-') {
 			/* check if we're looking at -- or - option */
 			if (__argv[i][1] == '-') {
-				if (strstr(__argv[i], "--debug") == __argv[i])
+				if (strstr(__argv[i], "--debug") == __argv[i]) {
 					debug = TRUE;
-				else if (strstr(__argv[i], "--help") == __argv[i])
+				} else if (strstr(__argv[i], "--help") == __argv[i]) {
 					help = TRUE;
+				}
 			} else {
-				if (strchr(__argv[i], 'd'))
+				if (strchr(__argv[i], 'd')) {
 					debug = TRUE;
-				if (strchr(__argv[i], 'h'))
+				}
+				if (strchr(__argv[i], 'h')) {
 					help = TRUE;
+				}
 			}
 		}
 	}
@@ -166,11 +169,11 @@ int _stdcall WinMain(struct HINSTANCE__ *hInstance, struct HINSTANCE__ *hPrevIns
 	if (!roger_main) {
 		/* Uhh, we do not have a main entry function, abort! */
 		DWORD dw = GetLastError();
-		BOOL mod_not_found = (dw == ERROR_MOD_NOT_FOUND || dw == ERROR_DLL_NOT_FOUND );
+		BOOL mod_not_found = (dw == ERROR_MOD_NOT_FOUND || dw == ERROR_DLL_NOT_FOUND);
 		const wchar_t *err_msg = get_win32_error_message(dw);
 
 		printf("Could not load roger_main from %s\n", roger_dir);
-		wprintf( L"Error (%u) %s%s%s\n", dw, err_msg, mod_not_found ? L"\n" : L"", mod_not_found ? L"This probably means that GTK+ can't be found" : L"");
+		wprintf(L"Error (%u) %s%s%s\n", dw, err_msg, mod_not_found ? L"\n" : L"", mod_not_found ? L"This probably means that GTK+ can't be found" : L"");
 		return 0;
 	}
 

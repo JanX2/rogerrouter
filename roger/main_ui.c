@@ -42,7 +42,8 @@ Application *application_new(void);
  * \return error code
  */
 int roger_main(HINSTANCE hint, int argc, char **argv);
-int roger_main(HINSTANCE hint, int argc, char **argv) {
+int roger_main(HINSTANCE hint, int argc, char **argv)
+{
 #else
 /**
  * \brief Main function
@@ -50,7 +51,8 @@ int roger_main(HINSTANCE hint, int argc, char **argv) {
  * \param argv argument vector
  * \return error code
  */
-int main( int argc, char **argv ) {
+int main(int argc, char **argv)
+{
 #endif
 	Application *application;
 	int status;

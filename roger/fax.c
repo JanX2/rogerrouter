@@ -68,38 +68,38 @@ void fax_connection_status_cb(AppObject *object, gint status, struct capi_connec
 
 	if (!status && !fax_status->done) {
 		switch (fax_status->phase) {
-			case PHASE_B:
-				g_debug("Ident: %s", fax_status->remote_ident);
-				gtk_label_set_text(GTK_LABEL(remote_label), (fax_status->remote_ident));
+		case PHASE_B:
+			g_debug("Ident: %s", fax_status->remote_ident);
+			gtk_label_set_text(GTK_LABEL(remote_label), (fax_status->remote_ident));
 
-				snprintf(buffer, sizeof(buffer), "%d/%d", fax_status->page_current, fax_status->page_total);
-				g_debug("Pages: %s", buffer);
-				gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress_bar), 0);
-				gtk_label_set_text(GTK_LABEL(page_current_label), buffer);
-				gtk_label_set_text(GTK_LABEL(status_current_label), _("Transfer starting"));
-				break;
-			case PHASE_D:
-				snprintf(buffer, sizeof(buffer), "%d/%d", fax_status->page_current, fax_status->page_total);
-				g_debug("Pages: %s", buffer);
-				gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress_bar), (float)fax_status->page_current / (float)fax_status->page_total);
-				gtk_label_set_text(GTK_LABEL(page_current_label), buffer);
-				gtk_label_set_text(GTK_LABEL(status_current_label), _("Transferring page"));
-				break;
-			case PHASE_E:
-				if (!fax_status->error_code) {
-					g_debug("Fax transfer successful");
-					gtk_label_set_text(GTK_LABEL(status_current_label), _("Fax transfer successful"));
-				} else {
-					gtk_label_set_text(GTK_LABEL(status_current_label), _("Fax transfer failed"));
-					g_debug("Fax transfer failed");
-				}
-				create_fax_report(fax_status, g_settings_get_string(profile_get_active()->settings, "fax-report-dir"));
-				phone_hangup(connection);
-				fax_status->done = TRUE;
-				break;
-			default:
-				g_debug("Unhandled phase (%d)", fax_status->phase);
-				break;
+			snprintf(buffer, sizeof(buffer), "%d/%d", fax_status->page_current, fax_status->page_total);
+			g_debug("Pages: %s", buffer);
+			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress_bar), 0);
+			gtk_label_set_text(GTK_LABEL(page_current_label), buffer);
+			gtk_label_set_text(GTK_LABEL(status_current_label), _("Transfer starting"));
+			break;
+		case PHASE_D:
+			snprintf(buffer, sizeof(buffer), "%d/%d", fax_status->page_current, fax_status->page_total);
+			g_debug("Pages: %s", buffer);
+			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress_bar), (float)fax_status->page_current / (float)fax_status->page_total);
+			gtk_label_set_text(GTK_LABEL(page_current_label), buffer);
+			gtk_label_set_text(GTK_LABEL(status_current_label), _("Transferring page"));
+			break;
+		case PHASE_E:
+			if (!fax_status->error_code) {
+				g_debug("Fax transfer successful");
+				gtk_label_set_text(GTK_LABEL(status_current_label), _("Fax transfer successful"));
+			} else {
+				gtk_label_set_text(GTK_LABEL(status_current_label), _("Fax transfer failed"));
+				g_debug("Fax transfer failed");
+			}
+			create_fax_report(fax_status, g_settings_get_string(profile_get_active()->settings, "fax-report-dir"));
+			phone_hangup(connection);
+			fax_status->done = TRUE;
+			break;
+		default:
+			g_debug("Unhandled phase (%d)", fax_status->phase);
+			break;
 		}
 	} else if (status == 1) {
 		float percentage = 0.0f;

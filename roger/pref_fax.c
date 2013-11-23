@@ -162,7 +162,7 @@ GtkWidget *pref_page_fax(void)
 	gtk_widget_set_hexpand(report_dir, TRUE);
 	const gchar *path = g_settings_get_string(profile_get_active()->settings, "fax-report-dir");
 	g_debug("path: '%s'", path);
-	
+
 	if (!gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(report_dir), path)) {
 		g_debug("Setting fallback directory");
 		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(report_dir), g_get_home_dir());

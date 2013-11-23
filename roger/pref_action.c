@@ -244,7 +244,7 @@ gboolean action_edit(struct action *action)
 	settings_refresh_list(list_store);
 
 	tree_model = GTK_TREE_MODEL(list_store);
- 
+
 	gtk_tree_view_set_model(GTK_TREE_VIEW(view), GTK_TREE_MODEL(tree_model));
 
 	renderer = gtk_cell_renderer_toggle_new();
@@ -488,7 +488,7 @@ GtkWidget *pref_page_action(void)
 	list_store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_POINTER);
 
 	tree_model = GTK_TREE_MODEL(list_store);
- 
+
 	gtk_tree_view_set_model(GTK_TREE_VIEW(view), GTK_TREE_MODEL(tree_model));
 
 	renderer = gtk_cell_renderer_text_new();

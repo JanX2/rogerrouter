@@ -564,9 +564,9 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	}
 
 	buffer = g_strdup_printf("%s/fax-report_%s_%s-%02d_%02d_%d_%02d_%02d_%02d.pdf",
-		report_dir, local, remote,
-		time_ptr->tm_mday, time_ptr->tm_mon + 1, time_ptr->tm_year + 1900,
-		time_ptr->tm_hour, time_ptr->tm_min, time_ptr->tm_sec);
+	                         report_dir, local, remote,
+	                         time_ptr->tm_mday, time_ptr->tm_mon + 1, time_ptr->tm_year + 1900,
+	                         time_ptr->tm_hour, time_ptr->tm_min, time_ptr->tm_sec);
 	out = cairo_pdf_surface_create(buffer, width, height + 200);
 	g_free(buffer);
 

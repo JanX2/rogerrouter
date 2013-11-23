@@ -303,47 +303,47 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 		//return;
 
 		switch (state->type) {
-			case PHONE_TYPE_VOICE:
-				if (!strcmp(gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(state->port_combobox)), _("Softphone"))) {
-					gint len = g_slist_length(phone_active_connections);
-					if (len < 2) {
-						/* Hold active call */
-						if (len == 1) {
-							phone_hold(phone_get_active_connection(), TRUE);
-						}
-
-						gpointer connection = phone_dial(state->number, g_settings_get_int(profile->settings, "suppress"));
-
-						if (connection) {
-							phone_add_connection(connection);
-							//gtk_widget_set_sensitive(state->port_combobox, FALSE);
-						}
+		case PHONE_TYPE_VOICE:
+			if (!strcmp(gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(state->port_combobox)), _("Softphone"))) {
+				gint len = g_slist_length(phone_active_connections);
+				if (len < 2) {
+					/* Hold active call */
+					if (len == 1) {
+						phone_hold(phone_get_active_connection(), TRUE);
 					}
-				} else {
-					g_debug("router_dial_number()");
-					gchar *number;
 
-					number = g_strdup_printf("%s%s", g_settings_get_int(profile->settings, "suppress") ? "*31#" : "", state->number);
+					gpointer connection = phone_dial(state->number, g_settings_get_int(profile->settings, "suppress"));
 
-					router_dial_number(profile, atoi(g_settings_get_string(profile->settings, "port")), number);
-					//gtk_widget_set_sensitive(state->port_combobox, FALSE);
-					g_free(number);
+					if (connection) {
+						phone_add_connection(connection);
+						//gtk_widget_set_sensitive(state->port_combobox, FALSE);
+					}
 				}
-				break;
-			case PHONE_TYPE_FAX: {
-				gpointer connection = fax_dial(state->priv, state->number);
-				if (connection) {
-					phone_add_connection(connection);
-					snprintf(state->phone_status_text, sizeof(state->phone_status_text), _("Dialing"));
-					fax_window_clear();
-					//state->connection = 1;
-					phone_setup_timer(state);
-				}
-				break;
+			} else {
+				g_debug("router_dial_number()");
+				gchar *number;
+
+				number = g_strdup_printf("%s%s", g_settings_get_int(profile->settings, "suppress") ? "*31#" : "", state->number);
+
+				router_dial_number(profile, atoi(g_settings_get_string(profile->settings, "port")), number);
+				//gtk_widget_set_sensitive(state->port_combobox, FALSE);
+				g_free(number);
 			}
-			default:
-				g_warning("Unknown type selected");
-				break;
+			break;
+		case PHONE_TYPE_FAX: {
+			gpointer connection = fax_dial(state->priv, state->number);
+			if (connection) {
+				phone_add_connection(connection);
+				snprintf(state->phone_status_text, sizeof(state->phone_status_text), _("Dialing"));
+				fax_window_clear();
+				//state->connection = 1;
+				phone_setup_timer(state);
+			}
+			break;
+		}
+		default:
+			g_warning("Unknown type selected");
+			break;
 		}
 	}
 }
@@ -456,26 +456,26 @@ static void contact_number_menu(GtkWidget *entry, struct contact *contact)
 		struct phone_number *number = list->data;
 
 		switch (number->type) {
-			case PHONE_NUMBER_HOME:
-				tmp = g_strconcat(_("HOME"), ": ", number->number, NULL);
-				name = g_strdup_printf("%s (%s)", contact->name, _("HOME"));
-				break;
-			case PHONE_NUMBER_WORK:
-				tmp = g_strconcat(_("WORK"), ": ", number->number, NULL);
-				name = g_strdup_printf("%s (%s)", contact->name, _("WORK"));
-				break;
-			case PHONE_NUMBER_MOBILE:
-				tmp = g_strconcat(_("MOBILE"), ": ", number->number, NULL);
-				name = g_strdup_printf("%s (%s)", contact->name, _("MOBILE"));
-				break;
-			case PHONE_NUMBER_FAX:
-				tmp = g_strconcat(_("FAX"), ": ", number->number, NULL);
-				name = g_strdup_printf("%s (%s)", contact->name, _("FAX"));
-				break;
-			default:
-				tmp = g_strconcat("??: ", number->number, NULL);
-				name = g_strdup_printf("%s (%s)", contact->name, "??");
-				break;
+		case PHONE_NUMBER_HOME:
+			tmp = g_strconcat(_("HOME"), ": ", number->number, NULL);
+			name = g_strdup_printf("%s (%s)", contact->name, _("HOME"));
+			break;
+		case PHONE_NUMBER_WORK:
+			tmp = g_strconcat(_("WORK"), ": ", number->number, NULL);
+			name = g_strdup_printf("%s (%s)", contact->name, _("WORK"));
+			break;
+		case PHONE_NUMBER_MOBILE:
+			tmp = g_strconcat(_("MOBILE"), ": ", number->number, NULL);
+			name = g_strdup_printf("%s (%s)", contact->name, _("MOBILE"));
+			break;
+		case PHONE_NUMBER_FAX:
+			tmp = g_strconcat(_("FAX"), ": ", number->number, NULL);
+			name = g_strdup_printf("%s (%s)", contact->name, _("FAX"));
+			break;
+		default:
+			tmp = g_strconcat("??: ", number->number, NULL);
+			name = g_strdup_printf("%s (%s)", contact->name, "??");
+			break;
 		}
 		item = gtk_menu_item_new_with_label(tmp);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);

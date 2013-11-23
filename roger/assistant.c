@@ -157,9 +157,9 @@ gpointer get_settings_thread(gpointer data)
 	}
 
 	message = g_strdup_printf(_("New box integrated:\n%s\nCountry-Prefix: %s\nCity-Prefix: %s"),
-		router_get_name(profile),
-		router_get_country_code(profile),
-		router_get_area_code(profile));
+	                          router_get_name(profile),
+	                          router_get_country_code(profile),
+	                          router_get_area_code(profile));
 	complete = TRUE;
 
 end:
@@ -225,8 +225,8 @@ GtkWidget *page_create_intro(void)
 	GtkWidget *label;
 
 	label = gtk_label_new(_("In the next few steps a new router box will be integrated into Roger Router\n"\
-		"First performing a scan for all available devices and then\n"\
-		"acquiring all needed information."));
+	                        "First performing a scan for all available devices and then\n"\
+	                        "acquiring all needed information."));
 
 	gtk_misc_set_padding(GTK_MISC(label), 15, 10);
 

@@ -42,7 +42,7 @@ void refresh_edit_dialog(struct contact *contact);
 void remove_phone_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 	struct contact *contact = user_data;
-	struct phone_number *number = (struct phone_number*) g_object_get_data(G_OBJECT(button), "number");
+	struct phone_number *number = (struct phone_number *) g_object_get_data(G_OBJECT(button), "number");
 
 	contact->numbers = g_slist_remove(contact->numbers, number);
 	refresh_edit_dialog(contact);
@@ -51,7 +51,7 @@ void remove_phone_clicked_cb(GtkWidget *button, gpointer user_data)
 void remove_address_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 	struct contact *contact = user_data;
-	struct contact_address *address = (struct contact_address*) g_object_get_data(G_OBJECT(button), "address");
+	struct contact_address *address = (struct contact_address *) g_object_get_data(G_OBJECT(button), "address");
 
 	contact->addresses = g_slist_remove(contact->addresses, address);
 	refresh_edit_dialog(contact);
@@ -125,8 +125,8 @@ void photo_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	gint result;
 	struct contact *contact = user_data;
 
-	file_chooser = gtk_file_chooser_dialog_new(_( "Open image" ), (GtkWindow *) gtk_widget_get_ancestor(button, GTK_TYPE_WINDOW),
-		GTK_FILE_CHOOSER_ACTION_OPEN, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Open"), GTK_RESPONSE_ACCEPT, _("_No image"), 1, NULL);
+	file_chooser = gtk_file_chooser_dialog_new(_("Open image"), (GtkWindow *) gtk_widget_get_ancestor(button, GTK_TYPE_WINDOW),
+	               GTK_FILE_CHOOSER_ACTION_OPEN, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Open"), GTK_RESPONSE_ACCEPT, _("_No image"), 1, NULL);
 
 	filter = gtk_file_filter_new();
 

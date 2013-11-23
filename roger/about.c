@@ -32,14 +32,16 @@
  * \param widget dialog widget we will destroy
  * \param user_data UNUSED
  */
-static void about_response(GtkWidget *widget, gpointer user_data) {
+static void about_response(GtkWidget *widget, gpointer user_data)
+{
 	gtk_widget_destroy(widget);
 }
 
 /**
  * \brief About dialog
  */
-void app_show_about(void) {
+void app_show_about(void)
+{
 	GtkWidget *dialog = NULL;
 	const gchar *authors[] = {
 		"Jan-Michael Brummer <jan.brummer@tabos.org>",
@@ -50,7 +52,7 @@ void app_show_about(void) {
 		NULL
 	};
 	char *translators =
-		"Jan-Michael Brummer <jan.brummer@tabos.org>";
+	    "Jan-Michael Brummer <jan.brummer@tabos.org>";
 	gchar *path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "app.png", NULL);
 
 	/* create about dialog */

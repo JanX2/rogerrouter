@@ -385,17 +385,17 @@ void delete_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, g
 	call = g_value_get_pointer(&ptr);
 
 	switch (call->type) {
-		case CALL_TYPE_VOICE:
-			router_delete_voice(profile_get_active(), call->local->name);
-			break;
-		case CALL_TYPE_FAX:
-			router_delete_fax(profile_get_active(), call->priv);
-			break;
-		default:
-			journal_list = g_slist_remove(journal_list, call);
-			g_debug("Deleting: '%s'", call->date_time);
-			csv_save_journal(journal_list);
-			break;
+	case CALL_TYPE_VOICE:
+		router_delete_voice(profile_get_active(), call->local->name);
+		break;
+	case CALL_TYPE_FAX:
+		router_delete_fax(profile_get_active(), call->priv);
+		break;
+	default:
+		journal_list = g_slist_remove(journal_list, call);
+		g_debug("Deleting: '%s'", call->date_time);
+		csv_save_journal(journal_list);
+		break;
 	}
 }
 
@@ -443,9 +443,9 @@ static void search_entry_changed(GtkEditable *entry, GtkTreeView *view)
 		journal_search_filter = filter_new("internal_search");
 
 		if (g_ascii_isdigit(text[0])) {
-			filter_rule_add(journal_search_filter, JOURNAL_COL_NUMBER, FILTER_CONTAINS, (gchar*)text);
+			filter_rule_add(journal_search_filter, JOURNAL_COL_NUMBER, FILTER_CONTAINS, (gchar *)text);
 		} else {
-			filter_rule_add(journal_search_filter, JOURNAL_COL_NAME, FILTER_CONTAINS, (gchar*)text);
+			filter_rule_add(journal_search_filter, JOURNAL_COL_NAME, FILTER_CONTAINS, (gchar *)text);
 		}
 	} else {
 		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, NULL);
@@ -550,26 +550,26 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 	gtk_tree_model_get(model, iter, JOURNAL_COL_CALL_PTR, &call, -1);
 
 	switch (call->type) {
-		case CALL_TYPE_FAX: {
-			gsize len = 0;
-			gchar *data = router_load_fax(profile_get_active(), call->priv, &len);
+	case CALL_TYPE_FAX: {
+		gsize len = 0;
+		gchar *data = router_load_fax(profile_get_active(), call->priv, &len);
 
-			if (data && len) {
-				gchar *path = g_build_filename(g_get_user_cache_dir(), G_DIR_SEPARATOR_S, "fax.pdf", NULL);
-				file_save(path, data, len);
+		if (data && len) {
+			gchar *path = g_build_filename(g_get_user_cache_dir(), G_DIR_SEPARATOR_S, "fax.pdf", NULL);
+			file_save(path, data, len);
 
-				os_execute(path);
-				g_free(path);
-			}
-			g_free(data);
-			break;
+			os_execute(path);
+			g_free(path);
 		}
-		case CALL_TYPE_VOICE:
-			journal_play_voice(call->local->name);
-			break;
-		default:
-			app_show_phone_window(call->remote);
-			break;
+		g_free(data);
+		break;
+	}
+	case CALL_TYPE_VOICE:
+		journal_play_voice(call->local->name);
+		break;
+	default:
+		app_show_phone_window(call->remote);
+		break;
 	}
 }
 
@@ -669,13 +669,13 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 	window = gtk_application_window_new(GTK_APPLICATION(app));
 	journal_win = window;
-	gtk_window_set_default_size((GtkWindow*)window, 1200, 600);
+	gtk_window_set_default_size((GtkWindow *)window, 1200, 600);
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 
 	grid = gtk_grid_new();
 
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
-	gtk_container_add(GTK_CONTAINER (window), grid);
+	gtk_container_add(GTK_CONTAINER(window), grid);
 
 	buttonbox = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
 
@@ -736,7 +736,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	//gtk_toolbar_insert(GTK_TOOLBAR(toolbar), button, toolbar_index++);
 
 	//gtk_toolbar_set_show_arrow(GTK_TOOLBAR(toolbar), FALSE);
-	gtk_grid_attach (GTK_GRID(grid), buttonbox, 0, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), buttonbox, 0, 0, 1, 1);
 
 	label = gtk_label_new(_("Search:"));
 	gtk_grid_attach(GTK_GRID(grid), label, 1, 0, 1, 1);
@@ -762,23 +762,23 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	g_signal_connect(G_OBJECT(journal_filter_box), "changed", G_CALLBACK(filter_box_changed), NULL);
 	gtk_grid_attach(GTK_GRID(grid), journal_filter_box, 4, 0, 1, 1);
 
-	scrolled = gtk_scrolled_window_new (NULL, NULL);
+	scrolled = gtk_scrolled_window_new(NULL, NULL);
 	gtk_widget_set_hexpand(scrolled, TRUE);
 	gtk_widget_set_vexpand(scrolled, TRUE);
 
 	view = gtk_tree_view_new();
 
 	list_store = gtk_list_store_new(10,
-		GDK_TYPE_PIXBUF,
-		G_TYPE_STRING,
-		G_TYPE_STRING,
-		G_TYPE_STRING,
-		G_TYPE_STRING,
-		G_TYPE_STRING,
-		G_TYPE_STRING,
-		G_TYPE_STRING,
-		G_TYPE_STRING,
-		G_TYPE_POINTER);
+	                                GDK_TYPE_PIXBUF,
+	                                G_TYPE_STRING,
+	                                G_TYPE_STRING,
+	                                G_TYPE_STRING,
+	                                G_TYPE_STRING,
+	                                G_TYPE_STRING,
+	                                G_TYPE_STRING,
+	                                G_TYPE_STRING,
+	                                G_TYPE_STRING,
+	                                G_TYPE_POINTER);
 
 	g_object_set_data(G_OBJECT(window), "list_store", list_store);
 
@@ -787,7 +787,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 	gtk_tree_view_set_model(GTK_TREE_VIEW(view), GTK_TREE_MODEL(tree_model));
 
-	g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(search_entry_changed), view); 
+	g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(search_entry_changed), view);
 
 	renderer = gtk_cell_renderer_pixbuf_new();
 	type_column = gtk_tree_view_column_new_with_attributes(_("Type"), renderer, "pixbuf", JOURNAL_COL_TYPE, NULL);

@@ -97,7 +97,7 @@ void app_reconnect(void)
 	router_reconnect(profile);
 }
 
-static void application_finalize (GObject *object)
+static void application_finalize(GObject *object)
 {
 	routermanager_shutdown();
 	G_OBJECT_CLASS(application_parent_class)->finalize(object);
@@ -188,60 +188,60 @@ static void app_init(Application *app)
 	}
 
 	gtk_builder_add_from_string(builder,
-		"<interface>"
-		"  <menu id='app-menu'>"
-		"    <section>"
-		"      <item>"
-		"        <attribute name='label' translatable='yes'>Contacts</attribute>"
-		"        <attribute name='action'>app.addressbook</attribute>"
-		"      </item>"
-		"      <item>"
-		"        <attribute name='label' translatable='yes'>Phone</attribute>"
-		"        <attribute name='action'>app.phone</attribute>"
-		"      </item>"
-		"      <submenu>"
-		"        <attribute name='label' translatable='yes'>Functions</attribute>"
-		"        <item>"
-		"          <attribute name='label' translatable='yes'>Copy IP address</attribute>"
-		"          <attribute name='action'>app.copy_ip</attribute>"
-		"        </item>"
-		"        <item>"
-		"          <attribute name='label' translatable='yes'>Reconnect</attribute>"
-		"          <attribute name='action'>app.reconnect</attribute>"
-		"        </item>"
-		"      </submenu>"
-		"    </section>"
-		"    <section>"
-		"      <item>"
-		"        <attribute name='label' translatable='yes'>Preferences</attribute>"
-		"        <attribute name='action'>app.preferences</attribute>"
-		"      </item>"
-		"    </section>"
-		"    <section>"
-		"      <submenu>"
-		"        <attribute name='label' translatable='yes'>Help</attribute>"
-		"        <item>"
-		"          <attribute name='label' translatable='yes'>Donate</attribute>"
-		"          <attribute name='action'>app.donate</attribute>"
-		"        </item>"
-		"        <item>"
-		"          <attribute name='label' translatable='yes'>Forum</attribute>"
-		"          <attribute name='action'>app.forum</attribute>"
-		"        </item>"
-		"      </submenu>"
-		"      <item>"
-		"        <attribute name='label' translatable='yes'>About</attribute>"
-		"        <attribute name='action'>app.about</attribute>"
-		"      </item>"
-		"    </section>"
-		"    <section>"
-		"      <item>"
-		"        <attribute name='label' translatable='yes'>Quit</attribute>"
-		"        <attribute name='action'>app.quit</attribute>"
-		"      </item>"
-		"    </section>"
-		"  </menu>"
-		"</interface>", -1, NULL);
+	                            "<interface>"
+	                            "  <menu id='app-menu'>"
+	                            "    <section>"
+	                            "      <item>"
+	                            "        <attribute name='label' translatable='yes'>Contacts</attribute>"
+	                            "        <attribute name='action'>app.addressbook</attribute>"
+	                            "      </item>"
+	                            "      <item>"
+	                            "        <attribute name='label' translatable='yes'>Phone</attribute>"
+	                            "        <attribute name='action'>app.phone</attribute>"
+	                            "      </item>"
+	                            "      <submenu>"
+	                            "        <attribute name='label' translatable='yes'>Functions</attribute>"
+	                            "        <item>"
+	                            "          <attribute name='label' translatable='yes'>Copy IP address</attribute>"
+	                            "          <attribute name='action'>app.copy_ip</attribute>"
+	                            "        </item>"
+	                            "        <item>"
+	                            "          <attribute name='label' translatable='yes'>Reconnect</attribute>"
+	                            "          <attribute name='action'>app.reconnect</attribute>"
+	                            "        </item>"
+	                            "      </submenu>"
+	                            "    </section>"
+	                            "    <section>"
+	                            "      <item>"
+	                            "        <attribute name='label' translatable='yes'>Preferences</attribute>"
+	                            "        <attribute name='action'>app.preferences</attribute>"
+	                            "      </item>"
+	                            "    </section>"
+	                            "    <section>"
+	                            "      <submenu>"
+	                            "        <attribute name='label' translatable='yes'>Help</attribute>"
+	                            "        <item>"
+	                            "          <attribute name='label' translatable='yes'>Donate</attribute>"
+	                            "          <attribute name='action'>app.donate</attribute>"
+	                            "        </item>"
+	                            "        <item>"
+	                            "          <attribute name='label' translatable='yes'>Forum</attribute>"
+	                            "          <attribute name='action'>app.forum</attribute>"
+	                            "        </item>"
+	                            "      </submenu>"
+	                            "      <item>"
+	                            "        <attribute name='label' translatable='yes'>About</attribute>"
+	                            "        <attribute name='action'>app.about</attribute>"
+	                            "      </item>"
+	                            "    </section>"
+	                            "    <section>"
+	                            "      <item>"
+	                            "        <attribute name='label' translatable='yes'>Quit</attribute>"
+	                            "        <attribute name='action'>app.quit</attribute>"
+	                            "      </item>"
+	                            "    </section>"
+	                            "  </menu>"
+	                            "</interface>", -1, NULL);
 
 	gtk_application_set_app_menu(GTK_APPLICATION(application), G_MENU_MODEL(gtk_builder_get_object(builder, "app-menu")));
 	g_object_unref(builder);
@@ -376,9 +376,9 @@ Application *application_new(void)
 	g_set_application_name(PACKAGE_NAME);
 
 	application = g_object_new(application_get_type(),
-		"application-id", "org.tabos."PACKAGE,
-		"flags", G_APPLICATION_HANDLES_COMMAND_LINE,
-		NULL);
+	                           "application-id", "org.tabos."PACKAGE,
+	                           "flags", G_APPLICATION_HANDLES_COMMAND_LINE,
+	                           NULL);
 
 	app_settings = g_settings_new(APP_GSETTINGS_SCHEMA);
 	g_signal_connect(application, "startup", G_CALLBACK(application_startup), application);

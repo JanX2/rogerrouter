@@ -39,7 +39,7 @@ static struct history *history_new(void)
 		temp = root;
 		root = g_slice_new(struct history);
 		root->value = 0.0f;
-		root->next= temp;
+		root->next = temp;
 	}
 
 	return root;
@@ -67,7 +67,8 @@ static double histroy_append(struct history **history, double x)
 	return result;
 }
 
-GtkWidget *line_level_bar_new(gint width, gint height) {
+GtkWidget *line_level_bar_new(gint width, gint height)
+{
 	GtkWidget *bar;
 	GtkWidget *progress_bar;
 
@@ -91,7 +92,8 @@ GtkWidget *line_level_bar_new(gint width, gint height) {
 	return bar;
 }
 
-void line_level_set(GtkWidget *bar, double max) {
+void line_level_set(GtkWidget *bar, double max)
+{
 	GtkWidget *bar1 = g_object_get_data(G_OBJECT(bar), "pbar1");
 	GtkWidget *related = g_object_get_data(G_OBJECT(bar), "bar");
 	struct history *history = g_object_get_data(G_OBJECT(bar), "history");
