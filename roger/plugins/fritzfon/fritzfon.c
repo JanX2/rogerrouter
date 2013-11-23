@@ -185,7 +185,8 @@ static void contact_add(struct profile *profile, xmlnode *node, gint count)
 	contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
 }
 
-static void phonebook_add(struct profile *profile, xmlnode *node) {
+static void phonebook_add(struct profile *profile, xmlnode *node)
+{
 	xmlnode *child;
 	gint count = 0;
 
@@ -194,7 +195,8 @@ static void phonebook_add(struct profile *profile, xmlnode *node) {
 	}
 }
 
-static gint fritzfon_read_book(void) {
+static gint fritzfon_read_book(void)
+{
 	gchar uri[1024];
 	xmlnode *node = NULL;
 	xmlnode *child;
@@ -231,7 +233,7 @@ static gint fritzfon_read_book(void) {
 		g_free(uri);
 		return FALSE;
 	}
-	
+
 	const gchar *data = msg->response_body->data;
 	gint read = msg->response_body->length;
 
@@ -268,7 +270,8 @@ GSList *fritzfon_get_contacts(void)
 	return list;
 }
 
-static gint fritzfon_get_books(void) {
+static gint fritzfon_get_books(void)
+{
 	gchar *url;
 	struct profile *profile = profile_get_active();
 	SoupMessage *msg;
@@ -280,8 +283,8 @@ static gint fritzfon_get_books(void) {
 
 	url = g_strdup_printf("http://%s/fon_num/fonbook_select.lua", router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
-		"sid", profile->router_info->session_id,
-		NULL);
+	                            "sid", profile->router_info->session_id,
+	                            NULL);
 	g_free(url);
 
 	soup_session_send_message(soup_session_sync, msg);
@@ -290,7 +293,7 @@ static gint fritzfon_get_books(void) {
 		g_object_unref(msg);
 		goto end;
 	}
-	
+
 	const gchar *data = msg->response_body->data;
 
 	gint read = msg->response_body->length;
@@ -420,7 +423,8 @@ gboolean fritzfon_reload_contacts(void)
 }
 
 
-xmlnode *create_phone(char *type, char *number) {
+xmlnode *create_phone(char *type, char *number)
+{
 	xmlnode *number_node;
 
 	number_node = xmlnode_new("number");
@@ -438,7 +442,8 @@ xmlnode *create_phone(char *type, char *number) {
  * \param contact person structure
  * \return xml node
  */
-static xmlnode *contact_to_xmlnode(struct contact *contact) {
+static xmlnode *contact_to_xmlnode(struct contact *contact)
+{
 	xmlnode *node;
 	xmlnode *contact_node;
 	xmlnode *realname_node;
@@ -486,20 +491,20 @@ static xmlnode *contact_to_xmlnode(struct contact *contact) {
 			number_node = xmlnode_new("number");
 
 			switch (number->type) {
-				case PHONE_NUMBER_HOME:
-					xmlnode_set_attrib(number_node, "type", "home");
-					break;
-				case PHONE_NUMBER_WORK:
-					xmlnode_set_attrib(number_node, "type", "work");
-					break;
-				case PHONE_NUMBER_MOBILE:
-					xmlnode_set_attrib(number_node, "type", "mobile");
-					break;
-				case PHONE_NUMBER_FAX:
-					xmlnode_set_attrib(number_node, "type", "fax_work");
-					break;
-				default:
-					continue;
+			case PHONE_NUMBER_HOME:
+				xmlnode_set_attrib(number_node, "type", "home");
+				break;
+			case PHONE_NUMBER_WORK:
+				xmlnode_set_attrib(number_node, "type", "work");
+				break;
+			case PHONE_NUMBER_MOBILE:
+				xmlnode_set_attrib(number_node, "type", "mobile");
+				break;
+			case PHONE_NUMBER_FAX:
+				xmlnode_set_attrib(number_node, "type", "fax_work");
+				break;
+			default:
+				continue;
 			}
 
 			if (first) {
@@ -544,7 +549,8 @@ static xmlnode *contact_to_xmlnode(struct contact *contact) {
  * \brief Convert phonebooks to xml node
  * \return xml node
  */
-xmlnode *phonebook_to_xmlnode(void) {
+xmlnode *phonebook_to_xmlnode(void)
+{
 	xmlnode *node;
 	xmlnode *child;
 	xmlnode *book;
@@ -634,32 +640,32 @@ gboolean fritzfon_remove_contact(struct contact *contact)
 
 void fritzfon_set_image(struct contact *contact)
 {
-		struct fritzfon_priv *priv = g_slice_new0(struct fritzfon_priv);
-		struct profile *profile = profile_get_active();
-		struct ftp *client = ftp_init(router_get_host(profile));
-		gchar *volume_path;
-		gchar *path;
-		gchar *file_name;
-		gchar *hash;
-		gchar *data;
-		gsize size;
+	struct fritzfon_priv *priv = g_slice_new0(struct fritzfon_priv);
+	struct profile *profile = profile_get_active();
+	struct ftp *client = ftp_init(router_get_host(profile));
+	gchar *volume_path;
+	gchar *path;
+	gchar *file_name;
+	gchar *hash;
+	gchar *data;
+	gsize size;
 
-		contact->priv = priv;
-		ftp_login(client, router_get_ftp_user(profile), router_get_ftp_password(profile));
+	contact->priv = priv;
+	ftp_login(client, router_get_ftp_user(profile), router_get_ftp_password(profile));
 
-		volume_path = g_settings_get_string(profile->settings, "fax-volume");
-		hash = g_strdup_printf("%s%s", volume_path, contact->image_uri);
-		file_name = g_strdup_printf("%d.jpg", g_str_hash(hash));
-		g_free(hash);
-		path = g_strdup_printf("%s/FRITZ/fonpix/", volume_path);
-		g_free(volume_path);
+	volume_path = g_settings_get_string(profile->settings, "fax-volume");
+	hash = g_strdup_printf("%s%s", volume_path, contact->image_uri);
+	file_name = g_strdup_printf("%d.jpg", g_str_hash(hash));
+	g_free(hash);
+	path = g_strdup_printf("%s/FRITZ/fonpix/", volume_path);
+	g_free(volume_path);
 
-		data = file_load(contact->image_uri, &size);
-		ftp_put_file(client, file_name, path, data, size);
+	data = file_load(contact->image_uri, &size);
+	ftp_put_file(client, file_name, path, data, size);
 
-		priv->image_url = g_strdup_printf("file:///var/media/ftp/%s%s", path, file_name);
-		g_free(path);
-		g_free(file_name);
+	priv->image_url = g_strdup_printf("file:///var/media/ftp/%s%s", path, file_name);
+	g_free(path);
+	g_free(file_name);
 }
 
 gboolean fritzfon_save_contact(struct contact *contact)
@@ -730,7 +736,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	gtk_label_set_markup(GTK_LABEL(label), _("Book:"));
 	gtk_box_pack_start(GTK_BOX(box), label, FALSE, TRUE, 10);
 
-	for (list = fritzfon_books; list != NULL; list= list->next) {
+	for (list = fritzfon_books; list != NULL; list = list->next) {
 		struct fritzfon_book *book = list->data;
 
 		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box), book->id, book->name);

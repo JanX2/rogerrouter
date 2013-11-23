@@ -59,7 +59,7 @@ GList *get_ebook_list(void)
 		g_warning("Could not retrieve addressbooks, abort!");
 		return NULL;
 	}
-	
+
 	groups = e_source_list_peek_groups(address_books);
 	if (!groups) {
 		g_warning("No groups!");

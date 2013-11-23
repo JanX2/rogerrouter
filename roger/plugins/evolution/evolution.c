@@ -61,7 +61,8 @@ static GHashTable *table = NULL;
  * \brief Get selected evolution address book Id
  * \return evolution address book
  */
-const gchar *get_selected_ebook_id( void) {
+const gchar *get_selected_ebook_id(void)
+{
 	return g_settings_get_string(ebook_settings, "book");
 }
 
@@ -118,7 +119,7 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 	}
 
 	query = e_book_query_any_field_contains("");
-	if (!query ) {
+	if (!query) {
 		g_warning("Couldn't create query.");
 		return;
 	}
@@ -188,33 +189,33 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 			gsize len = 0;
 
 			switch (photo->type) {
-				case E_CONTACT_PHOTO_TYPE_INLINED:
-					loader = gdk_pixbuf_loader_new();
+			case E_CONTACT_PHOTO_TYPE_INLINED:
+				loader = gdk_pixbuf_loader_new();
 
-					if (gdk_pixbuf_loader_write(loader, photo->data.inlined.data, photo->data.inlined.length, NULL)) {
-						buf = gdk_pixbuf_loader_get_pixbuf(loader);
-						len = photo->data.inlined.length;
-					} else {
-						g_debug("Could not load inlined photo!");
-					}
-					gdk_pixbuf_loader_close(loader, NULL);
-					break;
-				case E_CONTACT_PHOTO_TYPE_URI: {
-					GRegex *pro = g_regex_new("%25", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
-
-					if (!strncmp(photo->data.uri, "file://", 7)) {
-						gchar *uri = g_regex_replace_literal(pro, photo->data.uri + 7, -1, 0, "%", 0, NULL);
-						buf = gdk_pixbuf_new_from_file(uri, NULL);
-						len = gdk_pixbuf_get_byte_length(buf);
-					} else {
-						g_debug("Cannot handle URI: '%s'!", photo->data.uri);
-					}
-					g_regex_unref(pro);
-					break;
+				if (gdk_pixbuf_loader_write(loader, photo->data.inlined.data, photo->data.inlined.length, NULL)) {
+					buf = gdk_pixbuf_loader_get_pixbuf(loader);
+					len = photo->data.inlined.length;
+				} else {
+					g_debug("Could not load inlined photo!");
 				}
-				default:
-					g_debug("Unhandled photo type: %d", photo->type);
-					break;
+				gdk_pixbuf_loader_close(loader, NULL);
+				break;
+			case E_CONTACT_PHOTO_TYPE_URI: {
+				GRegex *pro = g_regex_new("%25", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
+
+				if (!strncmp(photo->data.uri, "file://", 7)) {
+					gchar *uri = g_regex_replace_literal(pro, photo->data.uri + 7, -1, 0, "%", 0, NULL);
+					buf = gdk_pixbuf_new_from_file(uri, NULL);
+					len = gdk_pixbuf_get_byte_length(buf);
+				} else {
+					g_debug("Cannot handle URI: '%s'!", photo->data.uri);
+				}
+				g_regex_unref(pro);
+				break;
+			}
+			default:
+				g_debug("Unhandled photo type: %d", photo->type);
+				break;
 			}
 
 			contact->image = buf;
@@ -475,20 +476,20 @@ gboolean evolution_save_contact(struct contact *contact)
 		gint type;
 
 		switch (number->type) {
-			case PHONE_NUMBER_HOME:
-				type = E_CONTACT_PHONE_HOME;
-				break;
-			case PHONE_NUMBER_WORK:
-				type = E_CONTACT_PHONE_BUSINESS;
-				break;
-			case PHONE_NUMBER_MOBILE:
-				type = E_CONTACT_PHONE_MOBILE;
-				break;
-			case PHONE_NUMBER_FAX:
-				type = E_CONTACT_PHONE_HOME_FAX;
-				break;
-			default:
-				continue;
+		case PHONE_NUMBER_HOME:
+			type = E_CONTACT_PHONE_HOME;
+			break;
+		case PHONE_NUMBER_WORK:
+			type = E_CONTACT_PHONE_BUSINESS;
+			break;
+		case PHONE_NUMBER_MOBILE:
+			type = E_CONTACT_PHONE_MOBILE;
+			break;
+		case PHONE_NUMBER_FAX:
+			type = E_CONTACT_PHONE_HOME_FAX;
+			break;
+		default:
+			continue;
 		}
 		e_contact_set(e_contact, type, number->number);
 	}
@@ -502,14 +503,14 @@ gboolean evolution_save_contact(struct contact *contact)
 		memset(ep_address, 0, sizeof(EContactAddress));
 
 		switch (address->type) {
-			case 0:
-				type = E_CONTACT_ADDRESS_HOME;
-				break;
-			case 1:
-				type = E_CONTACT_ADDRESS_WORK;
-				break;
-			default:
-				continue;
+		case 0:
+			type = E_CONTACT_ADDRESS_HOME;
+			break;
+		case 1:
+			type = E_CONTACT_ADDRESS_WORK;
+			break;
+		default:
+			continue;
 		}
 		ep_address->street = address->street;
 		ep_address->locality = address->city;

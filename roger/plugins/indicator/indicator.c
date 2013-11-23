@@ -138,7 +138,7 @@ void indicator_menu_last_calls_group(GtkWidget *menu, gchar *label, int call_typ
  * \param type call type
  * \return new menu widget
  */
-GtkWidget* indicator_menu_last_calls(void)
+GtkWidget *indicator_menu_last_calls(void)
 {
 	GtkWidget *menu;
 	GtkWidget *item;
@@ -172,7 +172,7 @@ GtkWidget* indicator_menu_last_calls(void)
 void indicator_last_calls_cb(GtkMenuItem *item)
 {
 	GtkWidget *submenu;
-	
+
 	submenu = indicator_menu_last_calls();
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
 
@@ -335,7 +335,7 @@ void impl_deactivate(PeasActivatable *plugin)
 
 	if (journal_win) {
 		/* Make sure journal window is visible on deactivate */
-		gtk_widget_show (GTK_WIDGET (journal_win));
+		gtk_widget_show(GTK_WIDGET(journal_win));
 	}
 
 	app_indicator_set_status(indicator, APP_INDICATOR_STATUS_PASSIVE);

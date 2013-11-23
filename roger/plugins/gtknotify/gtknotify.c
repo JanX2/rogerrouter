@@ -42,7 +42,7 @@
 #define ROUTERMANAGER_NOTIFICATION_GTK_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_NOTIFICATION_GTK_PLUGIN, RouterManagerNotificationGtkPlugin))
 
 typedef struct {
-        guint signal_id;
+	guint signal_id;
 } RouterManagerNotificationGtkPluginPrivate;
 
 ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_NOTIFICATION_GTK_PLUGIN, RouterManagerNotificationGtkPlugin, routermanager_notification_gtk_plugin)
@@ -403,8 +403,8 @@ void impl_activate(PeasActivatable *plugin)
 	gchar **outgoing_numbers = g_settings_get_strv(notification_gtk_settings, "outgoing-numbers");
 
 	if ((!incoming_numbers || !g_strv_length(incoming_numbers)) && (!outgoing_numbers || !g_strv_length(outgoing_numbers))) {
-		g_settings_set_strv(notification_gtk_settings, "incoming-numbers", (const gchar * const*) router_get_numbers(profile_get_active()));
-		g_settings_set_strv(notification_gtk_settings, "outgoing-numbers", (const gchar * const*) router_get_numbers(profile_get_active()));
+		g_settings_set_strv(notification_gtk_settings, "incoming-numbers", (const gchar * const *) router_get_numbers(profile_get_active()));
+		g_settings_set_strv(notification_gtk_settings, "outgoing-numbers", (const gchar * const *) router_get_numbers(profile_get_active()));
 	}
 
 	/* Connect to "call-notify" signal */
@@ -501,7 +501,7 @@ static void notification_gtk_outgoing_toggle_cb(GtkCellRendererToggle *toggle, g
 
 	gtk_tree_path_free(path);
 
-	g_settings_set_strv(notification_gtk_settings, "outgoing-numbers", (const gchar * const*) selected_outgoing_numbers);
+	g_settings_set_strv(notification_gtk_settings, "outgoing-numbers", (const gchar * const *) selected_outgoing_numbers);
 }
 
 static void notification_gtk_incoming_toggle_cb(GtkCellRendererToggle *toggle, gchar *path_str, gpointer user_data)
@@ -544,7 +544,7 @@ static void notification_gtk_incoming_toggle_cb(GtkCellRendererToggle *toggle, g
 
 	gtk_tree_path_free(path);
 
-	g_settings_set_strv(notification_gtk_settings, "incoming-numbers", (const gchar * const*) selected_incoming_numbers);
+	g_settings_set_strv(notification_gtk_settings, "incoming-numbers", (const gchar * const *) selected_incoming_numbers);
 }
 
 GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
@@ -580,7 +580,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	notification_gtk_settings_refresh_list(list_store);
 
 	tree_model = GTK_TREE_MODEL(list_store);
- 
+
 	gtk_tree_view_set_model(GTK_TREE_VIEW(view), GTK_TREE_MODEL(tree_model));
 
 	renderer = gtk_cell_renderer_text_new();

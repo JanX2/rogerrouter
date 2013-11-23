@@ -133,7 +133,7 @@ void statusicon_menu_last_calls_group(GtkWidget *menu, gchar *label, int call_ty
  * \param type call type
  * \return new menu widget
  */
-GtkWidget* statusicon_menu_last_calls(void)
+GtkWidget *statusicon_menu_last_calls(void)
 {
 	GtkWidget *menu;
 	GtkWidget *item;

@@ -44,7 +44,7 @@
 #define ROUTERMANAGER_NOTIFICATION_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_NOTIFICATION_PLUGIN, RouterManagerNotificationPlugin))
 
 typedef struct {
-        guint signal_id;
+	guint signal_id;
 } RouterManagerNotificationPluginPrivate;
 
 ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_NOTIFICATION_PLUGIN, RouterManagerNotificationPlugin, routermanager_notification_plugin)
@@ -132,13 +132,13 @@ static gpointer notification_reverse_lookup_thread(gpointer data)
 			gchar *text;
 
 			text = g_markup_printf_escaped(_("Name:\t%s\nNumber:\t%s\nCompany:\t%s\nStreet:\t%s\nCity:\t\t%s%s%s"),
-				name ? name : "",
-				number ? number : "",
-				"",
-				address ? address : "",
-				zip ? zip : "",
-				zip ? " " : "",
-				city ? city : "");
+			                               name ? name : "",
+			                               number ? number : "",
+			                               "",
+			                               address ? address : "",
+			                               zip ? zip : "",
+			                               zip ? " " : "",
+			                               city ? city : "");
 
 			notify_notification_update(connection->notification, connection->type == CALL_TYPE_INCOMING ? _("Incoming call") : _("Outgoing call"), text, "dialog-information");
 
@@ -220,14 +220,14 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 	/* Create notification message */
 	if (!intern) {
 		text = g_markup_printf_escaped(_("Name:\t%s\nNumber:\t%s\nCompany:\t%s\nStreet:\t%s\nCity:\t\t%s%s%s"),
-			contact->name ? contact->name : "",
-			contact->number ? contact->number : "",
-			contact->company ? contact->company : "",
-			contact->street ? contact->street : "",
-			contact->zip ? contact->zip : "",
-			contact->zip ? " " : "",
-			contact->city ? contact->city : ""
-		);
+		                               contact->name ? contact->name : "",
+		                               contact->number ? contact->number : "",
+		                               contact->company ? contact->company : "",
+		                               contact->street ? contact->street : "",
+		                               contact->zip ? contact->zip : "",
+		                               contact->zip ? " " : "",
+		                               contact->city ? contact->city : ""
+		                              );
 	} else {
 		text = g_markup_printf_escaped(_("Number:\t%s"), connection->local_number);
 	}
@@ -280,8 +280,8 @@ void impl_activate(PeasActivatable *plugin)
 	gchar **outgoing_numbers = g_settings_get_strv(notification_settings, "outgoing-numbers");
 
 	if ((!incoming_numbers || !g_strv_length(incoming_numbers)) && (!outgoing_numbers || !g_strv_length(outgoing_numbers))) {
-		g_settings_set_strv(notification_settings, "incoming-numbers", (const gchar * const*) router_get_numbers(profile_get_active()));
-		g_settings_set_strv(notification_settings, "outgoing-numbers", (const gchar * const*) router_get_numbers(profile_get_active()));
+		g_settings_set_strv(notification_settings, "incoming-numbers", (const gchar * const *) router_get_numbers(profile_get_active()));
+		g_settings_set_strv(notification_settings, "outgoing-numbers", (const gchar * const *) router_get_numbers(profile_get_active()));
 	}
 
 	/* Init libnotify */
@@ -384,7 +384,7 @@ static void notification_outgoing_toggle_cb(GtkCellRendererToggle *toggle, gchar
 
 	gtk_tree_path_free(path);
 
-	g_settings_set_strv(notification_settings, "outgoing-numbers", (const gchar * const*) selected_outgoing_numbers);
+	g_settings_set_strv(notification_settings, "outgoing-numbers", (const gchar * const *) selected_outgoing_numbers);
 }
 
 static void notification_incoming_toggle_cb(GtkCellRendererToggle *toggle, gchar *path_str, gpointer user_data)
@@ -427,7 +427,7 @@ static void notification_incoming_toggle_cb(GtkCellRendererToggle *toggle, gchar
 
 	gtk_tree_path_free(path);
 
-	g_settings_set_strv(notification_settings, "incoming-numbers", (const gchar * const*) selected_incoming_numbers);
+	g_settings_set_strv(notification_settings, "incoming-numbers", (const gchar * const *) selected_incoming_numbers);
 }
 
 GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
@@ -464,7 +464,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	notification_settings_refresh_list(list_store);
 
 	tree_model = GTK_TREE_MODEL(list_store);
- 
+
 	gtk_tree_view_set_model(GTK_TREE_VIEW(view), GTK_TREE_MODEL(tree_model));
 
 	renderer = gtk_cell_renderer_text_new();

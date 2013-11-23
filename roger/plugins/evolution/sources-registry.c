@@ -82,7 +82,7 @@ GList *get_ebook_list(void)
 
 	sources = e_source_registry_list_sources(get_source_registry(), E_SOURCE_EXTENSION_ADDRESS_BOOK);
 
-	for ( source = sources; source != NULL; source = source->next) {
+	for (source = sources; source != NULL; source = source->next) {
 		ESource *e_source = E_SOURCE(source -> data);
 
 		ebook_data = g_slice_new(struct ebook_data);

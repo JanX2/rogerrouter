@@ -68,7 +68,8 @@ static GHashTable *table = NULL;
  * \brief Free header, options and entry line
  * \param psCard pointer to card structure
  */
-static void vcard_free_data(struct vcard_data *card_data) {
+static void vcard_free_data(struct vcard_data *card_data)
+{
 	/* if header is present, free it and set to NULL */
 	if (card_data->header != NULL) {
 		g_free(card_data->header);
@@ -94,7 +95,8 @@ static void vcard_free_data(struct vcard_data *card_data) {
  * \brief Process first/last name structure
  * \param psCard pointer to card structure
  */
-static void process_first_last_name(struct vcard_data *card_data) {
+static void process_first_last_name(struct vcard_data *card_data)
+{
 	gint len = 0;
 	gint index = 0;
 
@@ -108,10 +110,10 @@ static void process_first_last_name(struct vcard_data *card_data) {
 	last_name = g_string_new("");
 	while (index < len) {
 		if (
-			(card_data->entry[index] != 0x00) &&
-			(card_data->entry[index] != ';') &&
-			(card_data->entry[index] != 0x0A) &&
-			(card_data->entry[index] != 0x0D)) {
+		    (card_data->entry[index] != 0x00) &&
+		    (card_data->entry[index] != ';') &&
+		    (card_data->entry[index] != 0x0A) &&
+		    (card_data->entry[index] != 0x0D)) {
 			g_string_append_c(last_name, card_data->entry[index++]);
 		} else {
 			break;
@@ -125,10 +127,10 @@ static void process_first_last_name(struct vcard_data *card_data) {
 	first_name = g_string_new("");
 	while (index < len) {
 		if (
-			(card_data->entry[index] != 0x00) &&
-			(card_data->entry[index] != ';') &&
-			(card_data->entry[index] != 0x0A) &&
-			(card_data->entry[index] != 0x0D)) {
+		    (card_data->entry[index] != 0x00) &&
+		    (card_data->entry[index] != ';') &&
+		    (card_data->entry[index] != 0x0A) &&
+		    (card_data->entry[index] != 0x0D)) {
 			g_string_append_c(first_name, card_data->entry[index++]);
 		} else {
 			break;
@@ -140,7 +142,8 @@ static void process_first_last_name(struct vcard_data *card_data) {
  * \brief Process formatted name structure
  * \param card_data pointer to card structure
  */
-static void process_formatted_name(struct vcard_data *card_data, struct contact *contact) {
+static void process_formatted_name(struct vcard_data *card_data, struct contact *contact)
+{
 	GString *str;
 	gint len = 0;
 	gint index = 0;
@@ -154,10 +157,10 @@ static void process_formatted_name(struct vcard_data *card_data, struct contact 
 	str = g_string_new("");
 	for (index = 0; index < len; index++) {
 		if (
-			(card_data->entry[index] != 0x00) &&
-			(card_data->entry[index] != ';') &&
-			(card_data->entry[index] != 0x0A) &&
-			(card_data->entry[index] != 0x0D)) {
+		    (card_data->entry[index] != 0x00) &&
+		    (card_data->entry[index] != ';') &&
+		    (card_data->entry[index] != 0x0A) &&
+		    (card_data->entry[index] != 0x0D)) {
 			g_string_append_c(str, card_data->entry[index]);
 		} else {
 			break;
@@ -171,7 +174,8 @@ static void process_formatted_name(struct vcard_data *card_data, struct contact 
  * \brief Process organization structure
  * \param psCard pointer to card structure
  */
-static void process_organization(struct vcard_data *card_data) {
+static void process_organization(struct vcard_data *card_data)
+{
 	gint len = 0;
 	gint index = 0;
 
@@ -185,10 +189,10 @@ static void process_organization(struct vcard_data *card_data) {
 	company = g_string_new("");
 	while (index < len) {
 		if (
-			(card_data->entry[index] != 0x00) &&
-			(card_data->entry[index] != ';') &&
-			(card_data->entry[index] != 0x0A) &&
-			(card_data->entry[index] != 0x0D)) {
+		    (card_data->entry[index] != 0x00) &&
+		    (card_data->entry[index] != ';') &&
+		    (card_data->entry[index] != 0x0A) &&
+		    (card_data->entry[index] != 0x0D)) {
 			g_string_append_c(company, card_data->entry[index++]);
 		} else {
 			break;
@@ -200,7 +204,8 @@ static void process_organization(struct vcard_data *card_data) {
  * \brief Process title structure
  * \param psCard pointer to card structure
  */
-static void process_title(struct vcard_data *card_data) {
+static void process_title(struct vcard_data *card_data)
+{
 	gint len = 0;
 	gint index = 0;
 
@@ -214,10 +219,10 @@ static void process_title(struct vcard_data *card_data) {
 	title = g_string_new("");
 	while (index < len) {
 		if (
-			(card_data->entry[index] != 0x00) &&
-			(card_data->entry[index] != ';') &&
-			(card_data->entry[index] != 0x0A) &&
-			(card_data->entry[index] != 0x0D)) {
+		    (card_data->entry[index] != 0x00) &&
+		    (card_data->entry[index] != ';') &&
+		    (card_data->entry[index] != 0x0A) &&
+		    (card_data->entry[index] != 0x0D)) {
 			g_string_append_c(title, card_data->entry[index++]);
 		} else {
 			break;
@@ -230,7 +235,8 @@ static void process_title(struct vcard_data *card_data) {
  * \param card_data pointer to card structure
  * \param contact contact structure
  */
-static void process_uid(struct vcard_data *card_data, struct contact *contact) {
+static void process_uid(struct vcard_data *card_data, struct contact *contact)
+{
 	gint len = 0;
 	gint index = 0;
 	GString *uid;
@@ -245,10 +251,10 @@ static void process_uid(struct vcard_data *card_data, struct contact *contact) {
 	uid = g_string_new("");
 	while (index < len) {
 		if (
-			(card_data->entry[index] != 0x00) &&
-			(card_data->entry[index] != ';') &&
-			(card_data->entry[index] != 0x0A) &&
-			(card_data->entry[index] != 0x0D)) {
+		    (card_data->entry[index] != 0x00) &&
+		    (card_data->entry[index] != ';') &&
+		    (card_data->entry[index] != 0x0A) &&
+		    (card_data->entry[index] != 0x0D)) {
 			g_string_append_c(uid, card_data->entry[index++]);
 		} else {
 			break;
@@ -262,7 +268,8 @@ static void process_uid(struct vcard_data *card_data, struct contact *contact) {
  * \brief Process address structure
  * \param card_data pointer to card structure
  */
-static void process_address(struct vcard_data *card_data, struct contact *contact) {
+static void process_address(struct vcard_data *card_data, struct contact *contact)
+{
 	struct contact_address *address;
 	GString *tmp_str;
 	gchar *tmp = NULL;
@@ -349,7 +356,8 @@ static void process_address(struct vcard_data *card_data, struct contact *contac
  * \brief Process telephone structure
  * \param card_data pointer to card structure
  */
-static void process_telephone(struct vcard_data *card_data, struct contact *contact) {
+static void process_telephone(struct vcard_data *card_data, struct contact *contact)
+{
 	gchar *tmp = card_data->entry;
 	struct phone_number *number;
 
@@ -406,7 +414,8 @@ static void process_telephone(struct vcard_data *card_data, struct contact *cont
  * \param card_data pointer to card structure
  * \param contact contact structure
  */
-static void process_photo(struct vcard_data *card_data, struct contact *contact) {
+static void process_photo(struct vcard_data *card_data, struct contact *contact)
+{
 	GdkPixbufLoader *loader;
 	guchar *image_ptr;
 	gsize len;
@@ -435,7 +444,8 @@ static void process_photo(struct vcard_data *card_data, struct contact *contact)
 /**
  * \brief Create new uid
  */
-GString *vcard_create_uid(void) {
+GString *vcard_create_uid(void)
+{
 	GString *id = g_string_new("");
 	gint index = 0;
 
@@ -519,7 +529,8 @@ static void process_card_end(struct contact *contact)
  * \param card_data pointer to card data structure
  * \param contact contact data
  */
-static void process_data(struct vcard_data *card_data) {
+static void process_data(struct vcard_data *card_data)
+{
 	static struct contact *contact;
 
 	if (!card_data->header || !card_data->entry) {
@@ -571,85 +582,86 @@ static void process_data(struct vcard_data *card_data) {
  * \brief Parse one char and add it to internal card structure
  * \param chr current char
  */
-void parse_char(int chr) {
+void parse_char(int chr)
+{
 	switch (state) {
-		case STATE_NEW:
-			current_card_data = g_malloc0(sizeof(struct vcard_data));
-			state = STATE_TAG;
-			/* fall-through */
-		case STATE_TAG:
-			switch (chr) {
-				case '\r':
-					break;
-				case '\n':
-					if (current_string != NULL) {
-						g_string_free(current_string, TRUE);
-					}
-					current_string = NULL;
-					vcard_free_data(current_card_data);
-					state = STATE_NEW;
-					break;
-				case ':':
-					current_card_data->header = g_string_free(current_string, FALSE);
-					current_string = NULL;
-					state = STATE_ENTRY;
-					break;
-				case ';':
-					current_card_data->header = g_string_free(current_string, FALSE);
-					current_string = NULL;
-					state = STATE_OPTIONS;
-					break;
-				default:
-					if (current_string == NULL) {
-						current_string = g_string_new("");
-					}
-					g_string_append_c(current_string, chr);
-					break;
-			}
+	case STATE_NEW:
+		current_card_data = g_malloc0(sizeof(struct vcard_data));
+		state = STATE_TAG;
+	/* fall-through */
+	case STATE_TAG:
+		switch (chr) {
+		case '\r':
 			break;
-		case STATE_OPTIONS:
-			switch (chr) {
-				case '\r':
-					break;
-				case '\n':
-					g_string_free(current_string, TRUE);
-					current_string = NULL;
-					vcard_free_data(current_card_data);
-					state = STATE_NEW;
-					break;
-				case ':':
-					current_card_data->options = g_string_free(current_string, FALSE);
-					current_string = NULL;
-					state = STATE_ENTRY;
-					break;
-				default:
-					if (current_string == NULL) {
-						current_string = g_string_new("");
-					}
-					g_string_append_c(current_string, chr);
-					break;
+		case '\n':
+			if (current_string != NULL) {
+				g_string_free(current_string, TRUE);
 			}
+			current_string = NULL;
+			vcard_free_data(current_card_data);
+			state = STATE_NEW;
 			break;
-		case STATE_ENTRY:
-			switch (chr) {
-				case '\r':
-					break;
-				case '\n':
-					if (current_string != NULL) {
-						current_card_data->entry = g_string_free(current_string, FALSE);
-						process_data(current_card_data);
-					}
-					current_string = NULL;
-					state = STATE_NEW;
-					break;
-				default:
-					if (current_string == NULL) {
-						current_string = g_string_new("");
-					}
-					g_string_append_c(current_string, chr);
-					break;
+		case ':':
+			current_card_data->header = g_string_free(current_string, FALSE);
+			current_string = NULL;
+			state = STATE_ENTRY;
+			break;
+		case ';':
+			current_card_data->header = g_string_free(current_string, FALSE);
+			current_string = NULL;
+			state = STATE_OPTIONS;
+			break;
+		default:
+			if (current_string == NULL) {
+				current_string = g_string_new("");
 			}
+			g_string_append_c(current_string, chr);
 			break;
+		}
+		break;
+	case STATE_OPTIONS:
+		switch (chr) {
+		case '\r':
+			break;
+		case '\n':
+			g_string_free(current_string, TRUE);
+			current_string = NULL;
+			vcard_free_data(current_card_data);
+			state = STATE_NEW;
+			break;
+		case ':':
+			current_card_data->options = g_string_free(current_string, FALSE);
+			current_string = NULL;
+			state = STATE_ENTRY;
+			break;
+		default:
+			if (current_string == NULL) {
+				current_string = g_string_new("");
+			}
+			g_string_append_c(current_string, chr);
+			break;
+		}
+		break;
+	case STATE_ENTRY:
+		switch (chr) {
+		case '\r':
+			break;
+		case '\n':
+			if (current_string != NULL) {
+				current_card_data->entry = g_string_free(current_string, FALSE);
+				process_data(current_card_data);
+			}
+			current_string = NULL;
+			state = STATE_NEW;
+			break;
+		default:
+			if (current_string == NULL) {
+				current_string = g_string_new("");
+			}
+			g_string_append_c(current_string, chr);
+			break;
+		}
+		break;
 	}
 }
 
@@ -657,7 +669,8 @@ void parse_char(int chr) {
  * \brief Load card file information
  * \param file_name file name to read
  */
-void vcard_load_file(char *file_name) {
+void vcard_load_file(char *file_name)
+{
 	GFile *file;
 	GFileInfo *file_info;
 	goffset file_size;
@@ -719,7 +732,8 @@ void vcard_load_file(char *file_name) {
  * \param data data string
  * \param chr put char
  */
-static void vcard_put_char(GString *data, gint chr) {
+static void vcard_put_char(GString *data, gint chr)
+{
 	if (current_position == 74 && chr != '\r') {
 		g_string_append(data, "\n ");
 		current_position = 1;
@@ -736,7 +750,8 @@ static void vcard_put_char(GString *data, gint chr) {
  * \param data data string
  * \param format format string
  */
-void vcard_print(GString *data, gchar *format, ...) {
+void vcard_print(GString *data, gchar *format, ...)
+{
 	va_list args;
 	int len;
 	int size = 100;
@@ -784,7 +799,8 @@ void vcard_print(GString *data, gchar *format, ...) {
  * \param uid uid
  * \param vcard entry list pointer or NULL
  */
-GList *vcard_find_entry(const gchar *uid) {
+GList *vcard_find_entry(const gchar *uid)
+{
 	GList *list1 = NULL;
 	GList *list2 = NULL;
 	GList *card = NULL;
@@ -816,14 +832,15 @@ GList *vcard_find_entry(const gchar *uid) {
  * \param option optional option string
  * \return card data structure or NULL
  */
-struct vcard_data *find_card_data(GList *list, gchar *header, gchar *option) {
+struct vcard_data *find_card_data(GList *list, gchar *header, gchar *option)
+{
 	GList *tmp = NULL;
 	struct vcard_data *data = NULL;
 
 	for (tmp = list; tmp != NULL && tmp->data != NULL; tmp = tmp->next) {
 		data = tmp->data;
 
-		if(data->header && strcmp(data->header, header) == 0) {
+		if (data->header && strcmp(data->header, header) == 0) {
 			if (!option || (data->options != NULL && strstr(data->options, option))) {
 				return data;
 			}
@@ -865,7 +882,7 @@ again:
 	for (tmp = list; tmp != NULL && tmp->data != NULL; tmp = tmp->next) {
 		data = tmp->data;
 
-		if(data->header && !strcmp(data->header, header)) {
+		if (data->header && !strcmp(data->header, header)) {
 			list = g_list_remove(list, data);
 			goto again;
 		}
@@ -878,7 +895,8 @@ again:
  * \brief Write card file information
  * \param file_name file name to read
  */
-void vcard_write_file(char *file_name) {
+void vcard_write_file(char *file_name)
+{
 	GString *data = NULL;
 	GSList *list = NULL;
 	struct contact *contact = NULL;
@@ -937,20 +955,20 @@ void vcard_write_file(char *file_name) {
 			card_data->header = g_strdup("TEL");
 
 			switch (number->type) {
-				case PHONE_NUMBER_HOME:
-					card_data->options = g_strdup("TYPE=HOME,VOICE");
-					break;
-				case PHONE_NUMBER_WORK:
-					card_data->options = g_strdup("TYPE=WORK,VOICE");
-					break;
-				case PHONE_NUMBER_MOBILE:
-					card_data->options = g_strdup("TYPE=CELL");
-					break;
-				case PHONE_NUMBER_FAX:
-					card_data->options = g_strdup("TYPE=HOME,FAX");
-					break;
-				default:
-					continue;
+			case PHONE_NUMBER_HOME:
+				card_data->options = g_strdup("TYPE=HOME,VOICE");
+				break;
+			case PHONE_NUMBER_WORK:
+				card_data->options = g_strdup("TYPE=WORK,VOICE");
+				break;
+			case PHONE_NUMBER_MOBILE:
+				card_data->options = g_strdup("TYPE=CELL");
+				break;
+			case PHONE_NUMBER_FAX:
+				card_data->options = g_strdup("TYPE=HOME,FAX");
+				break;
+			default:
+				continue;
 			}
 
 			card_data->entry = g_strdup(number->number);
@@ -967,21 +985,21 @@ void vcard_write_file(char *file_name) {
 			card_data->header = g_strdup("ADR");
 
 			switch (address->type) {
-				case 0:
-					card_data->options = g_strdup("TYPE=HOME");
-					break;
-				case 1:
-					card_data->options = g_strdup("TYPE=WORK");
-					break;
-				default:
-					continue;
+			case 0:
+				card_data->options = g_strdup("TYPE=HOME");
+				break;
+			case 1:
+				card_data->options = g_strdup("TYPE=WORK");
+				break;
+			default:
+				continue;
 			}
 
 			card_data->entry = g_strdup_printf(";;%s;%s;;%s;%s",
-				address->street,
-				address->city,
-				address->zip,
-				/*address->country*/"");
+			                                   address->street,
+			                                   address->city,
+			                                   address->zip,
+			                                   /*address->country*/"");
 
 			entry = g_list_append(entry, card_data);
 		}
