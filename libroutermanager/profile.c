@@ -123,7 +123,7 @@ struct profile *profile_new(const gchar *name, const gchar *host, const gchar *u
  */
 void profile_commit()
 {
-	gchar **profiles = g_malloc(sizeof(gchar*) * (g_slist_length(profile_list) + 1));
+	gchar **profiles = g_malloc(sizeof(gchar *) * (g_slist_length(profile_list) + 1));
 	GSList *list;
 	gint counter = 0;
 
@@ -133,7 +133,7 @@ void profile_commit()
 	}
 	profiles[counter] = NULL;
 
-	g_settings_set_strv(settings, "profiles", (const gchar *const *)profiles);
+	g_settings_set_strv(settings, "profiles", (const gchar * const *)profiles);
 }
 
 /**

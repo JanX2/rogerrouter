@@ -46,89 +46,89 @@ G_DEFINE_TYPE(AppObject, app_object, G_TYPE_OBJECT);
 static void app_object_create_signals(GObjectClass *g_object_class)
 {
 	app_object_signals[ACB_JOURNAL_LOADED] = g_signal_new(
-		"journal-loaded",
-		G_OBJECT_CLASS_TYPE(g_object_class),
-		G_SIGNAL_RUN_FIRST,
-		G_STRUCT_OFFSET(AppObjectClass, journal_loaded),
-		NULL,
-		NULL,
-		g_cclosure_marshal_VOID__POINTER,
-		G_TYPE_NONE,
-		1,
-		G_TYPE_POINTER);
+	            "journal-loaded",
+	            G_OBJECT_CLASS_TYPE(g_object_class),
+	            G_SIGNAL_RUN_FIRST,
+	            G_STRUCT_OFFSET(AppObjectClass, journal_loaded),
+	            NULL,
+	            NULL,
+	            g_cclosure_marshal_VOID__POINTER,
+	            G_TYPE_NONE,
+	            1,
+	            G_TYPE_POINTER);
 
 	app_object_signals[ACB_CONNECTION_NOTIFY] = g_signal_new(
-		"connection-notify",
-		G_OBJECT_CLASS_TYPE(g_object_class),
-		G_SIGNAL_RUN_FIRST,
-		G_STRUCT_OFFSET(AppObjectClass, connection_notify),
-		NULL,
-		NULL,
-		g_cclosure_marshal_VOID__POINTER,
-		G_TYPE_NONE,
-		1,
-		G_TYPE_POINTER);
+	            "connection-notify",
+	            G_OBJECT_CLASS_TYPE(g_object_class),
+	            G_SIGNAL_RUN_FIRST,
+	            G_STRUCT_OFFSET(AppObjectClass, connection_notify),
+	            NULL,
+	            NULL,
+	            g_cclosure_marshal_VOID__POINTER,
+	            G_TYPE_NONE,
+	            1,
+	            G_TYPE_POINTER);
 
 	app_object_signals[ACB_CONTACT_PROCESS] = g_signal_new(
-		"contact-process",
-		G_OBJECT_CLASS_TYPE(g_object_class),
-		G_SIGNAL_RUN_FIRST,
-		G_STRUCT_OFFSET(AppObjectClass, contact_process),
-		NULL,
-		NULL,
-		g_cclosure_marshal_VOID__POINTER,
-		G_TYPE_NONE,
-		1,
-		G_TYPE_POINTER);
+	            "contact-process",
+	            G_OBJECT_CLASS_TYPE(g_object_class),
+	            G_SIGNAL_RUN_FIRST,
+	            G_STRUCT_OFFSET(AppObjectClass, contact_process),
+	            NULL,
+	            NULL,
+	            g_cclosure_marshal_VOID__POINTER,
+	            G_TYPE_NONE,
+	            1,
+	            G_TYPE_POINTER);
 
 	app_object_signals[ACB_FAX_PROCESS] = g_signal_new(
-		"fax-process",
-		G_OBJECT_CLASS_TYPE(g_object_class),
-		G_SIGNAL_RUN_FIRST,
-		G_STRUCT_OFFSET(AppObjectClass, fax_process),
-		NULL,
-		NULL,
-		g_cclosure_marshal_VOID__POINTER,
-		G_TYPE_NONE,
-		1,
-		G_TYPE_POINTER);
+	        "fax-process",
+	        G_OBJECT_CLASS_TYPE(g_object_class),
+	        G_SIGNAL_RUN_FIRST,
+	        G_STRUCT_OFFSET(AppObjectClass, fax_process),
+	        NULL,
+	        NULL,
+	        g_cclosure_marshal_VOID__POINTER,
+	        G_TYPE_NONE,
+	        1,
+	        G_TYPE_POINTER);
 
 	app_object_signals[ACB_CONNECTION_ESTABLISHED] = g_signal_new(
-		"connection-established",
-		G_OBJECT_CLASS_TYPE(g_object_class),
-		G_SIGNAL_RUN_FIRST,
-		G_STRUCT_OFFSET(AppObjectClass, connection_established),
-		NULL,
-		NULL,
-		g_cclosure_marshal_VOID__POINTER,
-		G_TYPE_NONE,
-		1,
-		G_TYPE_POINTER);
+	            "connection-established",
+	            G_OBJECT_CLASS_TYPE(g_object_class),
+	            G_SIGNAL_RUN_FIRST,
+	            G_STRUCT_OFFSET(AppObjectClass, connection_established),
+	            NULL,
+	            NULL,
+	            g_cclosure_marshal_VOID__POINTER,
+	            G_TYPE_NONE,
+	            1,
+	            G_TYPE_POINTER);
 
 	app_object_signals[ACB_CONNECTION_TERMINATED] = g_signal_new(
-		"connection-terminated",
-		G_OBJECT_CLASS_TYPE(g_object_class),
-		G_SIGNAL_RUN_FIRST,
-		G_STRUCT_OFFSET(AppObjectClass, connection_terminated),
-		NULL,
-		NULL,
-		g_cclosure_marshal_VOID__POINTER,
-		G_TYPE_NONE,
-		1,
-		G_TYPE_POINTER);
+	            "connection-terminated",
+	            G_OBJECT_CLASS_TYPE(g_object_class),
+	            G_SIGNAL_RUN_FIRST,
+	            G_STRUCT_OFFSET(AppObjectClass, connection_terminated),
+	            NULL,
+	            NULL,
+	            g_cclosure_marshal_VOID__POINTER,
+	            G_TYPE_NONE,
+	            1,
+	            G_TYPE_POINTER);
 
 	app_object_signals[ACB_CONNECTION_STATUS] = g_signal_new(
-		"connection-status",
-		G_OBJECT_CLASS_TYPE(g_object_class),
-		G_SIGNAL_RUN_FIRST,
-		G_STRUCT_OFFSET(AppObjectClass, connection_status),
-		NULL,
-		NULL,
-		g_cclosure_marshal_VOID__UINT_POINTER,
-		G_TYPE_NONE,
-		2,
-		G_TYPE_UINT,
-		G_TYPE_POINTER);
+	            "connection-status",
+	            G_OBJECT_CLASS_TYPE(g_object_class),
+	            G_SIGNAL_RUN_FIRST,
+	            G_STRUCT_OFFSET(AppObjectClass, connection_status),
+	            NULL,
+	            NULL,
+	            g_cclosure_marshal_VOID__UINT_POINTER,
+	            G_TYPE_NONE,
+	            2,
+	            G_TYPE_UINT,
+	            G_TYPE_POINTER);
 }
 
 /**

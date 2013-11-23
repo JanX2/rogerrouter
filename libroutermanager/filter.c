@@ -43,32 +43,32 @@ static inline gboolean filter_compare(struct filter_rule *rule, const gchar *com
 	gboolean valid = FALSE;
 
 	if (!rule->entry || !compare) {
-			return valid;
+		return valid;
 	}
 
 	switch (rule->sub_type) {
-		case FILTER_IS:
-			if (!strcmp(compare, rule->entry)) {
-				valid = TRUE;
-			}
-			break;
-		case FILTER_IS_NOT:
-			if (strcmp(compare, rule->entry)) {
-				valid = TRUE;
-			}
-			break;
-		case FILTER_STARTS_WITH:
-			if (strncmp(compare, rule->entry, strlen(rule->entry))) {
-				valid = TRUE;
-			}
-			break;
-		case FILTER_CONTAINS:
-			if (g_strcasestr(compare, rule->entry)) {
-				valid = TRUE;
-			}
-			break;
-		default:
-			break;
+	case FILTER_IS:
+		if (!strcmp(compare, rule->entry)) {
+			valid = TRUE;
+		}
+		break;
+	case FILTER_IS_NOT:
+		if (strcmp(compare, rule->entry)) {
+			valid = TRUE;
+		}
+		break;
+	case FILTER_STARTS_WITH:
+		if (strncmp(compare, rule->entry, strlen(rule->entry))) {
+			valid = TRUE;
+		}
+		break;
+	case FILTER_CONTAINS:
+		if (g_strcasestr(compare, rule->entry)) {
+			valid = TRUE;
+		}
+		break;
+	default:
+		break;
 	}
 
 	return valid;
@@ -105,123 +105,123 @@ gboolean filter_rule_match(struct filter *filter, struct call *call)
 		struct filter_rule *rule = list->data;
 
 		switch (rule->type) {
-			case JOURNAL_TYPE_CALL_TYPE:
-				/* Call type */
-				call_type = TRUE;
+		case JOURNAL_TYPE_CALL_TYPE:
+			/* Call type */
+			call_type = TRUE;
 
-				if (rule->sub_type == CALL_TYPE_ALL || rule->sub_type == call->type) {
-					call_type_valid = TRUE;
-				}
+			if (rule->sub_type == CALL_TYPE_ALL || rule->sub_type == call->type) {
+				call_type_valid = TRUE;
+			}
 
-				if (filter->compare_or && call_type_valid) {
-					return TRUE;
-				}
+			if (filter->compare_or && call_type_valid) {
+				return TRUE;
+			}
 
-				break;
-			case JOURNAL_TYPE_DATE_TIME: {
-				/* Date/Time */
-				gchar *number_a = rule->entry;
-				gchar *number_b = call->date_time;
-				gint ret = 0;
+			break;
+		case JOURNAL_TYPE_DATE_TIME: {
+			/* Date/Time */
+			gchar *number_a = rule->entry;
+			gchar *number_b = call->date_time;
+			gint ret = 0;
 
-				if (!rule->entry) {
-					break;
-				}
-
-				dates++;
-
-				switch (rule->sub_type) {
-					case FILTER_IS:
-						/* Compare year */
-						ret = strncmp(number_a + 6, number_b + 6, 2);
-						if (ret == 0) {
-							/* Compare month */
-							ret = strncmp(number_a + 3, number_b + 3, 2);
-							if (ret == 0) {
-								/* Compare day */
-								ret = strncmp(number_a, number_b, 2);
-								if (ret == 0) {
-									dates_valid++;
-								}
-							}
-						}
-						break;
-					case FILTER_IS_NOT:
-						/* Compare year */
-						ret = strncmp(number_a + 6, number_b + 6, 2);
-						if (ret == 0) {
-							/* Compare month */
-							ret = strncmp(number_a + 3, number_b + 3, 2);
-							if (ret == 0) {
-								/* Compare day */
-								ret = strncmp(number_a, number_b, 2);
-								if (ret != 0) {
-									dates_valid++;
-								}
-							} else {
-								dates_valid++;
-							}
-						} else {
-							dates_valid++;
-						}
-					case FILTER_STARTS_WITH:
-						/* Compare year */
-						ret = strncmp(number_a + 6, number_b + 6, 2);
-						if (ret >= 0) {
-							/* Compare month */
-							ret = strncmp(number_a + 3, number_b + 3, 2);
-							if (ret >= 0) {
-								/* Compare day */
-								ret = strncmp(number_a, number_b, 2);
-								if (ret < 0) {
-									dates_valid++;
-								}
-							} else {
-								dates_valid++;
-							}
-						} else {
-							dates_valid++;
-						}
-					case FILTER_CONTAINS:
-						/* Compare year */
-						ret = strncmp(number_a + 6, number_b + 6, 2);
-						if (ret <= 0) {
-							/* Compare month */
-							ret = strncmp(number_a + 3, number_b + 3, 2);
-							if (ret <= 0) {
-								/* Compare day */
-								ret = strncmp(number_a, number_b, 2);
-								if (ret < 0) {
-									dates_valid++;
-								}
-							} else {
-								dates_valid++;
-							}
-						} else {
-							dates_valid++;
-						}
-						break;
-				}
-
+			if (!rule->entry) {
 				break;
 			}
-			case JOURNAL_TYPE_REMOTE_NAME:
-				/* Remote name */
-				remote_name = TRUE;
-				remote_name_valid = filter_compare(rule, call->remote->name);
+
+			dates++;
+
+			switch (rule->sub_type) {
+			case FILTER_IS:
+				/* Compare year */
+				ret = strncmp(number_a + 6, number_b + 6, 2);
+				if (ret == 0) {
+					/* Compare month */
+					ret = strncmp(number_a + 3, number_b + 3, 2);
+					if (ret == 0) {
+						/* Compare day */
+						ret = strncmp(number_a, number_b, 2);
+						if (ret == 0) {
+							dates_valid++;
+						}
+					}
+				}
 				break;
-			case JOURNAL_TYPE_REMOTE_NUMBER:
-				/* Remote number */
-				remote_number = TRUE;
-				remote_number_valid = filter_compare(rule, call->remote->number);
+			case FILTER_IS_NOT:
+				/* Compare year */
+				ret = strncmp(number_a + 6, number_b + 6, 2);
+				if (ret == 0) {
+					/* Compare month */
+					ret = strncmp(number_a + 3, number_b + 3, 2);
+					if (ret == 0) {
+						/* Compare day */
+						ret = strncmp(number_a, number_b, 2);
+						if (ret != 0) {
+							dates_valid++;
+						}
+					} else {
+						dates_valid++;
+					}
+				} else {
+					dates_valid++;
+				}
+			case FILTER_STARTS_WITH:
+				/* Compare year */
+				ret = strncmp(number_a + 6, number_b + 6, 2);
+				if (ret >= 0) {
+					/* Compare month */
+					ret = strncmp(number_a + 3, number_b + 3, 2);
+					if (ret >= 0) {
+						/* Compare day */
+						ret = strncmp(number_a, number_b, 2);
+						if (ret < 0) {
+							dates_valid++;
+						}
+					} else {
+						dates_valid++;
+					}
+				} else {
+					dates_valid++;
+				}
+			case FILTER_CONTAINS:
+				/* Compare year */
+				ret = strncmp(number_a + 6, number_b + 6, 2);
+				if (ret <= 0) {
+					/* Compare month */
+					ret = strncmp(number_a + 3, number_b + 3, 2);
+					if (ret <= 0) {
+						/* Compare day */
+						ret = strncmp(number_a, number_b, 2);
+						if (ret < 0) {
+							dates_valid++;
+						}
+					} else {
+						dates_valid++;
+					}
+				} else {
+					dates_valid++;
+				}
 				break;
-			case JOURNAL_TYPE_LOCAL_NUMBER:
-				/* Local number */
-				local_number = TRUE;
-				local_number_valid = filter_compare(rule, call->local->number);
-				break;
-			default:
-				break;
+			}
+
+			break;
+		}
+		case JOURNAL_TYPE_REMOTE_NAME:
+			/* Remote name */
+			remote_name = TRUE;
+			remote_name_valid = filter_compare(rule, call->remote->name);
+			break;
+		case JOURNAL_TYPE_REMOTE_NUMBER:
+			/* Remote number */
+			remote_number = TRUE;
+			remote_number_valid = filter_compare(rule, call->remote->number);
+			break;
+		case JOURNAL_TYPE_LOCAL_NUMBER:
+			/* Local number */
+			local_number = TRUE;
+			local_number_valid = filter_compare(rule, call->local->number);
+			break;
+		default:
+			break;
 		}
 	}
 

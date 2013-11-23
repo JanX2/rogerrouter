@@ -30,7 +30,8 @@
  * \brief Execute URI
  * \param uri uri name
  */
-void os_execute(const gchar *uri) {
+void os_execute(const gchar *uri)
+{
 	gchar *exec;
 
 	/* create execution command line for g_spawn */

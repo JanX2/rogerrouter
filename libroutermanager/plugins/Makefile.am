@@ -12,6 +12,10 @@ if WITH_GSTREAMER0
 SUBDIRS += gstreamer
 endif
 
+if WITH_GSTREAMER1
+SUBDIRS += gstreamer1
+endif
+
 if WITH_SECRET
 SUBDIRS += secret
 endif

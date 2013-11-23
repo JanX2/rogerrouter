@@ -131,7 +131,7 @@ gboolean ftp_read_control_response(struct ftp *client)
 				client->response[length - 2] = '\0';
 			}
 			if (isdigit(client->response[0]) && isdigit(client->response[1]) && isdigit(client->response[2]) && client->response[3] == ' ') {
-				client->code = (client->response[0] - '0') * 100 + (client->response[1] - '0') * 10 + (client->response[2] - '0'); 
+				client->code = (client->response[0] - '0') * 100 + (client->response[1] - '0') * 10 + (client->response[2] - '0');
 			}
 
 #ifdef FTP_DEBUG
@@ -185,7 +185,7 @@ gchar *ftp_read_data_response(GIOChannel *channel, gsize *len)
 
 	if (len) {
 		if (data) {
-		//	data[data_offset - 2] = '\0';
+			//	data[data_offset - 2] = '\0';
 		}
 		*len = data_offset;
 	}

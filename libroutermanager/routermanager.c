@@ -159,11 +159,6 @@ gboolean routermanager_init(gboolean debug, GError **error)
 	/* Initialize network monitor */
 	net_monitor_init();
 
-#ifdef HAVE_DBUS
-	/* Bluetooth */
-	bluetooth_init();
-#endif
-
 	return TRUE;
 }
 

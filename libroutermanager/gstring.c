@@ -73,7 +73,7 @@ gchar *g_convert_utf8(const gchar *text)
 	}
 
 	str = g_convert(text, strlen(text), "UTF-8", "ISO-8859-1", &read_bytes, &written_bytes, &error);
-	if (str == NULL){
+	if (str == NULL) {
 		str = g_strdup(text);
 
 		for (chr = (guchar *) str; *chr != 0; chr++) {
@@ -185,7 +185,7 @@ static gint index_in_array(gchar **arr, gchar *string)
  * \param xml test xml
  * \return unicode char
  */
-static gunichar unichar_for_entity(gchar *entity,gboolean numerical, gboolean iso8859_1, gboolean symbols, gboolean specials, gboolean xml)
+static gunichar unichar_for_entity(gchar *entity, gboolean numerical, gboolean iso8859_1, gboolean symbols, gboolean specials, gboolean xml)
 {
 	gint indx;
 

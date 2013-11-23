@@ -44,12 +44,12 @@ struct event_translate {
 struct event_translate event_translation_table[] = {
 	{G_FILE_MONITOR_EVENT_CHANGED , "file changed"},
 	{G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT, "file changes finished"},
-	{G_FILE_MONITOR_EVENT_DELETED,"file deleted"},
+	{G_FILE_MONITOR_EVENT_DELETED, "file deleted"},
 	{G_FILE_MONITOR_EVENT_CREATED, "file created"},
 	{G_FILE_MONITOR_EVENT_ATTRIBUTE_CHANGED, "file attrbutes changed"},
 	{G_FILE_MONITOR_EVENT_PRE_UNMOUNT, "file system about to be unmounted"},
 	{G_FILE_MONITOR_EVENT_UNMOUNTED, "file system unmounted"},
-	{-1, "" }
+	{ -1, "" }
 };
 
 static const char *event_to_text(GFileMonitorEvent event)
@@ -133,17 +133,18 @@ end:
 
 /**
  * Create file monitor for the users own spooler directory
- * 
+ *
  */
-static gboolean fax_setup_file_monitor( GError **error ) {
+static gboolean fax_setup_file_monitor(GError **error)
+{
 	GFileMonitor *file_monitor = NULL;
-	GFile *file = NULL; 
+	GFile *file = NULL;
 	GDir *user_spool_dir = NULL;
 	gboolean ret;
 	const gchar *user_name = g_get_user_name();
-	g_assert( user_name != NULL);
+	g_assert(user_name != NULL);
 	// const gchar *new_file = NULL;
-	gchar * dir_name =  g_strdup_printf("%s/%s", SPOOLER_DIR, user_name);
+	gchar *dir_name =  g_strdup_printf("%s/%s", SPOOLER_DIR, user_name);
 
 #ifdef FAX_SPOOLER_DEBUG
 	g_debug("Setting file monitor to '%s'", dir_name);
@@ -158,7 +159,7 @@ static gboolean fax_setup_file_monitor( GError **error ) {
 	//	}
 	//}
 	g_dir_close(user_spool_dir);
-		
+
 	/* Create GFile for GFileMonitor */
 	file = g_file_new_for_path(dir_name);
 	/* Create file monitor for spool directory */
@@ -210,9 +211,9 @@ static void fax_spooler_new_dir_cb(GFileMonitor *monitor, GFile *file, GFile *ot
 
 	file_name = g_file_get_path(file);
 	g_assert(file_name != NULL);
-	dir_basename = g_path_get_basename ( file_name);
-	if ( g_strcmp0 ( dir_basename, user_name ) == 0 ) {
-		g_file_monitor_cancel( monitor );
+	dir_basename = g_path_get_basename(file_name);
+	if (g_strcmp0(dir_basename, user_name) == 0) {
+		g_file_monitor_cancel(monitor);
 		fax_setup_file_monitor(&file_error);
 	}
 	g_free(file_name);
@@ -249,7 +250,7 @@ gboolean fax_printer_init(GError **error)
 	}
 	g_dir_close(dir);
 
-	user_dir_name = g_strdup_printf( "%s/%s", dir_name, g_get_user_name());
+	user_dir_name = g_strdup_printf("%s/%s", dir_name, g_get_user_name());
 
 	/* Check if users spooler dir is present */
 	if (g_file_test(user_dir_name, G_FILE_TEST_IS_DIR)) {
@@ -258,7 +259,7 @@ gboolean fax_printer_init(GError **error)
 		g_free(user_dir_name);
 		return ret;
 	}
-		
+
 	/* user spool dir does not exist, wait for it to appear */
 
 #ifdef FAX_SPOOLER_DEBUG

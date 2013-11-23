@@ -34,8 +34,7 @@ G_BEGIN_DECLS
 
 #define RM_ERROR rm_print_error_quark()
 
-typedef enum
-{
+typedef enum {
 	RM_ERROR_FAX,
 	RM_ERROR_ROUTER
 } rm_error;

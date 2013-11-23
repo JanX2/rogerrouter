@@ -51,7 +51,8 @@ struct connection *connection_add_call(gint id, gint type, const gchar *local_nu
  * \param id connection id
  * \return connection pointer or NULL on error
  */
-struct connection *connection_find_by_id(gint id) {
+struct connection *connection_find_by_id(gint id)
+{
 	GSList *list = connection_list;
 	struct connection *connection;
 
@@ -73,7 +74,8 @@ struct connection *connection_find_by_id(gint id) {
  * \param remote_number connection number
  * \return connection pointer or NULL on error
  */
-struct connection *connection_find_by_number(const gchar *remote_number) {
+struct connection *connection_find_by_number(const gchar *remote_number)
+{
 	GSList *list = connection_list;
 	struct connection *connection;
 
@@ -94,7 +96,8 @@ struct connection *connection_find_by_number(const gchar *remote_number) {
  * \brief Remove connection from connection list
  * \param connection connection pointer
  */
-void connection_remove(struct connection *connection) {
+void connection_remove(struct connection *connection)
+{
 	g_assert(connection_list != NULL);
 	g_assert(connection != NULL);
 

@@ -36,7 +36,8 @@
  * \param type node type
  * \return new node pointer
  */
-xmlnode *new_node(const char *name, XMLNodeType type) {
+xmlnode *new_node(const char *name, XMLNodeType type)
+{
 	xmlnode *node = g_new0(xmlnode, 1);
 
 	node->name = g_strdup(name);
@@ -50,7 +51,8 @@ xmlnode *new_node(const char *name, XMLNodeType type) {
  * \param name node name
  * \return new node pointer or NULL on error
  */
-xmlnode *xmlnode_new(const char *name) {
+xmlnode *xmlnode_new(const char *name)
+{
 	g_return_val_if_fail(name != NULL, NULL);
 
 	return new_node(name, XMLNODE_TYPE_TAG);
@@ -61,7 +63,8 @@ xmlnode *xmlnode_new(const char *name) {
  * \param parent parent node
  * \param child child node
  */
-void xmlnode_insert_child(xmlnode *parent, xmlnode *child) {
+void xmlnode_insert_child(xmlnode *parent, xmlnode *child)
+{
 	g_return_if_fail(parent != NULL);
 	g_return_if_fail(child != NULL);
 
@@ -82,7 +85,8 @@ void xmlnode_insert_child(xmlnode *parent, xmlnode *child) {
  * \param name node name
  * \return new node pointer or NULL on error
  */
-xmlnode *xmlnode_new_child(xmlnode *parent, const char *name) {
+xmlnode *xmlnode_new_child(xmlnode *parent, const char *name)
+{
 	xmlnode *node;
 
 	g_return_val_if_fail(parent != NULL, NULL);
@@ -99,7 +103,8 @@ xmlnode *xmlnode_new_child(xmlnode *parent, const char *name) {
  * \brief Free node
  * \param node node to free
  */
-void xmlnode_free(xmlnode *node) {
+void xmlnode_free(xmlnode *node)
+{
 	xmlnode *x, *y;
 
 	g_return_if_fail(node != NULL);
@@ -149,7 +154,8 @@ void xmlnode_free(xmlnode *node) {
  * \param node node pointer
  * \param attr attribute name
  */
-static void xmlnode_remove_attrib(xmlnode *node, const char *attr) {
+static void xmlnode_remove_attrib(xmlnode *node, const char *attr)
+{
 	xmlnode *psAttrNode, *sibling = NULL;
 
 	g_return_if_fail(node != NULL);
@@ -178,7 +184,8 @@ static void xmlnode_remove_attrib(xmlnode *node, const char *attr) {
  * \param attr attribute name
  * \param value value to set
  */
-void xmlnode_set_attrib(xmlnode *node, const char *attr, const char *value) {
+void xmlnode_set_attrib(xmlnode *node, const char *attr, const char *value)
+{
 	xmlnode *psAttribNode;
 
 	g_return_if_fail(node != NULL);
@@ -199,7 +206,8 @@ void xmlnode_set_attrib(xmlnode *node, const char *attr, const char *value) {
  * \param node node pointer
  * \return node prefix
  */
-static const char *xmlnode_get_prefix(xmlnode *node) {
+static const char *xmlnode_get_prefix(xmlnode *node)
+{
 	g_return_val_if_fail(node != NULL, NULL);
 	return node->prefix;
 }
@@ -210,7 +218,8 @@ static const char *xmlnode_get_prefix(xmlnode *node) {
  * \param value value
  * \param psBuf buffer to print to
  */
-static void xmlnode_to_str_foreach_append_ns(const char *pnKey, const char *value, GString *psBuf) {
+static void xmlnode_to_str_foreach_append_ns(const char *pnKey, const char *value, GString *psBuf)
+{
 	if (*pnKey) {
 		g_string_append_printf(psBuf, " xmlns:%s='%s'", pnKey, value);
 	} else {
@@ -226,7 +235,8 @@ static void xmlnode_to_str_foreach_append_ns(const char *pnKey, const char *valu
  * \param nDepth depth
  * \return string data or NULL on error
  */
-static char *xmlnode_to_str_helper(xmlnode *node, int *pnLen, gboolean bFormatting, int nDepth) {
+static char *xmlnode_to_str_helper(xmlnode *node, int *pnLen, gboolean bFormatting, int nDepth)
+{
 	GString *psText = g_string_new("");
 	const char *prefix;
 	xmlnode *c;
@@ -325,7 +335,8 @@ static char *xmlnode_to_str_helper(xmlnode *node, int *pnLen, gboolean bFormatti
  * \param pnLen pointer to len
  * \return formatted string or NULL on error
  */
-char *xmlnode_to_formatted_str(xmlnode *node, int *pnLen) {
+char *xmlnode_to_formatted_str(xmlnode *node, int *pnLen)
+{
 	char *pnXml, *pnXmlWithDeclaration;
 
 	g_return_val_if_fail(node != NULL, NULL);
@@ -352,7 +363,8 @@ struct _xmlnode_parser_data {
  * \param node xml node
  * \param xml_ns xml namespace
  */
-void xmlnode_set_namespace(xmlnode *node, const char *xml_ns) {
+void xmlnode_set_namespace(xmlnode *node, const char *xml_ns)
+{
 	g_return_if_fail(node != NULL);
 
 	g_free(node->xml_ns);
@@ -364,7 +376,8 @@ void xmlnode_set_namespace(xmlnode *node, const char *xml_ns) {
  * \param node xml node
  * \param prefix prefix
  */
-static void xmlnode_set_prefix(xmlnode *node, const char *prefix) {
+static void xmlnode_set_prefix(xmlnode *node, const char *prefix)
+{
 	g_return_if_fail(node != NULL);
 
 	g_free(node->prefix);
@@ -377,7 +390,8 @@ static void xmlnode_set_prefix(xmlnode *node, const char *prefix) {
  * \param data data pointer
  * \param size size of data
  */
-void xmlnode_insert_data(xmlnode *node, const char *data, gssize size) {
+void xmlnode_insert_data(xmlnode *node, const char *data, gssize size)
+{
 	xmlnode *child;
 	gsize real_size;
 
@@ -388,7 +402,7 @@ void xmlnode_insert_data(xmlnode *node, const char *data, gssize size) {
 	if (size == -1) {
 		real_size = strlen(data);
 	} else {
- 		real_size = size;
+		real_size = size;
 	}
 
 	child = new_node(NULL, XMLNODE_TYPE_DATA);
@@ -406,7 +420,8 @@ void xmlnode_insert_data(xmlnode *node, const char *data, gssize size) {
  * \param prefix prefix
  * \param value value
  */
-static void xmlnode_set_attrib_with_prefix(xmlnode *node, const char *attr, const char *prefix, const char *value) {
+static void xmlnode_set_attrib_with_prefix(xmlnode *node, const char *attr, const char *prefix, const char *value)
+{
 	xmlnode *psAttribNode;
 
 	g_return_if_fail(node != NULL);
@@ -427,7 +442,8 @@ static void xmlnode_set_attrib_with_prefix(xmlnode *node, const char *attr, cons
  * \param attr attribute name
  * \return attribute data
  */
-const char *xmlnode_get_attrib(xmlnode *node, const char *attr) {
+const char *xmlnode_get_attrib(xmlnode *node, const char *attr)
+{
 	xmlnode *x;
 
 	g_return_val_if_fail(node != NULL, NULL);
@@ -447,7 +463,8 @@ const char *xmlnode_get_attrib(xmlnode *node, const char *attr) {
  * \param pnHtml html text
  * \return unescaped text
  */
-static char *unescape_html(const char *pnHtml) {
+static char *unescape_html(const char *pnHtml)
+{
 	if (pnHtml != NULL) {
 		const char *pnC = pnHtml;
 		GString *ret = g_string_new("");
@@ -480,13 +497,14 @@ static char *unescape_html(const char *pnHtml) {
  * \param attributes pointer to xml attributes
  */
 static void xmlnode_parser_element_start_libxml(void *user_data, const xmlChar *element_name, const xmlChar *prefix,
-		const xmlChar *xml_ns, int nNbNamespaces, const xmlChar **ppsNamespaces, int nNbAttributes, int nNbDefaulted,
-		const xmlChar **attributes) {
+        const xmlChar *xml_ns, int nNbNamespaces, const xmlChar **ppsNamespaces, int nNbAttributes, int nNbDefaulted,
+        const xmlChar **attributes)
+{
 	struct _xmlnode_parser_data *xpd = user_data;
 	xmlnode *node;
 	int nI, nJ;
 
-	if(!element_name || xpd->error) {
+	if (!element_name || xpd->error) {
 		return;
 	} else {
 		if (xpd->current) {
@@ -539,7 +557,8 @@ static void xmlnode_parser_element_start_libxml(void *user_data, const xmlChar *
  * \param prefix prefix
  * \param xml_ns xml namespace
  */
-static void xmlnode_parser_element_end_libxml(void *user_data, const xmlChar *element_name, const xmlChar *prefix, const xmlChar *xml_ns) {
+static void xmlnode_parser_element_end_libxml(void *user_data, const xmlChar *element_name, const xmlChar *prefix, const xmlChar *xml_ns)
+{
 	struct _xmlnode_parser_data *xpd = user_data;
 
 	if (!element_name || !xpd->current || xpd->error) {
@@ -559,7 +578,8 @@ static void xmlnode_parser_element_end_libxml(void *user_data, const xmlChar *el
  * \param text text element
  * \param text_len text length
  */
-static void xmlnode_parser_element_text_libxml(void *user_data, const xmlChar *text, int text_len) {
+static void xmlnode_parser_element_text_libxml(void *user_data, const xmlChar *text, int text_len)
+{
 	struct _xmlnode_parser_data *xpd = user_data;
 
 	if (!xpd->current || xpd->error) {
@@ -578,7 +598,8 @@ static void xmlnode_parser_element_text_libxml(void *user_data, const xmlChar *t
  * \param user_data xmlnode parser data
  * \param msg error message
  */
-static void xmlnode_parser_error_libxml(void *user_data, const char *msg, ...) {
+static void xmlnode_parser_error_libxml(void *user_data, const char *msg, ...)
+{
 	struct _xmlnode_parser_data *xpd = user_data;
 	char err_msg[2048];
 	va_list args;
@@ -666,7 +687,8 @@ static xmlSAXHandler sXmlnodeParserLibxml = {
  * \param size size of string
  * \return new xml node
  */
-xmlnode *xmlnode_from_str(const char *str, gssize size) {
+xmlnode *xmlnode_from_str(const char *str, gssize size)
+{
 	struct _xmlnode_parser_data *xpd;
 	xmlnode *ret;
 	gsize real_size;
@@ -706,7 +728,8 @@ xmlnode *xmlnode_from_str(const char *str, gssize size) {
  * \param node xml node
  * \return namespace
  */
-const char *xmlnode_get_namespace(xmlnode *node) {
+const char *xmlnode_get_namespace(xmlnode *node)
+{
 	g_return_val_if_fail(node != NULL, NULL);
 
 	return node->xml_ns;
@@ -719,7 +742,8 @@ const char *xmlnode_get_namespace(xmlnode *node) {
  * \param ns namespace
  * \return chuld xmlnode
  */
-xmlnode *xmlnode_get_child_with_namespace(const xmlnode *parent, const char *name, const char *ns) {
+xmlnode *xmlnode_get_child_with_namespace(const xmlnode *parent, const char *name, const char *ns)
+{
 	xmlnode *x, *ret = NULL;
 	char **names;
 	char *parent_name, *child_name;
@@ -759,7 +783,8 @@ xmlnode *xmlnode_get_child_with_namespace(const xmlnode *parent, const char *nam
  * \param name child name
  * \return child xmlnode
  */
-xmlnode *xmlnode_get_child(const xmlnode *parent, const char *name) {
+xmlnode *xmlnode_get_child(const xmlnode *parent, const char *name)
+{
 	return xmlnode_get_child_with_namespace(parent, name, NULL);
 }
 
@@ -768,7 +793,8 @@ xmlnode *xmlnode_get_child(const xmlnode *parent, const char *name) {
  * \param node xml node
  * \return next xml node twin
  */
-xmlnode *xmlnode_get_next_twin(xmlnode *node) {
+xmlnode *xmlnode_get_next_twin(xmlnode *node)
+{
 	xmlnode *sibling;
 	const char *ns = xmlnode_get_namespace(node);
 
@@ -783,7 +809,7 @@ xmlnode *xmlnode_get_next_twin(xmlnode *node) {
 		}
 
 		if (sibling->type == XMLNODE_TYPE_TAG && !strcmp(node->name, sibling->name) && (!ns || (xml_ns && !strcmp(ns, xml_ns)))) {
-				return sibling;
+			return sibling;
 		}
 	}
 
@@ -795,7 +821,8 @@ xmlnode *xmlnode_get_next_twin(xmlnode *node) {
  * \param node xml node
  * \return xmlnode data
  */
-char *xmlnode_get_data(xmlnode *node) {
+char *xmlnode_get_data(xmlnode *node)
+{
 	GString *str = NULL;
 	xmlnode *c;
 
@@ -803,7 +830,7 @@ char *xmlnode_get_data(xmlnode *node) {
 
 	for (c = node->child; c; c = c->next) {
 		if (c->type == XMLNODE_TYPE_DATA) {
-			if(!str) {
+			if (!str) {
 				str = g_string_new_len(c->data, c->data_size);
 			} else {
 				str = g_string_append_len(str, c->data, c->data_size);
@@ -824,7 +851,8 @@ char *xmlnode_get_data(xmlnode *node) {
  * \param data data string
  * \return error code
  */
-int xmlnode_set_data(xmlnode *node, gchar *data) {
+int xmlnode_set_data(xmlnode *node, gchar *data)
+{
 	xmlnode *c;
 	int nRet = -1;
 
@@ -852,7 +880,8 @@ int xmlnode_set_data(xmlnode *node, gchar *data) {
  * \param file_name xml file name
  * \return new xml node or NULL
  */
-xmlnode *read_xml_from_file(const char *file_name) {
+xmlnode *read_xml_from_file(const char *file_name)
+{
 	const char *user_dir = g_get_user_data_dir();
 	gchar *file_name_full = NULL;
 	gchar *contents = NULL;
@@ -917,7 +946,7 @@ xmlnode *xmlnode_copy(const xmlnode *src)
 	ret->prefix = g_strdup(src->prefix);
 	if (src->namespace_map) {
 		ret->namespace_map = g_hash_table_new_full(g_str_hash, g_str_equal,
-		                                           g_free, g_free);
+		                     g_free, g_free);
 		g_hash_table_foreach(src->namespace_map, xmlnode_copy_foreach_ns, ret->namespace_map);
 	}
 

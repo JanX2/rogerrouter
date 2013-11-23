@@ -68,20 +68,20 @@ static void log_func(const gchar *log_domain, GLogLevelFlags log_level, const gc
 	}
 
 	switch (log_level) {
-		case G_LOG_LEVEL_ERROR:
-			g_printf("Error: ");
-			break;
-		case G_LOG_LEVEL_CRITICAL:
-			g_printf("Critical: ");
-			break;
-		case G_LOG_LEVEL_WARNING:
-			g_printf("Warning: ");
-			break;
-		case G_LOG_LEVEL_DEBUG:
-			g_printf("Debug: ");
-			break;
-		default:
-			break;
+	case G_LOG_LEVEL_ERROR:
+		g_printf("Error: ");
+		break;
+	case G_LOG_LEVEL_CRITICAL:
+		g_printf("Critical: ");
+		break;
+	case G_LOG_LEVEL_WARNING:
+		g_printf("Warning: ");
+		break;
+	case G_LOG_LEVEL_DEBUG:
+		g_printf("Debug: ");
+		break;
+	default:
+		break;
 	}
 
 	g_printf("%s\n", message);

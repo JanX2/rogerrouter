@@ -297,27 +297,41 @@ static void *gstreamer_open(void)
 
 	output = g_settings_get_string(profile->settings, "audio-output");
 	input = g_settings_get_string(profile->settings, "audio-input");
-	if (EMPTY_STRING(output)) {
+	//if (EMPTY_STRING(output)) {
 		output = g_strdup("autoaudiosink");
-	}
+	//}
 	if (EMPTY_STRING(input)) {
 		input = g_strdup("autoaudiosrc");
 	}
 
 	/* Create command for output pipeline */
-	command = g_strdup_printf("appsrc is-live=true format=time do-timestamp=true min-latency=1 max-latency=5000000 name=routermanager_src"
-		" caps=audio/x-raw-int"
-		",rate=%d"
-		",channels=%d"
-		",width=%d"
-		",depth=%d"
-		",signed=true,endianness=1234"
-		" ! %s",
-		gstreamer_sample_rate, gstreamer_channels, gstreamer_bits_per_sample, gstreamer_bits_per_sample,
-		output);
+	GstElement *source = gst_element_factory_make("appsrc", "routermanager_src");
 
-	gstreamer_start_pipeline(pipes, command);
-	g_free(command);
+	gst_app_src_set_stream_type(GST_APP_SRC(source), GST_APP_STREAM_TYPE_STREAM);
+
+	GstPad *sourcepad = gst_element_get_static_pad(source, "src");
+
+	gst_pad_set_caps(sourcepad,
+		gst_caps_new_simple(
+			"audio/x-raw-int",
+			"rate", G_TYPE_INT, gstreamer_sample_rate,
+			"channels", G_TYPE_INT, gstreamer_channels,
+			"width", G_TYPE_INT, gstreamer_bits_per_sample,
+			"depth", G_TYPE_INT, gstreamer_bits_per_sample,
+			"signed", G_TYPE_BOOLEAN, TRUE,
+			"endianness", G_TYPE_INT, 1234,
+			NULL));
+	gst_object_unref(sourcepad);
+
+	GstElement *sink = gst_element_factory_make(output, "sink");
+	GstElement *pipeline = gst_pipeline_new("routermanager_src_pipe");
+	gst_bin_add_many(GST_BIN(pipeline), source, sink, NULL);
+	gst_element_link_many(source, sink, NULL);
+	gst_element_set_state(pipeline, GST_STATE_PLAYING);
+
+	pipes->out_pipe = pipeline;
+	pipes->out_bin = gst_bin_get_by_name(GST_BIN(pipeline), "routermanager_src");
+	gstreamer_set_buffer_output_size(pipeline, 160);
 
 	/* Create command for input pipeline */
 	command = g_strdup_printf("%s ! appsink drop=true max_buffers=2"
@@ -443,8 +457,8 @@ static void impl_activate(PeasActivatable *plugin)
 {
 	gst_init_check(NULL, NULL, NULL);
 
-	g_setenv("PULSE_PROP_media.role", "phone", TRUE);
-	g_setenv("PULSE_PROP_filter.want", "echo-cancel", TRUE);
+	//g_setenv("PULSE_PROP_media.role", "phone", TRUE);
+	//g_setenv("PULSE_PROP_filter.want", "echo-cancel", TRUE);
 
 	routermanager_audio_register(&gstreamer);
 }

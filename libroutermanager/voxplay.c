@@ -50,7 +50,8 @@ struct vox_playback {
  * \param user_data audio private pointer
  * \return NULL
  */
-static gpointer playback_thread(gpointer user_data) {
+static gpointer playback_thread(gpointer user_data)
+{
 	struct vox_playback *playback = user_data;
 	short output[MAX_FRAME_SIZE];
 	spx_int32_t frame_size;
@@ -105,7 +106,8 @@ static gpointer playback_thread(gpointer user_data) {
  * \param len length of voice data
  * \return vox play structure
  */
-gpointer vox_play(gchar *data, gsize len) {
+gpointer vox_play(gchar *data, gsize len)
+{
 	struct vox_playback *playback;
 	const SpeexMode *mode;
 	spx_int32_t rate = 0;

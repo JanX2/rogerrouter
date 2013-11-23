@@ -102,7 +102,8 @@ gint call_sort_by_date(gconstpointer a, gconstpointer b)
  * \param priv private data
  * \return new call list with appended call structure
  */
-GSList *call_add(GSList *journal, gint type, const gchar *date_time, const gchar *remote_name, const gchar *remote_number, const gchar *local_name, const gchar *local_number, const gchar *duration, gpointer priv) {
+GSList *call_add(GSList *journal, gint type, const gchar *date_time, const gchar *remote_name, const gchar *remote_number, const gchar *local_name, const gchar *local_number, const gchar *duration, gpointer priv)
+{
 	GSList *list = journal;
 	struct call *call = NULL;
 
@@ -341,46 +342,46 @@ gchar *call_format_number(struct profile *profile, const gchar *number, enum num
 	}
 
 	switch (output_format) {
+	case NUMBER_FORMAT_LOCAL:
+	/* local number format */
+	case NUMBER_FORMAT_NATIONAL:
+		/* national number format */
+		switch (number_format) {
 		case NUMBER_FORMAT_LOCAL:
-			/* local number format */
-		case NUMBER_FORMAT_NATIONAL:
-			/* national number format */
-			switch (number_format) {
-				case NUMBER_FORMAT_LOCAL:
-					if (output_format == NUMBER_FORMAT_LOCAL) {
-						result = g_strdup(tmp);
-					} else {
-						result = g_strconcat(national_prefix, my_area_code, tmp, NULL);
-					}
-					break;
-				case NUMBER_FORMAT_NATIONAL:
-					result = g_strconcat(national_prefix, tmp, NULL);
-					break;
-				case NUMBER_FORMAT_INTERNATIONAL:
-					result = g_strconcat(international_prefix, tmp, NULL);
-					break;
+			if (output_format == NUMBER_FORMAT_LOCAL) {
+				result = g_strdup(tmp);
+			} else {
+				result = g_strconcat(national_prefix, my_area_code, tmp, NULL);
 			}
+			break;
+		case NUMBER_FORMAT_NATIONAL:
+			result = g_strconcat(national_prefix, tmp, NULL);
 			break;
 		case NUMBER_FORMAT_INTERNATIONAL:
-			/* international prefix + international format */
-		case NUMBER_FORMAT_INTERNATIONAL_PLUS:
-			/* international format prefixed by a + */
-			my_prefix = (output_format == NUMBER_FORMAT_INTERNATIONAL_PLUS) ? "+" : international_prefix;
-			switch (number_format) {
-				case NUMBER_FORMAT_LOCAL:
-					result = g_strconcat(my_prefix, my_country_code, my_area_code, tmp, NULL);
-					break;
-				case NUMBER_FORMAT_NATIONAL:
-					result = g_strconcat(my_prefix, my_country_code, tmp, NULL);
-					break;
-				case NUMBER_FORMAT_INTERNATIONAL:
-					result = g_strconcat(my_prefix, tmp, NULL);
-					break;
-			}
+			result = g_strconcat(international_prefix, tmp, NULL);
 			break;
-		default:
-			g_assert(output_format);
+		}
+		break;
+	case NUMBER_FORMAT_INTERNATIONAL:
+	/* international prefix + international format */
+	case NUMBER_FORMAT_INTERNATIONAL_PLUS:
+		/* international format prefixed by a + */
+		my_prefix = (output_format == NUMBER_FORMAT_INTERNATIONAL_PLUS) ? "+" : international_prefix;
+		switch (number_format) {
+		case NUMBER_FORMAT_LOCAL:
+			result = g_strconcat(my_prefix, my_country_code, my_area_code, tmp, NULL);
 			break;
+		case NUMBER_FORMAT_NATIONAL:
+			result = g_strconcat(my_prefix, my_country_code, tmp, NULL);
+			break;
+		case NUMBER_FORMAT_INTERNATIONAL:
+			result = g_strconcat(my_prefix, tmp, NULL);
+			break;
+		}
+		break;
+	default:
+		g_assert(output_format);
+		break;
 	}
 
 	g_free(international_prefix);

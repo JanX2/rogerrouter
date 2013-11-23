@@ -125,19 +125,19 @@ void action_connection_notify_cb(AppObject *object, struct connection *connectio
 #endif
 
 		if (/* Incoming connection */
-			((connection->type == CONNECTION_TYPE_INCOMING) && (action->flags & ACTION_INCOMING_RING)) ||
-			/* Outgoing connection */
-			((connection->type == CONNECTION_TYPE_OUTGOING) && (action->flags & ACTION_OUTGOING_DIAL)) ||
-			/* Incoming connection missed */
-			((connection->type == CONNECTION_TYPE_MISS) && (action->flags & ACTION_INCOMING_MISSED)) ||
-			/* Incoming connection established */
-			((connection->type == (CONNECTION_TYPE_INCOMING | CONNECTION_TYPE_CONNECT)) && (action->flags & ACTION_INCOMING_BEGIN)) ||
-			/* Outgoing connection established */
-			((connection->type == (CONNECTION_TYPE_OUTGOING | CONNECTION_TYPE_CONNECT)) && (action->flags & ACTION_OUTGOING_BEGIN)) ||
-			/* Incoming connection terminated */
-			((connection->type == (CONNECTION_TYPE_INCOMING | CONNECTION_TYPE_CONNECT | CONNECTION_TYPE_DISCONNECT)) && (action->flags & ACTION_INCOMING_END)) ||
-			/* Outgoing connection terminated */
-			((connection->type == (CONNECTION_TYPE_OUTGOING | CONNECTION_TYPE_CONNECT | CONNECTION_TYPE_DISCONNECT)) && (action->flags & ACTION_OUTGOING_END))) {
+		    ((connection->type == CONNECTION_TYPE_INCOMING) && (action->flags & ACTION_INCOMING_RING)) ||
+		    /* Outgoing connection */
+		    ((connection->type == CONNECTION_TYPE_OUTGOING) && (action->flags & ACTION_OUTGOING_DIAL)) ||
+		    /* Incoming connection missed */
+		    ((connection->type == CONNECTION_TYPE_MISS) && (action->flags & ACTION_INCOMING_MISSED)) ||
+		    /* Incoming connection established */
+		    ((connection->type == (CONNECTION_TYPE_INCOMING | CONNECTION_TYPE_CONNECT)) && (action->flags & ACTION_INCOMING_BEGIN)) ||
+		    /* Outgoing connection established */
+		    ((connection->type == (CONNECTION_TYPE_OUTGOING | CONNECTION_TYPE_CONNECT)) && (action->flags & ACTION_OUTGOING_BEGIN)) ||
+		    /* Incoming connection terminated */
+		    ((connection->type == (CONNECTION_TYPE_INCOMING | CONNECTION_TYPE_CONNECT | CONNECTION_TYPE_DISCONNECT)) && (action->flags & ACTION_INCOMING_END)) ||
+		    /* Outgoing connection terminated */
+		    ((connection->type == (CONNECTION_TYPE_OUTGOING | CONNECTION_TYPE_CONNECT | CONNECTION_TYPE_DISCONNECT)) && (action->flags & ACTION_OUTGOING_END))) {
 			gchar *tmp = action_regex(action->exec, connection);
 
 			g_debug("Action requested: '%s', executing '%s'", action->exec, tmp);
@@ -223,7 +223,7 @@ void action_commit(struct profile *profile)
 	}
 	actions[counter] = NULL;
 
-	g_settings_set_strv(profile->settings, "actions", (const gchar *const *)actions);
+	g_settings_set_strv(profile->settings, "actions", (const gchar * const *)actions);
 
 	//g_strfreev(actions);
 }
