@@ -103,10 +103,10 @@ int main(int argc, char *argv[])
 	 */
 
 	if (argc == 1) {
-		puts(
+		printf(
 		    /* device-class device-uril */
 		    /* TODO: use command line/device-uri? */
-		    "file roger-cups:/ "
+		    "file %s:/ "
 		    /* device make and model */
 		    "\"Roger-Router Fax\" "
 		    /* device-info */
@@ -114,7 +114,8 @@ int main(int argc, char *argv[])
 		    /* device-id */
 		    "\"MFG:Roger-Router;MDL:Roger-fax;"
 		    "DES:Roger-Router Fax Printer for Fritz!Box routers;"
-		    "CLS:PRINTER;CMD:POSTSCRIPT;\"");
+		    "CLS:PRINTER;CMD:POSTSCRIPT;\"",
+		    argv[0]);
 		return (CUPS_BACKEND_OK);
 	} else if (argc < 6 || argc > 7) {
 		fprintf(stderr, _("roger-fax backend - version %s\n") , VERSION);
