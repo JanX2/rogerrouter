@@ -29,7 +29,7 @@
 #define ROUTERMANAGER_WINCRED_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_WINCRED_PLUGIN, RouterManagerWinCredPlugin))
 
 typedef struct {
-        guint signal_id;
+	guint signal_id;
 } RouterManagerWinCredPluginPrivate;
 
 ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_WINCRED_PLUGIN, RouterManagerWinCredPlugin, routermanager_wincred_plugin)

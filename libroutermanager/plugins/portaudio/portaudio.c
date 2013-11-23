@@ -56,11 +56,11 @@ static gint port_sample_rate = 8000;
 static gint port_bits_per_sample = 16;
 
 #if defined(__i386__) || defined(__i486__) || defined(__i586__) || defined(__i686__) || defined(__x86_64__)
-	#define pa_util_read_memory_barrier() __asm__ volatile("lfence":::"memory")
-	#define pa_util_write_memory_barrier() __asm__ volatile("sfence":::"memory")
+#define pa_util_read_memory_barrier() __asm__ volatile("lfence":::"memory")
+#define pa_util_write_memory_barrier() __asm__ volatile("sfence":::"memory")
 #else
-	#define pa_util_read_memory_barrier()
-	#define pa_util_write_memory_barrier()
+#define pa_util_read_memory_barrier()
+#define pa_util_write_memory_barrier()
 #endif
 
 #ifdef USE_SPEEX
@@ -98,7 +98,8 @@ struct port_private {
  * \brief Clear buffer
  * \param buffer ring buffer structure
  */
-void pa_util_flush_ring_buffer(pa_util_ring_buffer *ring_buffer) {
+void pa_util_flush_ring_buffer(pa_util_ring_buffer *ring_buffer)
+{
 	ring_buffer->write_index = ring_buffer->read_index = 0;
 }
 
@@ -109,7 +110,8 @@ void pa_util_flush_ring_buffer(pa_util_ring_buffer *ring_buffer) {
  * \param data allocated buffer
  * \return 0 on success, otherwise error
  */
-long pa_util_initialize_ring_buffer(pa_util_ring_buffer *ring_buffer, long bytes, void *data) {
+long pa_util_initialize_ring_buffer(pa_util_ring_buffer *ring_buffer, long bytes, void *data)
+{
 	if (((bytes - 1) & bytes) != 0) {
 		g_warning("Size not power of 2");
 		return -1;
@@ -130,7 +132,8 @@ long pa_util_initialize_ring_buffer(pa_util_ring_buffer *ring_buffer, long bytes
  * \param buffer ring buffer structure
  * \return available size in bytes
  */
-long pa_util_get_ring_buffer_read_available(pa_util_ring_buffer *ring_buffer) {
+long pa_util_get_ring_buffer_read_available(pa_util_ring_buffer *ring_buffer)
+{
 	pa_util_read_memory_barrier();
 
 	return ((ring_buffer->write_index - ring_buffer->read_index) & ring_buffer->big_mask);
@@ -141,7 +144,8 @@ long pa_util_get_ring_buffer_read_available(pa_util_ring_buffer *ring_buffer) {
  * \param buffer ring buffer structure
  * \return available size in bytes
  */
-long pa_util_get_ring_buffer_write_available(pa_util_ring_buffer *ring_buffer) {
+long pa_util_get_ring_buffer_write_available(pa_util_ring_buffer *ring_buffer)
+{
 	return (ring_buffer->buffer_size - pa_util_get_ring_buffer_read_available(ring_buffer));
 }
 
@@ -155,7 +159,8 @@ long pa_util_get_ring_buffer_write_available(pa_util_ring_buffer *ring_buffer) {
  * \param size_ptr2 second data pointer length
  * \return room available to be written
  */
-long pa_util_get_ring_buffer_write_regions(pa_util_ring_buffer *ring_buffer, long bytes, void **data_ptr1, long *size_ptr1, void **data_ptr2, long *size_ptr2) {
+long pa_util_get_ring_buffer_write_regions(pa_util_ring_buffer *ring_buffer, long bytes, void **data_ptr1, long *size_ptr1, void **data_ptr2, long *size_ptr2)
+{
 	long index;
 	long available = pa_util_get_ring_buffer_write_available(ring_buffer);
 
@@ -194,7 +199,8 @@ long pa_util_get_ring_buffer_write_regions(pa_util_ring_buffer *ring_buffer, lon
  * \param size_ptr2 second data pointer length
  * \return room available to be read
  */
-long pa_util_get_ring_buffer_read_regions(pa_util_ring_buffer *ring_buffer, long bytes, void **data_ptr1, long *size_ptr1, void **data_ptr2, long *size_ptr2) {
+long pa_util_get_ring_buffer_read_regions(pa_util_ring_buffer *ring_buffer, long bytes, void **data_ptr1, long *size_ptr1, void **data_ptr2, long *size_ptr2)
+{
 	long index;
 	long available = pa_util_get_ring_buffer_read_available(ring_buffer);
 
@@ -229,7 +235,8 @@ long pa_util_get_ring_buffer_read_regions(pa_util_ring_buffer *ring_buffer, long
  * \param bytes number of bytes
  * \return new write index
  */
-long pa_util_advance_ring_buffer_write_index(pa_util_ring_buffer *ring_buffer, long bytes) {
+long pa_util_advance_ring_buffer_write_index(pa_util_ring_buffer *ring_buffer, long bytes)
+{
 	pa_util_write_memory_barrier();
 
 	return ring_buffer->write_index = (ring_buffer->write_index + bytes) & ring_buffer->big_mask;
@@ -241,7 +248,8 @@ long pa_util_advance_ring_buffer_write_index(pa_util_ring_buffer *ring_buffer, l
  * \param bytes number of bytes
  * \return new read index
  */
-long pa_util_advance_ring_buffer_read_index(pa_util_ring_buffer *ring_buffer, long bytes) {
+long pa_util_advance_ring_buffer_read_index(pa_util_ring_buffer *ring_buffer, long bytes)
+{
 	pa_util_write_memory_barrier();
 
 	return ring_buffer->read_index = (ring_buffer->read_index + bytes) & ring_buffer->big_mask;
@@ -254,7 +262,8 @@ long pa_util_advance_ring_buffer_read_index(pa_util_ring_buffer *ring_buffer, lo
  * \param bytes length of data
  * \return number of written bytes
  */
-long pa_util_write_ring_buffer(pa_util_ring_buffer *ring_buffer, const void *data, long bytes) {
+long pa_util_write_ring_buffer(pa_util_ring_buffer *ring_buffer, const void *data, long bytes)
+{
 	long size1;
 	long size2;
 	long written;
@@ -308,7 +317,8 @@ long pa_util_read_ring_buffer(pa_util_ring_buffer *ring_buffer, void *data, long
  * \brief Detect supported audio devices
  * \return 0
  */
-static GSList *port_audio_detect_devices(void) {
+static GSList *port_audio_detect_devices(void)
+{
 	GSList *list = NULL;
 	struct audio_device *device;
 	gint num_devices;
@@ -349,7 +359,8 @@ static GSList *port_audio_detect_devices(void) {
  * \param bits_per_sample number of bits per samplerate
  * \return TRUE on success, otherwise error
  */
-static int port_audio_init(unsigned char channels, unsigned short sample_rate, unsigned char bits_per_sample) {
+static int port_audio_init(unsigned char channels, unsigned short sample_rate, unsigned char bits_per_sample)
+{
 	Pa_Initialize();
 
 	/* TODO: Check if configuration is valid and usable */
@@ -367,7 +378,8 @@ static int port_audio_init(unsigned char channels, unsigned short sample_rate, u
  * \param samples number of samples
  * \return -1 if we have no existing output buffer, or 0 on success
  */
-int echo_cancellation(struct port_private *private, short *input_buffer, int samples) {
+int echo_cancellation(struct port_private *private, short *input_buffer, int samples)
+{
 #ifdef USE_SPEEX
 	short delayed[FRAME_SIZE];
 	short cancelled[FRAME_SIZE];
@@ -407,7 +419,8 @@ int echo_cancellation(struct port_private *private, short *input_buffer, int sam
  * \param user_data pointer to private data structure
  * \return 0
  */
-static int audio_cb(const void *input_buffer, void *output_buffer, unsigned long frames_per_buffer, const PaStreamCallbackTimeInfo *time_info, PaStreamCallbackFlags statusFlags, void *user_data) {
+static int audio_cb(const void *input_buffer, void *output_buffer, unsigned long frames_per_buffer, const PaStreamCallbackTimeInfo *time_info, PaStreamCallbackFlags statusFlags, void *user_data)
+{
 	struct port_private *private = user_data;
 	long bytes = private->bytes_per_frame * frames_per_buffer;
 	int ret = 0;
@@ -450,7 +463,8 @@ static int audio_cb(const void *input_buffer, void *output_buffer, unsigned long
  * \param frames number of frames
  * \param bytes_per_frame bytes per frame
  */
-PaError init_fifo(pa_util_ring_buffer *ring_buffer, long frames, long bytes_per_frame) {
+PaError init_fifo(pa_util_ring_buffer *ring_buffer, long frames, long bytes_per_frame)
+{
 	/* Calculate whole size in bytes */
 	long bytes = frames * bytes_per_frame;
 	char *buffer = g_malloc0(bytes);
@@ -466,7 +480,8 @@ PaError init_fifo(pa_util_ring_buffer *ring_buffer, long frames, long bytes_per_
  * \brief Terminate fifo
  * \param buffer ring buffer pointer
  */
-PaError term_fifo(pa_util_ring_buffer *buffer) {
+PaError term_fifo(pa_util_ring_buffer *buffer)
+{
 	if (buffer && buffer->buffer) {
 		g_free(buffer->buffer);
 	}
@@ -481,7 +496,8 @@ PaError term_fifo(pa_util_ring_buffer *buffer) {
  * \param n number
  * \return power of 2
  */
-unsigned long RoundUpToNextPowerOf2(unsigned long n) {
+unsigned long RoundUpToNextPowerOf2(unsigned long n)
+{
 	long bits = 0;
 
 	if (((n - 1) & n) == 0) {
@@ -616,9 +632,9 @@ static void *port_audio_open(void)
 	int num_frames = RoundUpToNextPowerOf2(FRAME_SIZE * 10);
 
 #ifdef USE_SPEEX
-/* Maximum attenuation of residual echo in dB (negative number) */
+	/* Maximum attenuation of residual echo in dB (negative number) */
 #define ECHO_SUPPRESS -60
-/* Maximum attenuation of residual echo when near end is active, in dB (negative number) */
+	/* Maximum attenuation of residual echo when near end is active, in dB (negative number) */
 #define ECHO_SUPPRESS_ACTIVE -60
 
 	int nTmp;
@@ -814,7 +830,8 @@ static gsize port_audio_read(void *priv, guchar *data, gsize size)
  * \brief Deinit audio
  * \return see error code of Pa_Terminate()
  */
-int port_audio_shutdown(void) {
+int port_audio_shutdown(void)
+{
 	return Pa_Terminate();
 }
 

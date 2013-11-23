@@ -343,10 +343,10 @@ gboolean fritzbox_logout(struct profile *profile, gboolean force)
 
 	url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_POST, url,
-		"sid", profile->router_info->session_id,
-		"security:command/logout", "",
-		"getpage", "../html/confirm_logout.html",
-		NULL);
+	                            "sid", profile->router_info->session_id,
+	                            "security:command/logout", "",
+	                            "getpage", "../html/confirm_logout.html",
+	                            NULL);
 	g_free(url);
 
 	soup_session_send_message(soup_session_sync, msg);
@@ -518,11 +518,11 @@ gboolean fritzbox_dial_number(struct profile *profile, gint port, const gchar *n
 	g_debug("Call number '%s' on port %s...", call_scramble_number(number), port_str);
 
 	msg = soup_form_request_new(SOUP_METHOD_POST, url,
-		"telcfg:settings/UseClickToDial", "1",
-		"telcfg:settings/DialPort", port_str,
-		"telcfg:command/Dial", number,
-		"sid", profile->router_info->session_id,
-		NULL);
+	                            "telcfg:settings/UseClickToDial", "1",
+	                            "telcfg:settings/DialPort", port_str,
+	                            "telcfg:command/Dial", number,
+	                            "sid", profile->router_info->session_id,
+	                            NULL);
 	g_free(port_str);
 	g_free(url);
 
@@ -557,11 +557,11 @@ gboolean fritzbox_hangup(struct profile *profile, gint port, const gchar *number
 	g_debug("Hangup on port %s...", port_str);
 
 	msg = soup_form_request_new(SOUP_METHOD_POST, url,
-		"telcfg:settings/UseClickToDial", "1",
-		"telcfg:settings/DialPort", port_str,
-		"telcfg:command/Hangup", number,
-		"sid", profile->router_info->session_id,
-		NULL);
+	                            "telcfg:settings/UseClickToDial", "1",
+	                            "telcfg:settings/DialPort", port_str,
+	                            "telcfg:command/Hangup", number,
+	                            "sid", profile->router_info->session_id,
+	                            NULL);
 	g_free(port_str);
 	g_free(url);
 
@@ -683,7 +683,7 @@ static GSList *fritzbox_parse_voice_data(GSList *journal, const gchar *data, gsi
 		}
 
 		snprintf(date_time, sizeof(date_time), "%2.2d.%2.2d.%2.2d %2.2d:%2.2d", voice_data->day, voice_data->month, voice_data->year,
-			voice_data->hour, voice_data->minute);
+		         voice_data->hour, voice_data->minute);
 		journal = call_add(journal, CALL_TYPE_VOICE, date_time, "", voice_data->remote_number, voice_data->file, voice_data->local_number, g_strdup_printf("%ds", voice_data->duration), NULL);
 	}
 
@@ -838,12 +838,12 @@ gchar *fritzbox_get_ip(struct profile *profile)
 	g_free(url);
 
 	request = g_strdup(
-		"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-		" <s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">"
-		" <s:Body>"
-		" <u:GetExternalIPAddress xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\" />"
-		" </s:Body>"
-		" </s:Envelope>\r\n");
+	              "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+	              " <s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+	              " <s:Body>"
+	              " <u:GetExternalIPAddress xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\" />"
+	              " </s:Body>"
+	              " </s:Envelope>\r\n");
 
 	soup_message_set_request(msg, "text/xml; charset=\"utf-8\"", SOUP_MEMORY_STATIC, request, strlen(request));
 	headers = msg->request_headers;
@@ -887,12 +887,12 @@ gboolean fritzbox_reconnect(struct profile *profile)
 	g_free(url);
 
 	request = g_strdup(
-		"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-		" <s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">"
-		" <s:Body>"
-		" <u:ForceTermination xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\" />"
-		" </s:Body>"
-		" </s:Envelope>\r\n");
+	              "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+	              " <s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+	              " <s:Body>"
+	              " <u:ForceTermination xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\" />"
+	              " </s:Body>"
+	              " </s:Envelope>\r\n");
 
 	soup_message_set_request(msg, "text/xml; charset=\"utf-8\"", SOUP_MEMORY_STATIC, request, strlen(request));
 	headers = msg->request_headers;

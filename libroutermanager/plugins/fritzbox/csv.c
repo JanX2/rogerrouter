@@ -44,16 +44,16 @@ static inline gpointer csv_parse_fritzbox(gpointer ptr, gchar **split)
 		gint call_type = 0;
 
 		switch (atoi(split[0])) {
-			case 1:
-				call_type = CALL_TYPE_INCOMING;
-				break;
-			case 2:
-				call_type = CALL_TYPE_MISSED;
-				break;
-			case 3:
-			case 4:
-				call_type = CALL_TYPE_OUTGOING;
-				break;
+		case 1:
+			call_type = CALL_TYPE_INCOMING;
+			break;
+		case 2:
+			call_type = CALL_TYPE_MISSED;
+			break;
+		case 3:
+		case 4:
+			call_type = CALL_TYPE_OUTGOING;
+			break;
 		}
 
 		list = call_add(list, call_type, split[1], split[2], split[3], split[4], split[5], split[6], NULL);

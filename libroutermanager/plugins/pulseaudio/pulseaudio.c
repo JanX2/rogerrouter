@@ -68,27 +68,28 @@ struct pulse_device_list output_device_list[16];
  * \param context pulseaudio context
  * \param user_data pa ready flag
  */
-static void pulse_state_cb(pa_context *context, void *user_data) {
+static void pulse_state_cb(pa_context *context, void *user_data)
+{
 	pa_context_state_t state;
 	int *pulse_ready = user_data;
 
 	state = pa_context_get_state(context);
 
 	switch (state) {
-		/* There are just here for reference */
-		case PA_CONTEXT_UNCONNECTED:
-		case PA_CONTEXT_CONNECTING:
-		case PA_CONTEXT_AUTHORIZING:
-		case PA_CONTEXT_SETTING_NAME:
-		default:
-			break;
-		case PA_CONTEXT_FAILED:
-		case PA_CONTEXT_TERMINATED:
-			*pulse_ready = 2;
-			break;
-		case PA_CONTEXT_READY:
-			*pulse_ready = 1;
-			break;
+	/* There are just here for reference */
+	case PA_CONTEXT_UNCONNECTED:
+	case PA_CONTEXT_CONNECTING:
+	case PA_CONTEXT_AUTHORIZING:
+	case PA_CONTEXT_SETTING_NAME:
+	default:
+		break;
+	case PA_CONTEXT_FAILED:
+	case PA_CONTEXT_TERMINATED:
+		*pulse_ready = 2;
+		break;
+	case PA_CONTEXT_READY:
+		*pulse_ready = 1;
+		break;
 	}
 }
 
@@ -99,7 +100,8 @@ static void pulse_state_cb(pa_context *context, void *user_data) {
  * \param eol end-of-list
  * \param user_data pointer to device list
  */
-static void pulse_sink_list_cb(pa_context *context, const pa_sink_info *sink_info, int eol, void *user_data) {
+static void pulse_sink_list_cb(pa_context *context, const pa_sink_info *sink_info, int eol, void *user_data)
+{
 	struct pulse_device_list *device_list = user_data;
 	int index = 0;
 
@@ -126,7 +128,8 @@ static void pulse_sink_list_cb(pa_context *context, const pa_sink_info *sink_inf
  * \param eol end-of-list
  * \param user_data pointer to device list
  */
-static void pulse_source_list_cb(pa_context *context, const pa_source_info *source_info, int eol, void *user_data) {
+static void pulse_source_list_cb(pa_context *context, const pa_source_info *source_info, int eol, void *user_data)
+{
 	struct pulse_device_list *device_list = user_data;
 	int index = 0;
 
@@ -151,7 +154,8 @@ static void pulse_source_list_cb(pa_context *context, const pa_source_info *sour
  * \param output pointer output device list
  * \return error code
  */
-static int pulse_get_device_list(struct pulse_device_list *input, struct pulse_device_list *output) {
+static int pulse_get_device_list(struct pulse_device_list *input, struct pulse_device_list *output)
+{
 	/* Define our pulse audio loop and connection variables */
 	pa_mainloop *main_loop;
 	pa_mainloop_api *main_api;
@@ -209,35 +213,35 @@ static int pulse_get_device_list(struct pulse_device_list *input, struct pulse_d
 		 * requests
 		 */
 		switch (state) {
-			/* State 0: we haven't done anything yet */
-			case 0:
-				operation = pa_context_get_sink_info_list(context, pulse_sink_list_cb, output);
+		/* State 0: we haven't done anything yet */
+		case 0:
+			operation = pa_context_get_sink_info_list(context, pulse_sink_list_cb, output);
 
-				/* Update state for next iteration through the loop */
+			/* Update state for next iteration through the loop */
+			state++;
+			break;
+		case 1:
+			if (pa_operation_get_state(operation) == PA_OPERATION_DONE) {
+				pa_operation_unref(operation);
+
+				operation = pa_context_get_source_info_list(context, pulse_source_list_cb, input);
+
+				/* Update the state so we know what to do next */
 				state++;
-				break;
-			case 1:
-				if (pa_operation_get_state(operation) == PA_OPERATION_DONE) {
-					pa_operation_unref(operation);
-
-					operation = pa_context_get_source_info_list(context, pulse_source_list_cb, input);
-
-					/* Update the state so we know what to do next */
-					state++;
-				}
-				break;
-			case 2:
-				if (pa_operation_get_state(operation) == PA_OPERATION_DONE) {
-					pa_operation_unref(operation);
-					pa_context_disconnect(context);
-					pa_context_unref(context);
-					pa_mainloop_free(main_loop);
-					return 0;
-				}
-				break;
-			default:
-				g_warning("in state %d", state);
-				return -1;
+			}
+			break;
+		case 2:
+			if (pa_operation_get_state(operation) == PA_OPERATION_DONE) {
+				pa_operation_unref(operation);
+				pa_context_disconnect(context);
+				pa_context_unref(context);
+				pa_mainloop_free(main_loop);
+				return 0;
+			}
+			break;
+		default:
+			g_warning("in state %d", state);
+			return -1;
 		}
 
 		pa_mainloop_iterate(main_loop, 1, NULL);
@@ -248,7 +252,8 @@ static int pulse_get_device_list(struct pulse_device_list *input, struct pulse_d
  * \brief Detect pulseaudio devices
  * \return list of audio devices
  */
-GSList *pulse_audio_detect_devices(void) {
+GSList *pulse_audio_detect_devices(void)
+{
 	int found_in = 0;
 	int found_out = 0;
 	int index;
@@ -297,7 +302,8 @@ GSList *pulse_audio_detect_devices(void) {
  * \param bits_per_sample number of bits per samplerate
  * \return TRUE on success, otherwise error
  */
-static int pulse_audio_init(unsigned char channels, unsigned short sample_rate, unsigned char bits_per_sample) {
+static int pulse_audio_init(unsigned char channels, unsigned short sample_rate, unsigned char bits_per_sample)
+{
 	/* TODO: Check if configuration is valid and usable */
 	pulse_channels = channels;
 	pulse_sample_rate = sample_rate;
@@ -310,7 +316,8 @@ static int pulse_audio_init(unsigned char channels, unsigned short sample_rate, 
  * \brief Open new playback and record pipes
  * \return pipe pointer or NULL on error
  */
-static void *pulse_audio_open(void) {
+static void *pulse_audio_open(void)
+{
 	pa_sample_spec sample_spec = {
 		.format = PA_SAMPLE_S16LE,
 	};
@@ -371,7 +378,8 @@ static void *pulse_audio_open(void) {
  * \param force force quit
  * \return error code
  */
-static int pulse_audio_close(void *priv, gboolean force) {
+static int pulse_audio_close(void *priv, gboolean force)
+{
 	struct pulse_pipes *pipes = priv;
 	int error;
 
@@ -405,7 +413,8 @@ static int pulse_audio_close(void *priv, gboolean force) {
  * \param len length of buffer
  * \return error code
  */
-static gsize pulse_audio_write(void *priv, guchar *buf, gsize len) {
+static gsize pulse_audio_write(void *priv, guchar *buf, gsize len)
+{
 	struct pulse_pipes *pipes = priv;
 	int error;
 
@@ -427,7 +436,8 @@ static gsize pulse_audio_write(void *priv, guchar *buf, gsize len) {
  * \param len maximal length of buffer
  * \return error code
  */
-static gsize pulse_audio_read(void *priv, guchar *buf, gsize len) {
+static gsize pulse_audio_read(void *priv, guchar *buf, gsize len)
+{
 	struct pulse_pipes *pipes = priv;
 	int nRet = 0;
 	int error;
@@ -449,7 +459,8 @@ static gsize pulse_audio_read(void *priv, guchar *buf, gsize len) {
  * \brief Shutdown audio interface
  * \return 0
  */
-static int pulse_audio_shutdown(void) {
+static int pulse_audio_shutdown(void)
+{
 	return 0;
 }
 

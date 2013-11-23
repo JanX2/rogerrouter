@@ -89,39 +89,40 @@ static inline void callmonitor_convert(gchar *text)
  * \param data user data (UNUSED)
  * \return TRUE
  */
-gboolean callmonitor_io_cb(GIOChannel *source, GIOCondition condition, gpointer data) {
+gboolean callmonitor_io_cb(GIOChannel *source, GIOCondition condition, gpointer data)
+{
 	GIOStatus ret;
 	GError *error = NULL;
 	gsize len;
 	gchar *msg;
 
 	switch (condition) {
-		case G_IO_IN:
-		case G_IO_PRI:
-			ret = g_io_channel_read_line(source, &msg, &len, NULL, &error);
-			if (ret != G_IO_STATUS_NORMAL) {
-				g_error("Error reading: %s", error -> message);
-			}
+	case G_IO_IN:
+	case G_IO_PRI:
+		ret = g_io_channel_read_line(source, &msg, &len, NULL, &error);
+		if (ret != G_IO_STATUS_NORMAL) {
+			g_error("Error reading: %s", error -> message);
+		}
 
-			gchar **lines = g_strsplit(msg, "\n", -1);
-			gint count = 0;
-			for (count = 0; count < g_strv_length(lines); count++) {
-				if (strlen(lines[count]) > 0) {
-					//g_debug("CallMonitor: '%s'", lines[count]);
-					callmonitor_convert(lines[count]);
-				}
+		gchar **lines = g_strsplit(msg, "\n", -1);
+		gint count = 0;
+		for (count = 0; count < g_strv_length(lines); count++) {
+			if (strlen(lines[count]) > 0) {
+				//g_debug("CallMonitor: '%s'", lines[count]);
+				callmonitor_convert(lines[count]);
 			}
-			g_strfreev(lines);
+		}
+		g_strfreev(lines);
 
-			g_free(msg);
-			break;
-		case G_IO_ERR:
-		case G_IO_HUP:
-			g_error("Read end of pipe died!");
-			break;
-		default:
-			g_debug("Unhandled case: %d", condition);
-			break;
+		g_free(msg);
+		break;
+	case G_IO_ERR:
+	case G_IO_HUP:
+		g_error("Read end of pipe died!");
+		break;
+	default:
+		g_debug("Unhandled case: %d", condition);
+		break;
 	}
 
 	return TRUE;

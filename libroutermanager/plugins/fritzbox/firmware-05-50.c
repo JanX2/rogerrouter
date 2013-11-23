@@ -157,9 +157,9 @@ gboolean fritzbox_login_05_50(struct profile *profile)
 
 		url = g_strdup_printf("http://%s/login_sid.lua", router_get_host(profile));
 		msg = soup_form_request_new(SOUP_METHOD_POST, url,
-			"username", user,
-			"response", response,
-			NULL);
+		                            "username", user,
+		                            "response", response,
+		                            NULL);
 		g_free(url);
 
 		soup_session_send_message(soup_session_sync, msg);
@@ -232,7 +232,8 @@ gboolean extract_number_05_50(GSList **number_list, const gchar *data, gchar *ms
  * \param profile profile structure
  * \param data webpage data
  */
-static void fritzbox_detect_controller_05_50(struct profile *profile, const gchar *data) {
+static void fritzbox_detect_controller_05_50(struct profile *profile, const gchar *data)
+{
 	gint index;
 	gint type = -1;
 	gint port;
@@ -370,8 +371,8 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 	/* Extract phone numbers */
 	url = g_strdup_printf("http://%s/fon_num/fon_num_list.lua", router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
-		"sid", profile->router_info->session_id,
-		NULL);
+	                            "sid", profile->router_info->session_id,
+	                            NULL);
 	g_free(url);
 
 	soup_session_send_message(soup_session_sync, msg);
@@ -393,14 +394,14 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 			g_debug("Adding MSN '%s'", call_scramble_number(numbers[idx]));
 		}
 
-		g_settings_set_strv(profile->settings, "numbers", (const gchar *const *)numbers);
+		g_settings_set_strv(profile->settings, "numbers", (const gchar * const *)numbers);
 	}
 
 	/* Extract phone names, default controller */
 	url = g_strdup_printf("http://%s/fon_devices/fondevices_list.lua", router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
-		"sid", profile->router_info->session_id,
-		NULL);
+	                            "sid", profile->router_info->session_id,
+	                            NULL);
 	g_free(url);
 
 	soup_session_send_message(soup_session_sync, msg);
@@ -449,8 +450,8 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 	/* Extract city/country/area prefix */
 	url = g_strdup_printf("http://%s/fon_num/sip_option.lua", router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
-		"sid", profile->router_info->session_id,
-		NULL);
+	                            "sid", profile->router_info->session_id,
+	                            NULL);
 	g_free(url);
 
 	soup_session_send_message(soup_session_sync, msg);
@@ -500,12 +501,12 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 	/* Extract Fax information */
 	url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_POST, url,
-		"getpage", "../html/de/menus/menu2.html",
-		"var:lang", profile->router_info->lang,
-		"var:pagename", "fon1fxi",
-		"var:menu", "fon",
-		"sid", profile->router_info->session_id,
-		NULL);
+	                            "getpage", "../html/de/menus/menu2.html",
+	                            "var:lang", profile->router_info->lang,
+	                            "var:pagename", "fon1fxi",
+	                            "var:menu", "fon",
+	                            "sid", profile->router_info->session_id,
+	                            NULL);
 	g_free(url);
 
 	soup_session_send_message(soup_session_sync, msg);
@@ -571,8 +572,8 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 	/* Extract default dial port */
 	url = g_strdup_printf("http://%s/fon_num/dial_foncalls.lua", router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
-		"sid", profile->router_info->session_id,
-		NULL);
+	                            "sid", profile->router_info->session_id,
+	                            NULL);
 	g_free(url);
 
 	soup_session_send_message(soup_session_sync, msg);
@@ -652,9 +653,9 @@ gboolean fritzbox_load_journal_05_50(struct profile *profile, gchar **data_ptr)
 	/* Create GET request */
 	gchar *url = g_strdup_printf("http://%s/fon_num/foncalls_list.lua", router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
-		"sid", profile->router_info->session_id,
-		"csv", "",
-		NULL);
+	                            "sid", profile->router_info->session_id,
+	                            "csv", "",
+	                            NULL);
 	g_free(url);
 
 	/* Queue message to session */
@@ -680,11 +681,11 @@ gboolean fritzbox_clear_journal_05_50(struct profile *profile)
 
 	url = g_strdup_printf("http://%s/fon_num/foncalls_list.lua", router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_POST, url,
-		"sid", profile->router_info->session_id,
-		"usejournal", "on",
-		"clear", "",
-		"callstab", "all",
-		NULL);
+	                            "sid", profile->router_info->session_id,
+	                            "usejournal", "on",
+	                            "clear", "",
+	                            "callstab", "all",
+	                            NULL);
 	g_free(url);
 
 	soup_session_send_message(soup_session_sync, msg);

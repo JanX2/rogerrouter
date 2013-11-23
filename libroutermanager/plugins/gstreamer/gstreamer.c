@@ -162,7 +162,7 @@ static GSList *gstreamer_detect_devices(void)
 		gst_object_unref(GST_OBJECT(element));
 
 		if (device_test[device_index].type == 2  && g_slist_length(devices) > 0) {
-		//	break;
+			//	break;
 		}
 	}
 
@@ -233,7 +233,7 @@ void gstreamer_set_properties(GstElement *element)
 	gst_structure_free(props);
 #else
 	gchar *tmp = g_strdup_printf("props,media.role=phone,filter.want=echo-cancel");
-	props = gst_structure_from_string (tmp, NULL);
+	props = gst_structure_from_string(tmp, NULL);
 	g_object_set(element, "stream-properties", props, NULL);
 	gst_structure_free(props);
 
@@ -298,7 +298,7 @@ static void *gstreamer_open(void)
 	output = g_settings_get_string(profile->settings, "audio-output");
 	input = g_settings_get_string(profile->settings, "audio-input");
 	//if (EMPTY_STRING(output)) {
-		output = g_strdup("autoaudiosink");
+	output = g_strdup("autoaudiosink");
 	//}
 	if (EMPTY_STRING(input)) {
 		input = g_strdup("autoaudiosrc");
@@ -312,15 +312,15 @@ static void *gstreamer_open(void)
 	GstPad *sourcepad = gst_element_get_static_pad(source, "src");
 
 	gst_pad_set_caps(sourcepad,
-		gst_caps_new_simple(
-			"audio/x-raw-int",
-			"rate", G_TYPE_INT, gstreamer_sample_rate,
-			"channels", G_TYPE_INT, gstreamer_channels,
-			"width", G_TYPE_INT, gstreamer_bits_per_sample,
-			"depth", G_TYPE_INT, gstreamer_bits_per_sample,
-			"signed", G_TYPE_BOOLEAN, TRUE,
-			"endianness", G_TYPE_INT, 1234,
-			NULL));
+	                 gst_caps_new_simple(
+	                     "audio/x-raw-int",
+	                     "rate", G_TYPE_INT, gstreamer_sample_rate,
+	                     "channels", G_TYPE_INT, gstreamer_channels,
+	                     "width", G_TYPE_INT, gstreamer_bits_per_sample,
+	                     "depth", G_TYPE_INT, gstreamer_bits_per_sample,
+	                     "signed", G_TYPE_BOOLEAN, TRUE,
+	                     "endianness", G_TYPE_INT, 1234,
+	                     NULL));
 	gst_object_unref(sourcepad);
 
 	GstElement *sink = gst_element_factory_make(output, "sink");
@@ -335,13 +335,13 @@ static void *gstreamer_open(void)
 
 	/* Create command for input pipeline */
 	command = g_strdup_printf("%s ! appsink drop=true max_buffers=2"
-		" caps=audio/x-raw-int"
-		",rate=%d"
-		",channels=%d"
-		",width=%d"
-		" name=routermanager_sink",
-		input,
-		gstreamer_sample_rate, gstreamer_channels, gstreamer_bits_per_sample);
+	                          " caps=audio/x-raw-int"
+	                          ",rate=%d"
+	                          ",channels=%d"
+	                          ",width=%d"
+	                          " name=routermanager_sink",
+	                          input,
+	                          gstreamer_sample_rate, gstreamer_channels, gstreamer_bits_per_sample);
 
 	gstreamer_start_pipeline(pipes, command);
 	g_free(command);
@@ -373,7 +373,7 @@ static gsize gstreamer_write(void *priv, guchar *data, gsize size)
 		gst_app_src_push_buffer(GST_APP_SRC(src), buffer);
 		written = size;
 	}
-	g_usleep (20 * G_TIME_SPAN_MILLISECOND);
+	g_usleep(20 * G_TIME_SPAN_MILLISECOND);
 
 	return written;
 }
@@ -394,7 +394,7 @@ static gsize gstreamer_read(void *priv, guchar *data, gsize size)
 	gst_adapter_copy(pipes->adapter, data, 0, read);
 	gst_adapter_flush(pipes->adapter, read);
 
-	g_usleep (20 * G_TIME_SPAN_MILLISECOND);
+	g_usleep(20 * G_TIME_SPAN_MILLISECOND);
 
 	return read;
 }
@@ -405,7 +405,8 @@ static gsize gstreamer_read(void *priv, guchar *data, gsize size)
  * \param force force quit
  * \return error code
  */
-int gstreamer_close(void *priv, gboolean force) {
+int gstreamer_close(void *priv, gboolean force)
+{
 	struct pipes *pipes = priv;
 
 	if (pipes == NULL) {
@@ -433,7 +434,8 @@ int gstreamer_close(void *priv, gboolean force) {
 	return 0;
 }
 
-int gstreamer_shutdown(void) {
+int gstreamer_shutdown(void)
+{
 	return 0;
 }
 

@@ -29,7 +29,7 @@
 #define ROUTERMANAGER_SECRET_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_SECRET_PLUGIN, RouterManagerSecretPlugin))
 
 typedef struct {
-        guint signal_id;
+	guint signal_id;
 } RouterManagerSecretPluginPrivate;
 
 ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_SECRET_PLUGIN, RouterManagerSecretPlugin, routermanager_secret_plugin)
@@ -63,10 +63,10 @@ static void secret_store_password(struct profile *profile, const gchar *name, co
 	GError *error = NULL;
 
 	secret_password_store_sync(SECRET_SCHEMA, SECRET_COLLECTION_DEFAULT,
-                            "Roger Router password", password, NULL, &error,
-                            "profile", profile ? profile->name : "fallback",
-                            "name", name,
-                            NULL);
+	                           "Roger Router password", password, NULL, &error,
+	                           "profile", profile ? profile->name : "fallback",
+	                           "name", name,
+	                           NULL);
 
 	if (error != NULL) {
 		/* ... handle the failure here */
@@ -87,9 +87,9 @@ static gchar *secret_get_password(struct profile *profile, const gchar *name)
 {
 	GError *error = NULL;
 	gchar *password = secret_password_lookup_sync(SECRET_SCHEMA, NULL, &error,
-                            "profile", profile ? profile->name : "fallback",
-                            "name", name,
-                            NULL);
+	                  "profile", profile ? profile->name : "fallback",
+	                  "name", name,
+	                  NULL);
 
 	if (error != NULL) {
 		/* ... handle the failure here */
@@ -112,9 +112,9 @@ static gboolean secret_remove_password(struct profile *profile, const gchar *nam
 {
 	GError *error = NULL;
 	gboolean removed = secret_password_clear_sync(SECRET_SCHEMA, NULL, &error,
-                            "profile", profile ? profile->name : "fallback",
-                            "name", name,
-                            NULL);
+	                   "profile", profile ? profile->name : "fallback",
+	                   "name", name,
+	                   NULL);
 
 	if (error != NULL) {
 		/* ... handle the failure here */
