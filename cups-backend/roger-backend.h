@@ -22,7 +22,7 @@
  *
  * These coded instructions, statements, and computer programs are the
  * property of Apple Inc. and are protected by Federal copyright
- * law.  Distribution and use rights are outlined in the file 
+ * law.  Distribution and use rights are outlined in the file
  * "COPYING" which should have been included with this file.  If this
  * file is missing or damaged, see the license at "http://www.cups.org/".
  */
@@ -45,8 +45,8 @@
 /* Define _ macro */
 #define _(text) gettext(text)
 
-/* 
- *  ROGER_BACKEND definitions 
+/*
+ *  ROGER_BACKEND definitions
  */
 
 #define ROGER_BACKEND_METHOD_MAX 16      /* max length of method */
@@ -59,40 +59,38 @@
 
 #define USLEEP_MS 1000                  /* sleep for 1 msec */
 
-typedef enum roger_paper_status_e
-{
-  ROGER_BACKEND_PAPER_UNKNOWN = -1,
-  ROGER_BACKEND_PAPER_OK = 0,
-  ROGER_BACKEND_PAPER_OUT = 1
+typedef enum roger_paper_status_e {
+	ROGER_BACKEND_PAPER_UNKNOWN = -1,
+	ROGER_BACKEND_PAPER_OK = 0,
+	ROGER_BACKEND_PAPER_OUT = 1
 } roger_paper_status_t;
 
 
-typedef enum roger_loglevel_e
-{
-  LOG_NONE,
-  LOG_EMERG,
-  LOG_ALERT,
-  LOG_CRIT,
-  LOG_ERROR,
-  LOG_WARN,
-  LOG_NOTICE,
-  LOG_INFO,
-  LOG_DEBUG,
-  LOG_DEBUG2,
-  LOG_END		/* not a real loglevel, but indicates end of list */
+typedef enum roger_loglevel_e {
+	LOG_NONE,
+	LOG_EMERG,
+	LOG_ALERT,
+	LOG_CRIT,
+	LOG_ERROR,
+	LOG_WARN,
+	LOG_NOTICE,
+	LOG_INFO,
+	LOG_DEBUG,
+	LOG_DEBUG2,
+	LOG_END		/* not a real loglevel, but indicates end of list */
 } roger_loglevel_t;
 
 /*
  * roger-runloop.c
  */
-extern ssize_t roger_backend_run_loop (int input_fd, int output_fd,
-				    char * output_name);
+extern ssize_t roger_backend_run_loop(int input_fd, int output_fd,
+                                      char *output_name);
 /*
  * roger-utils.c
  */
-int open_fax_output( int copies, char *job, char *user, char *title, int flags );
-int close_fax_output( int outputFd );
-char * get_output_name( void );
+int open_fax_output(int copies, char *job, char *user, char *title, int flags);
+int close_fax_output(int outputFd);
+char *get_output_name(void);
 
 #ifndef CUPS_LLCAST
 #  define CUPS_LLCAST	(long)

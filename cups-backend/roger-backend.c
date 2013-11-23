@@ -22,7 +22,7 @@
  *
  * These coded instructions, statements, and computer programs are the
  * property of Apple Inc. and are protected by Federal copyright
- * law.  Distribution and use rights are outlined in the file 
+ * law.  Distribution and use rights are outlined in the file
  * "COPYING" which should have been included with this file.  If this
  * file is missing or damaged, see the license at "http://www.cups.org/".
  */
@@ -56,7 +56,7 @@
  *  Usage: printer-uri job-id user title copies options [file]
  */
 
-int main ( int argc, char *argv[] )
+int main(int argc, char *argv[])
 {
 	char method[ROGER_BACKEND_METHOD_MAX];
 	char hostname[ROGER_BACKEND_HOST_MAX];
@@ -81,20 +81,20 @@ int main ( int argc, char *argv[] )
 	 * Make sure status messages are not buffered...
 	 */
 
-	setbuf ( stderr, NULL );
+	setbuf(stderr, NULL);
 
 	/*
 	 * Ignore SIGPIPE signals...
 	 */
 
 #ifdef HAVE_SIGSET
-	sigset ( SIGPIPE, SIG_IGN );
+	sigset(SIGPIPE, SIG_IGN);
 #elif defined(HAVE_SIGACTION)
-	memset ( &action, 0, sizeof ( action ) );
+	memset(&action, 0, sizeof(action));
 	action.sa_handler = SIG_IGN;
-	sigaction ( SIGPIPE, &action, NULL );
+	sigaction(SIGPIPE, &action, NULL);
 #else
-	signal ( SIGPIPE, SIG_IGN );
+	signal(SIGPIPE, SIG_IGN);
 #endif /* HAVE_SIGSET */
 
 
@@ -102,25 +102,25 @@ int main ( int argc, char *argv[] )
 	 * Check command-line...
 	 */
 
-	if ( argc == 1 ) {
-		puts ( 
-			/* device-class device-uril */
-			/* TODO: use command line/device-uri? */
-			"file roger-cups:/ "
-			/* device make and model */
-			"\"Roger-Router Fax\" "
-			/* device-info */
-			"\"Roger Router Fax Fritz!Box\" "
-			/* device-id */
-			"\"MFG:Roger-Router;MDL:Roger-fax;"
-			"DES:Roger-Router Fax Printer for Fritz!Box routers;"
-			"CLS:PRINTER;CMD:POSTSCRIPT;\"" );
-		return ( CUPS_BACKEND_OK );
-	} else if ( argc < 6 || argc > 7 ) {
-		fprintf ( stderr, _("roger-fax backend - version %s\n") , VERSION );
-		fprintf( stderr, _ ( "Usage: %s job-id user title copies options [file]\n" ),
-						  argv[0] );
-		return ( CUPS_BACKEND_FAILED );
+	if (argc == 1) {
+		puts(
+		    /* device-class device-uril */
+		    /* TODO: use command line/device-uri? */
+		    "file roger-cups:/ "
+		    /* device make and model */
+		    "\"Roger-Router Fax\" "
+		    /* device-info */
+		    "\"Roger Router Fax Fritz!Box\" "
+		    /* device-id */
+		    "\"MFG:Roger-Router;MDL:Roger-fax;"
+		    "DES:Roger-Router Fax Printer for Fritz!Box routers;"
+		    "CLS:PRINTER;CMD:POSTSCRIPT;\"");
+		return (CUPS_BACKEND_OK);
+	} else if (argc < 6 || argc > 7) {
+		fprintf(stderr, _("roger-fax backend - version %s\n") , VERSION);
+		fprintf(stderr, _("Usage: %s job-id user title copies options [file]\n"),
+		        argv[0]);
+		return (CUPS_BACKEND_FAILED);
 	}
 
 	/*
@@ -128,7 +128,7 @@ int main ( int argc, char *argv[] )
 	 * Otherwise, send stdin (fd = 0 )instead...
 	 */
 
-	if ( argc == 6 ) {
+	if (argc == 6) {
 		input_fd = 0;
 		copies = 1;
 	} else {
@@ -136,25 +136,25 @@ int main ( int argc, char *argv[] )
 		 * Try to open the print file...
 		 */
 
-		if ( ( input_fd = open ( argv[6], O_RDONLY ) ) < 0 ) {
-			perror ( "ERROR: unable to open print file" );
-			return ( CUPS_BACKEND_FAILED );
+		if ((input_fd = open(argv[6], O_RDONLY)) < 0) {
+			perror("ERROR: unable to open print file");
+			return (CUPS_BACKEND_FAILED);
 		}
-		copies = atoi ( argv[4] );
+		copies = atoi(argv[4]);
 	}
 
 	/* This is left in for when we add (debug) options */
 
-	httpSeparateURI ( HTTP_URI_CODING_ALL, cupsBackendDeviceURI ( argv ),
-					  method, sizeof ( method ), username, sizeof ( username ),
-					  hostname, sizeof ( hostname ), &port,
-					  resource, sizeof ( resource ) );
+	httpSeparateURI(HTTP_URI_CODING_ALL, cupsBackendDeviceURI(argv),
+	                method, sizeof(method), username, sizeof(username),
+	                hostname, sizeof(hostname), &port,
+	                resource, sizeof(resource));
 
 	/*
 	 * Get options, if any...
 	 */
 
-	if ( ( options = strchr ( resource, '?' ) ) != NULL ) {
+	if ((options = strchr(resource, '?')) != NULL) {
 		/*
 		 * terminate the device name string and move to the first
 		 * character of the options...
@@ -166,7 +166,7 @@ int main ( int argc, char *argv[] )
 		 * Parse options...
 		 */
 
-		/* We do not have options right now... 
+		/* We do not have options right now...
 
 		while ( *options ) {
 
@@ -200,20 +200,20 @@ int main ( int argc, char *argv[] )
 	 */
 
 	/*
-	   outputname inludes job-id, username and original name 
+	   outputname inludes job-id, username and original name
 	 */
-	output_fd = open_fax_output ( copies, argv[1], argv[2], argv[3], O_WRONLY | O_CREAT);
+	output_fd = open_fax_output(copies, argv[1], argv[2], argv[3], O_WRONLY | O_CREAT);
 
-	if ( output_fd < 0 ) {
+	if (output_fd < 0) {
 		/* TODO: improve backend return value setting? */
-		return ( CUPS_BACKEND_STOP );
+		return (CUPS_BACKEND_STOP);
 	}
 
-	fprintf( stderr, _( "INFO: Creating file %s\n" ),
-					  get_output_name() );
+	fprintf(stderr, _("INFO: Creating file %s\n"),
+	        get_output_name());
 
 
-	fprintf( stderr, _( "INFO: Connected to %s...\n" ), get_output_name() );
+	fprintf(stderr, _("INFO: Connected to %s...\n"), get_output_name());
 
 	/*
 	 * Print everything...
@@ -221,27 +221,27 @@ int main ( int argc, char *argv[] )
 
 	bytes_written = 0;
 
-	while ( copies > 0 && bytes_written >= 0 ) {
+	while (copies > 0 && bytes_written >= 0) {
 		copies--;
 	}
 
-	if ( input_fd != 0 ) {
-		fputs ( "PAGE: 1 1\n", stderr);
-		lseek ( input_fd, 0, SEEK_SET );
+	if (input_fd != 0) {
+		fputs("PAGE: 1 1\n", stderr);
+		lseek(input_fd, 0, SEEK_SET);
 	}
 
-	bytes_written = roger_backend_run_loop ( input_fd, output_fd, get_output_name() );
+	bytes_written = roger_backend_run_loop(input_fd, output_fd, get_output_name());
 
-	if ( input_fd != 0 && bytes_written >= 0 ) {
+	if (input_fd != 0 && bytes_written >= 0) {
 #ifdef HAVE_LONG_LONG
-		fprinf( stderr,
-						  _
-						  ( "INFO: Sent print file, %lld bytes...\n" ),
-						  CUPS_LLCAST bytes_written );
+		fprinf(stderr,
+		       _
+		       ("INFO: Sent print file, %lld bytes...\n"),
+		       CUPS_LLCAST bytes_written);
 #else
-		fprintf( stderr,
-						  _( "INFO: Sent print file, %ld bytes...\n" ),
-						  CUPS_LLCAST bytes_written );
+		fprintf(stderr,
+		        _("INFO: Sent print file, %ld bytes...\n"),
+		        CUPS_LLCAST bytes_written);
 #endif /* HAVE_LONG_LONG */
 	}
 
@@ -249,18 +249,18 @@ int main ( int argc, char *argv[] )
 	 * Close the socket connection...
 	 */
 
-	close_fax_output ( output_fd );
+	close_fax_output(output_fd);
 
 	/*
 	 * Close the input file and return...
 	 */
 
-	if ( input_fd != 0 ) {
-		close ( input_fd );
+	if (input_fd != 0) {
+		close(input_fd);
 	}
 
-	if ( bytes_written >= 0 ) {
-		fputs ( _( "INFO: Ready to print.\n" ), stderr );
+	if (bytes_written >= 0) {
+		fputs(_("INFO: Ready to print.\n"), stderr);
 	}
-	return ( bytes_written < 0 ? CUPS_BACKEND_FAILED : CUPS_BACKEND_OK );
+	return (bytes_written < 0 ? CUPS_BACKEND_FAILED : CUPS_BACKEND_OK);
 }

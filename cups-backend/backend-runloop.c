@@ -22,7 +22,7 @@
  *
  * These coded instructions, statements, and computer programs are the
  * property of Apple Inc. and are protected by Federal copyright
- * law.  Distribution and use rights are outlined in the file 
+ * law.  Distribution and use rights are outlined in the file
  * "COPYING" which should have been included with this file.  If this
  * file is missing or damaged, see the license at "http://www.cups.org/".
  */
@@ -48,7 +48,7 @@
  * 'roger_backend_run_loop()' - Read and write print and back-channel data.
  */
 
-ssize_t roger_backend_run_loop ( int input_fd, int output_fd, char *output_name )
+ssize_t roger_backend_run_loop(int input_fd, int output_fd, char *output_name)
 {
 	int nfds;
 	fd_set input_set;
@@ -66,15 +66,15 @@ ssize_t roger_backend_run_loop ( int input_fd, int output_fd, char *output_name 
 
 #if ROGER_BACKEND_CUPS_VERSION >= 103
 	int side_channel_open;		/* side channel status */
-	cups_sc_command_t command;	
-	cups_sc_status_t status;	
+	cups_sc_command_t command;
+	cups_sc_status_t status;
 	char data[16536];
-	int datalen;	
+	int datalen;
 #endif /* cups >= 1.3 */
 
-	fprintf ( stderr,
-			  "DEBUG: roger_backend_run_loop(input_fd=%d, output_fd=%d\n",
-			  input_fd, output_fd );
+	fprintf(stderr,
+	        "DEBUG: roger_backend_run_loop(input_fd=%d, output_fd=%d\n",
+	        input_fd, output_fd);
 
 	/*
 	 * If we are printing data from a print driver on stdin, ignore SIGTERM
@@ -83,18 +83,18 @@ ssize_t roger_backend_run_loop ( int input_fd, int output_fd, char *output_name 
 	 * is no way to cancel a raw print job...
 	 */
 
-	if ( !input_fd ) {
+	if (!input_fd) {
 #ifdef HAVE_SIGSET				/* Use System V signals over POSIX to avoid
 								   bugs */
-		sigset ( SIGTERM, SIG_IGN );
+		sigset(SIGTERM, SIG_IGN);
 #elif defined(HAVE_SIGACTION)
-		memset ( &action, 0, sizeof ( action ) );
+		memset(&action, 0, sizeof(action));
 
-		sigemptyset ( &action.sa_mask );
+		sigemptyset(&action.sa_mask);
 		action.sa_handler = SIG_IGN;
-		sigaction ( SIGTERM, &action, NULL );
+		sigaction(SIGTERM, &action, NULL);
 #else
-		signal ( SIGTERM, SIG_IGN );
+		signal(SIGTERM, SIG_IGN);
 #endif /* HAVE_SIGSET */
 	}
 
@@ -102,7 +102,7 @@ ssize_t roger_backend_run_loop ( int input_fd, int output_fd, char *output_name 
 	 * Figure out the maximum file descriptor value to use with select()...
 	 */
 
-	nfds = ( input_fd > CUPS_SC_FD ? input_fd : CUPS_SC_FD ) + 1;
+	nfds = (input_fd > CUPS_SC_FD ? input_fd : CUPS_SC_FD) + 1;
 
 	bytes_to_print = 0;
 	print_ptr = print_buffer;
@@ -114,14 +114,14 @@ ssize_t roger_backend_run_loop ( int input_fd, int output_fd, char *output_name 
 	 * Now loop until we are out of data from input_fd...
 	 */
 
-	while ( 1 ) {
+	while (1) {
 		/*
 		 * Use select() to determine whether we have data to copy around...
 		 */
 
-		FD_ZERO ( &input_set );
+		FD_ZERO(&input_set);
 		if (! bytes_to_print) {
-			FD_SET ( input_fd, &input_set );
+			FD_SET(input_fd, &input_set);
 		}
 
 
@@ -130,19 +130,19 @@ ssize_t roger_backend_run_loop ( int input_fd, int output_fd, char *output_name 
 		 */
 
 #if  ROGER_BACKEND_CUPS_VERSION >= 103
-		if ( side_channel_open && !draining ) {
-			FD_SET ( CUPS_SC_FD, &input_set );
+		if (side_channel_open && !draining) {
+			FD_SET(CUPS_SC_FD, &input_set);
 		}
 #endif
 
-		result =  select (nfds, &input_set, NULL, NULL, NULL);
-		if (result < 0 ) {
+		result =  select(nfds, &input_set, NULL, NULL, NULL);
+		if (result < 0) {
 			if (errno == EINTR && total_bytes_written == 0) {
-              			fputs ("DEBUG: Received an interrupt before any bytes_writtenwere "
-                     			"written, aborting!\n", stderr);
-              			return (0);
-            		}
-        	}
+				fputs("DEBUG: Received an interrupt before any bytes_writtenwere "
+				      "written, aborting!\n", stderr);
+				return (0);
+			}
+		}
 
 
 #if  ROGER_BACKEND_CUPS_VERSION >= 103
@@ -150,76 +150,76 @@ ssize_t roger_backend_run_loop ( int input_fd, int output_fd, char *output_name 
 		 * Check if we have a side-channel request ready (cups >= 1.3)...
 		 */
 
-		if ( FD_ISSET ( CUPS_SC_FD, &input_set ) ) {
+		if (FD_ISSET(CUPS_SC_FD, &input_set)) {
 			/*
 			 * Do the side-channel request
 			 */
 
-			datalen = sizeof ( data ) - 1;
+			datalen = sizeof(data) - 1;
 
-			if ( cupsSideChannelRead ( &command, &status, data, &datalen, 1.0 )
-				 != 0 ) {
+			if (cupsSideChannelRead(&command, &status, data, &datalen, 1.0)
+			        != 0) {
 				/*
-				   side channel is closed, or we lost synchronization 
+				   side channel is closed, or we lost synchronization
 				 */
 				side_channel_open = 0;
 			} else {
-				switch ( command ) {
-					case CUPS_SC_CMD_DRAIN_OUTPUT:
+				switch (command) {
+				case CUPS_SC_CMD_DRAIN_OUTPUT:
 
-						/*
-						 * Our sockets disable the Nagle algorithm and data is sent immediately.
-						 * 
-						 */
+					/*
+					 * Our sockets disable the Nagle algorithm and data is sent immediately.
+					 *
+					 */
 
-						draining = 1;
+					draining = 1;
 
-						/*
-						   we will do cupsSideChannelWrite() once there is no
-						   data left ! 
-						 */
-						break;
+					/*
+					   we will do cupsSideChannelWrite() once there is no
+					   data left !
+					 */
+					break;
 
-					case CUPS_SC_CMD_GET_BIDI:
-						status = CUPS_SC_STATUS_OK;
-						data[0] = CUPS_SC_BIDI_NOT_SUPPORTED;
-						datalen = 1;
-						cupsSideChannelWrite ( command, status, data, datalen,
-											   1.0 );
-						break;
+				case CUPS_SC_CMD_GET_BIDI:
+					status = CUPS_SC_STATUS_OK;
+					data[0] = CUPS_SC_BIDI_NOT_SUPPORTED;
+					datalen = 1;
+					cupsSideChannelWrite(command, status, data, datalen,
+					                     1.0);
+					break;
 
 
 #if ROGER_BACKEND_CUPS_VERSION >= 105
-					case CUPS_SC_CMD_GET_CONNECTED:
-						status = CUPS_SC_STATUS_OK;
-						data[0] = ( output_fd != -1 );
-						datalen = 1;
-						break;
+				case CUPS_SC_CMD_GET_CONNECTED:
+					status = CUPS_SC_STATUS_OK;
+					data[0] = (output_fd != -1);
+					datalen = 1;
+					break;
 #endif
 
-					default:
+				default:
 
-						/*
-						 * this covers the following values 
-						 *
-						 * case CUPS_SC_CMD_GET_STATE:
-						 * case CUPS_SC_CMD_SOFT_RESET:
-						 * case CUPS_SC_CMD_GET_DEVICE_ID:
-						 * for CUPS 1.4 and later 
-						 *
-						 * case CUPS_SC_CMD_SNMP_GET:
-						 * case CUPS_SC_CMD_SNMP_GET_NEXT:
-						 *
-						 * these values should not occur
-						 * case CUPS_SC_CMD_NONE:
-						 * case CUPS_SC_CMD_MAX:
-						 */
+					/*
+					 * this covers the following values
+					 *
+					 * case CUPS_SC_CMD_GET_STATE:
+					 * case CUPS_SC_CMD_SOFT_RESET:
+					 * case CUPS_SC_CMD_GET_DEVICE_ID:
+					 * for CUPS 1.4 and later
+					 *
+					 * case CUPS_SC_CMD_SNMP_GET:
+					 * case CUPS_SC_CMD_SNMP_GET_NEXT:
+					 *
+					 * these values should not occur
+					 * case CUPS_SC_CMD_NONE:
+					 * case CUPS_SC_CMD_MAX:
+					 */
 
-						status = CUPS_SC_STATUS_NOT_IMPLEMENTED;
-						datalen = 0;
-						cupsSideChannelWrite ( command, status, data, datalen,
-											   1.0 );
-						break;
+					status = CUPS_SC_STATUS_NOT_IMPLEMENTED;
+					datalen = 0;
+					cupsSideChannelWrite(command, status, data, datalen,
+					                     1.0);
+					break;
 				}
 
 			}
@@ -229,31 +229,31 @@ ssize_t roger_backend_run_loop ( int input_fd, int output_fd, char *output_name 
 		 * Check if we have print data ready...
 		 */
 
-		if ( FD_ISSET ( input_fd, &input_set ) ) {
-			if ( ( bytes_to_print = read ( input_fd, print_buffer,
-										sizeof ( print_buffer ) ) ) < 0 ) {
+		if (FD_ISSET(input_fd, &input_set)) {
+			if ((bytes_to_print = read(input_fd, print_buffer,
+			                           sizeof(print_buffer))) < 0) {
 				/*
 				 * Read error - bail if we don't see EAGAIN or EINTR...
 				 */
 
-				if ( errno != EAGAIN && errno != EINTR ) {
-					perror ( "ERROR: Unable to read print data" );
-					return ( -1 );
+				if (errno != EAGAIN && errno != EINTR) {
+					perror("ERROR: Unable to read print data");
+					return (-1);
 				}
 
 				bytes_to_print = 0;
-			} else if ( bytes_to_print == 0 ) {
+			} else if (bytes_to_print == 0) {
 				/*
 				 * End of input file, break out of the loop
 				 */
 
 #if ROGER_BACKEND_CUPS_VERSION >= 103
-				if ( draining ) {
+				if (draining) {
 					command = CUPS_SC_CMD_DRAIN_OUTPUT;
 					status = CUPS_SC_STATUS_OK;
 					datalen = 0;
-					cupsSideChannelWrite ( command, status, data, datalen,
-										   1.0 );
+					cupsSideChannelWrite(command, status, data, datalen,
+					                     1.0);
 					draining = 0;
 				}
 #endif
@@ -262,24 +262,24 @@ ssize_t roger_backend_run_loop ( int input_fd, int output_fd, char *output_name 
 			} else {
 				print_ptr = print_buffer;
 
-				fprintf ( stderr, "DEBUG: Read %d bytes_writtenof print data...\n",
-						  ( int ) bytes_to_print );
+				fprintf(stderr, "DEBUG: Read %d bytes_writtenof print data...\n",
+				        (int) bytes_to_print);
 			}
 		}
 
-		
-		if ( bytes_to_print > 0 ) {
-			bytes_written= write ( output_fd, print_ptr, bytes_to_print );
-			if ( bytes_written< 0 ) {
-				/*
-			 	 * Write error - bail if we don't see an error we can retry...
-			 	 */
 
-				if ( errno != !EAGAIN && errno != EINTR ) {
-					fprintf ( stderr,
-						  _( "ERROR: Unable to write print data: %s\n" ),
-						  strerror ( errno ) );
-					return ( -1 );
+		if (bytes_to_print > 0) {
+			bytes_written = write(output_fd, print_ptr, bytes_to_print);
+			if (bytes_written < 0) {
+				/*
+				 * Write error - bail if we don't see an error we can retry...
+				 */
+
+				if (errno != !EAGAIN && errno != EINTR) {
+					fprintf(stderr,
+					        _("ERROR: Unable to write print data: %s\n"),
+					        strerror(errno));
+					return (-1);
 				}
 			} else {
 				bytes_to_print = bytes_to_print - bytes_written;
@@ -292,5 +292,5 @@ ssize_t roger_backend_run_loop ( int input_fd, int output_fd, char *output_name 
 	 * Return with success...
 	 */
 
-	return ( total_bytes_written );
+	return (total_bytes_written);
 }

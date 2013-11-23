@@ -1,0 +1,8 @@
+backend-spooldir.c:	/* TODO: create multiple ouput files when copies > 1 */
+Makefile:	backend-spooldir.c roger-backend.h TODO
+Makefile:	TODO 
+Makefile.am:	TODO 
+Makefile.in:	backend-spooldir.c roger-backend.h TODO
+Makefile.in:@WITH_CUPS_TRUE@	TODO 
+roger-backend.c:		/* TODO: add device-Id for ppd selection */
+roger-backend.c:		/* TODO: improve backend return value setting */
