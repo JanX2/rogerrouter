@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 	// char *option_value;
 	// char sep;
 	int input_fd;
-	int output_fd;
+	output_t *output_desc;
 	int copies;
 	ssize_t bytes_written;
 
@@ -115,8 +115,8 @@ int main(int argc, char *argv[])
 		    argv[0], ROGER_BACKEND_DEVICE_ID );
 		return (CUPS_BACKEND_OK);
 	} else if (argc < 6 || argc > 7) {
-		fprintf(stderr, _("roger-fax backend - version %s\n") , VERSION);
-		fprintf(stderr, _("Usage: %s job-id user title copies options [file]\n"),
+		fprintf(stderr, "roger-fax backend - version %s\n" , VERSION);
+		fprintf(stderr, "Usage: %s job-id user title copies options [file]\n",
 		        argv[0]);
 		return (CUPS_BACKEND_FAILED);
 	}
@@ -200,18 +200,18 @@ int main(int argc, char *argv[])
 	/*
 	   outputname inludes job-id, username and original name
 	 */
-	output_fd = open_fax_output(copies, argv[1], argv[2], argv[3], O_WRONLY | O_CREAT);
+	output_desc = open_fax_output(copies, argv[1], argv[2], argv[3], O_WRONLY | O_CREAT);
 
-	if (output_fd < 0) {
+	if (output_desc == NULL) {
 		/* TODO: improve backend return value setting? */
 		return (CUPS_BACKEND_STOP);
 	}
 
-	fprintf(stderr, _("INFO: Creating file %s\n"),
-	        get_output_name());
+	fprintf(stderr, "INFO: Creating file %s\n",
+	        get_output_name(output_desc));
 
 
-	fprintf(stderr, _("INFO: Connected to %s...\n"), get_output_name());
+	fprintf(stderr, "INFO: Connected to %s...\n", get_output_name(output_desc));
 
 	/*
 	 * Print everything...
@@ -228,7 +228,7 @@ int main(int argc, char *argv[])
 		lseek(input_fd, 0, SEEK_SET);
 	}
 
-	bytes_written = roger_backend_run_loop(input_fd, output_fd, get_output_name());
+	bytes_written = roger_backend_run_loop(input_fd, output_desc, get_output_name(output_desc));
 
 	if (input_fd != 0 && bytes_written >= 0) {
 #ifdef HAVE_LONG_LONG
@@ -237,8 +237,7 @@ int main(int argc, char *argv[])
 		       ("INFO: Sent print file, %lld bytes...\n"),
 		       CUPS_LLCAST bytes_written);
 #else
-		fprintf(stderr,
-		        _("INFO: Sent print file, %ld bytes...\n"),
+		fprintf(stderr,"INFO: Sent print file, %ld bytes...\n",
 		        CUPS_LLCAST bytes_written);
 #endif /* HAVE_LONG_LONG */
 	}
@@ -247,7 +246,7 @@ int main(int argc, char *argv[])
 	 * Close the socket connection...
 	 */
 
-	close_fax_output(output_fd);
+	close_fax_output(output_desc);
 
 	/*
 	 * Close the input file and return...
@@ -258,7 +257,7 @@ int main(int argc, char *argv[])
 	}
 
 	if (bytes_written >= 0) {
-		fputs(_("INFO: Ready to print.\n"), stderr);
+		fputs("INFO: Ready to print.\n", stderr);
 	}
 	return (bytes_written < 0 ? CUPS_BACKEND_FAILED : CUPS_BACKEND_OK);
 }

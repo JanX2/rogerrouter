@@ -42,9 +42,6 @@
 #include <cups/sidechannel.h>
 #endif
 
-/* Define _ macro */
-#define _(text) gettext(text)
-
 /*
  *  ROGER_BACKEND definitions
  */
@@ -59,42 +56,22 @@
 #define ROGER_BACKEND_DEVICE_ID "MFG:Roger-Router;MDL:Roger-fax;" \
                     "DES:Roger-Router Fax Printer for Fritz!Box routers;" \
                     "CLS:PRINTER;CMD:POSTSCRIPT;"
-
-
 #define USLEEP_MS 1000                  /* sleep for 1 msec */
 
-typedef enum roger_paper_status_e {
-	ROGER_BACKEND_PAPER_UNKNOWN = -1,
-	ROGER_BACKEND_PAPER_OK = 0,
-	ROGER_BACKEND_PAPER_OUT = 1
-} roger_paper_status_t;
-
-
-typedef enum roger_loglevel_e {
-	LOG_NONE,
-	LOG_EMERG,
-	LOG_ALERT,
-	LOG_CRIT,
-	LOG_ERROR,
-	LOG_WARN,
-	LOG_NOTICE,
-	LOG_INFO,
-	LOG_DEBUG,
-	LOG_DEBUG2,
-	LOG_END		/* not a real loglevel, but indicates end of list */
-} roger_loglevel_t;
+typedef struct output_struct output_t;
 
 /*
  * roger-runloop.c
  */
-extern ssize_t roger_backend_run_loop(int input_fd, int output_fd,
+extern ssize_t roger_backend_run_loop(int input_fd, output_t *output_desc,
                                       char *output_name);
 /*
- * roger-utils.c
+ * roger-spooldir.c
  */
-int open_fax_output(int copies, char *job, char *user, char *title, int flags);
-int close_fax_output(int outputFd);
-char *get_output_name(void);
+output_t *open_fax_output(int copies, char *job, char *user, char *title, int flags);
+int close_fax_output(output_t *output_desc);
+ssize_t output_write(output_t *output_desc, const void *buf, size_t nbyte);
+char *get_output_name(output_t *output_desc);
 
 #ifndef CUPS_LLCAST
 #  define CUPS_LLCAST	(long)

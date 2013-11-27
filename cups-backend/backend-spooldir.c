@@ -33,137 +33,214 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 
-static char *tmp_file_name = NULL;
-static char *final_file_name = NULL;
-static int open_fd = -1;
-static struct passwd *pwd_entry = NULL;
+typedef struct output_struct {
+	char *tmp_file_name;
+	char *target_file_name;
+	int output_fd;
+} output_t;
+
+/**
+ * \brief Create and initialize a new output_descriptor
+ * \return output_desc the new initialized output descriptor
+ */
+static output_t *new_output_desc(void)
+{
+	output_t *output_desc = malloc(sizeof(output_t));
+	output_desc->output_fd = -1;
+	output_desc->tmp_file_name = NULL;
+	output_desc->target_file_name = NULL;
+	return output_desc;
+}
+
+/**
+ * \brief free out descriptor.
+ * \param output_desc the output descriptor to be freed
+ */
+static void free_output_desc(output_t *output_desc)
+{
+	g_free(output_desc->tmp_file_name);
+	g_free(output_desc->target_file_name);
+	g_free(output_desc);
+}
 
 /**
  * \brief get path to spooler directory for specified user, create directory if it does not yet exist
  * \param user the user whose spool directory is required
+ * \param uid the user-id of the user for whom the spooldir is to be looked up
+ * \param gid the goup-id of the user for whom the spooldir is to be looked up
  * \return path to users spool directory
  */
-static char *get_directory(char *user)
+static char *get_directory(char *user, int uid, int gid)
 {
 	/* check existance of roger spool directory */
 
-	gchar *spool_dir_name = g_strdup_printf(ROGER_BACKEND_DIRECTORY);
+	gchar *spool_dir_name = NULL;
 	gchar *dir_name = NULL;
 
-	if (pwd_entry == NULL) {
-		fprintf(stderr, _("ERROR: Cannot find uid/gid for user  %s\n"),
-		        user);
-		g_free(spool_dir_name);
-		return NULL;
-	}
+	spool_dir_name = g_strdup(ROGER_BACKEND_DIRECTORY);
 
 	if (!g_file_test(spool_dir_name, G_FILE_TEST_IS_DIR)) {
-		fprintf(stderr, _("ERROR: Spooler directory %s does not exist!\n"),
+		fprintf(stderr, "ERROR: Spooler directory %s does not exist!\n",
 		        spool_dir_name);
 		g_free(spool_dir_name);
 		return NULL;
 	}
+	g_free(spool_dir_name);
 
 	/* now check for the users own spool directory */
 
-	dir_name = g_strdup_printf("%s/%s", ROGER_BACKEND_DIRECTORY, user);
+	dir_name = g_build_filename(ROGER_BACKEND_DIRECTORY, user, NULL);
 
 	if (!g_file_test(dir_name, G_FILE_TEST_IS_DIR)) {
 		if (g_file_test(dir_name, G_FILE_TEST_EXISTS)) {
-			fprintf(stderr, _("ERROR: Cannot create output directory: %s exists, but is not a directory\n"), dir_name);
+			fprintf(stderr,
+			        "ERROR: Cannot create output directory: %s exists, but is not a directory\n",
+			        dir_name);
+			g_free(dir_name);
 			return NULL;
 		}
-		if (mkdir(dir_name, 0) != 0) {
+		if (g_mkdir(dir_name, 0) != 0) {
 			fprintf(stderr,
-			        _("ERROR: Cannot create output directory %s: %s\n"),
+			        "ERROR: Cannot create output directory %s: %s\n",
 			        dir_name, strerror(errno));
-			g_free(spool_dir_name);
 			g_free(dir_name);
-			return (NULL);
+			return NULL;
 		}
-		/*
-		   use chmod instead of file mode in mkdir to avoid impact of umask
-		 */
-		chmod(dir_name, S_IRWXU | S_IRWXG);
-		chown(dir_name, pwd_entry->pw_uid, pwd_entry->pw_gid);
+
+		/* use chmod instead of file mode in mkdir to avoid impact of umask */
+		if (g_chmod(dir_name, S_IRWXU | S_IRWXG) != 0) {
+			fprintf(stderr,
+			        "ERROR: Cannot set file mode for %s: %s\n",
+			        dir_name, strerror(errno));
+			g_rmdir(dir_name);
+			g_free(dir_name);
+			return NULL;
+		}
+		if (chown(dir_name, uid, gid) != 0) {
+			fprintf(stderr,
+			        "ERROR: Cannot set file owner for %s: %s\n",
+			        dir_name, strerror(errno));
+			g_rmdir(dir_name);
+			g_free(dir_name);
+			return NULL;
+		}
 	}
-	g_free(spool_dir_name);
 	return dir_name;
 }
 
 /*
+ * \brief erorr handling for output Close and remove file
+ * \param output_desc output descriptor to be cleaned up
+ */
+static void cleanup_output(output_t *output_desc)
+{
+	if (output_desc->output_fd >= 0) {
+		close(output_desc->output_fd);
+		g_unlink(output_desc->tmp_file_name);
+	}
+	free_output_desc(output_desc);
+}
+
+/*
  * \brief open fax output file
+ * \copies nr of copies (unused)
  * \param job jobid
- * \param user user submitting the job
+ * \param username of the user submitting the job
  * \parm title title of the printjob
  * \flags flags to be used on open call
- * \returns fd of opened file
+ * \return fd of opened file
  */
-int open_fax_output(int copies, char *job, char *user, char *title, int flags)
+output_t *open_fax_output(int copies, char *job, char *user, char *title, int flags)
 {
-	/* TODO: create multiple ouput files when copies > 1 */
 	gchar *dir_name = NULL;
+	output_t *output_desc = NULL;
 
-	pwd_entry = getpwnam(user);
-	dir_name = get_directory(user);
+	struct passwd *pwd_entry = getpwnam(user);
+	if (pwd_entry == NULL) {
+		fprintf(stderr, "ERROR: Cannot find uid/gid for user  %s\n",
+		        user);
+		return NULL;
+	}
+
+	dir_name = get_directory(user, pwd_entry->pw_uid, pwd_entry->pw_gid);
 
 	if (dir_name == NULL) {
-		return (-1);
+		return NULL;
 	}
 
-	final_file_name = g_strdup_printf("%s/%s-%s", dir_name, job, title);
-	tmp_file_name = g_strdup_printf("%s.tmp", final_file_name);
-	open_fd = open(tmp_file_name, flags);
-	if (open_fd < 0) {
-		fprintf(stderr, _("Error: cannot open outputfile: %s: %s\n"),
-		        tmp_file_name, strerror(errno));
-		return open_fd;
+	output_desc = new_output_desc();
+	output_desc->target_file_name = g_build_filename(dir_name, job, title, NULL);
+	g_free(dir_name);
+
+	/* tmp file must be in the final directory so that a move is atomic */
+	output_desc->tmp_file_name = g_strconcat(output_desc->target_file_name, ".tmp", NULL);
+
+	output_desc->output_fd = open(output_desc->tmp_file_name, flags);
+	if (output_desc->output_fd < 0) {
+		fprintf(stderr, "Error: cannot open outputfile: %s: %s\n",
+		        output_desc->tmp_file_name, strerror(errno));
+		cleanup_output(output_desc);
+		return NULL;
 	}
 
-	if (fchmod(open_fd, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP) != 0) {
+	if (fchmod(output_desc->output_fd, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP) != 0) {
 		fprintf(stderr,
-		        _
-		        ("ERROR: cannot set access mode for outputfile: %s: %s\n"),
-		        tmp_file_name, strerror(errno));
+		        "ERROR: cannot set access mode for outputfile: %s: %s\n",
+		        output_desc->tmp_file_name, strerror(errno));
+		cleanup_output(output_desc);
+		return NULL;
 	}
-	if (fchown(open_fd, pwd_entry->pw_uid, pwd_entry->pw_gid) != 0) {
+	if (fchown(output_desc->output_fd, pwd_entry->pw_uid, pwd_entry->pw_gid) != 0) {
 		fprintf(stderr,
-		        _("ERROR: cannot change owner of outputfile: %s: %s\n"),
-		        tmp_file_name, strerror(errno));
+		        "ERROR: cannot change owner of outputfile: %s: %s\n",
+		        output_desc->tmp_file_name, strerror(errno));
+		cleanup_output(output_desc);
+		return NULL;
 	}
-	return open_fd;
+	return output_desc;
+}
+
+/**
+ * \brief write to fax  output
+ * \param output_desc the output descriptor to write to
+ * \param buf buffer to be written
+ * \param count nuber of bytes to be written
+ */
+
+ssize_t output_write(output_t *output_desc, const void *buf, size_t count)
+{
+	return write(output_desc->output_fd, buf, count);
 }
 
 /**
  * \brief close the fax output file and rename it to its final name
- * \param output_fd file descriptor to be closed
- * \return status of close and rename calls
+ * \param output_desc output descriptor to be closed
+ * \return status (0=ok, -1=error, errno is set)
  */
-int close_fax_output(int output_fd)
+int close_fax_output(output_t *output_desc)
 {
 	int result;
 
-	assert(output_fd == open_fd);
-
 	/* close fd */
-	if ((result = close(output_fd)) != 0) {
-		fprintf(stderr, _("ERROR: close outputfile %s failed: %s\n"),
-		        tmp_file_name, strerror(errno));
+	if ((result = close(output_desc->output_fd)) != 0) {
+		fprintf(stderr, "ERROR: close outputfile %s failed: %s\n",
+		        output_desc->tmp_file_name, strerror(errno));
 	} else {
 		/* ok, rename output file */
-		if ((result = rename(tmp_file_name, final_file_name)) != 0) {
-			fprintf(stderr, _("ERROR: rename %s to %s failed: %s\n"),
-			        tmp_file_name, final_file_name, strerror(errno));
+		if ((result = rename(output_desc->tmp_file_name, output_desc->target_file_name)) != 0) {
+			fprintf(stderr, "ERROR: rename %s to %s failed: %s\n",
+			        output_desc->tmp_file_name, output_desc->target_file_name, strerror(errno));
 		}
 	}
+	free_output_desc(output_desc);
 	return result;
 }
 
 /**
  * \brief get name of currently open output filename
- * \return filenam
+ * \return filename
  */
-char *get_output_name(void)
+char *get_output_name(output_t *output_desc)
 {
-	return tmp_file_name;
+	return output_desc->tmp_file_name;
 }

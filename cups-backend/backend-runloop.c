@@ -48,7 +48,7 @@
  * 'roger_backend_run_loop()' - Read and write print and back-channel data.
  */
 
-ssize_t roger_backend_run_loop(int input_fd, int output_fd, char *output_name)
+ssize_t roger_backend_run_loop(int input_fd, output_t *output_desc, char *output_name)
 {
 	int nfds;
 	fd_set input_set;
@@ -73,8 +73,8 @@ ssize_t roger_backend_run_loop(int input_fd, int output_fd, char *output_name)
 #endif /* cups >= 1.3 */
 
 	fprintf(stderr,
-	        "DEBUG: roger_backend_run_loop(input_fd=%d, output_fd=%d\n",
-	        input_fd, output_fd);
+	        "DEBUG: roger_backend_run_loop(input_fd=%d\n",
+	        input_fd);
 
 	/*
 	 * If we are printing data from a print driver on stdin, ignore SIGTERM
@@ -200,7 +200,7 @@ ssize_t roger_backend_run_loop(int input_fd, int output_fd, char *output_name)
 #if ROGER_BACKEND_CUPS_VERSION >= 105
 				case CUPS_SC_CMD_GET_CONNECTED:
 					status = CUPS_SC_STATUS_OK;
-					data[0] = (output_fd != -1);
+					data[0] = (output_desc != NULL);
 					datalen = 1;
 					break;
 #endif
@@ -276,7 +276,7 @@ ssize_t roger_backend_run_loop(int input_fd, int output_fd, char *output_name)
 
 
 		if (bytes_to_print > 0) {
-			bytes_written = write(output_fd, print_ptr, bytes_to_print);
+			bytes_written = output_write(output_desc, print_ptr, bytes_to_print);
 			if (bytes_written < 0) {
 				/*
 				 * Write error - bail if we don't see an error we can retry...
@@ -284,7 +284,7 @@ ssize_t roger_backend_run_loop(int input_fd, int output_fd, char *output_name)
 
 				if (errno != !EAGAIN && errno != EINTR) {
 					fprintf(stderr,
-					        _("ERROR: Unable to write print data: %s\n"),
+					        "ERROR: Unable to write print data: %s\n",
 					        strerror(errno));
 					return (-1);
 				}
