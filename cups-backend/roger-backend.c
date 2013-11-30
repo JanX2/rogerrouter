@@ -31,21 +31,19 @@
  * Include necessary headers.
  */
 
-#include "roger-backend.h"
 #include <stdio.h>
 #include <stdarg.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <signal.h>
 #include <errno.h>
-
 #ifdef WIN32
 #include <winsock.h>
 #else
 #include <unistd.h>
 #include <fcntl.h>
 #endif /* WIN32 */
-
+#include "roger-backend.h"
 
 /*
  * \brief Send a file to the roger fax spool directory
@@ -58,18 +56,9 @@
 
 int main(int argc, char *argv[])
 {
-	char method[ROGER_BACKEND_METHOD_MAX];
-	char hostname[ROGER_BACKEND_HOST_MAX];
-	char username[ROGER_BACKEND_USER_MAX];
-	char resource[ROGER_BACKEND_ARGS_MAX];
-	int port;
-	char *options;
-	// char *option_name;
-	// char *option_value;
-	// char sep;
+	int copies;
 	int input_fd;
 	output_t *output_desc;
-	int copies;
 	ssize_t bytes_written;
 
 #if defined(HAVE_SIGACTION) && !defined(HAVE_SIGSET)
@@ -102,7 +91,9 @@ int main(int argc, char *argv[])
 	 * Check command-line...
 	 */
 
-	if (argc == 1) {
+	switch (argc) {
+
+	case 1:
 		printf(
 		    /* device-class device-uril */
 		    "file %s:/ "
@@ -114,7 +105,24 @@ int main(int argc, char *argv[])
 		    "\"%s\"\n",
 		    argv[0], ROGER_BACKEND_DEVICE_ID );
 		return (CUPS_BACKEND_OK);
-	} else if (argc < 6 || argc > 7) {
+
+	case 6:
+		/* print from stdin */
+		input_fd = 0;
+		copies = 1;
+		break;
+
+	case 7:
+		/* Print file from command line... */
+
+		if ((input_fd = open(argv[6], O_RDONLY)) < 0) {
+			perror("ERROR: unable to open print file");
+			return (CUPS_BACKEND_FAILED);
+		}
+		copies = atoi (argv[4]);
+		break;
+
+	default:	
 		fprintf(stderr, "roger-fax backend - version %s\n" , VERSION);
 		fprintf(stderr, "Usage: %s job-id user title copies options [file]\n",
 		        argv[0]);
@@ -122,88 +130,14 @@ int main(int argc, char *argv[])
 	}
 
 	/*
-	 * If we have 7 arguments, print the file named on the command-line.
-	 * Otherwise, send stdin (fd = 0 )instead...
+	 * Create output descriptor 
+	 * outputname includes job-id, username and original name
 	 */
 
-	if (argc == 6) {
-		input_fd = 0;
-		copies = 1;
-	} else {
-		/*
-		 * Try to open the print file...
-		 */
-
-		if ((input_fd = open(argv[6], O_RDONLY)) < 0) {
-			perror("ERROR: unable to open print file");
-			return (CUPS_BACKEND_FAILED);
-		}
-		copies = atoi(argv[4]);
-	}
-
-	/* This is left in for when we add (debug) options */
-
-	httpSeparateURI(HTTP_URI_CODING_ALL, cupsBackendDeviceURI(argv),
-	                method, sizeof(method), username, sizeof(username),
-	                hostname, sizeof(hostname), &port,
-	                resource, sizeof(resource));
-
-	/*
-	 * Get options, if any...
-	 */
-
-	if ((options = strchr(resource, '?')) != NULL) {
-		/*
-		 * terminate the device name string and move to the first
-		 * character of the options...
-		 */
-
-		*options++ = '\0';
-
-		/*
-		 * Parse options...
-		 */
-
-		/* We do not have options right now...
-
-		while ( *options ) {
-
-			option_name = options;
-
-			while ( *options && *options != '=' && *options != '+'
-					&& *options != '&' )
-				options++;
-
-			if ( ( sep = *options ) != '\0' )
-				*options++ = '\0';
-
-			if ( sep == '=' ) {
-
-				option_value = options;
-
-				while ( *options && *options != '+' && *options != '&' )
-					options++;
-
-				if ( *options )
-					*options++ = '\0';
-			} else
-				option_value = ( char * ) "";
-
-		}
-		*/
-	}
-
-	/*
-	 * Create output file
-	 */
-
-	/*
-	   outputname inludes job-id, username and original name
-	 */
 	output_desc = open_fax_output(copies, argv[1], argv[2], argv[3], O_WRONLY | O_CREAT);
 
 	if (output_desc == NULL) {
-		/* TODO: improve backend return value setting? */
+		/* TODO: improve backend return value setting? we may use BACEND_HOLD to keep queue going */
 		return (CUPS_BACKEND_STOP);
 	}
 
@@ -218,10 +152,6 @@ int main(int argc, char *argv[])
 	 */
 
 	bytes_written = 0;
-
-	while (copies > 0 && bytes_written >= 0) {
-		copies--;
-	}
 
 	if (input_fd != 0) {
 		fputs("PAGE: 1 1\n", stderr);

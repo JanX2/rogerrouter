@@ -31,18 +31,14 @@
  * Include necessary headers.
  */
 
-#include "roger-backend.h"
-#ifdef __hpux
-#include <sys/time.h>
-#else
 #include <sys/select.h>
-#endif /* __hpux */
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 #include <stdio.h>
 #include <signal.h>
 #include <errno.h>
+#include "roger-backend.h"
 
 /*
  * 'roger_backend_run_loop()' - Read and write print and back-channel data.
@@ -140,7 +136,7 @@ ssize_t roger_backend_run_loop(int input_fd, output_t *output_desc, char *output
 			if (errno == EINTR && total_bytes_written == 0) {
 				fputs("DEBUG: Received an interrupt before any bytes_writtenwere "
 				      "written, aborting!\n", stderr);
-				return (0);
+				return 0;
 			}
 		}
 
@@ -245,7 +241,7 @@ ssize_t roger_backend_run_loop(int input_fd, output_t *output_desc, char *output
 
 				if (errno != EAGAIN && errno != EINTR) {
 					perror("ERROR: Unable to read print data");
-					return (-1);
+					return -1;
 				}
 
 				bytes_to_print = 0;
@@ -286,7 +282,7 @@ ssize_t roger_backend_run_loop(int input_fd, output_t *output_desc, char *output
 					fprintf(stderr,
 					        "ERROR: Unable to write print data: %s\n",
 					        strerror(errno));
-					return (-1);
+					return -1;
 				}
 			} else {
 				bytes_to_print = bytes_to_print - bytes_written;

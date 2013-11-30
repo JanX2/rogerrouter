@@ -28,15 +28,14 @@
 #include <sys/errno.h>
 #include <pwd.h>
 #include <fcntl.h>
-#include <assert.h>
-#include <roger-backend.h>
 #include <glib.h>
 #include <glib/gstdio.h>
+#include <roger-backend.h>
 
 typedef struct output_struct {
-	char *tmp_file_name;
-	char *target_file_name;
-	int output_fd;
+	gchar *tmp_file_name;
+	gchar *target_file_name;
+	gint output_fd;
 } output_t;
 
 /**
@@ -45,7 +44,7 @@ typedef struct output_struct {
  */
 static output_t *new_output_desc(void)
 {
-	output_t *output_desc = malloc(sizeof(output_t));
+	output_t *output_desc = g_malloc(sizeof(output_t));
 	output_desc->output_fd = -1;
 	output_desc->tmp_file_name = NULL;
 	output_desc->target_file_name = NULL;
@@ -77,32 +76,33 @@ static char *get_directory(char *user, int uid, int gid)
 	gchar *spool_dir_name = NULL;
 	gchar *dir_name = NULL;
 
-	spool_dir_name = g_strdup(ROGER_BACKEND_DIRECTORY);
 
-	if (!g_file_test(spool_dir_name, G_FILE_TEST_IS_DIR)) {
-		fprintf(stderr, "ERROR: Spooler directory %s does not exist!\n",
-		        spool_dir_name);
-		g_free(spool_dir_name);
-		return NULL;
-	}
-	g_free(spool_dir_name);
-
-	/* now check for the users own spool directory */
+	/* check for the users own spool directory */
 
 	dir_name = g_build_filename(ROGER_BACKEND_DIRECTORY, user, NULL);
 
 	if (!g_file_test(dir_name, G_FILE_TEST_IS_DIR)) {
-		if (g_file_test(dir_name, G_FILE_TEST_EXISTS)) {
-			fprintf(stderr,
-			        "ERROR: Cannot create output directory: %s exists, but is not a directory\n",
-			        dir_name);
-			g_free(dir_name);
-			return NULL;
-		}
+
+		/* directory does not exist create directory */
+
 		if (g_mkdir(dir_name, 0) != 0) {
+
+			/* Cannot create output directory, warn if parent does not exist */
+
+			spool_dir_name = g_strdup(ROGER_BACKEND_DIRECTORY);
+
+			if (!g_file_test(spool_dir_name, G_FILE_TEST_IS_DIR)) {
+				fprintf(stderr, "ERROR: Spooler directory %s does not exist!\n",
+		        		         spool_dir_name);
+				g_free(spool_dir_name);
+				g_free(dir_name);
+				return NULL;
+			} 
+			g_free(spool_dir_name);
+
 			fprintf(stderr,
-			        "ERROR: Cannot create output directory %s: %s\n",
-			        dir_name, strerror(errno));
+		        	"ERROR: Cannot create output directory %s: %s\n",
+		        	dir_name, strerror(errno));
 			g_free(dir_name);
 			return NULL;
 		}
@@ -153,6 +153,7 @@ static void cleanup_output(output_t *output_desc)
 output_t *open_fax_output(int copies, char *job, char *user, char *title, int flags)
 {
 	gchar *dir_name = NULL;
+	gchar *file_name = NULL;
 	output_t *output_desc = NULL;
 
 	struct passwd *pwd_entry = getpwnam(user);
@@ -169,7 +170,9 @@ output_t *open_fax_output(int copies, char *job, char *user, char *title, int fl
 	}
 
 	output_desc = new_output_desc();
-	output_desc->target_file_name = g_build_filename(dir_name, job, title, NULL);
+	file_name = g_strdup_printf("%s-%s", job, title);
+	output_desc->target_file_name = g_build_filename(dir_name, file_name, NULL);
+	g_free(file_name);
 	g_free(dir_name);
 
 	/* tmp file must be in the final directory so that a move is atomic */
@@ -177,7 +180,7 @@ output_t *open_fax_output(int copies, char *job, char *user, char *title, int fl
 
 	output_desc->output_fd = open(output_desc->tmp_file_name, flags);
 	if (output_desc->output_fd < 0) {
-		fprintf(stderr, "Error: cannot open outputfile: %s: %s\n",
+		fprintf(stderr, "Error: Cannot open outputfile: %s: %s\n",
 		        output_desc->tmp_file_name, strerror(errno));
 		cleanup_output(output_desc);
 		return NULL;
