@@ -89,16 +89,14 @@ static char *get_directory(char *user, int uid, int gid)
 
 			/* Cannot create output directory, warn if parent does not exist */
 
-			spool_dir_name = g_strdup(ROGER_BACKEND_DIRECTORY);
+			spool_dir_name = ROGER_BACKEND_DIRECTORY;
 
 			if (!g_file_test(spool_dir_name, G_FILE_TEST_IS_DIR)) {
 				fprintf(stderr, "ERROR: Spooler directory %s does not exist!\n",
 		        		         spool_dir_name);
-				g_free(spool_dir_name);
 				g_free(dir_name);
 				return NULL;
 			} 
-			g_free(spool_dir_name);
 
 			fprintf(stderr,
 		        	"ERROR: Cannot create output directory %s: %s\n",

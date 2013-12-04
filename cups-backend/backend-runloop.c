@@ -278,7 +278,7 @@ ssize_t roger_backend_run_loop(int input_fd, output_t *output_desc, char *output
 				 * Write error - bail if we don't see an error we can retry...
 				 */
 
-				if (errno != !EAGAIN && errno != EINTR) {
+				if (errno != EAGAIN && errno != EINTR) {
 					fprintf(stderr,
 					        "ERROR: Unable to write print data: %s\n",
 					        strerror(errno));
