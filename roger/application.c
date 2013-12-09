@@ -253,6 +253,8 @@ static void app_init(Application *app)
 	routermanager_plugins_add_search_path(get_directory(APP_PLUGINS));
 	g_free(path);
 
+	fax_process_init();
+
 	if (routermanager_init(option_state.debug, &error) == FALSE) {
 		printf("routermanager() failed: %s\n", error ? error->message : "");
 
@@ -264,8 +266,6 @@ static void app_init(Application *app)
 		g_clear_error(&error);
 		return;
 	}
-
-	fax_process_init();
 
 	journal_window(G_APPLICATION(app), NULL);
 
