@@ -34,7 +34,6 @@
 #include <libroutermanager/fax_phone.h>
 #include <libroutermanager/fax_printer.h>
 #include <libroutermanager/action.h>
-#include <libroutermanager/bluetooth.h>
 
 #ifdef __APPLE__
 #include <gtkmacintegration/gtkosxapplication.h>
