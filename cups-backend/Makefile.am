@@ -10,7 +10,7 @@ roger_cups_SOURCES = \
 roger_cups_CFLAGS = -Wall $(EXTRA_CFLAGS) $(CUPS_CFLAGS)
 roger_cups_LDFLAGS = $(EXTRA_LIBS) $(CUPS_LIBS)
 
-install-data-hook:
-	chmod 0500 $(DESTDIR)$(cupsbackenddir)/roger-cups 
-	chown root.root $(DESTDIR)$(cupsbackenddir)/roger-cups
+#install-data-hook:
+#	chmod 0500 $(DESTDIR)$(cupsbackenddir)/roger-cups 
+#	chown root.root $(DESTDIR)$(cupsbackenddir)/roger-cups
 endif
