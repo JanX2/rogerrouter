@@ -32,12 +32,6 @@
 #include <glib/gstdio.h>
 #include <roger-backend.h>
 
-typedef struct output_struct {
-	gchar *tmp_file_name;
-	gchar *target_file_name;
-	gint output_fd;
-} output_t;
-
 /**
  * \brief Create and initialize a new output_descriptor
  * \return output_desc the new initialized output descriptor

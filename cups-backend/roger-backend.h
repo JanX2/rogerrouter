@@ -35,6 +35,7 @@
 #include <cups/cups.h>
 #include <cups/backend.h>
 #include <cups/http.h>
+#include <glib.h>
 
 #define ROGER_BACKEND_CUPS_VERSION  (100 * CUPS_VERSION_MAJOR + CUPS_VERSION_MINOR )
 
@@ -58,7 +59,11 @@
                     "CLS:PRINTER;CMD:POSTSCRIPT;"
 #define USLEEP_MS 1000                  /* sleep for 1 msec */
 
-typedef struct output_struct output_t;
+typedef struct output_struct {
+	gchar *tmp_file_name;
+	gchar *target_file_name;
+	gint output_fd;
+} output_t;
 
 /*
  * roger-runloop.c
