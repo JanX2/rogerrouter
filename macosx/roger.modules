@@ -3,6 +3,7 @@
 <moduleset>
 	<include href="http://git.gnome.org/browse/gtk-osx/plain/modulesets-stable/gtk-osx.modules"/>
 	<repository type="svn" name="roger" href="http://svn.tabos.org/repos/"/>
+	<repository type="tarball" name="gnome-symbolic" href="http://ftp.gnome.org/pub/GNOME/sources/gnome-icon-theme-symbolic/3.10/"/>
 	<repository type="tarball" name="libcapi20" href="http://en.tabos.org/download/"/>
 	<repository type="tarball" name="speex" href="http://downloads.xiph.org/releases/speex/"/>
 	<repository type="tarball" name="libsndfile" href="http://www.mega-nerd.com/libsndfile/files/"/>
@@ -11,6 +12,10 @@
 	<repository type="tarball" name="spandsp" href="http://soft-switch.org/downloads/spandsp/"/>
 	<repository type="tarball" name="portaudio" href="http://www.portaudio.com/archives/"/>
 	<repository type="tarball" name="ghostscript" href="http://prdownloads.sourceforge.net/ghostscript/GPL%20Ghostscript/"/>
+
+	<autotools id="gnome-icon-theme-symbolic">
+		<branch repo="gnome-symbolic" module="gnome-icon-theme-symbolic-3.10.1.tar.xz" version="3.10.1" />
+	</autotools>
 
 	<autotools id="speex">
 		<branch repo="speex" module="speex-1.2rc1.tar.gz" version="1.2rc1" size="1061882" md5sum="c4438b22c08e5811ff10e2b06ee9b9ae" />
