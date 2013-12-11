@@ -1,22 +1,21 @@
 These are the steps necessary to compile Roger Router from source on OS X:
 
-* Preface
-
-Please note that we currently build Roger Router for Macos 10.5, so we actually have the following in our ~/.jhbuild-custom:
-
-    setup_sdk(target="10.5", sdk_version="10.5", architectures=["i386"])
-    os.environ["CC"] = "/usr/bin/llvm-gcc"
-    os.environ["CXX"] = "/usr/bin/llvm-g++"
-    skip.append("libiconv")
-    moduleset=os.environ['HOME'] + '/PATH_TO_ROGER_SRC/macosx/roger.modules'
+Latest version tested: 10.8.5
 
 * Building GTK+ 3 for OS X
 
     $ curl -O https://git.gnome.org/browse/gtk-osx/plain/gtk-osx-build-setup.sh
     $ sh gtk-osx-build-setup.sh
 
-Setup PATH so we can easily execute jhbuild
+- Please note that we have to add the following in our ~/.jhbuild-custom:
+
+    os.environ["CFLAGS"] = "-Wall"
+    moduleset=os.environ['HOME'] + '/PATH_TO_ROGER_SRC/macosx/roger.modules'
+
+-  Setup PATH so we can easily execute jhbuild
     $ export PATH=$PATH:/Users/$USER/.local/bin
+
+Note: There is a bug in recent xcode version which prevents bootstrap from compile. In this case disable the module_extra_env["pkg-config"] ... line in .jhbuildrc for xcodeversion >= 5.0
 
     $ jhbuild bootstrap
     $ jhbuild build meta-gtk-osx-bootstrap
