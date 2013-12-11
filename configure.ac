@@ -44,7 +44,7 @@ case "$host" in
 	*darwin*)
 		WIN32=no
 		macos=yes
-		OS_CFLAGS="-DROUTERMANAGER_PLUGINS='\"lib/routermanager/plugins/\"' -DAPP_PLUGINS='\"lib/roger/plugins/\"' -DAPP_DATA='\"share/roger/\"' -DAPP_LOCALE='\"share/locale\"' -DJOURNAL_TOP_OLD_ICONS"
+		OS_CFLAGS="-DROUTERMANAGER_PLUGINS='\"lib/routermanager/plugins/\"' -DAPP_PLUGINS='\"lib/roger/plugins/\"' -DAPP_DATA='\"share/roger/\"' -DAPP_LOCALE='\"share/locale\"'"
 		OS_LIBS="-rdynamic"
 	;;
 	*freebsd*)

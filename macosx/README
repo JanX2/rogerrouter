@@ -28,6 +28,10 @@ Note that roger.modules in moduleset is a symlink to the file located in the Rog
 
     $ jhbuild build roger
 
+Optional: Add more eye-candy:
+    Copy settings.ini to gtk/inst/etc/gtk-3.0
+    Copy directory win32/themes/Adwaita to gtk/inst/share/themes/
+
 * Test Roger Router
 
     $ jhbuild shell
