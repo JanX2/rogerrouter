@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 		    "\"Roger Router Fax\" "
 		    /* device-id */
 		    "\"%s\"\n",
-		    argv[0], ROGER_BACKEND_DEVICE_ID );
+		    argv[0], ROGER_BACKEND_DEVICE_ID);
 		return (CUPS_BACKEND_OK);
 
 	case 6:
@@ -119,10 +119,10 @@ int main(int argc, char *argv[])
 			perror("ERROR: unable to open print file");
 			return (CUPS_BACKEND_FAILED);
 		}
-		copies = atoi (argv[4]);
+		copies = atoi(argv[4]);
 		break;
 
-	default:	
+	default:
 		fprintf(stderr, "roger-fax backend - version %s\n" , VERSION);
 		fprintf(stderr, "Usage: %s job-id user title copies options [file]\n",
 		        argv[0]);
@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
 	}
 
 	/*
-	 * Create output descriptor 
+	 * Create output descriptor
 	 * outputname includes job-id, username and original name
 	 */
 
@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
 		       ("INFO: Sent print file, %lld bytes...\n"),
 		       CUPS_LLCAST bytes_written);
 #else
-		fprintf(stderr,"INFO: Sent print file, %ld bytes...\n",
+		fprintf(stderr, "INFO: Sent print file, %ld bytes...\n",
 		        CUPS_LLCAST bytes_written);
 #endif /* HAVE_LONG_LONG */
 	}

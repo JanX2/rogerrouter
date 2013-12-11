@@ -87,14 +87,14 @@ static char *get_directory(char *user, int uid, int gid)
 
 			if (!g_file_test(spool_dir_name, G_FILE_TEST_IS_DIR)) {
 				fprintf(stderr, "ERROR: Spooler directory %s does not exist!\n",
-		        		         spool_dir_name);
+				        spool_dir_name);
 				g_free(dir_name);
 				return NULL;
-			} 
+			}
 
 			fprintf(stderr,
-		        	"ERROR: Cannot create output directory %s: %s\n",
-		        	dir_name, strerror(errno));
+			        "ERROR: Cannot create output directory %s: %s\n",
+			        dir_name, strerror(errno));
 			g_free(dir_name);
 			return NULL;
 		}
