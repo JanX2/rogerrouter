@@ -8,7 +8,7 @@ Please note that we currently build Roger Router for Macos 10.5, so we actually 
     os.environ["CC"] = "/usr/bin/llvm-gcc"
     os.environ["CXX"] = "/usr/bin/llvm-g++"
     skip.append("libiconv")
-    moduleset=os.environ['HOME'] + '/roger.modules'
+    moduleset=os.environ['HOME'] + '/PATH_TO_ROGER_SRC/macosx/roger.modules'
 
 * Building GTK+ 3 for OS X
 

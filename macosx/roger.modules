@@ -53,6 +53,9 @@
 	<autotools id="roger" autogen-sh="autogen.sh; ./configure">
 		<branch repo="roger"/>
 		<dependencies>
+			<dep package="librsvg"/>
+			<dep package="gnome-icon-theme"/>
+			<dep package="gnome-icon-theme-symbolic"/>
 			<dep package="libcapi20"/>
 			<dep package="speex"/>
 			<dep package="libsndfile"/>
