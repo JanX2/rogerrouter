@@ -42,7 +42,7 @@
 	</autotools>
 
 	<autotools id="libcapi20">
-		<branch repo="libcapi20" module="capi20-3.6.tar.bz2" version="3.6" checkoutdir="capi20" />
+		<branch repo="libcapi20" module="capi20.tar.bz2" version="3.6" checkoutdir="capi20" />
 	</autotools>
 
 	<autotools id="portaudio" autogen-sh="configure" autogenargs="--disable-mac-universal ">
