@@ -138,6 +138,10 @@
   </data>
 
   <data>
+    ${prefix}/icons/gnome
+  </data>
+
+  <data>
     ${prefix}/lib/gdk-pixbuf-2.0
   </data>
 
