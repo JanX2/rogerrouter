@@ -138,7 +138,7 @@
   </data>
 
   <data>
-    ${prefix}/icons/gnome
+    ${prefix}/share/icons/gnome
   </data>
 
   <data>
