@@ -22,7 +22,7 @@
 		</branch>
 	</autotools>
 
-	<autotools id="libsoup" autogen-sh="./autogen.sh; ./configure" autogenargs="--without-gnome --disable-tls-check">
+	<autotools id="libsoup" autogen-sh="./autogen.sh; ./configure" autogenargs="--without-gnome --disable-tls-check" makeargs="-Wno-format-zero-length">
 		<branch repo="libsoup" module="libsoup-2.40.3.tar.xz" version="2.40.3" />
 	</autotools>
 
