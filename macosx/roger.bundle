@@ -145,6 +145,14 @@
     ${prefix}/lib/gdk-pixbuf-2.0
   </data>
 
+  <data>
+    ${prefix}/lib/libcroco*
+  </data>
+
+  <data>
+    ${prefix}/lib/librsvg*
+  </data>
+
   <data dest='${bundle}/Contents/Resources/share/themes/'>
     ${project}/../win32/themes
   </data>
