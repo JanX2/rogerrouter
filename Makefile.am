@@ -1,4 +1,8 @@
-SUBDIRS = libroutermanager roger cups-backend roger-cli po doc
+SUBDIRS = libroutermanager roger roger-cli po doc
+
+if !WIN32
+SUBDIRS += cups-backend
+endif
 
 EXTRA_DIST = \
 	autogen.sh \
