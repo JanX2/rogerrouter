@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-23 23:41+0100\n"
+"POT-Creation-Date: 2013-12-12 22:07+0100\n"
 "PO-Revision-Date: 2013-09-07 19:34+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: German <jan.brummer@tabos.org>\n"
@@ -208,7 +208,7 @@ msgid "Photo"
 msgstr "Foto"
 
 #. Name
-#: ../roger/contacts.c:334 ../roger/contact_edit.c:194 ../roger/journal.c:807
+#: ../roger/contacts.c:334 ../roger/contact_edit.c:194 ../roger/journal.c:877
 #: ../roger/pref_action.c:193 ../roger/pref_action.c:495
 #: ../roger/pref_filters.c:209 ../roger/pref_filters.c:506
 #: ../roger/print.c:382
@@ -220,7 +220,7 @@ msgstr "Name"
 msgid "Do you want to delete the entry '%s'?"
 msgstr "Wollen Sie den Eintrag '%s' löschen?"
 
-#: ../roger/contacts.c:413 ../roger/journal.c:405
+#: ../roger/contacts.c:413 ../roger/journal.c:407
 msgid "Delete entry"
 msgstr "Eintrag löschen"
 
@@ -259,7 +259,7 @@ msgstr "_Öffnen"
 msgid "_No image"
 msgstr "_Kein Bild"
 
-#: ../roger/contact_edit.c:220 ../roger/journal.c:823
+#: ../roger/contact_edit.c:220 ../roger/journal.c:893
 #: ../roger/pref_action.c:256 ../roger/pref_filters.c:210 ../roger/print.c:386
 #: ../roger/plugins/notification/notification.c:471
 #: ../roger/plugins/gtknotify/gtknotify.c:587
@@ -282,7 +282,7 @@ msgstr "Straße"
 msgid "ZIP"
 msgstr "PLZ"
 
-#: ../roger/contact_edit.c:261 ../roger/journal.c:830
+#: ../roger/contact_edit.c:261 ../roger/journal.c:900
 msgid "City"
 msgstr "Stadt"
 
@@ -301,19 +301,19 @@ msgstr "Telefon"
 msgid "Address"
 msgstr "Adresse"
 
-#: ../roger/contact_edit.c:334
+#: ../roger/contact_edit.c:360
 msgid "Edit contact"
 msgstr "Kontakt editieren"
 
-#: ../roger/contact_edit.c:334
+#: ../roger/contact_edit.c:360
 msgid "_Save"
 msgstr "_Speichern"
 
-#: ../roger/contact_edit.c:334
+#: ../roger/contact_edit.c:360
 msgid "Cancel"
 msgstr "A_bbrechen"
 
-#: ../roger/contact_edit.c:347
+#: ../roger/contact_edit.c:373
 msgid ""
 "Note: Depending on the address book plugin not all information might be saved"
 msgstr ""
@@ -370,89 +370,109 @@ msgstr "Fortschritt:"
 msgid "Connection: Idle | Duration: 00:00:00"
 msgstr "Verbindung: Untätig | Dauer: 00:00:00"
 
-#: ../roger/journal.c:243
+#: ../roger/journal.c:245
 #, c-format
 msgid "Profile: %s | Total: %d call(s) | Duration: %d:%2.2d"
 msgstr "Profil: %s | Anzahl: %d Anruf(e) | Dauer: %d:%2.2d"
 
-#: ../roger/journal.c:243
+#: ../roger/journal.c:245
 msgid "<No profile>"
 msgstr "<Kein Profil>"
 
-#: ../roger/journal.c:363
+#: ../roger/journal.c:365
 msgid "Do you want to delete the router journal?"
 msgstr "Wollen Sie das Journal vom Router löschen?"
 
-#: ../roger/journal.c:364
+#: ../roger/journal.c:366
 msgid "Delete journal"
 msgstr "Journal löschen"
 
-#: ../roger/journal.c:404
+#: ../roger/journal.c:406
 msgid "Do you want to delete the selected entry?"
 msgstr "Wollen Sie den ausgewählten Eintrag löschen?"
 
+#: ../roger/journal.c:426
+msgid "Where shall i add the number?"
+msgstr "Wo soll die Nummer hinzugefügt werden?"
+
+#: ../roger/journal.c:433
+msgid "Add entry"
+msgstr "Eintrag hinzufügen"
+
+#: ../roger/journal.c:439
+msgid "Existing entry"
+msgstr "Existierender Eintrag"
+
+#: ../roger/journal.c:440
+msgid "New entry"
+msgstr "Neuer Eintrag"
+
 #. Create dialog
-#: ../roger/journal.c:528 ../roger/pref_filters.c:60
+#: ../roger/journal.c:589 ../roger/pref_filters.c:60
 msgid "Voice box"
 msgstr "Anrufbeantworter"
 
-#: ../roger/journal.c:528 ../roger/pref.c:106 ../roger/pref_filters.c:298
+#: ../roger/journal.c:589 ../roger/pref.c:106 ../roger/pref_filters.c:298
 msgid "_Close"
 msgstr "_Schließen"
 
-#: ../roger/journal.c:530
+#: ../roger/journal.c:591
 msgid "Playing voice box entry..."
 msgstr "Spiele Anrufbeantworter-Eintrag"
 
-#: ../roger/journal.c:690
+#: ../roger/journal.c:752
 msgid "Refresh journal"
 msgstr "Journal laden"
 
-#: ../roger/journal.c:703
+#: ../roger/journal.c:765
 msgid "Print journal"
 msgstr "Journal drucken"
 
-#: ../roger/journal.c:716
+#: ../roger/journal.c:778
 msgid "Clear journal on router"
 msgstr "Lösche Journal vom Router"
 
-#: ../roger/journal.c:730
+#: ../roger/journal.c:792
 msgid "Delete selected entry"
 msgstr "Ausgewählten Eintrag löschen"
 
-#: ../roger/journal.c:741
+#: ../roger/journal.c:805
+msgid "Add selected entry to address book"
+msgstr "Ausgewählten Eintrag zum Adressbuch hinzufügen"
+
+#: ../roger/journal.c:811
 msgid "Search:"
 msgstr "Suche:"
 
-#: ../roger/journal.c:745
+#: ../roger/journal.c:815
 msgid "Search in journal for name or number"
 msgstr "Suche im Journal nach Name oder Nummer"
 
-#: ../roger/journal.c:755
+#: ../roger/journal.c:825
 msgid "Filter:"
 msgstr "Filter:"
 
-#: ../roger/journal.c:793 ../roger/print.c:374
+#: ../roger/journal.c:863 ../roger/print.c:374
 msgid "Type"
 msgstr "Typ"
 
-#: ../roger/journal.c:798 ../roger/print.c:378
+#: ../roger/journal.c:868 ../roger/print.c:378
 msgid "Date/Time"
 msgstr "Datum/Zeit"
 
-#: ../roger/journal.c:816
+#: ../roger/journal.c:886
 msgid "Company"
 msgstr "Firma"
 
-#: ../roger/journal.c:837
+#: ../roger/journal.c:907
 msgid "Extension"
 msgstr "Nebenstelle"
 
-#: ../roger/journal.c:844
+#: ../roger/journal.c:914
 msgid "Line"
 msgstr "Leitung"
 
-#: ../roger/journal.c:851 ../roger/print.c:398
+#: ../roger/journal.c:921 ../roger/print.c:398
 msgid "Duration"
 msgstr "Dauer"
 
