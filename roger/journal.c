@@ -465,6 +465,8 @@ void add_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpoi
 		contact_add_number(call->remote, call->remote->number);
 		if (call->remote->lookup) {
 			contact_add_address(call->remote, call->remote->street, call->remote->zip, call->remote->city);
+		} else {
+			contact_add_address(call->remote, "", "", call->remote->city);
 		}
 		contact_editor(call->remote);
 	} else {
