@@ -405,7 +405,7 @@ void journal_button_delete_clicked_cb(GtkWidget *button, GtkWidget *view)
 {
 	GtkWidget *delete_dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Do you want to delete the selected entry?"));
 	gtk_window_set_title(GTK_WINDOW(delete_dialog), _("Delete entry"));
-	gtk_window_set_position(GTK_WINDOW(delete_dialog), GTK_WIN_POS_CENTER_ON_PARENT);
+	gtk_window_set_position(GTK_WINDOW(delete_dialog), GTK_WIN_POS_CENTER);
 
 	gint result = gtk_dialog_run(GTK_DIALOG(delete_dialog));
 	gtk_widget_destroy(delete_dialog);
@@ -431,7 +431,7 @@ void add_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpoi
 	gboolean new_entry = FALSE;
 
 	gtk_window_set_title(GTK_WINDOW(add_dialog), _("Add entry"));
-	gtk_window_set_position(GTK_WINDOW(add_dialog), GTK_WIN_POS_CENTER_ON_PARENT);
+	gtk_window_set_position(GTK_WINDOW(add_dialog), GTK_WIN_POS_CENTER);
 
 	grid = gtk_grid_new();
 	content = gtk_dialog_get_content_area(GTK_DIALOG(add_dialog));
