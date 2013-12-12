@@ -22,7 +22,9 @@
  * \brief CAPI routines and main faxophone functions
  */
 
+#ifndef WIN32
 #include <sys/resource.h>
+#endif
 
 #include <libfaxophone/faxophone.h>
 #include <libfaxophone/fax.h>
@@ -1589,7 +1591,9 @@ struct session *faxophone_init(struct session_handlers *handlers, const char *ho
 			/* start capi transmission loop */
 			faxophone_quit = 0;
 			capi_thread = CREATE_THREAD("capi", capi_loop, NULL);
+#ifndef WIN32
 			setpriority(PRIO_PROCESS, 0, -10);
+#endif
 		}
 	}
 
