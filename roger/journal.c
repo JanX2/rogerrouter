@@ -41,6 +41,8 @@
 #include <roger/phone.h>
 #include <roger/journal.h>
 #include <roger/print.h>
+#include <roger/contact_edit.h>
+#include <roger/contacts.h>
 
 #define JOURNAL_OLD_ICONS 1
 //#define JOURNAL_TOP_OLD_ICONS 1
@@ -279,18 +281,18 @@ static gpointer lookup_journal(gpointer user_data)
 	for (list = journal; list; list = list->next) {
 		struct call *call = list->data;
 		gchar *name;
-		gchar *address;
+		gchar *street;
 		gchar *zip;
 		gchar *city;
 
 		if (EMPTY_STRING(call->remote->name)) {
-			if (routermanager_lookup(call->remote->number, &name, &address, &zip, &city)) {
+			if (routermanager_lookup(call->remote->number, &name, &street, &zip, &city)) {
 				call->remote->name = name;
+				call->remote->street = street;
+				call->remote->zip = zip;
+				call->remote->city = city;
 				call->remote->lookup = TRUE;
 				found = TRUE;
-				g_free(address);
-				g_free(zip);
-				g_free(city);
 			}
 		}
 	}
@@ -417,6 +419,65 @@ void journal_button_delete_clicked_cb(GtkWidget *button, GtkWidget *view)
 	gtk_tree_selection_selected_foreach(selection, delete_foreach, NULL);
 
 	router_load_journal(profile_get_active());
+}
+
+void add_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
+{
+	GtkWidget *add_dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Where shall i add the number?"));
+	GtkWidget *content;
+	GtkWidget *grid;
+	GtkWidget *radio1;
+	GtkWidget *radio2;
+	gboolean new_entry = FALSE;
+
+	gtk_window_set_title(GTK_WINDOW(add_dialog), _("Add entry"));
+	gtk_window_set_position(GTK_WINDOW(add_dialog), GTK_WIN_POS_CENTER_ON_PARENT);
+
+	grid = gtk_grid_new();
+	content = gtk_dialog_get_content_area(GTK_DIALOG(add_dialog));
+
+	radio1 = gtk_radio_button_new_with_label(NULL, _("Existing entry"));
+	radio2 = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(radio1), _("New entry"));
+
+	gtk_grid_attach(GTK_GRID(grid), radio1, 0, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), radio2, 0, 1, 1, 1);
+
+	gtk_container_add(GTK_CONTAINER(content), grid);
+
+	gtk_widget_show_all(grid);
+
+	gint result = gtk_dialog_run(GTK_DIALOG(add_dialog));
+	new_entry = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radio2));
+	gtk_widget_destroy(add_dialog);
+
+	if (result != GTK_RESPONSE_OK) {
+		return;
+	}
+
+	struct call *call = NULL;
+	GValue ptr = { 0 };
+
+	gtk_tree_model_get_value(model, iter, JOURNAL_COL_CALL_PTR, &ptr);
+
+	call = g_value_get_pointer(&ptr);
+
+	if (new_entry) {
+		contact_add_number(call->remote, call->remote->number);
+		if (call->remote->lookup) {
+			contact_add_address(call->remote, call->remote->street, call->remote->zip, call->remote->city);
+		}
+		contact_editor(call->remote);
+	} else {
+		gtk_clipboard_set_text(gtk_clipboard_get(GDK_NONE), call->remote->number, -1);
+		contacts();
+	}
+}
+
+void journal_button_add_clicked_cb(GtkWidget *button, GtkWidget *view)
+{
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(view));
+
+	gtk_tree_selection_selected_foreach(selection, add_foreach, NULL);
 }
 
 static void journal_startup(GApplication *application)
@@ -649,6 +710,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	GtkWidget *print_button;
 	GtkWidget *clear_button;
 	GtkWidget *delete_button;
+	GtkWidget *add_button;
 	GtkWidget *label;
 	GtkListStore *list_store;
 	GtkTreeModel *tree_model;
@@ -732,10 +794,18 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	gtk_box_pack_start(GTK_BOX(buttonbox), delete_button, FALSE, FALSE, 0);
 	gtk_button_box_set_child_non_homogeneous(GTK_BUTTON_BOX(buttonbox), delete_button, TRUE);
 
-	//button = gtk_separator_tool_item_new();
-	//gtk_toolbar_insert(GTK_TOOLBAR(toolbar), button, toolbar_index++);
+	add_button = gtk_button_new();
+	gtk_widget_set_hexpand(add_button, FALSE);
+	gtk_button_set_relief(GTK_BUTTON(add_button), GTK_RELIEF_NONE);
+#ifdef JOURNAL_TOP_OLD_ICONS
+	gtk_button_set_image(GTK_BUTTON(add_button), gtk_image_new_from_icon_name("edit-delete", GTK_ICON_SIZE_SMALL_TOOLBAR));
+#else
+	gtk_button_set_image(GTK_BUTTON(add_button), gtk_image_new_from_icon_name("list-add-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR));
+#endif
+	gtk_widget_set_tooltip_text(GTK_WIDGET(add_button), _("Add selected entry to address book"));
+	gtk_box_pack_start(GTK_BOX(buttonbox), add_button, FALSE, FALSE, 0);
+	gtk_button_box_set_child_non_homogeneous(GTK_BUTTON_BOX(buttonbox), add_button, TRUE);
 
-	//gtk_toolbar_set_show_arrow(GTK_TOOLBAR(toolbar), FALSE);
 	gtk_grid_attach(GTK_GRID(grid), buttonbox, 0, 0, 1, 1);
 
 	label = gtk_label_new(_("Search:"));
@@ -872,6 +942,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 	g_signal_connect(G_OBJECT(print_button), "clicked", G_CALLBACK(journal_button_print_clicked_cb), view);
 	g_signal_connect(G_OBJECT(delete_button), "clicked", G_CALLBACK(journal_button_delete_clicked_cb), view);
+	g_signal_connect(G_OBJECT(add_button), "clicked", G_CALLBACK(journal_button_add_clicked_cb), view);
 	g_signal_connect(G_OBJECT(view), "row-activated", G_CALLBACK(journal_row_activated_cb), list_store);
 
 	g_signal_connect(G_OBJECT(journal_win), "delete_event", G_CALLBACK(journal_delete_event_cb), NULL);

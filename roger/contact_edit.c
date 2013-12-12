@@ -295,6 +295,32 @@ void refresh_edit_dialog(struct contact *contact)
 	gtk_widget_show_all(scrolled);
 }
 
+void contact_add_number(struct contact *contact, gchar *number)
+{
+	/* Add phone number */
+	struct phone_number *phone_number;
+
+	phone_number = g_slice_new(struct phone_number);
+	phone_number->type = PHONE_NUMBER_HOME;
+	phone_number->number = g_strdup(number);
+
+	contact->numbers = g_slist_prepend(contact->numbers, phone_number);
+}
+
+void contact_add_address(struct contact *contact, gchar *street, gchar *zip, gchar *city)
+{
+	/* Add address */
+	struct contact_address *address;
+
+	address = g_slice_new(struct contact_address);
+	address->type = 0;
+	address->street = g_strdup(street);
+	address->zip = g_strdup(zip);
+	address->city = g_strdup(city);
+
+	contact->addresses = g_slist_prepend(contact->addresses, address);
+}
+
 void add_detail_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 {
 	gint active = gtk_combo_box_get_active(box);
