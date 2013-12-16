@@ -544,7 +544,7 @@ void contacts(void)
 	image = gtk_image_new_from_icon_name("view-refresh-symbolic", GTK_ICON_SIZE_BUTTON);
 	gtk_button_set_image(GTK_BUTTON(button_reload), image);
 	gtk_button_set_relief(GTK_BUTTON(button_reload), GTK_RELIEF_NONE);
-	gtk_widget_set_tooltip_text(button_remove, _("Reload address book"));
+	gtk_widget_set_tooltip_text(button_reload, _("Reload address book"));
 	g_signal_connect(button_reload, "clicked", G_CALLBACK(button_reload_clicked_cb), contacts_view);
 	gtk_grid_attach(GTK_GRID(action_grid), button_reload, 3, 0, 1, 1);
 
