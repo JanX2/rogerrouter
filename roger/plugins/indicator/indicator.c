@@ -121,7 +121,7 @@ void indicator_menu_last_calls_group(GtkWidget *menu, gchar *label, int call_typ
 				gtk_menu_item_set_label(GTK_MENU_ITEM(item), call->remote->number);
 			}
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(indicator_dial_number_cb), &call->remote);
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(indicator_dial_number_cb), call->remote);
 
 			count++;
 
