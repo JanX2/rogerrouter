@@ -15,6 +15,6 @@ else
 fi
 
 chmod 660 $SPOOL_DIR/$RNAME.tmp
-mv $SPOOL_DIR/$RNAME.tmp SPOOL_DIR/$RNAME
+mv $SPOOL_DIR/$RNAME.tmp $SPOOL_DIR/$RNAME
 
 exit 0
