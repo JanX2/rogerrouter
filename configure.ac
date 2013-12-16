@@ -139,6 +139,7 @@ if test "x$with_cups" = xyes; then
 	if test -d "$cupsbackenddir"; then
 		AC_SUBST([cupsbackenddir])
 		AC_MSG_RESULT([$cupsbackenddir])
+		AC_DEFINE([HAVE_CUPS_BACKEND], 1, [Use new CUPS backend])
 	else
 		AC_MSG_FAILURE([Cups backend directory not found!])
 	fi

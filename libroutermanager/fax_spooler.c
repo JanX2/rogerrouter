@@ -144,7 +144,11 @@ static gboolean fax_setup_file_monitor(GError **error)
 	const gchar *user_name = g_get_user_name();
 	g_assert(user_name != NULL);
 	// const gchar *new_file = NULL;
+#ifdef HAVE_CUPS_BACKEND
 	gchar *dir_name =  g_strdup_printf("%s/%s", SPOOLER_DIR, user_name);
+#else
+	gchar *dir_name =  g_strdup(SPOOLER_DIR);
+#endif
 
 #ifdef FAX_SPOOLER_DEBUG
 	g_debug("Setting file monitor to '%s'", dir_name);
