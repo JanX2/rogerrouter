@@ -43,6 +43,7 @@
 #include <roger/print.h>
 #include <roger/contact_edit.h>
 #include <roger/contacts.h>
+#include <roger/icons.h>
 
 #define JOURNAL_OLD_ICONS 1
 //#define JOURNAL_TOP_OLD_ICONS 1
@@ -714,6 +715,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	GtkWidget *delete_button;
 	GtkWidget *add_button;
 	GtkWidget *label;
+	GtkWidget *image;
 	GtkListStore *list_store;
 	GtkTreeModel *tree_model;
 	GtkCellRenderer *renderer;
@@ -746,11 +748,8 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	button = gtk_button_new();
 	gtk_widget_set_hexpand(button, FALSE);
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-#ifdef JOURNAL_TOP_OLD_ICONS
-	gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_icon_name("view-refresh", GTK_ICON_SIZE_SMALL_TOOLBAR));
-#else
-	gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_icon_name("view-refresh-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR));
-#endif
+	image = get_icon(APP_ICON_REFRESH, GTK_ICON_SIZE_SMALL_TOOLBAR);
+	gtk_button_set_image(GTK_BUTTON(button), image);
 	gtk_widget_set_tooltip_text(GTK_WIDGET(button), _("Refresh journal"));
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(journal_button_refresh_clicked_cb), window);
 	gtk_box_pack_start(GTK_BOX(buttonbox), button, FALSE, FALSE, 0);
@@ -759,51 +758,36 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	print_button = gtk_button_new();
 	gtk_widget_set_hexpand(print_button, FALSE);
 	gtk_button_set_relief(GTK_BUTTON(print_button), GTK_RELIEF_NONE);
-#ifdef JOURNAL_TOP_OLD_ICONS
-	gtk_button_set_image(GTK_BUTTON(print_button), gtk_image_new_from_icon_name("document-print", GTK_ICON_SIZE_SMALL_TOOLBAR));
-#else
-	gtk_button_set_image(GTK_BUTTON(print_button), gtk_image_new_from_icon_name("printer-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR));
-#endif
+	image = get_icon(APP_ICON_PRINT, GTK_ICON_SIZE_SMALL_TOOLBAR);
+	gtk_button_set_image(GTK_BUTTON(print_button), image);
 	gtk_widget_set_tooltip_text(GTK_WIDGET(print_button), _("Print journal"));
-	//gtk_toolbar_insert(GTK_TOOLBAR(toolbar), print_button, toolbar_index++);
 	gtk_box_pack_start(GTK_BOX(buttonbox), print_button, FALSE, FALSE, 0);
 	gtk_button_box_set_child_non_homogeneous(GTK_BUTTON_BOX(buttonbox), print_button, TRUE);
 
 	clear_button = gtk_button_new();
 	gtk_widget_set_hexpand(clear_button, FALSE);
 	gtk_button_set_relief(GTK_BUTTON(clear_button), GTK_RELIEF_NONE);
-#ifdef JOURNAL_TOP_OLD_ICONS
-	gtk_button_set_image(GTK_BUTTON(clear_button), gtk_image_new_from_icon_name("edit-clear", GTK_ICON_SIZE_SMALL_TOOLBAR));
-#else
-	gtk_button_set_image(GTK_BUTTON(clear_button), gtk_image_new_from_icon_name("edit-clear-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR));
-#endif
+	image = get_icon(APP_ICON_CLEAR, GTK_ICON_SIZE_SMALL_TOOLBAR);
+	gtk_button_set_image(GTK_BUTTON(clear_button), image);
 	gtk_widget_set_tooltip_text(GTK_WIDGET(clear_button), _("Clear journal on router"));
 	g_signal_connect(G_OBJECT(clear_button), "clicked", G_CALLBACK(journal_button_clear_clicked_cb), window);
-	//gtk_toolbar_insert(GTK_TOOLBAR(toolbar), clear_button, toolbar_index++);
 	gtk_box_pack_start(GTK_BOX(buttonbox), clear_button, FALSE, FALSE, 0);
 	gtk_button_box_set_child_non_homogeneous(GTK_BUTTON_BOX(buttonbox), clear_button, TRUE);
 
 	delete_button = gtk_button_new();
 	gtk_widget_set_hexpand(delete_button, FALSE);
 	gtk_button_set_relief(GTK_BUTTON(delete_button), GTK_RELIEF_NONE);
-#ifdef JOURNAL_TOP_OLD_ICONS
-	gtk_button_set_image(GTK_BUTTON(delete_button), gtk_image_new_from_icon_name("edit-delete", GTK_ICON_SIZE_SMALL_TOOLBAR));
-#else
-	gtk_button_set_image(GTK_BUTTON(delete_button), gtk_image_new_from_icon_name("edit-delete-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR));
-#endif
+	image = get_icon(APP_ICON_REMOVE, GTK_ICON_SIZE_SMALL_TOOLBAR);
+	gtk_button_set_image(GTK_BUTTON(delete_button), image);
 	gtk_widget_set_tooltip_text(GTK_WIDGET(delete_button), _("Delete selected entry"));
-	//gtk_toolbar_insert(GTK_TOOLBAR(toolbar), delete_button, toolbar_index++);
 	gtk_box_pack_start(GTK_BOX(buttonbox), delete_button, FALSE, FALSE, 0);
 	gtk_button_box_set_child_non_homogeneous(GTK_BUTTON_BOX(buttonbox), delete_button, TRUE);
 
 	add_button = gtk_button_new();
 	gtk_widget_set_hexpand(add_button, FALSE);
 	gtk_button_set_relief(GTK_BUTTON(add_button), GTK_RELIEF_NONE);
-#ifdef JOURNAL_TOP_OLD_ICONS
-	gtk_button_set_image(GTK_BUTTON(add_button), gtk_image_new_from_icon_name("edit-delete", GTK_ICON_SIZE_SMALL_TOOLBAR));
-#else
-	gtk_button_set_image(GTK_BUTTON(add_button), gtk_image_new_from_icon_name("list-add-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR));
-#endif
+	image = get_icon(APP_ICON_ADD, GTK_ICON_SIZE_SMALL_TOOLBAR);
+	gtk_button_set_image(GTK_BUTTON(add_button), image);
 	gtk_widget_set_tooltip_text(GTK_WIDGET(add_button), _("Add selected entry to address book"));
 	gtk_box_pack_start(GTK_BOX(buttonbox), add_button, FALSE, FALSE, 0);
 	gtk_button_box_set_child_non_homogeneous(GTK_BUTTON_BOX(buttonbox), add_button, TRUE);
@@ -816,6 +800,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	entry = gtk_entry_new();
 	gtk_widget_set_tooltip_text(entry, _("Search in journal for name or number"));
 	g_signal_connect(G_OBJECT(entry), "icon-release", G_CALLBACK(entry_icon_released), NULL);
+
 #ifdef JOURNAL_TOP_OLD_ICONS
 	gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_PRIMARY, "edit-find");
 #else

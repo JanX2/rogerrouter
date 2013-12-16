@@ -46,6 +46,7 @@
 #include <roger/main.h>
 #include <roger/llevel.h>
 #include <roger/uitools.h>
+#include <roger/icons.h>
 
 static GSList *phone_active_connections = NULL;
 
@@ -434,6 +435,9 @@ GdkPixbuf *image_get_scaled(GdkPixbuf *image, gint req_width, gint req_height)
 
 	if (!image) {
 		image = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "user-info", orig_width, 0, NULL);
+		//GtkWidget *img;
+		//img = get_icon(APP_ICON_PERSON, GTK_ICON_SIZE_DIALOG);
+		//image = gtk_image_get_pixbuf(GTK_IMAGE(img));
 	}
 
 	width = gdk_pixbuf_get_width(image);
@@ -679,10 +683,8 @@ GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct p
 
 	/* Pickup button */
 	pickup_button = gtk_button_new();
-	//image = gtk_image_new_from_pixbuf(journal_get_call_icon(CALL_TYPE_OUTGOING));
-	gchar *path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "phone-pick-up.png", NULL);
-	image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file(path, NULL));
-	g_free(path);
+	image = get_icon(APP_ICON_CALL, GTK_ICON_SIZE_BUTTON);
+
 	gtk_container_add(GTK_CONTAINER(pickup_button), image);
 	gtk_widget_set_tooltip_text(pickup_button, _("Pick up"));
 	g_signal_connect(pickup_button, "clicked", G_CALLBACK(pickup_button_clicked_cb), state);
@@ -692,10 +694,7 @@ GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct p
 
 	/* Hangup button */
 	hangup_button = gtk_button_new();
-	//image = gtk_image_new_from_pixbuf(journal_get_call_icon(CALL_TYPE_MISSED));
-	path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "phone-hang-up.png", NULL);
-	image = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_file(path, NULL));
-	g_free(path);
+	image = get_icon(APP_ICON_HANGUP, GTK_ICON_SIZE_BUTTON);
 	gtk_widget_set_tooltip_text(hangup_button, _("Hang up"));
 	gtk_container_add(GTK_CONTAINER(hangup_button), image);
 	g_signal_connect(hangup_button, "clicked", G_CALLBACK(hangup_button_clicked_cb), state);

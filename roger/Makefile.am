@@ -31,6 +31,8 @@ roger_core_SOURCES =\
 	contact_edit.h\
 	fax.c\
 	fax.h\
+	icons.c\
+	icons.h\
 	journal.c\
 	journal.h\
 	llevel.c\
