@@ -30,6 +30,7 @@
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/profile.h>
 #include <libroutermanager/routermanager.h>
+#include <libroutermanager/gstring.h>
 
 #include <roger/about.h>
 #include <roger/application.h>
