@@ -84,5 +84,5 @@ gint contact_name_compare(gconstpointer a, gconstpointer b)
 	struct contact *contact_a = (struct contact *)a;
 	struct contact *contact_b = (struct contact *)b;
 
-	return strcmp(contact_a->name, contact_b->name);
+	return strcasecmp(contact_a->name, contact_b->name);
 }
