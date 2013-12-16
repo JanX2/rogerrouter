@@ -111,10 +111,10 @@ void indicator_menu_last_calls_group(GtkWidget *menu, gchar *label, int call_typ
 	while (list != NULL) {
 		struct call *call = list->data;
 
-		if (call->type == call_type && (strlen(call->remote->name) || strlen(call->remote->number))) {
+		if (call->type == call_type && (!EMPTY_STRING(call->remote->name) || !EMPTY_STRING(call->remote->number))) {
 			item = gtk_menu_item_new();
 
-			if (strlen(call->remote->name)) {
+			if (!EMPTY_STRING(call->remote->name)) {
 				gtk_menu_item_set_label(GTK_MENU_ITEM(item), call->remote->name);
 			} else {
 				gtk_menu_item_set_label(GTK_MENU_ITEM(item), call->remote->number);
