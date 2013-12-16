@@ -113,10 +113,10 @@ AS_IF([test "x$with_cups" != xsuper],
         if test "x$with_cups" = xyes; then
                 AC_SUBST([CUPS_CFLAGS], ["`cups-config --cflags`"])
                 AC_SUBST([CUPS_LIBS], ["`cups-config --libs`"])
-                ROGER_FEATURES_YES="\tcups backerd\n$ROGER_FEATURES_YES"
+                ROGER_FEATURES_YES="\tcups backend\n$ROGER_FEATURES_YES"
         else
                 with_cups=no
-                ROGER_FEATURES_NO="\tcups backerd\n$ROGER_FEATURES_NO"
+                ROGER_FEATURES_NO="\tcups backend\n$ROGER_FEATURES_NO"
         fi
 
 ])
