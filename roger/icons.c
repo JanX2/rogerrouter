@@ -43,9 +43,16 @@ struct icons app_icons[11] = {
 GtkWidget *get_icon(gint type, gint size)
 {
 	GtkWidget *image = NULL;
+	GdkPixbuf *pixbuf;
+	GtkIconTheme *icon_theme = gtk_icon_theme_get_default();
+	GError *error = NULL;
 
-	image = gtk_image_new_from_icon_name(app_icons[type].primary, size);
-	if (!image && !EMPTY_STRING(app_icons[type].secondary)) {
+	/* Try to load primary icon, if it is successful set it as image, otherwise use secondary */
+	pixbuf = gtk_icon_theme_load_icon(icon_theme, app_icons[type].primary, 48, 0, &error);
+	if (pixbuf) {
+		image = gtk_image_new_from_icon_name(app_icons[type].primary, size);
+		g_object_unref(pixbuf);
+	} else {
 		image = gtk_image_new_from_icon_name(app_icons[type].secondary, size);
 	}
 
