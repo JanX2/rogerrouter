@@ -225,7 +225,7 @@ void contacts_fill_list(GtkListStore *list_store, const gchar *text)
 		struct contact *contact = list->data;
 		GtkTreeIter iter;
 
-		if (text && !g_strcasestr(contact->name, text)) {
+		if (text && (!g_strcasestr(contact->name, text) && !g_strcasestr(contact->company, text))) {
 			continue;
 		}
 
