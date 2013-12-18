@@ -192,7 +192,7 @@ static gboolean fax_setup_file_monitor(GError **error)
  * \param event_type file monitor event
  * \param user_data unused pointer
  */
-static void fax_spooler_new_dir_cb(GFileMonitor *monitor, GFile *file, GFile *other_file, GFileMonitorEvent event_type, gpointer user_data)
+void fax_spooler_new_dir_cb(GFileMonitor *monitor, GFile *file, GFile *other_file, GFileMonitorEvent event_type, gpointer user_data)
 {
 	gchar *file_name = NULL;
 	const gchar *user_name = NULL;
@@ -276,7 +276,11 @@ gboolean fax_printer_init(GError **error)
 	file_monitor = g_file_monitor_directory(file, 0, NULL, &file_error);
 	if (file_monitor) {
 		/* Set callback for file monitor */
+#ifdef HAVE_CUPS_BACKEND
 		g_signal_connect(file_monitor, "changed", G_CALLBACK(fax_spooler_new_dir_cb), NULL);
+#else
+		g_signal_connect(file_monitor, "changed", G_CALLBACK(fax_spooler_new_file_cb), NULL);
+#endif
 		ret = TRUE;
 	} else {
 		g_debug("Error occured creating file monitor\n");
