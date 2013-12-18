@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce configure.
-AC_INIT([Roger Router],[1.8.1],[http://www.tabos.org/roger])
+AC_INIT([Roger Router],[1.8.2],[http://www.tabos.org/roger])
 AC_PREFIX_DEFAULT(/usr)
 AM_INIT_AUTOMAKE([1.11 no-dist-gzip dist-xz])
 AC_CONFIG_HEADERS(config.h)
@@ -94,9 +94,9 @@ dnl CUPS backend is optional
 dnl *******************************************************************
 AC_ARG_WITH([cups],
 	[AS_HELP_STRING([--with-cups=@<:@ARG@:>@],
-	[Use cups (possible values: no, yes or check) @<:@default=check@:>@])],
+	[Use cups (possible values: no, yes or check) @<:@default=no@:>@])],
 	[],
-	[with_cups=check])
+	[with_cups=no])
 
 AC_MSG_CHECKING(for cups)
 AS_IF([test "x$with_cups" != xsuper],
