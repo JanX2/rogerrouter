@@ -413,12 +413,19 @@ gchar *call_full_number(const gchar *number, gboolean country_code_prefix)
 	/* Check if it is an international number */
 	if (!strncmp(number, "00", 2)) {
 		gchar *out;
+		gchar *my_country_code;
 
 		if (country_code_prefix) {
 			return g_strdup(number);
 		}
 
-		out = g_strdup_printf("0%s", number + 4);
+		my_country_code = router_get_country_code(profile_get_active());
+		if (!strncmp(number + 2, my_country_code, strlen(my_country_code)))  {
+			out = g_strdup_printf("0%s", number + 4);
+		} else {
+			out = g_strdup(number);
+		}
+
 		return out;
 	}
 
