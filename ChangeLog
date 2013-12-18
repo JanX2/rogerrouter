@@ -1,8 +1,12 @@
 roger - 1.8.2
 ------------------------------------------------------------------------------------------------------------------
+* Contacts
+* VCard address book plugin
 * Ringtone bugfix (outgoing ringtone not working)
 * Set keep-alive in callmonitor (notifications lost connection)
+* Remove dbus-glib/bluetooth dependency
 * Fix icons for Windows (missing icons)
+* Fix 11880 reverse lookup
 
 roger - 1.8.1
 ------------------------------------------------------------------------------------------------------------------
