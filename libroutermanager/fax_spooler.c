@@ -135,25 +135,20 @@ end:
  * Create file monitor for the users own spooler directory
  *
  */
-static gboolean fax_setup_file_monitor(GError **error)
+static gboolean fax_setup_file_monitor(const gchar *dir_name, GError **error)
 {
 	GFileMonitor *file_monitor = NULL;
 	GFile *file = NULL;
-	GDir *user_spool_dir = NULL;
+	// GDir *user_spool_dir = NULL;
 	gboolean ret;
 	const gchar *user_name = g_get_user_name();
 	g_assert(user_name != NULL);
 	// const gchar *new_file = NULL;
-#ifdef HAVE_CUPS_BACKEND
-	gchar *dir_name =  g_strdup_printf("%s/%s", SPOOLER_DIR, user_name);
-#else
-	gchar *dir_name =  g_strdup(SPOOLER_DIR);
-#endif
 
-#ifdef FAX_SPOOLER_DEBUG
+#ifdef SPOOLER_DEBUG
 	g_debug("Setting file monitor to '%s'", dir_name);
 #endif
-	user_spool_dir = g_dir_open(dir_name, 0, error);
+	// user_spool_dir = g_dir_open(dir_name, 0, error);
 	/* fax all pre-existing faxfiles */
 	//while ( (new_file = g_dir_read_name(user_spool_dir)) != NULL ) {
 	//	/* Sort out invalid files */
@@ -162,12 +157,13 @@ static gboolean fax_setup_file_monitor(GError **error)
 	//		emit_fax_process(new_file);
 	//	}
 	//}
-	g_dir_close(user_spool_dir);
+	// g_dir_close(user_spool_dir);
 
 	/* Create GFile for GFileMonitor */
 	file = g_file_new_for_path(dir_name);
 	/* Create file monitor for spool directory */
 	file_monitor = g_file_monitor_directory(file, 0, NULL, error);
+	g_object_unref(file);
 	if (file_monitor) {
 		/* Set callback for file monitor */
 		g_signal_connect(file_monitor, "changed", G_CALLBACK(fax_spooler_new_file_cb), NULL);
@@ -178,11 +174,10 @@ static gboolean fax_setup_file_monitor(GError **error)
 		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Spooler directory %s does not exists!", dir_name);
 		ret = FALSE;
 	}
-
-	g_free(dir_name);
 	return ret;
 }
 
+#ifdef HAVE_CUPS_BACKEND
 /**
  * \brief Fax spooler callback for the common spool directory
  * Monitors the common fax spooler directory for changes and if a spool directory for this user appears, start a file monitor for it
@@ -218,69 +213,66 @@ void fax_spooler_new_dir_cb(GFileMonitor *monitor, GFile *file, GFile *other_fil
 	dir_basename = g_path_get_basename(file_name);
 	if (g_strcmp0(dir_basename, user_name) == 0) {
 		g_file_monitor_cancel(monitor);
-		fax_setup_file_monitor(&file_error);
+		fax_setup_file_monitor(file_name, &file_error);
 	}
 	g_free(file_name);
 	g_free(dir_basename);
 }
+#endif /* HAVE_CUPS_BACKEND */
 
 /**
  * \brief Initialize new printer spool queue
  */
 gboolean fax_printer_init(GError **error)
 {
-	GFileMonitor *file_monitor;
-	GFile *file;
 	GDir *dir;
-	gchar *dir_name = g_strdup_printf(SPOOLER_DIR);
-	gchar *user_dir_name = NULL;
 	GError *file_error = NULL;
-	gboolean ret = FALSE;
 
 	/* Check if spooler is present */
-	if (!g_file_test(dir_name, G_FILE_TEST_IS_DIR)) {
-		g_debug("Spooler directory %s does not exist!", dir_name);
-		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Spooler directory %s does not exists!", dir_name);
-		g_free(dir_name);
+	if (!g_file_test(SPOOLER_DIR, G_FILE_TEST_IS_DIR)) {
+		g_debug("Spooler directory %s does not exist!", SPOOLER_DIR);
+		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Spooler directory %s does not exists!", SPOOLER_DIR);
 		return FALSE;
 	}
 
-	dir = g_dir_open(dir_name, 0, &file_error);
+	dir = g_dir_open(SPOOLER_DIR,  0, &file_error);
 	if (!dir) {
 		g_debug("Could not access spooler directory. Is user in group fax?\n%s", file_error ? file_error->message : "");
 		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Could not access spooler directory. Is user in group fax?\n%s", file_error ? file_error->message : "");
-		g_free(dir_name);
 		return FALSE;
 	}
 	g_dir_close(dir);
 
-	user_dir_name = g_strdup_printf("%s/%s", dir_name, g_get_user_name());
+#ifndef HAVE_CUPS_BACKEND
+	return fax_setup_file_monitor(SPOOLER_DIR, &file_error);
+#else
+	GFileMonitor *file_monitor;
+	GFile *file;
+	gchar *user_dir_name = NULL;
+	gboolean ret = FALSE;
 
+	user_dir_name = g_build_filename(SPOOLER_DIR, g_get_user_name(), NULL);
 	/* Check if users spooler dir is present */
 	if (g_file_test(user_dir_name, G_FILE_TEST_IS_DIR)) {
-		ret = fax_setup_file_monitor(&file_error);
-		g_free(dir_name);
+		ret = fax_setup_file_monitor(user_dir_name, &file_error);
 		g_free(user_dir_name);
 		return ret;
 	}
 
 	/* user spool dir does not exist, wait for it to appear */
 
-#ifdef FAX_SPOOLER_DEBUG
-	g_debug("Setting file monitor to '%s'", dir_name);
+#ifdef SPOOLER_DEBUG
+	g_debug("Setting file monitor to '%s' (waiting for users spooldir)", SPOOLER_DIR);
 #endif
 
 	/* Create GFile for GFileMonitor */
-	file = g_file_new_for_path(dir_name);
+	file = g_file_new_for_path(SPOOLER_DIR);
 	/* Create file monitor for spool directory */
 	file_monitor = g_file_monitor_directory(file, 0, NULL, &file_error);
+	g_object_unref(file);
 	if (file_monitor) {
 		/* Set callback for file monitor */
-#ifdef HAVE_CUPS_BACKEND
 		g_signal_connect(file_monitor, "changed", G_CALLBACK(fax_spooler_new_dir_cb), NULL);
-#else
-		g_signal_connect(file_monitor, "changed", G_CALLBACK(fax_spooler_new_file_cb), NULL);
-#endif
 		ret = TRUE;
 	} else {
 		g_debug("Error occured creating file monitor\n");
@@ -288,10 +280,7 @@ gboolean fax_printer_init(GError **error)
 		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "%s", file_error->message);
 		ret = FALSE;
 	}
-
-	g_free(dir_name);
-
 	return ret;
+#endif /* HAVE_CUPS_BACKEND */
 }
-
 #endif
