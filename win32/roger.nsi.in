@@ -146,6 +146,7 @@ Section RogerRouter
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/routermanager/plugins/*.dll"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/routermanager/plugins/*.plugin"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/routermanager/plugins/*.csv"
+	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/routermanager/plugins/*.xml"
 
 	SetOutPath "$INSTDIR\share\"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/share/roger"
