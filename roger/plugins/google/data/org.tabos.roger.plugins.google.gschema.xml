@@ -1,0 +1,10 @@
+<schemalist>
+	<schema id="org.tabos.roger.plugins.google" path="/org/tabos/roger/plugins/google/">
+		<key name="user" type="s">
+			<default>''</default>
+		</key>
+		<key name="password" type="s">
+			<default>''</default>
+		</key>
+	</schema>
+</schemalist>

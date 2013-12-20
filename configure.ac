@@ -225,6 +225,36 @@ AM_CONDITIONAL(WITH_SECRET, test "x$with_secret" != "xno")
 AM_CONDITIONAL(HAVE_SECRET_SOURCE_REGISTRY, test "x$with_secret_registry" = "xyes")
 
 dnl ********************************************************************
+dnl gdata is optional
+dnl ********************************************************************
+AC_ARG_WITH([gdata],
+	[AS_HELP_STRING([--with-gdata=@<:@ARG@:>@],
+	[Use gdata (possible values: no, yes, check, or the path to secret) @<:@default=check@:>@])],
+	[],
+	[with_gdata=check])
+
+AC_MSG_CHECKING(for libgdata)
+AS_IF([test "x$with_gdata" != xno],
+	[if test "x$with_gdata" = xcheck; then
+		$PKG_CONFIG libgdata && with_gdata=yes
+	elif test "x$with_gdata" = xyes; then
+		$PKG_CONFIG libgdata || AC_MSG_FAILURE(
+		[--with-gdata=yes was given, but test for gdata failed])
+	fi
+	if test "x$with_gdata" = xyes; then
+		AC_SUBST([GDATA_CFLAGS], ["`$PKG_CONFIG --cflags libgdata`"])
+		AC_SUBST([GDATA_LIBS], ["`$PKG_CONFIG --libs libgdata`"])
+
+		ROGER_FEATURES_YES="\tgdata\n$ROGER_FEATURES_YES"
+	else
+		with_gdata=no
+		ROGER_FEATURES_NO="\tgdata\n$ROGER_FEATURES_NO"
+	fi
+])
+AC_MSG_RESULT($with_gdata)
+AM_CONDITIONAL(WITH_GDATA, test "x$with_gdata" != "xno")
+
+dnl ********************************************************************
 dnl ebook is optional
 dnl ********************************************************************
 AC_ARG_WITH([ebook],
@@ -526,6 +556,8 @@ AC_CONFIG_FILES([
     roger/plugins/indicator/data/Makefile
     roger/plugins/vcard/Makefile
     roger/plugins/vcard/data/Makefile
+    roger/plugins/google/Makefile
+    roger/plugins/google/data/Makefile
     cups-backend/Makefile
     macosx/roger.plist
     macosx/package

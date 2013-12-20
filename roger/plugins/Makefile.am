@@ -13,3 +13,7 @@ endif
 if WITH_APPINDICATOR3
 SUBDIRS += indicator
 endif
+
+if WITH_GDATA
+SUBDIRS += google
+endif

@@ -18,6 +18,29 @@ TODO
 * Add consistent directory handling in glib
 
 
+
+** Contacts **
+- Outlook
+- Apple Mail
+- Google
+- Thunderbird (read only)
+
+** Reverse lookup **
+- Germany: dasörtliche, dastelefonbuch, klicktel, goyellow, gelbeseiten
+- France: 11880.fr
+- Swiss: tel.search.ch, tel.local.ch
+- Austria: telefonabc.at
+
+** Journal **
+- MySQL
+- HTML
+- Text
+
+** Misc **
+- tellows
+- notes
+
+
 ************** UNDECIDED **************
 * Different sound output for notifications
 * Import for JFritz
