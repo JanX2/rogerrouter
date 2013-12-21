@@ -29,6 +29,11 @@ if test `id -u` != 0; then
 	exit 2
 fi
 
+if test x$(cups-config --serverbin 2> /dev/null) = x; then
+	echo Utility cups-config is not installed. Please install cups development package 
+	exit 3
+fi
+
 osname=`uname -s`
 if test x$osname = xDarwin; then
 	# Mac OSX -  test if group fax exists, if not create it
@@ -49,7 +54,7 @@ if test x$osname = xDarwin; then
 
 		if test x$found_gid = x$gid; then
 			echo Group fax does not exist but no free group id found, cannot continue
-			exit 3
+			exit 4
 		fi
 
 		# found a free gid, now create the group
