@@ -193,10 +193,10 @@ static gchar *get_thunderbird_dir(void) {
  * \brief Get next gchar of buffer
  * \return next gchar
  */
-static gchar next_char(void) {
+static inline gchar next_char(void) {
 	gchar cur = 0;
 
-	if (mork_data != NULL && mork_pos < mork_size) {
+	if (mork_pos < mork_size) {
 		cur = mork_data[mork_pos];
 		mork_pos++;
 	}
@@ -209,16 +209,16 @@ static gchar next_char(void) {
  * \param character gchar to check
  * \return 1 or 0
  */
-static gchar is_whitespace(gchar character) {
+static gboolean is_whitespace(gchar character) {
 	switch (character) {
 		case ' ':
 		case '\t':
 		case '\r':
 		case '\n':
 		case '\f':
-			return 1;
+			return TRUE;
 		default:
-			return 0;
+			return FALSE;
 	}
 }
 
@@ -226,62 +226,58 @@ static gchar is_whitespace(gchar character) {
  * \brief Parse comment section
  * \return 1 on success, else error
  */
-static gchar parse_comment(void) {
+static inline gboolean parse_comment(void) {
 	gchar cur = next_char();
 
 	if (cur != '/') {
-		return 0;
+		return FALSE;
 	}
 
 	while (cur != '\r' && cur != '\n' && cur) {
 		cur = next_char();
 	}
 
-	return 1;
+	return TRUE;
 }
 
 /**
  * \brief Parse cell section
  * \return 1 on success, else error
  */
-static gchar parse_cell(void) {
-	gchar result = 1;
-	gchar bColumn = 1;
-	gchar cur = next_char();
-	GString *psColumn = g_string_new(NULL);
-	GString *text = g_string_new(NULL);
+static gboolean parse_cell(void) {
+	gboolean result = TRUE;
+	gboolean is_column = TRUE;
+	gboolean is_value0id = FALSE;
+	GString *column = g_string_new_len(NULL, 4);
+	GString *text = g_string_new_len(NULL, 32);
 	int corners = 0;
-	gchar bValue0id = 0;
-	int is_hex = 0;
-	GString *hex_string = g_string_new(NULL);
+	gchar cur = next_char();
 
 	while (result && cur != ')' && cur) {
 		switch (cur) {
 			case '=':
 				/* From column to value */
-				if (bColumn) {
-					bColumn = 0;
+				if (is_column) {
+					is_column = FALSE;
 				} else {
 					text = g_string_append_c(text, cur);
 				}
 				break;
 			case '$': {
-				gchar anHexChar[3];
-				gchar cNext1, cNext2;
-				int nX;
+				gchar hex_chr[3];
+				int x;
 
-				cNext1 = next_char();
-				cNext2 = next_char();
-				snprintf(anHexChar, sizeof(anHexChar), "%c%c", cNext1, cNext2);
-				nX = strtoul(anHexChar, 0, 16);
-				hex_string = g_string_append_c(hex_string, nX);
-				is_hex = 1;
+				hex_chr[0] = next_char();
+				hex_chr[1] = next_char();
+				hex_chr[2] = '\0';
+				x = strtoul(hex_chr, 0, 16);
+				g_string_append_printf(text, "%c", x);
 				break;
 			}
 			case '\\': {
-				gchar cNextChar = next_char();
-				if (cNextChar != '\r' && cNextChar != '\n') {
-					text = g_string_append_c(text, cNextChar);
+				gchar next_chr = next_char();
+				if (next_chr != '\r' && next_chr != '\n') {
+					text = g_string_append_c(text, next_chr);
 				} else {
 					next_char();
 				}
@@ -291,15 +287,15 @@ static gchar parse_cell(void) {
 				corners++;
 				if (corners == 1) {
 				} else if (corners == 2) {
-					bColumn = 0;
-					bValue0id = 1;
+					is_column = FALSE;
+					is_value0id = TRUE;
 				} else {
 					text = g_string_append_c(text, cur);
 				}
 				break;
 			default:
-				if (bColumn) {
-					psColumn = g_string_append_c(psColumn, cur);
+				if (is_column) {
+					column = g_string_append_c(column, cur);
 				} else {
 					text = g_string_append_c(text, cur);
 				}
@@ -307,43 +303,38 @@ static gchar parse_cell(void) {
 		}
 
 		cur = next_char();
-		if (is_hex && cur != '$') {
-			text = g_string_append(text, hex_string->str);
-			g_string_set_size(hex_string, 0);
-			is_hex = 0;
-		}
 	}
 
-	int nColumid = strtoul(psColumn->str, 0, 16);
+	int column_id = strtoul(column->str, 0, 16);
+
 	if (mork_now_parsing != PARSE_ROWS) {
 		/* Dicts */
 		if (text && strlen(text->str)) {
-			//g_debug("Text: %s, %lx, %d", text->str, nColumid, mork_now_parsing == PARSE_COLUMNS);
+			//g_debug("Text: %s, %lx, %d", text->str, column_id, mork_now_parsing == PARSE_COLUMNS);
 			if (mork_now_parsing == PARSE_COLUMNS) {
-				insert_map(mork_columns, nColumid, strdup(text->str));
+				insert_map(mork_columns, column_id, g_strdup(text->str));
 			} else {
-				insert_map(mork_values, nColumid, strdup(text->str));
+				insert_map(mork_values, column_id, g_strdup(text->str));
 			}
 		}
 	} else {
 		if (text && strlen(text->str)) {
-			long value_id = strtoul(text->str, 0, 16);
+			gint value_id = strtoul(text->str, 0, 16);
 
-			//g_debug("bValue0id: %d", bValue0id);
+			//g_debug("is_value0id: %d", is_value0id);
 			/* Rows */
-			if (bValue0id) {
-				insert_map(current_cells, nColumid, (void *) value_id);
+			if (is_value0id) {
+				insert_map(current_cells, column_id, GINT_TO_POINTER(value_id));
 			} else {
 				mork_next_add_value_id--;
-				insert_map(mork_values, mork_next_add_value_id, strdup(text->str));
-				insert_map(current_cells, nColumid, (void *) mork_next_add_value_id);
+				insert_map(mork_values, mork_next_add_value_id, g_strdup(text->str));
+				insert_map(current_cells, column_id, (void *) mork_next_add_value_id);
 				//g_debug("text: %s", text->str);
 			}
 		}
 	}
 
-	g_string_free(hex_string, TRUE);
-	g_string_free(psColumn, TRUE);
+	g_string_free(column, TRUE);
 	g_string_free(text, TRUE);
 
 	return result;
@@ -353,9 +344,9 @@ static gchar parse_cell(void) {
  * \brief Parse dictionary section
  * \return 1 on success, else error
  */
-static gchar parse_dict(void) {
+static gboolean parse_dict(void) {
 	gchar cur = next_char();
-	gchar result = 1;
+	gboolean result = TRUE;
 
 	mork_now_parsing = PARSE_VALUES;
 
@@ -375,8 +366,8 @@ static gchar parse_dict(void) {
 					result = parse_cell();
 					break;
 				default:
-					printf("[%s]: error '%c'", __FUNCTION__, cur);
-					result = 0;
+					g_warning("[%s]: error '%c'", __FUNCTION__, cur);
+					result = FALSE;
 					break;
 			}
 		}
@@ -392,14 +383,14 @@ static gchar parse_dict(void) {
  * \param pid pointer to save id
  * \param scope pointer to save scope
  */
-static void parse_scope_id(GString *text, int *pid, int *scope) {
+static void parse_scope_id(GString *text, gint *pid, gint *scope) {
 	gchar *pos;
 
 	if ((pos = strchr(text->str, ':')) != NULL) {
-		int size = pos - text->str;
+		gint size = pos - text->str;
 		gchar *id_str = NULL;
 		gchar *sc_str = NULL;
-		int pos = size;
+		gint pos = size;
 
 		id_str = g_malloc(size + 1);
 		strncpy(id_str, text->str, pos);
@@ -563,11 +554,11 @@ static gchar parse_row(int table_id, int table_scope) {
  * \brief Parse table section
  * \return 1 on success, else error
  */
-static gchar parse_table(void) {
-	gchar result = 1;
-	gchar cur = next_char();
+static gboolean parse_table(void) {
+	gboolean result = TRUE;
 	GString *text_id = g_string_new(NULL);
-	int id = 0, scope = 0;
+	gint id = 0, scope = 0;
+	gchar cur = next_char();
 
 	while (cur != '{' && cur != '[' && cur != '}' && cur) {
 		if (!is_whitespace(cur)) {
@@ -598,6 +589,8 @@ static gchar parse_table(void) {
 						cur = next_char();
 
 						if (cur == '}') {
+							g_string_free(just_id, TRUE);
+							g_string_free(text_id, TRUE);
 							return result;
 						}
 					}
@@ -630,8 +623,8 @@ static gchar parse_group(void) {
  * \brief Parse mork code
  * \return 1 on success, else error
  */
-static gchar parse_mork(void) {
-	gchar result = 1;
+static gboolean parse_mork(void) {
+	gboolean result = TRUE;
 	gchar cur = 0;
 
 	cur = next_char();
@@ -660,8 +653,8 @@ static gchar parse_mork(void) {
 					result = parse_row(0, 0);
 					break;
 				default:
-					printf("[%s]: Error: %c", __FUNCTION__, cur);
-					result = 0;
+					g_warning("Error: %c", cur);
+					result = FALSE;
 					break;
 			}
 		}
