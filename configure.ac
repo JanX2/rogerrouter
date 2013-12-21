@@ -90,11 +90,55 @@ PKG_CHECK_MODULES([PEAS_GTK], [libpeas-gtk-1.0])
 #fi
 
 dnl *******************************************************************
+dnl Decide which fax spooler solution to use
+dnl *******************************************************************
+# determine prefered default type
+case "$host" in
+	*-*-*mingw*)
+		fax_printer=socket-server
+	;;
+	*darwin* | *freebsd*)
+		PKG_CHECK_MODULES(FAX_SPOOLER, 
+			[gio >= 2.36], 
+			[fax_printer=spoolerdir],
+			[fax_printer=socket_server]
+		)
+	;;
+	
+	*)
+		fax_printer=spoolerdir
+	;;
+esac
+
+AC_ARG_WITH([fax_spooler-type],
+	[AS_HELP_STRING([--with-fax-spooler-type=@<:@ARG@:>@],
+		[type of fax printer spooler to be supported (possible values: spoolerdir, socket-server or auto) @<:@default=auto@:>@])],
+	[if test x$with_fax_spooler_type = xauto; then 
+		with_fax_spooler_type=$fax_printer
+	 fi],
+	[with_fax_spooler_type=$fax_printer])
+
+AC_MSG_CHECKING(for fax spooler type)
+case "$with_fax_spooler_type" in
+	spoolerdir)
+		AC_DEFINE(USE_PRINTER_SPOOLER, 1, [Expect files in spooler directory /var/spool/roger])
+		AC_MSG_RESULT([Outgoing faxes are expected in spooler directory /var/spool/roger])
+	;;
+	socket-server)
+		AC_DEFINE(USE_PRINTER_SERVER, 1, [Use printer server on port 9100])
+		AC_MSG_RESULT([Outgoing faxes are received by fax printer server on port 9100])
+	;;
+	*)
+		AC_MSG_ERROR([Invalid option $with_fax_spooler_type])
+	;;
+esac
+
+dnl *******************************************************************
 dnl CUPS backend is optional
 dnl *******************************************************************
 AC_ARG_WITH([cups],
 	[AS_HELP_STRING([--with-cups=@<:@ARG@:>@],
-	[Use cups (possible values: no, yes or check) @<:@default=no@:>@])],
+		[Use cups (possible values: no, yes or check) @<:@default=no@:>@])],
 	[],
 	[with_cups=no])
 

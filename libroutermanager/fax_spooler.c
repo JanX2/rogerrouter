@@ -22,13 +22,17 @@
 #include <string.h>
 #include <sys/types.h>
 
-#if defined(G_OS_UNIX) && !defined(__APPLE__)
 #include <gio/gio.h>
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/routermanager.h>
 #include <libroutermanager/fax_printer.h>
 
+#ifdef USE_PRINTER_SPOOLER
 #define SPOOLER_DIR "/var/spool/roger"
 
 #define SPOOLER_DEBUG 1

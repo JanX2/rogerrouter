@@ -19,15 +19,19 @@
 
 #include <glib.h>
 
-#if defined(G_OS_WIN32) || defined(__APPLE__)
-
 #include <unistd.h>
 #include <errno.h>
 
 #include <gio/gio.h>
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <appobject-emit.h>
 #include <fax_printer.h>
+
+#ifdef USE_PRINTER_SERVER
 
 #define BUFFER_LENGTH 1024
 
