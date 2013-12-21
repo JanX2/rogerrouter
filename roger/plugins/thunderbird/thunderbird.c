@@ -62,18 +62,18 @@ enum {
 };
 
 static gchar *mork_data = NULL;
-static int mork_pos = 0;
-static int mork_now_parsing = PARSE_VALUES;
-static long mork_next_add_value_id = MAX_VAL;
+static gint mork_pos = 0;
+static gint mork_now_parsing = PARSE_VALUES;
+static gint mork_next_add_value_id = MAX_VAL;
 static GHashTable *mork_values = NULL;
 static GHashTable *mork_columns = NULL;
-
 static GHashTable *current_cells = NULL;
 
 static GHashTable *table_scope_map = NULL;
-static int num_possible = 0;
-static int num_persons = 0;
-static int mork_size = 0;
+static gint num_possible = 0;
+static gint num_persons = 0;
+static gint mork_size = 0;
+static gint default_table_id = 1;
 
 /**
  * \brief Get selected thunderbird addressbook
@@ -93,10 +93,10 @@ void thunderbird_set_selected_book(gchar *uri) {
 
 /**
  * \brief Destroy hashtable
- * \param pData hashtable widget
+ * \param data hashtable widget
  */
-void hash_destroy(void *pData) {
-	g_hash_table_destroy(pData);
+void hash_destroy(void *data) {
+	g_hash_table_destroy(data);
 }
 
 /**
@@ -133,10 +133,10 @@ static inline void *find_map_entry(GHashTable *table, int key) {
 }
 
 /**
- * \brief Get thunderbird directory
+ * \brief Find thunderbird directory
  * \return string to directory
  */
-static gchar *get_thunderbird_dir(void) {
+static gchar *find_thunderbird_dir(void) {
 	gchar *buffer;
 	gchar file[256];
 	gchar *path;
@@ -247,7 +247,7 @@ static inline gboolean parse_comment(void) {
 static gboolean parse_cell(void) {
 	gboolean result = TRUE;
 	gboolean is_column = TRUE;
-	gboolean is_value0id = FALSE;
+	gboolean is_value_oid = FALSE;
 	GString *column = g_string_new_len(NULL, 4);
 	GString *text = g_string_new_len(NULL, 32);
 	int corners = 0;
@@ -288,7 +288,7 @@ static gboolean parse_cell(void) {
 				if (corners == 1) {
 				} else if (corners == 2) {
 					is_column = FALSE;
-					is_value0id = TRUE;
+					is_value_oid = TRUE;
 				} else {
 					text = g_string_append_c(text, cur);
 				}
@@ -321,14 +321,14 @@ static gboolean parse_cell(void) {
 		if (text && strlen(text->str)) {
 			gint value_id = strtoul(text->str, 0, 16);
 
-			//g_debug("is_value0id: %d", is_value0id);
+			//g_debug("is_value_oid: %d", is_value_oid);
 			/* Rows */
-			if (is_value0id) {
+			if (is_value_oid) {
 				insert_map(current_cells, column_id, GINT_TO_POINTER(value_id));
 			} else {
 				mork_next_add_value_id--;
 				insert_map(mork_values, mork_next_add_value_id, g_strdup(text->str));
-				insert_map(current_cells, column_id, (void *) mork_next_add_value_id);
+				insert_map(current_cells, column_id, GINT_TO_POINTER(mork_next_add_value_id));
 				//g_debug("text: %s", text->str);
 			}
 		}
@@ -383,7 +383,7 @@ static gboolean parse_dict(void) {
  * \param pid pointer to save id
  * \param scope pointer to save scope
  */
-static void parse_scope_id(GString *text, gint *pid, gint *scope) {
+static void parse_scope_id(GString *text, gint *id, gint *scope) {
 	gchar *pos;
 
 	if ((pos = strchr(text->str, ':')) != NULL) {
@@ -399,20 +399,22 @@ static void parse_scope_id(GString *text, gint *pid, gint *scope) {
 		size = strlen(text->str) - pos;
 		sc_str = g_malloc(size);
 		strncpy(sc_str, text->str + pos + 1, size);
-		sc_str[strlen(sc_str)] = '\0';
-		if (strlen(sc_str) > 1 && sc_str[0] == '^') {
-			gchar *pnTmp = g_malloc(strlen(sc_str));
-			strncpy(pnTmp, sc_str + 1, strlen(sc_str));
+		sc_str[size] = '\0';
+
+		if (size > 1 && sc_str[0] == '^') {
+			/*gchar *tmp = g_malloc(strlen(sc_str));
+			strncpy(tmp, sc_str + 1, strlen(sc_str));
 			g_free(sc_str);
-			sc_str = pnTmp;
+			sc_str = tmp;*/
+			memcpy(sc_str, sc_str + 1, size - 1);
 		}
 
-		*pid = strtoul(id_str, 0, 16);
+		*id = strtoul(id_str, 0, 16);
 		g_free(id_str);
 		*scope = strtoul(sc_str, 0, 16);
 		g_free(sc_str);
 	} else {
-		*pid = strtoul(text->str, 0, 16);
+		*id = strtoul(text->str, 0, 16);
 		*scope = 0;
 	}
 }
@@ -439,7 +441,7 @@ static gchar parse_meta(gchar character) {
  * \param row_scope row scope id
  * \param row_id row id
  */
-static void set_current_row(int table_scope, int table_id, int row_scope, int row_id) {
+static inline void set_current_row(int table_scope, int table_id, int row_scope, int row_id) {
 	GHashTable *map;
 	GHashTable *tmp;
 
@@ -449,6 +451,14 @@ static void set_current_row(int table_scope, int table_id, int row_scope, int ro
 
 	if (!table_scope) {
 		table_scope = DEFAULT_SCOPE;
+	}
+
+	if (table_id) {
+		default_table_id = table_id;
+	}
+
+	if (!table_id) {
+		table_id = default_table_id;
 	}
 
 	//g_debug("Set to %lx/%lx/%lx/%lx", table_scope, table_id, row_scope, row_id);
@@ -653,7 +663,7 @@ static gboolean parse_mork(void) {
 					result = parse_row(0, 0);
 					break;
 				default:
-					g_warning("Error: %c", cur);
+					g_warning("[%s]: Error: %c", __FUNCTION__, cur);
 					result = FALSE;
 					break;
 			}
@@ -710,6 +720,7 @@ static void parse_person(GHashTable *map, gpointer pId) {
 	}
 
 	num_possible++;
+	g_debug("***** possible: %d", num_possible);
 
 	contact = g_slice_new0(struct contact);
 
@@ -719,9 +730,8 @@ static void parse_person(GHashTable *map, gpointer pId) {
 			continue;
 		}
 		const gchar *column = get_column(GPOINTER_TO_INT(key5));
-		//g_debug("column = '%s'", column);
 		const gchar *value = get_value(GPOINTER_TO_INT(value5));
-		//g_debug("value = '%s'", value);
+		g_debug("'%s' = '%s'", column, value);
 
 		if (!strcmp(column, "HomePhone")) {
 			number = g_slice_new(struct phone_number);
@@ -770,23 +780,23 @@ static void parse_person(GHashTable *map, gpointer pId) {
 		return;
 	}
 
-	if (home_city != NULL) {
+	if (home_city || home_zip || home_street) {
 		struct contact_address *address = g_slice_new0(struct contact_address);
 
-		address->city = g_strdup(home_city);
-		address->zip = g_strdup(home_zip);
-		address->street = g_strdup(home_street);
+		address->city = g_strdup(home_city ? home_city : "");
+		address->zip = g_strdup(home_zip ? home_zip : "");
+		address->street = g_strdup(home_street ? home_street : "");
 		address->type = 0;
 
 		contact->addresses = g_slist_prepend(contact->addresses, address);
 	}
 
-	if (business_city != NULL) {
+	if (business_city || business_zip || business_street) {
 		struct contact_address *address = g_slice_new0(struct contact_address);
 
-		address->city = g_strdup(business_city);
-		address->zip = g_strdup(business_zip);
-		address->street = g_strdup(business_street);
+		address->city = g_strdup(business_city ? business_city : "");
+		address->zip = g_strdup(business_zip ? business_zip : "");
+		address->street = g_strdup(business_street ? business_street : "");
 		address->type = 1;
 
 		contact->addresses = g_slist_prepend(contact->addresses, address);
@@ -899,7 +909,7 @@ static int thunderbird_read_book(void) {
 
 	num_persons = 0;
 	num_possible = 0;
-	g_debug("Start");
+
 	mork_data = NULL;
 	mork_pos = 0;
 	mork_now_parsing = PARSE_VALUES;
@@ -908,26 +918,23 @@ static int thunderbird_read_book(void) {
 	mork_columns = NULL;
 	current_cells = NULL;
 	table_scope_map = NULL;
+	default_table_id = 1;
 
-	g_debug("Create maps");
 	mork_values = create_map(free);
 	mork_columns = create_map(free);
 	table_scope_map = create_map(hash_destroy);
-
-	g_debug("get thunderbird book");
 
 	book = thunderbird_get_selected_book();
 	strncpy(file, book, sizeof(file));
 
 	g_debug("Thunderbird book (%s)", file);
 	thunderbird_open_book(file);
-	g_debug("free structure");
 
 	g_hash_table_destroy(table_scope_map);
 	g_hash_table_destroy(mork_columns);
 	g_hash_table_destroy(mork_values);
-	g_debug("Done");
-	g_debug("%d possible entries!", num_possible);
+
+	g_debug("%d entries!", num_possible);
 	g_debug("%d persons imported!", num_persons);
 
 	return 0;
@@ -940,9 +947,17 @@ GSList *thunderbird_get_contacts(void)
 	return list;
 }
 
+gboolean thunderbird_reload_contacts(void)
+{
+	contacts = NULL;
+	thunderbird_read_book();
+
+	return TRUE;
+}
+
 struct address_book thunderbird_book = {
 	thunderbird_get_contacts,
-	NULL,//thunderbird_reload_contacts,
+	thunderbird_reload_contacts,
 	NULL,//thunderbird_remove_contact,
 	NULL//thunderbird_save_contact
 };
@@ -994,7 +1009,7 @@ void filename_button_clicked_cb(GtkButton *button, gpointer user_data)
 	if (book != NULL && strlen(book) > 0) {
 		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(dialog), book);
 	} else {
-		dir = get_thunderbird_dir();
+		dir = find_thunderbird_dir();
 		snprintf(file, sizeof(file), "%s/abook.mab", dir);
 
 		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(dialog), file);

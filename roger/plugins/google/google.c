@@ -193,7 +193,7 @@ static int google_read_book(void) {
 
 			contact->name = g_strdup(gdata_gd_name_get_full_name(name));
 			if (contact->name == NULL) {
-				g_debug("contact name is nULL");
+				g_debug("contact name is NULL");
 				continue;
 			}
 
@@ -248,10 +248,14 @@ static int google_read_book(void) {
 				} else {
 					address->type = 0;
 				}
-				address->street = g_strdup(gdata_gd_postal_address_get_street(gaddress));
-				address->city = g_strdup(gdata_gd_postal_address_get_city(gaddress));
+
+				const gchar *tmp = gdata_gd_postal_address_get_street(gaddress);
+				address->street = g_strdup(tmp ? tmp : "");
+				tmp = gdata_gd_postal_address_get_city(gaddress);
+				address->city = g_strdup(tmp ? tmp : "");
 				//address->country = g_strdup(gdata_gd_postal_address_get_country(gaddress));
-				address->zip = g_strdup(gdata_gd_postal_address_get_postcode(gaddress));
+				tmp = gdata_gd_postal_address_get_postcode(gaddress);
+				address->zip = g_strdup(tmp ? tmp : "");
 
 				contact->addresses = g_slist_prepend(contact->addresses, address);
 
