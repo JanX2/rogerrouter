@@ -21,6 +21,10 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/call.h>
 #include <libroutermanager/plugins.h>
@@ -146,6 +150,7 @@ gboolean callmonitor_connect(gpointer user_data)
 	struct profile *profile;
 	gint sock = -1;
 	const gchar *hostname;
+	gint tcp_keepalive_time = 600;
 
 	profile = profile_get_active();
 	if (!profile) {
@@ -224,6 +229,7 @@ gboolean callmonitor_connect(gpointer user_data)
 
 	/* Set keep alive, otherwise the connection might drop silently */
 	g_socket_set_keepalive(socket, TRUE);
+	setsockopt(sock, IPPROTO_TCP, TCP_KEEPIDLE, &tcp_keepalive_time, sizeof(tcp_keepalive_time));
 
 #ifdef G_OS_WIN32
 	callmonitor_plugin->priv->channel = g_io_channel_win32_new_socket(sock);
