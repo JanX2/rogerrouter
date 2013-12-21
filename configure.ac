@@ -558,6 +558,8 @@ AC_CONFIG_FILES([
     roger/plugins/vcard/data/Makefile
     roger/plugins/google/Makefile
     roger/plugins/google/data/Makefile
+    roger/plugins/thunderbird/Makefile
+    roger/plugins/thunderbird/data/Makefile
     cups-backend/Makefile
     macosx/roger.plist
     macosx/package
