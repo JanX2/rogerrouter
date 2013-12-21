@@ -45,6 +45,7 @@ void app_show_about(void)
 	GtkWidget *dialog = NULL;
 	const gchar *authors[] = {
 		"Jan-Michael Brummer <jan.brummer@tabos.org>",
+		"Louis Lagendijk <louis@fazant.net>",
 		NULL
 	};
 	const gchar *documenters[] = {
