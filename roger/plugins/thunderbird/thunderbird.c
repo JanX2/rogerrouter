@@ -71,7 +71,6 @@ static GHashTable *mork_columns = NULL;
 static GHashTable *current_cells = NULL;
 
 static GHashTable *table_scope_map = NULL;
-static gchar *thunderbird_dir = NULL;
 static int num_possible = 0;
 static int num_persons = 0;
 static int mork_size = 0;
@@ -711,6 +710,11 @@ static void parse_person(GHashTable *map, gpointer pId) {
 	gpointer key5, value5;
 	struct contact *contact = NULL;
 	struct phone_number *number;
+	const gchar *thunderbird_dir = thunderbird_get_selected_book();
+
+	if (thunderbird_dir) {
+		thunderbird_dir = g_path_get_dirname(thunderbird_dir);
+	}
 
 	num_possible++;
 
@@ -721,93 +725,57 @@ static void parse_person(GHashTable *map, gpointer pId) {
 		if (GPOINTER_TO_INT(key5) == 0) {
 			continue;
 		}
-		const gchar *pnColumn = get_column(GPOINTER_TO_INT(key5));
-		//g_debug("pnColumn = '%s'", pnColumn);
-		const gchar *pnValue = get_value(GPOINTER_TO_INT(value5));
-		//g_debug("pnValue = '%s'", pnValue);
+		const gchar *column = get_column(GPOINTER_TO_INT(key5));
+		//g_debug("column = '%s'", column);
+		const gchar *value = get_value(GPOINTER_TO_INT(value5));
+		//g_debug("value = '%s'", value);
 
-		if (!strcmp(pnColumn, "HomePhone")) {
+		if (!strcmp(column, "HomePhone")) {
 			number = g_slice_new(struct phone_number);
-			number->number = g_strdup(pnValue);
+			number->number = g_strdup(value);
 			number->type = PHONE_NUMBER_HOME;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
-		} else if (!strcmp(pnColumn, "WorkPhone")) {
+		} else if (!strcmp(column, "WorkPhone")) {
 			number = g_slice_new(struct phone_number);
-			number->number = g_strdup(pnValue);
+			number->number = g_strdup(value);
 			number->type = PHONE_NUMBER_WORK;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
-		} else if (!strcmp(pnColumn, "FaxNumber")) {
+		} else if (!strcmp(column, "FaxNumber")) {
 			number = g_slice_new(struct phone_number);
-			number->number = g_strdup(pnValue);
+			number->number = g_strdup(value);
 			number->type = PHONE_NUMBER_FAX;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
-		} else if (!strcmp(pnColumn, "CellularNumber")) {
+		} else if (!strcmp(column, "CellularNumber")) {
 			number = g_slice_new(struct phone_number);
-			number->number = g_strdup(pnValue);
+			number->number = g_strdup(value);
 			number->type = PHONE_NUMBER_MOBILE;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
-		} else if (!strcmp(pnColumn, "DisplayName")) {
-			contact->name = g_strdup(pnValue);
-		} else if (!strcmp(pnColumn, "HomeAddress")) {
-			home_street = pnValue;
-		} else if (!strcmp(pnColumn, "HomeCity")) {
-			home_city = pnValue;
-		} else if (!strcmp(pnColumn, "HomeZipCode")) {
-			home_zip = pnValue;
-		} else if (!strcmp(pnColumn, "WorkAddress")) {
-			business_street = pnValue;
-		} else if (!strcmp(pnColumn, "WorkCity")) {
-			business_city = pnValue;
-		} else if (!strcmp(pnColumn, "WorkZipCode")) {
-			business_zip = pnValue;
-		}/* else if (!strcmp(pnColumn, "PhotoName")) {
-			pnPhotoName = pnValue;
-		}*/
+		} else if (!strcmp(column, "DisplayName")) {
+			contact->name = g_strdup(value);
+		} else if (!strcmp(column, "HomeAddress")) {
+			home_street = value;
+		} else if (!strcmp(column, "HomeCity")) {
+			home_city = value;
+		} else if (!strcmp(column, "HomeZipCode")) {
+			home_zip = value;
+		} else if (!strcmp(column, "WorkAddress")) {
+			business_street = value;
+		} else if (!strcmp(column, "WorkCity")) {
+			business_city = value;
+		} else if (!strcmp(column, "WorkZipCode")) {
+			business_zip = value;
+		} else if (!strcmp(column, "PhotoName")) {
+			gchar *file_name = g_build_filename(thunderbird_dir, "Photos", value, NULL);
+
+			contact->image = gdk_pixbuf_new_from_file(file_name, NULL);
+			g_free(file_name);
+		}
 	}
 
 	/* Do not add entries without name */
 	if (EMPTY_STRING(contact->name)) {
 		return;
 	}
-
-	/*check = contact->name;
-
-	if (check != NULL && strlen(check) > 0) {
-		gchar *file_name = NULL;
-		gchar *file_nameExt = NULL;
-		gchar *base = NULL;
-		gchar *dest = NULL;
-		gchar *src = NULL;
-
-		base = g_base64_encode((const guchar *) check, strlen(check));
-
-		src = base;
-		dest = base;
-		do {
-			while (*src == '=') {
-				src++;
-			}
-		} while ((*dest++ = *src++) != '\0');
-
-		file_name = g_strdup_printf("%s/ABphotos/%s", thunderbird_dir, base);
-		g_free(base);
-
-		file_nameExt = g_strdup_printf("%s.jpg", file_name);
-		image = gdk_pixbuf_new_from_file(file_nameExt, NULL);
-		if (image == NULL) {
-			g_free(file_nameExt);
-			file_nameExt = g_strdup_printf("%s.png", file_name);
-			image = gdk_pixbuf_new_from_file(file_nameExt, NULL);
-			if (image == NULL) {
-				g_free(file_nameExt);
-				file_nameExt = g_strdup_printf("%s.gif", file_name);
-				image = gdk_pixbuf_new_from_file(file_nameExt, NULL);
-			}
-		}
-
-		g_free(file_nameExt);
-		g_free(file_name);
-	}*/
 
 	if (home_city != NULL) {
 		struct contact_address *address = g_slice_new0(struct contact_address);
@@ -830,14 +798,6 @@ static void parse_person(GHashTable *map, gpointer pId) {
 
 		contact->addresses = g_slist_prepend(contact->addresses, address);
 	}
-
-	/*if (image == NULL && pnPhotoName != NULL) {
-		gchar *file_name = NULL;
-
-		file_name = g_strdup_printf("%s/Photos/%s", thunderbird_dir, pnPhotoName);
-		image = gdk_pixbuf_new_from_file(file_name, NULL);
-		g_free(file_name);
-	}*/
 
 	contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
 	num_persons++;
@@ -964,12 +924,7 @@ static int thunderbird_read_book(void) {
 	g_debug("get thunderbird book");
 
 	book = thunderbird_get_selected_book();
-	if ((book == NULL) || (strlen(book) <= 0)) {
-		snprintf(file, sizeof(file), "%s/abook.mab", thunderbird_dir);
-	} else {
-		strncpy(file, book, sizeof(file));
-	}
-
+	strncpy(file, book, sizeof(file));
 
 	g_debug("Thunderbird book (%s)", file);
 	thunderbird_open_book(file);
