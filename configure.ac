@@ -99,9 +99,9 @@ case "$host" in
 	;;
 	*darwin* | *freebsd*)
 		PKG_CHECK_MODULES(FAX_SPOOLER, 
-			[gio >= 2.36], 
+			[gio-2.0 >= 2.36], 
 			[fax_printer=spoolerdir],
-			[fax_printer=socket_server]
+			[fax_printer=socket-server]
 		)
 	;;
 	
