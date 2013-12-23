@@ -231,12 +231,7 @@ gboolean callmonitor_connect(gpointer user_data)
 	g_socket_set_keepalive(socket, TRUE);
 #ifdef TCP_KEEPIDLE
 	setsockopt(sock, IPPROTO_TCP, TCP_KEEPIDLE, &tcp_keepalive_time, sizeof(tcp_keepalive_time));
-#else
-#ifdef TCP_KEEPALIVE
-	setsockopt(sock, IPPROTO_TCP, TCP_KEEPALIVE, &tcp_keepalive_time, sizeof(tcp_keepalive_time));
 #endif
-#endif
-
 
 #ifdef G_OS_WIN32
 	callmonitor_plugin->priv->channel = g_io_channel_win32_new_socket(sock);
