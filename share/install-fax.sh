@@ -17,7 +17,7 @@
  # You should have received a copy of the GNU General Public License
  # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-# set -x
+set -x
 
 if test $# != 0; then
 	echo Create the cups printer required for roger-router fax sending
@@ -27,11 +27,6 @@ fi
 if test `id -u` != 0; then
         echo Not started from user root. Cannot install printer. Use sudo $0 ?
 	exit 2
-fi
-
-if test x$(cups-config --serverbin 2> /dev/null) = x; then
-	echo Utility cups-config is not installed. Please install cups development package 
-	exit 3
 fi
 
 osname=`uname -s`
@@ -75,16 +70,37 @@ else
 	spooldir_uid=lp
 	spooldir_gid=fax
 fi
+
+# find cups serverbin directory for backend installation
+# if cups-config can be found we use it, otherwise we try a number of locations for the backenddir
+
+cupsconfig=$(which cups-config 2> /dev/null)
+
+if test x$cupsconfig != x; then
+	cupsbackenddir=$(cups-config --serverbin)/backend
+else
+	for bindir in /usr/lib/cups /usr/local/lib/cups /usr/libexec/cups /usr/local/libexec/cups; do
+		if test -d $bindir/backend; then
+			cupsbackenddir=$bindir/backend
+			break;
+		fi
+	done
+fi
 	
+if ! test -d $cupsbackenddir; then
+	echo cannot find the cups backend directory!
+	exit 5
+fi
+
 # Create spooler directory
 mkdir -p /var/spool/roger/
 chown $spooldir_uid:$spooldir_gid /var/spool/roger
 chmod 2770 /var/spool/roger/
 
 # install the backend
-cp roger-cups $(cups-config --serverbin)/backend/
-chown $backend_uid:$backend_gid $(cups-config --serverbin)/backend/
-chmod 0755 $(cups-config --serverbin)/backend/roger-cups
+cp roger-cups $cupsbackenddir
+chown $backend_uid:$backend_gid $cupsbackenddir
+chmod 0755 $cupsbackenddir/roger-cups
 
 #  Create the printer
 lpadmin -p "Roger-Router-Fax" -E -v roger-cups:/ -P roger-fax.ppd
