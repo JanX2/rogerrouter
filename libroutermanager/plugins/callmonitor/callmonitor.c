@@ -229,8 +229,14 @@ gboolean callmonitor_connect(gpointer user_data)
 
 	/* Set keep alive, otherwise the connection might drop silently */
 	g_socket_set_keepalive(socket, TRUE);
+
+	/* this is a bit of a mess: LINUX uses TCP_KEEP_IDLE, where OSX uses TCP_KEEPALIVE */
 #ifdef TCP_KEEPIDLE
 	setsockopt(sock, IPPROTO_TCP, TCP_KEEPIDLE, &tcp_keepalive_time, sizeof(tcp_keepalive_time));
+#else
+#ifdef TCP_KEEPALIVE
+	setsockopt(sock, IPPROTO_TCP, TCP_KEEPALIVE, &tcp_keepalive_time, sizeof(tcp_keepalive_time));
+#endif
 #endif
 
 #ifdef G_OS_WIN32
