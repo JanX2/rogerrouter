@@ -12,5 +12,33 @@
 		<key name="maximized" type="b">
 			<default>false</default>
 		</key>
+
+		<key name="col-1-width" type="u">
+			<default>6</default>
+		</key>
+		<key name="col-2-width" type="u">
+			<default>6</default>
+		</key>
+		<key name="col-3-width" type="u">
+			<default>6</default>
+		</key>
+		<key name="col-4-width" type="u">
+			<default>6</default>
+		</key>
+		<key name="col-5-width" type="u">
+			<default>6</default>
+		</key>
+		<key name="col-6-width" type="u">
+			<default>6</default>
+		</key>
+		<key name="col-7-width" type="u">
+			<default>6</default>
+		</key>
+		<key name="col-8-width" type="u">
+			<default>6</default>
+		</key>
+		<key name="col-9-width" type="u">
+			<default>6</default>
+		</key>
 	</schema>
 </schemalist>

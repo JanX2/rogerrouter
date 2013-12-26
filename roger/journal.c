@@ -724,6 +724,32 @@ static gboolean journal_window_state_event_cb(GtkWidget *window, GdkEventWindowS
 	return FALSE;
 }
 
+static guint timeout_id = 0;
+
+static gboolean save_column_state(gpointer data)
+{
+	gint column_id = gtk_tree_view_column_get_sort_column_id(data);
+	gint width = gtk_tree_view_column_get_width(data);
+	gchar *key;
+
+	key = g_strdup_printf("col-%d-width", column_id);
+	g_settings_set_uint(app_settings, key, width);
+	g_free(key);
+
+	return FALSE;
+}
+
+static void journal_column_fixed_width_cb(GtkWidget *widget, gpointer user_data)
+{
+	GtkTreeViewColumn *column = GTK_TREE_VIEW_COLUMN(widget);
+
+	if (timeout_id) {
+		g_source_remove(timeout_id);
+	}
+
+	timeout_id = g_timeout_add(250, save_column_state, column);
+}
+
 GtkWidget *journal_window(GApplication *app, GFile *file)
 {
 	GtkWidget *window, *grid, *scrolled, *view;
@@ -873,11 +899,17 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 	renderer = gtk_cell_renderer_pixbuf_new();
 	type_column = gtk_tree_view_column_new_with_attributes(_("Type"), renderer, "pixbuf", JOURNAL_COL_TYPE, NULL);
+	gtk_tree_view_column_set_sort_column_id(type_column, 1);
+	gtk_tree_view_column_set_fixed_width(type_column, g_settings_get_uint(app_settings, "col-1-width"));
+	g_signal_connect(type_column, "notify::fixed-width", G_CALLBACK(journal_column_fixed_width_cb), NULL);
 	gtk_tree_view_column_set_resizable(type_column, TRUE);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(view), type_column);
 
 	renderer = gtk_cell_renderer_text_new();
 	date_time_column = gtk_tree_view_column_new_with_attributes(_("Date/Time"), renderer, "text", JOURNAL_COL_DATETIME, NULL);
+	gtk_tree_view_column_set_sort_column_id(date_time_column, 2);
+	gtk_tree_view_column_set_fixed_width(date_time_column, g_settings_get_uint(app_settings, "col-2-width"));
+	g_signal_connect(date_time_column, "notify::fixed-width", G_CALLBACK(journal_column_fixed_width_cb), NULL);
 	gtk_tree_view_column_set_resizable(date_time_column, TRUE);
 	//gtk_tree_view_column_set_reorderable(date_time_column, TRUE);
 	gtk_tree_view_column_set_sort_column_id(date_time_column, JOURNAL_COL_DATETIME);
@@ -887,7 +919,11 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	renderer = gtk_cell_renderer_text_new();
 	g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, NULL);
 	name_column = gtk_tree_view_column_new_with_attributes(_("Name"), renderer, "text", JOURNAL_COL_NAME, NULL);
+	gtk_tree_view_column_set_sort_column_id(name_column, 3);
+	gtk_tree_view_column_set_fixed_width(name_column, g_settings_get_uint(app_settings, "col-3-width"));
+	g_signal_connect(name_column, "notify::fixed-width", G_CALLBACK(journal_column_fixed_width_cb), NULL);
 	gtk_tree_view_column_set_cell_data_func(name_column, renderer, name_column_cell_data_func, NULL, NULL);
+	gtk_tree_view_column_set_sizing(name_column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
 	gtk_tree_view_column_set_resizable(name_column, TRUE);
 	//gtk_tree_view_column_set_reorderable(name_column, TRUE);
 	gtk_tree_view_column_set_sort_column_id(name_column, JOURNAL_COL_NAME);
@@ -896,6 +932,9 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	renderer = gtk_cell_renderer_text_new();
 	g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, NULL);
 	company_column = gtk_tree_view_column_new_with_attributes(_("Company"), renderer, "text", JOURNAL_COL_COMPANY, NULL);
+	gtk_tree_view_column_set_sort_column_id(company_column, 4);
+	gtk_tree_view_column_set_fixed_width(company_column, g_settings_get_uint(app_settings, "col-4-width"));
+	g_signal_connect(company_column, "notify::fixed-width", G_CALLBACK(journal_column_fixed_width_cb), NULL);
 	gtk_tree_view_column_set_resizable(company_column, TRUE);
 	//gtk_tree_view_column_set_reorderable(company_column, TRUE);
 	gtk_tree_view_column_set_sort_column_id(company_column, JOURNAL_COL_COMPANY);
@@ -903,6 +942,9 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 	renderer = gtk_cell_renderer_text_new();
 	number_column = gtk_tree_view_column_new_with_attributes(_("Number"), renderer, "text", JOURNAL_COL_NUMBER, NULL);
+	gtk_tree_view_column_set_sort_column_id(number_column, 5);
+	gtk_tree_view_column_set_fixed_width(number_column, g_settings_get_uint(app_settings, "col-5-width"));
+	g_signal_connect(number_column, "notify::fixed-width", G_CALLBACK(journal_column_fixed_width_cb), NULL);
 	gtk_tree_view_column_set_resizable(number_column, TRUE);
 	//gtk_tree_view_column_set_reorderable(number_column, TRUE);
 	gtk_tree_view_column_set_sort_column_id(number_column, JOURNAL_COL_NUMBER);
@@ -910,6 +952,9 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 	renderer = gtk_cell_renderer_text_new();
 	city_column = gtk_tree_view_column_new_with_attributes(_("City"), renderer, "text", JOURNAL_COL_CITY, NULL);
+	gtk_tree_view_column_set_sort_column_id(city_column, 6);
+	gtk_tree_view_column_set_fixed_width(city_column, g_settings_get_uint(app_settings, "col-6-width"));
+	g_signal_connect(city_column, "notify::fixed-width", G_CALLBACK(journal_column_fixed_width_cb), NULL);
 	gtk_tree_view_column_set_resizable(city_column, TRUE);
 	//gtk_tree_view_column_set_reorderable(city_column, TRUE);
 	gtk_tree_view_column_set_sort_column_id(city_column, JOURNAL_COL_CITY);
@@ -917,6 +962,9 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 	renderer = gtk_cell_renderer_text_new();
 	local_name_column = gtk_tree_view_column_new_with_attributes(_("Extension"), renderer, "text", JOURNAL_COL_EXTENSION, NULL);
+	gtk_tree_view_column_set_sort_column_id(local_name_column, 7);
+	gtk_tree_view_column_set_fixed_width(local_name_column, g_settings_get_uint(app_settings, "col-7-width"));
+	g_signal_connect(local_name_column, "notify::fixed-width", G_CALLBACK(journal_column_fixed_width_cb), NULL);
 	gtk_tree_view_column_set_resizable(local_name_column, TRUE);
 	//gtk_tree_view_column_set_reorderable(local_name_column, TRUE);
 	gtk_tree_view_column_set_sort_column_id(local_name_column, JOURNAL_COL_EXTENSION);
@@ -924,6 +972,9 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 	renderer = gtk_cell_renderer_text_new();
 	local_number_column = gtk_tree_view_column_new_with_attributes(_("Line"), renderer, "text", JOURNAL_COL_LINE, NULL);
+	gtk_tree_view_column_set_sort_column_id(local_number_column, 8);
+	gtk_tree_view_column_set_fixed_width(local_number_column, g_settings_get_uint(app_settings, "col-8-width"));
+	g_signal_connect(local_number_column, "notify::fixed-width", G_CALLBACK(journal_column_fixed_width_cb), NULL);
 	gtk_tree_view_column_set_resizable(local_number_column, TRUE);
 	//gtk_tree_view_column_set_reorderable(local_number_column, TRUE);
 	gtk_tree_view_column_set_sort_column_id(local_number_column, JOURNAL_COL_LINE);
@@ -931,6 +982,9 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 	renderer = gtk_cell_renderer_text_new();
 	duration_column = gtk_tree_view_column_new_with_attributes(_("Duration"), renderer, "text", JOURNAL_COL_DURATION, NULL);
+	gtk_tree_view_column_set_sort_column_id(duration_column, 9);
+	gtk_tree_view_column_set_fixed_width(duration_column, g_settings_get_uint(app_settings, "col-9-width"));
+	g_signal_connect(duration_column, "notify::fixed-width", G_CALLBACK(journal_column_fixed_width_cb), NULL);
 	gtk_tree_view_column_set_resizable(duration_column, TRUE);
 	//gtk_tree_view_column_set_reorderable(duration_column, TRUE);
 	gtk_tree_view_column_set_sort_column_id(duration_column, JOURNAL_COL_DURATION);
