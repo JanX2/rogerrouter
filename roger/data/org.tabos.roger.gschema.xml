@@ -13,6 +13,9 @@
 			<default>false</default>
 		</key>
 
+		<key name="col-0-width" type="u">
+			<default>6</default>
+		</key>
 		<key name="col-1-width" type="u">
 			<default>6</default>
 		</key>
@@ -35,9 +38,6 @@
 			<default>6</default>
 		</key>
 		<key name="col-8-width" type="u">
-			<default>6</default>
-		</key>
-		<key name="col-9-width" type="u">
 			<default>6</default>
 		</key>
 	</schema>

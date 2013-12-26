@@ -105,7 +105,7 @@ gboolean filter_rule_match(struct filter *filter, struct call *call)
 		struct filter_rule *rule = list->data;
 
 		switch (rule->type) {
-		case JOURNAL_TYPE_CALL_TYPE:
+		case FILTER_CALL_TYPE:
 			/* Call type */
 			call_type = TRUE;
 
@@ -118,7 +118,7 @@ gboolean filter_rule_match(struct filter *filter, struct call *call)
 			}
 
 			break;
-		case JOURNAL_TYPE_DATE_TIME: {
+		case FILTER_DATE_TIME: {
 			/* Date/Time */
 			gchar *number_a = rule->entry;
 			gchar *number_b = call->date_time;
@@ -205,17 +205,17 @@ gboolean filter_rule_match(struct filter *filter, struct call *call)
 
 			break;
 		}
-		case JOURNAL_TYPE_REMOTE_NAME:
+		case FILTER_REMOTE_NAME:
 			/* Remote name */
 			remote_name = TRUE;
 			remote_name_valid = filter_compare(rule, call->remote->name);
 			break;
-		case JOURNAL_TYPE_REMOTE_NUMBER:
+		case FILTER_REMOTE_NUMBER:
 			/* Remote number */
 			remote_number = TRUE;
 			remote_number_valid = filter_compare(rule, call->remote->number);
 			break;
-		case JOURNAL_TYPE_LOCAL_NUMBER:
+		case FILTER_LOCAL_NUMBER:
 			/* Local number */
 			local_number = TRUE;
 			local_number_valid = filter_compare(rule, call->local->number);
