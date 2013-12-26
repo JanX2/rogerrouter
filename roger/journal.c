@@ -44,6 +44,7 @@
 #include <roger/contact_edit.h>
 #include <roger/contacts.h>
 #include <roger/icons.h>
+#include <roger/application.h>
 
 #define JOURNAL_OLD_ICONS 1
 //#define JOURNAL_TOP_OLD_ICONS 1
@@ -703,6 +704,26 @@ static void name_column_cell_data_func(GtkTreeViewColumn *column, GtkCellRendere
 	}
 }
 
+static gboolean journal_configure_event_cb(GtkWidget *window, GdkEvent *event, gpointer user_data)
+{
+	if (!g_settings_get_boolean(app_settings, "maximized")) {
+		GdkEventConfigure *ev = (GdkEventConfigure *) event;
+		g_settings_set_uint(app_settings, "width", ev->width);
+		g_settings_set_uint(app_settings, "height", ev->height);
+	}
+
+	return FALSE;
+}
+
+static gboolean journal_window_state_event_cb(GtkWidget *window, GdkEventWindowState *event)
+{
+	gboolean maximized = event->new_window_state & GDK_WINDOW_STATE_MAXIMIZED;
+
+	g_settings_set_boolean(app_settings, "maximized", maximized);
+
+	return FALSE;
+}
+
 GtkWidget *journal_window(GApplication *app, GFile *file)
 {
 	GtkWidget *window, *grid, *scrolled, *view;
@@ -735,7 +756,11 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 	window = gtk_application_window_new(GTK_APPLICATION(app));
 	journal_win = window;
-	gtk_window_set_default_size((GtkWindow *)window, 1200, 600);
+	gtk_window_set_default_size((GtkWindow *)window, g_settings_get_uint(app_settings, "width"), g_settings_get_uint(app_settings, "height"));
+	if (g_settings_get_boolean(app_settings, "maximized")) {
+		gtk_window_maximize((GtkWindow *)(window));
+	}
+
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 
 	grid = gtk_grid_new();
@@ -932,10 +957,13 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	g_signal_connect(G_OBJECT(add_button), "clicked", G_CALLBACK(journal_button_add_clicked_cb), view);
 	g_signal_connect(G_OBJECT(view), "row-activated", G_CALLBACK(journal_row_activated_cb), list_store);
 
-	g_signal_connect(G_OBJECT(journal_win), "delete_event", G_CALLBACK(journal_delete_event_cb), NULL);
+	g_signal_connect(G_OBJECT(journal_win), "delete-event", G_CALLBACK(journal_delete_event_cb), NULL);
 	g_signal_connect(G_OBJECT(app_object), "journal-loaded", G_CALLBACK(journal_loaded_cb), NULL);
 
 	g_signal_connect(G_OBJECT(app_object), "connection-notify", G_CALLBACK(journal_connection_notify_cb), NULL);
+
+	g_signal_connect(G_OBJECT(journal_win), "configure-event", G_CALLBACK(journal_configure_event_cb), NULL);
+	g_signal_connect(G_OBJECT(journal_win), "window-state-event", G_CALLBACK(journal_window_state_event_cb), NULL);
 
 	gtk_window_set_hide_titlebar_when_maximized(GTK_WINDOW(journal_win), TRUE);
 	gtk_widget_hide_on_delete(journal_win);

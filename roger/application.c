@@ -42,7 +42,7 @@
 
 static GtkApplication *application;
 static gboolean startup_called = FALSE;
-static GSettings *app_settings = NULL;
+GSettings *app_settings = NULL;
 
 struct cmd_line_option_state {
 	gboolean debug;

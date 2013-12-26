@@ -22,6 +22,8 @@
 
 G_BEGIN_DECLS
 
+extern GSettings *app_settings;
+
 void app_show_contacts(void);
 void app_show_preferences(void);
 void app_show_help(void);

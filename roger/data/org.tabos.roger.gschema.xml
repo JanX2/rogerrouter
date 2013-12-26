@@ -3,5 +3,14 @@
 		<key name="debug" type="b">
 			<default>false</default>
 		</key>
+		<key name="width" type="u">
+			<default>1200</default>
+		</key>
+		<key name="height" type="u">
+			<default>600</default>
+		</key>
+		<key name="maximized" type="b">
+			<default>false</default>
+		</key>
 	</schema>
 </schemalist>
