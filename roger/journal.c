@@ -730,10 +730,15 @@ static gboolean save_column_state(gpointer data)
 {
 	gint column_id = gtk_tree_view_column_get_sort_column_id(data);
 	gint width = gtk_tree_view_column_get_width(data);
+	gboolean visible = gtk_tree_view_column_get_visible(data);
 	gchar *key;
 
 	key = g_strdup_printf("col-%d-width", column_id);
 	g_settings_set_uint(app_settings, key, width);
+	g_free(key);
+
+	key = g_strdup_printf("col-%d-visible", column_id);
+	g_settings_set_boolean(app_settings, key, visible);
 	g_free(key);
 
 	return FALSE;
@@ -748,6 +753,18 @@ static void journal_column_fixed_width_cb(GtkWidget *widget, gpointer user_data)
 	}
 
 	timeout_id = g_timeout_add(250, save_column_state, column);
+}
+
+static gboolean journal_column_header_button_pressed_cb(GtkTreeViewColumn *column, GdkEventButton *event, gpointer user_data)
+{
+	GtkMenu *menu = GTK_MENU(user_data);
+
+	if (event->button == GDK_BUTTON_SECONDARY) {
+		gtk_menu_popup(menu, NULL, NULL, NULL, NULL, event->button, event->time);
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
 GtkWidget *journal_window(GApplication *app, GFile *file)
@@ -766,7 +783,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	GtkListStore *list_store;
 	GtkTreeModel *tree_model;
 	GtkCellRenderer *renderer;
-	GtkTreeViewColumn *type_column;
+	GtkTreeViewColumn *column;
 	GtkTreeSortable *sortable;
 	gint index;
 	gchar *column_name[10] = {
@@ -900,27 +917,48 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 	g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(search_entry_changed), view);
 
-	renderer = gtk_cell_renderer_pixbuf_new();
-	type_column = gtk_tree_view_column_new_with_attributes(_("Type"), renderer, "pixbuf", JOURNAL_COL_TYPE, NULL);
-	gtk_tree_view_column_set_sort_column_id(type_column, 1);
-	gtk_tree_view_column_set_fixed_width(type_column, g_settings_get_uint(app_settings, "col-0-width"));
-	g_signal_connect(type_column, "notify::fixed-width", G_CALLBACK(journal_column_fixed_width_cb), NULL);
-	gtk_tree_view_column_set_resizable(type_column, TRUE);
-	gtk_tree_view_append_column(GTK_TREE_VIEW(view), type_column);
+	GtkWidget *header_menu = gtk_menu_new();
+	GtkWidget *column_item;
+	gchar *title;
 
+	/* Add pixbuf renderer, it's always the first in row */
+	renderer = gtk_cell_renderer_pixbuf_new();
+	column = gtk_tree_view_column_new_with_attributes(column_name[0], renderer, "pixbuf", JOURNAL_COL_TYPE, NULL);
+	gtk_tree_view_column_set_sort_column_id(column, 1);
+	gtk_tree_view_column_set_fixed_width(column, g_settings_get_uint(app_settings, "col-0-width"));
+	gtk_tree_view_column_set_visible(column, g_settings_get_boolean(app_settings, "col-0-visible"));
+	g_signal_connect(column, "notify::fixed-width", G_CALLBACK(journal_column_fixed_width_cb), NULL);
+	g_signal_connect(column, "notify::visible", G_CALLBACK(journal_column_fixed_width_cb), NULL);
+	gtk_tree_view_column_set_resizable(column, TRUE);
+	gtk_tree_view_append_column(GTK_TREE_VIEW(view), column);
+
+	title = column_name[0];
+	button = gtk_tree_view_column_get_button(column);
+	g_signal_connect(button, "button-press-event", G_CALLBACK(journal_column_header_button_pressed_cb), header_menu);
+
+	column_item = gtk_check_menu_item_new_with_label(title);
+	g_object_bind_property(column, "visible", column_item, "active", G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
+	gtk_menu_shell_append(GTK_MENU_SHELL(header_menu), column_item);
+
+	/* Add all the other columns renderer */
 	for (index = JOURNAL_COL_DATETIME; index <= JOURNAL_COL_DURATION; index++) {
-		GtkTreeViewColumn *column;
+		gchar *tmp;
 
 		renderer = gtk_cell_renderer_text_new();
 		g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, NULL);
 		column = gtk_tree_view_column_new_with_attributes(column_name[index], renderer, "text", index, NULL);
 		gtk_tree_view_column_set_sort_column_id(column, index);
 
-		gchar *tmp = g_strdup_printf("col-%d-width", index);
+		tmp = g_strdup_printf("col-%d-width", index);
 		gtk_tree_view_column_set_fixed_width(column, g_settings_get_uint(app_settings, tmp));
 		g_free(tmp);
 
+		tmp = g_strdup_printf("col-%d-visible", index);
+		gtk_tree_view_column_set_visible(column, g_settings_get_boolean(app_settings, tmp));
+		g_free(tmp);
+
 		g_signal_connect(column, "notify::fixed-width", G_CALLBACK(journal_column_fixed_width_cb), NULL);
+		g_signal_connect(column, "notify::visible", G_CALLBACK(journal_column_fixed_width_cb), NULL);
 		gtk_tree_view_column_set_resizable(column, TRUE);
 		gtk_tree_view_column_set_sort_column_id(column, index);
 
@@ -931,7 +969,16 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 		}
 
 		gtk_tree_view_append_column(GTK_TREE_VIEW(view), column);
+
+		title = column_name[index];
+		button = gtk_tree_view_column_get_button(column);
+		g_signal_connect(button, "button-press-event", G_CALLBACK(journal_column_header_button_pressed_cb), header_menu);
+
+		column_item = gtk_check_menu_item_new_with_label(title);
+		g_object_bind_property(column, "visible", column_item, "active", G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
+		gtk_menu_shell_append(GTK_MENU_SHELL(header_menu), column_item);
 	}
+	gtk_widget_show_all(header_menu);
 
 	gtk_container_add(GTK_CONTAINER(scrolled), view);
 

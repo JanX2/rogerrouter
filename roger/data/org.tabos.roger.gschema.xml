@@ -40,5 +40,33 @@
 		<key name="col-8-width" type="u">
 			<default>6</default>
 		</key>
+
+		<key name="col-0-visible" type="b">
+			<default>true</default>
+		</key>
+		<key name="col-1-visible" type="b">
+			<default>true</default>
+		</key>
+		<key name="col-2-visible" type="b">
+			<default>true</default>
+		</key>
+		<key name="col-3-visible" type="b">
+			<default>true</default>
+		</key>
+		<key name="col-4-visible" type="b">
+			<default>true</default>
+		</key>
+		<key name="col-5-visible" type="b">
+			<default>true</default>
+		</key>
+		<key name="col-6-visible" type="b">
+			<default>true</default>
+		</key>
+		<key name="col-7-visible" type="b">
+			<default>true</default>
+		</key>
+		<key name="col-8-visible" type="b">
+			<default>true</default>
+		</key>
 	</schema>
 </schemalist>
