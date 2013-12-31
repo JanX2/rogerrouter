@@ -77,6 +77,23 @@ function make_pkg
 	touch $2.done
 }
 
+function download
+{
+	if [ -f $2.done ]; then
+		return
+	fi
+
+	if [ ! -f $2 ]; then
+		echo "Downloading $1/$2"
+		wget $1/$2
+		if [ $? -ne 0 ]; then
+			exit
+		fi
+	fi
+
+	touch $2.done
+}
+
 topdir=`pwd`/..
 windir=`pwd`
 
@@ -138,6 +155,8 @@ make_pkg "http://ftp.gnome.org/pub/GNOME/sources/gobject-introspection/1.38/" "g
 make_pkg "http://ftp.gnome.org/pub/GNOME/sources/libpeas/1.8/" "libpeas-1.8.1.tar.xz" "libpeas-1.8.1"
 
 # ******************** Roger Router *******************
+
+download http://downloads.ghostscript.com/public/ gs910w32.exe
 
 # Compile Roger Router
 cd $topdir

@@ -62,6 +62,14 @@ Function un.onInit
 	!insertmacro MUI_UNGETLANGUAGE
 FunctionEnd
 
+Section -Prerequisites
+	SetOutPath $INSTDIR\3rdparty
+	MessageBox MB_YESNO "Ghostscript is needed for the fax transfer. Do you want to install it?" /SD IDYES IDNO endGhostscript
+		File "gs910w32.exe"
+		ExecWait "$INSTDIR\3rdparty\gs910w32.exe"
+	endGhostscript:
+SectionEnd
+
 Section RogerRouter
 	; Install license file
 	SetOutPath "$INSTDIR"
