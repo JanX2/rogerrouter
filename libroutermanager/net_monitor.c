@@ -141,10 +141,15 @@ void net_monitor_state_changed(gboolean state)
  */
 void net_monitor_reconnect(void)
 {
+#ifdef G_OS_UNIX
 	GNetworkMonitor *monitor = g_network_monitor_get_default();
 
 	net_monitor_state_changed(FALSE);
 	net_monitor_state_changed(g_network_monitor_get_network_available(monitor));
+#else
+	net_monitor_state_changed(FALSE);
+	net_monitor_state_changed(TRUE);
+#endif
 }
 
 /**
@@ -153,7 +158,7 @@ void net_monitor_reconnect(void)
  * \param available network available flag
  * \param unused unused user data pointer
  */
-static void net_monitor_changed_cb(GNetworkMonitor *monitor, gboolean available, gpointer unused)
+void net_monitor_changed_cb(GNetworkMonitor *monitor, gboolean available, gpointer unused)
 {
 	net_monitor_state_changed(available);
 }
@@ -164,14 +169,22 @@ static void net_monitor_changed_cb(GNetworkMonitor *monitor, gboolean available,
  */
 gboolean net_monitor_init(void)
 {
+#ifdef G_OS_UNIX
+	g_debug("new_monitor_init()");
 	GNetworkMonitor *monitor = g_network_monitor_get_default();
 
+	g_debug("monitor: %p", monitor);
 	g_return_val_if_fail(monitor != NULL, FALSE);
 
 	/* Connect signal handler */
+	g_debug("connect signal");
 	g_signal_connect(monitor, "network-changed", G_CALLBACK(net_monitor_changed_cb), NULL);
 
+	g_debug("state changed");
 	net_monitor_state_changed(g_network_monitor_get_network_available(monitor));
+#else
+	net_monitor_state_changed(TRUE);
+#endif
 
 	return TRUE;
 }
@@ -181,10 +194,12 @@ gboolean net_monitor_init(void)
  */
 void net_monitor_shutdown(void)
 {
+#ifdef G_OS_UNIX
 	GNetworkMonitor *monitor = g_network_monitor_get_default();
 
 	/* Disconnect signal handler */
 	g_signal_handlers_disconnect_by_func(monitor, G_CALLBACK(net_monitor_changed_cb), NULL);
+#endif
 
 	/* Send offline state */
 	net_monitor_state_changed(FALSE);
