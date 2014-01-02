@@ -164,6 +164,10 @@ void vox_stop(gpointer vox_data)
 {
 	struct vox_playback *playback = vox_data;
 
+	if (!playback) {
+		return;
+	}
+
 	g_cancellable_cancel(playback->cancel);
 	g_thread_join(playback->thread);
 
