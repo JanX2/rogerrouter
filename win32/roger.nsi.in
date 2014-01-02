@@ -197,7 +197,7 @@ Section "Uninstall"
 	Delete /rebootok "$SMPROGRAMS\RogerRouter\RogerRouter.lnk"
 	Delete /rebootok "$SMPROGRAMS\RogerRouter\Uninstall.lnk"
 	RMDir "$SMPROGRAMS\RogerRouter"
-	RMDir /r "$INSTDIR\.."
+	RMDir /r "$INSTDIR"
 
 	; Removing printers
 	ExecWait 'rundll32 printui.dll,PrintUIEntry /dl /n "Roger Router (Fax)" /q'
