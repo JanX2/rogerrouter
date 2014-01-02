@@ -235,7 +235,7 @@ Section -ExecBatchFiles SEC15
  
 	;Display text above progress bar
 	SetDetailsPrint textonly
-	DetailPrint "Removing existing printers"
+	DetailPrint "Removing existing Roger Router Fax printer"
 	SetDetailsPrint none
 
 	; Removing printers
@@ -244,7 +244,7 @@ Section -ExecBatchFiles SEC15
 
 	;Display text above progress bar
 	SetDetailsPrint textonly
-	DetailPrint "Installing new printers"
+	DetailPrint "Installing new Roger Router Fax printer"
 	SetDetailsPrint none
 
 	; Installing printers
@@ -253,7 +253,7 @@ Section -ExecBatchFiles SEC15
 
 	;Display text above progress bar
 	SetDetailsPrint textonly
-	DetailPrint "Applying details to new printers"
+	DetailPrint "Applying details to new Roger Router Fax printer"
 	SetDetailsPrint none
 
 	; Adding Printer comments
