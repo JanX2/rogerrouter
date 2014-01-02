@@ -21,9 +21,11 @@
 #include <string.h>
 #include <stdlib.h>
 
+#ifndef G_OS_WIN32
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
+#endif
 
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/call.h>
@@ -99,6 +101,12 @@ gboolean callmonitor_io_cb(GIOChannel *source, GIOCondition condition, gpointer 
 	GError *error = NULL;
 	gsize len;
 	gchar *msg;
+
+	if (condition & (G_IO_HUP | G_IO_ERR | G_IO_NVAL)) {
+		/* A big problem occured and we've lost the connection */
+		//callmonitor_reconnect(data);
+		return FALSE;
+	}
 
 	switch (condition) {
 	case G_IO_IN:
