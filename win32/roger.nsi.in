@@ -200,6 +200,9 @@ Section "Uninstall"
 	RMDir /r "$INSTDIR"
 
 	; Removing printers
+	SetDetailsPrint textonly
+	DetailPrint "Removing Roger Router Fax printer"
+	SetDetailsPrint none
 	ExecWait 'rundll32 printui.dll,PrintUIEntry /dl /n "Roger Router (Fax)" /q'
 SectionEnd
 
