@@ -24,7 +24,7 @@ AC_CANONICAL_HOST
 
 GLIB_GSETTINGS
 
-ROGER_VERSION_MAJOR=roger_major
+ROGER_VERSION_MAJOR=roger_major()
 AC_SUBST(ROGER_VERSION_MAJOR)
 ROGER_VERSION_MINOR=roger_minor()
 AC_SUBST(ROGER_VERSION_MINOR)
@@ -52,7 +52,7 @@ case "$host" in
 		macos=no
 		OS_CFLAGS="-D_WIN32_WINNT=0x0501 -DROUTERMANAGER_PLUGINS='\"lib/routermanager/plugins/\"' -DAPP_PLUGINS='\"lib/roger/plugins/\"' -DAPP_DATA='\"share/roger/\"' -DAPP_LOCALE='\"share/locale\"' -DJOURNAL_TOP_OLD_ICONS"
 		OS_LIBS="-mwindows -mms-bitfields -Wl,-subsystem,windows -lws2_32"
-		AC_CHECK_TOOL(WINDRES, windre, windres)
+		AC_CHECK_TOOL(WINDRES, windres)
 	;;
 	*darwin*)
 		WIN32=no
