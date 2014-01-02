@@ -1,5 +1,11 @@
 dnl Process this file with autoconf to produce configure.
-AC_INIT([Roger Router],[1.8.2],[http://www.tabos.org/roger])
+
+m4_define([roger_major], [1])
+m4_define([roger_minor], [8])
+m4_define([roger_micro], [2])
+
+m4_define([roger_version],[roger_major.roger_minor.roger_micro])
+AC_INIT([Roger Router],[roger_version],[http://www.tabos.org/roger])
 AC_PREFIX_DEFAULT(/usr)
 AM_INIT_AUTOMAKE([1.11 no-dist-gzip dist-xz])
 AC_CONFIG_HEADERS(config.h)
@@ -17,6 +23,13 @@ LT_INIT(win32-dll)
 AC_CANONICAL_HOST
 
 GLIB_GSETTINGS
+
+ROGER_VERSION_MAJOR=roger_major
+AC_SUBST(ROGER_VERSION_MAJOR)
+ROGER_VERSION_MINOR=roger_minor()
+AC_SUBST(ROGER_VERSION_MINOR)
+ROGER_VERSION_MICRO=roger_micro()
+AC_SUBST(ROGER_VERSION_MICRO)
 
 AC_CHECK_LIB(m, pow)
 AC_CHECK_LIB(gthread-2.0, g_thread_init)
@@ -583,6 +596,7 @@ AC_CONFIG_FILES([
     libroutermanager/plugins/gstreamer1/Makefile
     libroutermanager/plugins/secret/Makefile
     roger/Makefile
+    roger/roger_winres.rc
     roger/data/Makefile
     roger-cli/Makefile
     roger/plugins/Makefile
