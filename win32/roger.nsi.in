@@ -26,6 +26,8 @@ RequestExecutionLevel admin
 ; Set default installation directory
 InstallDir "$PROGRAMFILES\${PACKAGE_NAME}"
 
+BrandingText "The Tabos Team"
+
 ; Pages
 ; Welcome page
 !insertmacro MUI_PAGE_WELCOME
@@ -39,7 +41,7 @@ InstallDir "$PROGRAMFILES\${PACKAGE_NAME}"
 !insertmacro MUI_PAGE_INSTFILES
 ; Finish page
 !define MUI_FINISHPAGE_NOAUTOCLOSE
-!define MUI_FINISHPAGE_RUN	"$INSTDIR\bin\roger.exe"
+!define MUI_FINISHPAGE_RUN	"$INSTDIR\roger.exe"
 !define MUI_FINISHPAGE_RUN_NOTCHECKED
 !define MUI_FINISHPAGE_LINK	"Tabos.org homepage"
 !define MUI_FINISHPAGE_LINK_LOCATION	"http://www.tabos.org"
@@ -77,7 +79,7 @@ Section RogerRouter
 	File "printer/*"
 
 	; Install program and libraries
-	SetOutPath "$INSTDIR\bin"
+	SetOutPath "$INSTDIR"
 
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/roger.exe"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/roger_cli.exe"
@@ -174,19 +176,19 @@ Section RogerRouter
 	ReadEnvStr $0 COMSPEC
 
 	SetOutPath "$INSTDIR"
-	nsExec::ExecToLog '$0 /C .\bin\pango-querymodules.exe > etc\pango\pango.modules'
+	nsExec::ExecToLog '$0 /C .\pango-querymodules.exe > etc\pango\pango.modules'
 
-	WriteUninstaller "$INSTDIR\bin\uninstall.exe"
+	WriteUninstaller "$INSTDIR\uninstall.exe"
 SectionEnd
 
 Section "Start Menu Shortcuts"
 	CreateDirectory "$SMPROGRAMS\RogerRouter"
-	CreateShortCut "$SMPROGRAMS\RogerRouter\Uninstall.lnk" "$INSTDIR\bin\uninstall.exe"
-	CreateShortCut "$SMPROGRAMS\RogerRouter\RogerRouter.lnk" "$INSTDIR\bin\roger.exe"
+	CreateShortCut "$SMPROGRAMS\RogerRouter\Uninstall.lnk" "$INSTDIR\uninstall.exe"
+	CreateShortCut "$SMPROGRAMS\RogerRouter\RogerRouter.lnk" "$INSTDIR\roger.exe"
 SectionEnd
 
 Section "Desktop Icons"
-	CreateShortCut "$DESKTOP\RogerRouter.lnk" "$INSTDIR\bin\roger.exe"
+	CreateShortCut "$DESKTOP\RogerRouter.lnk" "$INSTDIR\roger.exe"
 SectionEnd
 
 Section "Uninstall"
@@ -196,6 +198,9 @@ Section "Uninstall"
 	Delete /rebootok "$SMPROGRAMS\RogerRouter\Uninstall.lnk"
 	RMDir "$SMPROGRAMS\RogerRouter"
 	RMDir /r "$INSTDIR\.."
+
+	; Removing printers
+	ExecWait 'rundll32 printui.dll,PrintUIEntry /dl /n "Roger Router (Fax)" /q'
 SectionEnd
 
 ;Add printer ports to registry
@@ -253,5 +258,4 @@ Section -ExecBatchFiles SEC15
 
 	; Adding Printer comments
 	ExecWait 'rundll32 printui.dll,PrintUIEntry /Xs /q /n "Roger Router (Fax)" comment "Fax-Printer of Roger Router"  location "Router"'
-	sleep 1
 SectionEnd
