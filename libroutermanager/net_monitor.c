@@ -170,17 +170,13 @@ void net_monitor_changed_cb(GNetworkMonitor *monitor, gboolean available, gpoint
 gboolean net_monitor_init(void)
 {
 #ifdef G_OS_UNIX
-	g_debug("new_monitor_init()");
 	GNetworkMonitor *monitor = g_network_monitor_get_default();
 
-	g_debug("monitor: %p", monitor);
 	g_return_val_if_fail(monitor != NULL, FALSE);
 
 	/* Connect signal handler */
-	g_debug("connect signal");
 	g_signal_connect(monitor, "network-changed", G_CALLBACK(net_monitor_changed_cb), NULL);
 
-	g_debug("state changed");
 	net_monitor_state_changed(g_network_monitor_get_network_available(monitor));
 #else
 	net_monitor_state_changed(TRUE);
