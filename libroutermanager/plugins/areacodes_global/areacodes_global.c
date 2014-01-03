@@ -91,7 +91,7 @@ static gchar *areacodes_get_city(RouterManagerGlobalAreaCodesPlugin *areacodes_p
 	}
 
 	full_number = call_full_number(number, TRUE);
-	g_debug("full_number: '%s'", full_number);
+	//g_debug("full_number: '%s'", full_number);
 
 	/* Find area code */
 	areacode = areacodes_get_area_code(areacodes_plugin, full_number);
@@ -101,7 +101,7 @@ static gchar *areacodes_get_city(RouterManagerGlobalAreaCodesPlugin *areacodes_p
 		return g_strdup("");
 	}
 
-	g_debug("country: '%s'", areacode->country);
+	//g_debug("country: '%s'", areacode->country);
 
 	local_number = g_strdup_printf("0%s", full_number + 2 + areacode->skip);
 	g_free(full_number);
@@ -113,7 +113,7 @@ static gchar *areacodes_get_city(RouterManagerGlobalAreaCodesPlugin *areacodes_p
 		memset(sub_string, 0, sizeof(sub_string));
 		strncpy(sub_string, local_number, 3);
 
-		g_debug("Checking 3-match: %s", sub_string);
+		//g_debug("Checking 3-match: %s", sub_string);
 
 		ret = g_hash_table_lookup(areacode->table, sub_string);
 	}
@@ -123,7 +123,7 @@ static gchar *areacodes_get_city(RouterManagerGlobalAreaCodesPlugin *areacodes_p
 		memset(sub_string, 0, sizeof(sub_string));
 		strncpy(sub_string, local_number, 4);
 
-		g_debug("Checking 4-match: %s", sub_string);
+		//g_debug("Checking 4-match: %s", sub_string);
 
 		ret = g_hash_table_lookup(areacode->table, sub_string);
 	}
@@ -133,7 +133,7 @@ static gchar *areacodes_get_city(RouterManagerGlobalAreaCodesPlugin *areacodes_p
 		memset(sub_string, 0, sizeof(sub_string));
 		strncpy(sub_string, local_number, 5);
 
-		g_debug("Checking 5-match: %s", sub_string);
+		//g_debug("Checking 5-match: %s", sub_string);
 
 		ret = g_hash_table_lookup(areacode->table, sub_string);
 	}
@@ -141,11 +141,11 @@ static gchar *areacodes_get_city(RouterManagerGlobalAreaCodesPlugin *areacodes_p
 	g_free(local_number);
 
 	if (!ret) {
-		g_debug("Not found");
+		//g_debug("Not found");
 		return g_strdup("");
 	}
 
-	g_debug("Ret: %s", ret);
+	//g_debug("Ret: %s", ret);
 	return g_convert_utf8(ret);
 }
 
