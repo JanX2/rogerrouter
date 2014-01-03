@@ -36,6 +36,8 @@ static GtkWidget *remote_label;
 static GtkWidget *page_current_label;
 static GtkWidget *status_current_label;
 
+static gint ui_status = 0;
+
 static void capi_connection_established_cb(AppObject *object, struct capi_connection *connection, gpointer user_data)
 {
 	struct phone_state *state = user_data;
@@ -55,15 +57,17 @@ static void capi_connection_terminated_cb(AppObject *object, struct capi_connect
 	phone_remove_timer(state);
 }
 
-void fax_connection_status_cb(AppObject *object, gint status, struct capi_connection *connection, gpointer user_data)
+gboolean fax_update_ui(gpointer user_data)
 {
-	struct fax_status *fax_status;
+	struct capi_connection *connection = user_data;
+	gint status = ui_status;
 	gchar buffer[256];
+	struct fax_status *fax_status;
 
 	fax_status = connection->priv;
 	if (!fax_status) {
 		g_warning("No status available");
-		return;
+		return FALSE;
 	}
 
 	if (!status && !fax_status->done) {
@@ -115,7 +119,7 @@ void fax_connection_status_cb(AppObject *object, gint status, struct capi_connec
 
 		percent = percentage * 100;
 		if (old_percent == percent) {
-			return;
+			return FALSE;
 		}
 		old_percent = percent;
 
@@ -125,6 +129,15 @@ void fax_connection_status_cb(AppObject *object, gint status, struct capi_connec
 		//g_debug("Transfer at %s", text);
 		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progress_bar), text);
 	}
+
+	return FALSE;
+}
+
+void fax_connection_status_cb(AppObject *object, gint status, struct capi_connection *connection, gpointer user_data)
+{
+
+	ui_status = status;
+	g_idle_add(fax_update_ui, connection);
 }
 
 gboolean fax_window_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpointer data)
