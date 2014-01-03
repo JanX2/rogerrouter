@@ -278,7 +278,7 @@ gboolean app_show_fax_window_idle(gpointer data)
 gchar *convert_fax_to_tiff(gchar *file_name)
 {
 	GError *error = NULL;
-	gchar *args[12];
+	gchar *args[14];
 	gchar *output;
 	gchar *tiff;
 	struct profile *profile = profile_get_active();
@@ -299,23 +299,34 @@ gchar *convert_fax_to_tiff(gchar *file_name)
 	args[3] = "-dSAFER";
 	args[4] = "-dBATCH";
 
-	if (g_settings_get_int(profile->settings, "fax-controller") < 3) {
+	//if (g_settings_get_int(profile->settings, "fax-controller") < 3) {
 		args[5] = "-sDEVICE=tiffg4";
-	} else {
-		args[5] = "-sDEVICE=tiffg32d";
-	}
+	//} else {
+	//	args[5] = "-sDEVICE=tiffg32d";
+	//}
 
-	args[6] = "-sPAPERSIZE=a4";
-	args[7] = "-dFIXEDMEDIA";
-	if (g_settings_get_int(profile->settings, "fax-resolution")) {
-		args[8] = "-r204x196";
-	} else {
-		args[8] = "-r204x98";
+	args[6] = "-dPDFFitPage";
+	switch (g_settings_get_int(profile->settings, "fax-resolution")) {
+	case 2:
+		/* Super - fine */
+		args[7] = "-r204x392";
+		break;
+	case 1:
+		/* Fine */
+		args[7] = "-r204x196";
+		break;
+	default:
+		/* Standard */
+		args[7] = "-r204x98";
+		break;
 	}
 	output = g_strdup_printf("-sOutputFile=%s", tiff);
-	args[9] = output;
-	args[10] = file_name;
-	args[11] = NULL;
+	args[8] = output;
+	args[9] = "stocht.ps";
+	args[10] = "-c=\"<< /HalftoneMode 1 >> setuserparams\"";
+	args[11] = "-f";
+	args[12] = file_name;
+	args[13] = NULL;
 
 	if (!g_spawn_sync(NULL, args, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL, NULL, &error)) {
 		g_warning("Error occurred: %s", error ? error->message : "");

@@ -8,6 +8,12 @@ TODO
 * Better icons in journal/print
 * Secret check
 
+* GNetworkMonitor currently only works on Linux! Add implementation for Windows (patch added to glib bugtracker) and OS X in Roger and if it works ok, move it to glib!!
+* Fax information are no longer read completly
+* Audio plugin selection should update preferences immediately
+
+* G_OS_LINUX??
+
 **** WIN32 ****
 * Application icon in different sizes
 * Fax printer / in nsis package
