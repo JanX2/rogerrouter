@@ -348,6 +348,164 @@ static void fritzbox_extract_dect_05_50(struct profile *profile, const gchar *da
 	} while (count < 7);
 }
 
+gboolean fritzbox_get_fax_information_05_50(struct profile *profile)
+{
+	SoupMessage *msg;
+	const gchar *data;
+	gsize read;
+	gchar *url;
+
+	url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
+	msg = soup_form_request_new(SOUP_METHOD_POST, url,
+	                            "getpage", "../html/de/menus/menu2.html",
+	                            "var:lang", profile->router_info->lang,
+	                            "var:pagename", "fon1fxi",
+	                            "var:menu", "fon",
+	                            "sid", profile->router_info->session_id,
+	                            NULL);
+	g_free(url);
+
+	soup_session_send_message(soup_session_sync, msg);
+	if (msg->status_code != 200) {
+		g_debug("Received status code: %d", msg->status_code);
+		g_object_unref(msg);
+		return FALSE;
+	}
+	data = msg->response_body->data;
+	read = msg->response_body->length;
+
+	log_save_data("fritzbox-05_50-get-settings-fax.html", data, read);
+
+	g_assert(data != NULL);
+
+	gchar *header = xml_extract_input_value(data, "telcfg:settings/FaxKennung");
+	if (header) {
+		g_debug("Fax-Header: '%s'", call_scramble_number(header));
+		g_settings_set_string(profile->settings, "fax-header", header);
+		g_free(header);
+	}
+
+	gchar *fax_msn = xml_extract_input_value(data, "telcfg:settings/FaxMSN0");
+	if (fax_msn) {
+		if (!strcmp(fax_msn, "POTS")) {
+			gchar **numbers = g_settings_get_strv(profile->settings, "numbers");
+			g_free(fax_msn);
+			fax_msn = g_strdup(numbers[0]);
+		}
+		gchar *formated_number;
+
+		formated_number = call_format_number(profile, fax_msn, NUMBER_FORMAT_INTERNATIONAL_PLUS);
+
+		g_debug("Fax number: '%s'", call_scramble_number(fax_msn));
+
+		g_settings_set_string(profile->settings, "fax-number", fax_msn);
+
+		g_settings_set_string(profile->settings, "fax-ident", formated_number);
+		g_free(formated_number);
+	}
+	g_free(fax_msn);
+
+	g_settings_set_string(profile->settings, "fax-volume", "");
+	gchar *active = xml_extract_input_value(data, "telcfg:settings/FaxMailActive");
+	if (active) {
+		gint fax_mail_active = atoi(&active[0]);
+
+		if ((fax_mail_active == 2 || fax_mail_active == 3)) {
+			gchar *volume = xml_extract_input_value(data, "ctlusb:settings/storage-part0");
+
+			if (volume) {
+				g_debug("Fax-Storage-Volume: '%s'", volume);
+				g_settings_set_string(profile->settings, "fax-volume", volume);
+			} else {
+				g_settings_set_string(profile->settings, "fax-volume", "");
+			}
+
+			g_free(active);
+		}
+	}
+
+	g_object_unref(msg);
+
+	return TRUE;
+}
+
+gboolean fritzbox_get_fax_information_06_00(struct profile *profile)
+{
+	SoupMessage *msg;
+	const gchar *data;
+	gsize read;
+	gchar *url;
+
+	url = g_strdup_printf("http://%s/fon_devices/fax_send.lua", router_get_host(profile));
+	msg = soup_form_request_new(SOUP_METHOD_GET, url,
+	                            "sid", profile->router_info->session_id,
+	                            NULL);
+	g_free(url);
+
+	soup_session_send_message(soup_session_sync, msg);
+	if (msg->status_code != 200) {
+		g_debug("Received status code: %d", msg->status_code);
+		g_object_unref(msg);
+		return FALSE;
+	}
+	data = msg->response_body->data;
+	read = msg->response_body->length;
+
+	log_save_data("fritzbox-06_00-get-settings-fax.html", data, read);
+
+	g_assert(data != NULL);
+
+	gchar *header = xml_extract_list_value(data, "telcfg:settings/FaxKennung");
+	if (header) {
+		g_debug("Fax-Header: '%s'", call_scramble_number(header));
+		g_settings_set_string(profile->settings, "fax-header", header);
+		g_free(header);
+	}
+
+	gchar *fax_msn = xml_extract_list_value(data, "telcfg:settings/FaxMSN0");
+	if (fax_msn) {
+		if (!strcmp(fax_msn, "POTS")) {
+			gchar **numbers = g_settings_get_strv(profile->settings, "numbers");
+			g_free(fax_msn);
+			fax_msn = g_strdup(numbers[0]);
+		}
+		gchar *formated_number;
+
+		formated_number = call_format_number(profile, fax_msn, NUMBER_FORMAT_INTERNATIONAL_PLUS);
+
+		g_debug("Fax number: '%s'", call_scramble_number(fax_msn));
+
+		g_settings_set_string(profile->settings, "fax-number", fax_msn);
+
+		g_settings_set_string(profile->settings, "fax-ident", formated_number);
+		g_free(formated_number);
+	}
+	g_free(fax_msn);
+
+	g_settings_set_string(profile->settings, "fax-volume", "");
+	gchar *active = xml_extract_list_value(data, "telcfg:settings/FaxMailActive");
+	if (active) {
+		gint fax_mail_active = atoi(&active[0]);
+
+		if ((fax_mail_active == 2 || fax_mail_active == 3)) {
+			gchar *volume = xml_extract_list_value(data, "ctlusb:settings/storage-part0");
+
+			if (volume) {
+				g_debug("Fax-Storage-Volume: '%s'", volume);
+				g_settings_set_string(profile->settings, "fax-volume", volume);
+			} else {
+				g_settings_set_string(profile->settings, "fax-volume", "");
+			}
+
+			g_free(active);
+		}
+	}
+
+	g_object_unref(msg);
+
+	return TRUE;
+}
+
 /**
  * \brief Get settings via lua-scripts (phone numbers/names, default controller, tam setting, fax volume/settings, prefixes, default dial port)
  * \param profile profile information structure
@@ -499,75 +657,11 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 	g_object_unref(msg);
 
 	/* Extract Fax information */
-	url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
-	msg = soup_form_request_new(SOUP_METHOD_POST, url,
-	                            "getpage", "../html/de/menus/menu2.html",
-	                            "var:lang", profile->router_info->lang,
-	                            "var:pagename", "fon1fxi",
-	                            "var:menu", "fon",
-	                            "sid", profile->router_info->session_id,
-	                            NULL);
-	g_free(url);
-
-	soup_session_send_message(soup_session_sync, msg);
-	if (msg->status_code != 200) {
-		g_debug("Received status code: %d", msg->status_code);
-		g_object_unref(msg);
-		return FALSE;
+	if (FIRMWARE_IS(6, 0)) {
+		fritzbox_get_fax_information_06_00(profile);
+	} else {
+		fritzbox_get_fax_information_05_50(profile);
 	}
-	data = msg->response_body->data;
-	read = msg->response_body->length;
-
-	log_save_data("fritzbox-05_50-get-settings-fax.html", data, read);
-	g_assert(data != NULL);
-
-	gchar *header = xml_extract_input_value(data, "telcfg:settings/FaxKennung");
-	if (header) {
-		g_debug("Fax-Header: '%s'", call_scramble_number(header));
-		g_settings_set_string(profile->settings, "fax-header", header);
-		g_free(header);
-	}
-
-	gchar *fax_msn = xml_extract_input_value(data, "telcfg:settings/FaxMSN0");
-	if (fax_msn) {
-		if (!strcmp(fax_msn, "POTS")) {
-			gchar **numbers = g_settings_get_strv(profile->settings, "numbers");
-			g_free(fax_msn);
-			fax_msn = g_strdup(numbers[0]);
-		}
-		gchar *formated_number;
-
-		formated_number = call_format_number(profile, fax_msn, NUMBER_FORMAT_INTERNATIONAL_PLUS);
-
-		g_debug("Fax number: '%s'", call_scramble_number(fax_msn));
-
-		g_settings_set_string(profile->settings, "fax-number", fax_msn);
-
-		g_settings_set_string(profile->settings, "fax-ident", formated_number);
-		g_free(formated_number);
-	}
-	g_free(fax_msn);
-
-	g_settings_set_string(profile->settings, "fax-volume", "");
-	gchar *active = xml_extract_input_value(data, "telcfg:settings/FaxMailActive");
-	if (active) {
-		gint fax_mail_active = atoi(&active[0]);
-
-		if ((fax_mail_active == 2 || fax_mail_active == 3)) {
-			gchar *volume = xml_extract_input_value(data, "ctlusb:settings/storage-part0");
-
-			if (volume) {
-				g_debug("Fax-Storage-Volume: '%s'", volume);
-				g_settings_set_string(profile->settings, "fax-volume", volume);
-			} else {
-				g_settings_set_string(profile->settings, "fax-volume", "");
-			}
-
-			g_free(active);
-		}
-	}
-
-	g_object_unref(msg);
 
 	/* Extract default dial port */
 	url = g_strdup_printf("http://%s/fon_num/dial_foncalls.lua", router_get_host(profile));
