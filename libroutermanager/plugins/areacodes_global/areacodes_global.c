@@ -203,8 +203,8 @@ static void impl_activate(PeasActivatable *plugin)
 	g_free(data);
 	g_free(areacodes);
 
-	/* Connect to "contact-process" signal */
-	areacodes_plugin->priv->signal_id = g_signal_connect(G_OBJECT(app_object), "contact-process", G_CALLBACK(global_areacodes_contact_process_cb), areacodes_plugin);
+	/* Connect to "contact-process" signal using "after" as this should come last */
+	areacodes_plugin->priv->signal_id = g_signal_connect_after(G_OBJECT(app_object), "contact-process", G_CALLBACK(global_areacodes_contact_process_cb), areacodes_plugin);
 }
 
 /**
