@@ -75,6 +75,7 @@ static void real_time_frame_handler(t30_state_t *state, void *user_data, gint di
 			status->bytes_total += len;
 		}
 
+		status->progress_status = 1;
 		session->handlers->status(connection, 1);
 	}
 }
@@ -131,6 +132,7 @@ static gint phase_handler_b(t30_state_t *state, void *user_data, gint result)
 	status->encoding = stats.encoding;
 	status->bitrate = stats.bit_rate;
 	//status->page_total = stats.pages_in_file;
+	status->progress_status = 0;
 
 	status->page_current = status->sending ? stats.pages_tx + 1 : stats.pages_rx + 1;
 
@@ -177,6 +179,7 @@ static gint phase_handler_d(t30_state_t *state, void *user_data, gint result)
 	//status->page_total = stats.pages_in_file;
 	status->bytes_received = 0;
 	status->bytes_sent = 0;
+	status->progress_status = 0;
 
 	session->handlers->status(connection, 0);
 
@@ -225,6 +228,7 @@ static void phase_handler_e(t30_state_t *state, void *user_data, gint result)
 	} else {
 		ident = t30_get_tx_ident(t30);
 	}
+	status->progress_status = 0;
 
 	snprintf(status->remote_ident, sizeof(status->remote_ident), "%s", ident ? ident : "");
 	g_debug("Remote station id: %s", status->remote_ident);
@@ -524,6 +528,7 @@ struct capi_connection *fax_send(const gchar *tiff_file, gint modem, gint ecm, g
 
 	connection = capi_call(controller, src_no, trg_no, (guint) call_anonymous, SESSION_FAX, cip);
 	if (connection) {
+		status->connection = connection;
 		connection->priv = status;
 		spandsp_init(status->tiff_file, TRUE, status->modem, status->ecm, status->ident, status->header, connection);
 	}

@@ -25,6 +25,7 @@
 #include <libroutermanager/libfaxophone/fax.h>
 #include <libroutermanager/libfaxophone/phone.h>
 #include <libroutermanager/routermanager.h>
+#include <libroutermanager/gstring.h>
 
 #include <roger/phone.h>
 #include <roger/main.h>
@@ -36,7 +37,7 @@ static GtkWidget *remote_label;
 static GtkWidget *page_current_label;
 static GtkWidget *status_current_label;
 
-static gint ui_status = 0;
+static struct fax_status ui_fax_status;
 
 static void capi_connection_established_cb(AppObject *object, struct capi_connection *connection, gpointer user_data)
 {
@@ -59,22 +60,41 @@ static void capi_connection_terminated_cb(AppObject *object, struct capi_connect
 
 gboolean fax_update_ui(gpointer user_data)
 {
-	struct capi_connection *connection = user_data;
-	gint status = ui_status;
+	struct fax_status *fax_status =  &ui_fax_status;
 	gchar buffer[256];
-	struct fax_status *fax_status;
+	float percentage = 0.0f;
+	gchar text[6];
+	int percent = 0;
+	static int old_percent = 0;
+	gchar *tmp;
 
-	fax_status = connection->priv;
-	if (!fax_status) {
-		g_warning("No status available");
-		return FALSE;
-	}
+	/* update percentage */
+	if (fax_status->progress_status) {
+		percentage = (float) fax_status->bytes_sent / (float) fax_status->bytes_total;
 
-	if (!status && !fax_status->done) {
+		if (percentage > 1.0f) {
+			percentage = 1.0f;
+		}
+
+		percent = percentage * 100;
+		if (old_percent != percent) {
+			old_percent = percent;
+
+			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress_bar), percentage);
+
+			snprintf(text, sizeof(text), "%d%%", percent);
+			//g_debug("Transfer at %s", text);
+			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progress_bar), text);
+		}
+	} else if (!fax_status->done) {
+		/* Update status information */
 		switch (fax_status->phase) {
 		case PHASE_B:
-			g_debug("Ident: %s", fax_status->remote_ident);
-			gtk_label_set_text(GTK_LABEL(remote_label), (fax_status->remote_ident));
+			g_debug("PHASE_B");
+			tmp = g_convert_utf8(fax_status->remote_ident);
+			g_debug("Ident: %s", tmp);
+			gtk_label_set_text(GTK_LABEL(remote_label), tmp);
+			g_free(tmp);
 
 			snprintf(buffer, sizeof(buffer), "%d/%d", fax_status->page_current, fax_status->page_total);
 			g_debug("Pages: %s", buffer);
@@ -98,36 +118,13 @@ gboolean fax_update_ui(gpointer user_data)
 				g_debug("Fax transfer failed");
 			}
 			create_fax_report(fax_status, g_settings_get_string(profile_get_active()->settings, "fax-report-dir"));
-			phone_hangup(connection);
+			phone_hangup(fax_status->connection);
 			fax_status->done = TRUE;
 			break;
 		default:
 			g_debug("Unhandled phase (%d)", fax_status->phase);
 			break;
 		}
-	} else if (status == 1) {
-		float percentage = 0.0f;
-		gchar text[6];
-		int percent = 0;
-		static int old_percent = 0;
-
-		percentage = (float) fax_status->bytes_sent / (float) fax_status->bytes_total;
-
-		if (percentage > 1.0f) {
-			percentage = 1.0f;
-		}
-
-		percent = percentage * 100;
-		if (old_percent == percent) {
-			return FALSE;
-		}
-		old_percent = percent;
-
-		gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress_bar), percentage);
-
-		snprintf(text, sizeof(text), "%d%%", percent);
-		//g_debug("Transfer at %s", text);
-		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progress_bar), text);
 	}
 
 	return FALSE;
@@ -135,9 +132,16 @@ gboolean fax_update_ui(gpointer user_data)
 
 void fax_connection_status_cb(AppObject *object, gint status, struct capi_connection *connection, gpointer user_data)
 {
+	struct fax_status *fax_status;
 
-	ui_status = status;
-	g_idle_add(fax_update_ui, connection);
+	fax_status = connection->priv;
+	if (!fax_status) {
+		return;
+	}
+
+	memcpy(&ui_fax_status, fax_status, sizeof(struct fax_status));
+
+	g_idle_add(fax_update_ui, NULL);
 }
 
 gboolean fax_window_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpointer data)

@@ -63,6 +63,9 @@ struct fax_status {
 	gint bytes_total;
 	gboolean manual_hookup;
 	gboolean done;
+	gboolean progress_status;
+
+	struct capi_connection *connection;
 
 	fax_state_t *fax_state;
 };
