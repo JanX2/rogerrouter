@@ -141,7 +141,7 @@ void fax_connection_status_cb(AppObject *object, gint status, struct capi_connec
 
 	memcpy(&ui_fax_status, fax_status, sizeof(struct fax_status));
 
-	g_idle_add(fax_update_ui, NULL);
+	g_idle_add_full(G_PRIORITY_HIGH_IDLE, fax_update_ui, NULL, NULL);
 }
 
 gboolean fax_window_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpointer data)
