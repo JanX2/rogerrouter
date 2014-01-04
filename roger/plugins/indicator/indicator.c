@@ -3,7 +3,7 @@
  * Copyright (c) 2013 Dieter Schärf
  *
  * Roger Router
- * Copyright (c) 2012-2013 Jan-Michael Brummer
+ * Copyright (c) 2012-2014 Jan-Michael Brummer
  *
  * This file is part of Roger Router.
  *
