@@ -12,7 +12,7 @@ XPStyle on
 Name "${PACKAGE_NAME} ${PACKAGE_VERSION}"
 OutFile "${PACKAGE_NAME}-${PACKAGE_VERSION}.exe"
 
-SetCompressor /SOLID zlib
+SetCompressor /SOLID lzma
 
 ; Run the installer with admin privileges
 RequestExecutionLevel admin
