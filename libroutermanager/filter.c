@@ -58,7 +58,7 @@ static inline gboolean filter_compare(struct filter_rule *rule, const gchar *com
 		}
 		break;
 	case FILTER_STARTS_WITH:
-		if (strncmp(compare, rule->entry, strlen(rule->entry))) {
+		if (!strncmp(compare, rule->entry, strlen(rule->entry))) {
 			valid = TRUE;
 		}
 		break;
