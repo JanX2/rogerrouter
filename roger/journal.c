@@ -863,7 +863,21 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	gtk_box_pack_start(GTK_BOX(buttonbox), add_button, FALSE, FALSE, 0);
 	gtk_button_box_set_child_non_homogeneous(GTK_BUTTON_BOX(buttonbox), add_button, TRUE);
 
+#ifdef GEAR_MENU
+	{
+		GtkWidget *menu_button;
+		//GtkMenuModel *menu;
+
+		menu_button = gtk_menu_button_new();
+		gtk_container_add(GTK_CONTAINER(menu_button), gtk_image_new_from_icon_name("emblem-system-symbolic", GTK_ICON_SIZE_MENU));
+		gtk_button_set_relief(GTK_BUTTON(menu_button), GTK_RELIEF_NONE);
+		
+		//gtk_menu_button_set_menu_model(GTK_MENU_BUTTON(menu_button), menu);
+		gtk_grid_attach(GTK_GRID(grid), menu_button, 0, 0, 1, 1);
+	}
+#else
 	gtk_grid_attach(GTK_GRID(grid), buttonbox, 0, 0, 1, 1);
+#endif
 
 	label = gtk_label_new(_("Search:"));
 	gtk_grid_attach(GTK_GRID(grid), label, 1, 0, 1, 1);
@@ -950,7 +964,9 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 		gtk_tree_view_column_set_sort_column_id(column, index);
 
 		tmp = g_strdup_printf("col-%d-width", index);
-		gtk_tree_view_column_set_fixed_width(column, g_settings_get_uint(app_settings, tmp));
+		if (g_settings_get_uint(app_settings, tmp)) {
+			gtk_tree_view_column_set_fixed_width(column, g_settings_get_uint(app_settings, tmp));
+		}
 		g_free(tmp);
 
 		tmp = g_strdup_printf("col-%d-visible", index);

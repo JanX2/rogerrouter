@@ -58,9 +58,9 @@ typedef struct capi_profile {
 
 #define CAPI_CONNECTIONS 5
 /* Packet size */
-#define CAPI_PACKETS 160
+#define CAPI_PACKETS 2048
 /* Packer buffer count */
-#define CAPI_BUFFERCNT 6
+#define CAPI_BUFFERCNT 7
 /* max. B-Channels */
 #define CAPI_BCHANNELS 2
 
