@@ -281,8 +281,14 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **street, gcha
 	gchar *full_number = NULL;
 	gchar *country_code = NULL;
 	gboolean found = FALSE;
-	const gint international_prefix_len = strlen(router_get_international_prefix(profile_get_active()));
+	gint international_prefix_len;
+	struct profile *profile = profile_get_active();
 
+	if (!profile) {
+		return FALSE;
+	}
+
+	international_prefix_len = strlen(router_get_international_prefix(profile));
 #ifdef RL_DEBUG
 	g_debug("Input number '%s'", number);
 #endif

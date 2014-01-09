@@ -209,6 +209,10 @@ gchar *router_get_ftp_user(struct profile *profile)
  */
 gchar *router_get_international_prefix(struct profile *profile)
 {
+	if (!profile || !profile->settings) {
+		return NULL;
+	}
+
 	return g_settings_get_string(profile->settings, "international-call-prefix");
 }
 

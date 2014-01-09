@@ -105,6 +105,7 @@ gboolean callmonitor_io_cb(GIOChannel *source, GIOCondition condition, gpointer 
 	if (condition & (G_IO_HUP | G_IO_ERR | G_IO_NVAL)) {
 		/* A big problem occured and we've lost the connection */
 		//callmonitor_reconnect(data);
+		g_warning("Error in callmonitor io cb, abort");
 		return FALSE;
 	}
 
@@ -254,7 +255,7 @@ gboolean callmonitor_connect(gpointer user_data)
 #endif
 	g_io_channel_set_encoding(callmonitor_plugin->priv->channel, NULL, NULL);
 
-	callmonitor_plugin->priv->id = g_io_add_watch(callmonitor_plugin->priv->channel, G_IO_IN | G_IO_PRI | G_IO_ERR | G_IO_HUP, callmonitor_io_cb, NULL);
+	callmonitor_plugin->priv->id = g_io_add_watch(callmonitor_plugin->priv->channel, G_IO_IN | G_IO_PRI | G_IO_ERR | G_IO_HUP | G_IO_NVAL, callmonitor_io_cb, NULL);
 
 	g_resolver_free_addresses(list);
 
