@@ -851,16 +851,10 @@ gboolean journal_button_press_event_cb(GtkWidget *treeview, GdkEventButton *even
 GtkWidget *journal_window(GApplication *app, GFile *file)
 {
 	GtkWidget *window, *grid, *scrolled, *view;
-	GtkWidget *buttonbox;
 	GtkWidget *status;
 	GtkWidget *entry;
 	GtkWidget *button;
-	GtkWidget *print_button;
-	GtkWidget *clear_button;
-	GtkWidget *delete_button;
-	GtkWidget *add_button;
 	GtkWidget *label;
-	GtkWidget *image;
 	GtkListStore *list_store;
 	GtkTreeModel *tree_model;
 	GtkCellRenderer *renderer;
@@ -896,6 +890,53 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
 	gtk_container_add(GTK_CONTAINER(window), grid);
+
+#if GTK_CHECK_VERSION(3,8,0)
+	GtkWidget *menu_button;
+	GtkWidget *menu, *menuitem;
+
+	menu_button = gtk_menu_button_new();
+	gtk_container_add(GTK_CONTAINER(menu_button), gtk_image_new_from_icon_name("view-list-symbolic", GTK_ICON_SIZE_MENU));
+	gtk_button_set_relief(GTK_BUTTON(menu_button), GTK_RELIEF_NONE);
+
+	menu = gtk_menu_new();
+
+	/* Refresh journal */
+	menuitem = gtk_menu_item_new_with_label(_("Refresh journal"));
+	g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_refresh_clicked_cb), window);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+	/* Print journal */
+	menuitem = gtk_menu_item_new_with_label(_("Print journal"));
+	g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_print_clicked_cb), view);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+	/* Clear journal */
+	menuitem = gtk_menu_item_new_with_label(_("Clear journal"));
+	g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_clear_clicked_cb), window);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+	/* Delete entry */
+	menuitem = gtk_menu_item_new_with_label(_("Delete entry"));
+	g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_delete_clicked_cb), view);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+	/* Add entry */
+	menuitem = gtk_menu_item_new_with_label(_("Add entry"));
+	g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_add_clicked_cb), view);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+	gtk_widget_show_all(menu);
+
+	gtk_menu_button_set_popup(GTK_MENU_BUTTON(menu_button), menu);
+	gtk_grid_attach(GTK_GRID(grid), menu_button, 0, 0, 1, 1);
+#else
+	GtkWidget *image;
+	GtkWidget *print_button;
+	GtkWidget *clear_button;
+	GtkWidget *buttonbox;
+	GtkWidget *delete_button;
+	GtkWidget *add_button;
 
 	buttonbox = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
 
@@ -935,6 +976,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	image = get_icon(APP_ICON_REMOVE, GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtk_button_set_image(GTK_BUTTON(delete_button), image);
 	gtk_widget_set_tooltip_text(GTK_WIDGET(delete_button), _("Delete selected entry"));
+	g_signal_connect(delete_button, "clicked", G_CALLBACK(journal_button_delete_clicked_cb), view);
 	gtk_box_pack_start(GTK_BOX(buttonbox), delete_button, FALSE, FALSE, 0);
 	gtk_button_box_set_child_non_homogeneous(GTK_BUTTON_BOX(buttonbox), delete_button, TRUE);
 
@@ -944,52 +986,10 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	image = get_icon(APP_ICON_ADD, GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtk_button_set_image(GTK_BUTTON(add_button), image);
 	gtk_widget_set_tooltip_text(GTK_WIDGET(add_button), _("Add selected entry to address book"));
+	g_signal_connect(add_button, "clicked", G_CALLBACK(journal_button_add_clicked_cb), view);
 	gtk_box_pack_start(GTK_BOX(buttonbox), add_button, FALSE, FALSE, 0);
 	gtk_button_box_set_child_non_homogeneous(GTK_BUTTON_BOX(buttonbox), add_button, TRUE);
 
-#define GEAR_MENU
-#ifdef GEAR_MENU
-	{
-		GtkWidget *menu_button;
-		GtkWidget *menu, *menuitem;
-
-		menu_button = gtk_menu_button_new();
-		gtk_container_add(GTK_CONTAINER(menu_button), gtk_image_new_from_icon_name("view-list-symbolic", GTK_ICON_SIZE_MENU));
-		gtk_button_set_relief(GTK_BUTTON(menu_button), GTK_RELIEF_NONE);
-
-		menu = gtk_menu_new();
-
-		/* Refresh journal */
-		menuitem = gtk_menu_item_new_with_label(_("Refresh journal"));
-		g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_refresh_clicked_cb), window);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-		/* Print journal */
-		menuitem = gtk_menu_item_new_with_label(_("Print journal"));
-		g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_print_clicked_cb), view);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-		/* Clear journal */
-		menuitem = gtk_menu_item_new_with_label(_("Clear journal"));
-		g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_clear_clicked_cb), window);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-		/* Delete entry */
-		menuitem = gtk_menu_item_new_with_label(_("Delete entry"));
-		g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_delete_clicked_cb), view);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-		/* Add entry */
-		menuitem = gtk_menu_item_new_with_label(_("Add entry"));
-		g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_add_clicked_cb), view);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-		gtk_widget_show_all(menu);
-
-		gtk_menu_button_set_popup(GTK_MENU_BUTTON(menu_button), menu);
-		gtk_grid_attach(GTK_GRID(grid), menu_button, 0, 0, 1, 1);
-	}
-#else
 	gtk_grid_attach(GTK_GRID(grid), buttonbox, 0, 0, 1, 1);
 #endif
 
@@ -1124,8 +1124,6 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 	gtk_window_set_title(GTK_WINDOW(window), "Journal");
 
-	g_signal_connect(G_OBJECT(delete_button), "clicked", G_CALLBACK(journal_button_delete_clicked_cb), view);
-	g_signal_connect(G_OBJECT(add_button), "clicked", G_CALLBACK(journal_button_add_clicked_cb), view);
 	g_signal_connect(G_OBJECT(view), "row-activated", G_CALLBACK(journal_row_activated_cb), list_store);
 #ifdef GEAR_MENU
 	g_signal_connect(G_OBJECT(view), "button-press-event", G_CALLBACK(journal_button_press_event_cb), list_store);
