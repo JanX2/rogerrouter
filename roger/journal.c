@@ -1125,9 +1125,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	gtk_window_set_title(GTK_WINDOW(window), "Journal");
 
 	g_signal_connect(G_OBJECT(view), "row-activated", G_CALLBACK(journal_row_activated_cb), list_store);
-#ifdef GEAR_MENU
 	g_signal_connect(G_OBJECT(view), "button-press-event", G_CALLBACK(journal_button_press_event_cb), list_store);
-#endif
 
 	g_signal_connect(G_OBJECT(journal_win), "delete-event", G_CALLBACK(journal_delete_event_cb), NULL);
 	g_signal_connect(G_OBJECT(app_object), "journal-loaded", G_CALLBACK(journal_loaded_cb), NULL);
