@@ -472,13 +472,17 @@ void fax_transfer(struct capi_connection *connection, _cmsg capi_message)
 
 	/* RX/TX spandsp */
 	spandsp_rx(status->fax_state, DATA_B3_IND_DATA(&capi_message), len);
-	spandsp_tx(status->fax_state, alaw_buffer_tx, len);
+	//isdn_lock();
+	DATA_B3_RESP(&cmsg, session->appl_id, session->message_number++, connection->ncci, DATA_B3_IND_DATAHANDLE(&capi_message));
+	//isdn_unlock();
+
 
 	/* Send data to remote */
-	isdn_lock();
-	DATA_B3_RESP(&cmsg, session->appl_id, session->message_number++, connection->ncci, DATA_B3_IND_DATAHANDLE(&capi_message));
+	len = CAPI_PACKETS;
+	spandsp_tx(status->fax_state, alaw_buffer_tx, len);
+	//isdn_lock();
 	DATA_B3_REQ(&cmsg, session->appl_id, 0, connection->ncci, (void *) alaw_buffer_tx, len, session->message_number++, 0);
-	isdn_unlock();
+	//isdn_unlock();
 }
 
 /**
