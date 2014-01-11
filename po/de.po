@@ -45,7 +45,7 @@ msgstr "Spenden"
 #: ../roger/application.c:186 ../roger/plugins/statusicon/gtk.c:235
 #: ../roger/plugins/indicator/indicator.c:258
 msgid "About"
-msgstr "Über"
+msgstr "Info"
 
 #. Quit
 #: ../roger/application.c:187 ../roger/plugins/statusicon/gtk.c:244
