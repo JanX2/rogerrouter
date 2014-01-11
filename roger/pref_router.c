@@ -80,7 +80,7 @@ static void verify_ftp_button_clicked_cb(GtkButton *button, gpointer user_data)
 	if (!client) {
 		dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("Could not connect to FTP. Missing USB storage?"));
 	} else {
-		if (ftp_login(client, "ftpuser", router_get_ftp_password(profile)) == TRUE) {
+		if (ftp_login(client, router_get_ftp_user(profile), router_get_ftp_password(profile)) == TRUE) {
 			dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE, _("FTP password is valid"));
 		} else {
 			dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("FTP password is invalid"));
