@@ -916,6 +916,9 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_clear_clicked_cb), window);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
+	menuitem = gtk_separator_menu_item_new();
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
 	/* Delete entry */
 	menuitem = gtk_menu_item_new_with_label(_("Delete entry"));
 	g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_delete_clicked_cb), view);
