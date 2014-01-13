@@ -1,7 +1,7 @@
 .\" Copyright (c) 2009-2013, Jan-Michael Brummer <jan.brummer@tabos.org>
 .TH roger_cli 1 "" "Roger Router CLI Version @PACKAGE_VERSION@"
 .SH NAME
-Roger Router CLI \- Router Manager
+roger \- Roger Router CLI \- Router Manager
 .SH SYNOPSIS
 .TP 5
 \fBroger cli
