@@ -498,7 +498,7 @@ void fax_transfer(struct capi_connection *connection, _cmsg capi_message)
  * \param call_anonymous Send fax anonymous
  * \return error code
  */
-struct capi_connection *fax_send(const gchar *tiff_file, gint modem, gint ecm, gint controller, const gchar *src_no, const gchar *trg_no, const gchar *lsi, const gchar *local_header_info, gint call_anonymous)
+struct capi_connection *fax_send(gchar *tiff_file, gint modem, gint ecm, gint controller, const gchar *src_no, const gchar *trg_no, const gchar *lsi, const gchar *local_header_info, gint call_anonymous)
 {
 	struct fax_status *status;
 	struct capi_connection *connection;
@@ -530,7 +530,7 @@ struct capi_connection *fax_send(const gchar *tiff_file, gint modem, gint ecm, g
 		g_debug("Using 'ISDN Fax' id");
 	}
 
-	connection = capi_call(controller, src_no, trg_no, (guint) call_anonymous, SESSION_FAX, cip);
+	connection = capi_call(controller, src_no, trg_no, (guint) call_anonymous, SESSION_FAX, cip, 1, 1, 0, NULL, NULL, NULL);
 	if (connection) {
 		status->connection = connection;
 		connection->priv = status;

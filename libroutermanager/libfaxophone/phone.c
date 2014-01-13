@@ -121,7 +121,7 @@ void phone_transfer(struct capi_connection *connection, _cmsg capi_message)
  */
 struct capi_connection *phone_call(guchar controller, const char *source, const char *target, gboolean anonymous)
 {
-	return capi_call(controller, source, target, anonymous, SESSION_PHONE, PHONE_CIP);
+	return capi_call(controller, source, target, anonymous, SESSION_PHONE, PHONE_CIP, 1, 1, 0, NULL, NULL, NULL);
 }
 
 /**

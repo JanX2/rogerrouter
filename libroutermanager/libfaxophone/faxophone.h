@@ -96,7 +96,8 @@ enum state {
 enum session_type {
 	SESSION_NONE,
 	SESSION_FAX,
-	SESSION_PHONE
+	SESSION_PHONE,
+	SESSION_SFF
 };
 
 #define RECORDING_BUFSIZE 32768
@@ -142,6 +143,8 @@ struct capi_connection {
 	double line_level_in_state;
 	double line_level_out_state;
 	struct recorder recorder;
+	int buffers;
+	gboolean use_buffers;
 
 	gpointer audio;
 
@@ -177,7 +180,7 @@ struct session {
 };
 
 struct capi_connection *capi_get_free_connection(void);
-struct capi_connection *capi_call(unsigned, const char *, const char *, unsigned, unsigned, unsigned);
+struct capi_connection *capi_call(unsigned, const char *, const char *, unsigned, unsigned, unsigned, _cword, _cword, _cword, _cstruct, _cstruct, _cstruct);
 void capi_send_dtmf_code(struct capi_connection *connection, unsigned char nCode);
 void capi_hangup(struct capi_connection *connection);
 int capi_pickup(struct capi_connection *connection, int type);

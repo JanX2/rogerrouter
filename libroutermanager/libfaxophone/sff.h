@@ -17,17 +17,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_FAX_PHONE_H
-#define LIBROUTERMANAGER_FAX_PHONE_H
+/**
+ * \file sff.h
+ * \brief SFF structures
+ */
 
-G_BEGIN_DECLS
+#ifndef SFF_H
+#define SFF_H
 
-extern struct capi_connection *active_capi_connection;
+#define SFF_CIP 0x04
 
-void faxophone_setup(void);
-struct capi_connection *fax_dial(gchar *tiff, const gchar *number);
-struct capi_connection *phone_dial(const gchar *trg_no, gboolean suppress);
-
-G_END_DECLS
+struct capi_connection *sff_send(gchar *tiff_file, gint modem, gint ecm, gint controller, const gchar *src_no, const gchar *trg_no, const gchar *lsi, const gchar *local_header_info, gint call_anonymous);
+void sff_init_data(struct capi_connection *connection);
+void sff_clean(struct capi_connection *connection);
 
 #endif

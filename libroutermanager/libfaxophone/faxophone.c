@@ -28,6 +28,7 @@
 
 #include <libfaxophone/faxophone.h>
 #include <libfaxophone/fax.h>
+#include <libfaxophone/sff.h>
 #include <libfaxophone/phone.h>
 #include <libfaxophone/isdn-convert.h>
 #include <config.h>
@@ -68,7 +69,7 @@ static void capi_error(long error)
  */
 static int capi_connection_set_type(struct capi_connection *connection, int type)
 {
-	int nResult = 0;
+	int result = 0;
 
 	/* Set type */
 	connection->type = type;
@@ -87,13 +88,19 @@ static int capi_connection_set_type(struct capi_connection *connection, int type
 		connection->clean = fax_clean;
 		connection->early_b3 = 0;
 		break;
+	case SESSION_SFF:
+		connection->init_data = sff_init_data;
+		connection->data = NULL;
+		connection->clean = sff_clean;
+		connection->early_b3 = 0;
+		break;
 	default:
 		g_debug("Unhandled session type!!");
-		nResult = -1;
+		result = -1;
 		break;
 	}
 
-	return nResult;
+	return result;
 }
 
 /**
@@ -226,7 +233,19 @@ void capi_hangup(struct capi_connection *connection)
  * \param cip caller id
  * \return error code
  */
-struct capi_connection *capi_call(unsigned controller, const char *src_no, const char *trg_no, unsigned call_anonymous, unsigned type, unsigned cip)
+struct capi_connection *capi_call(
+	unsigned controller,
+	const char *src_no,
+	const char *trg_no,
+	unsigned call_anonymous,
+	unsigned type,
+	unsigned cip,
+	_cword b1_protocol,
+	_cword b2_protocol,
+	_cword b3_protocol,
+	_cstruct b1_configuration,
+	_cstruct b2_configuration,
+	_cstruct b3_configuration)
 {
 	_cmsg cmsg;
 	unsigned char called_party_number[70];
@@ -298,30 +317,49 @@ struct capi_connection *capi_call(unsigned controller, const char *src_no, const
 	/* Request connect */
 	isdn_lock();
 	err = CONNECT_REQ(
-	          &cmsg,
-	          session->appl_id,
-	          0,
-	          controller,
-	          cip,
-	          (unsigned char *) called_party_number,
-	          (unsigned char *) calling_party_number,
-	          (unsigned char *) "",
-	          (unsigned char *) "",
-	          1,
-	          1,
-	          0,
-	          (unsigned char *) "",
-	          (unsigned char *) "",
-	          (unsigned char *) "",
-	          (unsigned char *) "",
-	          (unsigned char *) bc,
-	          (unsigned char *) llc,
-	          (unsigned char *) hlc,
-	          (unsigned char *) "",
-	          (unsigned char *) "",
-	          (unsigned char *) "",
-	          (unsigned char *) "",
-	          (_cstruct) "");
+			/* CAPI Message */
+			&cmsg,
+			/* Application ID */
+			session->appl_id,
+			/* Message Number */
+			0,
+			/* Controller */
+			controller,
+			/* CIP (Voice/Fax/...) */
+			cip,
+			/* Called party number */
+			(unsigned char *) called_party_number,
+			/* Calling party number */
+			(unsigned char *) calling_party_number,
+			/* NULL */
+			NULL,
+			/* NULL */
+			NULL,
+			/* B1 Protocol */
+			b1_protocol,
+			/* B2 Protocol */
+			b2_protocol,
+			/* B3 Protocol */
+			b3_protocol,
+			/* B1 Configuration */
+			b1_configuration,
+			/* B2 Confguration */
+			b2_configuration,
+			/* B3 Configuration */
+			b3_configuration,
+			/* Rest... */
+			NULL,
+			/* BC */
+			(unsigned char *) bc,
+			/* LLC */
+			(unsigned char *) llc,
+			/* HLC */
+			(unsigned char *) hlc,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL);
 	isdn_unlock();
 
 	/* Error? */
@@ -562,20 +600,20 @@ static int capi_close(void)
  * \param plci plci
  * \param nIgnore ignore connection
  */
-static void capi_resp_connection(int plci, unsigned int nIgnore)
+static void capi_resp_connection(int plci, unsigned int ignore)
 {
-	_cmsg sCmsg1;
+	_cmsg cmsg1;
 
-	if (!nIgnore) {
+	if (!ignore) {
 		/* *ring* */
 		g_debug("REQ: ALERT - plci %d", plci);
 		isdn_lock();
-		ALERT_REQ(&sCmsg1, session->appl_id, 0, plci, NULL, NULL, NULL, NULL, NULL);
+		ALERT_REQ(&cmsg1, session->appl_id, 0, plci, NULL, NULL, NULL, NULL, NULL);
 		isdn_unlock();
 	} else {
 		/* ignore */
 		isdn_lock();
-		CONNECT_RESP(&sCmsg1, session->appl_id, session->message_number++, plci, nIgnore, 1, 1, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+		CONNECT_RESP(&cmsg1, session->appl_id, session->message_number++, plci, ignore, 1, 1, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 		isdn_unlock();
 	}
 }
@@ -865,6 +903,7 @@ static int capi_indication(_cmsg capi_message)
 			g_debug("Wrong NCCI, got 0x%x", ncci);
 			break;
 		}
+
 		connection->ncci = ncci;
 
 		isdn_lock();
@@ -884,7 +923,7 @@ static int capi_indication(_cmsg capi_message)
 
 	/* CAPI_DATA_B3 - data - receive/send */
 	case CAPI_DATA_B3:
-		//g_debug(("IND: CAPI_DATA_B3");
+		g_debug("IND: CAPI_DATA_B3");
 		ncci = CONNECT_B3_IND_NCCI(&capi_message);
 		plci = ncci & 0x0000ffff;
 
@@ -893,8 +932,12 @@ static int capi_indication(_cmsg capi_message)
 			break;
 		}
 
-		//g_debug("IND: CAPI_DATA_B3 - nConnection: %d, plci: %d, ncci: %d", connection->id, connection->plci, connection->ncci);
-		connection->data(connection, capi_message);
+		g_debug("IND: CAPI_DATA_B3 - nConnection: %d, plci: %ld, ncci: %ld", connection->id, connection->plci, connection->ncci);
+		if (connection->data) {
+			connection->data(connection, capi_message);
+		} else {
+			DATA_B3_RESP(&cmsg1, session->appl_id, session->message_number++, connection->ncci, DATA_B3_IND_DATAHANDLE(&capi_message));
+		}
 		break;
 
 	/* CAPI_FACILITY - Facility (DTMF) */
@@ -1058,13 +1101,13 @@ static int capi_indication(_cmsg capi_message)
 			break;
 		case 0x006C: {
 			/* Caller party number */
-			//int nTmp;
+			//int tmp;
 
 			//g_debug("CAPI_INFO - CALLER PARTY NUMBER (%.%s)", info_element[0], &info_element[1]);
 			g_debug("CAPI_INFO - CALLER PARTY NUMBER");
 
-			/*for (nTmp = 0; nTmp < sizeof(info_element); nTmp++) {
-				g_debug("InfoElement (%d): %x (%c)", nTmp, info_element[nTmp], info_element[nTmp]);
+			/*for (tmp = 0; tmp < sizeof(info_element); tmp++) {
+				g_debug("InfoElement (%d): %x (%c)", tmp, info_element[tmp], info_element[tmp]);
 			}*/
 			break;
 		}
@@ -1178,7 +1221,7 @@ static int capi_indication(_cmsg capi_message)
 	/* CAPI_DISCONNECT_B3 - Disconnect data */
 	case CAPI_DISCONNECT_B3:
 		g_debug("IND: DISCONNECT_B3");
-		ncci = CONNECT_B3_IND_NCCI(&capi_message);
+		ncci = DISCONNECT_B3_IND_NCCI(&capi_message);
 		plci = ncci & 0x0000ffff;
 
 		isdn_lock();
@@ -1265,6 +1308,7 @@ static void capi_confirmation(_cmsg capi_message)
 	struct capi_connection *connection = NULL;
 	unsigned int info;
 	unsigned int plci;
+	unsigned int ncci;
 #ifdef FAXOPHONE_DEBUG
 	int controller;
 #endif
@@ -1301,6 +1345,16 @@ static void capi_confirmation(_cmsg capi_message)
 		break;
 	case CAPI_DATA_B3:
 		/* Sent data acknowledge, NOP */
+		g_debug("CNF: DATA_B3");
+		info = DATA_B3_CONF_INFO(&capi_message);
+		ncci = DATA_B3_CONF_NCCI(&capi_message);
+
+		g_debug("CNF: CAPI_ALERT: info %d, ncci %d", info, ncci);
+
+		connection = capi_find_ncci(ncci);
+		if (connection && connection->use_buffers && connection->use_buffers < 7) {
+			connection->buffers++;
+		}
 		break;
 	case CAPI_INFO:
 		/* Info, NOP */

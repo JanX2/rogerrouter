@@ -14,6 +14,7 @@ libroutermanager_include_HEADERS = $(wildcard *.h)
 libroutermanager_faxophone_includedir = $(includedir)/libroutermanager/libfaxophone
 libroutermanager_faxophone_include_HEADERS = \
 	libfaxophone/fax.h \
+	libfaxophone/sff.h \
 	libfaxophone/faxophone.h \
 	libfaxophone/isdn-convert.h \
 	libfaxophone/phone.h \
@@ -86,7 +87,9 @@ libroutermanager_la_SOURCES = \
 	libfaxophone/phone.c \
 	libfaxophone/phone.h \
 	libfaxophone/ringtone.c \
-	libfaxophone/ringtone.h
+	libfaxophone/ringtone.h \
+	libfaxophone/sff.c \
+	libfaxophone/sff.h
 
 libroutermanager_la_LDFLAGS = -rdynamic
 libroutermanager_la_LIBADD = -lc $(EXTRA_LIBS) $(PEAS_LIBS) $(SOUP_LIBS) $(CAPI_LIBS) $(SPANDSP_LIBS) $(DBUS_LIBS) $(OS_LIBS)

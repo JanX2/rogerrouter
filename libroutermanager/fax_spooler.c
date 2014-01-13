@@ -123,7 +123,7 @@ static void fax_spooler_new_file_cb(GFileMonitor *monitor, GFile *file, GFile *o
 	g_assert(file_name != NULL);
 
 	/* Sort out invalid files */
-	if (has_file_extension(file_name, ".tmp") || has_file_extension(file_name, ".tif")) {
+	if (has_file_extension(file_name, ".tmp") || has_file_extension(file_name, ".tif") || has_file_extension(file_name, ".sff")) {
 		/* Skip it */
 		goto end;
 	}

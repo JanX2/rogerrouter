@@ -316,11 +316,11 @@ gchar *convert_fax_to_tiff(gchar *file_name)
 	args[3] = "-dSAFER";
 	args[4] = "-dBATCH";
 
-	//if (g_settings_get_int(profile->settings, "fax-controller") < 3) {
+	if (g_settings_get_boolean(profile->settings, "fax-sff")) {
+		args[5] = "-sDEVICE=cfax";
+	} else {
 		args[5] = "-sDEVICE=tiffg4";
-	//} else {
-	//	args[5] = "-sDEVICE=tiffg32d";
-	//}
+	}
 
 	args[6] = "-dPDFFitPage";
 	args[7] = "-dMaxStripSize=0";

@@ -181,6 +181,9 @@
 		<key name="fax-volume" type="s">
 			<default>''</default>
 		</key>
+		<key name="fax-sff" type="b">
+			<default>false</default>
+		</key>
 
 		<!-- Softphone -->
 		<key name="phone-number" type="s">

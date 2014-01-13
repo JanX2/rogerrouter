@@ -35,6 +35,7 @@
 
 #include <libfaxophone/faxophone.h>
 #include <libfaxophone/fax.h>
+#include <libfaxophone/sff.h>
 #include <libfaxophone/phone.h>
 #include <libfaxophone/ringtone.h>
 
@@ -49,7 +50,7 @@ struct capi_connection *active_capi_connection = NULL;
  * \param trg_no target number
  * \return capi connection pointer
  */
-struct capi_connection *fax_dial(const gchar *tiff, const gchar *trg_no)
+struct capi_connection *fax_dial(gchar *tiff, const gchar *trg_no)
 {
 	struct profile *profile = profile_get_active();
 	gint modem = g_settings_get_int(profile->settings, "fax-bitrate");
@@ -58,8 +59,15 @@ struct capi_connection *fax_dial(const gchar *tiff, const gchar *trg_no)
 	const gchar *src_no = g_settings_get_string(profile->settings, "fax-number");
 	const gchar *header = g_settings_get_string(profile->settings, "fax-header");
 	const gchar *ident = g_settings_get_string(profile->settings, "fax-ident");
+	struct capi_connection *connection = NULL;
 
-	return fax_send(tiff, modem, ecm, controller, src_no, trg_no, ident, header, 0);
+	if (g_settings_get_boolean(profile->settings, "fax-sff")) {
+		connection = sff_send(tiff, modem, ecm, controller, src_no, trg_no, ident, header, 0);
+	} else {
+		connection = fax_send(tiff, modem, ecm, controller, src_no, trg_no, ident, header, 0);
+	}
+
+	return connection;
 }
 
 /**
