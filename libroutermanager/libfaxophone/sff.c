@@ -71,13 +71,16 @@ gpointer sff_transfer_thread(gpointer data)
 	_cmsg cmsg;
 
 	while (connection->state == STATE_CONNECTED && sff_pos < sff_len) {
-		if (connection->use_buffers && connection->buffers) {
+		if (connection->use_buffers && connection->buffers < CAPI_BUFFERCNT) {
+			g_debug("Buffers: %d", connection->buffers);
 			sff_transfer(connection, cmsg);
-			connection->buffers--;
+			connection->buffers++;
 		}
+
+		g_usleep(50);
 	}
 
-	while (connection->state == STATE_CONNECTED && connection->buffers != 7) {
+	while (connection->state == STATE_CONNECTED && connection->buffers) {
 		g_usleep(50);
 	}
 
@@ -117,14 +120,13 @@ struct capi_connection *sff_send(gchar *sff_file, gint modem, gint ecm, gint con
 
 	b1 = NULL;
 	b2 = NULL;
-	b3 = g_malloc(1 + 2 + 2 + 1 + strlen(ident) + strlen(header));
+	b3 = g_malloc(1 + 2 + 2 + 1 + strlen(ident) + 1 + strlen(header));
 
 	/* Length */
-	b3[i++] = 1 + 2 + 2 + 1 + strlen(ident) + strlen(header);
+	b3[i++] = 1 + 2 + 2 + 1 + strlen(ident) + 1 + strlen(header);
 	/* Resolution: Standard */
 	b3[i++] = 0;
-	/* Accept color faxes */
-	b3[i++] = 4;
+	b3[i++] = 0;
 	/* Format: SFF */
 	b3[i++] = 0;
 	b3[i++] = 0;
@@ -147,7 +149,7 @@ struct capi_connection *sff_send(gchar *sff_file, gint modem, gint ecm, gint con
 
 	connection = capi_call(controller, src_no, trg_no, (guint) call_anonymous, SESSION_SFF, SFF_CIP, 4, 4, 5, b1, b2, b3);
 	if (connection) {
-		connection->buffers = 7;
+		connection->buffers = 0;
 		connection->use_buffers = TRUE;
 	}
 

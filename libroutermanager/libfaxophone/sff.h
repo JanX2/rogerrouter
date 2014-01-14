@@ -25,7 +25,8 @@
 #ifndef SFF_H
 #define SFF_H
 
-#define SFF_CIP 0x04
+//#define SFF_CIP 0x04
+#define SFF_CIP 0x11
 
 struct capi_connection *sff_send(gchar *tiff_file, gint modem, gint ecm, gint controller, const gchar *src_no, const gchar *trg_no, const gchar *lsi, const gchar *local_header_info, gint call_anonymous);
 void sff_init_data(struct capi_connection *connection);

@@ -153,7 +153,7 @@ static int capi_set_free(struct capi_connection *connection)
  */
 void capi_hangup(struct capi_connection *connection)
 {
-	_cmsg sCmsg1;
+	_cmsg cmsg1;
 	guint info = 0;
 
 	if (connection == NULL) {
@@ -169,7 +169,7 @@ void capi_hangup(struct capi_connection *connection)
 		g_debug("REQ: DISCONNECT - plci %ld", connection->plci);
 
 		isdn_lock();
-		info = DISCONNECT_REQ(&sCmsg1, session->appl_id, 1, connection->plci, NULL, NULL, NULL, NULL);
+		info = DISCONNECT_REQ(&cmsg1, session->appl_id, 1, connection->plci, NULL, NULL, NULL, NULL);
 		isdn_unlock();
 
 		if (info != 0) {
@@ -184,13 +184,13 @@ void capi_hangup(struct capi_connection *connection)
 		g_debug("REQ: DISCONNECT_B3 - ncci %ld", connection->ncci);
 
 		isdn_lock();
-		info = DISCONNECT_B3_REQ(&sCmsg1, session->appl_id, 1, connection->ncci, NULL);
+		info = DISCONNECT_B3_REQ(&cmsg1, session->appl_id, 1, connection->ncci, NULL);
 		isdn_unlock();
 
 		if (info != 0) {
 			/* retry with disconnect on whole connection */
 			isdn_lock();
-			info = DISCONNECT_REQ(&sCmsg1, session->appl_id, 1, connection->plci, NULL, NULL, NULL, NULL);
+			info = DISCONNECT_REQ(&cmsg1, session->appl_id, 1, connection->plci, NULL, NULL, NULL, NULL);
 			isdn_unlock();
 			if (info != 0) {
 				connection->state = STATE_IDLE;
@@ -207,7 +207,7 @@ void capi_hangup(struct capi_connection *connection)
 		g_debug("RESP: CONNECT - plci %ld", connection->plci);
 
 		isdn_lock();
-		info = CONNECT_RESP(&sCmsg1, session->appl_id, session->message_number++, connection->plci, 3, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+		info = CONNECT_RESP(&cmsg1, session->appl_id, session->message_number++, connection->plci, 3, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 		isdn_unlock();
 		connection->state = STATE_IDLE;
 		if (info != 0) {
@@ -1352,8 +1352,8 @@ static void capi_confirmation(_cmsg capi_message)
 		g_debug("CNF: CAPI_ALERT: info %d, ncci %d", info, ncci);
 
 		connection = capi_find_ncci(ncci);
-		if (connection && connection->use_buffers && connection->use_buffers < 7) {
-			connection->buffers++;
+		if (connection && connection->use_buffers && connection->buffers) {
+			connection->buffers--;
 		}
 		break;
 	case CAPI_INFO:
