@@ -70,7 +70,7 @@ gpointer sff_transfer_thread(gpointer data)
 	struct capi_connection *connection = data;
 	_cmsg cmsg;
 
-	while (sff_pos < sff_len) {
+	while (connection->state == STATE_CONNECTED && sff_pos < sff_len) {
 		if (connection->use_buffers && connection->buffers) {
 			sff_transfer(connection, cmsg);
 			connection->buffers--;
