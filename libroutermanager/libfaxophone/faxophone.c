@@ -1168,7 +1168,7 @@ static int capi_indication(_cmsg capi_message)
 			}
 			g_debug("CAPI_INFO information indicated disconnect, so terminate connection");
 
-			//capi_hangup(connection);
+			capi_hangup(connection);
 			break;
 		case 0x804D:
 			/* Release */
