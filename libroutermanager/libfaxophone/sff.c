@@ -29,6 +29,7 @@
 #include <libroutermanager/file.h>
 
 #include <libfaxophone/faxophone.h>
+#include <libfaxophone/fax.h>
 #include <libfaxophone/sff.h>
 
 static gchar *sff_data = NULL;
@@ -43,6 +44,7 @@ static gsize sff_pos = 0;
 static inline void sff_transfer(struct capi_connection *connection, _cmsg capi_message)
 {
 	struct session *session = faxophone_get_session();
+	struct fax_status *status = connection->priv;
 	_cmsg cmsg;
 	gint transfer = CAPI_PACKETS;
 
@@ -57,6 +59,12 @@ static inline void sff_transfer(struct capi_connection *connection, _cmsg capi_m
 	isdn_unlock();
 
 	sff_pos += transfer;
+
+	status->bytes_total = sff_len;
+	status->bytes_sent = sff_pos;
+
+	status->progress_status = 1;
+	session->handlers->status(connection, 1);
 
 	if (sff_pos == sff_len) {
 		g_debug("EOF");
@@ -149,8 +157,15 @@ struct capi_connection *sff_send(gchar *sff_file, gint modem, gint ecm, gint con
 
 	connection = capi_call(controller, src_no, trg_no, (guint) call_anonymous, SESSION_SFF, SFF_CIP, 4, 4, 5, b1, b2, b3);
 	if (connection) {
+		struct fax_status *status = NULL;
+
 		connection->buffers = 0;
 		connection->use_buffers = TRUE;
+
+		status = malloc(sizeof(struct fax_status));
+		memset(status, 0, sizeof(struct fax_status));
+
+		connection->priv = status;
 	}
 
 	return connection;
