@@ -292,17 +292,15 @@ gboolean app_show_fax_window_idle(gpointer data)
 	return FALSE;
 }
 
-gchar *convert_fax_to_tiff(gchar *file_name)
+gchar *convert_to_fax(gchar *file_name)
 {
 	GError *error = NULL;
 	gchar *args[13];
 	gchar *output;
-	gchar *tiff;
+	gchar *out_file;
 	struct profile *profile = profile_get_active();
 
-	tiff = g_strdup_printf("%s.tif", file_name);
-
-	/* convert ps to tiff */
+	/* convert ps to fax */
 #ifdef G_OS_WIN32
 	args[0] = g_settings_get_string(profile->settings, "ghostscript");
 #elif __APPLE__
@@ -310,7 +308,7 @@ gchar *convert_fax_to_tiff(gchar *file_name)
 #else
 	args[0] = get_directory("gs");
 #endif
-	g_debug("convert_fax_to_tiff(): args[0]=%s", args[0]);
+	g_debug("convert_fax_to_out_file(): args[0]=%s", args[0]);
 	args[1] = "-q";
 	args[2] = "-dNOPAUSE";
 	args[3] = "-dSAFER";
@@ -318,8 +316,10 @@ gchar *convert_fax_to_tiff(gchar *file_name)
 
 	if (g_settings_get_boolean(profile->settings, "fax-sff")) {
 		args[5] = "-sDEVICE=cfax";
+		out_file = g_strdup_printf("%s.sff", file_name);
 	} else {
 		args[5] = "-sDEVICE=tiffg4";
+		out_file = g_strdup_printf("%s.tif", file_name);
 	}
 
 	args[6] = "-dPDFFitPage";
@@ -338,7 +338,7 @@ gchar *convert_fax_to_tiff(gchar *file_name)
 		args[8] = "-r204x98";
 		break;
 	}
-	output = g_strdup_printf("-sOutputFile=%s", tiff);
+	output = g_strdup_printf("-sOutputFile=%s", out_file);
 	args[9] = output;
 	args[10] = "-f";
 	args[11] = file_name;
@@ -347,28 +347,28 @@ gchar *convert_fax_to_tiff(gchar *file_name)
 	if (!g_spawn_sync(NULL, args, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL, NULL, &error)) {
 		g_warning("Error occurred: %s", error ? error->message : "");
 		g_free(args[0]);
-		g_free(tiff);
+		g_free(out_file);
 		return NULL;
 	}
 	g_free(args[0]);
 
-	if (!g_file_test(tiff, G_FILE_TEST_EXISTS)) {
-		g_free(tiff);
+	if (!g_file_test(out_file, G_FILE_TEST_EXISTS)) {
+		g_free(out_file);
 		return NULL;
 	}
 
-	return tiff;
+	return out_file;
 }
 
 void fax_process_cb(GtkWidget *widget, gchar *file_name, gpointer user_data)
 {
-	gchar *tiff;
+	gchar *out_file;
 
-	tiff = convert_fax_to_tiff(file_name);
-	if (tiff) {
-		g_idle_add(app_show_fax_window_idle, tiff);
+	out_file = convert_to_fax(file_name);
+	if (out_file) {
+		g_idle_add(app_show_fax_window_idle, out_file);
 	} else {
-		g_warning("Error converting print file to TIFF!");
+		g_warning("Error converting print file to FAX format!");
 	}
 
 	g_unlink(file_name);
