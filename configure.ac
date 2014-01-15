@@ -5,7 +5,10 @@ m4_define([roger_minor], [8])
 m4_define([roger_micro], [2])
 
 m4_define([roger_version],[roger_major.roger_minor.roger_micro])
+
 AC_INIT([Roger Router],[roger_version],[http://www.tabos.org/roger])
+m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
+
 AC_PREFIX_DEFAULT(/usr)
 AM_INIT_AUTOMAKE([1.11 no-dist-gzip dist-xz])
 AC_CONFIG_HEADERS(config.h)
