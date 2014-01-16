@@ -126,9 +126,9 @@ struct capi_connection *sff_send(gchar *sff_file, gint modem, gint ecm, gint con
 	g_debug(" ** SFF **");
 	g_debug("sff: %s, modem: %d, ecm: %s, controller: %d, src: %s, trg: %s, ident: %s, header: %s, anonymous: %d)", sff_file, modem, ecm ? "on" : "off", controller, src_no, trg_no, (ident != NULL ? ident : "(null)"), (header != NULL ? header : "(null)"), call_anonymous);
 
-	b1 = NULL;
+	b1 = g_malloc0(2 + 2 + 2 + 2);
 	b2 = NULL;
-	b3 = g_malloc(1 + 2 + 2 + 1 + strlen(ident) + 1 + strlen(header));
+	b3 = g_malloc0(1 + 2 + 2 + 1 + strlen(ident) + 1 + strlen(header));
 
 	/* Length */
 	b3[i++] = 1 + 2 + 2 + 1 + strlen(ident) + 1 + strlen(header);

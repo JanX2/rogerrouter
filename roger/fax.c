@@ -38,11 +38,14 @@ static GtkWidget *page_current_label;
 static GtkWidget *status_current_label;
 
 static struct fax_status ui_fax_status;
+static struct capi_connection *fax_connection;
 
 static void capi_connection_established_cb(AppObject *object, struct capi_connection *connection, gpointer user_data)
 {
 	struct phone_state *state = user_data;
 	g_debug("capi_connection_established()");
+
+	fax_connection = connection;
 
 	snprintf(state->phone_status_text, sizeof(state->phone_status_text), _("Connected"));
 }
@@ -50,17 +53,42 @@ static void capi_connection_established_cb(AppObject *object, struct capi_connec
 static void capi_connection_terminated_cb(AppObject *object, struct capi_connection *connection, gpointer user_data)
 {
 	struct phone_state *state = user_data;
-	g_debug("capi_connection_terminated()");
+	int reason;
+
+	if (fax_connection != connection) {
+		return;
+	}
+
+	g_debug("capi_connection_terminated(): 0x%x/0x%x", connection->reason, connection->reason_b3);
+
+	switch (connection->reason) {
+		case 0x3490:
+		case 0x349f:
+			reason = connection->reason_b3;
+			break;
+		default:
+			reason = connection->reason;
+			break;
+	}
+
+	if (reason == 0) {
+		g_debug("Fax transfer successful");
+		gtk_label_set_text(GTK_LABEL(status_current_label), _("Fax transfer successful"));
+	} else {
+		gtk_label_set_text(GTK_LABEL(status_current_label), _("Fax transfer failed"));
+		g_debug("Fax transfer failed");
+	}
 
 	snprintf(state->phone_status_text, sizeof(state->phone_status_text), _("Disconnected"));
 
 	phone_remove_connection(connection);
 	phone_remove_timer(state);
+	fax_connection = NULL;
 }
 
 gboolean fax_update_ui(gpointer user_data)
 {
-	struct fax_status *fax_status =  &ui_fax_status;
+	struct fax_status *fax_status = &ui_fax_status;
 	gchar buffer[256];
 	float percentage = 0.0f;
 	gchar text[6];
@@ -177,7 +205,7 @@ void fax_window_clear(void)
 	gtk_label_set_text(GTK_LABEL(status_current_label), "");
 }
 
-void app_show_fax_window(gchar *tiff_file)
+void app_show_fax_window(gchar *fax_file)
 {
 	GtkWidget *window;
 	GtkWidget *grid;
@@ -192,10 +220,11 @@ void app_show_fax_window(gchar *tiff_file)
 	//GtkWidget *page_current_label;
 	gint pos_y = 0;
 	struct phone_state *state;
+	struct profile *profile = profile_get_active();
 
 	state = g_malloc0(sizeof(struct phone_state));
 	state->type = PHONE_TYPE_FAX;
-	state->priv = tiff_file;
+	state->priv = fax_file;
 
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window), _("Fax"));
@@ -273,6 +302,13 @@ void app_show_fax_window(gchar *tiff_file)
 	gtk_container_add(GTK_CONTAINER(window), grid);
 	gtk_container_set_border_width(GTK_CONTAINER(window), 5);
 
+	if (g_settings_get_boolean(profile->settings, "fax-sff")) {
+		gtk_widget_set_no_show_all(pages_label, TRUE);
+		gtk_widget_set_no_show_all(page_current_label, TRUE);
+		gtk_widget_set_no_show_all(remote_station_label, TRUE);
+		gtk_widget_set_no_show_all(remote_label, TRUE);
+	}
+
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 
 	g_signal_connect(G_OBJECT(window), "delete_event", G_CALLBACK(fax_window_delete_event_cb), state);
@@ -286,9 +322,9 @@ void app_show_fax_window(gchar *tiff_file)
 
 gboolean app_show_fax_window_idle(gpointer data)
 {
-	gchar *tiff_file = data;
+	gchar *fax_file = data;
 
-	app_show_fax_window(tiff_file);
+	app_show_fax_window(fax_file);
 	return FALSE;
 }
 

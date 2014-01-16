@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-09 18:44+0100\n"
+"POT-Creation-Date: 2014-01-16 09:17+0100\n"
 "PO-Revision-Date: 2013-09-07 19:34+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: German <jan.brummer@tabos.org>\n"
@@ -190,7 +190,7 @@ msgid "Mobile"
 msgstr "Mobil"
 
 #. Fax
-#: ../roger/contacts.c:123 ../roger/contact_edit.c:218 ../roger/fax.c:201
+#: ../roger/contacts.c:123 ../roger/contact_edit.c:218 ../roger/fax.c:230
 #: ../roger/pref.c:116 ../libroutermanager/filter.c:441
 msgid "Fax"
 msgstr "Fax"
@@ -208,7 +208,7 @@ msgid "Photo"
 msgstr "Foto"
 
 #. Name
-#: ../roger/contacts.c:336 ../roger/contact_edit.c:199 ../roger/journal.c:873
+#: ../roger/contacts.c:336 ../roger/contact_edit.c:199 ../roger/journal.c:883
 #: ../roger/pref_action.c:193 ../roger/pref_action.c:495
 #: ../roger/pref_filters.c:209 ../roger/pref_filters.c:506
 #: ../roger/print.c:382
@@ -221,7 +221,8 @@ msgid "Do you want to delete the entry '%s'?"
 msgstr "Wollen Sie den Eintrag '%s' löschen?"
 
 #. Delete entry
-#: ../roger/contacts.c:415 ../roger/journal.c:409 ../roger/journal.c:974
+#: ../roger/contacts.c:415 ../roger/journal.c:415 ../roger/journal.c:957
+#: ../roger/journal.c:1041
 msgid "Delete entry"
 msgstr "Eintrag löschen"
 
@@ -260,7 +261,7 @@ msgstr "_Öffnen"
 msgid "_No image"
 msgstr "_Kein Bild"
 
-#: ../roger/contact_edit.c:225 ../roger/journal.c:875
+#: ../roger/contact_edit.c:225 ../roger/journal.c:885
 #: ../roger/pref_action.c:256 ../roger/pref_filters.c:210 ../roger/print.c:386
 #: ../roger/plugins/notification/notification.c:471
 #: ../roger/plugins/gtknotify/gtknotify.c:587
@@ -283,7 +284,7 @@ msgstr "Straße"
 msgid "ZIP"
 msgstr "PLZ"
 
-#: ../roger/contact_edit.c:268 ../roger/journal.c:876
+#: ../roger/contact_edit.c:268 ../roger/journal.c:886
 msgid "City"
 msgstr "Stadt"
 
@@ -321,182 +322,187 @@ msgstr ""
 "Hinweis: Je nach Adressbuchplugin können nicht alle Informationen "
 "gespeichert werden"
 
-#: ../roger/fax.c:47 ../roger/phone.c:171 ../roger-cli/main_cli.c:157
+#: ../roger/fax.c:50 ../roger/phone.c:171 ../roger-cli/main_cli.c:157
 #, c-format
 msgid "Connected"
 msgstr "Verbunden"
 
-#: ../roger/fax.c:55 ../roger/phone.c:202 ../roger-cli/main_cli.c:168
+#: ../roger/fax.c:76 ../roger/fax.c:143
+msgid "Fax transfer successful"
+msgstr "Faxübertragung erfolgreich"
+
+#: ../roger/fax.c:78 ../roger/fax.c:145
+msgid "Fax transfer failed"
+msgstr "Faxübertragung fehlgeschlagen"
+
+#: ../roger/fax.c:82 ../roger/phone.c:202 ../roger-cli/main_cli.c:168
 #, c-format
 msgid "Disconnected"
 msgstr "Nicht verbunden"
 
-#: ../roger/fax.c:103
+#: ../roger/fax.c:131
 msgid "Transfer starting"
 msgstr "Übertragung beginnt"
 
-#: ../roger/fax.c:110 ../roger-cli/main_cli.c:200
+#: ../roger/fax.c:138 ../roger-cli/main_cli.c:200
 msgid "Transferring page"
 msgstr "Übertrage Seite"
 
-#: ../roger/fax.c:115
-msgid "Fax transfer successful"
-msgstr "Faxübertragung erfolgreich"
-
-#: ../roger/fax.c:117
-msgid "Fax transfer failed"
-msgstr "Faxübertragung fehlgeschlagen"
-
-#: ../roger/fax.c:222
+#: ../roger/fax.c:251
 msgid "Information"
 msgstr "Information"
 
-#: ../roger/fax.c:233
+#: ../roger/fax.c:262
 msgid "Status:"
 msgstr "Status:"
 
-#: ../roger/fax.c:240
+#: ../roger/fax.c:269
 msgid "Current page:"
 msgstr "Aktuelle Seite:"
 
-#: ../roger/fax.c:247
+#: ../roger/fax.c:276
 msgid "Remote station:"
 msgstr "Empfängerstation:"
 
-#: ../roger/fax.c:254
+#: ../roger/fax.c:283
 msgid "Progress:"
 msgstr "Fortschritt:"
 
-#: ../roger/fax.c:266
+#: ../roger/fax.c:295
 msgid "Connection: Idle | Duration: 00:00:00"
 msgstr "Verbindung: Untätig | Dauer: 00:00:00"
 
-#: ../roger/journal.c:247
+#: ../roger/journal.c:248
+#, c-format
+msgid "%s (%d call(s), %d:%2.2dh)"
+msgstr "%s (%d Anruf(e), %d:%2.2dh)"
+
+#: ../roger/journal.c:248 ../roger/journal.c:252
+msgid "<No profile>"
+msgstr "<Kein Profil>"
+
+#: ../roger/journal.c:252
 #, c-format
 msgid "Profile: %s | Total: %d call(s) | Duration: %d:%2.2d"
 msgstr "Profil: %s | Anzahl: %d Anruf(e) | Dauer: %d:%2.2d"
 
-#: ../roger/journal.c:247
-msgid "<No profile>"
-msgstr "<Kein Profil>"
-
-#: ../roger/journal.c:367
+#: ../roger/journal.c:373
 msgid "Do you want to delete the router journal?"
 msgstr "Wollen Sie das Journal vom Router löschen?"
 
-#: ../roger/journal.c:368
+#: ../roger/journal.c:374
 msgid "Delete journal"
 msgstr "Journal löschen"
 
-#: ../roger/journal.c:408
+#: ../roger/journal.c:414
 msgid "Do you want to delete the selected entry?"
 msgstr "Wollen Sie den ausgewählten Eintrag löschen?"
 
-#: ../roger/journal.c:428
+#: ../roger/journal.c:434
 msgid "Where shall i add the number?"
 msgstr "Wo soll die Nummer hinzugefügt werden?"
 
 #. Add entry
-#: ../roger/journal.c:435 ../roger/journal.c:978
+#: ../roger/journal.c:441 ../roger/journal.c:962 ../roger/journal.c:1046
 msgid "Add entry"
 msgstr "Eintrag hinzufügen"
 
-#: ../roger/journal.c:441
+#: ../roger/journal.c:447
 msgid "Existing entry"
 msgstr "Existierender Eintrag"
 
-#: ../roger/journal.c:442
+#: ../roger/journal.c:448
 msgid "New entry"
 msgstr "Neuer Eintrag"
 
 #. Create dialog
-#: ../roger/journal.c:598 ../roger/pref_filters.c:60
+#: ../roger/journal.c:604 ../roger/pref_filters.c:60
 msgid "Voice box"
 msgstr "Anrufbeantworter"
 
-#: ../roger/journal.c:598 ../roger/pref.c:106 ../roger/pref_filters.c:298
+#: ../roger/journal.c:604 ../roger/pref.c:106 ../roger/pref_filters.c:298
 msgid "_Close"
 msgstr "_Schließen"
 
-#: ../roger/journal.c:600
+#: ../roger/journal.c:606
 msgid "Playing voice box entry..."
 msgstr "Spiele Anrufbeantworter-Eintrag"
 
 #. Copy phone number
-#: ../roger/journal.c:810
+#: ../roger/journal.c:816
 msgid "Copy number"
 msgstr "Kopiere Nummer"
 
 #. Call phone number
-#: ../roger/journal.c:815
+#: ../roger/journal.c:821
 msgid "Call number"
 msgstr "Nummer wählen"
 
 #. Add contact
-#: ../roger/journal.c:820
+#: ../roger/journal.c:826
 msgid "Add contact"
 msgstr "Kontakt hinzufügen"
 
-#: ../roger/journal.c:871 ../roger/print.c:374
+#: ../roger/journal.c:881 ../roger/print.c:374
 msgid "Type"
 msgstr "Typ"
 
-#: ../roger/journal.c:872 ../roger/print.c:378
+#: ../roger/journal.c:882 ../roger/print.c:378
 msgid "Date/Time"
 msgstr "Datum/Zeit"
 
-#: ../roger/journal.c:874
+#: ../roger/journal.c:884
 msgid "Company"
 msgstr "Firma"
 
-#: ../roger/journal.c:877
+#: ../roger/journal.c:887
 msgid "Extension"
 msgstr "Nebenstelle"
 
-#: ../roger/journal.c:878
+#: ../roger/journal.c:888
 msgid "Line"
 msgstr "Leitung"
 
-#: ../roger/journal.c:879 ../roger/print.c:398
+#: ../roger/journal.c:889 ../roger/print.c:398
 msgid "Duration"
 msgstr "Dauer"
 
 #. Refresh journal
-#: ../roger/journal.c:905 ../roger/journal.c:960
+#: ../roger/journal.c:939 ../roger/journal.c:1023 ../roger/journal.c:1069
 msgid "Refresh journal"
 msgstr "Journal laden"
 
 #. Print journal
-#: ../roger/journal.c:915 ../roger/journal.c:965
+#: ../roger/journal.c:944 ../roger/journal.c:1028 ../roger/journal.c:1079
 msgid "Print journal"
 msgstr "Journal drucken"
 
-#: ../roger/journal.c:924
-msgid "Clear journal on router"
-msgstr "Lösche Journal vom Router"
-
-#: ../roger/journal.c:934
-msgid "Delete selected entry"
-msgstr "Ausgewählten Eintrag löschen"
-
-#: ../roger/journal.c:943
-msgid "Add selected entry to address book"
-msgstr "Ausgewählten Eintrag zum Adressbuch hinzufügen"
-
 #. Clear journal
-#: ../roger/journal.c:969
+#: ../roger/journal.c:949 ../roger/journal.c:1033
 msgid "Clear journal"
 msgstr "Journal löschen"
 
-#: ../roger/journal.c:990
+#: ../roger/journal.c:1089
+msgid "Clear journal on router"
+msgstr "Lösche Journal vom Router"
+
+#: ../roger/journal.c:1099
+msgid "Delete selected entry"
+msgstr "Ausgewählten Eintrag löschen"
+
+#: ../roger/journal.c:1109
+msgid "Add selected entry to address book"
+msgstr "Ausgewählten Eintrag zum Adressbuch hinzufügen"
+
+#: ../roger/journal.c:1117
 msgid "Search:"
 msgstr "Suche:"
 
-#: ../roger/journal.c:994
+#: ../roger/journal.c:1121
 msgid "Search in journal for name or number"
 msgstr "Suche im Journal nach Name oder Nummer"
 
-#: ../roger/journal.c:1005
+#: ../roger/journal.c:1133
 msgid "Filter:"
 msgstr "Filter:"
 

@@ -213,8 +213,6 @@ void journal_redraw(void)
 		return;
 	}
 
-	status = g_object_get_data(G_OBJECT(journal_win), "statusbar");
-
 	/* Update liststore */
 	for (list = journal_list; list != NULL; list = list->next) {
 		struct call *call = list->data;
@@ -244,8 +242,16 @@ void journal_redraw(void)
 	}
 
 	profile = profile_get_active();
+
+#if GTK_CHECK_VERSION(3,10,0)
+	status = g_object_get_data(G_OBJECT(journal_win), "headerbar");
+	text = g_strdup_printf(_("%s (%d call(s), %d:%2.2dh)"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
+	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(status), text);
+#else
+	status = g_object_get_data(G_OBJECT(journal_win), "statusbar");
 	text = g_strdup_printf(_("Profile: %s | Total: %d call(s) | Duration: %d:%2.2d"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
 	gtk_statusbar_push(GTK_STATUSBAR(status), 0, text);
+#endif
 	g_free(text);
 }
 
@@ -494,7 +500,7 @@ static void journal_startup(GApplication *application)
 	journal_application = application;
 }
 
-static void search_entry_changed(GtkEditable *entry, GtkTreeView *view)
+void search_entry_changed(GtkEditable *entry, GtkTreeView *view)
 {
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 
@@ -847,14 +853,24 @@ gboolean journal_button_press_event_cb(GtkWidget *treeview, GdkEventButton *even
 
 	return FALSE;
 }
+static gboolean
+window_key_press_event_cb (GtkWidget *widget,
+                           GdkEvent  *event,
+                           gpointer   user_data)
+{
+  return gtk_search_bar_handle_event (GTK_SEARCH_BAR (user_data), event);
+}
+
+static void find_button_pressed_cb(GtkWidget *widget, gpointer user_data)
+{
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget), !gtk_search_bar_get_search_mode(GTK_SEARCH_BAR(user_data)));
+	gtk_search_bar_set_search_mode(GTK_SEARCH_BAR(user_data), !gtk_search_bar_get_search_mode(GTK_SEARCH_BAR(user_data)));
+}
 
 GtkWidget *journal_window(GApplication *app, GFile *file)
 {
 	GtkWidget *window, *grid, *scrolled, *view;
-	GtkWidget *status;
-	GtkWidget *entry;
 	GtkWidget *button;
-	GtkWidget *label;
 	GtkListStore *list_store;
 	GtkTreeModel *tree_model;
 	GtkCellRenderer *renderer;
@@ -890,6 +906,108 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
 	gtk_container_add(GTK_CONTAINER(window), grid);
+
+#if GTK_CHECK_VERSION(3,10,0)
+	GtkWidget *header;
+	GtkWidget *box;
+	GtkWidget *search;
+	GtkWidget *icon;
+	GtkWidget *menu_button;
+	GtkWidget *menu, *menuitem;
+	GtkWidget *entry;
+
+	/* Create header bar and set it to window */
+	header = gtk_header_bar_new();
+	gtk_widget_set_hexpand(header, TRUE);
+	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
+	gtk_header_bar_set_title(GTK_HEADER_BAR (header), "Journal");
+	gtk_window_set_titlebar((GtkWindow *)(window), header);
+
+	/* Create button box as raised and linked */
+	box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+	gtk_container_add(GTK_CONTAINER(header), box);
+	gtk_style_context_add_class(gtk_widget_get_style_context(box), GTK_STYLE_CLASS_RAISED);
+	gtk_style_context_add_class(gtk_widget_get_style_context(box), GTK_STYLE_CLASS_LINKED);
+
+	/* Create menu button and menu */
+	menu_button = gtk_menu_button_new();
+	gtk_container_add(GTK_CONTAINER(menu_button), gtk_image_new_from_icon_name("view-list-symbolic", GTK_ICON_SIZE_MENU));
+
+	menu = gtk_menu_new();
+
+	/* Refresh journal */
+	menuitem = gtk_menu_item_new_with_label(_("Refresh journal"));
+	g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_refresh_clicked_cb), window);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+	/* Print journal */
+	menuitem = gtk_menu_item_new_with_label(_("Print journal"));
+	g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_print_clicked_cb), view);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+	/* Clear journal */
+	menuitem = gtk_menu_item_new_with_label(_("Clear journal"));
+	g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_clear_clicked_cb), window);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+	menuitem = gtk_separator_menu_item_new();
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+	/* Delete entry */
+	menuitem = gtk_menu_item_new_with_label(_("Delete entry"));
+	g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_delete_clicked_cb), view);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+	/* Add entry */
+	menuitem = gtk_menu_item_new_with_label(_("Add entry"));
+	g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_add_clicked_cb), view);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+	gtk_widget_show_all(menu);
+
+	gtk_menu_button_set_popup(GTK_MENU_BUTTON(menu_button), menu);
+	gtk_box_pack_start(GTK_BOX(box), menu_button, FALSE, TRUE, 0);
+
+	/* Create search bar */
+	search = gtk_search_bar_new();
+
+	button = gtk_toggle_button_new();
+	icon = gtk_image_new_from_icon_name("edit-find-symbolic", GTK_ICON_SIZE_BUTTON);
+	g_signal_connect(button, "clicked", G_CALLBACK(find_button_pressed_cb), search);
+	gtk_button_set_image(GTK_BUTTON(button), icon);
+
+	gtk_box_pack_start(GTK_BOX(box), button, FALSE, TRUE, 0);
+
+	entry = gtk_search_entry_new();
+	g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(search_entry_changed), view);
+	gtk_widget_set_hexpand(entry, TRUE);
+
+	gtk_container_add(GTK_CONTAINER(search), entry);
+	gtk_widget_show_all(search);
+
+	gtk_grid_attach(GTK_GRID(grid), search, 0, 1, 6, 1);
+
+	gtk_search_bar_connect_entry(GTK_SEARCH_BAR(search), GTK_ENTRY(entry));
+
+	/* Create filter box */
+	journal_filter_box = gtk_combo_box_text_new();
+	journal_update_filter();
+	g_signal_connect(G_OBJECT(journal_filter_box), "changed", G_CALLBACK(filter_box_changed), NULL);
+	gtk_box_pack_start(GTK_BOX(box), journal_filter_box, FALSE, TRUE, 0);
+
+	/* Create spinner */
+	spinner = gtk_spinner_new();
+	gtk_widget_set_no_show_all(spinner, TRUE);
+	gtk_container_add(GTK_CONTAINER(header), spinner);//, FALSE, FALSE, 0);
+
+	g_object_set_data(G_OBJECT(window), "headerbar", header);
+	gtk_widget_show_all(header);
+
+	g_signal_connect(window, "key-press-event", G_CALLBACK(window_key_press_event_cb), search);
+#else
+	GtkWidget *label;
+	GtkWidget *entry;
+	GtkWidget *status;
 
 #if GTK_CHECK_VERSION(3,8,0)
 	GtkWidget *menu_button;
@@ -1002,6 +1120,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	entry = gtk_entry_new();
 	gtk_widget_set_tooltip_text(entry, _("Search in journal for name or number"));
 	g_signal_connect(G_OBJECT(entry), "icon-release", G_CALLBACK(entry_icon_released), NULL);
+	g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(search_entry_changed), view);
 
 #ifdef JOURNAL_TOP_OLD_ICONS
 	gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_PRIMARY, "edit-find");
@@ -1020,6 +1139,15 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 	g_signal_connect(G_OBJECT(journal_filter_box), "changed", G_CALLBACK(filter_box_changed), NULL);
 	gtk_grid_attach(GTK_GRID(grid), journal_filter_box, 4, 0, 1, 1);
+
+	status = gtk_statusbar_new();
+	spinner = gtk_spinner_new();
+	gtk_widget_set_no_show_all(spinner, TRUE);
+	gtk_box_pack_end(GTK_BOX(status), spinner, FALSE, FALSE, 0);
+
+	g_object_set_data(G_OBJECT(window), "statusbar", status);
+	gtk_grid_attach(GTK_GRID(grid), status, 0, 2, 6, 1);
+#endif
 
 	scrolled = gtk_scrolled_window_new(NULL, NULL);
 	gtk_widget_set_hexpand(scrolled, TRUE);
@@ -1043,8 +1171,6 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	sortable = GTK_TREE_SORTABLE(list_store);
 
 	gtk_tree_view_set_model(GTK_TREE_VIEW(view), GTK_TREE_MODEL(tree_model));
-
-	g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(search_entry_changed), view);
 
 	GtkWidget *header_menu = gtk_menu_new();
 	GtkWidget *column_item;
@@ -1113,15 +1239,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 	gtk_container_add(GTK_CONTAINER(scrolled), view);
 
-	gtk_grid_attach(GTK_GRID(grid), scrolled, 0, 1, 6, 1);
-
-	status = gtk_statusbar_new();
-	spinner = gtk_spinner_new();
-	gtk_widget_set_no_show_all(spinner, TRUE);
-	gtk_box_pack_end(GTK_BOX(status), spinner, FALSE, FALSE, 0);
-
-	g_object_set_data(G_OBJECT(window), "statusbar", status);
-	gtk_grid_attach(GTK_GRID(grid), status, 0, 2, 6, 1);
+	gtk_grid_attach(GTK_GRID(grid), scrolled, 0, 2, 6, 1);
 
 	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(view)), GTK_SELECTION_MULTIPLE);
 

@@ -924,8 +924,7 @@ static int capi_indication(_cmsg capi_message)
 	/* CAPI_DATA_B3 - data - receive/send */
 	case CAPI_DATA_B3:
 		g_debug("IND: CAPI_DATA_B3");
-		ncci = CONNECT_B3_IND_NCCI(&capi_message);
-		plci = ncci & 0x0000ffff;
+		ncci = DATA_B3_IND_NCCI(&capi_message);
 
 		connection = capi_find_ncci(ncci);
 		if (connection == NULL) {
@@ -1233,6 +1232,7 @@ static int capi_indication(_cmsg capi_message)
 			break;
 		}
 
+		connection->reason_b3 = DISCONNECT_B3_IND_REASON_B3(&capi_message);
 		connection->ncci = 0;
 		if (connection->state == STATE_CONNECTED || connection->state == STATE_CONNECT_B3_WAIT) {
 			/* passive disconnect, DISCONNECT_IND comes later */
@@ -1264,7 +1264,7 @@ static int capi_indication(_cmsg capi_message)
 		}
 
 		/* CAPI-Error code */
-		connection->capi_code = DISCONNECT_IND_REASON(&capi_message);
+		connection->reason = DISCONNECT_IND_REASON(&capi_message);
 		connection->state = STATE_IDLE;
 		connection->ncci = 0;
 		connection->plci = 0;

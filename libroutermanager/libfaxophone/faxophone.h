@@ -131,7 +131,8 @@ struct capi_connection {
 	unsigned int controller;
 	unsigned long int plci;
 	unsigned long int ncci;
-	unsigned int capi_code;
+	unsigned int reason;
+	unsigned int reason_b3;
 	char *source;
 	char *target;
 	void *priv;
