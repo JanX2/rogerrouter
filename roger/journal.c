@@ -1256,7 +1256,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	g_signal_connect(G_OBJECT(journal_win), "configure-event", G_CALLBACK(journal_configure_event_cb), NULL);
 	g_signal_connect(G_OBJECT(journal_win), "window-state-event", G_CALLBACK(journal_window_state_event_cb), NULL);
 
-	gtk_window_set_hide_titlebar_when_maximized(GTK_WINDOW(journal_win), TRUE);
+	//gtk_window_set_hide_titlebar_when_maximized(GTK_WINDOW(journal_win), TRUE);
 	gtk_widget_hide_on_delete(journal_win);
 	gtk_window_set_has_resize_grip(GTK_WINDOW(journal_win), FALSE);
 
