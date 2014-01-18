@@ -1,7 +1,23 @@
-Minimum requirements:
+Minimum requirements
+----------------------
     * GTK 3.4
     * glib/gio 2.32
     * speex/speexdsp 1.0
     * libpeas 1.0
     * gmodule
     * libsoup 2.4
+
+
+Fedora packages
+-----------------
+
+# Req: libcapi20
+
+# Base
+sudo yum install autoconf automake gtk3-devel intltool libtool speex-devel libsndfile-devel libxml2-devel libsoup-devel libpeas-devel spandsp-devel
+
+# Plugins
+libnotify-devel
+evolution-devel
+pulseaudio-libs-devel
+libsecret-devel
