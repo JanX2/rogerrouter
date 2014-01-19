@@ -172,7 +172,7 @@ Section RogerRouter
 	File "/usr/i686-w64-mingw32/sys-root/mingw/share/locale/de/LC_MESSAGES/atk10.mo"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/share/locale/de/LC_MESSAGES/gtk30.mo"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/share/locale/de/LC_MESSAGES/glib20.mo"
-	File "/usr/i686-w64-mingw32/sys-root/mingw/share/locale/de/LC_MESSAGES/libpeas.mo"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/lib/locale/de/LC_MESSAGES/libpeas.mo"
 
 	ReadEnvStr $0 COMSPEC
 

@@ -69,7 +69,7 @@ static inline void sff_transfer(struct capi_connection *connection, _cmsg capi_m
 	if (sff_pos == sff_len) {
 		g_debug("EOF");
 	} else {
-		g_debug("Pos: %ld/%ld (%ld%%)", sff_pos, sff_len, sff_pos * 100 / sff_len);
+		g_debug("Pos: %" G_GSIZE_FORMAT "/%" G_GSIZE_FORMAT " (%" G_GSIZE_FORMAT "%%)", sff_pos, sff_len, sff_pos * 100 / sff_len);
 	}
 }
 
