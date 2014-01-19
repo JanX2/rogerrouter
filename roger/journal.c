@@ -244,7 +244,7 @@ void journal_redraw(void)
 
 	profile = profile_get_active();
 
-#if GTK_CHECK_VERSION(3,10,0)
+#if GTK_CHECK_VERSION(3,10,0) && G_OS_LINUX
 	status = g_object_get_data(G_OBJECT(journal_win), "headerbar");
 	text = g_strdup_printf(_("%s (%d call(s), %d:%2.2dh)"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
 	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(status), text);
@@ -855,7 +855,7 @@ gboolean journal_button_press_event_cb(GtkWidget *treeview, GdkEventButton *even
 	return FALSE;
 }
 
-static gboolean window_key_press_event_cb(GtkWidget *widget, GdkEvent *event, gpointer user_data)
+gboolean window_key_press_event_cb(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 {
 	GtkWidget *button = g_object_get_data(G_OBJECT(widget), "button");
 	GdkEventKey *key = (GdkEventKey*)event;
@@ -874,7 +874,7 @@ static gboolean window_key_press_event_cb(GtkWidget *widget, GdkEvent *event, gp
 	return ret;
 }
 
-static void find_button_pressed_cb(GtkWidget *widget, gpointer user_data)
+void find_button_pressed_cb(GtkWidget *widget, gpointer user_data)
 {
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget), !gtk_search_bar_get_search_mode(GTK_SEARCH_BAR(user_data)));
 	gtk_search_bar_set_search_mode(GTK_SEARCH_BAR(user_data), !gtk_search_bar_get_search_mode(GTK_SEARCH_BAR(user_data)));
@@ -920,7 +920,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
 	gtk_container_add(GTK_CONTAINER(window), grid);
 
-#if GTK_CHECK_VERSION(3,10,0)
+#if GTK_CHECK_VERSION(3,10,0) && G_OS_LINUX
 	GtkWidget *header;
 	GtkWidget *box;
 	GtkWidget *search;
@@ -1029,7 +1029,11 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	GtkWidget *menu, *menuitem;
 
 	menu_button = gtk_menu_button_new();
+#ifdef JOURNAL_TOP_OLD_ICONS
+	gtk_container_add(GTK_CONTAINER(menu_button), gtk_image_new_from_icon_name("format-justify-fill", GTK_ICON_SIZE_MENU));
+#else
 	gtk_container_add(GTK_CONTAINER(menu_button), gtk_image_new_from_icon_name("view-list-symbolic", GTK_ICON_SIZE_MENU));
+#endif
 	gtk_button_set_relief(GTK_BUTTON(menu_button), GTK_RELIEF_NONE);
 
 	menu = gtk_menu_new();
@@ -1161,7 +1165,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	gtk_box_pack_end(GTK_BOX(status), spinner, FALSE, FALSE, 0);
 
 	g_object_set_data(G_OBJECT(window), "statusbar", status);
-	gtk_grid_attach(GTK_GRID(grid), status, 0, 2, 6, 1);
+	gtk_grid_attach(GTK_GRID(grid), status, 0, 3, 6, 1);
 #endif
 
 	scrolled = gtk_scrolled_window_new(NULL, NULL);
