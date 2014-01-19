@@ -53,6 +53,7 @@ static void capi_connection_established_cb(AppObject *object, struct capi_connec
 static void capi_connection_terminated_cb(AppObject *object, struct capi_connection *connection, gpointer user_data)
 {
 	struct phone_state *state = user_data;
+	struct profile *profile = profile_get_active();
 	int reason;
 
 	if (fax_connection != connection) {
@@ -71,12 +72,14 @@ static void capi_connection_terminated_cb(AppObject *object, struct capi_connect
 			break;
 	}
 
+	if (g_settings_get_boolean(profile->settings, "fax-sff")) {
 	if (reason == 0) {
 		g_debug("Fax transfer successful");
 		gtk_label_set_text(GTK_LABEL(status_current_label), _("Fax transfer successful"));
 	} else {
 		gtk_label_set_text(GTK_LABEL(status_current_label), _("Fax transfer failed"));
 		g_debug("Fax transfer failed");
+	}
 	}
 
 	snprintf(state->phone_status_text, sizeof(state->phone_status_text), _("Disconnected"));
@@ -380,7 +383,7 @@ gchar *convert_to_fax(gchar *file_name)
 	args[11] = file_name;
 	args[12] = NULL;
 
-	if (!g_spawn_sync(NULL, args, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL, NULL, &error)) {
+	if (!g_spawn_sync(NULL, args, NULL, G_SPAWN_SEARCH_PATH | G_SPAWN_STDOUT_TO_DEV_NULL | G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, NULL, NULL, NULL, &error)) {
 		g_warning("Error occurred: %s", error ? error->message : "");
 		g_free(args[0]);
 		g_free(out_file);
