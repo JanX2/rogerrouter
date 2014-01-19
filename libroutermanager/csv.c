@@ -113,7 +113,7 @@ gboolean csv_save_journal(GSList *journal)
 	file_name = g_build_filename(dir, "journal.csv", NULL);
 
 	/* Open output file */
-	file = fopen(file_name, "w+");
+	file = fopen(file_name, "wb+");
 	g_free(dir);
 	g_free(file_name);
 
