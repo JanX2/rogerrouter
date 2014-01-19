@@ -150,6 +150,7 @@ static gpointer notification_reverse_lookup_thread(gpointer data)
 void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *connection, gpointer unused_pointer)
 {
 	GtkWidget *notify = NULL;
+	GtkWidget *main_frame;
 	GtkWidget *frame;
 	GtkWidget *main_grid;
 	GtkWidget *contact_grid;
@@ -235,6 +236,8 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 
 	notify = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
+	main_frame = gtk_frame_new(NULL);
+
 	frame = gtk_alignment_new(0.5, 0.5, 1, 1);
 	gtk_alignment_set_padding(GTK_ALIGNMENT(frame), 10, 10, 10, 10);
 
@@ -317,7 +320,8 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 	gtk_grid_attach(GTK_GRID(main_grid), contact_grid, 0, 0, 1, 1);
 
 	gtk_container_add(GTK_CONTAINER(frame), main_grid);
-	gtk_container_add(GTK_CONTAINER(notify), frame);
+	gtk_container_add(GTK_CONTAINER(main_frame), frame);
+	gtk_container_add(GTK_CONTAINER(notify), main_frame);
 
 	tmp = connection->local_number ? g_strdup_printf(_("(on %s)"), connection->local_number) : g_strdup(_("(on ?)"));
 	gtk_label_set_text(GTK_LABEL(local_label), tmp);
@@ -370,17 +374,16 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 		g_timeout_add_seconds(5, notification_gtk_close, notify);
 	}
 
-	gtk_widget_show_all(notify);
+	gtk_window_set_decorated(GTK_WINDOW(notify), FALSE);
+	gtk_widget_show_all(main_frame);
 
 	gtk_window_get_size(GTK_WINDOW(notify), &width, &height);
 
-//#ifdef G_OS_WIN32
-	//height += 32;
-//#endif
 	gtk_window_move(GTK_WINDOW(notify), gdk_screen_width() - width, gdk_screen_height() - height);
 
 	gtk_window_stick(GTK_WINDOW(notify));
 	gtk_window_set_keep_above(GTK_WINDOW(notify), TRUE);
+	gtk_widget_show(notify);
 
 	connection->notification = notify;
 

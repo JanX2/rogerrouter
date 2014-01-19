@@ -857,7 +857,7 @@ static int capi_indication(_cmsg capi_message)
 				connection->state = STATE_CONNECT_ACTIVE;
 				if (connection->type == SESSION_PHONE) {
 					connection->audio = session->handlers->audio_open();
-					if (connection->audio) {
+					if (!connection->audio) {
 						capi_hangup(connection);
 						connection->audio = NULL;
 					}

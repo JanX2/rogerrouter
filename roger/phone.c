@@ -368,9 +368,9 @@ static void hangup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	struct phone_state *state = user_data;
 	const gchar *number = gtk_entry_get_text(GTK_ENTRY(state->name_entry));
 
-	if (EMPTY_STRING(state->number)) {
-		return;
-	}
+	//if (EMPTY_STRING(state->number)) {
+	//	return;
+	//}
 
 	if (state->type == PHONE_TYPE_FAX || !strcmp(gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(state->port_combobox)), _("Softphone"))) {
 		gint len = g_slist_length(phone_active_connections);

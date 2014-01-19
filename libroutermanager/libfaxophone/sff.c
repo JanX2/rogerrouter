@@ -88,11 +88,12 @@ gpointer sff_transfer_thread(gpointer data)
 		g_usleep(50);
 	}
 
+	capi_hangup(connection);
+
 	while (connection->state == STATE_CONNECTED && connection->buffers) {
 		g_usleep(50);
 	}
 
-	capi_hangup(connection);
 
 	return NULL;
 }

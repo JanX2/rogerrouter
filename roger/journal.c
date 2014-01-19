@@ -22,6 +22,7 @@
 
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
+#include <gdk/gdk.h>
 
 #include <libroutermanager/profile.h>
 #include <libroutermanager/router.h>
@@ -853,12 +854,24 @@ gboolean journal_button_press_event_cb(GtkWidget *treeview, GdkEventButton *even
 
 	return FALSE;
 }
-static gboolean
-window_key_press_event_cb (GtkWidget *widget,
-                           GdkEvent  *event,
-                           gpointer   user_data)
+
+static gboolean window_key_press_event_cb(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 {
-  return gtk_search_bar_handle_event (GTK_SEARCH_BAR (user_data), event);
+	GtkWidget *button = g_object_get_data(G_OBJECT(widget), "button");
+	GdkEventKey *key = (GdkEventKey*)event;
+	gint ret;
+
+	ret = gtk_search_bar_handle_event(GTK_SEARCH_BAR(user_data), event);
+
+	if (ret == GDK_EVENT_STOP) {
+		if (key->keyval == GDK_KEY_Escape) {
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), FALSE);
+		} else {
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
+		}
+	}
+
+	return ret;
 }
 
 static void find_button_pressed_cb(GtkWidget *widget, gpointer user_data)
@@ -979,8 +992,10 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	gtk_box_pack_start(GTK_BOX(box), button, FALSE, TRUE, 0);
 
 	entry = gtk_search_entry_new();
+	g_object_set_data(G_OBJECT(window), "button", button);
 	g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(search_entry_changed), view);
 	gtk_widget_set_hexpand(entry, TRUE);
+	gtk_widget_set_hexpand(search, TRUE);
 
 	gtk_container_add(GTK_CONTAINER(search), entry);
 	gtk_widget_show_all(search);
