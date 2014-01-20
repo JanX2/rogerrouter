@@ -48,7 +48,6 @@
 #include <roger/application.h>
 
 #define JOURNAL_OLD_ICONS 1
-//#define JOURNAL_TOP_OLD_ICONS 1
 
 GtkWidget *journal_win = NULL;
 GtkWidget *journal_filter_box = NULL;
@@ -511,11 +510,7 @@ void search_entry_changed(GtkEditable *entry, GtkTreeView *view)
 	}
 
 	if (strlen(text)) {
-#ifdef JOURNAL_TOP_OLD_ICONS
-		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, "edit-clear");
-#else
 		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, "edit-clear-symbolic");
-#endif
 
 		journal_search_filter = filter_new("internal_search");
 
@@ -1029,11 +1024,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	GtkWidget *menu, *menuitem;
 
 	menu_button = gtk_menu_button_new();
-#ifdef JOURNAL_TOP_OLD_ICONS
-	gtk_container_add(GTK_CONTAINER(menu_button), gtk_image_new_from_icon_name("format-justify-fill", GTK_ICON_SIZE_MENU));
-#else
 	gtk_container_add(GTK_CONTAINER(menu_button), gtk_image_new_from_icon_name("view-list-symbolic", GTK_ICON_SIZE_MENU));
-#endif
 	gtk_button_set_relief(GTK_BUTTON(menu_button), GTK_RELIEF_NONE);
 
 	menu = gtk_menu_new();
@@ -1141,11 +1132,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	g_signal_connect(G_OBJECT(entry), "icon-release", G_CALLBACK(entry_icon_released), NULL);
 	g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(search_entry_changed), view);
 
-#ifdef JOURNAL_TOP_OLD_ICONS
-	gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_PRIMARY, "edit-find");
-#else
 	gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_PRIMARY, "edit-find-symbolic");
-#endif
 	gtk_widget_set_hexpand(entry, TRUE);
 	gtk_grid_attach(GTK_GRID(grid), entry, 2, 0, 1, 1);
 

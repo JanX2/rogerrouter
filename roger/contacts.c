@@ -189,11 +189,7 @@ static void search_entry_changed(GtkEditable *entry, gpointer user_data)
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 
 	if (!EMPTY_STRING(text)) {
-#ifdef JOURNAL_TOP_OLD_ICONS
-		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, "edit-clear");
-#else
 		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, "edit-clear-symbolic");
-#endif
 	} else {
 		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, NULL);
 	}
@@ -500,11 +496,7 @@ void contacts(void)
 	gtk_widget_set_margin_right(entry, 5);
 	gtk_widget_set_margin_bottom(entry, 5);
 	gtk_widget_set_vexpand(entry, FALSE);
-#ifdef JOURNAL_TOP_OLD_ICONS
-	gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_PRIMARY, "edit-find");
-#else
 	gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_PRIMARY, "edit-find-symbolic");
-#endif
 	gtk_grid_attach(GTK_GRID(contacts_window_grid), entry, 0, 0, 1, 1);
 
 	scrolled = gtk_scrolled_window_new(NULL, NULL);
