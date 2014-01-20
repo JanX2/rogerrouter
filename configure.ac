@@ -53,7 +53,7 @@ case "$host" in
 	*-*-*mingw*)
 		WIN32=yes
 		macos=no
-		OS_CFLAGS="-D_WIN32_WINNT=0x0501 -DROUTERMANAGER_PLUGINS='\"lib/routermanager/plugins/\"' -DAPP_PLUGINS='\"lib/roger/plugins/\"' -DAPP_DATA='\"share/roger/\"' -DAPP_LOCALE='\"share/locale\"' -DJOURNAL_TOP_OLD_ICONS"
+		OS_CFLAGS="-D_WIN32_WINNT=0x0501 -DROUTERMANAGER_PLUGINS='\"lib/routermanager/plugins/\"' -DAPP_PLUGINS='\"lib/roger/plugins/\"' -DAPP_DATA='\"share/roger/\"' -DAPP_LOCALE='\"share/locale\"'"
 		OS_LIBS="-mwindows -mms-bitfields -Wl,-subsystem,windows -lws2_32"
 		AC_CHECK_TOOL(WINDRES, windres)
 	;;

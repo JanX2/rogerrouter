@@ -122,10 +122,10 @@ cd packages
 # ********************* 3rd PARTY PACKAGES ************************
 
 # Download and compile libcroco
-#make_pkg "http://ftp.gnome.org/pub/GNOME/sources/libcroco/0.6/" "libcroco-0.6.8.tar.xz" "libcroco-0.6.8"
+make_pkg "http://ftp.gnome.org/pub/GNOME/sources/libcroco/0.6/" "libcroco-0.6.8.tar.xz" "libcroco-0.6.8"
 
 # Download and compile librsvg (requires libcroco)
-#make_pkg "http://ftp.gnome.org/pub/GNOME/sources/librsvg/2.40/" "librsvg-2.40.1.tar.xz" "librsvg-2.40.1"
+make_pkg "http://ftp.gnome.org/pub/GNOME/sources/librsvg/2.40/" "librsvg-2.40.1.tar.xz" "librsvg-2.40.1"
 
 # Download and compile libogg
 make_pkg "http://downloads.xiph.org/releases/ogg/" "libogg-1.3.1.tar.xz" "libogg-1.3.1"
