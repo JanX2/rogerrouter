@@ -512,34 +512,35 @@ void contacts(void)
 	action_grid = gtk_grid_new();
 	button_add = gtk_button_new();
 	//image = gtk_image_new_from_icon_name("list-add-symbolic", GTK_ICON_SIZE_BUTTON);
-	image = get_icon(APP_ICON_ADD, GTK_ICON_SIZE_BUTTON);
+	image = get_icon(APP_ICON_ADD, GTK_ICON_SIZE_MENU);
 	gtk_button_set_image(GTK_BUTTON(button_add), image);
 	gtk_button_set_relief(GTK_BUTTON(button_add), GTK_RELIEF_NONE);
 	gtk_widget_set_tooltip_text(button_add, _("Add new contact"));
 	g_signal_connect(button_add, "clicked", G_CALLBACK(button_add_clicked_cb), contacts_view);
 	gtk_grid_attach(GTK_GRID(action_grid), button_add, 0, 0, 1, 1);
 
-	button_edit = gtk_button_new();
-	//image = gtk_image_new_from_icon_name("document-properties-symbolic", GTK_ICON_SIZE_BUTTON);
-	image = get_icon(APP_ICON_EDIT, GTK_ICON_SIZE_BUTTON);
-	gtk_button_set_image(GTK_BUTTON(button_edit), image);
-	gtk_button_set_relief(GTK_BUTTON(button_edit), GTK_RELIEF_NONE);
-	gtk_widget_set_tooltip_text(button_edit, _("Edit selected contact"));
-	g_signal_connect(button_edit, "clicked", G_CALLBACK(button_edit_clicked_cb), contacts_view);
-	gtk_grid_attach(GTK_GRID(action_grid), button_edit, 1, 0, 1, 1);
-
 	button_remove = gtk_button_new();
 	//image = gtk_image_new_from_icon_name("list-remove-symbolic", GTK_ICON_SIZE_BUTTON);
-	image = get_icon(APP_ICON_REMOVE, GTK_ICON_SIZE_BUTTON);
+	image = get_icon(APP_ICON_REMOVE, GTK_ICON_SIZE_MENU);
 	gtk_button_set_image(GTK_BUTTON(button_remove), image);
 	gtk_button_set_relief(GTK_BUTTON(button_remove), GTK_RELIEF_NONE);
 	gtk_widget_set_tooltip_text(button_remove, _("Remove selected contact"));
 	g_signal_connect(button_remove, "clicked", G_CALLBACK(button_remove_clicked_cb), contacts_view);
-	gtk_grid_attach(GTK_GRID(action_grid), button_remove, 2, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(action_grid), button_remove, 1, 0, 1, 1);
+
+	button_edit = gtk_button_new();
+	//image = gtk_image_new_from_icon_name("document-properties-symbolic", GTK_ICON_SIZE_BUTTON);
+	image = get_icon(APP_ICON_EDIT, GTK_ICON_SIZE_MENU);
+	gtk_button_set_image(GTK_BUTTON(button_edit), image);
+	gtk_button_set_relief(GTK_BUTTON(button_edit), GTK_RELIEF_NONE);
+	gtk_widget_set_tooltip_text(button_edit, _("Edit selected contact"));
+	g_signal_connect(button_edit, "clicked", G_CALLBACK(button_edit_clicked_cb), contacts_view);
+	gtk_grid_attach(GTK_GRID(action_grid), button_edit, 2, 0, 1, 1);
+
 
 	button_reload = gtk_button_new();
 	//image = gtk_image_new_from_icon_name("view-refresh-symbolic", GTK_ICON_SIZE_BUTTON);
-	image = get_icon(APP_ICON_REFRESH, GTK_ICON_SIZE_BUTTON);
+	image = get_icon(APP_ICON_REFRESH, GTK_ICON_SIZE_MENU);
 	gtk_button_set_image(GTK_BUTTON(button_reload), image);
 	gtk_button_set_relief(GTK_BUTTON(button_reload), GTK_RELIEF_NONE);
 	gtk_widget_set_tooltip_text(button_reload, _("Reload address book"));
