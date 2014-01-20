@@ -149,6 +149,26 @@ case "$with_fax_spooler_type" in
 	;;
 esac
 
+AC_ARG_WITH([headerbar],
+	[AS_HELP_STRING([--headerbar=@<:@ARG@:>@],
+		[whether journal shoudl make use of GtkHeaderBar (possible values: no, yes) @<:@default=no@:>@])],
+	[],
+	[with_headerbar=no])
+
+AC_MSG_CHECKING(for headerbar)
+case "$with_headerbar" in
+	yes)
+		AC_DEFINE(USE_HEADERBAR, 1, [Use headerbar])
+		AC_MSG_RESULT([Using GtkHeaderBar])
+	;;
+	no)
+		AC_MSG_RESULT([Using statusbar])
+	;;
+	*)
+		AC_MSG_ERROR([Invalid option $with_headerbar])
+	;;
+esac
+
 dnl *******************************************************************
 dnl CUPS backend is optional
 dnl *******************************************************************

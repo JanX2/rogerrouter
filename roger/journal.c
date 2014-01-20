@@ -243,7 +243,7 @@ void journal_redraw(void)
 
 	profile = profile_get_active();
 
-#if GTK_CHECK_VERSION(3,10,0) && G_OS_LINUX
+#if GTK_CHECK_VERSION(3,10,0) && defined(USE_HEADERBAR)
 	status = g_object_get_data(G_OBJECT(journal_win), "headerbar");
 	text = g_strdup_printf(_("%s (%d call(s), %d:%2.2dh)"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
 	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(status), text);
@@ -915,7 +915,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
 	gtk_container_add(GTK_CONTAINER(window), grid);
 
-#if GTK_CHECK_VERSION(3,10,0) && G_OS_LINUX
+#if GTK_CHECK_VERSION(3,10,0) && defined(USE_HEADERBAR)
 	GtkWidget *header;
 	GtkWidget *box;
 	GtkWidget *search;
