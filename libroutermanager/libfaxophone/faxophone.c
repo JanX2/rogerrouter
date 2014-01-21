@@ -837,7 +837,9 @@ static int capi_indication(_cmsg capi_message)
 			if (connection->type == SESSION_PHONE) {
 				connection->audio = session->handlers->audio_open();
 				if (!connection->audio) {
+					g_warning("Could not open audio. Hangup");
 					capi_hangup(connection);
+					connection->audio = NULL;
 				}
 			}
 		} else if (connection->early_b3 == 0) {
@@ -858,6 +860,7 @@ static int capi_indication(_cmsg capi_message)
 				if (connection->type == SESSION_PHONE) {
 					connection->audio = session->handlers->audio_open();
 					if (!connection->audio) {
+						g_warning("Could not open audio. Hangup");
 						capi_hangup(connection);
 						connection->audio = NULL;
 					}
@@ -1211,8 +1214,16 @@ static int capi_indication(_cmsg capi_message)
 				connection->connect_time = time(NULL);
 				if (connection->type == SESSION_PHONE) {
 					connection->audio = session->handlers->audio_open();
+					if (!connection->audio) {
+						g_warning("Could not open audio. Hangup");
+						capi_hangup(connection);
+						connection->audio = NULL;
+					} else {
+						connection->state = STATE_CONNECT_ACTIVE;
+					}
+				} else {
+					connection->state = STATE_CONNECT_ACTIVE;
 				}
-				connection->state = STATE_CONNECT_ACTIVE;
 			}
 		}
 		break;
