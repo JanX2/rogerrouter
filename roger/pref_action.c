@@ -420,6 +420,14 @@ void action_toggle_cb(GtkToggleButton *button, gpointer user_data)
 		flags |= ACTION_INCOMING_END;
 	}
 
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(incoming_call_missed_toggle))) {
+		flags |= ACTION_INCOMING_MISSED;
+	}
+
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(outgoing_call_dial_toggle))) {
+		flags |= ACTION_OUTGOING_DIAL;
+	}
+
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(outgoing_call_begins_toggle))) {
 		flags |= ACTION_OUTGOING_BEGIN;
 	}
