@@ -165,12 +165,12 @@ void fax_connection_status_cb(AppObject *object, gint status, struct capi_connec
 {
 	struct fax_status *fax_status;
 
-	fax_status = connection->priv;
-	if (!fax_status) {
-		return;
+	if (connection && connection->priv) {
+		fax_status = connection->priv;
+		memcpy(&ui_fax_status, fax_status, sizeof(struct fax_status));
+	} else {
+		memset(&ui_fax_status, 0, sizeof(struct fax_status));
 	}
-
-	memcpy(&ui_fax_status, fax_status, sizeof(struct fax_status));
 
 	g_idle_add_full(G_PRIORITY_HIGH_IDLE, fax_update_ui, NULL, NULL);
 }

@@ -1,3 +1,4 @@
+#!/bin/sh
 ##
  # Roger Router
  # Copyright (c) 2012-2014 Jan-Michael Brummer
@@ -16,8 +17,6 @@
  # You should have received a copy of the GNU General Public License
  # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-
-#!/bin/sh
 
 # Generate the Makefiles and configure files
 if !( autoreconf --version ) </dev/null > /dev/null 2>&1; then

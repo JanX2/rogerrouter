@@ -1,3 +1,4 @@
+#!/bin/sh
 ##
  # Roger Router
  # Copyright (c) 2012-2014 Jan-Michael Brummer
@@ -17,5 +18,4 @@
  # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-#!/bin/bash
 dconf reset -f "/org/tabos/"
