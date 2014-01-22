@@ -26,6 +26,7 @@
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/libfaxophone/phone.h>
+#include <libroutermanager/libfaxophone/ringtone.h>
 #include <libroutermanager/fax_phone.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/profile.h>
@@ -221,6 +222,7 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 
 	/* If its a disconnect or a connect, close previous notification window */
 	if ((connection->type & CONNECTION_TYPE_DISCONNECT) || (connection->type & CONNECTION_TYPE_CONNECT)) {
+		ringtone_stop();
 		if (connection->notification) {
 			gtk_widget_destroy(connection->notification);
 			connection->notification = NULL;
@@ -228,6 +230,7 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 		return;
 	}
 
+	ringtone_play(connection->type);
 
 	/** Ask for contact information */
 	memset(contact, 0, sizeof(struct contact));
