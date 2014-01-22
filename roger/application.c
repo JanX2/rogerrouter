@@ -85,8 +85,11 @@ void app_copy_ip(void)
 
 	ip = router_get_ip(profile);
 	if (ip) {
+		g_debug("IP: '%s'", ip);
 		gtk_clipboard_set_text(gtk_clipboard_get(GDK_NONE), ip, -1);
 		g_free(ip);
+	} else {
+		g_warning("Could not get ip");
 	}
 }
 

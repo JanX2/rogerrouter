@@ -396,7 +396,7 @@ void delete_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, g
 
 	switch (call->type) {
 	case CALL_TYPE_VOICE:
-		router_delete_voice(profile_get_active(), call->local->name);
+		router_delete_voice(profile_get_active(), call->priv);
 		break;
 	case CALL_TYPE_FAX:
 		router_delete_fax(profile_get_active(), call->priv);
@@ -637,7 +637,7 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 		break;
 	}
 	case CALL_TYPE_VOICE:
-		journal_play_voice(call->local->name);
+		journal_play_voice(call->priv);
 		break;
 	default:
 		app_show_phone_window(call->remote);

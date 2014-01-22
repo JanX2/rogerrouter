@@ -111,9 +111,19 @@ GSList *call_add(GSList *journal, gint type, const gchar *date_time, const gchar
 	for (list = journal; list != NULL; list = list->next) {
 		call = list->data;
 
-		/* Easier compare method, we are just interested in the complete date_time, local_number and type field */
-		if ((call->type == type) && !strcmp(call->date_time, date_time) && !strcmp(call->local->number, local_number)) {
-			/* Call already exists, return unchanged journal */
+		/* Easier compare method, we are just interested in the complete date_time, remote_number and type field */
+		if (!strcmp(call->date_time, date_time) && !strcmp(call->remote->number, remote_number)) {
+			if (call->type == type) {
+				/* Call with the same type already exists, return unchanged journal */
+				return journal;
+			}
+
+			/* Found same call with different type (voice/fax): merge them */
+			if (type == CALL_TYPE_VOICE || type == CALL_TYPE_FAX) {
+				call->type = type;
+				call->priv = priv;
+			}
+
 			return journal;
 		}
 	}
