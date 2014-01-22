@@ -188,6 +188,22 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 		}
 	}
 
+	if (!found && connection->local_number[0] != '0') {
+		g_debug("type: %d, number '%s' not found", connection->type, call_scramble_number(connection->local_number));
+
+		gchar *tmp = call_full_number(connection->local_number, FALSE);
+
+		/* Match numbers against local number and check if we should show a notification */
+		for (count = 0; count < g_strv_length(numbers); count++) {
+			g_debug("type: %d, number '%s'/'%s' <-> '%s'", connection->type, call_scramble_number(connection->local_number), call_scramble_number(tmp), call_scramble_number(numbers[count]));
+			if (!strcmp(tmp, numbers[count])) {
+				found = TRUE;
+				break;
+			}
+		}
+		g_free(tmp);
+	}
+
 #ifdef ACCEPT_INTERN
 	if (!found && !strncmp(connection->local_number, "**", 2)) {
 		intern = TRUE;
