@@ -830,7 +830,7 @@ gchar *fritzbox_get_ip(struct profile *profile)
 	SoupMessageHeaders *headers;
 
 	/* Create POST message */
-	gchar *url = g_strdup_printf("http://%s/upnp/control/WANCommonIFC1", router_get_host(profile));
+	gchar *url = g_strdup_printf("http://%s/upnp/control/WANIPConn1", router_get_host(profile));
 
 	uri = soup_uri_new(url);
 	soup_uri_set_port(uri, 49000);
@@ -838,8 +838,8 @@ gchar *fritzbox_get_ip(struct profile *profile)
 	g_free(url);
 
 	request = g_strdup(
-	              "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-	              " <s:Envelope s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+	              "<?xml version='1.0' encoding='utf-8'?>"
+	              " <s:Envelope s:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/' xmlns:s='http://schemas.xmlsoap.org/soap/envelope/'>"
 	              " <s:Body>"
 	              " <u:GetExternalIPAddress xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\" />"
 	              " </s:Body>"
