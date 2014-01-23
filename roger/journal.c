@@ -248,9 +248,9 @@ void journal_redraw(void)
 	text = g_strdup_printf(_("%s (%d call(s), %d:%2.2dh)"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
 	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(status), text);
 #else
-	status = g_object_get_data(G_OBJECT(journal_win), "statusbar");
+	status = g_object_get_data(G_OBJECT(journal_win), "status_label");
 	text = g_strdup_printf(_("Profile: %s | Total: %d call(s) | Duration: %d:%2.2d"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
-	gtk_statusbar_push(GTK_STATUSBAR(status), 0, text);
+	gtk_label_set_text(GTK_LABEL(status), text);
 #endif
 	g_free(text);
 }
@@ -1146,16 +1146,22 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	g_signal_connect(G_OBJECT(journal_filter_box), "changed", G_CALLBACK(filter_box_changed), NULL);
 	gtk_grid_attach(GTK_GRID(grid), journal_filter_box, 4, 0, 1, 1);
 
-	status = gtk_statusbar_new();
+	GtkWidget *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
+
+	status = gtk_label_new("");
+	gtk_misc_set_alignment(GTK_MISC(status), 0, 0.5);
+	gtk_misc_set_padding(GTK_MISC(status), 5, 0);
+	gtk_box_pack_start(GTK_BOX(box), status, TRUE, TRUE, 0);
 	spinner = gtk_spinner_new();
 	gtk_widget_set_no_show_all(spinner, TRUE);
-	gtk_box_pack_end(GTK_BOX(status), spinner, FALSE, FALSE, 0);
+	gtk_box_pack_end(GTK_BOX(box), spinner, FALSE, FALSE, 0);
 
-	g_object_set_data(G_OBJECT(window), "statusbar", status);
-	gtk_grid_attach(GTK_GRID(grid), status, 0, 3, 6, 1);
+	g_object_set_data(G_OBJECT(window), "status_label", status);
+	gtk_grid_attach(GTK_GRID(grid), box, 0, 3, 5, 1);
 #endif
 
 	scrolled = gtk_scrolled_window_new(NULL, NULL);
+	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(scrolled), GTK_SHADOW_IN);
 	gtk_widget_set_hexpand(scrolled, TRUE);
 	gtk_widget_set_vexpand(scrolled, TRUE);
 
@@ -1244,8 +1250,9 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	gtk_widget_show_all(header_menu);
 
 	gtk_container_add(GTK_CONTAINER(scrolled), view);
+	gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(view), TRUE);
 
-	gtk_grid_attach(GTK_GRID(grid), scrolled, 0, 2, 6, 1);
+	gtk_grid_attach(GTK_GRID(grid), scrolled, 0, 2, 5, 1);
 
 	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(view)), GTK_SELECTION_MULTIPLE);
 
