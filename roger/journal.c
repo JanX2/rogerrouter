@@ -995,7 +995,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	gtk_container_add(GTK_CONTAINER(search), entry);
 	gtk_widget_show_all(search);
 
-	gtk_grid_attach(GTK_GRID(grid), search, 0, 1, 6, 1);
+	gtk_grid_attach(GTK_GRID(grid), search, 0, 1, 5, 1);
 
 	gtk_search_bar_connect_entry(GTK_SEARCH_BAR(search), GTK_ENTRY(entry));
 
