@@ -417,6 +417,11 @@ gchar *call_full_number(const gchar *number, gboolean country_code_prefix)
 		return NULL;
 	}
 
+	/* Skip numbers with leading '*' or '#' */
+	if (number[0] == '*' || number[0] == '#') {
+		return g_strdup(number);
+	}
+
 	/* Remove call-by-call (carrier preselect) prefix */
 	number += call_by_call_prefix_length(number);
 
