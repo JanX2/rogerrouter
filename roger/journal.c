@@ -850,6 +850,7 @@ gboolean journal_button_press_event_cb(GtkWidget *treeview, GdkEventButton *even
 	return FALSE;
 }
 
+#if GTK_CHECK_VERSION(3,10,0) && defined(USE_HEADERBAR)
 gboolean window_key_press_event_cb(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 {
 	GtkWidget *button = g_object_get_data(G_OBJECT(widget), "button");
@@ -874,6 +875,7 @@ void find_button_pressed_cb(GtkWidget *widget, gpointer user_data)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget), !gtk_search_bar_get_search_mode(GTK_SEARCH_BAR(user_data)));
 	gtk_search_bar_set_search_mode(GTK_SEARCH_BAR(user_data), !gtk_search_bar_get_search_mode(GTK_SEARCH_BAR(user_data)));
 }
+#endif
 
 GtkWidget *journal_window(GApplication *app, GFile *file)
 {
