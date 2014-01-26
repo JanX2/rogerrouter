@@ -143,9 +143,15 @@ int remote_port_invoke_call(struct remote_call_port *port, remote_call_func func
 	}
 
 	if (status == G_IO_STATUS_NORMAL) {
+		gint64 end_time = g_get_monotonic_time () + 1 * G_TIME_SPAN_SECOND;
+
 		g_mutex_lock(&port->mutex);
 		g_io_channel_flush(port->channel_out, NULL);
-		g_cond_wait(&port->condition, &port->mutex);
+		if (!g_cond_wait_until(&port->condition, &port->mutex, end_time)) {
+			g_mutex_unlock(&port->mutex);
+
+			return -1;
+		}
 		g_mutex_unlock(&port->mutex);
 
 		return 0;

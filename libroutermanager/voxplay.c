@@ -131,6 +131,7 @@ static gpointer playback_thread(gpointer user_data)
 	speex_bits_destroy(&playback->bits);
 
 	playback->audio->close(playback->priv, FALSE);
+	playback->audio = NULL;
 	playback->pause = FALSE;
 
 	return NULL;
@@ -221,6 +222,7 @@ void vox_stop(gpointer vox_data)
 		return;
 	}
 
+	playback->pause = TRUE;
 	g_cancellable_cancel(playback->cancel);
 	g_thread_join(playback->thread);
 

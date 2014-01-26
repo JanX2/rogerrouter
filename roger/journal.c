@@ -659,7 +659,7 @@ void journal_play_voice(const gchar *name)
 	}
 
 	/* Create dialog */
-	dialog = gtk_dialog_new_with_buttons(_("Voice box"), GTK_WINDOW(journal_win), GTK_DIALOG_MODAL, _("_Close"), GTK_RESPONSE_CLOSE, NULL);
+	dialog = gtk_dialog_new_with_buttons(_("Voice box"), GTK_WINDOW(journal_win), 0/*GTK_DIALOG_MODAL*/, _("_Close"), GTK_RESPONSE_CLOSE, NULL);
 	content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 
 	playback_data = g_slice_new(struct journal_playback);
@@ -694,13 +694,13 @@ void journal_play_voice(const gchar *name)
 
 	gtk_widget_show_all(content_area);
 	gtk_dialog_run(GTK_DIALOG(dialog));
-	gtk_widget_destroy(dialog);
-
-	playback_data->progress = NULL;
 
 	if (playback_data->vox_data) {
 		vox_stop(playback_data->vox_data);
 	}
+
+	gtk_widget_destroy(dialog);
+	playback_data->progress = NULL;
 
 	//TODO: Free memory
 	//g_free(data);
