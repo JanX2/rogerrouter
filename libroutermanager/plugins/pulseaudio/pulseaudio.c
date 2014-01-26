@@ -364,9 +364,9 @@ static void *pulse_audio_open(void)
 	pipes->simple_in = pa_simple_new(NULL, "Roger Router", PA_STREAM_RECORD, input, "phone", &sample_spec, NULL, &buffer, &error);
 	if (pipes->simple_in == NULL) {
 		g_debug("Pulseaudio - Could not open input device '%s'. Error: %s", input ? input : "", pa_strerror(error));
-		pa_simple_free(pipes->simple_out);
-		free(pipes);
-		return NULL;
+		//pa_simple_free(pipes->simple_out);
+		//free(pipes);
+		//return NULL;
 	}
 
 	return pipes;

@@ -581,14 +581,69 @@ void journal_update_filter(void)
 	gtk_combo_box_set_active(GTK_COMBO_BOX(journal_filter_box), 0);
 }
 
+struct journal_playback
+{
+	gchar *data;
+	gsize len;
+	gpointer vox_data;
+	gfloat fraction;
+
+	GtkWidget *media_button;
+	GtkWidget *progress;
+};
+
+void vox_playback_cb(void *progress, gfloat fraction)
+{
+	struct journal_playback *playback_data = progress;
+
+	if (playback_data && playback_data->progress) {
+		playback_data->fraction = fraction;
+		gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(playback_data->progress), fraction);
+
+		if (fraction == 1.0f) {
+			GtkWidget *media_image = gtk_image_new_from_icon_name("media-playback-start-symbolic", GTK_ICON_SIZE_BUTTON);
+			gtk_button_set_image(GTK_BUTTON(playback_data->media_button), media_image);
+		}
+	}
+}
+
+void vox_media_button_clicked_cb(GtkWidget *button, gpointer user_data)
+{
+	struct journal_playback *playback_data = user_data;
+
+	if (playback_data->vox_data && playback_data->fraction != 1.0f) {
+		GtkWidget *media_image;
+
+		if (vox_playpause(playback_data->vox_data)) {
+			media_image = gtk_image_new_from_icon_name("media-playback-pause-symbolic", GTK_ICON_SIZE_BUTTON);
+		} else {
+			media_image = gtk_image_new_from_icon_name("media-playback-start-symbolic", GTK_ICON_SIZE_BUTTON);
+		}
+
+		gtk_button_set_image(GTK_BUTTON(playback_data->media_button), media_image);
+	} else {
+		if (playback_data->vox_data) {
+			vox_stop(playback_data->vox_data);
+		}
+		playback_data->vox_data = vox_play(playback_data->data, playback_data->len, vox_playback_cb, playback_data);
+
+		GtkWidget *media_image = gtk_image_new_from_icon_name("media-playback-pause-symbolic", GTK_ICON_SIZE_BUTTON);
+		gtk_button_set_image(GTK_BUTTON(playback_data->media_button), media_image);
+	}
+}
+
 void journal_play_voice(const gchar *name)
 {
 	GtkWidget *dialog;
 	GtkWidget *content_area;
+	GtkWidget *grid;
+	GtkWidget *media_button;
+	GtkWidget *progress;
 	GtkWidget *label;
 	gsize len = 0;
 	gchar *data = router_load_voice(profile_get_active(), name, &len);
 	gpointer vox_data;
+	struct journal_playback *playback_data;
 
 	if (!data || !len) {
 		g_debug("could not load file!");
@@ -599,20 +654,49 @@ void journal_play_voice(const gchar *name)
 	/* Create dialog */
 	dialog = gtk_dialog_new_with_buttons(_("Voice box"), GTK_WINDOW(journal_win), GTK_DIALOG_MODAL, _("_Close"), GTK_RESPONSE_CLOSE, NULL);
 	content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
-	label = gtk_label_new(_("Playing voice box entry..."));
 
-	gtk_container_add(GTK_CONTAINER(content_area), label);
+	playback_data = g_slice_new(struct journal_playback);
+	playback_data->data = data;
+	playback_data->len = len;
+
+	grid = gtk_grid_new();
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
+
+	label = gtk_label_new(_("Playing voice box entry..."));
+	gtk_grid_attach(GTK_GRID(grid), label, 0, 0, 2, 1);
+
+	media_button = gtk_button_new();
+	playback_data->media_button = media_button;
+	g_signal_connect(media_button, "clicked", G_CALLBACK(vox_media_button_clicked_cb), playback_data);
+	GtkWidget *media_image = gtk_image_new_from_icon_name("media-playback-pause-symbolic", GTK_ICON_SIZE_BUTTON);
+	gtk_button_set_image(GTK_BUTTON(media_button), media_image);
+	gtk_grid_attach(GTK_GRID(grid), media_button, 0, 1, 1, 1);
+
+	progress = gtk_progress_bar_new();
+	playback_data->progress = progress;
+	gtk_widget_set_hexpand(progress, TRUE);
+	gtk_grid_attach(GTK_GRID(grid), progress, 1, 1, 1, 1);
+
+	gtk_container_add(GTK_CONTAINER(content_area), grid);
 	gtk_widget_set_size_request(dialog, 300, 150);
 	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
 
-	vox_data = vox_play(data, len);
+	vox_data = vox_play(data, len, vox_playback_cb, playback_data);
+	playback_data->vox_data = vox_data;
+
 	gtk_widget_show_all(content_area);
 	gtk_dialog_run(GTK_DIALOG(dialog));
 	gtk_widget_destroy(dialog);
 
-	vox_stop(vox_data);
+	playback_data->progress = NULL;
 
-	g_free(data);
+	if (playback_data->vox_data) {
+		vox_stop(playback_data->vox_data);
+	}
+
+	//TODO: Free memory
+	//g_free(data);
 }
 
 void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)

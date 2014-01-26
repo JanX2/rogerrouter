@@ -22,8 +22,9 @@
 
 G_BEGIN_DECLS
 
-gpointer vox_play(gchar *data, gsize len);
+gpointer vox_play(gchar *data, gsize len, void (*vox_cb)(void *priv, gfloat fraction), void *priv);
 void vox_stop(gpointer vox_data);
+gboolean vox_playpause(gpointer vox_data);
 
 G_END_DECLS
 

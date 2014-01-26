@@ -642,7 +642,7 @@ GSList *fritzbox_load_faxbox(GSList *journal)
 				number = "";
 			}
 
-			journal = call_add(journal, CALL_TYPE_FAX, g_strdup_printf("%s %s", date, time), "", number, ("Telefax"), "", "", g_strdup(full));
+			journal = call_add(journal, CALL_TYPE_FAX, g_strdup_printf("%s %s", date, time), "", number, ("Telefax"), "", "0:01", g_strdup(full));
 			g_free(full);
 		}
 
@@ -684,7 +684,7 @@ static GSList *fritzbox_parse_voice_data(GSList *journal, const gchar *data, gsi
 
 		snprintf(date_time, sizeof(date_time), "%2.2d.%2.2d.%2.2d %2.2d:%2.2d", voice_data->day, voice_data->month, voice_data->year,
 		         voice_data->hour, voice_data->minute);
-		journal = call_add(journal, CALL_TYPE_VOICE, date_time, "", voice_data->remote_number, "", voice_data->local_number, g_strdup_printf("%ds", voice_data->duration), g_strdup(voice_data->file));
+		journal = call_add(journal, CALL_TYPE_VOICE, date_time, "", voice_data->remote_number, "", voice_data->local_number, "0:01", g_strdup(voice_data->file));
 	}
 
 	return journal;

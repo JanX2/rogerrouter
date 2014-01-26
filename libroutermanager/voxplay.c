@@ -44,7 +44,12 @@ struct vox_playback {
 	struct audio *audio;
 	gpointer priv;
 	GCancellable *cancel;
+	gboolean pause;
+
+	void (*cb)(void *priv, gfloat fraction);
+	void *cb_data;
 };
+
 /**
  * \brief Main playback thread
  * \param user_data audio private pointer
@@ -58,10 +63,38 @@ static gpointer playback_thread(gpointer user_data)
 	int j;
 	unsigned char bytes = 0;
 	gsize offset = 0;
+	int cnt = 0;
+	int len_cnt = 0;
 
 	speex_decoder_ctl(playback->speex, SPEEX_GET_FRAME_SIZE, &frame_size);
+	g_debug("Frame Size: %d", frame_size);
+	g_debug("Playback len: %ld", playback->len);
 
 	while (offset < playback->len && !g_cancellable_is_cancelled(playback->cancel)) {
+		bytes = playback->data[offset];
+		offset++;
+
+		if (bytes != 0x26) {
+			continue;
+		}
+
+		offset += bytes;
+		cnt++;
+	}
+
+	g_debug("cnt: %d", cnt);
+	g_debug("Seconds: %f", (float)(frame_size * cnt) / (float)8000);
+
+	len_cnt = cnt;
+	offset = 0;
+	cnt = 0;
+
+	while (offset < playback->len && !g_cancellable_is_cancelled(playback->cancel)) {
+		if (playback->pause) {
+			g_usleep(100);
+			continue;
+		}
+
 		bytes = playback->data[offset];
 		offset++;
 
@@ -90,12 +123,16 @@ static gpointer playback_thread(gpointer user_data)
 		}
 
 		playback->audio->write(playback->priv, (unsigned char *) output, frame_size * sizeof(short));
+		cnt++;
+		playback->cb(playback->cb_data, (float)cnt / (float)len_cnt);
 	}
+	g_debug("Cnt: %d", cnt);
 
 	speex_decoder_destroy(playback->speex);
 	speex_bits_destroy(&playback->bits);
 
 	playback->audio->close(playback->priv, FALSE);
+	playback->pause = FALSE;
 
 	return NULL;
 }
@@ -106,7 +143,7 @@ static gpointer playback_thread(gpointer user_data)
  * \param len length of voice data
  * \return vox play structure
  */
-gpointer vox_play(gchar *data, gsize len)
+gpointer vox_play(gchar *data, gsize len, void (*vox_cb)(void *priv, gfloat fraction), void *priv)
 {
 	struct vox_playback *playback;
 	const SpeexMode *mode;
@@ -150,10 +187,27 @@ gpointer vox_play(gchar *data, gsize len)
 
 	playback->cancel = g_cancellable_new();
 
+	playback->cb = vox_cb;
+	playback->cb_data = priv;
+
 	/* Start playback thread */
+	playback->pause = FALSE;
 	playback->thread = g_thread_new("play vox", playback_thread, playback);
 
 	return playback;
+}
+
+gboolean vox_playpause(gpointer vox_data)
+{
+	struct vox_playback *playback = vox_data;
+
+	if (!playback) {
+		return FALSE;
+	}
+
+	playback->pause = !playback->pause;
+
+	return !playback->pause;
 }
 
 /**
