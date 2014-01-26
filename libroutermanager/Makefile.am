@@ -72,6 +72,8 @@ libroutermanager_la_SOURCES = \
 	plugins.h\
 	profile.c\
 	profile.h\
+	remote.c\
+	remote.h\
 	router.c\
 	router.h\
 	voxplay.c\

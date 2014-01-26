@@ -46,8 +46,8 @@ struct vox_playback {
 	GCancellable *cancel;
 	gboolean pause;
 
-	void (*cb)(void *priv, gfloat fraction);
-	void *cb_data;
+	void (*cb)(gpointer priv, gpointer fraction);
+	gpointer cb_data;
 };
 
 /**
@@ -124,9 +124,8 @@ static gpointer playback_thread(gpointer user_data)
 
 		playback->audio->write(playback->priv, (unsigned char *) output, frame_size * sizeof(short));
 		cnt++;
-		playback->cb(playback->cb_data, (float)cnt / (float)len_cnt);
+		playback->cb(playback->cb_data, GINT_TO_POINTER(cnt * 100 / len_cnt));//(float)cnt / (float)len_cnt);
 	}
-	g_debug("Cnt: %d", cnt);
 
 	speex_decoder_destroy(playback->speex);
 	speex_bits_destroy(&playback->bits);
@@ -143,7 +142,7 @@ static gpointer playback_thread(gpointer user_data)
  * \param len length of voice data
  * \return vox play structure
  */
-gpointer vox_play(gchar *data, gsize len, void (*vox_cb)(void *priv, gfloat fraction), void *priv)
+gpointer vox_play(gchar *data, gsize len, void (*vox_cb)(gpointer priv, gpointer fraction), gpointer priv)
 {
 	struct vox_playback *playback;
 	const SpeexMode *mode;

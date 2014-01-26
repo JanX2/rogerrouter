@@ -37,6 +37,7 @@
 #include <libroutermanager/lookup.h>
 #include <libroutermanager/csv.h>
 #include <libroutermanager/gstring.h>
+#include <libroutermanager/remote.h>
 
 #include <roger/main.h>
 #include <roger/phone.h>
@@ -586,32 +587,38 @@ struct journal_playback
 	gchar *data;
 	gsize len;
 	gpointer vox_data;
-	gfloat fraction;
+	gint fraction;
 
 	GtkWidget *media_button;
 	GtkWidget *progress;
 };
 
-void vox_playback_cb(void *progress, gfloat fraction)
+void vox_playback_cb(gpointer progress, gpointer frac)
 {
 	struct journal_playback *playback_data = progress;
+	gint fraction = GPOINTER_TO_INT(frac);
 
 	if (playback_data && playback_data->progress) {
 		playback_data->fraction = fraction;
-		gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(playback_data->progress), fraction);
+		gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(playback_data->progress), (float)fraction / (float)100);
 
-		if (fraction == 1.0f) {
+		if (fraction == 100) {
 			GtkWidget *media_image = gtk_image_new_from_icon_name("media-playback-start-symbolic", GTK_ICON_SIZE_BUTTON);
 			gtk_button_set_image(GTK_BUTTON(playback_data->media_button), media_image);
 		}
 	}
 }
 
+void remote_vox_playback_cb(gpointer progress, gpointer fraction)
+{
+	remote_port_invoke_call(remote_port_get_main(), vox_playback_cb, progress, fraction);
+}
+
 void vox_media_button_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 	struct journal_playback *playback_data = user_data;
 
-	if (playback_data->vox_data && playback_data->fraction != 1.0f) {
+	if (playback_data->vox_data && playback_data->fraction != 100) {
 		GtkWidget *media_image;
 
 		if (vox_playpause(playback_data->vox_data)) {
@@ -625,7 +632,7 @@ void vox_media_button_clicked_cb(GtkWidget *button, gpointer user_data)
 		if (playback_data->vox_data) {
 			vox_stop(playback_data->vox_data);
 		}
-		playback_data->vox_data = vox_play(playback_data->data, playback_data->len, vox_playback_cb, playback_data);
+		playback_data->vox_data = vox_play(playback_data->data, playback_data->len, remote_vox_playback_cb, playback_data);
 
 		GtkWidget *media_image = gtk_image_new_from_icon_name("media-playback-pause-symbolic", GTK_ICON_SIZE_BUTTON);
 		gtk_button_set_image(GTK_BUTTON(playback_data->media_button), media_image);
@@ -682,7 +689,7 @@ void journal_play_voice(const gchar *name)
 	gtk_widget_set_size_request(dialog, 300, 150);
 	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
 
-	vox_data = vox_play(data, len, vox_playback_cb, playback_data);
+	vox_data = vox_play(data, len, remote_vox_playback_cb, playback_data);
 	playback_data->vox_data = vox_data;
 
 	gtk_widget_show_all(content_area);

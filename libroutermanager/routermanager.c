@@ -34,6 +34,7 @@
 #include <libroutermanager/fax_phone.h>
 #include <libroutermanager/fax_printer.h>
 #include <libroutermanager/action.h>
+#include <libroutermanager/remote.h>
 
 #ifdef __APPLE__
 #include <gtkmacintegration/gtkosxapplication.h>
@@ -136,6 +137,9 @@ gboolean routermanager_init(gboolean debug, GError **error)
 	if (!fax_printer_init(error)) {
 		return FALSE;
 	}
+
+	/* Initialize remote port */
+	remote_port_init();
 
 	/* Initialize network */
 	net_init();
