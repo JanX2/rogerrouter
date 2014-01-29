@@ -226,7 +226,9 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 		return;
 	}
 
-	ringtone_play(connection->type);
+	if (g_settings_get_boolean(notification_settings, "play-ringtones")) {
+		ringtone_play(connection->type);
+	}
 
 	/** Ask for contact information */
 	memset(contact, 0, sizeof(struct contact));
