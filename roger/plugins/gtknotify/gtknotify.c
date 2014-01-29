@@ -230,7 +230,9 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 		return;
 	}
 
-	ringtone_play(connection->type);
+	if (g_settings_get_boolean(notification_gtk_settings, "play-ringtones")) {
+		ringtone_play(connection->type);
+	}
 
 	/** Ask for contact information */
 	memset(contact, 0, sizeof(struct contact));
@@ -563,6 +565,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *enable_column;
 	GtkTreeViewColumn *number_column;
+	GtkWidget *play_ringtones_toggle;
 
 	/* Settings grid */
 	settings_grid = gtk_grid_new();
@@ -602,6 +605,10 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	enable_column = gtk_tree_view_column_new_with_attributes(_("Incoming"), renderer, "active", 2, NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(view), enable_column);
 	g_signal_connect(G_OBJECT(renderer), "toggled", G_CALLBACK(notification_gtk_incoming_toggle_cb), tree_model);
+
+	play_ringtones_toggle = gtk_check_button_new_with_label(_("Play ringtones"));
+	g_settings_bind(notification_gtk_settings, "play-ringtones", play_ringtones_toggle, "active", G_SETTINGS_BIND_DEFAULT);
+	gtk_grid_attach(GTK_GRID(settings_grid), play_ringtones_toggle, 0, 1, 1, 1);
 
 	return pref_group_create(settings_grid, _("Choose for which MSNs you want notifications"), TRUE, TRUE);
 }
