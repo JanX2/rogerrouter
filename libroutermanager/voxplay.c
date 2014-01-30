@@ -68,7 +68,7 @@ static gpointer playback_thread(gpointer user_data)
 
 	speex_decoder_ctl(playback->speex, SPEEX_GET_FRAME_SIZE, &frame_size);
 	g_debug("Frame Size: %d", frame_size);
-	g_debug("Playback len: %ld", playback->len);
+	g_debug("Playback len: %" G_GSIZE_FORMAT, playback->len);
 
 	while (offset < playback->len && !g_cancellable_is_cancelled(playback->cancel)) {
 		bytes = playback->data[offset];
