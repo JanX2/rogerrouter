@@ -1,3 +1,23 @@
+roger - 1.8.3
+------------------------------------------------------------------------------------------------------------------
+* WIN32:
+    - Add ghostscript to bundle
+    - Install fax driver automatically
+    - Fix rundll warnings on startup
+    - Add information details to application files
+    - Fix journal woes while writing file
+    - Add Roger to Add/Remove software dialog
+    - Correct notification position
+    - Switch to symbolic UI icons
+* Sleeker journal UI (gear menu, combine fax/voice with call entries, optional GtkHeaderbar on GTK+ 3.10)
+* Increased CAPI transfer buffers
+* Improved fax file generation based on spandsp research
+* Google plugin on Linux
+* Thunderbird plugin
+* Save and restore journal window width/height/maximized flag
+* Play/Pause control for vox playback
+* Bugfixes
+
 roger - 1.8.2
 ------------------------------------------------------------------------------------------------------------------
 * Contacts
