@@ -105,8 +105,8 @@ msgid ""
 msgstr ""
 "In den nächsten Schritten geschieht die Integration eines neuen Routers in "
 "Roger Router.\n"
-"Als erstes werden allen verfügbaren Geräten erkannt und anschließend die "
-"relevaten\n"
+"Als erstes werden alle verfügbaren Geräten erkannt und anschließend die "
+"relevanten\n"
 "Informationen eingelesen."
 
 #: ../roger/assistant.c:249 ../roger/assistant.c:502
