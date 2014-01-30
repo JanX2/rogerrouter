@@ -189,6 +189,13 @@ Section RogerRouter
 	nsExec::ExecToLog '$0 /C .\gdk-pixbuf-query-loaders.exe > lib\gdk-pixbuf-2.0\2.10.0\loaders.cache'
 
 	WriteUninstaller "$INSTDIR\uninstall.exe"
+
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\RogerRouter" "DisplayName" "Roger Router"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\RogerRouter" "DisplayVersion" "${PACKAGE_VERSION}"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\RogerRouter" "Publisher" "Tabos.org"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\RogerRouter" "HelpLink" "http://www.tabos.org"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\RogerRouter" "URLInfoAbout" "http://www.tabos.org"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\RogerRouter" "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
 SectionEnd
 
 Section "Start Menu Shortcuts"
@@ -214,6 +221,8 @@ Section "Uninstall"
 	DetailPrint "Removing Roger Router Fax printer"
 	SetDetailsPrint none
 	ExecWait 'rundll32 printui.dll,PrintUIEntry /dl /n "Roger Router (Fax)" /q'
+
+	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\RogerRouter"
 SectionEnd
 
 ;Add printer ports to registry
