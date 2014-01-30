@@ -54,14 +54,13 @@ struct event_translate event_translation_table[] = {
 	{G_FILE_MONITOR_EVENT_PRE_UNMOUNT, "file system about to be unmounted"},
 	{G_FILE_MONITOR_EVENT_UNMOUNTED, "file system unmounted"},
 	{G_FILE_MONITOR_EVENT_MOVED, "file moved"},
-	{ -1, "" }
 };
 
 static const char *event_to_text(GFileMonitorEvent event)
 {
 	int index;
 
-	for (index = 0; event_translation_table[index].event != -1; index++) {
+	for (index = 0; index < sizeof(event_translation_table) / sizeof(event_translation_table[0]); index++) {
 		if (event_translation_table[index].event == event) {
 			return event_translation_table[index].text;
 		}
