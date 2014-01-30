@@ -1,3 +1,6 @@
+#include <io.h>
+#include <fcntl.h>
+
 #include <glib.h>
 
 #include <remote.h>
@@ -41,7 +44,7 @@ gboolean remote_call_handle(GIOChannel *channel, GIOCondition condition, gpointe
 	if (status == G_IO_STATUS_NORMAL && read == sizeof(event)) {
 		remote_call_process(port, &event);
 	} else {
-		g_warning("Warning, status = %d, read = %ld", status, read);
+		g_warning("Warning, status = %d, read = %" G_GSIZE_FORMAT, status, read);
 	}
 
 	return TRUE;
