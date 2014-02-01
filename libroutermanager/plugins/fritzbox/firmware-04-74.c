@@ -188,6 +188,32 @@ gboolean extract_number_04_74(GSList **number_list, const gchar *data, gchar *ms
 }
 
 /**
+ * \brief strndup phone number from fw 04.74
+ * \param number_list pointer to number_list
+ * \param data incoming page data
+ * \param len len of string to copy
+ * \return TRUE on success, otherwise FALSE
+ */
+gboolean copy_number_04_74(GSList **number_list, const gchar *data, gsize len)
+{
+	gchar *fon;
+
+	fon = g_strndup(data, len);
+	if (!EMPTY_STRING(fon) && isdigit(fon[0])) {
+		if (!g_slist_find_custom(*number_list, fon, number_compare_04_74)) {
+			*number_list = g_slist_prepend(*number_list, fon);
+		} else {
+			g_free(fon);
+		}
+
+		return TRUE;
+	}
+
+	g_free(fon);
+	return FALSE;
+}
+
+/**
  * \brief Read MSNs of data
  * \param profile profile information structure
  * \param data data to parse for MSNs
@@ -201,9 +227,54 @@ void fritzbox_extract_numbers_04_74(struct profile *profile, const gchar *data)
 	GSList *list;
 	gchar **numbers;
 	gint counter = 0;
+	gchar *skip = NULL;
+	gchar *start;
+	gchar *end;
 
-	//router_clear_numbers(profile);
+	/* First read old entries */
+	skip = strstr(data, "readFonNumbers()");
 
+	if (skip != NULL) {
+		/* POTS */
+		skip = strstr(skip, "nrs.pots");
+		if (skip != NULL) {
+			start = strchr(skip, '"');
+			end = strchr(start + 1, '"');
+			if (end - start - 1 > 0) {
+				copy_number_04_74(&number_list, start + 1, end - start - 1);
+			}
+		} else {
+			skip = (gchar*)data;
+		}
+
+		/* MSN */
+		for (index = 0; index < 10; index++) {
+			skip = strstr(skip, "nrs.msn.push");
+			if (skip != NULL) {
+				start = strchr(skip, '"');
+				end = strchr(start + 1, '"');
+				if (end - start - 1 > 0) {
+					copy_number_04_74(&number_list, start + 1, end - start - 1);
+				}
+				skip = end;
+			}
+		}
+
+		/* SIP */
+		for (index = 0; index < 19; index++) {
+			skip = strstr(skip, "nrs.sip.push");
+			if (skip != NULL) {
+				start = strchr(skip, '"');
+				end = strchr(start + 1, '"');
+				if (end - start - 1 > 0) {
+					copy_number_04_74(&number_list, start + 1, end - start - 1);
+				}
+				skip = end;
+			}
+		}
+	}
+
+	/* Now read the new entries */
 	/* POTS first! */
 	if (extract_number_04_74(&number_list, data, "telcfg:settings/MSN/POTS")) {
 		type = 3;
