@@ -434,10 +434,11 @@ GdkPixbuf *image_get_scaled(GdkPixbuf *image, gint req_width, gint req_height)
 	}
 
 	if (!image) {
+#if defined(G_OS_WIN32) || defined(__APPLE__)
+		image = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "avatar-default", orig_width, 0, NULL);
+#else
 		image = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "avatar-default-symbolic", orig_width, 0, NULL);
-		//GtkWidget *img;
-		//img = get_icon(APP_ICON_PERSON, GTK_ICON_SIZE_DIALOG);
-		//image = gtk_image_get_pixbuf(GTK_IMAGE(img));
+#endif
 	}
 
 	width = gdk_pixbuf_get_width(image);
