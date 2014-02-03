@@ -34,6 +34,10 @@ roger/plugins/indicator/indicator.c
 [type: gettext/ini]roger/plugins/indicator/indicator.plugin.in
 roger/plugins/vcard/vcard.c
 [type: gettext/ini]roger/plugins/vcard/vcard.plugin.in
+roger/plugins/google/google.c
+[type: gettext/ini]roger/plugins/google/google.plugin.in
+roger/plugins/thunderbird/thunderbird.c
+[type: gettext/ini]roger/plugins/thunderbird/thunderbird.plugin.in
 roger-cli/main_cli.c
 libroutermanager/filter.c
 [type: gettext/ini]libroutermanager/plugins/areacodes_global/areacodes_global.plugin.in
