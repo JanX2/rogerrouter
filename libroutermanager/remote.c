@@ -1,9 +1,9 @@
+#include <glib.h>
+
 #ifdef G_OS_WIN32
 #include <io.h>
 #include <fcntl.h>
 #endif
-
-#include <glib.h>
 
 #include <remote.h>
 
