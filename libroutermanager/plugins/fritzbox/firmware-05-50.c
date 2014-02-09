@@ -488,7 +488,30 @@ gboolean fritzbox_get_fax_information_06_00(struct profile *profile)
 		gint fax_mail_active = atoi(&active[0]);
 
 		if ((fax_mail_active == 2 || fax_mail_active == 3)) {
-			gchar *volume = xml_extract_list_value(data, "ctlusb:settings/storage-part0");
+			gchar *volume;
+			g_object_unref(msg);
+
+
+			url = g_strdup_printf("http://%s/usb/show_usb_devices.lua", router_get_host(profile));
+			msg = soup_form_request_new(SOUP_METHOD_GET, url,
+				                    "sid", profile->router_info->session_id,
+				                    NULL);
+			g_free(url);
+
+			soup_session_send_message(soup_session_sync, msg);
+			if (msg->status_code != 200) {
+				g_debug("Received status code: %d", msg->status_code);
+				g_object_unref(msg);
+				return FALSE;
+			}
+			data = msg->response_body->data;
+			read = msg->response_body->length;
+
+			log_save_data("fritzbox-06_00-show-usb-devices.html", data, read);
+
+			g_assert(data != NULL);
+
+			volume = xml_extract_list_value(data, "name");
 
 			if (volume) {
 				g_debug("Fax-Storage-Volume: '%s'", volume);
