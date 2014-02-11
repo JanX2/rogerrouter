@@ -1360,11 +1360,15 @@ static void capi_confirmation(_cmsg capi_message)
 		break;
 	case CAPI_DATA_B3:
 		/* Sent data acknowledge, NOP */
+#ifdef FAXOPHONE_DEBUG
 		g_debug("CNF: DATA_B3");
+#endif
 		info = DATA_B3_CONF_INFO(&capi_message);
 		ncci = DATA_B3_CONF_NCCI(&capi_message);
 
+#ifdef FAXOPHONE_DEBUG
 		g_debug("CNF: CAPI_ALERT: info %d, ncci %d", info, ncci);
+#endif
 
 		connection = capi_find_ncci(ncci);
 		if (connection && connection->use_buffers && connection->buffers) {
