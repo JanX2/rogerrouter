@@ -27,6 +27,7 @@
 #include <roger/journal.h>
 #include <roger/pref.h>
 #include <roger/pref_filters.h>
+#include <roger/icons.h>
 
 static gint table_y;
 static GSList *pref_filters_current_rules;
@@ -65,7 +66,7 @@ static void type_box_changed_cb(GtkWidget *widget, gpointer next)
 		}
 		break;
 	case 1:
-		/* Date */
+		/* Date/Time */
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is"));
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is not"));
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is after"));
@@ -74,22 +75,12 @@ static void type_box_changed_cb(GtkWidget *widget, gpointer next)
 		break;
 	case 2:
 		/* Name */
-		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is"));
-		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is not"));
-		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Starts with"));
-		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Contains"));
-		gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 0);
-		break;
 	case 3:
 		/* Number */
-		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is"));
-		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is not"));
-		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Starts with"));
-		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Contains"));
-		gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 0);
-		break;
 	case 4:
-		/* Local number */
+		/* Extension */
+	case 5:
+		/* Line */
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is"));
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is not"));
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Starts with"));
@@ -187,6 +178,7 @@ static void pref_filters_add_rule(gpointer grid_ptr, struct filter_rule *rule)
 	GtkWidget *entry;
 	GtkWidget *remove_button;
 	GtkWidget *add_button;
+	GtkWidget *image;
 
 	if (!rule) {
 		rule = g_slice_new0(struct filter_rule);
@@ -197,18 +189,19 @@ static void pref_filters_add_rule(gpointer grid_ptr, struct filter_rule *rule)
 	/* Set standard spacing to 5 */
 	gtk_grid_set_row_spacing(GTK_GRID(own_grid), 5);
 	gtk_grid_set_column_spacing(GTK_GRID(own_grid), 15);
-	gtk_grid_set_column_homogeneous(GTK_GRID(own_grid), TRUE);
+	//gtk_grid_set_column_homogeneous(GTK_GRID(own_grid), TRUE);
 
 	g_object_set_data(G_OBJECT(own_grid), "rule", rule);
 
 	pref_filters_current_rules = g_slist_append(pref_filters_current_rules, rule);
 
 	type_box = gtk_combo_box_text_new();
-	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Call type"));
-	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Date"));
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Type"));
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Date/Time"));
 	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Name"));
 	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Number"));
-	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Local number"));
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Extension"));
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Line"));
 
 	gtk_combo_box_set_active(GTK_COMBO_BOX(type_box), rule->type);
 
@@ -223,17 +216,23 @@ static void pref_filters_add_rule(gpointer grid_ptr, struct filter_rule *rule)
 	gtk_grid_attach(GTK_GRID(own_grid), sub_type_box, 1, 0, 1, 1);
 
 	entry = gtk_entry_new();
+	gtk_widget_set_hexpand(entry, TRUE);
 	if (rule->entry) {
 		gtk_entry_set_text(GTK_ENTRY(entry), rule->entry);
 	}
 	g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(entry_changed_cb), rule);
 	gtk_grid_attach(GTK_GRID(own_grid), entry, 2, 0, 1, 1);
 
-	add_button = gtk_button_new_with_mnemonic(_("Add"));
+	add_button = gtk_button_new();
+	image = get_icon(APP_ICON_ADD, GTK_ICON_SIZE_MENU);
+	gtk_button_set_image(GTK_BUTTON(add_button), image);
+
 	g_signal_connect(G_OBJECT(add_button), "clicked", G_CALLBACK(add_button_clicked_cb), grid);
 	gtk_grid_attach(GTK_GRID(own_grid), add_button, 3, 0, 1, 1);
 
-	remove_button = gtk_button_new_with_mnemonic(_("_Remove"));
+	remove_button = gtk_button_new();
+	image = get_icon(APP_ICON_REMOVE, GTK_ICON_SIZE_MENU);
+	gtk_button_set_image(GTK_BUTTON(remove_button), image);
 	g_signal_connect(remove_button, "clicked", G_CALLBACK(remove_button_clicked_cb), own_grid);
 	gtk_grid_attach(GTK_GRID(own_grid), remove_button, 4, 0, 1, 1);
 
@@ -308,6 +307,7 @@ void filter_edit_cb(GtkWidget *widget, gpointer data)
 	table_y = 0;
 	gtk_grid_attach(GTK_GRID(grid), GTK_WIDGET(label), 0, table_y, 1, 1);
 	entry = gtk_entry_new();
+	gtk_widget_set_hexpand(entry, TRUE);
 	gtk_grid_attach(GTK_GRID(grid), GTK_WIDGET(entry), 1, table_y, 1, 1);
 	gtk_entry_set_text(GTK_ENTRY(entry), filter->name);
 	table_y++;
@@ -368,10 +368,14 @@ void filter_add_cb(GtkWidget *widget, gpointer data)
 	add_dialog = gtk_dialog_new_with_buttons(_("Add new filter"), pref_get_window(), GTK_DIALOG_DESTROY_WITH_PARENT, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_OK"), GTK_RESPONSE_OK, NULL);
 
 	grid = gtk_grid_new();
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 15);
+
 	label = gtk_label_new(_("Enter filter name"));
 	gtk_grid_attach(GTK_GRID(grid), label, 0, table_y, 1, 1);
 
 	entry = gtk_entry_new();
+	gtk_widget_set_hexpand(entry, TRUE);
 	gtk_grid_attach(GTK_GRID(grid), entry, 1, table_y, 1, 1);
 	table_y++;
 

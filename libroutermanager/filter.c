@@ -94,6 +94,8 @@ gboolean filter_rule_match(struct filter *filter, struct call *call)
 	gboolean remote_number_valid = FALSE;
 	gboolean local_number = FALSE;
 	gboolean local_number_valid = FALSE;
+	gboolean local_name = FALSE;
+	gboolean local_name_valid = FALSE;
 
 	if (!filter) {
 		/* We have no filter, everything matches */
@@ -215,6 +217,11 @@ gboolean filter_rule_match(struct filter *filter, struct call *call)
 			remote_number = TRUE;
 			remote_number_valid = filter_compare(rule, call->remote->number);
 			break;
+		case FILTER_LOCAL_NAME:
+			/* Local name */
+			local_name = TRUE;
+			local_name_valid = filter_compare(rule, call->local->name);
+			break;
 		case FILTER_LOCAL_NUMBER:
 			/* Local number */
 			local_number = TRUE;
@@ -243,9 +250,12 @@ gboolean filter_rule_match(struct filter *filter, struct call *call)
 	if (local_number_valid || !local_number) {
 		result |= 0x10;
 	}
+	if (local_name_valid || !local_name) {
+		result |= 0x20;
+	}
 
 	/* Result check */
-	return (result == 0x1F);
+	return (result == 0x3F);
 }
 
 /**
