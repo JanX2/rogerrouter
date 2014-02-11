@@ -64,7 +64,7 @@ msgid ""
 "Please check the host name"
 msgstr ""
 "Fehler: Konnte die Box an diesem Hostnamen nicht erkennen\n"
-"Bitte berprfen Sie den Hostnamen"
+"Bitte überprüfen Sie den Hostnamen"
 
 #. Error: Could not get settings from box
 #: ../roger/assistant.c:123
