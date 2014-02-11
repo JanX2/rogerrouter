@@ -434,7 +434,7 @@ GdkPixbuf *image_get_scaled(GdkPixbuf *image, gint req_width, gint req_height)
 	}
 
 	if (!image) {
-#if defined(G_OS_WIN32) || defined(__APPLE__)
+#if defined(__APPLE__)
 		image = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "avatar-default", orig_width, 0, NULL);
 #else
 		image = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "avatar-default-symbolic", orig_width, 0, NULL);
