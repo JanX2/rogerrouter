@@ -269,6 +269,7 @@ void phone_fill_combobox(GtkWidget *port_combobox, struct phone_state *state)
 	struct profile *profile = profile_get_active();
 	struct phone *phone;
 	gchar tmp[10];
+	gchar *act;
 
 	if (!profile) {
 		return;
@@ -287,6 +288,13 @@ void phone_fill_combobox(GtkWidget *port_combobox, struct phone_state *state)
 	g_signal_connect(port_combobox, "changed", G_CALLBACK(port_combobox_changed_cb), state);
 
 	g_settings_bind(profile->settings, "port", port_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+
+	act = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(port_combobox));
+	if (act) {
+		g_free(act);
+	} else {
+		gtk_combo_box_set_active_id(GTK_COMBO_BOX(port_combobox), tmp);
+	}
 }
 
 static void phone_connection_failed(void)

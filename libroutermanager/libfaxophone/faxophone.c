@@ -926,7 +926,9 @@ static int capi_indication(_cmsg capi_message)
 
 	/* CAPI_DATA_B3 - data - receive/send */
 	case CAPI_DATA_B3:
+#ifdef FAXOPHONE_DEBUG
 		g_debug("IND: CAPI_DATA_B3");
+#endif
 		ncci = DATA_B3_IND_NCCI(&capi_message);
 
 		connection = capi_find_ncci(ncci);
@@ -934,7 +936,9 @@ static int capi_indication(_cmsg capi_message)
 			break;
 		}
 
+#ifdef FAXOPHONE_DEBUG
 		g_debug("IND: CAPI_DATA_B3 - nConnection: %d, plci: %ld, ncci: %ld", connection->id, connection->plci, connection->ncci);
+#endif
 		if (connection->data) {
 			connection->data(connection, capi_message);
 		} else {
