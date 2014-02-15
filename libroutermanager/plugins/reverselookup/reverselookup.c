@@ -210,6 +210,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 
 end:
 	g_hash_table_insert(table, full_number, rl_contact);
+	g_object_unref(msg);
 
 	return result;
 }

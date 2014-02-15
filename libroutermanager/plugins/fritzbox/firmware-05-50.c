@@ -577,6 +577,7 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 
 		g_settings_set_strv(profile->settings, "numbers", (const gchar * const *)numbers);
 	}
+	g_object_unref(msg);
 
 	/* Extract phone names, default controller */
 	url = g_strdup_printf("http://%s/fon_devices/fondevices_list.lua", router_get_host(profile));

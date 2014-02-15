@@ -629,6 +629,7 @@ gboolean fritzfon_save(void)
 		g_object_unref(msg);
 		return FALSE;
 	}
+	g_object_unref(msg);
 
 	return TRUE;
 }
