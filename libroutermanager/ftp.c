@@ -283,6 +283,14 @@ gboolean ftp_passive(struct ftp *client)
 	gint data_port;
 	guint v[6];
 
+	if (client->data) {
+#ifdef FTP_DEBUG
+		g_debug("Data channel already open");
+#endif
+		g_io_channel_shutdown(client->data, FALSE, NULL);
+		client->data = NULL;
+	}
+
 #ifdef FTP_DEBUG
 	g_debug("ftp_passive(): EPSV");
 #endif
@@ -493,7 +501,31 @@ struct ftp *ftp_init(const gchar *server)
 	/* Read welcome message */
 	ftp_read_control_response(client);
 
+#ifdef FTP_DEBUG
+	g_debug("ftp_init() done");
+#endif
+
 	return client;
+}
+
+/**
+ * \brief Shutdown ftp structure (close sockets and free memory)
+ * \param client ftp client structure
+ * \return TRUE on success, otherwise FALSE
+ */
+gboolean ftp_shutdown(struct ftp *client)
+{
+	g_return_val_if_fail(client != NULL, FALSE);
+
+	g_free(client->server);
+	g_free(client->response);
+
+	g_io_channel_shutdown(client->control, FALSE, NULL);
+	g_io_channel_shutdown(client->data, FALSE, NULL);
+
+	g_slice_free(struct ftp, client);
+
+	return TRUE;
 }
 
 /**

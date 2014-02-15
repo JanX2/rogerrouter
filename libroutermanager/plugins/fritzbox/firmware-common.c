@@ -592,11 +592,13 @@ GSList *fritzbox_load_faxbox(GSList *journal)
 
 	if (!ftp_login(client, user, router_get_ftp_password(profile))) {
 		g_warning("Could not login to router ftp");
+		ftp_shutdown(client);
 		return journal;
 	}
 
 	if (!ftp_passive(client)) {
 		g_warning("Could not switch to passive mode");
+		ftp_shutdown(client);
 		return journal;
 	}
 
@@ -649,6 +651,8 @@ GSList *fritzbox_load_faxbox(GSList *journal)
 		g_free(response);
 	}
 	g_free(path);
+
+	ftp_shutdown(client);
 
 	return journal;
 }
@@ -712,6 +716,7 @@ GSList *fritzbox_load_voicebox(GSList *journal)
 
 	if (!ftp_login(client, user, router_get_ftp_password(profile))) {
 		g_warning("Could not login to router ftp");
+		ftp_shutdown(client);
 		return journal;
 	}
 
@@ -745,6 +750,8 @@ GSList *fritzbox_load_voicebox(GSList *journal)
 	}
 	g_free(path);
 
+	ftp_shutdown(client);
+
 	return journal;
 }
 
@@ -759,13 +766,17 @@ gchar *fritzbox_load_fax(struct profile *profile, const gchar *filename, gsize *
 {
 	struct ftp *client;
 	gchar *user = router_get_ftp_user(profile);
+	gchar *ret;
 
 	client = ftp_init(router_get_host(profile));
 	ftp_login(client, user, router_get_ftp_password(profile));
 
 	ftp_passive(client);
 
-	return ftp_get_file(client, filename, len);
+	ret = ftp_get_file(client, filename, len);
+	ftp_shutdown(client);
+
+	return ret;
 }
 
 /**
@@ -793,6 +804,9 @@ gchar *fritzbox_load_voice(struct profile *profile, const gchar *name, gsize *le
 	ftp_passive(client);
 
 	ret = ftp_get_file(client, filename, len);
+
+	ftp_shutdown(client);
+
 	g_free(filename);
 
 	return ret;
@@ -921,13 +935,17 @@ gboolean fritzbox_delete_fax(struct profile *profile, const gchar *filename)
 {
 	struct ftp *client;
 	gchar *user = router_get_ftp_user(profile);
+	gboolean ret;
 
 	client = ftp_init(router_get_host(profile));
 	ftp_login(client, user, router_get_ftp_password(profile));
 
 	ftp_passive(client);
 
-	return ftp_delete_file(client, filename);
+	ret = ftp_delete_file(client, filename);
+	ftp_shutdown(client);
+
+	return ret;
 }
 
 /**
@@ -974,6 +992,7 @@ gboolean fritzbox_delete_voice(struct profile *profile, const gchar *filename)
 		g_free(modified_data);
 		g_free(remote_file);
 		g_free(path);
+		ftp_shutdown(client);
 		return FALSE;
 	}
 
@@ -989,8 +1008,11 @@ gboolean fritzbox_delete_voice(struct profile *profile, const gchar *filename)
 	name = g_build_filename(g_settings_get_string(profile->settings, "fax-volume"), "FRITZ/voicebox/rec", filename, NULL);
 	if (!ftp_delete_file(client, name)) {
 		g_free(name);
+		ftp_shutdown(client);
 		return FALSE;
 	}
+
+	ftp_shutdown(client);
 
 	g_free(name);
 

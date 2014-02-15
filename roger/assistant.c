@@ -126,10 +126,14 @@ gpointer get_settings_thread(gpointer data)
 
 	/* Test ftp login */
 	struct ftp *ftp = ftp_init(host);
-	if (ftp && !ftp_login(ftp, ftp_user, ftp_password)) {
-		/* Error: Could not login to ftp */
-		message = g_strdup(_("Error: Could not login to box ftp server\nPlease check your ftp user/password."));
-		goto end;
+	if (ftp) {
+		if (!ftp_login(ftp, ftp_user, ftp_password)) {
+			/* Error: Could not login to ftp */
+			message = g_strdup(_("Error: Could not login to box ftp server\nPlease check your ftp user/password."));
+			ftp_shutdown(ftp);
+			goto end;
+		}
+		ftp_shutdown(ftp);
 	}
 
 	/* Enable telnet & capi port */

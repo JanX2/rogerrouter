@@ -85,6 +85,7 @@ static void verify_ftp_button_clicked_cb(GtkButton *button, gpointer user_data)
 		} else {
 			dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("FTP password is invalid"));
 		}
+		ftp_shutdown(client);
 	}
 
 	gtk_dialog_run(GTK_DIALOG(dialog));

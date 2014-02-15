@@ -40,6 +40,7 @@ gchar *ftp_get_file(struct ftp *client, const gchar *file, gsize *len);
 gboolean ftp_put_file(struct ftp *client, const gchar *file, const gchar *path, gchar *data, gsize size);
 struct ftp *ftp_init(const gchar *server);
 gboolean ftp_delete_file(struct ftp *client, const gchar *file);
+gboolean ftp_shutdown(struct ftp *client);
 
 G_END_DECLS
 
