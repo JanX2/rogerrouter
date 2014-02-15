@@ -40,7 +40,7 @@
 			<service>11880.com</service>
 			<prefix>0</prefix>
 			<url>http://www.11880.com/rueckwaertssuche/%NUMBER%</url>
-			<pattern>&lt;h4&gt;&lt;a href=[^&gt;]*&gt;\d+.\s(?P&lt;name&gt;[^&lt;]+)&lt;/a&gt;&lt;/h4&gt;.+[^&lt;]&lt;p&gt;\s+(?P&lt;street&gt;.+)\s+[^&lt;]&lt;br&gt;\s+(?P&lt;zip&gt;\d+)\s+(?P&lt;city&gt;.+)&lt;/p&gt;</pattern>
+			<pattern>&lt;h4&gt;&lt;a href=[^&gt;]*&gt;\d+.\s(?P&lt;name&gt;[^&lt;]+)&lt;/a&gt;&lt;/h4&gt;.+[^&lt;]&lt;p&gt;\s+(?P&lt;street&gt;.+)\s+[^&lt;]&lt;br&gt;\s+(?P&lt;zip&gt;\d+)\s+(?P&lt;city&gt;.+)\n.*&lt;/p&gt;</pattern>
 		</lookup>
 		<lookup>
 		 	<service>Das Oertliche</service>
