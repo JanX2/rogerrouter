@@ -939,11 +939,8 @@ static int capi_indication(_cmsg capi_message)
 #ifdef FAXOPHONE_DEBUG
 		g_debug("IND: CAPI_DATA_B3 - nConnection: %d, plci: %ld, ncci: %ld", connection->id, connection->plci, connection->ncci);
 #endif
-		if (connection->data) {
-			connection->data(connection, capi_message);
-		} else {
-			DATA_B3_RESP(&cmsg1, session->appl_id, session->message_number++, connection->ncci, DATA_B3_IND_DATAHANDLE(&capi_message));
-		}
+		connection->data(connection, capi_message);
+
 		break;
 
 	/* CAPI_FACILITY - Facility (DTMF) */
