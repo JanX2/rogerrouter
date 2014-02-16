@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce configure.
 
 m4_define([roger_major], [1])
 m4_define([roger_minor], [8])
-m4_define([roger_micro], [3])
+m4_define([roger_micro], [4])
 
 m4_define([roger_version],[roger_major.roger_minor.roger_micro])
 
