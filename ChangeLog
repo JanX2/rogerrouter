@@ -1,3 +1,13 @@
+roger - 1.8.4
+------------------------------------------------------------------------------------------------------------------
+* Update RL patterns
+* Close FTP sockets
+* Revert to previous CAPI buffer sizes
+* Update filters
+* Add fax extraction for newer FW
+* Fix gtk notification plugin crash
+* Bugfixes
+
 roger - 1.8.3
 ------------------------------------------------------------------------------------------------------------------
 * WIN32:
