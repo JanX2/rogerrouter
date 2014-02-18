@@ -267,6 +267,9 @@ gboolean ftp_login(struct ftp *client, const gchar *user, const gchar *password)
 		if (client->code == 230) {
 			login = TRUE;
 		}
+	} else if (client->code == 230) {
+		/* Already logged in */
+		login = TRUE;
 	}
 
 	return login;
