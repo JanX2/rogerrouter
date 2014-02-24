@@ -24,6 +24,7 @@ G_BEGIN_DECLS
 
 #define CSV_FRITZBOX_JOURNAL_DE "Typ;Datum;Name;Rufnummer;Nebenstelle;Eigene Rufnummer;Dauer"
 #define CSV_FRITZBOX_JOURNAL_EN "Type;Date;Name;Number;Extension;Outgoing Caller ID;Duration"
+#define CSV_FRITZBOX_JOURNAL_EN2 "Type;Date;Name;Number;Extension;Telephone Number;Duration"
 
 GSList *csv_parse_fritzbox_journal_data(GSList *list, const gchar *data);
 
