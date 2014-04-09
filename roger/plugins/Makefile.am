@@ -17,3 +17,7 @@ endif
 if WITH_GDATA
 SUBDIRS += google
 endif
+
+if WITH_KWALLET
+SUBDIRS += kwallet
+endif

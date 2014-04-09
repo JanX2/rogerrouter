@@ -55,6 +55,8 @@ roger_core_SOURCES =\
 	pref_prefix.h\
 	pref_router.c\
 	pref_router.h\
+	pref_security.c\
+	pref_security.h\
 	pref_softphone.c\
 	pref_softphone.h\
 	pref_misc.c\

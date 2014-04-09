@@ -21,8 +21,24 @@
 
 #include <libroutermanager/password.h>
 
-/** Internal password manager pointer */
-static struct password_manager *internal_password_manager = NULL;
+/** Internal password manager list */
+static GSList *pm_plugins = NULL;
+
+struct password_manager *password_manager_find(struct profile *profile)
+{
+	gchar *name = g_settings_get_string(profile->settings, "password-manager");
+	GSList *list;
+
+	for (list = pm_plugins; list != NULL; list = list->next) {
+		struct password_manager *pm = list->data;
+
+		if (pm && pm->name && name && !strcmp(pm->name, name)) {
+			return pm;
+		}
+	}
+
+	return pm_plugins ? pm_plugins->data : NULL;
+}
 
 /**
  * \brief Set password in manager
@@ -32,14 +48,9 @@ static struct password_manager *internal_password_manager = NULL;
  */
 void password_manager_set_password(struct profile *profile, const gchar *name, const gchar *password)
 {
-	if (internal_password_manager) {
-		/* Store it in external password manager */
-		internal_password_manager->set_password(profile, name, password);
-		return;
-	}
+	struct password_manager *pm = password_manager_find(profile);
 
-	/* Fallback: Use gsettings */
-	g_settings_set_string(profile->settings, name, password);
+	pm->set_password(profile, name, password);
 }
 
 /**
@@ -50,12 +61,9 @@ void password_manager_set_password(struct profile *profile, const gchar *name, c
  */
 gchar *password_manager_get_password(struct profile *profile, const gchar *name)
 {
-	if (internal_password_manager) {
-		return internal_password_manager->get_password(profile, name);
-	}
+	struct password_manager *pm = password_manager_find(profile);
 
-	/* Fallback: Use gsettings */
-	return g_settings_get_string(profile->settings, name);
+	return pm->get_password(profile, name);
 }
 
 /**
@@ -66,14 +74,9 @@ gchar *password_manager_get_password(struct profile *profile, const gchar *name)
  */
 gboolean password_manager_remove_password(struct profile *profile, const gchar *name)
 {
-	if (internal_password_manager) {
-		return internal_password_manager->remove_password(profile, name);
-	}
+	struct password_manager *pm = password_manager_find(profile);
 
-	/* Fallback: Use gsettings */
-	g_settings_set_string(profile->settings, name, "");
-
-	return TRUE;
+	return pm->remove_password(profile, name);
 }
 
 /**
@@ -82,5 +85,39 @@ gboolean password_manager_remove_password(struct profile *profile, const gchar *
  */
 void password_manager_register(struct password_manager *manager)
 {
-	internal_password_manager = manager;
+	pm_plugins = g_slist_prepend(pm_plugins, manager);
+}
+
+GSList *password_manager_get_plugins(void)
+{
+	return pm_plugins;
+}
+
+void simple_store_password(struct profile *profile, const gchar *name, const gchar *password)
+{
+	g_settings_set_string(profile->settings, name, password);
+}
+
+gchar *simple_get_password(struct profile *profile, const gchar *name)
+{
+	return g_settings_get_string(profile->settings, name);
+}
+
+gboolean simple_remove_password(struct profile *profile, const gchar *name)
+{
+	g_settings_set_string(profile->settings, name, "");
+
+	return TRUE;
+}
+
+struct password_manager simple = {
+        "Simple",
+        simple_store_password,
+        simple_get_password,
+        simple_remove_password,
+};
+
+void password_manager_init(void)
+{
+	password_manager_register(&simple);
 }

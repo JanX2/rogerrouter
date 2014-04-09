@@ -35,6 +35,7 @@
 #include <libroutermanager/fax_printer.h>
 #include <libroutermanager/action.h>
 #include <libroutermanager/remote.h>
+#include <libroutermanager/password.h>
 
 #ifdef __APPLE__
 #include <gtkmacintegration/gtkosxapplication.h>
@@ -149,6 +150,9 @@ gboolean routermanager_init(gboolean debug, GError **error)
 
 	/* Initialize plugins */
 	plugins_init();
+
+	/* Initialize password manager */
+	password_manager_init();
 
 	/* Initialize router */
 	if (!router_init()) {

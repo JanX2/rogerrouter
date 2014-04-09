@@ -37,6 +37,8 @@ void password_manager_set_password(struct profile *profile, const gchar *name, c
 gchar *password_manager_get_password(struct profile *profile, const gchar *name);
 gboolean password_manager_remove_password(struct profile *profile, const gchar *name);
 void password_manager_register(struct password_manager *manager);
+GSList *password_manager_get_plugins(void);
+void password_manager_init(void);
 
 G_END_DECLS
 

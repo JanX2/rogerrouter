@@ -17,6 +17,7 @@ AC_CONFIG_MACRO_DIR(m4)
 
 # Check for compilers.
 AC_PROG_CC
+AC_PROG_CXX
 AC_CHECK_PROG(found_cc, "$CC", yes, no)
 AM_PROG_CC_C_O
 
@@ -303,6 +304,28 @@ AS_IF([test "x$with_secret" != xno],
 AC_MSG_RESULT($with_secret)
 AM_CONDITIONAL(WITH_SECRET, test "x$with_secret" != "xno")
 AM_CONDITIONAL(HAVE_SECRET_SOURCE_REGISTRY, test "x$with_secret_registry" = "xyes")
+
+dnl ********************************************************************
+dnl kwallet is optional
+dnl ********************************************************************
+AC_ARG_WITH([kwallet],
+	[AS_HELP_STRING([--with-kwallet=@<:@ARG@:>@],
+	[Use kwallet (possible values: no, yes or the path to kwallet) @<:@default=no@:>@])],
+	[],
+	[with_kwallet=no])
+
+AC_MSG_CHECKING(for kwallet)
+AS_IF([test "x$with_kwallet" != xno],
+	[kde_dir="`kde4-config --prefix`"
+	AC_SUBST([KWALLET_CFLAGS], ["`pkg-config --cflags-only-I QtCore QtDBus QtGui` -I$kde_dir/include"])
+	AC_SUBST([KWALLET_LIBS], ["-lQtCore -lQtDBus -lQtGui -lkdecore -lkdeui"])
+	AC_DEFINE([HAVE_KWALLET], 1, [Have kwallet])
+	ROGER_FEATURES_YES="\tkwallet\n$ROGER_FEATURES_YES"
+])
+AC_MSG_RESULT($with_kwallet)
+
+AM_CONDITIONAL(WITH_KWALLET, test "x$with_kwallet" != "xno")
+
 
 dnl ********************************************************************
 dnl gdata is optional
@@ -641,6 +664,7 @@ AC_CONFIG_FILES([
     roger/plugins/google/data/Makefile
     roger/plugins/thunderbird/Makefile
     roger/plugins/thunderbird/data/Makefile
+    roger/plugins/kwallet/Makefile
     cups-backend/Makefile
     macosx/roger.plist
     macosx/package

@@ -30,6 +30,7 @@
 #include <roger/pref_plugins.h>
 #include <roger/pref_filters.h>
 #include <roger/pref_softphone.h>
+#include <roger/pref_security.h>
 #include <roger/pref_audio.h>
 #include <roger/pref_fax.h>
 #include <roger/pref_action.h>
@@ -123,6 +124,9 @@ void preferences(void)
 
 	page = pref_page_plugins();
 	pref_notebook_add_page(notebook, page, _("Plugins"));
+
+	page = pref_page_security();
+	pref_notebook_add_page(notebook, page, _("Security"));
 
 	page = pref_page_audio();
 	pref_notebook_add_page(notebook, page, _("Audio"));

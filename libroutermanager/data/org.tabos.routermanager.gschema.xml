@@ -225,6 +225,11 @@
 		<key name="ghostscript" type="s">
 			<default>''</default>
 		</key>
+
+		<!-- Password manager -->
+		<key name="password-manager" type="s">
+			<default>''</default>
+		</key>
 	</schema>
 
 	<schema id="org.tabos.routermanager.profile.action">
