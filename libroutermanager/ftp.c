@@ -202,7 +202,9 @@ gboolean ftp_timeout_cb(gpointer user_data)
 {
 	struct ftp *client = user_data;
 
-	client->timeout = TRUE;
+	if (client) {
+		client->timeout = TRUE;
+	}
 
 	return FALSE;
 }
