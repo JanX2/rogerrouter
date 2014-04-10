@@ -121,13 +121,15 @@ struct profile *profile_new(const gchar *name, const gchar *host, const gchar *u
 /**
  * \brief Update profiles in gsettting
  */
-void profile_commit()
+void profile_commit(void)
 {
-	gchar **profiles = g_malloc(sizeof(gchar *) * (g_slist_length(profile_list) + 1));
+	GSList *plist = profile_get_list();
 	GSList *list;
+	gchar **profiles;
 	gint counter = 0;
 
-	for (list = profile_list; list; list = list->next) {
+	profiles = g_malloc(sizeof(gchar *) * (g_slist_length(plist) + 1));
+	for (list = plist; list != NULL; list = list->next) {
 		struct profile *current_profile = list->data;
 		profiles[counter++] = g_strdup(current_profile->name);
 	}
