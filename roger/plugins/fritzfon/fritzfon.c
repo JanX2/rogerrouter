@@ -220,7 +220,7 @@ static gint fritzfon_read_book(void)
 	soup_multipart_append_form_string(multipart, "sid", profile->router_info->session_id);
 	soup_multipart_append_form_string(multipart, "PhonebookId", owner);
 	soup_multipart_append_form_string(multipart, "PhonebookExportName", name);
-	soup_multipart_append_form_string(multipart, "PhonebookExport", "");
+	soup_multipart_append_form_string(multipart, "PhonebookExport", "1");
 	SoupMessage *msg = soup_form_request_new_from_multipart(uri, multipart);
 
 	soup_session_send_message(soup_session_sync, msg);
