@@ -151,7 +151,7 @@ case "$with_fax_spooler_type" in
 esac
 
 AC_ARG_WITH([headerbar],
-	[AS_HELP_STRING([--headerbar=@<:@ARG@:>@],
+	[AS_HELP_STRING([--with-headerbar=@<:@ARG@:>@],
 		[whether journal shoudl make use of GtkHeaderBar (possible values: no, yes) @<:@default=no@:>@])],
 	[],
 	[with_headerbar=no])
