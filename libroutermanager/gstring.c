@@ -20,8 +20,9 @@
 #include <string.h>
 
 #include <glib.h>
+#include <glib/gprintf.h>
 
-#include <libroutermanager/gstring.h>
+#include "gstring.h"
 
 /**
  * \brief Search for case-sensitive needle in haystack
@@ -268,6 +269,7 @@ static gchar *convert_entities(const gchar *inbuf)
 
 			entity = g_strndup(found + 1, (endfound - found) - 1);
 			len = (found - prevfound);
+			endfound += (endfound - found);
 			memcpy(outbufloc, prevfound, len);
 			outbufloc += len;
 			unic = unichar_for_entity(entity, TRUE, TRUE, TRUE, TRUE, TRUE);
@@ -310,9 +312,14 @@ gchar *strip_html(gchar *word)
 	gchar *spaced_str = g_regex_replace_literal(space, stripped, -1, 0, " ", 0, NULL);
 	gchar *misc_str = g_regex_replace_literal(misc, spaced_str, -1, 0, "", 0, NULL);
 	gchar *return_str = convert_entities(misc_str);
+
 	g_free(misc_str);
 	g_free(spaced_str);
 	g_free(stripped);
+
+	g_regex_unref(misc);
+	g_regex_unref(space);
+	g_regex_unref(tags);
 
 	g_strstrip(return_str);
 
