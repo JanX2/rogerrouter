@@ -374,9 +374,8 @@ static void journal_button_refresh_clicked_cb(GtkWidget *button, GtkWidget *wind
 
 	gtk_spinner_start(GTK_SPINNER(spinner));
 	gtk_widget_show(spinner);
-	//journal_clear();
 
-	if (router_load_journal(profile_get_active()) == FALSE) {
+	if (router_load_journal(profile) == FALSE) {
 		gtk_spinner_stop(GTK_SPINNER(spinner));
 		gtk_widget_hide(spinner);
 	}
