@@ -866,6 +866,7 @@ static void journal_column_fixed_width_cb(GtkWidget *widget, gpointer user_data)
 {
 	GtkTreeViewColumn *column = GTK_TREE_VIEW_COLUMN(widget);
 
+	g_debug("Called f-w");
 	if (timeout_id) {
 		g_source_remove(timeout_id);
 	}
@@ -1329,7 +1330,13 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 		gchar *tmp;
 
 		renderer = gtk_cell_renderer_text_new();
+
+		/* Usually we want GTK to autosize the columns for the optimal width. Unfortunately this is not
+		 * true for versions < 3.10.0. Disable ellipsize text to show optimal column widths..... *grml*
+		 */
+#if GTK_CHECK_VERSION(3,10,0)
 		g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, NULL);
+#endif
 		column = gtk_tree_view_column_new_with_attributes(column_name[index], renderer, "text", index, NULL);
 		gtk_tree_view_column_set_sort_column_id(column, index);
 
@@ -1346,7 +1353,6 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 		g_signal_connect(column, "notify::fixed-width", G_CALLBACK(journal_column_fixed_width_cb), NULL);
 		g_signal_connect(column, "notify::visible", G_CALLBACK(journal_column_fixed_width_cb), NULL);
 		gtk_tree_view_column_set_resizable(column, TRUE);
-		gtk_tree_view_column_set_sort_column_id(column, index);
 
 		if (index == JOURNAL_COL_DATETIME) {
 			gtk_tree_sortable_set_sort_func(sortable, JOURNAL_COL_DATETIME, journal_sort_by_date, 0, NULL);
