@@ -57,9 +57,10 @@ struct password_manager kwallet = {
 
 void impl_activate(PeasActivatable *plugin)
 {
-	g_debug("Register kwallet password manager plugin");
-	kwallet4_init();
-	password_manager_register(&kwallet);
+	if (kwallet4_init()) {
+		g_debug("Register kwallet password manager plugin");
+		password_manager_register(&kwallet);
+	}
 }
 
 void impl_deactivate(PeasActivatable *plugin)

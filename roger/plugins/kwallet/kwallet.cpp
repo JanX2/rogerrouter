@@ -15,7 +15,7 @@ static KWallet::Wallet *wallet = NULL;
 /**
  * \brief Initialize wallet
  */
-extern "C" void kwallet4_init(void)
+extern "C" int kwallet4_init(void)
 {
 	QString local_wallet;
 
@@ -28,6 +28,8 @@ extern "C" void kwallet4_init(void)
 		local_wallet = KWallet::Wallet::LocalWallet();
 		wallet = KWallet::Wallet::openWallet(local_wallet, 0);
 	}
+
+	return app && wallet;
 }
 
 extern "C" int kwallet4_get_password(const char *name, char **password)
