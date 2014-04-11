@@ -35,7 +35,7 @@ struct phone_state {
 	GtkWidget *dialpad_frame;
 	GtkWidget *control_frame;
 	GtkWidget *call_frame;
-	GtkWidget *phone_statusbar;
+	GtkWidget *phone_status_label;
 	GtkWidget *name_entry;
 	GtkWidget *photo_image;
 	GtkWidget *llevel_in;

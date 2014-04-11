@@ -294,9 +294,8 @@ void app_show_fax_window(gchar *fax_file)
 
 	gtk_container_add(GTK_CONTAINER(frame), frame_grid);
 
-	state->phone_statusbar = gtk_statusbar_new();
-	gtk_statusbar_push(GTK_STATUSBAR(state->phone_statusbar), 0, _("Connection: Idle | Duration: 00:00:00"));
-	gtk_grid_attach(GTK_GRID(grid), state->phone_statusbar, 0, 2, 3, 1);
+	state->phone_status_label = gtk_label_new(_("Connection: Idle | Duration: 00:00:00"));
+	gtk_grid_attach(GTK_GRID(grid), state->phone_status_label, 0, 2, 3, 1);
 
 	/* We set the dial frame last, so that all other widgets are in place */
 	frame = phone_dial_frame(window, NULL, state);

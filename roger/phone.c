@@ -109,7 +109,7 @@ static gboolean phone_session_timer_cb(gpointer data)
 	gchar buf[64];
 
 	snprintf(buf, sizeof(buf), _("Connection: %s | Time: %s"), state->phone_status_text, time_diff);
-	gtk_statusbar_push(GTK_STATUSBAR(state->phone_statusbar), 0, buf);
+	gtk_label_set_text(GTK_LABEL(state->phone_status_label), buf);
 
 	if (connection && state->llevel_in && state->llevel_out) {
 		line_level_set(state->llevel_in, log10(1.0 + 9.0 * get_line_level_in(connection)));
@@ -1001,9 +1001,8 @@ void app_show_phone_window(struct contact *contact)
 	gtk_grid_attach(GTK_GRID(grid), separator, 0, pos_y, 3, 1);
 
 	pos_y++;
-	state->phone_statusbar = gtk_statusbar_new();
-	gtk_statusbar_push(GTK_STATUSBAR(state->phone_statusbar), 0, _("Connection: Idle | Time: 00:00:00"));
-	gtk_grid_attach(GTK_GRID(grid), state->phone_statusbar, 0, pos_y, 3, 1);
+	state->phone_status_label = gtk_label_new(_("Connection: Idle | Time: 00:00:00"));
+	gtk_grid_attach(GTK_GRID(grid), state->phone_status_label, 0, pos_y, 3, 1);
 
 	/* We set the dial frame last, so that all other widgets are in place */
 	frame = phone_dial_frame(window, contact, state);
