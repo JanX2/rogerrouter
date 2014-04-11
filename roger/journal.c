@@ -53,7 +53,7 @@
 GtkWidget *journal_view = NULL;
 GtkWidget *journal_win = NULL;
 GtkWidget *journal_filter_box = NULL;
-static GSList *journal_list = NULL;
+GSList *journal_list = NULL;
 GApplication *journal_application = NULL;
 GdkPixbuf *icon_call_in = NULL;
 GdkPixbuf *icon_call_missed = NULL;
@@ -64,7 +64,7 @@ struct filter *journal_filter = NULL;
 struct filter *journal_search_filter = NULL;
 static GtkWidget *spinner = NULL;
 static GMutex journal_mutex;
-static gboolean use_header_bar = FALSE;
+gboolean use_header_bar = FALSE;
 
 void profile_select(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
