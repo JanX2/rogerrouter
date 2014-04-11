@@ -64,6 +64,7 @@ struct filter *journal_filter = NULL;
 struct filter *journal_search_filter = NULL;
 static GtkWidget *spinner = NULL;
 static GMutex journal_mutex;
+static gboolean use_header_bar = FALSE;
 
 void profile_select(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
@@ -261,15 +262,18 @@ void journal_redraw(void)
 
 	profile = profile_get_active();
 
-#if GTK_CHECK_VERSION(3,10,0) && defined(USE_HEADERBAR)
-	status = g_object_get_data(G_OBJECT(journal_win), "headerbar");
-	text = g_strdup_printf(_("%s (%d call(s), %d:%2.2dh)"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
-	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(status), text);
-#else
-	status = g_object_get_data(G_OBJECT(journal_win), "status_label");
-	text = g_strdup_printf(_("Profile: %s | Total: %d call(s) | Duration: %d:%2.2d"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
-	gtk_label_set_text(GTK_LABEL(status), text);
+#if GTK_CHECK_VERSION(3, 10, 0)
+	if (use_header_bar) {
+		status = g_object_get_data(G_OBJECT(journal_win), "headerbar");
+		text = g_strdup_printf(_("%s (%d call(s), %d:%2.2dh)"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
+		gtk_header_bar_set_subtitle(GTK_HEADER_BAR(status), text);
+	} else
 #endif
+	{
+		status = g_object_get_data(G_OBJECT(journal_win), "status_label");
+		text = g_strdup_printf(_("Profile: %s | Total: %d call(s) | Duration: %d:%2.2d"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
+		gtk_label_set_text(GTK_LABEL(status), text);
+	}
 	g_free(text);
 }
 
@@ -1031,10 +1035,14 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	gtk_container_add(GTK_CONTAINER(window), grid);
 
 #if GTK_CHECK_VERSION(3,10,0)
-	gboolean use_header;
+	gboolean use_header = FALSE;
 
+#if GTK_CHECK_VERSION(3,12,0)
 	g_object_get(gtk_settings_get_default(), "gtk-dialogs-use-header", &use_header, NULL);
-	if (use_header || g_settings_get_boolean(app_settings, "use-header")) {
+#endif
+	use_header_bar = use_header || g_settings_get_boolean(app_settings, "use-header");
+
+	if (use_header_bar) {
 		GtkWidget *header;
 		GtkWidget *box;
 		GtkWidget *search;
