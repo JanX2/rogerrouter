@@ -21,3 +21,7 @@ endif
 if WITH_KWALLET
 SUBDIRS += kwallet
 endif
+
+if WITH_MACOS_KEYCHAIN
+SUBDIRS += keychain
+endif

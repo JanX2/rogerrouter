@@ -306,6 +306,46 @@ AM_CONDITIONAL(WITH_SECRET, test "x$with_secret" != "xno")
 AM_CONDITIONAL(HAVE_SECRET_SOURCE_REGISTRY, test "x$with_secret_registry" = "xyes")
 
 dnl ********************************************************************
+dnl MacOS keyChain is optional
+dnl ********************************************************************
+AC_ARG_WITH([macos-keychain],
+	[AS_HELP_STRING([--with-macos-keychain=@<:@ARG@:>@], 
+	[Use macos-keychain (possible values: no, yes, check) @<:@default=check@:>@])],
+	[],
+	[with_macos_keychain=check])
+
+AC_MSG_CHECKING(for MacOS-keyring)
+
+if test "$with_macos_keychain" = "check"; then
+AC_CACHE_CHECK([for SecKeychainGetVersion], 
+    ac_cv_func_SecKeychainGetVersion, 
+    [ac_save_LIBS="$LIBS" 
+    LIBS="$LIBS -Wl,-framework -Wl,Security" 
+    AC_TRY_LINK([#include <Security/Security.h>], 
+        [SecKeychainGetVersion(NULL);], 
+        [ac_cv_func_SecKeychainGetVersion=yes], 
+        [ac_cv_func_SecKeychainGetVersion=no]) 
+    LIBS="$ac_save_LIBS"]) 
+if test $ac_cv_func_SecKeychainGetVersion = yes; then 
+    with_macos_keychain=yes
+    OS_LIBS="$OS_LIBS -Wl,-framework -Wl,Security"
+else
+    with_macos_keychain=no 
+fi 
+fi
+
+if test "x$with_macos_keychain" != "xno"; then
+	ROGER_FEATURES_YES="\tmacos-keyring\n$ROGER_FEATURES_YES"
+	with_macos_keychain=yes
+else
+	ROGER_FEATURES_NO="\tmacos-keyring\n$ROGER_FEATURES_NO"
+fi
+
+AC_MSG_RESULT($with_macos_keychain)
+
+AM_CONDITIONAL(WITH_MACOS_KEYCHAIN, test "x$with_macos_keychain" != "xno")
+
+dnl ********************************************************************
 dnl kwallet is optional
 dnl ********************************************************************
 AC_ARG_WITH([kwallet],
@@ -665,6 +705,7 @@ AC_CONFIG_FILES([
     roger/plugins/thunderbird/Makefile
     roger/plugins/thunderbird/data/Makefile
     roger/plugins/kwallet/Makefile
+    roger/plugins/keychain/Makefile
     cups-backend/Makefile
     macosx/roger.plist
     macosx/package
