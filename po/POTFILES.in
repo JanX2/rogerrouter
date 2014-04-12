@@ -17,6 +17,7 @@ roger/pref_filters.c
 roger/pref_plugins.c
 roger/pref_prefix.c
 roger/pref_router.c
+roger/pref_security.c
 roger/pref_softphone.c
 roger/pref_misc.c
 roger/print.c
