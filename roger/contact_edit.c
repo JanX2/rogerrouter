@@ -171,20 +171,21 @@ void refresh_edit_dialog(struct contact *contact)
 	GtkWidget *detail_photo_image = NULL;
 	GtkWidget *detail_name_label = NULL;
 	GtkWidget *content;
+	GtkWidget *align;
 
 	scrolled = gtk_scrolled_window_new(NULL, NULL);
 	gtk_widget_set_vexpand(scrolled, TRUE);
 	gtk_widget_set_hexpand(scrolled, TRUE);
-#if GTK_CHECK_VERSION(3,8,0)
-	gtk_container_add(GTK_CONTAINER(scrolled), grid);
-#else
-	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolled), grid);
-#endif
 
-	gtk_widget_set_margin_left(grid, 25);
-	gtk_widget_set_margin_top(grid, 15);
-	gtk_widget_set_margin_right(grid, 25);
-	gtk_widget_set_margin_bottom(grid, 15);
+	align = gtk_alignment_new(0.5, 0.5, 1, 1);
+	gtk_alignment_set_padding(GTK_ALIGNMENT(align), 10, 10, 20, 20);
+	gtk_container_add(GTK_CONTAINER(align), grid);
+
+#if GTK_CHECK_VERSION(3,8,0)
+	gtk_container_add(GTK_CONTAINER(scrolled), align);
+#else
+	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolled), align);
+#endif
 
 	gtk_grid_set_row_spacing(GTK_GRID(grid), 10);
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 15);

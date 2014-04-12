@@ -73,17 +73,17 @@ void contacts_update_details(struct contact *contact)
 	GSList *numbers;
 	GSList *addresses;
 	GtkWidget *grid;
+	GtkWidget *align;
 	gchar *markup;
 	gint detail_row = 1;
 
+	align = gtk_alignment_new(0.5, 0.5, 1, 1);
+	gtk_alignment_set_padding(GTK_ALIGNMENT(align), 20, 20, 25, 25);
+
 	grid = gtk_grid_new();
+	gtk_container_add(GTK_CONTAINER(align), grid);
 
 	if (contact) {
-		gtk_widget_set_margin_left(grid, 25);
-		gtk_widget_set_margin_top(grid, 25);
-		gtk_widget_set_margin_right(grid, 25);
-		gtk_widget_set_margin_bottom(grid, 25);
-
 		gtk_grid_set_row_spacing(GTK_GRID(grid), 15);
 		gtk_grid_set_column_spacing(GTK_GRID(grid), 15);
 		detail_photo_image = gtk_image_new();
@@ -130,7 +130,6 @@ void contacts_update_details(struct contact *contact)
 			gtk_misc_set_alignment(GTK_MISC(number), 0, 0.5);
 			dial = gtk_button_new();
 			gtk_widget_set_tooltip_text(dial, _("Dial number"));
-			//phone_image = gtk_image_new_from_icon_name("call-start-symbolic", GTK_ICON_SIZE_BUTTON);
 			phone_image = get_icon(APP_ICON_CALL, GTK_ICON_SIZE_BUTTON);
 			gtk_button_set_image(GTK_BUTTON(dial), phone_image);
 			gtk_button_set_relief(GTK_BUTTON(dial), GTK_RELIEF_NONE);
@@ -174,13 +173,13 @@ void contacts_update_details(struct contact *contact)
 			detail_row++;
 		}
 	}
-	gtk_widget_show_all(grid);
+	gtk_widget_show_all(align);
 
 	if (detail_grid) {
 		gtk_container_remove(GTK_CONTAINER(contacts_window_grid), detail_grid);
 	}
 
-	detail_grid = grid;
+	detail_grid = align;
 	gtk_grid_attach(GTK_GRID(contacts_window_grid), detail_grid, 1, 0, 1, 3);
 }
 
@@ -458,6 +457,7 @@ void contacts(void)
 	GtkWidget *button_reload;
 	GtkWidget *contacts_view;
 	GtkWidget *image;
+	GtkWidget *align;
 
 	if (contacts_window) {
 		gtk_window_present(GTK_WINDOW(contacts_window));
@@ -489,15 +489,15 @@ void contacts(void)
 	gtk_grid_set_row_spacing(GTK_GRID(contacts_window_grid), 5);
 	gtk_grid_set_column_spacing(GTK_GRID(contacts_window_grid), 5);
 
+	align = gtk_alignment_new(0.5, 0.5, 1, 1);
+	gtk_alignment_set_padding(GTK_ALIGNMENT(align), 0, 0, 5, 5);
+	gtk_grid_attach(GTK_GRID(contacts_window_grid), align, 0, 0, 1, 1);
+
 	entry = gtk_entry_new();
 	g_signal_connect(G_OBJECT(entry), "icon-release", G_CALLBACK(entry_icon_released), NULL);
-	gtk_widget_set_margin_left(entry, 5);
-	gtk_widget_set_margin_top(entry, 5);
-	gtk_widget_set_margin_right(entry, 5);
-	gtk_widget_set_margin_bottom(entry, 5);
 	gtk_widget_set_vexpand(entry, FALSE);
 	gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_PRIMARY, "edit-find-symbolic");
-	gtk_grid_attach(GTK_GRID(contacts_window_grid), entry, 0, 0, 1, 1);
+	gtk_container_add(GTK_CONTAINER(align), entry);
 
 	scrolled = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(scrolled), GTK_SHADOW_IN);
@@ -511,7 +511,6 @@ void contacts(void)
 
 	action_grid = gtk_grid_new();
 	button_add = gtk_button_new();
-	//image = gtk_image_new_from_icon_name("list-add-symbolic", GTK_ICON_SIZE_BUTTON);
 	image = get_icon(APP_ICON_ADD, GTK_ICON_SIZE_MENU);
 	gtk_button_set_image(GTK_BUTTON(button_add), image);
 	gtk_button_set_relief(GTK_BUTTON(button_add), GTK_RELIEF_NONE);
@@ -520,7 +519,6 @@ void contacts(void)
 	gtk_grid_attach(GTK_GRID(action_grid), button_add, 0, 0, 1, 1);
 
 	button_remove = gtk_button_new();
-	//image = gtk_image_new_from_icon_name("list-remove-symbolic", GTK_ICON_SIZE_BUTTON);
 	image = get_icon(APP_ICON_REMOVE, GTK_ICON_SIZE_MENU);
 	gtk_button_set_image(GTK_BUTTON(button_remove), image);
 	gtk_button_set_relief(GTK_BUTTON(button_remove), GTK_RELIEF_NONE);
@@ -529,7 +527,6 @@ void contacts(void)
 	gtk_grid_attach(GTK_GRID(action_grid), button_remove, 1, 0, 1, 1);
 
 	button_edit = gtk_button_new();
-	//image = gtk_image_new_from_icon_name("document-properties-symbolic", GTK_ICON_SIZE_BUTTON);
 	image = get_icon(APP_ICON_EDIT, GTK_ICON_SIZE_MENU);
 	gtk_button_set_image(GTK_BUTTON(button_edit), image);
 	gtk_button_set_relief(GTK_BUTTON(button_edit), GTK_RELIEF_NONE);
@@ -539,7 +536,6 @@ void contacts(void)
 
 
 	button_reload = gtk_button_new();
-	//image = gtk_image_new_from_icon_name("view-refresh-symbolic", GTK_ICON_SIZE_BUTTON);
 	image = get_icon(APP_ICON_REFRESH, GTK_ICON_SIZE_MENU);
 	gtk_button_set_image(GTK_BUTTON(button_reload), image);
 	gtk_button_set_relief(GTK_BUTTON(button_reload), GTK_RELIEF_NONE);
