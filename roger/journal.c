@@ -272,10 +272,8 @@ static gboolean reload_journal(gpointer user_data)
 		valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(list_store), &iter);
 	}
 
-	if (spinner != NULL) {
-		gtk_spinner_stop(GTK_SPINNER(spinner));
-		gtk_widget_hide(spinner);
-	}
+	gtk_spinner_stop(GTK_SPINNER(spinner));
+	gtk_widget_hide(spinner);
 
 	g_mutex_unlock(&journal_mutex);
 	g_debug("[%s]: end", __FUNCTION__);
@@ -283,11 +281,10 @@ static gboolean reload_journal(gpointer user_data)
 	return FALSE;
 }
 
-gboolean lookup_journal(gpointer user_data)
+gpointer lookup_journal(gpointer user_data)
 {
 	GSList *journal = user_data;
 	GSList *list;
-	gboolean found = FALSE;
 
 	g_debug("[%s]: start", __FUNCTION__);
 	for (list = journal; list; list = list->next) {
@@ -304,22 +301,14 @@ gboolean lookup_journal(gpointer user_data)
 				call->remote->zip = zip;
 				call->remote->city = city;
 				call->remote->lookup = TRUE;
-				found = TRUE;
 			}
 		}
 	}
-	g_debug("[%s]: check", __FUNCTION__);
 
-	if (found) {
-		g_idle_add(reload_journal, journal_list);
-	} else {
-		gtk_spinner_stop(GTK_SPINNER(spinner));
-		gtk_widget_hide(spinner);
-		g_mutex_unlock(&journal_mutex);
-	}
+	g_idle_add(reload_journal, journal_list);
 	g_debug("[%s]: done", __FUNCTION__);
 
-	return FALSE;
+	return NULL;
 }
 
 void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
@@ -344,7 +333,8 @@ void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
 
 	g_debug("[%s]: done", __FUNCTION__);
 
-	g_idle_add(lookup_journal, journal_list);
+	//g_idle_add(lookup_journal, journal_list);
+	g_thread_new("Reverse Lookup Journal", lookup_journal, journal_list);
 }
 
 static void journal_connection_notify_cb(AppObject *obj, struct connection *connection, gpointer user_data)
@@ -754,18 +744,6 @@ void journal_row_activated_cb(GtkTreeView *view, GtkTreePath *path, GtkTreeViewC
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(view);
 
 	gtk_tree_selection_selected_foreach(selection, row_activated_foreach, NULL);
-}
-
-gpointer load_journal_thread(gpointer user_data)
-{
-	journal_button_refresh_clicked_cb(NULL, user_data);
-	return NULL;
-}
-
-gboolean load_journal_idle(gpointer user_data)
-{
-	journal_button_refresh_clicked_cb(NULL, user_data);
-	return FALSE;
 }
 
 static gboolean journal_hide_on_quit = FALSE;
@@ -1408,9 +1386,6 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	gtk_window_set_has_resize_grip(GTK_WINDOW(journal_win), FALSE);
 
 	filter_box_changed(GTK_COMBO_BOX(journal_filter_box), NULL);
-
-	//g_thread_new("load journal", load_journal_thread, journal_win);
-	//g_idle_add(load_journal_idle, journal_win);
 
 	gtk_widget_show_all(GTK_WIDGET(grid));
 
