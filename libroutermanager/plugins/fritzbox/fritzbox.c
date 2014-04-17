@@ -92,15 +92,18 @@ gboolean fritzbox_get_settings(struct profile *profile)
  */
 gboolean fritzbox_load_journal(struct profile *profile, gchar **data_ptr)
 {
+	gboolean ret = FALSE;
+
+	g_debug("Load journal...");
 	if (FIRMWARE_IS(5, 50)) {
-		return fritzbox_load_journal_05_50(profile, data_ptr);
+		ret = fritzbox_load_journal_05_50(profile, data_ptr);
+	} else if (FIRMWARE_IS(4, 74)) {
+		ret = fritzbox_load_journal_04_74(profile, data_ptr);
 	}
 
-	if (FIRMWARE_IS(4, 74)) {
-		return fritzbox_load_journal_04_74(profile, data_ptr);
-	}
+	g_debug("Load journal...done");
 
-	return FALSE;
+	return ret;
 }
 
 /**

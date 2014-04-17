@@ -180,28 +180,6 @@ GdkPixbuf *journal_get_call_icon(gint type)
 	return NULL;
 }
 
-
-void journal_add_call(GtkListStore *list_store, struct call *call)
-{
-	GtkTreeIter iter;
-	GdkPixbuf *out_icon;
-
-	out_icon = journal_get_call_icon(call->type);
-	gtk_list_store_append(list_store, &iter);
-	gtk_list_store_set(list_store, &iter, JOURNAL_COL_TYPE, out_icon, -1);
-	gtk_list_store_set(list_store, &iter, JOURNAL_COL_DATETIME, call->date_time, -1);
-	gtk_list_store_set(list_store, &iter, JOURNAL_COL_NAME, call->remote->name, -1);
-	gtk_list_store_set(list_store, &iter, JOURNAL_COL_COMPANY, call->remote->company, -1);
-	gtk_list_store_set(list_store, &iter, JOURNAL_COL_NUMBER, call->remote->number, -1);
-
-	gtk_list_store_set(list_store, &iter, JOURNAL_COL_CITY, call->remote->city, -1);
-	gtk_list_store_set(list_store, &iter, JOURNAL_COL_EXTENSION, call->local->name, -1);
-	gtk_list_store_set(list_store, &iter, JOURNAL_COL_LINE, call->local->number, -1);
-	gtk_list_store_set(list_store, &iter, JOURNAL_COL_DURATION, call->duration, -1);
-
-	gtk_list_store_set(list_store, &iter, JOURNAL_COL_CALL_PTR, call, -1);
-}
-
 void journal_redraw(void)
 {
 	GSList *list;
@@ -216,22 +194,11 @@ void journal_redraw(void)
 		return;
 	}
 
-	list_store = gtk_list_store_new(10,
-	                                GDK_TYPE_PIXBUF,
-	                                G_TYPE_STRING,
-	                                G_TYPE_STRING,
-	                                G_TYPE_STRING,
-	                                G_TYPE_STRING,
-	                                G_TYPE_STRING,
-	                                G_TYPE_STRING,
-	                                G_TYPE_STRING,
-	                                G_TYPE_STRING,
-	                                G_TYPE_POINTER);
-
-	g_object_set_data(G_OBJECT(journal_win), "list_store", list_store);
+	list_store = g_object_get_data(G_OBJECT(journal_win), "list_store");
 
 	/* Update liststore */
 	for (list = journal_list; list != NULL; list = list->next) {
+		GtkTreeIter iter;
 		struct call *call = list->data;
 
 		g_assert(call != NULL);
@@ -244,7 +211,18 @@ void journal_redraw(void)
 			continue;
 		}
 
-		journal_add_call(list_store, call);
+		gtk_list_store_insert_with_values(list_store, &iter, -1,
+			JOURNAL_COL_TYPE, journal_get_call_icon(call->type),
+			JOURNAL_COL_DATETIME, call->date_time,
+			JOURNAL_COL_NAME, call->remote->name,
+			JOURNAL_COL_COMPANY, call->remote->company,
+			JOURNAL_COL_NUMBER, call->remote->number,
+			JOURNAL_COL_CITY, call->remote->city,
+			JOURNAL_COL_EXTENSION, call->local->name,
+			JOURNAL_COL_LINE, call->local->number,
+			JOURNAL_COL_DURATION, call->duration,
+			JOURNAL_COL_CALL_PTR, call,
+			-1);
 
 		if (strchr(call->duration, 's') != NULL) {
 			/* Ignore voicebox duration */
@@ -257,8 +235,6 @@ void journal_redraw(void)
 		}
 		count++;
 	}
-
-	gtk_tree_view_set_model(GTK_TREE_VIEW(journal_view), GTK_TREE_MODEL(list_store));
 
 	profile = profile_get_active();
 
@@ -275,6 +251,7 @@ void journal_redraw(void)
 		gtk_label_set_text(GTK_LABEL(status), text);
 	}
 	g_free(text);
+	g_debug("[%s]: done", __FUNCTION__);
 }
 
 static gboolean reload_journal(gpointer user_data)
@@ -284,6 +261,7 @@ static gboolean reload_journal(gpointer user_data)
 	gboolean valid;
 	struct call *call;
 
+	g_debug("[%s]: start", __FUNCTION__);
 	valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(list_store), &iter);
 	while (valid) {
 		gtk_tree_model_get(GTK_TREE_MODEL(list_store), &iter, JOURNAL_COL_CALL_PTR, &call, -1);
@@ -300,16 +278,18 @@ static gboolean reload_journal(gpointer user_data)
 	}
 
 	g_mutex_unlock(&journal_mutex);
+	g_debug("[%s]: end", __FUNCTION__);
 
 	return FALSE;
 }
 
-static gpointer lookup_journal(gpointer user_data)
+gboolean lookup_journal(gpointer user_data)
 {
 	GSList *journal = user_data;
 	GSList *list;
 	gboolean found = FALSE;
 
+	g_debug("[%s]: start", __FUNCTION__);
 	for (list = journal; list; list = list->next) {
 		struct call *call = list->data;
 		gchar *name;
@@ -328,6 +308,7 @@ static gpointer lookup_journal(gpointer user_data)
 			}
 		}
 	}
+	g_debug("[%s]: check", __FUNCTION__);
 
 	if (found) {
 		g_idle_add(reload_journal, journal_list);
@@ -336,14 +317,17 @@ static gpointer lookup_journal(gpointer user_data)
 		gtk_widget_hide(spinner);
 		g_mutex_unlock(&journal_mutex);
 	}
+	g_debug("[%s]: done", __FUNCTION__);
 
-	return NULL;
+	return FALSE;
 }
 
 void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
 {
+	g_debug("[%s]: start", __FUNCTION__);
+
 	if (g_mutex_trylock(&journal_mutex) == FALSE) {
-		//g_debug("Journal loading already in progress");
+		g_debug("Journal loading already in progress");
 		return;
 	}
 
@@ -358,7 +342,9 @@ void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
 
 	journal_redraw();
 
-	g_thread_new("Lookup journal", lookup_journal, journal_list);
+	g_debug("[%s]: done", __FUNCTION__);
+
+	g_idle_add(lookup_journal, journal_list);
 }
 
 static void journal_connection_notify_cb(AppObject *obj, struct connection *connection, gpointer user_data)
@@ -368,26 +354,32 @@ static void journal_connection_notify_cb(AppObject *obj, struct connection *conn
 	}
 }
 
-static void journal_button_refresh_clicked_cb(GtkWidget *button, GtkWidget *window)
+gboolean journal_button_refresh_idle(gpointer data)
 {
 	struct profile *profile = profile_get_active();
 
 	if (!profile) {
-		return;
+		return FALSE;
 	}
-
-	gtk_spinner_start(GTK_SPINNER(spinner));
-	gtk_widget_show(spinner);
 
 	if (router_load_journal(profile) == FALSE) {
 		gtk_spinner_stop(GTK_SPINNER(spinner));
 		gtk_widget_hide(spinner);
 	}
+
+	return FALSE;
+}
+
+static void journal_button_refresh_clicked_cb(GtkWidget *button, GtkWidget *window)
+{
+	gtk_spinner_start(GTK_SPINNER(spinner));
+	gtk_widget_show(spinner);
+
+	g_idle_add(journal_button_refresh_idle, NULL);
 }
 
 void journal_button_print_clicked_cb(GtkWidget *button, GtkWidget *view)
 {
-	g_debug("Print list");
 	journal_print(view);
 }
 
@@ -404,7 +396,6 @@ void journal_button_clear_clicked_cb(GtkWidget *button, GtkWidget *view)
 		return;
 	}
 
-	g_debug("Removing journal");
 	router_clear_journal(profile_get_active());
 }
 
@@ -771,6 +762,12 @@ gpointer load_journal_thread(gpointer user_data)
 	return NULL;
 }
 
+gboolean load_journal_idle(gpointer user_data)
+{
+	journal_button_refresh_clicked_cb(NULL, user_data);
+	return FALSE;
+}
+
 static gboolean journal_hide_on_quit = FALSE;
 static gboolean journal_hide_on_start = FALSE;
 
@@ -802,7 +799,7 @@ gint journal_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpointer data)
 	return FALSE;
 }
 
-static gint journal_sort_by_date(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer data)
+gint journal_sort_by_date(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer data)
 {
 	struct call *call_a;
 	struct call *call_b;
@@ -813,7 +810,7 @@ static gint journal_sort_by_date(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIte
 	return call_sort_by_date(call_a, call_b);
 }
 
-static void name_column_cell_data_func(GtkTreeViewColumn *column, GtkCellRenderer *renderer, GtkTreeModel *model, GtkTreeIter *iter, gpointer user_data)
+void name_column_cell_data_func(GtkTreeViewColumn *column, GtkCellRenderer *renderer, GtkTreeModel *model, GtkTreeIter *iter, gpointer user_data)
 {
 	struct call *call;
 
@@ -1412,7 +1409,8 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 	filter_box_changed(GTK_COMBO_BOX(journal_filter_box), NULL);
 
-	g_thread_new("load journal", load_journal_thread, journal_win);
+	//g_thread_new("load journal", load_journal_thread, journal_win);
+	//g_idle_add(load_journal_idle, journal_win);
 
 	gtk_widget_show_all(GTK_WIDGET(grid));
 
