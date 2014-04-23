@@ -111,6 +111,36 @@ static gboolean notification_close(gpointer window)
 	return FALSE;
 }
 
+gboolean notification_update(gpointer data) {
+	struct contact *contact = data;
+	struct connection *connection;
+
+	g_assert(contact != NULL);
+	g_assert(contact->priv != NULL);
+
+	connection = contact->priv;
+
+	if (connection->notification && !EMPTY_STRING(contact->name)) {
+		gchar *text;
+
+		text = g_markup_printf_escaped(_("Name:\t%s\nNumber:\t%s\nCompany:\t%s\nStreet:\t%s\nCity:\t\t%s%s%s"),
+		                               contact->name,
+		                               contact->number,
+		                               "",
+		                               contact->street,
+		                               contact->zip,
+		                               contact->zip ? " " : "",
+		                               contact->city);
+
+		notify_notification_update(connection->notification, connection->type == CALL_TYPE_INCOMING ? _("Incoming call") : _("Outgoing call"), text, "dialog-information");
+
+		notify_notification_show(connection->notification, NULL);
+		g_free(text);
+	}
+
+	return FALSE;
+}
+
 /**
  * \brief Reverse lookup of connection data and notification redraw
  * \param data connection pointer
@@ -119,33 +149,16 @@ static gboolean notification_close(gpointer window)
 static gpointer notification_reverse_lookup_thread(gpointer data)
 {
 	struct connection *connection = data;
-	gchar *name;
-	gchar *address;
-	gchar *zip;
-	gchar *city;
-	gchar *number;
+	struct contact *contact;
 
-	number = connection->remote_number;
+	contact = g_slice_new0(struct contact);
 
-	if (routermanager_lookup(number, &name, &address, &zip, &city)) {
-		if (connection->notification) {
-			gchar *text;
+	contact->number = g_strdup(connection->remote_number);
+	contact->priv = data;
 
-			text = g_markup_printf_escaped(_("Name:\t%s\nNumber:\t%s\nCompany:\t%s\nStreet:\t%s\nCity:\t\t%s%s%s"),
-			                               name ? name : "",
-			                               number ? number : "",
-			                               "",
-			                               address ? address : "",
-			                               zip ? zip : "",
-			                               zip ? " " : "",
-			                               city ? city : "");
+	routermanager_lookup(contact->number, &contact->name, &contact->street, &contact->zip, &contact->city);
 
-			notify_notification_update(connection->notification, connection->type == CALL_TYPE_INCOMING ? _("Incoming call") : _("Outgoing call"), text, "dialog-information");
-
-			notify_notification_show(connection->notification, NULL);
-			g_free(text);
-		}
-	}
+	g_idle_add(notification_update, contact);
 	g_debug("done");
 
 	return NULL;
