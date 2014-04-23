@@ -294,14 +294,16 @@ gpointer lookup_journal(gpointer user_data)
 		gchar *zip;
 		gchar *city;
 
-		if (EMPTY_STRING(call->remote->name)) {
-			if (routermanager_lookup(call->remote->number, &name, &street, &zip, &city)) {
-				call->remote->name = name;
-				call->remote->street = street;
-				call->remote->zip = zip;
-				call->remote->city = city;
-				call->remote->lookup = TRUE;
-			}
+		if (!EMPTY_STRING(call->remote->name)) {
+			continue;
+		}
+
+		if (routermanager_lookup(call->remote->number, &name, &street, &zip, &city)) {
+			call->remote->name = name;
+			call->remote->street = street;
+			call->remote->zip = zip;
+			call->remote->city = city;
+			call->remote->lookup = TRUE;
 		}
 	}
 
