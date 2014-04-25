@@ -288,12 +288,19 @@ gboolean ftp_passive(struct ftp *client)
 	gint data_port;
 	guint v[6];
 
+#ifdef FTP_DEBUG
+	g_debug("ftp_passive(): request");
+#endif
+
 	if (client->data) {
 #ifdef FTP_DEBUG
 		g_debug("Data channel already open");
 #endif
 		g_io_channel_shutdown(client->data, FALSE, NULL);
 		client->data = NULL;
+#ifdef FTP_DEBUG
+		g_debug("ftp_passive(): data is NULL now");
+#endif
 	}
 
 #ifdef FTP_DEBUG
@@ -492,7 +499,7 @@ gboolean ftp_put_file(struct ftp *client, const gchar *file, const gchar *path, 
  */
 struct ftp *ftp_init(const gchar *server)
 {
-	struct ftp *client = g_slice_new0(struct ftp);
+	struct ftp *client = g_malloc0(sizeof(struct ftp));
 
 	client->server = g_strdup(server);
 	client->control = ftp_open_port(client->server, 21);
@@ -520,15 +527,38 @@ struct ftp *ftp_init(const gchar *server)
  */
 gboolean ftp_shutdown(struct ftp *client)
 {
+#ifdef FTP_DEBUG
+	g_debug("ftp_shutdown(): start");
+#endif
+
 	g_return_val_if_fail(client != NULL, FALSE);
 
+#ifdef FTP_DEBUG
+	g_debug("ftp_shutdown(): free");
+#endif
 	g_free(client->server);
 	g_free(client->response);
 
-	g_io_channel_shutdown(client->control, FALSE, NULL);
-	g_io_channel_shutdown(client->data, FALSE, NULL);
+#ifdef FTP_DEBUG
+	g_debug("ftp_shutdown(): shutdown");
+#endif
 
-	g_slice_free(struct ftp, client);
+	if (client->control) {
+		g_io_channel_shutdown(client->control, FALSE, NULL);
+	}
+
+	if (client->data) {
+		g_io_channel_shutdown(client->data, FALSE, NULL);
+	}
+
+#ifdef FTP_DEBUG
+	g_debug("ftp_shutdown(): free");
+#endif
+	g_free(client);
+
+#ifdef FTP_DEBUG
+	g_debug("ftp_shutdown(): done");
+#endif
 
 	return TRUE;
 }
