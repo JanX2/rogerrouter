@@ -202,9 +202,8 @@ gboolean ftp_timeout_cb(gpointer user_data)
 {
 	struct ftp *client = user_data;
 
-	if (client) {
-		client->timeout = TRUE;
-	}
+	client->timeout = TRUE;
+	client->event = 0;
 
 	return FALSE;
 }
@@ -234,7 +233,11 @@ gboolean ftp_send_command(struct ftp *client, gchar *command)
 	}
 	g_io_channel_flush(client->control, NULL);
 
-	g_timeout_add_seconds(3, ftp_timeout_cb, client);
+	if (client->event) {
+		g_source_remove(client->event);
+	}
+
+	client->event = g_timeout_add_seconds(3, ftp_timeout_cb, client);
 
 	return ftp_read_control_response(client);
 }
@@ -532,6 +535,11 @@ gboolean ftp_shutdown(struct ftp *client)
 #endif
 
 	g_return_val_if_fail(client != NULL, FALSE);
+
+	/* Remove timeout event */
+	if (client->event) {
+		g_source_remove(client->event);
+	}
 
 #ifdef FTP_DEBUG
 	g_debug("ftp_shutdown(): free");
