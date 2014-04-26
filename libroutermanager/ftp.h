@@ -29,7 +29,7 @@ struct ftp {
 	gchar *response;
 	GIOChannel *control;
 	GIOChannel *data;
-	gboolean timeout;
+	GTimer *timer;
 };
 
 gchar *ftp_read_response(GIOChannel *channel, gsize *len);

@@ -117,14 +117,17 @@ gboolean ftp_read_control_response(struct ftp *client)
 	g_debug("Wait for control response");
 #endif
 
+
 	/* Clear previous response message */
 	if (client->response) {
 		g_free(client->response);
 		client->response = NULL;
 	}
 
+	g_timer_start(client->timer);
+
 	/* While timeout is not set, wait for data */
-	while (!client->timeout) {
+	while (g_timer_elapsed(client->timer, NULL) < 3000000) {
 		io_status = g_io_channel_read_line(client->control, &client->response, &length, NULL, &error);
 		if (io_status == G_IO_STATUS_NORMAL) {
 			if (client->response[length - 2] == '\r' && client->response[length - 1] == '\n') {
@@ -145,6 +148,8 @@ gboolean ftp_read_control_response(struct ftp *client)
 			break;
 		}
 	}
+
+	g_timer_stop(client->timer);
 
 	return client->response != NULL;
 }
@@ -194,21 +199,6 @@ gchar *ftp_read_data_response(GIOChannel *channel, gsize *len)
 }
 
 /**
- * \brief Timeout callback - sets internal timeout flag to TRUE
- * \param user_data pointer to ftp client structure
- * \return FALSE
- */
-gboolean ftp_timeout_cb(gpointer user_data)
-{
-	struct ftp *client = user_data;
-
-	client->timeout = TRUE;
-	client->event = 0;
-
-	return FALSE;
-}
-
-/**
  * \brief Send FTP command through io channel
  * \param client ftp client structure
  * \param command FTP command
@@ -223,8 +213,6 @@ gboolean ftp_send_command(struct ftp *client, gchar *command)
 
 	ftp_command = g_strconcat(command, "\r\n", NULL);
 
-	client->timeout = FALSE;
-
 	io_status = g_io_channel_write_chars(client->control, ftp_command, strlen(ftp_command), &written, &error);
 	g_free(ftp_command);
 	if (io_status != G_IO_STATUS_NORMAL) {
@@ -232,12 +220,6 @@ gboolean ftp_send_command(struct ftp *client, gchar *command)
 		return FALSE;
 	}
 	g_io_channel_flush(client->control, NULL);
-
-	if (client->event) {
-		g_source_remove(client->event);
-	}
-
-	client->event = g_timeout_add_seconds(3, ftp_timeout_cb, client);
 
 	return ftp_read_control_response(client);
 }
@@ -512,6 +494,8 @@ struct ftp *ftp_init(const gchar *server)
 		g_slice_free(struct ftp, client);
 		return NULL;
 	}
+
+	client->timer = g_timer_new();
 
 	/* Read welcome message */
 	ftp_read_control_response(client);
