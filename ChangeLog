@@ -1,3 +1,17 @@
+roger - 1.8.5
+------------------------------------------------------------------------------------------------------------------
+* Add KWallet password manager plugin
+* Add initial mac osx keychain support
+* Add new english csv header
+* Add security tab into preferences to allow selection of plugin
+* Redesign fax/phone dialog
+* Handle ftp logins without password
+* Add workaround to allow optimal column width on GTK < 3.10
+* Dynamic switch between non-/header-bar modus, depending on DE
+* Use popover menus on GTK >= 3.10 with headerbar
+* Fix html conversion
+* Fix random crashes
+
 roger - 1.8.4
 ------------------------------------------------------------------------------------------------------------------
 * Update RL patterns
