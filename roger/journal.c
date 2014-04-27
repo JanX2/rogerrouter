@@ -251,7 +251,6 @@ void journal_redraw(void)
 		gtk_label_set_text(GTK_LABEL(status), text);
 	}
 	g_free(text);
-	g_debug("[%s]: done", __FUNCTION__);
 }
 
 static gboolean reload_journal(gpointer user_data)
@@ -261,7 +260,6 @@ static gboolean reload_journal(gpointer user_data)
 	gboolean valid;
 	struct call *call;
 
-	g_debug("[%s]: start", __FUNCTION__);
 	valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(list_store), &iter);
 	while (valid) {
 		gtk_tree_model_get(GTK_TREE_MODEL(list_store), &iter, JOURNAL_COL_CALL_PTR, &call, -1);
@@ -276,7 +274,6 @@ static gboolean reload_journal(gpointer user_data)
 	gtk_widget_hide(spinner);
 
 	g_mutex_unlock(&journal_mutex);
-	g_debug("[%s]: end", __FUNCTION__);
 
 	return FALSE;
 }
@@ -286,7 +283,6 @@ gpointer lookup_journal(gpointer user_data)
 	GSList *journal = user_data;
 	GSList *list;
 
-	g_debug("[%s]: start", __FUNCTION__);
 	for (list = journal; list; list = list->next) {
 		struct call *call = list->data;
 		gchar *name;
@@ -308,7 +304,6 @@ gpointer lookup_journal(gpointer user_data)
 	}
 
 	g_idle_add(reload_journal, journal_list);
-	g_debug("[%s]: done", __FUNCTION__);
 
 	return NULL;
 }
@@ -316,8 +311,6 @@ gpointer lookup_journal(gpointer user_data)
 void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
 {
 	GSList *old;
-
-	g_debug("[%s]: start", __FUNCTION__);
 
 	if (g_mutex_trylock(&journal_mutex) == FALSE) {
 		g_debug("Journal loading already in progress");
@@ -337,9 +330,6 @@ void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
 
 	journal_redraw();
 
-	g_debug("[%s]: done", __FUNCTION__);
-
-	//g_idle_add(lookup_journal, journal_list);
 	g_thread_new("Reverse Lookup Journal", lookup_journal, journal_list);
 }
 
