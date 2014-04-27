@@ -1,20 +1,11 @@
 TODO
 ----------
 
-* opensuse needs gdk-pixbuf-loader-rsvg dependency
-
 * Segmentation fault (MOSTLY DONE)
-* Check soup critical message: buffer->length > 0 (FIXED)
-* test libsecret on different platforms, e.g. OpenSuSE 13.1 KDE/64 (DONE, added kwallet plugin and security tab)
-* %NAME% in actions not working as expected (NO PROBLEM DETECTED)
-* save width of columns (Linux Mint 13) / compare with ffgtk (WORKAROUND, signal not emitted by GTK so disable ellipsized text to allow auto adjust)
-* Cannot parse phone book on 7170 (WORKS)
-* Make FTP optional (WORKS)
 
 * Allow to change outgoing popup delay
 * Allow to disable ringtones within popups
 * GLib:Critical: g_strv_length: assertion `str_array != NULL' failed (after Get settings)
-* roger-selinux check
 
 * Prepend rm_ to each external routermanager function?
 * Check router structure for different routers (speedport)
@@ -36,13 +27,9 @@ TODO
 * Add G_OS_OSX in glib
 * Add consistent directory handling in glib
 
-
-
 ** Contacts **
 - Outlook
 - Apple Mail
-- Google
-- Thunderbird (read only)
 
 ** Reverse lookup **
 - Germany: dasörtliche, dastelefonbuch, klicktel, goyellow, gelbeseiten
@@ -59,18 +46,12 @@ TODO
 - tellows
 - notes
 
-
 ************** UNDECIDED **************
 * Different sound output for notifications
 * Import for JFritz
 * Export contacts to CSV?
 * DSL/Connection information
-* Fix journal position handling with GTK <= 3.4
-* SELinux: "SELinux is preventing /usr/bin/mv from remove_name access on the directory matt-Fax-ID35.tmp."
-
 
 * Distribution schema: Add default actions
-
-
 
 * wincred faults with empty password?

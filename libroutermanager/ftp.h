@@ -25,7 +25,6 @@ G_BEGIN_DECLS
 struct ftp {
 	gchar *server;
 	gint code;
-	guint event;
 	gchar *response;
 	GIOChannel *control;
 	GIOChannel *data;

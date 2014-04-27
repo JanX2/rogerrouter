@@ -315,6 +315,8 @@ gpointer lookup_journal(gpointer user_data)
 
 void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
 {
+	GSList *old;
+
 	g_debug("[%s]: start", __FUNCTION__);
 
 	if (g_mutex_trylock(&journal_mutex) == FALSE) {
@@ -326,10 +328,12 @@ void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
 	journal_clear();
 
 	/* Set new internal list */
-	if (journal_list) {
-		g_slist_free_full(journal_list, call_free);
-	}
+	old = journal_list;
 	journal_list = journal;
+
+	if (old) {
+		g_slist_free_full(old, call_free);
+	}
 
 	journal_redraw();
 
@@ -970,6 +974,31 @@ void find_button_pressed_cb(GtkWidget *widget, gpointer user_data)
 }
 #endif
 
+void refresh_journal_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+{
+	journal_button_refresh_clicked_cb(NULL, NULL);
+}
+
+void print_journal_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+{
+	journal_button_print_clicked_cb(NULL, journal_view);
+}
+
+void clear_journal_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+{
+	journal_button_clear_clicked_cb(NULL, NULL);
+}
+
+void delete_entry_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+{
+	journal_button_delete_clicked_cb(NULL, journal_view);
+}
+
+void add_entry_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+{
+	journal_button_add_clicked_cb(NULL, journal_view);
+}
+
 GtkWidget *journal_window(GApplication *app, GFile *file)
 {
 	GtkWidget *window, *grid, *scrolled;
@@ -990,6 +1019,13 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 		_("Extension"),
 		_("Line"),
 		_("Duration")
+	};
+	const GActionEntry journal_actions[] = {
+		{"refresh-journal", refresh_journal_activated},
+		{"print-journal", print_journal_activated},
+		{"clear-journal", clear_journal_activated},
+		{"delete-entry", delete_entry_activated},
+		{"add-entry", add_entry_activated},
 	};
 
 	journal_startup(app);
@@ -1025,8 +1061,9 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 		GtkWidget *search;
 		GtkWidget *icon;
 		GtkWidget *menu_button;
-		GtkWidget *menu, *menuitem;
 		GtkWidget *entry;
+		GMenu *menu;
+		GMenu *section;
 
 		/* Create header bar and set it to window */
 		header = gtk_header_bar_new();
@@ -1045,8 +1082,21 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 		menu_button = gtk_menu_button_new();
 		gtk_container_add(GTK_CONTAINER(menu_button), gtk_image_new_from_icon_name("view-list-symbolic", GTK_ICON_SIZE_MENU));
 
-		menu = gtk_menu_new();
+		menu = g_menu_new();
 
+		g_action_map_add_action_entries(G_ACTION_MAP(app), journal_actions, G_N_ELEMENTS(journal_actions), app);
+
+		g_menu_append(menu, _("Refresh journal"), "app.refresh-journal");
+		g_menu_append(menu, _("Print journal"), "app.print-journal");
+		g_menu_append(menu, _("Clear journal"), "app.clear-journal");
+
+		section = g_menu_new();
+		g_menu_append(section, _("Delete entry"), "app.delete-entry");
+		g_menu_append(section, _("Add entry"), "app.add-entry");
+
+		g_menu_append_section(menu, NULL, G_MENU_MODEL(section));
+
+#if 0
 		/* Refresh journal */
 		menuitem = gtk_menu_item_new_with_label(_("Refresh journal"));
 		g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_refresh_clicked_cb), window);
@@ -1076,8 +1126,13 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
 		gtk_widget_show_all(menu);
+#endif
 
-		gtk_menu_button_set_popup(GTK_MENU_BUTTON(menu_button), menu);
+#if GTK_CHECK_VERSION(3,12,0)
+		gtk_menu_button_set_use_popover(GTK_MENU_BUTTON(menu_button), TRUE);
+#endif
+		gtk_menu_button_set_menu_model(GTK_MENU_BUTTON(menu_button), G_MENU_MODEL(menu));
+
 		gtk_box_pack_start(GTK_BOX(box), menu_button, FALSE, TRUE, 0);
 
 		/* Create search bar */

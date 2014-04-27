@@ -484,7 +484,7 @@ gboolean ftp_put_file(struct ftp *client, const gchar *file, const gchar *path, 
  */
 struct ftp *ftp_init(const gchar *server)
 {
-	struct ftp *client = g_malloc0(sizeof(struct ftp));
+	struct ftp *client = g_slice_new0(struct ftp);
 
 	client->server = g_strdup(server);
 	client->control = ftp_open_port(client->server, 21);
@@ -520,10 +520,7 @@ gboolean ftp_shutdown(struct ftp *client)
 
 	g_return_val_if_fail(client != NULL, FALSE);
 
-	/* Remove timeout event */
-	if (client->event) {
-		g_source_remove(client->event);
-	}
+	g_timer_destroy(client->timer);
 
 #ifdef FTP_DEBUG
 	g_debug("ftp_shutdown(): free");
@@ -546,7 +543,7 @@ gboolean ftp_shutdown(struct ftp *client)
 #ifdef FTP_DEBUG
 	g_debug("ftp_shutdown(): free");
 #endif
-	g_free(client);
+	g_slice_free(struct ftp, client);
 
 #ifdef FTP_DEBUG
 	g_debug("ftp_shutdown(): done");
