@@ -1010,6 +1010,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 		_("Line"),
 		_("Duration")
 	};
+#if GTK_CHECK_VERSION(3,10,0)
 	const GActionEntry journal_actions[] = {
 		{"refresh-journal", refresh_journal_activated},
 		{"print-journal", print_journal_activated},
@@ -1017,6 +1018,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 		{"delete-entry", delete_entry_activated},
 		{"add-entry", add_entry_activated},
 	};
+#endif
 
 	journal_startup(app);
 
