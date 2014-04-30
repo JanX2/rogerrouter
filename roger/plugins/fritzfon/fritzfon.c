@@ -231,7 +231,6 @@ static gint fritzfon_read_book(void)
 	if (msg->status_code != 200) {
 		g_warning("Could not firmware file");
 		g_object_unref(msg);
-		g_free(uri);
 		return FALSE;
 	}
 
