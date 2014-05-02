@@ -356,9 +356,8 @@ AC_ARG_WITH([kwallet],
 
 AC_MSG_CHECKING(for kwallet)
 AS_IF([test "x$with_kwallet" != xno],
-	[kde_dir="`kde4-config --prefix`"
-	AC_SUBST([KWALLET_CFLAGS], ["`pkg-config --cflags-only-I QtCore QtDBus QtGui` -I$kde_dir/include"])
-	AC_SUBST([KWALLET_LIBS], ["-lQtCore -lQtDBus -lQtGui -lkdecore -lkdeui"])
+	[AC_SUBST([KWALLET_CFLAGS], ["`pkg-config --cflags-only-I QtCore QtDBus QtGui` -I`kde4-config --path include`"])
+	AC_SUBST([KWALLET_LIBS], ["-lQtCore -lQtDBus -lQtGui -lkdecore -lkdeui -L`kde4-config --path lib` -L/usr/lib/kde4/devel -L/usr/lib64/kde4/devel"])
 	AC_DEFINE([HAVE_KWALLET], 1, [Have kwallet])
 	ROGER_FEATURES_YES="\tkwallet\n$ROGER_FEATURES_YES"
 ])
