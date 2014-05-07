@@ -7,7 +7,11 @@ share_DATA = \
 	images/app.png \
 	images/callin.png \
 	images/callmissed.png \
-	images/callout.png
+	images/callout.png \
+	images/default.png \
+	images/mono-dark.png \
+	images/mono-lite.png \
+	images/notify.png
 
 EXTRA_DIST = $(share_DATA) images/hicolor_apps_scalable_roger.svg roger_winres.rc
 

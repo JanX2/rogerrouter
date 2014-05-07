@@ -1,7 +1,29 @@
 <schemalist>
+	<enum id='org.tabos.roger.plugins.indicator.status-icon-default'>
+		<value nick='default' value='0' />
+		<value nick='mono-dark' value='1' />
+		<value nick='mono-lite' value='2' />
+	</enum>
+	<enum id='org.tabos.roger.plugins.indicator.status-icon-notify'>
+		<value nick='notify' value='0' />
+		<value nick='mono-dark' value='1' />
+		<value nick='mono-lite' value='2' />
+	</enum>
 	<schema id="org.tabos.roger.plugins.indicator" path="/org/tabos/roger/plugins/indicator/">
 		<key name="hide-journal-on-startup" type="b">
 			<default>true</default>
+			<summary>Hide Journal on startup</summary>
+			<description>If true, the Journal is hide on startup off Roger Router.</description>
+		</key>
+		<key name='default-icon' enum='org.tabos.roger.plugins.indicator.status-icon-default'>
+			<default>'default'</default>
+			<summary>Select default icon</summary>
+			<description>Select the default icon for display in Application Indicator.</description>
+		</key>
+		<key name='notify-icon' enum='org.tabos.roger.plugins.indicator.status-icon-notify'>
+			<default>'notify'</default>
+			<summary>Select notification icon</summary>
+			<description>Select the notification icon for display in Application Indicator.</description>
 		</key>
 	</schema>
 </schemalist>

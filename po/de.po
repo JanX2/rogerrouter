@@ -1389,8 +1389,8 @@ msgstr "Funktionen"
 msgid "Roger Router"
 msgstr "Roger Router"
 
-#: ../roger/plugins/statusicon/gtk.c:332
-#: ../roger/plugins/indicator/indicator.c:353
+#: ../roger/plugins/statusicon/gtk.c:377
+#: ../roger/plugins/indicator/indicator.c:397
 msgid "Hide Journal on startup"
 msgstr "Verstecke das Journal beim Starten"
 
@@ -1546,6 +1546,42 @@ msgstr ""
 #: ../roger.desktop.in.h:3
 msgid "fritz;box;fritzbox;router;manager;fax;softphone;"
 msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
+
+#: ../roger/plugins/indicator/indicator.c:408
+#: ../roger/plugins/statusicon/gtk.c:388
+msgid "Default Icon"
+msgstr "Standard-Symbol"
+
+#: ../roger/plugins/indicator/indicator.c:413
+#: ../roger/plugins/indicator/indicator.c:426
+#: ../roger/plugins/statusicon/gtk.c:393 ../roger/plugins/statusicon/gtk.c:406
+msgid "default"
+msgstr "default"
+
+#: ../roger/plugins/indicator/indicator.c:414
+#: ../roger/plugins/indicator/indicator.c:427
+#: ../roger/plugins/statusicon/gtk.c:394 ../roger/plugins/statusicon/gtk.c:407
+msgid "mono-dark"
+msgstr "mono-dark"
+
+#: ../roger/plugins/indicator/indicator.c:415
+#: ../roger/plugins/indicator/indicator.c:428
+#: ../roger/plugins/statusicon/gtk.c:395 ../roger/plugins/statusicon/gtk.c:408
+msgid "mono-lite"
+msgstr "mono-lite"
+
+#: ../roger/plugins/indicator/indicator.c:421
+#: ../roger/plugins/statusicon/gtk.c:401
+msgid "Notify Icon"
+msgstr "Benachrichtigungs-Symbol"
+
+#: ../roger/plugins/indicator/indicator.c:440
+msgid "Settings for Application Indicator"
+msgstr "Einstellungen für Application Indicator"
+
+#: ../roger/plugins/statusicon/gtk.c:420
+msgid "Settings for Status icon GTK"
+msgstr "Einstellungen für Statusicon GTK"
 
 #~ msgid "Call type"
 #~ msgstr "Anruftyp"

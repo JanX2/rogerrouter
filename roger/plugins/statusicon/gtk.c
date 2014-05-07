@@ -162,7 +162,7 @@ GtkWidget *statusicon_menu_last_calls(void)
 
 void statusicon_activate_cb(void)
 {
-	gchar *path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "app.png", NULL);
+	gchar *path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, g_settings_get_string(statusicon_settings, "default-icon"), ".png", NULL);
 	gtk_status_icon_set_from_pixbuf(statusicon, gdk_pixbuf_new_from_file(path, NULL));
 	g_free(path);
 
@@ -264,14 +264,46 @@ void statusicon_connection_notify_cb(AppObject *obj, struct connection *connecti
 	g_debug("Called: '%d/%d", connection->type, CONNECTION_TYPE_MISS);
 	if (connection->type == CONNECTION_TYPE_MISS) {
 		g_debug("Setting missed icon");
-		gtk_status_icon_set_from_pixbuf(statusicon, journal_get_call_icon(CALL_TYPE_MISSED));
+		gchar *path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, g_settings_get_string(statusicon_settings, "notify-icon"), ".png", NULL);
+		gtk_status_icon_set_from_pixbuf(statusicon, gdk_pixbuf_new_from_file(path, NULL));
+		g_free(path);
 	}
+}
+
+/**
+ * \brief "connection-default-icon" callback function
+ * \param widget gtk combo box
+ * \param unused_pointer unused user pointer
+ */
+void statusicon_combobox_default_changed_cb(GtkComboBox *widget, gpointer user_data)
+{
+	/* GSettings has not written the changed value to its container, so we explicit set it here */
+	GtkWidget *combo_box = user_data;
+
+	g_settings_set_string(statusicon_settings, "default-icon", gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_box)));
+
+	/* Update statusicon icon */
+	gchar *path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, g_settings_get_string(statusicon_settings, "default-icon"), ".png", NULL);
+	gtk_status_icon_set_from_pixbuf(statusicon, gdk_pixbuf_new_from_file(path, NULL));
+	g_free(path);
+}
+
+/**
+ * \brief "connection-notify-icon" callback function
+ * \param widget gtk combo box
+ * \param unused_pointer unused user pointer
+ */
+void statusicon_combobox_notify_changed_cb(GtkComboBox *widget, gpointer user_data)
+{
+	/* GSettings has not written the changed value to its container, so we explicit set it here */
+	GtkWidget *combo_box = user_data;
+
+	g_settings_set_string(statusicon_settings, "notify-icon", gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_box)));
 }
 
 void impl_activate(PeasActivatable *plugin)
 {
 	RouterManagerStatusIconPlugin *statusicon_plugin;
-	gchar *path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "app.png", NULL);
 
 	journal_set_hide_on_quit(TRUE);
 
@@ -283,8 +315,10 @@ void impl_activate(PeasActivatable *plugin)
 	g_signal_connect(G_OBJECT(statusicon), "popup-menu", G_CALLBACK(statusicon_popup_menu_cb), NULL);
 	g_signal_connect(G_OBJECT(statusicon), "activate", G_CALLBACK(statusicon_activate_cb), NULL);
 
+	gchar *path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, g_settings_get_string(statusicon_settings, "default-icon"), ".png", NULL);
 	gtk_status_icon_set_from_pixbuf(statusicon, gdk_pixbuf_new_from_file(path, NULL));
 	g_free(path);
+
 	gtk_status_icon_set_tooltip_text(statusicon, _("Roger Router"));
 	gtk_status_icon_set_visible(statusicon, TRUE);
 
@@ -326,13 +360,56 @@ void impl_deactivate(PeasActivatable *plugin)
 
 GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 {
-	GtkWidget *toggle_button;
+	GtkWidget *settings_grid;
+	GtkWidget *label;
+	GtkWidget *switch_journal;
+	GtkWidget *combo_box_default;
+	GtkWidget *combo_box_notify;
 	GtkWidget *group;
 
-	toggle_button = gtk_check_button_new_with_label(_("Hide Journal on startup"));
-	g_settings_bind(statusicon_settings, "hide-journal-on-startup", toggle_button, "active", G_SETTINGS_BIND_DEFAULT);
+	/* Settings grid */
+	settings_grid = gtk_grid_new();
+	gtk_grid_set_row_spacing(GTK_GRID(settings_grid), 5);
+	gtk_grid_set_column_spacing(GTK_GRID(settings_grid), 15);
 
-	group = pref_group_create(toggle_button, _("Startup"), TRUE, FALSE);
+	/* Create label and switch for "Hide Journal on startup" and add to grid */
+	label = ui_label_new(_("Hide Journal on startup"));
+	gtk_grid_attach(GTK_GRID(settings_grid), label, 0, 0, 1, 1);
+
+	switch_journal = gtk_switch_new();
+	gtk_switch_set_active(GTK_SWITCH(switch_journal), g_settings_get_boolean(statusicon_settings, "hide-journal-on-startup"));
+	gtk_widget_set_halign(switch_journal, GTK_ALIGN_END);
+	gtk_grid_attach(GTK_GRID(settings_grid), switch_journal, 1, 0, 1, 1);
+
+	/* Create label and combo_box for "Default Icon" and add to grid */
+	label = ui_label_new(_("Default Icon"));
+	gtk_grid_attach(GTK_GRID(settings_grid), label, 0, 1, 1, 1);
+
+	combo_box_default = gtk_combo_box_text_new();
+	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box_default), "default", _("default"));
+	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box_default), "mono-dark", _("mono-dark"));
+	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box_default), "mono-lite", _("mono-lite"));
+	gtk_grid_attach(GTK_GRID(settings_grid), combo_box_default, 1, 1, 1, 1);
+
+	/* Create label and combo_box for "Notify Icon" and add to grid */
+	label = ui_label_new(_("Notify Icon"));
+	gtk_grid_attach(GTK_GRID(settings_grid), label, 0, 2, 1, 1);
+
+	combo_box_notify = gtk_combo_box_text_new();
+	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box_notify), "notify", _("default"));
+	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box_notify), "mono-dark", _("mono-dark"));
+	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box_notify), "mono-lite", _("mono-lite"));
+	gtk_grid_attach(GTK_GRID(settings_grid), combo_box_notify, 1, 2, 1, 1);
+
+	/* Set signals */
+	g_settings_bind(statusicon_settings, "hide-journal-on-startup", switch_journal, "active", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(statusicon_settings, "default-icon", combo_box_default, "active-id", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(statusicon_settings, "notify-icon", combo_box_notify, "active-id", G_SETTINGS_BIND_DEFAULT);
+
+	g_signal_connect(combo_box_default, "changed", G_CALLBACK(statusicon_combobox_default_changed_cb), combo_box_default);
+	g_signal_connect(combo_box_notify, "changed", G_CALLBACK(statusicon_combobox_notify_changed_cb), combo_box_notify);
+
+	group = pref_group_create(settings_grid, _("Settings for Status icon GTK"), TRUE, TRUE);
 
 	return group;
 }

@@ -1,6 +1,6 @@
 /**
  * Roger Router - Plugin Application Indicator
- * Copyright (c) 2013 Dieter Schärf
+ * Copyright (c) 2013-2014 Dieter Schärf
  *
  * Roger Router
  * Copyright (c) 2012-2014 Jan-Michael Brummer
@@ -27,10 +27,10 @@
 #include <libappindicator/app-indicator.h>
 
 #include <libroutermanager/call.h>
+#include <libroutermanager/gstring.h>
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/profile.h>
 #include <libroutermanager/routermanager.h>
-#include <libroutermanager/gstring.h>
 
 #include <roger/about.h>
 #include <roger/application.h>
@@ -53,8 +53,8 @@ ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_INDICATOR_PLUGIN, 
 extern GList *journal_list;
 extern GtkWidget *journal_win;
 
-static AppIndicator *indicator;
-static GSettings *indicator_settings;
+static GSettings *indicator_settings = NULL;
+static AppIndicator *indicator = NULL;
 
 /**
  * \brief create "Functions" submenu items
@@ -288,27 +288,60 @@ void indicator_connection_notify_cb(AppObject *obj, struct connection *connectio
 	}
 }
 
+/**
+ * \brief "connection-default-icon" callback function
+ * \param widget gtk combo box
+ * \param unused_pointer unused user pointer
+ */
+void indicator_combobox_default_changed_cb(GtkComboBox *widget, gpointer user_data)
+{
+	/* GSettings has not written the changed value to its container, so we explicit set it here */
+	GtkWidget *combo_box = user_data;
+
+	g_settings_set_string(indicator_settings, "default-icon", gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_box)));
+
+	/* Update indicator icon */
+	gchar *path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, g_settings_get_string(indicator_settings, "default-icon"), ".png", NULL);
+	app_indicator_set_icon_full(indicator, path, "default-icon");
+	g_free(path);
+}
+
+/**
+ * \brief "connection-notify-icon" callback function
+ * \param widget gtk combo box
+ * \param unused_pointer unused user pointer
+ */
+void indicator_combobox_notify_changed_cb(GtkComboBox *widget, gpointer user_data)
+{
+	/* GSettings has not written the changed value to its container, so we explicit set it here */
+	GtkWidget *combo_box = user_data;
+
+	g_settings_set_string(indicator_settings, "notify-icon", gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_box)));
+
+	/* Update indicator attention icon */
+	gchar *path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, g_settings_get_string(indicator_settings, "notify-icon"), ".png", NULL);
+	app_indicator_set_attention_icon_full(indicator, path, "notify-icon");
+	g_free(path);
+}
+
 void impl_activate(PeasActivatable *plugin)
 {
 	RouterManagerIndicatorPlugin *indicator_plugin;
 	GtkWidget *menu;
-	gchar *icon;
 
 	journal_set_hide_on_quit(TRUE);
 
 	indicator_settings = g_settings_new("org.tabos.roger.plugins.indicator");
 
 	/* Create Application Indicator */
-	icon = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "callout.png", NULL);
-	indicator = app_indicator_new("roger", icon, APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
-	g_free(icon);
+	gchar *path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, g_settings_get_string(indicator_settings, "default-icon"), ".png", NULL);
+	indicator = app_indicator_new("roger", path, APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
+	path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, g_settings_get_string(indicator_settings, "notify-icon"), ".png", NULL);
+	app_indicator_set_attention_icon_full(indicator, path, "notify-icon");
+	g_free(path);
 
 	menu = indicator_menu();
 	app_indicator_set_menu(indicator, GTK_MENU(menu));
-
-	icon = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "callmissed.png", NULL);
-	app_indicator_set_attention_icon(indicator, icon);
-	g_free(icon);
 
 	app_indicator_set_status(indicator, APP_INDICATOR_STATUS_ACTIVE);
 
@@ -347,13 +380,62 @@ void impl_deactivate(PeasActivatable *plugin)
 
 GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 {
-	GtkWidget *toggle_button;
+	GtkWidget *settings_grid;
+	GtkWidget *label;
+	GtkWidget *switch_journal;
+	GtkWidget *combo_box_default;
+	GtkWidget *combo_box_notify;
 	GtkWidget *group;
 
-	toggle_button = gtk_check_button_new_with_label(_("Hide Journal on startup"));
-	g_settings_bind(indicator_settings, "hide-journal-on-startup", toggle_button, "active", G_SETTINGS_BIND_DEFAULT);
+	/* Settings grid */
+	settings_grid = gtk_grid_new();
+	gtk_grid_set_row_spacing(GTK_GRID(settings_grid), 10);
+	gtk_grid_set_column_spacing(GTK_GRID(settings_grid), 10);
 
-	group = pref_group_create(toggle_button, _("Startup"), TRUE, FALSE);
+	/* Create label and switch for "Hide Journal on startup" and add to grid */
+	label = gtk_label_new("");
+	gtk_label_set_markup(GTK_LABEL(label), _("Hide Journal on startup"));
+	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+	gtk_grid_attach(GTK_GRID(settings_grid), label, 0, 0, 1, 1);
+
+	switch_journal = gtk_switch_new();
+	gtk_switch_set_active(GTK_SWITCH(switch_journal), g_settings_get_boolean(indicator_settings, "hide-journal-on-startup"));
+	gtk_widget_set_halign(switch_journal, GTK_ALIGN_END);
+	gtk_grid_attach(GTK_GRID(settings_grid), switch_journal, 2, 0, 1, 1);
+
+	/* Create label and combo_box for "Default Icon" and add to grid */
+	label = gtk_label_new("");
+	gtk_label_set_markup(GTK_LABEL(label), _("Default Icon"));
+	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+	gtk_grid_attach(GTK_GRID(settings_grid), label, 0, 1, 1, 1);
+
+	combo_box_default = gtk_combo_box_text_new();
+	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box_default), "default", _("default"));
+	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box_default), "mono-dark", _("mono-dark"));
+	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box_default), "mono-lite", _("mono-lite"));
+	gtk_grid_attach(GTK_GRID(settings_grid), combo_box_default, 1, 1, 2, 1);
+
+	/* Create label and combo_box for "Notify Icon" and add to grid */
+	label = gtk_label_new("");
+	gtk_label_set_markup(GTK_LABEL(label), _("Notify Icon"));
+	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+	gtk_grid_attach(GTK_GRID(settings_grid), label, 0, 2, 1, 1);
+
+	combo_box_notify = gtk_combo_box_text_new();
+	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box_notify), "notify", _("default"));
+	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box_notify), "mono-dark", _("mono-dark"));
+	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box_notify), "mono-lite", _("mono-lite"));
+	gtk_grid_attach(GTK_GRID(settings_grid), combo_box_notify, 1, 2, 2, 1);
+
+	/* Set signals */
+	g_settings_bind(indicator_settings, "hide-journal-on-startup", switch_journal, "active", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(indicator_settings, "default-icon", combo_box_default, "active-id", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(indicator_settings, "notify-icon", combo_box_notify, "active-id", G_SETTINGS_BIND_DEFAULT);
+
+	g_signal_connect(combo_box_default, "changed", G_CALLBACK(indicator_combobox_default_changed_cb), combo_box_default);
+	g_signal_connect(combo_box_notify, "changed", G_CALLBACK(indicator_combobox_notify_changed_cb), combo_box_notify);
+
+	group = pref_group_create(settings_grid, _("Settings for Application Indicator"), TRUE, TRUE);
 
 	return group;
 }
