@@ -32,6 +32,7 @@
 #include <roger/main.h>
 #include <roger/phone.h>
 #include <roger/pref.h>
+#include <roger/uitools.h>
 
 #define MAX_LASTCALLS 5
 
@@ -378,7 +379,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 
 	switch_journal = gtk_switch_new();
 	gtk_switch_set_active(GTK_SWITCH(switch_journal), g_settings_get_boolean(statusicon_settings, "hide-journal-on-startup"));
-	gtk_widget_set_halign(switch_journal, GTK_ALIGN_END);
+	gtk_widget_set_halign(switch_journal, GTK_ALIGN_START);
 	gtk_grid_attach(GTK_GRID(settings_grid), switch_journal, 1, 0, 1, 1);
 
 	/* Create label and combo_box for "Default Icon" and add to grid */

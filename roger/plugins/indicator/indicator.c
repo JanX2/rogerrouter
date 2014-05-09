@@ -38,6 +38,7 @@
 #include <roger/main.h>
 #include <roger/phone.h>
 #include <roger/pref.h>
+#include <roger/uitools.h>
 
 #define MAX_LASTCALLS 5
 
@@ -389,43 +390,37 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 
 	/* Settings grid */
 	settings_grid = gtk_grid_new();
-	gtk_grid_set_row_spacing(GTK_GRID(settings_grid), 10);
-	gtk_grid_set_column_spacing(GTK_GRID(settings_grid), 10);
+	gtk_grid_set_row_spacing(GTK_GRID(settings_grid), 5);
+	gtk_grid_set_column_spacing(GTK_GRID(settings_grid), 15);
 
 	/* Create label and switch for "Hide Journal on startup" and add to grid */
-	label = gtk_label_new("");
-	gtk_label_set_markup(GTK_LABEL(label), _("Hide Journal on startup"));
-	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+	label = ui_label_new(_("Hide Journal on startup"));
 	gtk_grid_attach(GTK_GRID(settings_grid), label, 0, 0, 1, 1);
 
 	switch_journal = gtk_switch_new();
 	gtk_switch_set_active(GTK_SWITCH(switch_journal), g_settings_get_boolean(indicator_settings, "hide-journal-on-startup"));
-	gtk_widget_set_halign(switch_journal, GTK_ALIGN_END);
-	gtk_grid_attach(GTK_GRID(settings_grid), switch_journal, 2, 0, 1, 1);
+	gtk_widget_set_halign(switch_journal, GTK_ALIGN_START);
+	gtk_grid_attach(GTK_GRID(settings_grid), switch_journal, 1, 0, 1, 1);
 
 	/* Create label and combo_box for "Default Icon" and add to grid */
-	label = gtk_label_new("");
-	gtk_label_set_markup(GTK_LABEL(label), _("Default Icon"));
-	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+	label = ui_label_new(_("Default Icon"));
 	gtk_grid_attach(GTK_GRID(settings_grid), label, 0, 1, 1, 1);
 
 	combo_box_default = gtk_combo_box_text_new();
 	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box_default), "default", _("default"));
 	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box_default), "mono-dark", _("mono-dark"));
 	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box_default), "mono-lite", _("mono-lite"));
-	gtk_grid_attach(GTK_GRID(settings_grid), combo_box_default, 1, 1, 2, 1);
+	gtk_grid_attach(GTK_GRID(settings_grid), combo_box_default, 1, 1, 1, 1);
 
 	/* Create label and combo_box for "Notify Icon" and add to grid */
-	label = gtk_label_new("");
-	gtk_label_set_markup(GTK_LABEL(label), _("Notify Icon"));
-	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+	label = ui_label_new(_("Notify Icon"));
 	gtk_grid_attach(GTK_GRID(settings_grid), label, 0, 2, 1, 1);
 
 	combo_box_notify = gtk_combo_box_text_new();
 	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box_notify), "notify", _("default"));
 	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box_notify), "mono-dark", _("mono-dark"));
 	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box_notify), "mono-lite", _("mono-lite"));
-	gtk_grid_attach(GTK_GRID(settings_grid), combo_box_notify, 1, 2, 2, 1);
+	gtk_grid_attach(GTK_GRID(settings_grid), combo_box_notify, 1, 2, 1, 1);
 
 	/* Set signals */
 	g_settings_bind(indicator_settings, "hide-journal-on-startup", switch_journal, "active", G_SETTINGS_BIND_DEFAULT);
