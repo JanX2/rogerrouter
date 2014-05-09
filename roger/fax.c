@@ -122,7 +122,7 @@ gboolean fax_update_ui(gpointer user_data)
 		switch (fax_status->phase) {
 		case PHASE_B:
 			g_debug("PHASE_B");
-			tmp = g_convert_utf8(fax_status->remote_ident);
+			tmp = g_convert_utf8(fax_status->remote_ident, -1);
 			g_debug("Ident: %s", tmp);
 			gtk_label_set_text(GTK_LABEL(remote_label), tmp);
 			g_free(tmp);

@@ -77,30 +77,17 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 {
 	SoupMessage *msg;
 	const gchar *data;
-	GRegex *reg;
-	GMatchInfo *info;
+	GRegex *reg = NULL;
+	GMatchInfo *info = NULL;
 	gchar *rl_tmp;
 	struct contact *rl_contact;
 	gboolean result = FALSE;
 	gchar *full_number;
+	gchar *rdata = NULL;
+	gsize len;
 
 	/* get full number according to service preferences */
 	full_number = call_full_number(number, lookup->prefix);
-
-	rl_contact = g_hash_table_lookup(table, full_number);
-	if (rl_contact) {
-		g_free(full_number);
-
-		if (!EMPTY_STRING(rl_contact->name)) {
-			*name = g_strdup(rl_contact->name);
-			*street = g_strdup(rl_contact->street);
-			*zip = g_strdup(rl_contact->zip);
-			*city = g_strdup(rl_contact->city);
-			return TRUE;
-		}
-
-		return FALSE;
-	}
 
 #ifdef RL_DEBUG
 	g_debug("New lookup for '%s'", full_number);
@@ -124,19 +111,26 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 		return FALSE;
 	}
 
-	rl_contact = g_slice_new0(struct contact);
-
 	data = msg->response_body->data;
+	len = msg->response_body->length;
+	if (!len) {
+		goto end;
+	}
 
+	rdata = g_convert_utf8(data, len);
+
+#ifdef RL_DEBUG
+	g_debug("Lookup pattern '%s'", lookup->pattern);
+#endif
 	reg = g_regex_new(lookup->pattern, G_REGEX_MULTILINE | G_REGEX_DOTALL, 0, NULL);
 	if (!reg) {
 		goto end;
 	}
 
-	if (!g_regex_match(reg, data, 0, &info)) {
+	if (!g_regex_match(reg, rdata, 0, &info)) {
 #ifdef RL_DEBUG
 		gchar *tmp_file = g_strdup_printf("rl-%s-%s.html", lookup->service, number);
-		log_save_data(tmp_file, data, msg->response_body->length);
+		log_save_data(tmp_file, rdata, len);
 		g_free(tmp_file);
 #endif
 		goto end;
@@ -144,7 +138,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 
 #ifdef RL_DEBUG
 	gchar *tmp_file = g_strdup_printf("rl-found-%s-%s.html", lookup->service, number);
-	log_save_data(tmp_file, data, msg->response_body->length);
+	log_save_data(tmp_file, rdata, len);
 	g_free(tmp_file);
 #endif
 
@@ -159,7 +153,8 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 #ifdef RL_DEBUG
 	g_debug("g_match_info_fetch_named()");
 #endif
-	if ((rl_tmp = g_match_info_fetch_named(info, "name"))) {
+	rl_tmp = g_match_info_fetch_named(info, "name");
+	if (rl_tmp != NULL) {
 		*name = strip_html(rl_tmp);
 		g_free(rl_tmp);
 	} else {
@@ -170,7 +165,8 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 	g_debug("Match found: %s->%s", number, *name);
 #endif
 
-	if ((rl_tmp = g_match_info_fetch_named(info, "street"))) {
+	rl_tmp = g_match_info_fetch_named(info, "street");
+	if (rl_tmp != NULL) {
 #ifdef RL_DEBUG
 		g_debug("street: %s", rl_tmp);
 #endif
@@ -180,7 +176,8 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 		*street = g_strdup("");
 	}
 
-	if ((rl_tmp = g_match_info_fetch_named(info, "zip"))) {
+	rl_tmp = g_match_info_fetch_named(info, "zip");
+	if (rl_tmp != NULL) {
 #ifdef RL_DEBUG
 		g_debug("zip: %s", rl_tmp);
 #endif
@@ -190,7 +187,8 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 		*zip = g_strdup("");
 	}
 
-	if ((rl_tmp = g_match_info_fetch_named(info, "city"))) {
+	rl_tmp = g_match_info_fetch_named(info, "city");
+	if (rl_tmp != NULL) {
 #ifdef RL_DEBUG
 		g_debug("city: %s", rl_tmp);
 #endif
@@ -200,16 +198,27 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 		*city = g_strdup("");
 	}
 
-	g_match_info_free(info);
-
+	rl_contact = g_slice_new0(struct contact);
 	rl_contact->name = g_strdup(*name);
 	rl_contact->street = g_strdup(*street);
 	rl_contact->zip = g_strdup(*zip);
 	rl_contact->city = g_strdup(*city);
+	g_hash_table_insert(table, number, rl_contact);
 	result = TRUE;
 
 end:
-	g_hash_table_insert(table, full_number, rl_contact);
+	if (rdata) {
+		g_free(rdata);
+	}
+
+	if (info) {
+		g_match_info_free(info);
+	}
+
+	if (reg) {
+		g_regex_unref(reg);
+	}
+
 	g_object_unref(msg);
 
 	return result;
@@ -284,15 +293,33 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **street, gcha
 	gboolean found = FALSE;
 	gint international_prefix_len;
 	struct profile *profile = profile_get_active();
+	struct contact *rl_contact;
 
 	if (!profile) {
 		return FALSE;
 	}
 
-	international_prefix_len = strlen(router_get_international_prefix(profile));
+	/* In case we do not have a number, abort */
+	if (EMPTY_STRING(number) || !isdigit(number[0])) {
+		return FALSE;
+	}
+
 #ifdef RL_DEBUG
 	g_debug("Input number '%s'", number);
 #endif
+
+	rl_contact = g_hash_table_lookup(table, number);
+	if (rl_contact) {
+		if (!EMPTY_STRING(rl_contact->name)) {
+			*name = g_strdup(rl_contact->name);
+			*street = g_strdup(rl_contact->street);
+			*zip = g_strdup(rl_contact->zip);
+			*city = g_strdup(rl_contact->city);
+			return TRUE;
+		}
+
+		return FALSE;
+	}
 
 	/* Get full number and extract country code if possible */
 	full_number = call_full_number(number, TRUE);
@@ -305,14 +332,16 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **street, gcha
 #endif
 
 	country_code = get_country_code(full_number);
+	g_free(full_number);
+
+	international_prefix_len = strlen(router_get_international_prefix(profile));
 #ifdef RL_DEBUG
-	if (country_code) {
-		g_debug("Country code: %s", country_code + international_prefix_len);
-	} else {
+	if (!country_code) {
 		g_debug("Warning: Could not get country code!!");
+	} else {
+		g_debug("Country code: %s", country_code + international_prefix_len);
 	}
 #endif
-	g_free(full_number);
 
 	if (!country_code) {
 		return FALSE;
@@ -328,11 +357,6 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **street, gcha
 
 	g_free(country_code);
 
-	/* In case we do not have a number, abort */
-	if (EMPTY_STRING(number) || !isdigit(number[0])) {
-		return FALSE;
-	}
-
 	for (; list != NULL && list->data != NULL; list = list->next) {
 		lookup = list->data;
 
@@ -345,6 +369,12 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **street, gcha
 		if (found) {
 			break;
 		}
+	}
+
+	if (!found) {
+		rl_contact = g_slice_new0(struct contact);
+
+		g_hash_table_insert(table, number, rl_contact);
 	}
 
 	return found;

@@ -233,6 +233,10 @@ gchar *router_get_national_prefix(struct profile *profile)
  */
 gchar *router_get_area_code(struct profile *profile)
 {
+	if (!profile || !profile->settings) {
+		return NULL;
+	}
+
 	return g_settings_get_string(profile->settings, "area-code");
 }
 
@@ -243,6 +247,10 @@ gchar *router_get_area_code(struct profile *profile)
  */
 gchar *router_get_country_code(struct profile *profile)
 {
+	if (!profile || !profile->settings) {
+		return NULL;
+	}
+
 	return g_settings_get_string(profile->settings, "country-code");
 }
 
@@ -253,6 +261,10 @@ gchar *router_get_country_code(struct profile *profile)
  */
 gboolean router_get_settings(struct profile *profile)
 {
+	if (!router) {
+		return FALSE;
+	}
+
 	return router->get_settings(profile);
 }
 
@@ -263,6 +275,10 @@ gboolean router_get_settings(struct profile *profile)
  */
 const gchar *router_get_name(struct profile *profile)
 {
+	if (!profile || !profile->router_info) {
+		return NULL;
+	}
+
 	return profile->router_info->name;
 }
 
@@ -273,6 +289,10 @@ const gchar *router_get_name(struct profile *profile)
  */
 const gchar *router_get_version(struct profile *profile)
 {
+	if (!profile || !profile->router_info) {
+		return NULL;
+	}
+
 	return profile->router_info->version;
 }
 
@@ -283,6 +303,10 @@ const gchar *router_get_version(struct profile *profile)
  */
 gboolean router_load_journal(struct profile *profile)
 {
+	if (!router) {
+		return FALSE;
+	}
+
 	return router->load_journal(profile, NULL);
 }
 /**

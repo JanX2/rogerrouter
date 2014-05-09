@@ -146,7 +146,7 @@ static gchar *areacodes_get_city(RouterManagerGlobalAreaCodesPlugin *areacodes_p
 	}
 
 	//g_debug("Ret: %s", ret);
-	return g_convert_utf8(ret);
+	return g_convert_utf8(ret, -1);
 }
 
 /**

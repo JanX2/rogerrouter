@@ -178,9 +178,10 @@ gchar *ftp_read_data_response(GIOChannel *channel, gsize *len)
 
 		if (io_status == G_IO_STATUS_NORMAL) {
 			data_size += read;
-			data = g_realloc(data, data_size);
+			data = g_realloc(data, data_size + 1);
 			memcpy(data + data_offset, buffer, read);
 			data_offset += read;
+			data[data_offset] = '\0';
 		} else if (io_status == G_IO_STATUS_AGAIN) {
 			continue;
 		} else {
@@ -282,6 +283,7 @@ gboolean ftp_passive(struct ftp *client)
 		g_debug("Data channel already open");
 #endif
 		g_io_channel_shutdown(client->data, FALSE, NULL);
+		g_io_channel_unref(client->data);
 		client->data = NULL;
 #ifdef FTP_DEBUG
 		g_debug("ftp_passive(): data is NULL now");
@@ -534,10 +536,12 @@ gboolean ftp_shutdown(struct ftp *client)
 
 	if (client->control) {
 		g_io_channel_shutdown(client->control, FALSE, NULL);
+		g_io_channel_unref(client->control);
 	}
 
 	if (client->data) {
 		g_io_channel_shutdown(client->data, FALSE, NULL);
+		g_io_channel_unref(client->data);
 	}
 
 #ifdef FTP_DEBUG

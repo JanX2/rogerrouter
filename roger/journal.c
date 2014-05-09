@@ -285,10 +285,10 @@ gpointer lookup_journal(gpointer user_data)
 
 	for (list = journal; list; list = list->next) {
 		struct call *call = list->data;
-		gchar *name;
-		gchar *street;
-		gchar *zip;
-		gchar *city;
+		gchar *name = NULL;
+		gchar *street = NULL;
+		gchar *zip = NULL;
+		gchar *city = NULL;
 
 		if (!EMPTY_STRING(call->remote->name)) {
 			continue;
@@ -834,6 +834,8 @@ static gboolean save_column_state(gpointer data)
 	g_settings_set_boolean(app_settings, key, visible);
 	g_free(key);
 
+	timeout_id = 0;
+
 	return FALSE;
 }
 
@@ -841,7 +843,6 @@ static void journal_column_fixed_width_cb(GtkWidget *widget, gpointer user_data)
 {
 	GtkTreeViewColumn *column = GTK_TREE_VIEW_COLUMN(widget);
 
-	g_debug("Called f-w");
 	if (timeout_id) {
 		g_source_remove(timeout_id);
 	}

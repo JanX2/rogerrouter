@@ -648,6 +648,8 @@ GSList *fritzbox_load_faxbox(GSList *journal)
 			g_free(full);
 		}
 
+		g_strfreev(split);
+
 		g_free(response);
 	}
 	g_free(path);

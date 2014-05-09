@@ -27,7 +27,7 @@ G_BEGIN_DECLS
 #endif
 
 gchar *g_strcasestr(const gchar *haystack, const gchar *needle);
-gchar *g_convert_utf8(const gchar *text);
+gchar *g_convert_utf8(const gchar *text, gssize len);
 gchar *strip_html(gchar *text);
 
 G_END_DECLS
