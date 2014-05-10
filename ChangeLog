@@ -1,3 +1,11 @@
+roger - 1.8.6
+------------------------------------------------------------------------------------------------------------------
+* Statusicon and Indicator plugin are able to change their icon style
+* Fix issues detected with valgrind
+* Fix reverse lookup crashes
+* Fix crash in FritzFon plugin
+* Fix compilation for old GTK versions and KWallet
+
 roger - 1.8.5
 ------------------------------------------------------------------------------------------------------------------
 * Add KWallet password manager plugin
