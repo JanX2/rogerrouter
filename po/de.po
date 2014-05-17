@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-28 00:16+0200\n"
+"POT-Creation-Date: 2014-05-10 12:58+0200\n"
 "PO-Revision-Date: 2013-09-07 19:34+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: German <jan.brummer@tabos.org>\n"
@@ -26,14 +26,14 @@ msgstr ""
 
 #. Contacts
 #: ../roger/application.c:186 ../roger/contacts.c:557
-#: ../roger/plugins/statusicon/gtk.c:195
-#: ../roger/plugins/indicator/indicator.c:217
+#: ../roger/plugins/statusicon/gtk.c:196
+#: ../roger/plugins/indicator/indicator.c:218
 msgid "Contacts"
 msgstr "Kontakte"
 
 #. Help
-#: ../roger/application.c:187 ../roger/plugins/statusicon/gtk.c:230
-#: ../roger/plugins/indicator/indicator.c:253
+#: ../roger/application.c:187 ../roger/plugins/statusicon/gtk.c:231
+#: ../roger/plugins/indicator/indicator.c:254
 msgid "Help"
 msgstr "Hilfe"
 
@@ -42,14 +42,14 @@ msgid "Donate"
 msgstr "Spenden"
 
 #. About
-#: ../roger/application.c:189 ../roger/plugins/statusicon/gtk.c:235
-#: ../roger/plugins/indicator/indicator.c:258
+#: ../roger/application.c:189 ../roger/plugins/statusicon/gtk.c:236
+#: ../roger/plugins/indicator/indicator.c:259
 msgid "About"
 msgstr "Info"
 
 #. Quit
-#: ../roger/application.c:190 ../roger/plugins/statusicon/gtk.c:244
-#: ../roger/plugins/indicator/indicator.c:267
+#: ../roger/application.c:190 ../roger/plugins/statusicon/gtk.c:245
+#: ../roger/plugins/indicator/indicator.c:268
 msgid "Quit"
 msgstr "Beenden"
 
@@ -208,7 +208,7 @@ msgid "Photo"
 msgstr "Foto"
 
 #. Name
-#: ../roger/contacts.c:331 ../roger/contact_edit.c:200 ../roger/journal.c:1005
+#: ../roger/contacts.c:331 ../roger/contact_edit.c:200 ../roger/journal.c:1011
 #: ../roger/pref_action.c:193 ../roger/pref_action.c:503
 #: ../roger/pref_filters.c:201 ../roger/pref_filters.c:510
 #: ../roger/print.c:382
@@ -221,8 +221,8 @@ msgid "Do you want to delete the entry '%s'?"
 msgstr "Wollen Sie den Eintrag '%s' löschen?"
 
 #. Delete entry
-#: ../roger/contacts.c:410 ../roger/journal.c:415 ../roger/journal.c:1084
-#: ../roger/journal.c:1109 ../roger/journal.c:1202
+#: ../roger/contacts.c:410 ../roger/journal.c:420 ../roger/journal.c:1092
+#: ../roger/journal.c:1117 ../roger/journal.c:1210
 msgid "Delete entry"
 msgstr "Eintrag löschen"
 
@@ -263,7 +263,7 @@ msgstr "_Öffnen"
 msgid "_No image"
 msgstr "_Kein Bild"
 
-#: ../roger/contact_edit.c:226 ../roger/journal.c:1007
+#: ../roger/contact_edit.c:226 ../roger/journal.c:1013
 #: ../roger/pref_action.c:256 ../roger/pref_filters.c:202 ../roger/print.c:386
 #: ../roger/plugins/notification/notification.c:502
 #: ../roger/plugins/gtknotify/gtknotify.c:596
@@ -286,7 +286,7 @@ msgstr "Straße"
 msgid "ZIP"
 msgstr "PLZ"
 
-#: ../roger/contact_edit.c:269 ../roger/journal.c:1008
+#: ../roger/contact_edit.c:269 ../roger/journal.c:1014
 msgid "City"
 msgstr "Stadt"
 
@@ -296,8 +296,8 @@ msgstr "Detail hinzufügen"
 
 #. Phone
 #: ../roger/contact_edit.c:289 ../roger/phone.c:977
-#: ../roger/plugins/statusicon/gtk.c:200
-#: ../roger/plugins/indicator/indicator.c:222
+#: ../roger/plugins/statusicon/gtk.c:201
+#: ../roger/plugins/indicator/indicator.c:223
 msgid "Phone"
 msgstr "Telefon"
 
@@ -388,127 +388,127 @@ msgstr "<Kein Profil>"
 msgid "Profile: %s | Total: %d call(s) | Duration: %d:%2.2d"
 msgstr "Profil: %s | Anzahl: %d Anruf(e) | Dauer: %d:%2.2d"
 
-#: ../roger/journal.c:374
+#: ../roger/journal.c:379
 msgid "Do you want to delete the router journal?"
 msgstr "Wollen Sie das Journal vom Router löschen?"
 
-#: ../roger/journal.c:375
+#: ../roger/journal.c:380
 msgid "Delete journal"
 msgstr "Journal löschen"
 
-#: ../roger/journal.c:414
+#: ../roger/journal.c:419
 msgid "Do you want to delete the selected entry?"
 msgstr "Wollen Sie den ausgewählten Eintrag löschen?"
 
-#: ../roger/journal.c:434
+#: ../roger/journal.c:439
 msgid "Where shall i add the number?"
 msgstr "Wo soll die Nummer hinzugefügt werden?"
 
 #. Add entry
-#: ../roger/journal.c:441 ../roger/journal.c:1085 ../roger/journal.c:1114
-#: ../roger/journal.c:1207
+#: ../roger/journal.c:446 ../roger/journal.c:1093 ../roger/journal.c:1122
+#: ../roger/journal.c:1215
 msgid "Add entry"
 msgstr "Eintrag hinzufügen"
 
-#: ../roger/journal.c:447
+#: ../roger/journal.c:452
 msgid "Existing entry"
 msgstr "Existierender Eintrag"
 
-#: ../roger/journal.c:448
+#: ../roger/journal.c:453
 msgid "New entry"
 msgstr "Neuer Eintrag"
 
 #. Create dialog
-#: ../roger/journal.c:661 ../roger/pref_filters.c:61
+#: ../roger/journal.c:666 ../roger/pref_filters.c:61
 msgid "Voice box"
 msgstr "Anrufbeantworter"
 
 #. GTK_DIALOG_MODAL
-#: ../roger/journal.c:661 ../roger/pref.c:107 ../roger/pref_filters.c:297
+#: ../roger/journal.c:666 ../roger/pref.c:107 ../roger/pref_filters.c:297
 msgid "_Close"
 msgstr "_Schließen"
 
-#: ../roger/journal.c:672
+#: ../roger/journal.c:677
 msgid "Playing voice box entry..."
 msgstr "Spiele Anrufbeantworter-Eintrag"
 
 #. Copy phone number
-#: ../roger/journal.c:899
+#: ../roger/journal.c:905
 msgid "Copy number"
 msgstr "Kopiere Nummer"
 
 #. Call phone number
-#: ../roger/journal.c:904
+#: ../roger/journal.c:910
 msgid "Call number"
 msgstr "Nummer wählen"
 
 #. Add contact
-#: ../roger/journal.c:909
+#: ../roger/journal.c:915
 msgid "Add contact"
 msgstr "Kontakt hinzufügen"
 
-#: ../roger/journal.c:1003 ../roger/pref_filters.c:199 ../roger/print.c:374
+#: ../roger/journal.c:1009 ../roger/pref_filters.c:199 ../roger/print.c:374
 msgid "Type"
 msgstr "Typ"
 
-#: ../roger/journal.c:1004 ../roger/pref_filters.c:200 ../roger/print.c:378
+#: ../roger/journal.c:1010 ../roger/pref_filters.c:200 ../roger/print.c:378
 msgid "Date/Time"
 msgstr "Datum/Zeit"
 
-#: ../roger/journal.c:1006
+#: ../roger/journal.c:1012
 msgid "Company"
 msgstr "Firma"
 
-#: ../roger/journal.c:1009 ../roger/pref_filters.c:203
+#: ../roger/journal.c:1015 ../roger/pref_filters.c:203
 msgid "Extension"
 msgstr "Nebenstelle"
 
-#: ../roger/journal.c:1010 ../roger/pref_filters.c:204
+#: ../roger/journal.c:1016 ../roger/pref_filters.c:204
 msgid "Line"
 msgstr "Leitung"
 
-#: ../roger/journal.c:1011 ../roger/print.c:398
+#: ../roger/journal.c:1017 ../roger/print.c:398
 msgid "Duration"
 msgstr "Dauer"
 
 #. Refresh journal
-#: ../roger/journal.c:1079 ../roger/journal.c:1091 ../roger/journal.c:1184
-#: ../roger/journal.c:1230
+#: ../roger/journal.c:1087 ../roger/journal.c:1099 ../roger/journal.c:1192
+#: ../roger/journal.c:1238
 msgid "Refresh journal"
 msgstr "Journal laden"
 
 #. Print journal
-#: ../roger/journal.c:1080 ../roger/journal.c:1096 ../roger/journal.c:1189
-#: ../roger/journal.c:1240
+#: ../roger/journal.c:1088 ../roger/journal.c:1104 ../roger/journal.c:1197
+#: ../roger/journal.c:1248
 msgid "Print journal"
 msgstr "Journal drucken"
 
 #. Clear journal
-#: ../roger/journal.c:1081 ../roger/journal.c:1101 ../roger/journal.c:1194
+#: ../roger/journal.c:1089 ../roger/journal.c:1109 ../roger/journal.c:1202
 msgid "Clear journal"
 msgstr "Journal löschen"
 
-#: ../roger/journal.c:1250
+#: ../roger/journal.c:1258
 msgid "Clear journal on router"
 msgstr "Lösche Journal vom Router"
 
-#: ../roger/journal.c:1260
+#: ../roger/journal.c:1268
 msgid "Delete selected entry"
 msgstr "Ausgewählten Eintrag löschen"
 
-#: ../roger/journal.c:1270
+#: ../roger/journal.c:1278
 msgid "Add selected entry to address book"
 msgstr "Ausgewählten Eintrag zum Adressbuch hinzufügen"
 
-#: ../roger/journal.c:1278
+#: ../roger/journal.c:1286
 msgid "Search:"
 msgstr "Suche:"
 
-#: ../roger/journal.c:1282
+#: ../roger/journal.c:1290
 msgid "Search in journal for name or number"
 msgstr "Suche im Journal nach Name oder Nummer"
 
-#: ../roger/journal.c:1290
+#: ../roger/journal.c:1298
 msgid "Filter:"
 msgstr "Filter:"
 
@@ -649,8 +649,8 @@ msgid "Connection: Idle | Time: 00:00:00"
 msgstr "Verbindung: Untätig | Dauer: 00:00:00"
 
 #. Preferences
-#: ../roger/pref.c:107 ../roger/plugins/statusicon/gtk.c:221
-#: ../roger/plugins/indicator/indicator.c:244
+#: ../roger/pref.c:107 ../roger/plugins/statusicon/gtk.c:222
+#: ../roger/plugins/indicator/indicator.c:245
 msgid "Preferences"
 msgstr "Einstellungen"
 
@@ -909,22 +909,22 @@ msgstr "Alle"
 #. Last calls - Incomming
 #: ../roger/pref_filters.c:58 ../roger/plugins/notification/notification.c:511
 #: ../roger/plugins/gtknotify/gtknotify.c:605
-#: ../roger/plugins/statusicon/gtk.c:144
-#: ../roger/plugins/indicator/indicator.c:150
+#: ../roger/plugins/statusicon/gtk.c:145
+#: ../roger/plugins/indicator/indicator.c:151
 msgid "Incoming"
 msgstr "Eingehend"
 
 #. Last calls - Missed
-#: ../roger/pref_filters.c:59 ../roger/plugins/statusicon/gtk.c:158
-#: ../roger/plugins/indicator/indicator.c:164
+#: ../roger/pref_filters.c:59 ../roger/plugins/statusicon/gtk.c:159
+#: ../roger/plugins/indicator/indicator.c:165
 msgid "Missed"
 msgstr "Verpasst"
 
 #. Last calls - Outgoing
 #: ../roger/pref_filters.c:60 ../roger/plugins/notification/notification.c:506
 #: ../roger/plugins/gtknotify/gtknotify.c:600
-#: ../roger/plugins/statusicon/gtk.c:151
-#: ../roger/plugins/indicator/indicator.c:157
+#: ../roger/plugins/statusicon/gtk.c:152
+#: ../roger/plugins/indicator/indicator.c:158
 msgid "Outgoing"
 msgstr "Ausgehend"
 
@@ -1235,12 +1235,12 @@ msgid "Message:"
 msgstr "Nachricht:"
 
 #: ../roger/plugins/evolution/evolution.c:592
-#: ../roger/plugins/fritzfon/fritzfon.c:739
+#: ../roger/plugins/fritzfon/fritzfon.c:738
 msgid "Book:"
 msgstr "Buch:"
 
 #: ../roger/plugins/evolution/evolution.c:605
-#: ../roger/plugins/fritzfon/fritzfon.c:752
+#: ../roger/plugins/fritzfon/fritzfon.c:751
 #: ../roger/plugins/vcard/vcard.c:1251
 #: ../roger/plugins/thunderbird/thunderbird.c:1058
 msgid "Contact book"
@@ -1356,48 +1356,78 @@ msgstr ""
 "Zeigt Benachrichtigungen über eingehende/ausgehende/verpasste Anrufe (GTK)"
 
 #. Functions - Copy IP adress
-#: ../roger/plugins/statusicon/gtk.c:66
-#: ../roger/plugins/indicator/indicator.c:72
+#: ../roger/plugins/statusicon/gtk.c:67
+#: ../roger/plugins/indicator/indicator.c:73
 msgid "Copy IP address"
 msgstr "IP-Adresse kopieren"
 
 #. Functions - Reconnect
-#: ../roger/plugins/statusicon/gtk.c:71
-#: ../roger/plugins/indicator/indicator.c:77
+#: ../roger/plugins/statusicon/gtk.c:72
+#: ../roger/plugins/indicator/indicator.c:78
 msgid "Reconnect"
 msgstr "Neu verbinden"
 
 #. Journal
-#: ../roger/plugins/statusicon/gtk.c:190
-#: ../roger/plugins/indicator/indicator.c:212
+#: ../roger/plugins/statusicon/gtk.c:191
+#: ../roger/plugins/indicator/indicator.c:213
 msgid "Journal"
 msgstr "Journal"
 
 #. Last calls
-#: ../roger/plugins/statusicon/gtk.c:205
-#: ../roger/plugins/indicator/indicator.c:227
+#: ../roger/plugins/statusicon/gtk.c:206
+#: ../roger/plugins/indicator/indicator.c:228
 msgid "Last calls"
 msgstr "Letzte Anrufe"
 
 #. Functions
-#: ../roger/plugins/statusicon/gtk.c:211
-#: ../roger/plugins/indicator/indicator.c:234
+#: ../roger/plugins/statusicon/gtk.c:212
+#: ../roger/plugins/indicator/indicator.c:235
 msgid "Functions"
 msgstr "Funktionen"
 
-#: ../roger/plugins/statusicon/gtk.c:288 ../roger.desktop.in.h:1
+#: ../roger/plugins/statusicon/gtk.c:323 ../roger.desktop.in.h:1
 msgid "Roger Router"
 msgstr "Roger Router"
 
+#. Create label and switch for "Hide Journal on startup" and add to grid
 #: ../roger/plugins/statusicon/gtk.c:377
 #: ../roger/plugins/indicator/indicator.c:397
 msgid "Hide Journal on startup"
 msgstr "Verstecke das Journal beim Starten"
 
-#: ../roger/plugins/statusicon/gtk.c:335
-#: ../roger/plugins/indicator/indicator.c:356
-msgid "Startup"
-msgstr "Starten"
+#. Create label and combo_box for "Default Icon" and add to grid
+#: ../roger/plugins/statusicon/gtk.c:386
+#: ../roger/plugins/indicator/indicator.c:406
+msgid "Default Icon"
+msgstr "Standard-Symbol"
+
+#: ../roger/plugins/statusicon/gtk.c:390 ../roger/plugins/statusicon/gtk.c:400
+#: ../roger/plugins/indicator/indicator.c:410
+#: ../roger/plugins/indicator/indicator.c:420
+msgid "default"
+msgstr "default"
+
+#: ../roger/plugins/statusicon/gtk.c:391 ../roger/plugins/statusicon/gtk.c:401
+#: ../roger/plugins/indicator/indicator.c:411
+#: ../roger/plugins/indicator/indicator.c:421
+msgid "mono-dark"
+msgstr "mono-dark"
+
+#: ../roger/plugins/statusicon/gtk.c:392 ../roger/plugins/statusicon/gtk.c:402
+#: ../roger/plugins/indicator/indicator.c:412
+#: ../roger/plugins/indicator/indicator.c:422
+msgid "mono-lite"
+msgstr "mono-lite"
+
+#. Create label and combo_box for "Notify Icon" and add to grid
+#: ../roger/plugins/statusicon/gtk.c:396
+#: ../roger/plugins/indicator/indicator.c:416
+msgid "Notify Icon"
+msgstr "Benachrichtigungs-Symbol"
+
+#: ../roger/plugins/statusicon/gtk.c:413
+msgid "Settings for Status icon GTK"
+msgstr "Einstellungen für Statusicon GTK"
 
 #: ../roger/plugins/statusicon/statusicon.plugin.in.h:1
 msgid "Status icon GTK"
@@ -1406,6 +1436,10 @@ msgstr "Statusicon GTK"
 #: ../roger/plugins/statusicon/statusicon.plugin.in.h:2
 msgid "Status icon plugin using GTK following FreeDesktop standard"
 msgstr "Statusicon-Plugin in GTK nach den FreeDesktop-Standard"
+
+#: ../roger/plugins/indicator/indicator.c:433
+msgid "Settings for Application Indicator"
+msgstr "Einstellungen für Application Indicator"
 
 #: ../roger/plugins/indicator/indicator.plugin.in.h:1
 msgid "Application Indicator"
@@ -1547,41 +1581,8 @@ msgstr ""
 msgid "fritz;box;fritzbox;router;manager;fax;softphone;"
 msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
 
-#: ../roger/plugins/indicator/indicator.c:408
-#: ../roger/plugins/statusicon/gtk.c:388
-msgid "Default Icon"
-msgstr "Standard-Symbol"
-
-#: ../roger/plugins/indicator/indicator.c:413
-#: ../roger/plugins/indicator/indicator.c:426
-#: ../roger/plugins/statusicon/gtk.c:393 ../roger/plugins/statusicon/gtk.c:406
-msgid "default"
-msgstr "default"
-
-#: ../roger/plugins/indicator/indicator.c:414
-#: ../roger/plugins/indicator/indicator.c:427
-#: ../roger/plugins/statusicon/gtk.c:394 ../roger/plugins/statusicon/gtk.c:407
-msgid "mono-dark"
-msgstr "mono-dark"
-
-#: ../roger/plugins/indicator/indicator.c:415
-#: ../roger/plugins/indicator/indicator.c:428
-#: ../roger/plugins/statusicon/gtk.c:395 ../roger/plugins/statusicon/gtk.c:408
-msgid "mono-lite"
-msgstr "mono-lite"
-
-#: ../roger/plugins/indicator/indicator.c:421
-#: ../roger/plugins/statusicon/gtk.c:401
-msgid "Notify Icon"
-msgstr "Benachrichtigungs-Symbol"
-
-#: ../roger/plugins/indicator/indicator.c:440
-msgid "Settings for Application Indicator"
-msgstr "Einstellungen für Application Indicator"
-
-#: ../roger/plugins/statusicon/gtk.c:420
-msgid "Settings for Status icon GTK"
-msgstr "Einstellungen für Statusicon GTK"
+#~ msgid "Startup"
+#~ msgstr "Starten"
 
 #~ msgid "Call type"
 #~ msgstr "Anruftyp"

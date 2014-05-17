@@ -317,7 +317,7 @@ void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
 		return;
 	}
 
-	if (!gtk_widget_is_visible(spinner)) {
+	if (!gtk_widget_get_visible(spinner)) {
 		gtk_spinner_start(GTK_SPINNER(spinner));
 		gtk_widget_show(spinner);
 	}

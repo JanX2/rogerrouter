@@ -68,6 +68,7 @@ gchar *call_scramble_number(const gchar *number);
 gchar *call_full_number(const gchar *number, gboolean country_code_prefix);
 gint call_sort_by_date(gconstpointer a, gconstpointer b);
 gchar *call_format_number(struct profile *profile, const gchar *number, enum number_format output_format);
+gchar *call_canonize_number(const gchar *number);
 
 G_END_DECLS
 

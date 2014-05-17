@@ -32,6 +32,7 @@
 #include <libroutermanager/profile.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/audio.h>
+#include <libroutermanager/call.h>
 
 #include <libfaxophone/faxophone.h>
 #include <libfaxophone/fax.h>
@@ -60,12 +61,14 @@ struct capi_connection *fax_dial(gchar *tiff, const gchar *trg_no)
 	const gchar *header = g_settings_get_string(profile->settings, "fax-header");
 	const gchar *ident = g_settings_get_string(profile->settings, "fax-ident");
 	struct capi_connection *connection = NULL;
+	gchar *target = call_canonize_number(trg_no);
 
 	if (g_settings_get_boolean(profile->settings, "fax-sff")) {
-		connection = sff_send(tiff, modem, ecm, controller, src_no, trg_no, ident, header, 0);
+		connection = sff_send(tiff, modem, ecm, controller, src_no, target, ident, header, 0);
 	} else {
-		connection = fax_send(tiff, modem, ecm, controller, src_no, trg_no, ident, header, 0);
+		connection = fax_send(tiff, modem, ecm, controller, src_no, target, ident, header, 0);
 	}
+	g_free(target);
 
 	return connection;
 }
