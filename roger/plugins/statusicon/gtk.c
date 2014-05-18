@@ -302,14 +302,8 @@ void statusicon_combobox_notify_changed_cb(GtkComboBox *widget, gpointer user_da
 	g_settings_set_string(statusicon_settings, "notify-icon", gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_box)));
 }
 
-void impl_activate(PeasActivatable *plugin)
+static gboolean add_statusicon(gpointer user_data)
 {
-	RouterManagerStatusIconPlugin *statusicon_plugin;
-
-	journal_set_hide_on_quit(TRUE);
-
-	statusicon_settings = g_settings_new("org.tabos.roger.plugins.statusicon");
-
 	/* Create StatusIcon GTK */
 	statusicon = gtk_status_icon_new();
 
@@ -323,6 +317,17 @@ void impl_activate(PeasActivatable *plugin)
 	gtk_status_icon_set_tooltip_text(statusicon, _("Roger Router"));
 	gtk_status_icon_set_visible(statusicon, TRUE);
 
+	return FALSE;
+}
+
+void impl_activate(PeasActivatable *plugin)
+{
+	RouterManagerStatusIconPlugin *statusicon_plugin;
+
+	journal_set_hide_on_quit(TRUE);
+
+	statusicon_settings = g_settings_new("org.tabos.roger.plugins.statusicon");
+
 	/* Connect to "call-notify" signal */
 	statusicon_plugin = ROUTERMANAGER_STATUSICON_PLUGIN(plugin);
 	statusicon_plugin->priv->signal_id = g_signal_connect(G_OBJECT(app_object), "connection-notify", G_CALLBACK(statusicon_connection_notify_cb), NULL);
@@ -330,6 +335,8 @@ void impl_activate(PeasActivatable *plugin)
 	if (g_settings_get_boolean(statusicon_settings, "hide-journal-on-startup")) {
 		journal_set_hide_on_start(TRUE);
 	}
+
+	g_idle_add(add_statusicon, NULL);
 }
 
 void impl_deactivate(PeasActivatable *plugin)
