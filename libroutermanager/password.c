@@ -111,10 +111,10 @@ gboolean simple_remove_password(struct profile *profile, const gchar *name)
 }
 
 struct password_manager simple = {
-        "Simple",
-        simple_store_password,
-        simple_get_password,
-        simple_remove_password,
+	"Simple",
+	simple_store_password,
+	simple_get_password,
+	simple_remove_password,
 };
 
 void password_manager_init(void)

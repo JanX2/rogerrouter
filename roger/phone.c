@@ -312,7 +312,7 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	struct phone_state *state = user_data;
 
 	state->number = gtk_entry_get_text(GTK_ENTRY(state->name_entry));
-	if (EMPTY_STRING(state->number) || !(isdigit(state->number[0]) || state->number[0] == '*' || state->number[0] == '#')) {
+	if (EMPTY_STRING(state->number) || !(isdigit(state->number[0]) || state->number[0] == '*' || state->number[0] == '#' || state->number[0] == '+')) {
 		state->number = g_object_get_data(G_OBJECT(state->name_entry), "number");
 	}
 

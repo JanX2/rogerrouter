@@ -50,7 +50,6 @@ GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand,
 
 static GSList *contacts = NULL;
 static GSettings *fritzfon_settings = NULL;
-static GHashTable *table = NULL;
 
 static xmlnode *master_node = NULL;
 
@@ -361,62 +360,6 @@ void fritzfon_combobox_changed_cb(GtkComboBox *widget, gpointer user_data)
 	fritzfon_read_book();
 }
 
-gint fritzfon_number_compare(gconstpointer a, gconstpointer b)
-{
-	struct contact *contact = (struct contact *)a;
-	gchar *number = (gchar *)b;
-	GSList *list = contact->numbers;
-
-	while (list) {
-		struct phone_number *phone_number = list->data;
-		if (g_strcmp0(phone_number->number, number) == 0) {
-			return 0;
-		}
-
-		list = list->next;
-	}
-
-	return -1;
-}
-
-void fritzfon_contact_process_cb(AppObject *obj, struct contact *contact, gpointer user_data)
-{
-	struct contact *fritz_contact;
-
-	if (EMPTY_STRING(contact->number)) {
-		/* Contact number is not present, abort */
-		return;
-	}
-
-	fritz_contact = g_hash_table_lookup(table, contact->number);
-	if (fritz_contact) {
-		if (!EMPTY_STRING(fritz_contact->name)) {
-			contact_copy(fritz_contact, contact);
-		} else {
-			/* Previous lookup done but no result found */
-			return;
-		}
-	} else {
-		GSList *list;
-		gchar *full_number = call_full_number(contact->number, FALSE);
-
-		list = g_slist_find_custom(contacts, full_number, fritzfon_number_compare);
-		if (list) {
-			fritz_contact = list->data;
-
-			g_hash_table_insert(table, contact->number, fritz_contact);
-
-			contact_copy(fritz_contact, contact);
-		} else {
-			/* We have found no entry, mark it in table to speedup further lookup */
-			fritz_contact = g_malloc0(sizeof(struct contact));
-			g_hash_table_insert(table, contact->number, fritz_contact);
-		}
-
-		g_free(full_number);
-	}
-}
-
 gboolean fritzfon_reload_contacts(void)
 {
 	return fritzfon_read_book() == 0;
@@ -694,33 +637,17 @@ struct address_book fritzfon_book = {
 
 void impl_activate(PeasActivatable *plugin)
 {
-	RouterManagerFritzFonPlugin *fritzfon_plugin = ROUTERMANAGER_FRITZFON_PLUGIN(plugin);
-
 	fritzfon_settings = g_settings_new("org.tabos.roger.plugins.fritzfon");
-
-	table = g_hash_table_new(g_str_hash, g_str_equal);
 
 	fritzfon_get_books();
 	fritzfon_read_book();
-
-	fritzfon_plugin->priv->signal_id = g_signal_connect(G_OBJECT(app_object), "contact-process", G_CALLBACK(fritzfon_contact_process_cb), NULL);
 
 	routermanager_address_book_register(&fritzfon_book);
 }
 
 void impl_deactivate(PeasActivatable *plugin)
 {
-	RouterManagerFritzFonPlugin *fritzfon_plugin = ROUTERMANAGER_FRITZFON_PLUGIN(plugin);
-
-	if (g_signal_handler_is_connected(G_OBJECT(app_object), fritzfon_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(app_object), fritzfon_plugin->priv->signal_id);
-	}
-
 	g_object_unref(fritzfon_settings);
-
-	if (table) {
-		g_hash_table_destroy(table);
-	}
 }
 
 GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)

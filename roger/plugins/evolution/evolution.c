@@ -55,7 +55,6 @@ GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand,
 
 static GSList *contacts = NULL;
 static GSettings *ebook_settings = NULL;
-static GHashTable *table = NULL;
 
 /**
  * \brief Get selected evolution address book Id
@@ -340,62 +339,6 @@ void ebook_combobox_changed_cb(GtkComboBox *widget, gpointer user_data)
 	ebook_read_book();
 }
 
-gint evolution_number_compare(gconstpointer a, gconstpointer b)
-{
-	struct contact *contact = (struct contact *)a;
-	gchar *number = (gchar *)b;
-	GSList *list = contact->numbers;
-
-	while (list) {
-		struct phone_number *phone_number = list->data;
-		if (g_strcmp0(phone_number->number, number) == 0) {
-			return 0;
-		}
-
-		list = list->next;
-	}
-
-	return -1;
-}
-
-void evolution_contact_process_cb(AppObject *obj, struct contact *contact, gpointer user_data)
-{
-	struct contact *eds_contact;
-
-	if (EMPTY_STRING(contact->number)) {
-		/* Contact number is not present, abort */
-		return;
-	}
-
-	eds_contact = g_hash_table_lookup(table, contact->number);
-	if (eds_contact) {
-		if (!EMPTY_STRING(eds_contact->name)) {
-			contact_copy(eds_contact, contact);
-		} else {
-			/* Previous lookup done but no result found */
-			return;
-		}
-	} else {
-		GSList *list;
-		gchar *full_number = call_full_number(contact->number, FALSE);
-
-		list = g_slist_find_custom(contacts, full_number, evolution_number_compare);
-		if (list) {
-			eds_contact = list->data;
-
-			g_hash_table_insert(table, contact->number, eds_contact);
-
-			contact_copy(eds_contact, contact);
-		} else {
-			/* We have found no entry, mark it in table to speedup further lookup */
-			eds_contact = g_malloc0(sizeof(struct contact));
-			g_hash_table_insert(table, contact->number, eds_contact);
-		}
-
-		g_free(full_number);
-	}
-}
-
 GSList *evolution_get_contacts(void)
 {
 	GSList *list = contacts;
@@ -548,31 +491,16 @@ struct address_book evolution_book = {
 
 void impl_activate(PeasActivatable *plugin)
 {
-	RouterManagerEvolutionPlugin *evolution_plugin = ROUTERMANAGER_EVOLUTION_PLUGIN(plugin);
-
 	ebook_settings = g_settings_new("org.tabos.roger.plugins.evolution");
 
-	table = g_hash_table_new(g_str_hash, g_str_equal);
-
 	ebook_read_book();
-	evolution_plugin->priv->signal_id = g_signal_connect(G_OBJECT(app_object), "contact-process", G_CALLBACK(evolution_contact_process_cb), NULL);
 
 	routermanager_address_book_register(&evolution_book);
 }
 
 void impl_deactivate(PeasActivatable *plugin)
 {
-	RouterManagerEvolutionPlugin *evolution_plugin = ROUTERMANAGER_EVOLUTION_PLUGIN(plugin);
-
-	if (g_signal_handler_is_connected(G_OBJECT(app_object), evolution_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(app_object), evolution_plugin->priv->signal_id);
-	}
-
 	g_object_unref(ebook_settings);
-
-	if (table) {
-		g_hash_table_destroy(table);
-	}
 }
 
 GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)

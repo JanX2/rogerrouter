@@ -62,8 +62,6 @@ static GString *last_name = NULL;
 static GString *company = NULL;
 static GString *title = NULL;
 
-static GHashTable *table = NULL;
-
 /**
  * \brief Free header, options and entry line
  * \param psCard pointer to card structure
@@ -1112,93 +1110,22 @@ struct address_book vcard_book = {
 	vcard_save_contact
 };
 
-gint vcard_number_compare(gconstpointer a, gconstpointer b)
-{
-	struct contact *contact = (struct contact *)a;
-	gchar *number = (gchar *)b;
-	GSList *list = contact->numbers;
-
-	while (list) {
-		struct phone_number *phone_number = list->data;
-		if (g_strcmp0(phone_number->number, number) == 0) {
-			return 0;
-		}
-
-		list = list->next;
-	}
-
-	return -1;
-}
-
-void vcard_contact_process_cb(AppObject *obj, struct contact *contact, gpointer user_data)
-{
-	struct contact *vcard_contact;
-
-	if (EMPTY_STRING(contact->number)) {
-		/* Contact number is not present, abort */
-		return;
-	}
-
-	vcard_contact = g_hash_table_lookup(table, contact->number);
-	if (vcard_contact) {
-		if (!EMPTY_STRING(vcard_contact->name)) {
-			contact_copy(vcard_contact, contact);
-		} else {
-			/* Previous lookup done but no result found */
-			return;
-		}
-	} else {
-		GSList *list;
-		gchar *full_number = call_full_number(contact->number, FALSE);
-
-		list = g_slist_find_custom(contacts, full_number, vcard_number_compare);
-		if (list) {
-			vcard_contact = list->data;
-
-			g_hash_table_insert(table, contact->number, vcard_contact);
-
-			contact_copy(vcard_contact, contact);
-		} else {
-			/* We have found no entry, mark it in table to speedup further lookup */
-			vcard_contact = g_malloc0(sizeof(struct contact));
-			g_hash_table_insert(table, contact->number, vcard_contact);
-		}
-
-		g_free(full_number);
-	}
-}
-
 void impl_activate(PeasActivatable *plugin)
 {
-	RouterManagerVCardPlugin *vcard_plugin = ROUTERMANAGER_VCARD_PLUGIN(plugin);
-	gchar *name ;
+	gchar *name;
 
 	vcard_settings = g_settings_new("org.tabos.roger.plugins.vcard");
-
-	table = g_hash_table_new(g_str_hash, g_str_equal);
 
 	name = g_settings_get_string(vcard_settings, "filename");
 
 	vcard_load_file(name);
-
-	vcard_plugin->priv->signal_id = g_signal_connect(G_OBJECT(app_object), "contact-process", G_CALLBACK(vcard_contact_process_cb), NULL);
 
 	routermanager_address_book_register(&vcard_book);
 }
 
 void impl_deactivate(PeasActivatable *plugin)
 {
-	RouterManagerVCardPlugin *vcard_plugin = ROUTERMANAGER_VCARD_PLUGIN(plugin);
-
-	if (g_signal_handler_is_connected(G_OBJECT(app_object), vcard_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(app_object), vcard_plugin->priv->signal_id);
-	}
-
 	g_object_unref(vcard_settings);
-
-	if (table) {
-		g_hash_table_destroy(table);
-	}
 }
 
 void filename_button_clicked_cb(GtkButton *button, gpointer user_data)

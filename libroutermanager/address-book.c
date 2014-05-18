@@ -23,12 +23,19 @@
  *  - Write support
  */
 
+#include <string.h>
+
 #include <glib.h>
 
 #include <libroutermanager/address-book.h>
+#include <libroutermanager/number.h>
+#include <libroutermanager/appobject.h>
+#include <libroutermanager/gstring.h>
 
 /** Holds the main internal address book */
 static struct address_book *internal_book = NULL;
+static guint address_book_signal_id = 0;
+static GHashTable *table = NULL;
 
 /**
  * \brief Get whole contacts within the main internal address book
@@ -89,6 +96,68 @@ gboolean address_book_can_save(void)
 	return ret;
 }
 
+gint address_book_number_compare(gconstpointer a, gconstpointer b)
+{
+	struct contact *contact = (struct contact *)a;
+	gchar *number = (gchar *)b;
+	GSList *list = contact->numbers;
+
+	while (list) {
+		struct phone_number *phone_number = list->data;
+		if (g_strcmp0(phone_number->number, number) == 0) {
+			return 0;
+		}
+
+		list = list->next;
+	}
+
+	return -1;
+}
+
+void address_book_contact_process_cb(AppObject *obj, struct contact *contact, gpointer user_data)
+{
+	struct contact *tmp_contact;
+	GSList *contacts;
+
+	if (EMPTY_STRING(contact->number)) {
+		/* Contact number is not present, abort */
+		return;
+	}
+
+	contacts = address_book_get_contacts();
+	if (!contacts) {
+		return;
+	}
+
+	tmp_contact = g_hash_table_lookup(table, contact->number);
+	if (tmp_contact) {
+		if (!EMPTY_STRING(tmp_contact->name)) {
+			contact_copy(tmp_contact, contact);
+		} else {
+			/* Previous lookup done but no result found */
+			return;
+		}
+	} else {
+		GSList *list;
+		gchar *full_number = call_full_number(contact->number, FALSE);
+
+		list = g_slist_find_custom(contacts, full_number, address_book_number_compare);
+		if (list) {
+			tmp_contact = list->data;
+
+			g_hash_table_insert(table, contact->number, tmp_contact);
+
+			contact_copy(tmp_contact, contact);
+		} else {
+			/* We have found no entry, mark it in table to speedup further lookup */
+			tmp_contact = g_malloc0(sizeof(struct contact));
+			g_hash_table_insert(table, contact->number, tmp_contact);
+		}
+
+		g_free(full_number);
+	}
+}
+
 /**
  * \brief Register a new address book
  * \param book address book pointer
@@ -96,4 +165,9 @@ gboolean address_book_can_save(void)
 void routermanager_address_book_register(struct address_book *book)
 {
 	internal_book = book;
+
+	if (!address_book_signal_id) {
+		table = g_hash_table_new(g_str_hash, g_str_equal);
+		address_book_signal_id = g_signal_connect(G_OBJECT(app_object), "contact-process", G_CALLBACK(address_book_contact_process_cb), NULL);
+	}
 }
