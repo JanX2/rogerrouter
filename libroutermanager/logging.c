@@ -41,7 +41,7 @@ void log_save_data(gchar *name, const gchar *data, gsize len)
 		return;
 	}
 
-	file = g_build_filename(g_get_tmp_dir(), name, NULL);
+	file = g_build_filename(g_get_user_cache_dir(), name, NULL);
 	file_save(file, data, len);
 
 	g_free(file);
