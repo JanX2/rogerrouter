@@ -1,12 +1,6 @@
 TODO
 ----------
 
-* Segmentation fault (MOSTLY DONE)
-
-* Cannonize numbers on fax transfer (VALIDATE)
-* Thunderbird Nummern im Journal (VALIDATE)
-
-* Statusicon Cinnamon Probleme
 * Error message for source msn not set
 * Gtk:Critical: gtk_label_set_text: assertion 'GTK_IS_LABEL (label)' failed
 
