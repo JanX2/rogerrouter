@@ -32,6 +32,7 @@
 void file_save(gchar *name, const gchar *data, gsize len)
 {
 	GFile *file = g_file_new_for_path(name);
+	GError *error = NULL;
 	GFileOutputStream *stream;
 
 	if (len == -1) {
@@ -39,17 +40,23 @@ void file_save(gchar *name, const gchar *data, gsize len)
 	}
 
 	if (g_file_query_exists(file, NULL)) {
-		stream = g_file_replace(file, NULL, FALSE, G_FILE_CREATE_PRIVATE, NULL, NULL);
+		stream = g_file_replace(file, NULL, FALSE, G_FILE_CREATE_PRIVATE, NULL, &error);
 	} else {
-		stream = g_file_create(file, G_FILE_CREATE_PRIVATE, NULL, NULL);
+		stream = g_file_create(file, G_FILE_CREATE_PRIVATE, NULL, &error);
 	}
 
-	g_output_stream_write(G_OUTPUT_STREAM(stream), data, len, NULL, NULL);
-	g_output_stream_flush(G_OUTPUT_STREAM(stream), NULL, NULL);
-	g_output_stream_close(G_OUTPUT_STREAM(stream), NULL, NULL);
-
-	g_object_unref(stream);
 	g_object_unref(file);
+
+	if (stream != NULL) {
+		g_output_stream_write(G_OUTPUT_STREAM(stream), data, len, NULL, NULL);
+		g_output_stream_flush(G_OUTPUT_STREAM(stream), NULL, NULL);
+		g_output_stream_close(G_OUTPUT_STREAM(stream), NULL, NULL);
+
+		g_object_unref(stream);
+	} else {
+		g_warning("%s", error->message);
+		g_error_free(error);
+	}
 }
 
 /**
