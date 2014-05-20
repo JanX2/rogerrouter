@@ -84,6 +84,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 	gboolean result = FALSE;
 	gchar *full_number;
 	gchar *rdata = NULL;
+	gchar *file;
 	gsize len;
 
 	/* get full number according to service preferences */
@@ -205,6 +206,18 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 	rl_contact->city = g_strdup(*city);
 	g_hash_table_insert(table, number, rl_contact);
 	result = TRUE;
+
+	rl_tmp = g_strdup_printf("%s;%s;%s;%s;%s\n",
+		number,
+		rl_contact->name,
+		rl_contact->street,
+		rl_contact->zip,
+		rl_contact->city);
+
+	file = g_build_filename(g_get_user_cache_dir(), "routermanager", "reverselookup", number, NULL);
+	file_save(file, rl_tmp, strlen(rl_tmp));
+	g_free(file);
+	g_free(rl_tmp);
 
 end:
 	if (rdata) {
@@ -448,6 +461,41 @@ static void country_code_add(xmlnode *node)
 	g_hash_table_insert(lookup_table, (gpointer) atol(code), lookup_list);
 }
 
+static void lookup_read_cache(gchar *dir_name)
+{
+	GDir *dir;
+	GError *error = NULL;
+	const gchar *file_name;
+
+	dir = g_dir_open(dir_name, 0, &error);
+
+	while ((file_name = g_dir_read_name(dir))) {
+		gchar *data;
+		gchar *uri;
+		gchar **split;
+		struct contact *contact;
+
+		uri = g_build_filename(dir_name, file_name, NULL);
+		data = file_load(uri, NULL);
+		g_free(uri);
+
+		g_assert(data != NULL);
+
+		split = g_strsplit(data, ";", -1);
+
+		contact = g_slice_new0(struct contact);
+
+		contact->name = g_strdup(split[1]);
+		contact->street = g_strdup(split[2]);
+		contact->zip = g_strdup(split[3]);
+		contact->city = g_strdup(split[4]);
+
+		g_hash_table_insert(table, g_strdup(split[0]), contact);
+
+		g_strfreev(split);
+	}
+}
+
 /**
  * \brief Activate plugin
  * \param plugin peas plugin
@@ -477,6 +525,11 @@ static void impl_activate(PeasActivatable *plugin)
 		/* Add new country code lists to hash table */
 		country_code_add(child);
 	}
+
+	file = g_build_filename(g_get_user_cache_dir(), "routermanager", "reverselookup", NULL);
+	g_mkdir_with_parents(file, 0770);
+	lookup_read_cache(file);
+	g_free(file);
 
 	xmlnode_free(node);
 
