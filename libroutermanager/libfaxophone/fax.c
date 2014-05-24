@@ -498,11 +498,10 @@ void fax_transfer(struct capi_connection *connection, _cmsg capi_message)
  * \param call_anonymous Send fax anonymous
  * \return error code
  */
-struct capi_connection *fax_send(gchar *tiff_file, gint modem, gint ecm, gint controller, const gchar *src_no, const gchar *trg_no, const gchar *lsi, const gchar *local_header_info, gint call_anonymous)
+struct capi_connection *fax_send(gchar *tiff_file, gint modem, gint ecm, gint controller, gint cip, const gchar *src_no, const gchar *trg_no, const gchar *lsi, const gchar *local_header_info, gint call_anonymous)
 {
 	struct fax_status *status;
 	struct capi_connection *connection;
-	gint cip;
 
 	g_debug("tiff: %s, modem: %d, ecm: %s, controller: %d, src: %s, trg: %s, ident: %s, header: %s, anonymous: %d)", tiff_file, modem, ecm ? "on" : "off", controller, src_no, trg_no, (lsi != NULL ? lsi : "(null)"), (local_header_info != NULL ? local_header_info : "(null)"), call_anonymous);
 
@@ -521,14 +520,6 @@ struct capi_connection *fax_send(gchar *tiff_file, gint modem, gint ecm, gint co
 	snprintf(status->src_no, sizeof(status->src_no), "%s", src_no);
 	snprintf(status->trg_no, sizeof(status->trg_no), "%s", trg_no);
 	snprintf(status->tiff_file, sizeof(status->tiff_file), "%s", tiff_file);
-
-	if (controller >= 4) {
-		cip = SPEECH_CIP;
-		g_debug("Using 'Analog Fax' id");
-	} else {
-		cip = FAX_CIP;
-		g_debug("Using 'ISDN Fax' id");
-	}
 
 	connection = capi_call(controller, src_no, trg_no, (guint) call_anonymous, SESSION_FAX, cip, 1, 1, 0, NULL, NULL, NULL);
 	if (connection) {

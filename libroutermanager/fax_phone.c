@@ -33,12 +33,15 @@
 #include <libroutermanager/router.h>
 #include <libroutermanager/audio.h>
 #include <libroutermanager/call.h>
+#include <libroutermanager/gstring.h>
 
 #include <libfaxophone/faxophone.h>
 #include <libfaxophone/fax.h>
 #include <libfaxophone/sff.h>
 #include <libfaxophone/phone.h>
 #include <libfaxophone/ringtone.h>
+
+#define RM_ERROR 
 
 static struct session *session = NULL;
 static gconstpointer net_event;
@@ -57,16 +60,34 @@ struct capi_connection *fax_dial(gchar *tiff, const gchar *trg_no)
 	gint modem = g_settings_get_int(profile->settings, "fax-bitrate");
 	gboolean ecm = g_settings_get_boolean(profile->settings, "fax-ecm");
 	gint controller = g_settings_get_int(profile->settings, "fax-controller") + 1;
+	gint cip = g_settings_get_int(profile->settings, "fax-cip");
 	const gchar *src_no = g_settings_get_string(profile->settings, "fax-number");
 	const gchar *header = g_settings_get_string(profile->settings, "fax-header");
 	const gchar *ident = g_settings_get_string(profile->settings, "fax-ident");
 	struct capi_connection *connection = NULL;
-	gchar *target = call_canonize_number(trg_no);
+	gchar *target;
+
+	if (EMPTY_STRING(src_no)) {
+		return NULL;
+	}
+
+	target = call_canonize_number(trg_no);
+
+	if (!cip) {
+		/* CIP is not set in the settings, try to guess it based on the controller id */
+		if (controller >= 4) {
+			cip = SPEECH_CIP;
+			g_debug("Using 'Analog Fax' id");
+		} else {
+			cip = FAX_CIP;
+			g_debug("Using 'ISDN Fax' id");
+		}
+	}
 
 	if (g_settings_get_boolean(profile->settings, "fax-sff")) {
 		connection = sff_send(tiff, modem, ecm, controller, src_no, target, ident, header, 0);
 	} else {
-		connection = fax_send(tiff, modem, ecm, controller, src_no, target, ident, header, 0);
+		connection = fax_send(tiff, modem, ecm, controller, cip, src_no, target, ident, header, 0);
 	}
 	g_free(target);
 

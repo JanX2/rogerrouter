@@ -184,6 +184,9 @@
 		<key name="fax-sff" type="b">
 			<default>false</default>
 		</key>
+		<key name="fax-cip" type="i">
+			<default>0</default>
+		</key>
 
 		<!-- Softphone -->
 		<key name="phone-number" type="s">

@@ -1381,7 +1381,7 @@ static void capi_confirmation(_cmsg capi_message)
 		plci = CONNECT_CONF_PLCI(&capi_message);
 		info = CONNECT_CONF_INFO(&capi_message);
 
-		g_debug("CNF: CAPI_CONNECT - (plci: %d)", plci);
+		g_debug("CNF: CAPI_CONNECT - (plci: %d, info: %d)", plci, info);
 		/* .. or new outgoing call? get plci. */
 		connection = capi_find_new();
 		if (connection == NULL) {
