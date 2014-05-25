@@ -301,7 +301,7 @@ static GtkWidget *pref_page_router_information(void)
 	firmware_name = router_get_version(profile_get_active());
 	box_string = g_strdup_printf(_("%s (Firmware: %s)"), box_name, firmware_name);
 	box_label = ui_label_new(box_string);
-	gtk_misc_set_alignment(GTK_MISC(box_label), 0.5, 0.5);
+	gtk_widget_set_halign(box_label, GTK_ALIGN_CENTER);
 	gtk_widget_set_hexpand(box_label, TRUE);
 	g_free(box_string);
 	gtk_grid_attach(GTK_GRID(group), box_label, 1, 1, 1, 1);

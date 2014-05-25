@@ -29,7 +29,7 @@ GtkWidget *ui_label_new(gchar *text)
 	label = gtk_label_new(text);
 	gdk_rgba_parse(&col, "#808080");
 	gtk_widget_override_color(label, GTK_STATE_FLAG_NORMAL, &col);
-	gtk_misc_set_alignment(GTK_MISC(label), 1, 0.5);
+	gtk_widget_set_halign(label, GTK_ALIGN_END);
 
 	return label;
 }
@@ -37,4 +37,18 @@ GtkWidget *ui_label_new(gchar *text)
 gchar *ui_bold_text(gchar *text)
 {
 	return g_strdup_printf("<b>%s</b>", text);
+}
+
+void gtk_widget_set_margin(GtkWidget *widget, gint x, gint y)
+{
+	gtk_widget_set_margin_top(widget, y);
+	gtk_widget_set_margin_bottom(widget, y);
+
+#if GTK_CHECK_VERSION(3, 12, 0)
+	gtk_widget_set_margin_start(widget, x);
+	gtk_widget_set_margin_end(widget, x);
+#else
+	gtk_widget_set_margin_left(widget, x);
+	gtk_widget_set_margin_right(widget, x);
+#endif
 }

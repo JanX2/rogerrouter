@@ -60,8 +60,8 @@ GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand,
 
 	/* Configure plugins label */
 	title = gtk_label_new("");
-	gtk_misc_set_alignment(GTK_MISC(title), 0, 0.5);
-	gtk_misc_set_padding(GTK_MISC(title), 10, 5);
+	gtk_widget_set_halign(title, GTK_ALIGN_START);
+	gtk_widget_set_margin(title, 10, 5);
 	gtk_label_set_markup(GTK_LABEL(title), title_markup);
 	gtk_grid_attach(GTK_GRID(grid), title, 0, 0, 1, 1);
 

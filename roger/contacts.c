@@ -91,7 +91,7 @@ void contacts_update_details(struct contact *contact)
 
 		detail_name_label = gtk_label_new("");
 		gtk_label_set_ellipsize(GTK_LABEL(detail_name_label), PANGO_ELLIPSIZE_END);
-		gtk_misc_set_alignment(GTK_MISC(detail_name_label), 0, 0.5);
+		gtk_widget_set_halign(detail_name_label, GTK_ALIGN_START);
 		gtk_widget_set_hexpand(detail_name_label, TRUE);
 		gtk_grid_attach(GTK_GRID(grid), detail_name_label, 1, 0, 1, 1);
 
@@ -127,7 +127,7 @@ void contacts_update_details(struct contact *contact)
 			}
 			number = gtk_label_new(phone_number->number);
 			gtk_label_set_selectable(GTK_LABEL(number), TRUE);
-			gtk_misc_set_alignment(GTK_MISC(number), 0, 0.5);
+			gtk_widget_set_halign(number, GTK_ALIGN_START);
 			dial = gtk_button_new();
 			gtk_widget_set_tooltip_text(dial, _("Dial number"));
 			phone_image = get_icon(APP_ICON_CALL, GTK_ICON_SIZE_BUTTON);
@@ -166,7 +166,7 @@ void contacts_update_details(struct contact *contact)
 
 			label = gtk_label_new(addr_str->str);
 			gtk_label_set_selectable(GTK_LABEL(label), TRUE);
-			gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
+			gtk_widget_set_halign(label, GTK_ALIGN_START);
 			gtk_grid_attach(GTK_GRID(grid), label, 1, detail_row, 1, 1);
 
 			g_string_free(addr_str, TRUE);

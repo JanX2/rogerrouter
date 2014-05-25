@@ -761,10 +761,8 @@ static inline GtkWidget *phone_create_button(const gchar *text_hi, const gchar *
 
 	button = gtk_button_new();
 	label_hi = gtk_label_new(text_hi);
-	gtk_misc_set_alignment(GTK_MISC(label_hi), 0.5, 0.5);
 	gtk_grid_attach(GTK_GRID(grid), label_hi, 0, 0, 1, 1);
 	label_lo = gtk_label_new(text_lo);
-	gtk_misc_set_alignment(GTK_MISC(label_lo), 0.5, 0.5);
 	gtk_label_set_use_markup(GTK_LABEL(label_lo), TRUE);
 	gtk_grid_attach(GTK_GRID(grid), label_lo, 0, 1, 1, 1);
 	gtk_container_add(GTK_CONTAINER(button), grid);

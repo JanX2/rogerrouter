@@ -232,7 +232,7 @@ GtkWidget *page_create_intro(void)
 	                        "First performing a scan for all available devices and then\n"\
 	                        "acquiring all needed information."));
 
-	gtk_misc_set_padding(GTK_MISC(label), 15, 10);
+	gtk_widget_set_margin(label, 15, 10);
 
 	return label;
 }
@@ -253,8 +253,8 @@ GtkWidget *page_create_profile(GtkWidget *window)
 	gchar *tmp = ui_bold_text(_("Enter new profile name"));
 	gtk_label_set_markup(GTK_LABEL(profile_label), tmp);
 	g_free(tmp);
-	gtk_misc_set_alignment(GTK_MISC(profile_label), 0, 0.5f);
-	gtk_misc_set_padding(GTK_MISC(profile_label), 10, 10);
+	gtk_widget_set_halign(profile_label, GTK_ALIGN_START);
+	gtk_widget_set_margin(profile_label, 10, 10);
 	gtk_grid_attach(GTK_GRID(profile_grid), profile_label, 0, 0, 1, 1);
 
 	/* Profile entry */
@@ -312,8 +312,8 @@ GtkWidget *page_create_router(GtkWidget *window)
 	gchar *tmp = ui_bold_text(_("Select your router:"));
 	gtk_label_set_markup(GTK_LABEL(router_label), tmp);
 	g_free(tmp);
-	gtk_misc_set_alignment(GTK_MISC(router_label), 0, 0.5f);
-	gtk_misc_set_padding(GTK_MISC(router_label), 10, 10);
+	gtk_widget_set_halign(router_label, GTK_ALIGN_START);
+	gtk_widget_set_margin(router_label, 10, 10);
 	gtk_grid_attach(GTK_GRID(router_grid), router_label, 0, 0, 1, 1);
 
 	/* First alignment for router radio buttons */
@@ -366,8 +366,8 @@ GtkWidget *page_create_router(GtkWidget *window)
 	tmp = ui_bold_text(_("Enter login data:"));
 	gtk_label_set_markup(GTK_LABEL(router_user_label), tmp);
 	g_free(tmp);
-	gtk_misc_set_alignment(GTK_MISC(router_user_label), 0, 0.5f);
-	gtk_misc_set_padding(GTK_MISC(router_user_label), 10, 10);
+	gtk_widget_set_halign(router_user_label, GTK_ALIGN_START);
+	gtk_widget_set_margin(router_user_label, 10, 10);
 	gtk_grid_attach(GTK_GRID(router_grid), router_user_label, 0, 4, 1, 1);
 
 	router_alignment3 = gtk_alignment_new(0.5f, 0.5f, 1.0f, 1.0f);
@@ -411,8 +411,8 @@ GtkWidget *page_create_router(GtkWidget *window)
 	tmp = ui_bold_text(_("Enter FTP login data:"));
 	gtk_label_set_markup(GTK_LABEL(router_ftp_user_label), tmp);
 	g_free(tmp);
-	gtk_misc_set_alignment(GTK_MISC(router_ftp_user_label), 0, 0.5f);
-	gtk_misc_set_padding(GTK_MISC(router_ftp_user_label), 10, 10);
+	gtk_widget_set_halign(router_ftp_user_label, GTK_ALIGN_START);
+	gtk_widget_set_margin(router_ftp_user_label, 10, 10);
 	gtk_grid_attach(GTK_GRID(router_grid), router_ftp_user_label, 0, 6, 1, 1);
 
 	router_alignment3 = gtk_alignment_new(0.5f, 0.5f, 1.0f, 1.0f);
@@ -470,7 +470,6 @@ GtkWidget *page_create_settings(GtkWidget *window)
 	gtk_grid_attach(GTK_GRID(settings_grid), settings_spinner, 0, 0, 1, 1);
 
 	settings_label = gtk_label_new("");
-	gtk_misc_set_alignment(GTK_MISC(settings_label), 0.5f, 0.5f);
 	gtk_widget_set_hexpand(settings_label, TRUE);
 	gtk_widget_set_vexpand(settings_label, TRUE);
 	gtk_grid_attach(GTK_GRID(settings_grid), settings_label, 0, 1, 1, 1);

@@ -24,6 +24,7 @@ G_BEGIN_DECLS
 
 GtkWidget *ui_label_new(gchar *text);
 gchar *ui_bold_text(gchar *text);
+void gtk_widget_set_margin(GtkWidget *widget, gint x, gint y);
 
 G_END_DECLS
 

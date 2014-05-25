@@ -275,51 +275,51 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 	/* Name */
 	line++;
 	direction_label = gtk_label_new(_("Name:"));
-	gtk_misc_set_alignment(GTK_MISC(direction_label), 0, 0.5);
+	gtk_widget_set_halign(direction_label, GTK_ALIGN_START);
 	gtk_grid_attach(GTK_GRID(contact_grid), direction_label, 1, line, 1, 1);
 
 	contact_name_label = gtk_label_new("");
-	gtk_misc_set_alignment(GTK_MISC(contact_name_label), 0, 0.5);
+	gtk_widget_set_halign(contact_name_label, GTK_ALIGN_START);
 	gtk_grid_attach(GTK_GRID(contact_grid), contact_name_label, 2, line, 1, 1);
 
 	/* Number */
 	line++;
 	number_label = gtk_label_new(_("Number:"));
-	gtk_misc_set_alignment(GTK_MISC(number_label), 0, 0.5);
+	gtk_widget_set_halign(number_label, GTK_ALIGN_START);
 	gtk_grid_attach(GTK_GRID(contact_grid), number_label, 1, line, 1, 1);
 
 	contact_number_label = gtk_label_new("");
-	gtk_misc_set_alignment(GTK_MISC(contact_number_label), 0, 0.5);
+	gtk_widget_set_halign(contact_number_label, GTK_ALIGN_START);
 	gtk_grid_attach(GTK_GRID(contact_grid), contact_number_label, 2, line, 1, 1);
 
 	/* Company */
 	line++;
 	company_label = gtk_label_new(_("Company:"));
-	gtk_misc_set_alignment(GTK_MISC(company_label), 0, 0.5);
+	gtk_widget_set_halign(company_label, GTK_ALIGN_START);
 	gtk_grid_attach(GTK_GRID(contact_grid), company_label, 1, line, 1, 1);
 
 	contact_company_label = gtk_label_new("");
-	gtk_misc_set_alignment(GTK_MISC(contact_company_label), 0, 0.5);
+	gtk_widget_set_halign(contact_company_label, GTK_ALIGN_START);
 	gtk_grid_attach(GTK_GRID(contact_grid), contact_company_label, 2, line, 1, 1);
 
 	/* Street */
 	line++;
 	street_label = gtk_label_new(_("Street:"));
-	gtk_misc_set_alignment(GTK_MISC(street_label), 0, 0.5);
+	gtk_widget_set_halign(street_label, GTK_ALIGN_START);
 	gtk_grid_attach(GTK_GRID(contact_grid), street_label, 1, line, 1, 1);
 
 	contact_street_label = gtk_label_new("");
-	gtk_misc_set_alignment(GTK_MISC(contact_street_label), 0, 0.5);
+	gtk_widget_set_halign(contact_street_label, GTK_ALIGN_START);
 	gtk_grid_attach(GTK_GRID(contact_grid), contact_street_label, 2, line, 1, 1);
 
 	/* City */
 	line++;
 	city_label = gtk_label_new(_("City:"));
-	gtk_misc_set_alignment(GTK_MISC(city_label), 0, 0.5);
+	gtk_widget_set_halign(city_label, GTK_ALIGN_START);
 	gtk_grid_attach(GTK_GRID(contact_grid), city_label, 1, line, 1, 1);
 
 	contact_city_label = gtk_label_new("");
-	gtk_misc_set_alignment(GTK_MISC(contact_city_label), 0, 0.5);
+	gtk_widget_set_halign(contact_city_label, GTK_ALIGN_START);
 	gtk_grid_attach(GTK_GRID(contact_grid), contact_city_label, 2, line, 1, 1);
 
 	gtk_grid_attach(GTK_GRID(main_grid), contact_grid, 0, 0, 1, 1);

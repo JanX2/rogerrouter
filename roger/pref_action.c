@@ -573,11 +573,11 @@ GtkWidget *pref_page_action(void)
 	tmp = ui_bold_text(_("Description"));
 	gtk_label_set_markup(GTK_LABEL(description_label), tmp);
 	g_free(tmp);
-	gtk_misc_set_alignment(GTK_MISC(description_label), 0, 0.5);
+	gtk_widget_set_halign(description_label, GTK_ALIGN_START);
 	gtk_grid_attach(GTK_GRID(grid), description_label, 0, 12, 3, 1);
 
 	description_text_label = ui_label_new("");
-	gtk_misc_set_alignment(GTK_MISC(description_text_label), 0, 0.5);
+	gtk_widget_set_halign(description_text_label, GTK_ALIGN_START);
 	gtk_grid_attach(GTK_GRID(grid), description_text_label, 0, 13, 3, 1);
 
 	g_signal_connect(view, "cursor-changed", G_CALLBACK(view_cursor_changed_cb), description_text_label);
