@@ -152,7 +152,6 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 {
 	GtkWidget *notify = NULL;
 	GtkWidget *main_frame;
-	GtkWidget *frame;
 	GtkWidget *main_grid;
 	GtkWidget *contact_grid;
 	GtkWidget *phone_grid;
@@ -243,10 +242,9 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 
 	main_frame = gtk_frame_new(NULL);
 
-	frame = gtk_alignment_new(0.5, 0.5, 1, 1);
-	gtk_alignment_set_padding(GTK_ALIGNMENT(frame), 10, 10, 10, 10);
-
 	main_grid = gtk_grid_new();
+	gtk_widget_set_margin(main_grid, 10, 10, 10, 10);
+
 	/* Set standard spacing to 5 */
 	gtk_grid_set_row_spacing(GTK_GRID(main_grid), 15);
 	gtk_grid_set_column_spacing(GTK_GRID(main_grid), 15);
@@ -324,8 +322,7 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 
 	gtk_grid_attach(GTK_GRID(main_grid), contact_grid, 0, 0, 1, 1);
 
-	gtk_container_add(GTK_CONTAINER(frame), main_grid);
-	gtk_container_add(GTK_CONTAINER(main_frame), frame);
+	gtk_container_add(GTK_CONTAINER(main_frame), main_grid);
 	gtk_container_add(GTK_CONTAINER(notify), main_frame);
 
 	tmp = connection->local_number ? g_strdup_printf(_("(on %s)"), connection->local_number) : g_strdup(_("(on ?)"));

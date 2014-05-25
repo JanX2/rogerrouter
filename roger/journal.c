@@ -1310,7 +1310,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 		status = gtk_label_new("");
 		gtk_widget_set_halign(status, GTK_ALIGN_START);
-		gtk_widget_set_margin(status, 5, 0);
+		gtk_widget_set_margin(status, 5, 0, 5, 0);
 		gtk_box_pack_start(GTK_BOX(box), status, TRUE, TRUE, 0);
 		spinner = gtk_spinner_new();
 		gtk_widget_set_no_show_all(spinner, TRUE);

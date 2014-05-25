@@ -73,15 +73,11 @@ void contacts_update_details(struct contact *contact)
 	GSList *numbers;
 	GSList *addresses;
 	GtkWidget *grid;
-	GtkWidget *align;
 	gchar *markup;
 	gint detail_row = 1;
 
-	align = gtk_alignment_new(0.5, 0.5, 1, 1);
-	gtk_alignment_set_padding(GTK_ALIGNMENT(align), 20, 20, 25, 25);
-
 	grid = gtk_grid_new();
-	gtk_container_add(GTK_CONTAINER(align), grid);
+	gtk_widget_set_margin(grid, 20, 25, 20, 25);
 
 	if (contact) {
 		gtk_grid_set_row_spacing(GTK_GRID(grid), 15);
@@ -173,13 +169,13 @@ void contacts_update_details(struct contact *contact)
 			detail_row++;
 		}
 	}
-	gtk_widget_show_all(align);
+	gtk_widget_show_all(grid);
 
 	if (detail_grid) {
 		gtk_container_remove(GTK_CONTAINER(contacts_window_grid), detail_grid);
 	}
 
-	detail_grid = align;
+	detail_grid = grid;
 	gtk_grid_attach(GTK_GRID(contacts_window_grid), detail_grid, 1, 0, 1, 3);
 }
 
@@ -457,7 +453,6 @@ void contacts(void)
 	GtkWidget *button_reload;
 	GtkWidget *contacts_view;
 	GtkWidget *image;
-	GtkWidget *align;
 
 	if (contacts_window) {
 		gtk_window_present(GTK_WINDOW(contacts_window));
@@ -489,15 +484,12 @@ void contacts(void)
 	gtk_grid_set_row_spacing(GTK_GRID(contacts_window_grid), 5);
 	gtk_grid_set_column_spacing(GTK_GRID(contacts_window_grid), 5);
 
-	align = gtk_alignment_new(0.5, 0.5, 1, 1);
-	gtk_alignment_set_padding(GTK_ALIGNMENT(align), 0, 0, 5, 5);
-	gtk_grid_attach(GTK_GRID(contacts_window_grid), align, 0, 0, 1, 1);
-
 	entry = gtk_entry_new();
 	g_signal_connect(G_OBJECT(entry), "icon-release", G_CALLBACK(entry_icon_released), NULL);
 	gtk_widget_set_vexpand(entry, FALSE);
 	gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_PRIMARY, "edit-find-symbolic");
-	gtk_container_add(GTK_CONTAINER(align), entry);
+	gtk_widget_set_margin(entry, 0, 5, 0, 5);
+	gtk_grid_attach(GTK_GRID(contacts_window_grid), entry, 0, 0, 1, 1);
 
 	scrolled = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(scrolled), GTK_SHADOW_IN);

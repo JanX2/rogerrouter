@@ -232,7 +232,7 @@ GtkWidget *page_create_intro(void)
 	                        "First performing a scan for all available devices and then\n"\
 	                        "acquiring all needed information."));
 
-	gtk_widget_set_margin(label, 15, 10);
+	gtk_widget_set_margin(label, 15, 10, 15, 10);
 
 	return label;
 }
@@ -241,7 +241,6 @@ GtkWidget *page_create_profile(GtkWidget *window)
 {
 	GtkWidget *profile_grid;
 	GtkWidget *profile_label;
-	GtkWidget *profile_alignment;
 	GtkWidget *profile_entry;
 	GtkWidget *profile_warning_label;
 
@@ -254,21 +253,18 @@ GtkWidget *page_create_profile(GtkWidget *window)
 	gtk_label_set_markup(GTK_LABEL(profile_label), tmp);
 	g_free(tmp);
 	gtk_widget_set_halign(profile_label, GTK_ALIGN_START);
-	gtk_widget_set_margin(profile_label, 10, 10);
+	gtk_widget_set_margin(profile_label, 10, 10, 10, 10);
 	gtk_grid_attach(GTK_GRID(profile_grid), profile_label, 0, 0, 1, 1);
 
 	/* Profile entry */
-	profile_alignment = gtk_alignment_new(0.5f, 0.5f, 1.0f, 1.0f);
-	gtk_alignment_set_padding(GTK_ALIGNMENT(profile_alignment), 5, 5, 35, 35);
-
 	profile_entry = gtk_entry_new();
+	gtk_widget_set_margin(profile_entry, 35, 5, 35, 5);
 	g_object_set_data(G_OBJECT(window), "profile_entry", profile_entry);
 	g_signal_connect(G_OBJECT(profile_entry), "changed", G_CALLBACK(profile_entry_changed), window);
 	gtk_widget_set_tooltip_text(profile_entry, "Enter a unique name for your profile you can remember (e.g. \"Los Angeles\", \"At home\", \"Mum\" or whatever you like)");
 	gtk_entry_set_activates_default(GTK_ENTRY(profile_entry), TRUE);
 
-	gtk_container_add(GTK_CONTAINER(profile_alignment), profile_entry);
-	gtk_grid_attach(GTK_GRID(profile_grid), profile_alignment, 0, 1, 1, 1);
+	gtk_grid_attach(GTK_GRID(profile_grid), profile_entry, 0, 1, 1, 1);
 
 	/* Profile warning label */
 	profile_warning_label = gtk_label_new("");
@@ -284,9 +280,6 @@ GtkWidget *page_create_router(GtkWidget *window)
 {
 	GtkWidget *router_grid;
 	GtkWidget *router_label;
-	GtkWidget *router_alignment1;
-	GtkWidget *router_alignment2;
-	GtkWidget *router_alignment3;
 	GtkWidget *router_other_entry;
 	GtkWidget *router_innergrid;
 	GtkWidget *radio_button;
@@ -313,15 +306,12 @@ GtkWidget *page_create_router(GtkWidget *window)
 	gtk_label_set_markup(GTK_LABEL(router_label), tmp);
 	g_free(tmp);
 	gtk_widget_set_halign(router_label, GTK_ALIGN_START);
-	gtk_widget_set_margin(router_label, 10, 10);
+	gtk_widget_set_margin(router_label, 10, 10, 10, 10);
 	gtk_grid_attach(GTK_GRID(router_grid), router_label, 0, 0, 1, 1);
-
-	/* First alignment for router radio buttons */
-	router_alignment1 = gtk_alignment_new(0.5f, 0.5f, 1.0f, 1.0f);
-	gtk_alignment_set_padding(GTK_ALIGNMENT(router_alignment1), 5, 5, 35, 35);
 
 	/* Inner grid for radio buttons */
 	router_innergrid = gtk_grid_new();
+	gtk_widget_set_margin(router_innergrid, 35, 5, 35, 5);
 
 	memset(&router_info, 0, sizeof(struct router_info));
 	router_info.host = g_strdup("fritz.box");
@@ -342,20 +332,14 @@ GtkWidget *page_create_router(GtkWidget *window)
 	g_object_set_data(G_OBJECT(window), "radio_button", radio_button);
 	gtk_grid_attach(GTK_GRID(router_innergrid), radio_button, 0, 1, 1, 1);
 
-	/* Second alignment for other entry box */
-	router_alignment2 = gtk_alignment_new(0.5f, 0.5f, 1.0f, 1.0f);
-	gtk_alignment_set_padding(GTK_ALIGNMENT(router_alignment2), 0, 0, 10, 10);
-
 	/* Other entry box */
 	router_other_entry = gtk_entry_new();
+	gtk_widget_set_margin(router_other_entry, 10, 0, 10, 0);
 	gtk_widget_set_hexpand(router_other_entry, TRUE);
 	g_object_set_data(G_OBJECT(window), "router_other_entry", router_other_entry);
-	gtk_container_add(GTK_CONTAINER(router_alignment2), router_other_entry);
+	gtk_grid_attach(GTK_GRID(router_innergrid), router_other_entry, 0, 2, 1, 1);
 
-	gtk_grid_attach(GTK_GRID(router_innergrid), router_alignment2, 0, 2, 1, 1);
-
-	gtk_container_add(GTK_CONTAINER(router_alignment1), router_innergrid);
-	gtk_grid_attach(GTK_GRID(router_grid), router_alignment1, 0, 2, 1, 1);
+	gtk_grid_attach(GTK_GRID(router_grid), router_innergrid, 0, 2, 1, 1);
 
 	radio_list = gtk_radio_button_get_group(GTK_RADIO_BUTTON(radio_button));
 
@@ -367,20 +351,18 @@ GtkWidget *page_create_router(GtkWidget *window)
 	gtk_label_set_markup(GTK_LABEL(router_user_label), tmp);
 	g_free(tmp);
 	gtk_widget_set_halign(router_user_label, GTK_ALIGN_START);
-	gtk_widget_set_margin(router_user_label, 10, 10);
+	gtk_widget_set_margin(router_user_label, 10, 10, 10, 10);
 	gtk_grid_attach(GTK_GRID(router_grid), router_user_label, 0, 4, 1, 1);
-
-	router_alignment3 = gtk_alignment_new(0.5f, 0.5f, 1.0f, 1.0f);
-	gtk_alignment_set_padding(GTK_ALIGNMENT(router_alignment3), 5, 5, 35, 35);
-	gtk_grid_attach(GTK_GRID(router_grid), router_alignment3, 0, 5, 1, 1);
 
 	/* User entry box */
 	router_userdata_grid = gtk_grid_new();
+	gtk_widget_set_margin(router_userdata_grid, 35, 5, 35, 5);
+
 	/* Set standard spacing to 5 */
 	gtk_grid_set_row_spacing(GTK_GRID(router_userdata_grid), 5);
 	gtk_grid_set_column_spacing(GTK_GRID(router_userdata_grid), 5);
 
-	gtk_container_add(GTK_CONTAINER(router_alignment3), router_userdata_grid);
+	gtk_grid_attach(GTK_GRID(router_grid), router_userdata_grid, 0, 5, 1, 1);
 
 	router_user_name = gtk_label_new("User:");
 	gtk_grid_attach(GTK_GRID(router_userdata_grid), router_user_name, 0, 0, 1, 1);
@@ -412,20 +394,18 @@ GtkWidget *page_create_router(GtkWidget *window)
 	gtk_label_set_markup(GTK_LABEL(router_ftp_user_label), tmp);
 	g_free(tmp);
 	gtk_widget_set_halign(router_ftp_user_label, GTK_ALIGN_START);
-	gtk_widget_set_margin(router_ftp_user_label, 10, 10);
+	gtk_widget_set_margin(router_ftp_user_label, 10, 10, 10, 10);
 	gtk_grid_attach(GTK_GRID(router_grid), router_ftp_user_label, 0, 6, 1, 1);
-
-	router_alignment3 = gtk_alignment_new(0.5f, 0.5f, 1.0f, 1.0f);
-	gtk_alignment_set_padding(GTK_ALIGNMENT(router_alignment3), 5, 5, 35, 35);
-	gtk_grid_attach(GTK_GRID(router_grid), router_alignment3, 0, 7, 1, 1);
 
 	/* User entry box */
 	router_ftp_userdata_grid = gtk_grid_new();
+	gtk_widget_set_margin(router_ftp_userdata_grid, 35, 5, 35, 5);
+
 	/* Set standard spacing to 5 */
 	gtk_grid_set_row_spacing(GTK_GRID(router_ftp_userdata_grid), 5);
 	gtk_grid_set_column_spacing(GTK_GRID(router_ftp_userdata_grid), 5);
 
-	gtk_container_add(GTK_CONTAINER(router_alignment3), router_ftp_userdata_grid);
+	gtk_grid_attach(GTK_GRID(router_grid), router_ftp_userdata_grid, 0, 7, 1, 1);
 
 	router_ftp_user_name = gtk_label_new("User:");
 	gtk_grid_attach(GTK_GRID(router_ftp_userdata_grid), router_ftp_user_name, 0, 0, 1, 1);

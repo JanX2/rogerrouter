@@ -49,7 +49,6 @@ void pref_notebook_add_page(GtkWidget *notebook, GtkWidget *page, gchar *title)
 GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand, gboolean vexpand)
 {
 	GtkWidget *grid;
-	GtkWidget *align1;
 	GtkWidget *title;
 	gchar *title_markup = ui_bold_text(title_str);
 
@@ -61,15 +60,12 @@ GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand,
 	/* Configure plugins label */
 	title = gtk_label_new("");
 	gtk_widget_set_halign(title, GTK_ALIGN_START);
-	gtk_widget_set_margin(title, 10, 5);
+	gtk_widget_set_margin(title, 10, 5, 10, 5);
 	gtk_label_set_markup(GTK_LABEL(title), title_markup);
 	gtk_grid_attach(GTK_GRID(grid), title, 0, 0, 1, 1);
 
-	/* Create alignment */
-	align1 = gtk_alignment_new(0, 0.5, 1, 1);
-	gtk_alignment_set_padding(GTK_ALIGNMENT(align1), 0, 10, 20, 20);
-	gtk_container_add(GTK_CONTAINER(align1), box);
-	gtk_grid_attach(GTK_GRID(grid), align1, 0, 1, 1, 1);
+	gtk_widget_set_margin(box, 20, 0, 20, 10);
+	gtk_grid_attach(GTK_GRID(grid), box, 0, 1, 1, 1);
 
 	g_free(title_markup);
 
