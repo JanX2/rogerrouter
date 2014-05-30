@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-30 17:34+0200\n"
+"POT-Creation-Date: 2014-05-30 18:53+0200\n"
 "PO-Revision-Date: 2013-09-07 19:34+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: German <jan.brummer@tabos.org>\n"
@@ -307,7 +307,7 @@ msgid "Add detail"
 msgstr "Detail hinzufügen"
 
 #. Phone
-#: ../roger/contact_edit.c:286 ../roger/phone.c:1000
+#: ../roger/contact_edit.c:286 ../roger/phone.c:999
 #: ../roger/plugins/statusicon/gtk.c:201
 #: ../roger/plugins/indicator/indicator.c:223
 msgid "Phone"
@@ -594,54 +594,58 @@ msgstr "Fax Zuhause"
 msgid "WORK FAX"
 msgstr "Fax Arbeit"
 
+#: ../roger/phone.c:509
+msgid "UNKNOWN"
+msgstr "UNBEKANNT"
+
 #. Name label
-#: ../roger/phone.c:622
+#: ../roger/phone.c:621
 msgid "Connect to:"
 msgstr "Verbinden mit:"
 
-#: ../roger/phone.c:627
+#: ../roger/phone.c:626
 msgid "Use autocompletion while typing names from your address book"
 msgstr "Verwende Vervollständung aus dem Adressbuch während des Tippens"
 
-#: ../roger/phone.c:710
+#: ../roger/phone.c:709
 msgid "Pick up"
 msgstr "Abheben"
 
-#: ../roger/phone.c:719
+#: ../roger/phone.c:718
 msgid "Hang up"
 msgstr "Auflegen"
 
 #. Port label
-#: ../roger/phone.c:727
+#: ../roger/phone.c:726
 msgid "Extension:"
 msgstr "Nebenstelle:"
 
-#: ../roger/phone.c:732
+#: ../roger/phone.c:731
 msgid "Choose an extension for this call"
 msgstr "Wähle eine Nebenstelle für diesen Anruf"
 
 #. Port label
-#: ../roger/phone.c:746
+#: ../roger/phone.c:745
 msgid "Own number:"
 msgstr "Eigene Nummer:"
 
-#: ../roger/phone.c:750
+#: ../roger/phone.c:749
 msgid "Standard"
 msgstr "Standard"
 
-#: ../roger/phone.c:751
+#: ../roger/phone.c:750
 msgid "Suppress number"
 msgstr "Unterdrücke Rufnummer"
 
-#: ../roger/phone.c:946
+#: ../roger/phone.c:945
 msgid "Active calls"
 msgstr "Aktive Anrufe"
 
-#: ../roger/phone.c:961
+#: ../roger/phone.c:960
 msgid "A call is in progress. Still close this window?"
 msgstr "Ein Anruf ist aktiv. Möchten Sie das Fenster trotzdem schließen?"
 
-#: ../roger/phone.c:1027
+#: ../roger/phone.c:1026
 msgid "Connection: Idle | Time: 00:00:00"
 msgstr "Verbindung: Untätig | Dauer: 00:00:00"
 

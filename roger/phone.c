@@ -491,22 +491,22 @@ static void contact_number_menu(GtkWidget *entry, struct contact *contact)
 
 		switch (number->type) {
 		case PHONE_NUMBER_HOME:
-			tmp = g_strconcat(_("HOME"), ": ", number->number, NULL);
+			tmp = g_strdup_printf("%s:\t%s", _("HOME"), number->number);
 			break;
 		case PHONE_NUMBER_WORK:
-			tmp = g_strconcat(_("WORK"), ": ", number->number, NULL);
+			tmp = g_strdup_printf("%s:\t%s", _("WORK"), number->number);
 			break;
 		case PHONE_NUMBER_MOBILE:
-			tmp = g_strconcat(_("MOBILE"), ": ", number->number, NULL);
+			tmp = g_strdup_printf("%s:\t%s", _("MOBILE"), number->number);
 			break;
 		case PHONE_NUMBER_FAX_HOME:
-			tmp = g_strconcat(_("HOME FAX"), ": ", number->number, NULL);
+			tmp = g_strdup_printf("%s:\t%s", _("HOME FAX"), number->number);
 			break;
 		case PHONE_NUMBER_FAX_WORK:
-			tmp = g_strconcat(_("WORK FAX"), ": ", number->number, NULL);
+			tmp = g_strdup_printf("%s:\t%s", _("WORK FAX"), number->number);
 			break;
 		default:
-			tmp = g_strconcat("??: ", number->number, NULL);
+			tmp = g_strdup_printf("%s:\t%s", _("UNKNOWN"), number->number);
 			break;
 		}
 		item = gtk_check_menu_item_new_with_label(tmp);
@@ -518,7 +518,6 @@ static void contact_number_menu(GtkWidget *entry, struct contact *contact)
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_object_set_data(G_OBJECT(item), "entry", entry);
 		g_object_set_data(G_OBJECT(item), "name", contact->name);
-		g_object_set_data(G_OBJECT(entry), "number", number->number);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(phone_set_dial_number), number->number);
 		g_free(tmp);
 	}
