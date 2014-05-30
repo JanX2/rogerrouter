@@ -885,6 +885,7 @@ GtkWidget *phone_control_frame(struct phone_state *state)
 {
 	GtkWidget *grid;
 	GtkWidget *button;
+	GtkWidget *image;
 
 	grid = gtk_grid_new();
 
@@ -893,7 +894,11 @@ GtkWidget *phone_control_frame(struct phone_state *state)
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
 	gtk_grid_set_column_homogeneous(GTK_GRID(grid), TRUE);
 
-	button = gtk_toggle_button_new_with_label(_("Hold"));
+	//button = gtk_toggle_button_new_with_label(_("Hold"));
+	button = gtk_toggle_button_new();
+	image = gtk_image_new_from_icon_name("media-playback-pause-symbolic", GTK_ICON_SIZE_BUTTON);
+	gtk_container_add(GTK_CONTAINER(button), image);
+
 	g_signal_connect(button, "clicked", G_CALLBACK(hold_clicked_cb), NULL);
 	gtk_grid_attach(GTK_GRID(grid), button, 0, 0, 1, 1);
 
@@ -905,11 +910,19 @@ GtkWidget *phone_control_frame(struct phone_state *state)
 	g_signal_connect(button, "clicked", G_CALLBACK(conference_clicked_cb), NULL);
 	gtk_grid_attach(GTK_GRID(grid), button, 0, 2, 1, 1);*/
 
-	button = gtk_toggle_button_new_with_label(_("Record"));
+	//button = gtk_toggle_button_new_with_label(_("Record"));
+	button = gtk_toggle_button_new();
+	image = gtk_image_new_from_icon_name("media-record-symbolic", GTK_ICON_SIZE_BUTTON);
+	gtk_container_add(GTK_CONTAINER(button), image);
+
 	g_signal_connect(button, "clicked", G_CALLBACK(record_clicked_cb), NULL);
 	gtk_grid_attach(GTK_GRID(grid), button, 0, 3, 1, 1);
 
-	button = gtk_toggle_button_new_with_label(_("Mute"));
+	//button = gtk_toggle_button_new_with_label(_("Mute"));
+	button = gtk_toggle_button_new();
+	image = gtk_image_new_from_icon_name("microphone-sensitivity-muted-symbolic", GTK_ICON_SIZE_BUTTON);
+	gtk_container_add(GTK_CONTAINER(button), image);
+
 	g_signal_connect(button, "clicked", G_CALLBACK(mute_clicked_cb), NULL);
 	gtk_grid_attach(GTK_GRID(grid), button, 0, 4, 1, 1);
 
