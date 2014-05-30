@@ -686,6 +686,7 @@ void journal_play_voice(const gchar *name)
 	gtk_grid_attach(GTK_GRID(grid), media_button, 0, 1, 1, 1);
 
 	progress = gtk_progress_bar_new();
+	gtk_widget_set_valign(progress, GTK_ALIGN_CENTER);
 	playback_data->progress = progress;
 	gtk_widget_set_hexpand(progress, TRUE);
 	gtk_grid_attach(GTK_GRID(grid), progress, 1, 1, 1, 1);

@@ -867,6 +867,8 @@ GtkWidget *phone_control_frame(struct phone_state *state)
 	/* Line Level Widget */
 	state->llevel_in = line_level_bar_new();
 	state->llevel_out = line_level_bar_new();
+	gtk_widget_set_halign(state->llevel_in, GTK_ALIGN_CENTER);
+	gtk_widget_set_halign(state->llevel_out, GTK_ALIGN_CENTER);
 	gtk_widget_set_vexpand(state->llevel_in, TRUE);
 	gtk_widget_set_vexpand(state->llevel_out, TRUE);
 
