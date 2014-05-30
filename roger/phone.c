@@ -472,7 +472,8 @@ static void contact_number_menu(GtkWidget *entry, struct contact *contact)
 	GSList *list;
 	GtkWidget *item;
 	gchar *tmp;
-	gchar *name;
+
+	gchar *prev_number = g_object_get_data(G_OBJECT(entry), "number");
 
 	menu = gtk_menu_new();
 
@@ -484,29 +485,30 @@ static void contact_number_menu(GtkWidget *entry, struct contact *contact)
 		switch (number->type) {
 		case PHONE_NUMBER_HOME:
 			tmp = g_strconcat(_("HOME"), ": ", number->number, NULL);
-			name = g_strdup_printf("%s (%s)", contact->name, _("HOME"));
 			break;
 		case PHONE_NUMBER_WORK:
 			tmp = g_strconcat(_("WORK"), ": ", number->number, NULL);
-			name = g_strdup_printf("%s (%s)", contact->name, _("WORK"));
 			break;
 		case PHONE_NUMBER_MOBILE:
 			tmp = g_strconcat(_("MOBILE"), ": ", number->number, NULL);
-			name = g_strdup_printf("%s (%s)", contact->name, _("MOBILE"));
 			break;
 		case PHONE_NUMBER_FAX:
 			tmp = g_strconcat(_("FAX"), ": ", number->number, NULL);
-			name = g_strdup_printf("%s (%s)", contact->name, _("FAX"));
 			break;
 		default:
 			tmp = g_strconcat("??: ", number->number, NULL);
-			name = g_strdup_printf("%s (%s)", contact->name, "??");
 			break;
 		}
-		item = gtk_menu_item_new_with_label(tmp);
+		item = gtk_check_menu_item_new_with_label(tmp);
+
+		if (!EMPTY_STRING(prev_number) && !strcmp(prev_number, number->number)) {
+			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), TRUE);
+		}
+
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_object_set_data(G_OBJECT(item), "entry", entry);
-		g_object_set_data(G_OBJECT(item), "name", name);
+		g_object_set_data(G_OBJECT(item), "name", contact->name);
+		g_object_set_data(G_OBJECT(entry), "number", number->number);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(phone_set_dial_number), number->number);
 		g_free(tmp);
 	}
