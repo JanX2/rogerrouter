@@ -23,7 +23,7 @@
 G_BEGIN_DECLS
 
 void line_level_set(GtkWidget *bar, double max);
-GtkWidget *line_level_bar_new(gint width, gint height);
+GtkWidget *line_level_bar_new(void);
 void line_level_check(void);
 
 G_END_DECLS

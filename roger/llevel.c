@@ -24,6 +24,8 @@
 
 #include <roger/llevel.h>
 
+#define PROGRESS_BAR 1
+
 struct history {
 	double value;
 	struct history *next;
@@ -67,26 +69,22 @@ static double histroy_append(struct history **history, double x)
 	return result;
 }
 
-GtkWidget *line_level_bar_new(gint width, gint height)
+GtkWidget *line_level_bar_new(void)
 {
 	GtkWidget *bar;
-	GtkWidget *progress_bar;
 
-	/* create box which contains our progress bars */
-	bar = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_widget_set_size_request(bar, width, height);
-	g_object_set_data(G_OBJECT(bar), "width", GINT_TO_POINTER(width));
-
+#ifdef PROGRESS_BAR
 	/* progress bar: fast/slow relation progressbar */
-	progress_bar = gtk_progress_bar_new();
+	bar = gtk_progress_bar_new();
 
-	gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress_bar), 0.0);
-	g_object_set_data(G_OBJECT(bar), "pbar1", progress_bar);
-	gtk_widget_set_size_request(progress_bar, 1, -1);
-	gtk_box_pack_start(GTK_BOX(bar), progress_bar, TRUE, TRUE, 0);
-	gtk_widget_show(progress_bar);
-
-	/* Rest */
+	gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(bar), 0.0);
+	gtk_progress_bar_set_inverted(GTK_PROGRESS_BAR(bar), TRUE);
+#else
+	bar = gtk_level_bar_new();
+	gtk_level_bar_set_value(GTK_LEVEL_BAR(bar), 0.0);
+	gtk_level_bar_set_inverted(GTK_LEVEL_BAR(bar), TRUE);
+#endif
+	gtk_orientable_set_orientation(GTK_ORIENTABLE(bar), GTK_ORIENTATION_VERTICAL);
 	g_object_set_data(G_OBJECT(bar), "history", history_new());
 
 	return bar;
@@ -94,18 +92,17 @@ GtkWidget *line_level_bar_new(gint width, gint height)
 
 void line_level_set(GtkWidget *bar, double max)
 {
-	GtkWidget *bar1 = g_object_get_data(G_OBJECT(bar), "pbar1");
-	GtkWidget *related = g_object_get_data(G_OBJECT(bar), "bar");
 	struct history *history = g_object_get_data(G_OBJECT(bar), "history");
-	double maxMax = history ? histroy_append(&history, max) : max;
+	double max_max = history ? histroy_append(&history, max) : max;
 	double percentage;
 
 	g_object_set_data(G_OBJECT(bar), "history", history);
 
-	percentage = maxMax > 0.0 ? max / maxMax : 0.0;
-	gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(bar1), percentage);
+	percentage = max_max > 0.0 ? max / max_max : 0.0;
 
-	if (related) {
-		line_level_set(related, max);
-	}
+#ifdef PROGRESS_BAR
+	gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(bar), percentage);
+#else
+	gtk_level_bar_set_value(GTK_LEVEL_BAR(bar), percentage);
+#endif
 }
