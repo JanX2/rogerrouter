@@ -403,12 +403,19 @@ static void hangup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 void menu_set_position(GtkMenu *menu, gint *x, gint *y, gboolean *push_in, gpointer user_data)
 {
 	GtkAllocation allocation;
+	GtkRequisition request;
+
+	gtk_widget_get_preferred_size(gtk_widget_get_toplevel(GTK_WIDGET(menu)), NULL, &request);
 
 	gdk_window_get_origin(gtk_widget_get_window(user_data), x, y);
 
 	gtk_widget_get_allocation(user_data, &allocation);
 	*x += allocation.x;
-	*y += allocation.y;
+	*y += allocation.y + allocation.height;
+
+	if (request.width < allocation.width) {
+		gtk_widget_set_size_request(GTK_WIDGET(menu), allocation.width, -1);
+	}
 
 	*push_in = TRUE;
 }
