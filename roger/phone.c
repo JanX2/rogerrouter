@@ -421,7 +421,7 @@ static void phone_set_dial_number(GtkMenuItem *item, gpointer user_data)
 	g_object_set_data(G_OBJECT(entry), "number", user_data);
 	if (!EMPTY_STRING(name)) {
 		gtk_entry_set_text(GTK_ENTRY(entry), name);
-		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, "go-down");
+		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, "go-down-symbolic");
 	} else {
 		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, NULL);
 	}
@@ -627,7 +627,7 @@ GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct p
 
 		if (!EMPTY_STRING(contact_copy->name)) {
 			gtk_entry_set_text(GTK_ENTRY(state->name_entry), contact_copy->name);
-			gtk_entry_set_icon_from_icon_name(GTK_ENTRY(state->name_entry), GTK_ENTRY_ICON_SECONDARY, "go-down");
+			gtk_entry_set_icon_from_icon_name(GTK_ENTRY(state->name_entry), GTK_ENTRY_ICON_SECONDARY, "go-down-symbolic");
 			g_object_set_data(G_OBJECT(state->name_entry), "contact", contact_copy);
 			g_object_set_data(G_OBJECT(state->name_entry), "number", contact_copy->number);
 		} else if (contact_copy->number) {
