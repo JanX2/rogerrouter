@@ -67,8 +67,11 @@ static gpointer playback_thread(gpointer user_data)
 	int len_cnt = 0;
 
 	speex_decoder_ctl(playback->speex, SPEEX_GET_FRAME_SIZE, &frame_size);
+
+#ifdef VOX_DEBUG
 	g_debug("Frame Size: %d", frame_size);
 	g_debug("Playback len: %" G_GSIZE_FORMAT, playback->len);
+#endif
 
 	while (offset < playback->len && !g_cancellable_is_cancelled(playback->cancel)) {
 		bytes = playback->data[offset];
@@ -82,8 +85,10 @@ static gpointer playback_thread(gpointer user_data)
 		cnt++;
 	}
 
+#ifdef VOX_DEBUG
 	g_debug("cnt: %d", cnt);
 	g_debug("Seconds: %f", (float)(frame_size * cnt) / (float)8000);
+#endif
 
 	len_cnt = cnt;
 	offset = 0;
