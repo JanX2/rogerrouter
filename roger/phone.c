@@ -739,11 +739,18 @@ static inline GtkWidget *phone_create_button(const gchar *text_hi, const gchar *
 
 static void phone_dtmf_clicked_cb(GtkWidget *widget, gpointer user_data)
 {
-	gint num = GPOINTER_TO_INT(user_data);
+	gint num = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(widget), "num"));
 	struct capi_connection *connection = phone_get_active_connection();
 
 	if (connection) {
 		phone_send_dtmf_code(connection, num);
+	} else {
+		struct phone_state *state = user_data;
+		const gchar *text = gtk_entry_get_text(GTK_ENTRY(state->name_entry));
+		gchar *tmp = g_strdup_printf("%s%c", text, num);
+
+		gtk_entry_set_text(GTK_ENTRY(state->name_entry), tmp);
+		g_free(tmp);
 	}
 }
 
@@ -767,7 +774,7 @@ static struct phone_label {
 	{NULL, NULL}
 };
 
-GtkWidget *phone_dialpad_frame(void)
+GtkWidget *phone_dialpad_frame(struct phone_state *state)
 {
 	GtkWidget *grid = gtk_grid_new();
 	GtkWidget *button;
@@ -781,7 +788,8 @@ GtkWidget *phone_dialpad_frame(void)
 	/* Add buttons */
 	for (index = 0; phone_labels[index].text != NULL; index++) {
 		button = phone_create_button(phone_labels[index].text, phone_labels[index].subtext);
-		g_signal_connect(button, "clicked", G_CALLBACK(phone_dtmf_clicked_cb), GINT_TO_POINTER(phone_labels[index].chr));
+		g_object_set_data(G_OBJECT(button), "num", GINT_TO_POINTER(phone_labels[index].chr));
+		g_signal_connect(button, "clicked", G_CALLBACK(phone_dtmf_clicked_cb), state);
 		gtk_grid_attach(GTK_GRID(grid), button, index % 3, index / 3, 1, 1);
 	}
 
@@ -952,7 +960,7 @@ void app_show_phone_window(struct contact *contact)
 
 	/* Yes, we start at pos_y = 1, pos_y = 0 will be set below */
 	pos_y = 1;
-	state->dialpad_frame = phone_dialpad_frame();
+	state->dialpad_frame = phone_dialpad_frame(state);
 	gtk_widget_set_no_show_all(state->dialpad_frame, TRUE);
 	gtk_grid_attach(GTK_GRID(grid), state->dialpad_frame, 0, pos_y, 1, 1);
 
