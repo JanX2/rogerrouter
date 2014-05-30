@@ -520,7 +520,7 @@ static void contact_number_menu(GtkWidget *entry, struct contact *contact)
 		g_free(tmp);
 	}
 
-	usleep(200000);
+	//usleep(200000);
 	gtk_widget_show_all(menu);
 	gtk_menu_popup(GTK_MENU(menu), NULL, NULL, menu_set_position, entry, 0, gtk_get_current_event_time());
 }
