@@ -141,9 +141,14 @@ static void parse_telephony(struct contact *contact, xmlnode *telephony)
 			} else if (strcmp(type, "work") == 0) {
 				phone_number->type = PHONE_NUMBER_WORK;
 			} else if (strcmp(type, "fax_work") == 0) {
-				phone_number->type = PHONE_NUMBER_FAX;
+				phone_number->type = PHONE_NUMBER_FAX_WORK;
+			} else if (strcmp(type, "fax_home") == 0) {
+				phone_number->type = PHONE_NUMBER_FAX_HOME;
+			} else if (strcmp(type, "pager") == 0) {
+				phone_number->type = PHONE_NUMBER_PAGER;
 			} else {
 				phone_number->type = -1;
+				g_debug("Unhandled phone number type: '%s'", type);
 			}
 			phone_number->number = call_full_number(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
@@ -443,8 +448,11 @@ static xmlnode *contact_to_xmlnode(struct contact *contact)
 			case PHONE_NUMBER_MOBILE:
 				xmlnode_set_attrib(number_node, "type", "mobile");
 				break;
-			case PHONE_NUMBER_FAX:
+			case PHONE_NUMBER_FAX_WORK:
 				xmlnode_set_attrib(number_node, "type", "fax_work");
+				break;
+			case PHONE_NUMBER_FAX_HOME:
+				xmlnode_set_attrib(number_node, "type", "fax_home");
 				break;
 			default:
 				continue;

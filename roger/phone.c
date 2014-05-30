@@ -499,8 +499,11 @@ static void contact_number_menu(GtkWidget *entry, struct contact *contact)
 		case PHONE_NUMBER_MOBILE:
 			tmp = g_strconcat(_("MOBILE"), ": ", number->number, NULL);
 			break;
-		case PHONE_NUMBER_FAX:
-			tmp = g_strconcat(_("FAX"), ": ", number->number, NULL);
+		case PHONE_NUMBER_FAX_HOME:
+			tmp = g_strconcat(_("HOME FAX"), ": ", number->number, NULL);
+			break;
+		case PHONE_NUMBER_FAX_WORK:
+			tmp = g_strconcat(_("WORK FAX"), ": ", number->number, NULL);
 			break;
 		default:
 			tmp = g_strconcat("??: ", number->number, NULL);

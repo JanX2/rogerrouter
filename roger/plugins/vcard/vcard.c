@@ -376,7 +376,7 @@ static void process_telephone(struct vcard_data *card_data, struct contact *cont
 				}
 			}
 		} else*/ {
-			number->type = PHONE_NUMBER_FAX;
+			number->type = PHONE_NUMBER_FAX_HOME;
 		}
 	} else {
 		/* Check for cell phone number, and create string if needed */
@@ -962,7 +962,7 @@ void vcard_write_file(char *file_name)
 			case PHONE_NUMBER_MOBILE:
 				card_data->options = g_strdup("TYPE=CELL");
 				break;
-			case PHONE_NUMBER_FAX:
+			case PHONE_NUMBER_FAX_HOME:
 				card_data->options = g_strdup("TYPE=HOME,FAX");
 				break;
 			default:

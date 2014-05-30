@@ -221,9 +221,9 @@ static int google_read_book(void) {
 				} else if (strcmp(type, GDATA_GD_PHONE_NUMBER_MOBILE) == 0) {
 					phone_number->type = PHONE_NUMBER_MOBILE;
 				} else if (strcmp(type, GDATA_GD_PHONE_NUMBER_HOME_FAX) == 0) {
-					phone_number->type = PHONE_NUMBER_FAX;
+					phone_number->type = PHONE_NUMBER_FAX_HOME;
 				} else if (strcmp(type, GDATA_GD_PHONE_NUMBER_WORK_FAX) == 0) {
-					phone_number->type = PHONE_NUMBER_FAX;
+					phone_number->type = PHONE_NUMBER_FAX_WORK;
 				}
 				phone_number->number = call_full_number(num, FALSE);
 				contact->numbers = g_slist_prepend(contact->numbers, phone_number);

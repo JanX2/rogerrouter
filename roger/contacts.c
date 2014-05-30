@@ -115,8 +115,14 @@ void contacts_update_details(struct contact *contact)
 			case PHONE_NUMBER_MOBILE:
 				type = ui_label_new(_("Mobile"));
 				break;
-			case PHONE_NUMBER_FAX:
-				type = ui_label_new(_("Fax"));
+			case PHONE_NUMBER_FAX_HOME:
+				type = ui_label_new(_("Private Fax"));
+				break;
+			case PHONE_NUMBER_FAX_WORK:
+				type = ui_label_new(_("Business Fax"));
+				break;
+			case PHONE_NUMBER_PAGER:
+				type = ui_label_new(_("Pager"));
 				break;
 			default:
 				type = ui_label_new(_("Unknown"));
