@@ -21,8 +21,8 @@
 #define EBOOK_SOURCES_H
 
 struct ebook_data {
-	char *name;
-	char *id;
+	gchar *name;
+	gchar *id;
 };
 
 const gchar *get_selected_ebook_id(void);

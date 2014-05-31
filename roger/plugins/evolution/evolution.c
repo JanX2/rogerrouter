@@ -260,6 +260,15 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 			phone_number->number = call_full_number(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 		}
+
+		number = e_contact_get_const(e_contact, E_CONTACT_PHONE_BUSINESS_FAX);
+		if (!EMPTY_STRING(number)) {
+			phone_number = g_slice_new(struct phone_number);
+			phone_number->type = PHONE_NUMBER_FAX_WORK;
+			phone_number->number = call_full_number(number, FALSE);
+			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
+		}
+
 		company = e_contact_get_const(e_contact, E_CONTACT_ORG);
 		if (!EMPTY_STRING(company)) {
 			contact->company = g_strdup(company);
@@ -285,7 +294,6 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 			contact->addresses = g_slist_prepend(contact->addresses, c_address);
 		}
 
-		//contacts = g_slist_prepend(contacts, contact);
 		contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
 	}
 
@@ -407,6 +415,7 @@ gboolean evolution_save_contact(struct contact *contact)
 		e_contact_set(e_contact, E_CONTACT_PHONE_BUSINESS, "");
 		e_contact_set(e_contact, E_CONTACT_PHONE_MOBILE, "");
 		e_contact_set(e_contact, E_CONTACT_PHONE_HOME_FAX, "");
+		e_contact_set(e_contact, E_CONTACT_PHONE_BUSINESS_FAX, "");
 
 		e_contact_set(e_contact, E_CONTACT_ADDRESS_HOME, NULL);
 		e_contact_set(e_contact, E_CONTACT_ADDRESS_WORK, NULL);
