@@ -192,12 +192,12 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 				loader = gdk_pixbuf_loader_new();
 
 				if (gdk_pixbuf_loader_write(loader, photo->data.inlined.data, photo->data.inlined.length, NULL)) {
+					gdk_pixbuf_loader_close(loader, NULL);
 					buf = gdk_pixbuf_loader_get_pixbuf(loader);
 					len = photo->data.inlined.length;
 				} else {
 					g_debug("Could not load inlined photo!");
 				}
-				gdk_pixbuf_loader_close(loader, NULL);
 				break;
 			case E_CONTACT_PHOTO_TYPE_URI: {
 				GRegex *pro = g_regex_new("%25", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
