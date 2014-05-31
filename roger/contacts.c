@@ -158,6 +158,7 @@ void contacts_update_details(struct contact *contact)
 			default:
 				type = ui_label_new(_("Other"));
 			}
+			gtk_widget_set_valign(type, GTK_ALIGN_START);
 			gtk_grid_attach(GTK_GRID(grid), type, 0, detail_row, 1, 1);
 
 			g_string_append_printf(addr_str, "%s\n", address->street);
@@ -169,6 +170,7 @@ void contacts_update_details(struct contact *contact)
 			label = gtk_label_new(addr_str->str);
 			gtk_label_set_selectable(GTK_LABEL(label), TRUE);
 			gtk_widget_set_halign(label, GTK_ALIGN_START);
+			gtk_widget_set_valign(label, GTK_ALIGN_END);
 			gtk_grid_attach(GTK_GRID(grid), label, 1, detail_row, 1, 1);
 
 			g_string_free(addr_str, TRUE);

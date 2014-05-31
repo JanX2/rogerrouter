@@ -1322,7 +1322,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	}
 
 	scrolled = gtk_scrolled_window_new(NULL, NULL);
-	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(scrolled), GTK_SHADOW_IN);
+	//gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(scrolled), GTK_SHADOW_IN);
 	gtk_widget_set_hexpand(scrolled, TRUE);
 	gtk_widget_set_vexpand(scrolled, TRUE);
 

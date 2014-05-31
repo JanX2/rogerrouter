@@ -213,7 +213,9 @@ void refresh_edit_dialog(struct contact *contact)
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Private"));
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Business"));
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Mobile"));
-		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Fax"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Private Fax"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Business Fax"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Pager"));
 
 		g_signal_connect(G_OBJECT(type_box), "changed", G_CALLBACK(number_type_changed_cb), phone_number);
 		gtk_combo_box_set_active(GTK_COMBO_BOX(type_box), phone_number->type);
