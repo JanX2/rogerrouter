@@ -161,11 +161,12 @@ void contacts_update_details(struct contact *contact)
 			gtk_widget_set_valign(type, GTK_ALIGN_START);
 			gtk_grid_attach(GTK_GRID(grid), type, 0, detail_row, 1, 1);
 
-			g_string_append_printf(addr_str, "%s\n", address->street);
+			g_string_append_printf(addr_str, "%s", address->street);
 			if (!EMPTY_STRING(address->zip)) {
-				g_string_append_printf(addr_str, "%s ", address->zip);
+				g_string_append_printf(addr_str, "\n%s %s", address->zip, address->city);
+			} else if (!EMPTY_STRING(address->city)) {
+				g_string_append_printf(addr_str, "%s", address->city);
 			}
-			g_string_append_printf(addr_str, "%s", address->city);
 
 			label = gtk_label_new(addr_str->str);
 			gtk_label_set_selectable(GTK_LABEL(label), TRUE);
