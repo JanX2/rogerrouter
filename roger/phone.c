@@ -690,7 +690,7 @@ GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct p
 	gtk_widget_set_tooltip_text(state->port_combobox, _("Choose an extension for this call"));
 	phone_fill_combobox(state->port_combobox, state);
 	gtk_widget_set_hexpand(state->port_combobox, TRUE);
-	gtk_grid_attach(GTK_GRID(grid), state->port_combobox, 2, line, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), state->port_combobox, 2, line, 2, 1);
 
 	if (state->type != PHONE_TYPE_VOICE) {
 		gtk_widget_set_no_show_all(port_label, TRUE);
@@ -710,7 +710,7 @@ GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct p
 	g_settings_bind(profile_get_active()->settings, "suppress", my_number_combobox, "active", G_SETTINGS_BIND_DEFAULT);
 
 	gtk_widget_set_hexpand(my_number_combobox, TRUE);
-	gtk_grid_attach(GTK_GRID(grid), my_number_combobox, 2, line, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), my_number_combobox, 2, line, 2, 1);
 
 	return grid;
 }
