@@ -103,6 +103,8 @@ void preferences(void)
 	dialog = gtk_dialog_new_with_buttons(_("Preferences"), parent ? GTK_WINDOW(parent) : NULL, 0, _("_Close"), GTK_RESPONSE_CLOSE, NULL);
 	content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 
+	gtk_container_set_border_width(GTK_CONTAINER(dialog), 5);
+
 	page = pref_page_router();
 	pref_notebook_add_page(notebook, page, _("Router"));
 

@@ -47,8 +47,10 @@
 #include <roger/llevel.h>
 #include <roger/uitools.h>
 #include <roger/icons.h>
+#include <roger/application.h>
 
 static GSList *phone_active_connections = NULL;
+static gboolean use_header_bar = FALSE;
 
 void phone_add_connection(gpointer connection)
 {
@@ -109,7 +111,15 @@ static gboolean phone_session_timer_cb(gpointer data)
 	gchar buf[64];
 
 	snprintf(buf, sizeof(buf), _("Connection: %s | Time: %s"), state->phone_status_text, time_diff);
-	gtk_label_set_text(GTK_LABEL(state->phone_status_label), buf);
+
+#if GTK_CHECK_VERSION(3, 10, 0)
+	if (use_header_bar) {
+		gtk_header_bar_set_subtitle(GTK_HEADER_BAR(state->phone_status_label), buf);
+	} else
+#endif
+	{
+		gtk_label_set_text(GTK_LABEL(state->phone_status_label), buf);
+	}
 
 	if (connection && state->llevel_in && state->llevel_out) {
 		line_level_set(state->llevel_in, log10(1.0 + 9.0 * get_line_level_in(connection)));
@@ -574,7 +584,7 @@ gboolean number_entry_contains_completion_cb(GtkEntryCompletion *completion, con
 
 GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct phone_state *state)
 {
-	GtkWidget *grid;
+	GtkWidget *dial_frame_grid;
 	GtkWidget *name_label;
 	GtkWidget *pickup_button;
 	GtkWidget *hangup_button;
@@ -585,11 +595,11 @@ GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct p
 	GtkTreeIter iter;
 	gint line = 0;
 
-	grid = gtk_grid_new();
+	dial_frame_grid = gtk_grid_new();
 
 	/* Set standard spacing to 5 */
-	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
+	gtk_grid_set_row_spacing(GTK_GRID(dial_frame_grid), 5);
+	gtk_grid_set_column_spacing(GTK_GRID(dial_frame_grid), 12);
 
 	/**
 	 * PHO- Name:   <ENTRY>
@@ -600,11 +610,11 @@ GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct p
 	/* Photo image */
 	state->photo_image = gtk_image_new();
 	gtk_widget_set_visible(state->photo_image, TRUE);
-	gtk_grid_attach(GTK_GRID(grid), state->photo_image, 5, 1, 2, 2);
+	gtk_grid_attach(GTK_GRID(dial_frame_grid), state->photo_image, 5, 1, 2, 2);
 
 	/* Name label */
 	name_label = ui_label_new(_("Connect to:"));
-	gtk_grid_attach(GTK_GRID(grid), name_label, 1, line, 1, 1);
+	gtk_grid_attach(GTK_GRID(dial_frame_grid), name_label, 1, line, 1, 1);
 
 	/* Name entry */
 	state->name_entry = gtk_entry_new();
@@ -612,7 +622,7 @@ GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct p
 	gtk_widget_set_hexpand(state->name_entry, TRUE);
 	gtk_entry_set_activates_default(GTK_ENTRY(state->name_entry), TRUE);
 	g_signal_connect(state->name_entry, "icon-press", G_CALLBACK(name_entry_icon_press_cb), NULL);
-	gtk_grid_attach(GTK_GRID(grid), state->name_entry, 2, line, 2, 1);
+	gtk_grid_attach(GTK_GRID(dial_frame_grid), state->name_entry, 2, line, 2, 1);
 
 	if (contact) {
 		struct contact *contact_copy = g_slice_new(struct contact);
@@ -667,7 +677,7 @@ GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct p
 	gtk_container_add(GTK_CONTAINER(pickup_button), image);
 	gtk_widget_set_tooltip_text(pickup_button, _("Pick up"));
 	g_signal_connect(pickup_button, "clicked", G_CALLBACK(pickup_button_clicked_cb), state);
-	gtk_grid_attach(GTK_GRID(grid), pickup_button, 5, line, 1, 1);
+	gtk_grid_attach(GTK_GRID(dial_frame_grid), pickup_button, 5, line, 1, 1);
 	gtk_widget_set_can_default(pickup_button, TRUE);
 	gtk_window_set_default(GTK_WINDOW(window), pickup_button);
 
@@ -677,20 +687,20 @@ GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct p
 	gtk_widget_set_tooltip_text(hangup_button, _("Hang up"));
 	gtk_container_add(GTK_CONTAINER(hangup_button), image);
 	g_signal_connect(hangup_button, "clicked", G_CALLBACK(hangup_button_clicked_cb), state);
-	gtk_grid_attach(GTK_GRID(grid), hangup_button, 6, line, 1, 1);
+	gtk_grid_attach(GTK_GRID(dial_frame_grid), hangup_button, 6, line, 1, 1);
 
 	/* Extension */
 	line++;
 	/* Port label */
 	port_label = ui_label_new(_("Extension:"));
-	gtk_grid_attach(GTK_GRID(grid), port_label, 1, line, 1, 1);
+	gtk_grid_attach(GTK_GRID(dial_frame_grid), port_label, 1, line, 1, 1);
 
 	/* Port combobox */
 	state->port_combobox = gtk_combo_box_text_new();
 	gtk_widget_set_tooltip_text(state->port_combobox, _("Choose an extension for this call"));
 	phone_fill_combobox(state->port_combobox, state);
 	gtk_widget_set_hexpand(state->port_combobox, TRUE);
-	gtk_grid_attach(GTK_GRID(grid), state->port_combobox, 2, line, 2, 1);
+	gtk_grid_attach(GTK_GRID(dial_frame_grid), state->port_combobox, 2, line, 2, 1);
 
 	if (state->type != PHONE_TYPE_VOICE) {
 		gtk_widget_set_no_show_all(port_label, TRUE);
@@ -702,17 +712,17 @@ GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct p
 
 	/* Port label */
 	GtkWidget *my_number_label = ui_label_new(_("Own number:"));
-	gtk_grid_attach(GTK_GRID(grid), my_number_label, 1, line, 1, 1);
+	gtk_grid_attach(GTK_GRID(dial_frame_grid), my_number_label, 1, line, 1, 1);
 
 	GtkWidget *my_number_combobox = gtk_combo_box_text_new();
-	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(my_number_combobox), "Standard", _("Standard"));
-	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(my_number_combobox), "Suppress", _("Suppress number"));
+	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(my_number_combobox), "Show", _("Show"));
+	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(my_number_combobox), "Suppress", _("Suppress"));
 	g_settings_bind(profile_get_active()->settings, "suppress", my_number_combobox, "active", G_SETTINGS_BIND_DEFAULT);
 
 	gtk_widget_set_hexpand(my_number_combobox, TRUE);
-	gtk_grid_attach(GTK_GRID(grid), my_number_combobox, 2, line, 2, 1);
+	gtk_grid_attach(GTK_GRID(dial_frame_grid), my_number_combobox, 2, line, 2, 1);
 
-	return grid;
+	return dial_frame_grid;
 }
 
 static inline GtkWidget *phone_create_button(const gchar *text_hi, const gchar *text_lo)
@@ -884,6 +894,7 @@ GtkWidget *phone_control_frame(struct phone_state *state)
 	gtk_grid_attach(GTK_GRID(grid), state->llevel_out, 1, 3, 1, 2);
 
 	image = gtk_image_new_from_icon_name("audio-speakers-symbolic", GTK_ICON_SIZE_BUTTON);
+	//image = gtk_volume_button_new();
 	gtk_grid_attach(GTK_GRID(grid), image, 0, 5, 1, 1);
 
 	button = gtk_toggle_button_new();
@@ -946,7 +957,9 @@ void app_show_phone_window(struct contact *contact)
 	}
 
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+
 	grid = gtk_grid_new();
+	gtk_widget_set_margin(grid, 5, 5, 5, 5);
 
 	state = g_malloc0(sizeof(struct phone_state));
 	state->type = PHONE_TYPE_VOICE;
@@ -971,13 +984,36 @@ void app_show_phone_window(struct contact *contact)
 	gtk_widget_set_no_show_all(state->control_frame, TRUE);
 	gtk_grid_attach(GTK_GRID(grid), state->control_frame, 2, pos_y, 1, 1);
 
-	pos_y++;
-	separator = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
-	gtk_grid_attach(GTK_GRID(grid), separator, 0, pos_y, 3, 1);
+#if GTK_CHECK_VERSION(3,10,0)
+	gboolean use_header = FALSE;
 
-	pos_y++;
-	state->phone_status_label = gtk_label_new(_("Connection: Idle | Time: 00:00:00"));
-	gtk_grid_attach(GTK_GRID(grid), state->phone_status_label, 0, pos_y, 3, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+	g_object_get(gtk_settings_get_default(), "gtk-dialogs-use-header", &use_header, NULL);
+#endif
+	use_header_bar = use_header || g_settings_get_boolean(app_settings, "use-header");
+
+	if (use_header_bar) {
+		/* Create header bar and set it to window */
+		GtkWidget *header = gtk_header_bar_new();
+
+		gtk_widget_set_hexpand(header, TRUE);
+		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
+		gtk_header_bar_set_title(GTK_HEADER_BAR (header), _("Phone"));
+		gtk_header_bar_set_subtitle(GTK_HEADER_BAR (header), _("Connection: Idle | Time: 00:00:00"));
+		gtk_window_set_titlebar((GtkWindow *)(window), header);
+
+		state->phone_status_label = header;
+	} else
+#endif
+	{
+		pos_y++;
+		separator = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
+		gtk_grid_attach(GTK_GRID(grid), separator, 0, pos_y, 3, 1);
+
+		pos_y++;
+		state->phone_status_label = gtk_label_new(_("Connection: Idle | Time: 00:00:00"));
+		gtk_grid_attach(GTK_GRID(grid), state->phone_status_label, 0, pos_y, 3, 1);
+	}
 
 	/* We set the dial frame last, so that all other widgets are in place */
 	frame = phone_dial_frame(window, contact, state);
