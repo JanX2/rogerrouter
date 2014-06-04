@@ -672,8 +672,9 @@ void journal_play_voice(const gchar *name)
 	playback_data->len = len;
 
 	grid = gtk_grid_new();
-	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
-	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
+	gtk_widget_set_margin(grid, 12, 12, 12, 12);
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 6);
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 12);
 
 	label = gtk_label_new(_("Playing voice box entry..."));
 	gtk_grid_attach(GTK_GRID(grid), label, 0, 0, 2, 1);

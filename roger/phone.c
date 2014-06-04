@@ -50,7 +50,9 @@
 #include <roger/application.h>
 
 static GSList *phone_active_connections = NULL;
+#if GTK_CHECK_VERSION(3,10,0)
 static gboolean use_header_bar = FALSE;
+#endif
 
 void phone_add_connection(gpointer connection)
 {
@@ -181,10 +183,6 @@ static void capi_connection_established_cb(AppObject *object, struct capi_connec
 		snprintf(state->phone_status_text, sizeof(state->phone_status_text), _("Connected"));
 		phone_setup_timer(state);
 	}
-
-	gchar *call_label_text = g_strdup_printf(_("%d active call(s)"), g_slist_length(phone_active_connections));
-	gtk_label_set_text(GTK_LABEL(state->call_label), call_label_text);
-	g_free(call_label_text);
 }
 
 static void capi_connection_terminated_cb(AppObject *object, struct capi_connection *connection, gpointer user_data)
@@ -956,20 +954,22 @@ void app_show_phone_window(struct contact *contact)
 		return;
 	}
 
-	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-
-	grid = gtk_grid_new();
-	gtk_widget_set_margin(grid, 5, 5, 5, 5);
-
 	state = g_malloc0(sizeof(struct phone_state));
 	state->type = PHONE_TYPE_VOICE;
 
-	/* Set standard spacing to 5 */
-	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
+	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
 	gtk_window_set_title(GTK_WINDOW(window), _("Phone"));
 	gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
+	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
+	g_signal_connect(window, "delete_event", G_CALLBACK(phone_window_delete_event_cb), state);
+
+	grid = gtk_grid_new();
+	gtk_widget_set_margin(grid, 12, 12, 12, 12);
+
+	/* Set standard spacing to 5 */
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 16);
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
 
 	/* Yes, we start at pos_y = 1, pos_y = 0 will be set below */
 	pos_y = 1;
@@ -977,12 +977,9 @@ void app_show_phone_window(struct contact *contact)
 	gtk_widget_set_no_show_all(state->dialpad_frame, TRUE);
 	gtk_grid_attach(GTK_GRID(grid), state->dialpad_frame, 0, pos_y, 1, 1);
 
-	GtkWidget *vseparator = gtk_separator_new(GTK_ORIENTATION_VERTICAL);
-	gtk_grid_attach(GTK_GRID(grid), vseparator, 1, pos_y, 1, 1);
-
 	state->control_frame = phone_control_frame(state);
 	gtk_widget_set_no_show_all(state->control_frame, TRUE);
-	gtk_grid_attach(GTK_GRID(grid), state->control_frame, 2, pos_y, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), state->control_frame, 1, pos_y, 1, 1);
 
 #if GTK_CHECK_VERSION(3,10,0)
 	gboolean use_header = FALSE;
@@ -1017,15 +1014,11 @@ void app_show_phone_window(struct contact *contact)
 
 	/* We set the dial frame last, so that all other widgets are in place */
 	frame = phone_dial_frame(window, contact, state);
-	gtk_grid_attach(GTK_GRID(grid), frame, 0, 0, 3, 1);
+	gtk_grid_attach(GTK_GRID(grid), frame, 0, 0, 2, 1);
 
 	gtk_container_add(GTK_CONTAINER(window), grid);
-	gtk_container_set_border_width(GTK_CONTAINER(window), 5);
-
-	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 
 	g_signal_connect(app_object, "connection-notify", G_CALLBACK(phone_connection_notify_cb), state);
-	g_signal_connect(G_OBJECT(window), "delete_event", G_CALLBACK(phone_window_delete_event_cb), state);
 
 	g_signal_connect(app_object, "connection-established", G_CALLBACK(capi_connection_established_cb), state);
 	g_signal_connect(app_object, "connection-terminated", G_CALLBACK(capi_connection_terminated_cb), state);
