@@ -469,7 +469,7 @@ static inline void set_current_row(int table_scope, int table_id, int row_scope,
 		insert_map(table_scope_map, abs(table_scope), create_map(hash_destroy));
 		tmp = find_map_entry(table_scope_map, abs(table_scope));
 		if (tmp == NULL) {
-			printf("[%s]: Could not create table scope map!!", __FUNCTION__);
+			g_warning("Could not create table scope map!!");
 			return;
 		}
 	}
@@ -481,7 +481,7 @@ static inline void set_current_row(int table_scope, int table_id, int row_scope,
 		insert_map(map, abs(table_id), create_map(hash_destroy));
 		tmp = find_map_entry(map, abs(table_id));
 		if (tmp == NULL) {
-			printf("[%s]: Could not create table id map!!", __FUNCTION__);
+			g_warning("Could not create table id map!!");
 			return;
 		}
 	}
@@ -493,7 +493,7 @@ static inline void set_current_row(int table_scope, int table_id, int row_scope,
 		insert_map(map, abs(row_scope), create_map(hash_destroy));
 		tmp = find_map_entry(map, abs(row_scope));
 		if (tmp == NULL) {
-			printf("[%s]: Could not create row scope map!!", __FUNCTION__);
+			g_warning("Could not create row scope map!!");
 			return;
 		}
 	}
@@ -505,7 +505,7 @@ static inline void set_current_row(int table_scope, int table_id, int row_scope,
 		insert_map(map, abs(row_id), create_map(NULL));
 		tmp = find_map_entry(map, abs(row_id));
 		if (tmp == NULL) {
-			printf("[%s]: Could not create row id map!!", __FUNCTION__);
+			g_warning("Could not create row id map!!");
 			return;
 		}
 	}
@@ -663,7 +663,7 @@ static gboolean parse_mork(void) {
 					result = parse_row(0, 0);
 					break;
 				default:
-					g_warning("[%s]: Error: %c", __FUNCTION__, cur);
+					g_warning("Error: %c", cur);
 					result = FALSE;
 					break;
 			}
@@ -720,7 +720,10 @@ static void parse_person(GHashTable *map, gpointer pId) {
 	}
 
 	num_possible++;
+
+#ifdef THUNDERBIRD_DEBUG
 	g_debug("***** possible: %d", num_possible);
+#endif
 
 	contact = g_slice_new0(struct contact);
 
@@ -731,7 +734,9 @@ static void parse_person(GHashTable *map, gpointer pId) {
 		}
 		const gchar *column = get_column(GPOINTER_TO_INT(key5));
 		const gchar *value = get_value(GPOINTER_TO_INT(value5));
+#ifdef THUNDERBIRD_DEBUG
 		g_debug("'%s' = '%s'", column, value);
+#endif
 
 		if (!strcmp(column, "HomePhone")) {
 			number = g_slice_new(struct phone_number);
@@ -888,11 +893,17 @@ static void thunderbird_open_book(gchar *book) {
 	if (mork_data != NULL) {
 		mork_size = size;
 		if (read(file, mork_data, size) == size) {
+#ifdef THUNDERBIRD_DEBUG
 			g_debug("Parsing mork");
+#endif
 			parse_mork();
+#ifdef THUNDERBIRD_DEBUG
 			g_debug("Parsing tables");
+#endif
 			parse_tables();
+#ifdef THUNDERBIRD_DEBUG
 			g_debug("Done");
+#endif
 		}
 	}
 
@@ -927,15 +938,19 @@ static int thunderbird_read_book(void) {
 	book = thunderbird_get_selected_book();
 	strncpy(file, book, sizeof(file));
 
+#ifdef THUNDERBIRD_DEBUG
 	g_debug("Thunderbird book (%s)", file);
+#endif
 	thunderbird_open_book(file);
 
 	g_hash_table_destroy(table_scope_map);
 	g_hash_table_destroy(mork_columns);
 	g_hash_table_destroy(mork_values);
 
+#ifdef THUNDERBIRD_DEBUG
 	g_debug("%d entries!", num_possible);
 	g_debug("%d persons imported!", num_persons);
+#endif
 
 	return 0;
 }
@@ -994,7 +1009,7 @@ void impl_deactivate(PeasActivatable *plugin)
 
 void filename_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
-	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Select vcard file"), pref_get_window(), GTK_FILE_CHOOSER_ACTION_OPEN, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Open"), GTK_RESPONSE_ACCEPT, NULL);
+	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Select mab file"), pref_get_window(), GTK_FILE_CHOOSER_ACTION_OPEN, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Open"), GTK_RESPONSE_ACCEPT, NULL);
 	GtkFileFilter *filter;
 	const gchar *book;
 	gchar *dir;
