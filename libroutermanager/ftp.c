@@ -44,6 +44,7 @@ static GIOChannel *ftp_open_port(gchar *server, gint port)
 	GError *error = NULL;
 	GResolver *resolver = NULL;
 	GList *list = NULL;
+	GList *tmp;
 	GIOChannel *io_channel;
 	gint sock;
 
@@ -56,9 +57,15 @@ static GIOChannel *ftp_open_port(gchar *server, gint port)
 		return NULL;
 	}
 
-	inet_address = g_list_last(list)->data;
+	/* We need a IPV4 connection */
+	for (tmp = list; tmp != NULL; tmp = tmp->next) {
+		if (g_inet_address_get_family(tmp->data) == G_SOCKET_FAMILY_IPV4) {
+			inet_address = tmp->data;
+		}
+	}
+
 	if (inet_address == NULL) {
-		g_warning("Could not get inet address from string: '%s'", server);
+		g_warning("Could not get ipv4 inet address from string: '%s'", server);
 		g_object_unref(socket);
 		g_resolver_free_addresses(list);
 		return NULL;
