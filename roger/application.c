@@ -173,12 +173,24 @@ static void application_init(Application *app)
 	/* Do nothing */
 }
 
+static gboolean show_message(gpointer message_ptr)
+{
+	gchar *message = message_ptr;
+
+	GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("Error"));
+	gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), "%s", message ? message : "");
+
+	g_signal_connect(dialog, "response", G_CALLBACK(gtk_widget_destroy), NULL);
+
+	gtk_widget_show(dialog);
+
+	return FALSE;
+}
+
 static void app_object_message_cb(AppObject *object, gint type, gchar *message)
 {
-	GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, type == 0 ? GTK_MESSAGE_ERROR : GTK_MESSAGE_WARNING, GTK_BUTTONS_CLOSE, type == 0 ? _("Error") : _("Warning"));
-	gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), "%s", message ? message : "");
-	gtk_dialog_run(GTK_DIALOG(dialog));
-	gtk_widget_destroy(dialog);
+	g_idle_add(show_message, message);
+	g_debug("MOEP");
 }
 
 static void app_init(Application *app)
