@@ -1097,38 +1097,6 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 		g_menu_append_section(menu, NULL, G_MENU_MODEL(section));
 
-#if 0
-		/* Refresh journal */
-		menuitem = gtk_menu_item_new_with_label(_("Refresh journal"));
-		g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_refresh_clicked_cb), window);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-		/* Print journal */
-		menuitem = gtk_menu_item_new_with_label(_("Print journal"));
-		g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_print_clicked_cb), journal_view);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-		/* Clear journal */
-		menuitem = gtk_menu_item_new_with_label(_("Clear journal"));
-		g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_clear_clicked_cb), window);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-		menuitem = gtk_separator_menu_item_new();
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-		/* Delete entry */
-		menuitem = gtk_menu_item_new_with_label(_("Delete entry"));
-		g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_delete_clicked_cb), journal_view);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-		/* Add entry */
-		menuitem = gtk_menu_item_new_with_label(_("Add entry"));
-		g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_add_clicked_cb), journal_view);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-		gtk_widget_show_all(menu);
-#endif
-
 #if GTK_CHECK_VERSION(3,12,0)
 		gtk_menu_button_set_use_popover(GTK_MENU_BUTTON(menu_button), TRUE);
 #endif

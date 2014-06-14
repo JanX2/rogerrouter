@@ -91,3 +91,13 @@ void emit_connection_status(gint status, struct capi_connection *connection)
 {
 	g_signal_emit(app_object, app_object_signals[ACB_CONNECTION_STATUS], 0, status, connection);
 }
+
+/**
+ * \brief Emit signal: message
+ * \param type message type
+ * \param message message text
+ */
+void emit_message(gint type, gchar *message)
+{
+	g_signal_emit(app_object, app_object_signals[ACB_MESSAGE], 0, type, message);
+}

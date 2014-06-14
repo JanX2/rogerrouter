@@ -34,6 +34,8 @@ void emit_connection_established(struct capi_connection *connection);
 void emit_connection_terminated(struct capi_connection *connection);
 void emit_connection_status(gint status, struct capi_connection *connection);
 
+void emit_message(gint status, gchar *message);
+
 G_END_DECLS
 
 #endif

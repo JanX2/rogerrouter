@@ -36,6 +36,7 @@ typedef enum {
 	ACB_CONNECTION_ESTABLISHED,
 	ACB_CONNECTION_TERMINATED,
 	ACB_CONNECTION_STATUS,
+	ACB_MESSAGE,
 	ACB_MAX
 } AppCallbackId;
 
@@ -61,6 +62,7 @@ struct _AppObjectClass {
 	void (*connection_established)(struct capi_connection *connection);
 	void (*connection_terminated)(struct capi_connection *connection);
 	void (*connection_status)(gint status, struct capi_connection *connection);
+	void (*message)(gint type, gchar *message);
 };
 
 GType app_object_get_type(void);

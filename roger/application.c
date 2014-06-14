@@ -173,81 +173,53 @@ static void application_init(Application *app)
 	/* Do nothing */
 }
 
+static void app_object_message_cb(AppObject *object, gint type, gchar *message)
+{
+	GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, type == 0 ? GTK_MESSAGE_ERROR : GTK_MESSAGE_WARNING, GTK_BUTTONS_CLOSE, type == 0 ? _("Error") : _("Warning"));
+	gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), "%s", message ? message : "");
+	gtk_dialog_run(GTK_DIALOG(dialog));
+	gtk_widget_destroy(dialog);
+}
+
 static void app_init(Application *app)
 {
-	GtkBuilder *builder;
 	GError *error = NULL;
+	GMenu *menu;
+	GMenu *section;
+	GMenu *sub_section;
 
 	g_action_map_add_action_entries(G_ACTION_MAP(application), apps_entries, G_N_ELEMENTS(apps_entries), application);
 
-	builder = gtk_builder_new();
+	menu = g_menu_new();
 
-	if (1 == 0) {
-		g_debug(_("Contacts"));
-		g_debug(_("Help"));
-		g_debug(_("Donate"));
-		g_debug(_("About"));
-		g_debug(_("Quit"));
-	}
+	g_menu_append(menu, _("Contacts"), "app.addressbook");
+	g_menu_append(menu, _("Phone"), "app.phone");
 
-	gtk_builder_add_from_string(builder,
-	                            "<interface>"
-	                            "  <menu id='app-menu'>"
-	                            "    <section>"
-	                            "      <item>"
-	                            "        <attribute name='label' translatable='yes'>Contacts</attribute>"
-	                            "        <attribute name='action'>app.addressbook</attribute>"
-	                            "      </item>"
-	                            "      <item>"
-	                            "        <attribute name='label' translatable='yes'>Phone</attribute>"
-	                            "        <attribute name='action'>app.phone</attribute>"
-	                            "      </item>"
-	                            "      <submenu>"
-	                            "        <attribute name='label' translatable='yes'>Functions</attribute>"
-	                            "        <item>"
-	                            "          <attribute name='label' translatable='yes'>Copy IP address</attribute>"
-	                            "          <attribute name='action'>app.copy_ip</attribute>"
-	                            "        </item>"
-	                            "        <item>"
-	                            "          <attribute name='label' translatable='yes'>Reconnect</attribute>"
-	                            "          <attribute name='action'>app.reconnect</attribute>"
-	                            "        </item>"
-	                            "      </submenu>"
-	                            "    </section>"
-	                            "    <section>"
-	                            "      <item>"
-	                            "        <attribute name='label' translatable='yes'>Preferences</attribute>"
-	                            "        <attribute name='action'>app.preferences</attribute>"
-	                            "      </item>"
-	                            "    </section>"
-	                            "    <section>"
-	                            "      <submenu>"
-	                            "        <attribute name='label' translatable='yes'>Help</attribute>"
-	                            "        <item>"
-	                            "          <attribute name='label' translatable='yes'>Donate</attribute>"
-	                            "          <attribute name='action'>app.donate</attribute>"
-	                            "        </item>"
-	                            "        <item>"
-	                            "          <attribute name='label' translatable='yes'>Forum</attribute>"
-	                            "          <attribute name='action'>app.forum</attribute>"
-	                            "        </item>"
-	                            "      </submenu>"
-	                            "      <item>"
-	                            "        <attribute name='label' translatable='yes'>About</attribute>"
-	                            "        <attribute name='action'>app.about</attribute>"
-	                            "      </item>"
-	                            "    </section>"
-	                            "    <section>"
-	                            "      <item>"
-	                            "        <attribute name='label' translatable='yes'>Quit</attribute>"
-	                            "        <attribute name='action'>app.quit</attribute>"
-	                            "      </item>"
-	                            "    </section>"
-	                            "  </menu>"
-	                            "</interface>", -1, NULL);
+	section = g_menu_new();
+	g_menu_append(section, _("Copy IP address"), "app.copy_ip");
+	g_menu_append(section, _("Reconnect"), "app.reconnect");
+	g_menu_append_submenu(menu, _("Functions"), G_MENU_MODEL(section));
 
-	gtk_application_set_app_menu(GTK_APPLICATION(application), G_MENU_MODEL(gtk_builder_get_object(builder, "app-menu")));
-	g_object_unref(builder);
+	section = g_menu_new();
+	g_menu_append(section, _("Preferences"), "app.preferences");
+	g_menu_append_section(menu, NULL, G_MENU_MODEL(section));
+
+	section = g_menu_new();
+
+	sub_section = g_menu_new();
+	g_menu_append(sub_section, _("Donate"), "app.donate");
+	g_menu_append(sub_section, _("Forum"), "app.forum");
+	g_menu_append_submenu(section, _("Help"), G_MENU_MODEL(sub_section));
+
+	g_menu_append(section, _("About"), "app.about");
+	g_menu_append_section(menu, NULL, G_MENU_MODEL(section));
+
+	section = g_menu_new();
+	g_menu_append(section, _("Quit"), "app.quit");
+
+	g_menu_append_section(menu, NULL, G_MENU_MODEL(section));
+
+	gtk_application_set_app_menu(GTK_APPLICATION(application), G_MENU_MODEL(menu));
 
 	const gchar *user_plugins = g_get_user_data_dir();
 	gchar *path = g_build_filename(user_plugins, "roger", G_DIR_SEPARATOR_S, "plugins", NULL);
@@ -268,6 +240,8 @@ static void app_init(Application *app)
 		return;
 	}
 
+	g_signal_connect(app_object, "message", G_CALLBACK(app_object_message_cb), NULL);
+
 	fax_process_init();
 
 	journal_window(G_APPLICATION(app), NULL);
@@ -275,6 +249,8 @@ static void app_init(Application *app)
 	if (net_is_online() && !profile_get_active()) {
 		assistant();
 	}
+
+	emit_message(42, "The answer of all questions? 42");
 }
 
 static void application_class_init(ApplicationClass *class)

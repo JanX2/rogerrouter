@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-08 16:07+0200\n"
+"POT-Creation-Date: 2014-06-13 21:21+0200\n"
 "PO-Revision-Date: 2013-09-07 19:34+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: German <jan.brummer@tabos.org>\n"
@@ -255,13 +255,13 @@ msgstr "Bild öffnen"
 #: ../roger/contact_edit.c:130 ../roger/pref_action.c:164
 #: ../roger/pref_fax.c:54 ../roger/pref_filters.c:368 ../roger/pref_misc.c:49
 #: ../roger/plugins/vcard/vcard.c:1133
-#: ../roger/plugins/thunderbird/thunderbird.c:997
+#: ../roger/plugins/thunderbird/thunderbird.c:1012
 msgid "_Cancel"
 msgstr "A_bbrechen"
 
 #: ../roger/contact_edit.c:130 ../roger/pref_fax.c:54 ../roger/pref_misc.c:49
 #: ../roger/plugins/vcard/vcard.c:1133
-#: ../roger/plugins/thunderbird/thunderbird.c:997
+#: ../roger/plugins/thunderbird/thunderbird.c:1012
 msgid "_Open"
 msgstr "_Öffnen"
 
@@ -844,7 +844,7 @@ msgstr "Wähle Berichtsverzeichnis"
 
 #: ../roger/pref_fax.c:174 ../roger/pref_misc.c:89
 #: ../roger/plugins/vcard/vcard.c:1168
-#: ../roger/plugins/thunderbird/thunderbird.c:1048
+#: ../roger/plugins/thunderbird/thunderbird.c:1063
 msgid "Select"
 msgstr "Auswählen"
 
@@ -1234,7 +1234,7 @@ msgstr "Buch:"
 #: ../roger/plugins/evolution/evolution.c:545
 #: ../roger/plugins/fritzfon/fritzfon.c:686
 #: ../roger/plugins/vcard/vcard.c:1178
-#: ../roger/plugins/thunderbird/thunderbird.c:1058
+#: ../roger/plugins/thunderbird/thunderbird.c:1073
 msgid "Contact book"
 msgstr "Kontaktbuch"
 
@@ -1442,7 +1442,6 @@ msgid "Status icon plugin using AppIndicator support"
 msgstr "Statusicon-Plugin mit AppIndicator-Unterstützung"
 
 #: ../roger/plugins/vcard/vcard.c:1133
-#: ../roger/plugins/thunderbird/thunderbird.c:997
 msgid "Select vcard file"
 msgstr "VCard-Datei auswählen"
 
@@ -1478,7 +1477,11 @@ msgstr "Google"
 msgid "Google address book support"
 msgstr "Google Adressbuch-Support"
 
-#: ../roger/plugins/thunderbird/thunderbird.c:1044
+#: ../roger/plugins/thunderbird/thunderbird.c:1012
+msgid "Select mab file"
+msgstr "VCard-Datei auswählen"
+
+#: ../roger/plugins/thunderbird/thunderbird.c:1059
 msgid "Thunderbird file"
 msgstr "Thunderbird-Datei"
 

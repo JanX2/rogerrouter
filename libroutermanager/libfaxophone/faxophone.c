@@ -26,6 +26,8 @@
 #include <sys/resource.h>
 #endif
 
+#include <libroutermanager/appobject-emit.h>
+
 #include <libfaxophone/faxophone.h>
 #include <libfaxophone/fax.h>
 #include <libfaxophone/sff.h>
@@ -861,6 +863,7 @@ static int capi_indication(_cmsg capi_message)
 					connection->audio = session->handlers->audio_open();
 					if (!connection->audio) {
 						g_warning("Could not open audio. Hangup");
+						emit_message(0, "Could not open audio. Hangup");
 						capi_hangup(connection);
 						connection->audio = NULL;
 					}
@@ -1217,6 +1220,7 @@ static int capi_indication(_cmsg capi_message)
 					connection->audio = session->handlers->audio_open();
 					if (!connection->audio) {
 						g_warning("Could not open audio. Hangup");
+						emit_message(0, "Could not open audio. Hangup");
 						capi_hangup(connection);
 						connection->audio = NULL;
 					} else {
