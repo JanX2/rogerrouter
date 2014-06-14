@@ -54,6 +54,8 @@ static GSList *phone_active_connections = NULL;
 static gboolean use_header_bar = FALSE;
 #endif
 
+static GtkWidget *phone_window = NULL;
+
 void phone_add_connection(gpointer connection)
 {
 	phone_active_connections = g_slist_prepend(phone_active_connections, connection);
@@ -713,6 +715,7 @@ GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct p
 	gtk_grid_attach(GTK_GRID(dial_frame_grid), my_number_label, 1, line, 1, 1);
 
 	GtkWidget *my_number_combobox = gtk_combo_box_text_new();
+	gtk_widget_set_tooltip_text(my_number_combobox, _("Choose if your number should be visible for the called party"));
 	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(my_number_combobox), "Show", _("Show"));
 	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(my_number_combobox), "Suppress", _("Suppress"));
 	g_settings_bind(profile_get_active()->settings, "suppress", my_number_combobox, "active", G_SETTINGS_BIND_DEFAULT);
@@ -938,6 +941,8 @@ gboolean phone_window_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpoint
 
 	g_signal_handlers_disconnect_by_data(app_object, state);
 
+	phone_window = NULL;
+
 	return FALSE;
 }
 
@@ -951,6 +956,11 @@ void app_show_phone_window(struct contact *contact)
 	struct phone_state *state;
 
 	if (!profile_get_active()) {
+		return;
+	}
+
+	if (phone_window) {
+		gtk_window_present(GTK_WINDOW(phone_window));
 		return;
 	}
 
@@ -1024,5 +1034,6 @@ void app_show_phone_window(struct contact *contact)
 	g_signal_connect(app_object, "connection-terminated", G_CALLBACK(capi_connection_terminated_cb), state);
 
 	gtk_widget_show_all(window);
-}
 
+	phone_window = window;
+}
