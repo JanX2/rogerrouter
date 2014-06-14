@@ -1,10 +1,6 @@
 TODO
 ----------
 
-* Error message for source msn not set
-* error message for audio not set
-* Gtk:Critical: gtk_label_set_text: assertion 'GTK_IS_LABEL (label)' failed
-
 * Allow to change outgoing popup delay
 * Allow to disable ringtones within popups
 * GLib:Critical: g_strv_length: assertion `str_array != NULL' failed (after Get settings)

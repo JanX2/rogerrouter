@@ -249,8 +249,6 @@ static void app_init(Application *app)
 	if (net_is_online() && !profile_get_active()) {
 		assistant();
 	}
-
-	emit_message(42, "The answer of all questions? 42");
 }
 
 static void application_class_init(ApplicationClass *class)
