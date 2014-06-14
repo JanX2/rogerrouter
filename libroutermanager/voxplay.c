@@ -31,6 +31,7 @@
 
 #include <libroutermanager/voxplay.h>
 #include <libroutermanager/audio.h>
+#include <libroutermanager/appobject-emit.h>
 
 #define MAX_FRAME_SIZE 2000
 
@@ -162,6 +163,7 @@ gpointer vox_play(gchar *data, gsize len, void (*vox_cb)(gpointer priv, gpointer
 	if (!playback->audio) {
 		g_warning("No audio device");
 		g_slice_free(struct vox_playback, playback);
+		emit_message(0, "No audio device");
 		return NULL;
 	}
 
@@ -170,6 +172,7 @@ gpointer vox_play(gchar *data, gsize len, void (*vox_cb)(gpointer priv, gpointer
 	if (!playback->priv) {
 		g_debug("Could not open audio device");
 		g_slice_free(struct vox_playback, playback);
+		emit_message(0, "Could not open audio device");
 		return NULL;
 	}
 
@@ -184,6 +187,7 @@ gpointer vox_play(gchar *data, gsize len, void (*vox_cb)(gpointer priv, gpointer
 		playback->audio->close(playback->priv, FALSE);
 
 		g_slice_free(struct vox_playback, playback);
+		emit_message(0, "Decoder initialization failed.");
 		return NULL;
 	}
 
