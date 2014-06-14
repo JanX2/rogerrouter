@@ -320,6 +320,7 @@ void app_show_fax_window(gchar *fax_file)
 	g_signal_connect(app_object, "connection-terminated", G_CALLBACK(capi_connection_terminated_cb), state);
 
 	gtk_widget_show_all(window);
+	gtk_window_set_keep_above(GTK_WINDOW(window), TRUE);
 }
 
 gboolean app_show_fax_window_idle(gpointer data)
