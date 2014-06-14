@@ -190,7 +190,6 @@ static gboolean show_message(gpointer message_ptr)
 static void app_object_message_cb(AppObject *object, gint type, gchar *message)
 {
 	g_idle_add(show_message, message);
-	g_debug("MOEP");
 }
 
 static void app_init(Application *app)
