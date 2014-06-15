@@ -155,11 +155,11 @@ static gboolean gstreamer_start_pipeline(struct pipes *pipes, gchar *command)
 	GstStateChangeReturn ret;
 
 	/* Start pipeline */
-	g_debug("command: '%s'", command);
+	//g_debug("command: '%s'", command);
 	pipe = gst_parse_launch(command, &error);
 
 	if (error != NULL || !pipe) {
-		g_debug("Error: Could not launch output pipe. => %s", error->message);
+		g_warning("Error: Could not launch output pipe. => %s", error->message);
 		g_error_free(error);
 
 		return FALSE;
@@ -168,7 +168,7 @@ static gboolean gstreamer_start_pipeline(struct pipes *pipes, gchar *command)
 	/* Try to set pipeline state to playing */
 	ret = gst_element_set_state(pipe, GST_STATE_PLAYING);
 	if (ret == GST_STATE_CHANGE_FAILURE) {
-		g_debug("Error: cannot start pipeline => %d", ret);
+		g_warning("Error: cannot start pipeline => %d", ret);
 		return FALSE;
 	}
 
@@ -207,12 +207,12 @@ static void *gstreamer_open(void)
 
 	output = g_settings_get_string(profile->settings, "audio-output");
 	input = g_settings_get_string(profile->settings, "audio-input");
-	//if (EMPTY_STRING(output)) {
-	output = g_strdup("autoaudiosink");
-	//}
-	//if (EMPTY_STRING(input)) {
-	input = g_strdup("autoaudiosrc");
-	//}
+	if (EMPTY_STRING(output)) {
+		output = g_strdup("autoaudiosink");
+	}
+	if (EMPTY_STRING(input)) {
+		input = g_strdup("autoaudiosrc");
+	}
 
 	/* Create command for output pipeline */
 	command = g_strdup_printf("appsrc is-live=true name=routermanager_src format=3"
