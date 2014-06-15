@@ -12,5 +12,8 @@
 		<key name="position" type="i">
 			<default>3</default>
 		</key>
+		<key name="duration" type="i">
+			<default>5</default>
+		</key>
 	</schema>
 </schemalist>

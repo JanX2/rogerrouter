@@ -371,10 +371,12 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 
 		gtk_grid_attach(GTK_GRID(main_grid), phone_grid, 0, 1, 1, 1);
 	} else if (connection->type == CONNECTION_TYPE_OUTGOING) {
+		gint duration = g_settings_get_int(notification_gtk_settings, "duration");
 		tmp = ui_bold_text(_("Outgoing call"));
 		gtk_label_set_markup(GTK_LABEL(type_label), tmp);
 		g_free(tmp);
-		g_timeout_add_seconds(5, notification_gtk_close, notify);
+
+		g_timeout_add_seconds(duration, notification_gtk_close, notify);
 	}
 
 	gtk_window_set_decorated(GTK_WINDOW(notify), FALSE);
@@ -583,8 +585,12 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	GtkTreeViewColumn *number_column;
 	GtkWidget *position_label;
 	GtkWidget *position_combobox;
-	GtkWidget *play_ringtones_toggle;
+	GtkWidget *play_ringtones_label;
+	GtkWidget *play_ringtones_switch;
 	GtkWidget *popup_grid;
+	GtkWidget *duration_label;
+	GtkWidget *duration_spinbutton;
+	GtkAdjustment *adjustment;
 
 	/* Settings grid */
 	settings_grid = gtk_grid_new();
@@ -632,7 +638,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	gtk_grid_set_row_spacing(GTK_GRID(popup_grid), 5);
 	gtk_grid_set_column_spacing(GTK_GRID(popup_grid), 15);
 
-	position_label = ui_label_new("Position:");
+	position_label = ui_label_new(_("Position"));
 	gtk_grid_attach(GTK_GRID(popup_grid), position_label, 0, 0, 1, 1);
 
 	position_combobox = gtk_combo_box_text_new();
@@ -643,9 +649,21 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	g_settings_bind(notification_gtk_settings, "position", position_combobox, "active", G_SETTINGS_BIND_DEFAULT);
 	gtk_grid_attach(GTK_GRID(popup_grid), position_combobox, 1, 0, 1, 1);
 
-	play_ringtones_toggle = gtk_check_button_new_with_label(_("Play ringtones"));
-	g_settings_bind(notification_gtk_settings, "play-ringtones", play_ringtones_toggle, "active", G_SETTINGS_BIND_DEFAULT);
-	gtk_grid_attach(GTK_GRID(popup_grid), play_ringtones_toggle, 0, 1, 2, 1);
+	duration_label = ui_label_new(_("Duration (outgoing)"));
+	gtk_grid_attach(GTK_GRID(popup_grid), duration_label, 0, 1, 1, 1);
+
+	adjustment = gtk_adjustment_new(0, 1, 60, 1, 10, 0);
+	duration_spinbutton = gtk_spin_button_new(adjustment, 1, 0);
+	gtk_widget_set_hexpand(duration_spinbutton, TRUE);
+	g_settings_bind(notification_gtk_settings, "duration", duration_spinbutton, "value", G_SETTINGS_BIND_DEFAULT);
+	gtk_grid_attach(GTK_GRID(popup_grid), duration_spinbutton, 1, 1, 1, 1);
+
+	play_ringtones_label = ui_label_new(_("Play ringtones"));
+	gtk_grid_attach(GTK_GRID(popup_grid), play_ringtones_label, 0, 2, 1, 1);
+
+	play_ringtones_switch = gtk_switch_new();
+	g_settings_bind(notification_gtk_settings, "play-ringtones", play_ringtones_switch, "active", G_SETTINGS_BIND_DEFAULT);
+	gtk_grid_attach(GTK_GRID(popup_grid), play_ringtones_switch, 1, 2, 1, 1);
 
 	gtk_grid_attach(GTK_GRID(settings_grid), pref_group_create(popup_grid, _("Popup"), TRUE, TRUE), 0, 1, 1, 1);
 
