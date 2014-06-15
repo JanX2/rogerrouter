@@ -1,19 +1,21 @@
 TODO
 ----------
 
-* Allow to change outgoing popup delay
 * Allow to disable ringtones within popups
-* GLib:Critical: g_strv_length: assertion `str_array != NULL' failed (after Get settings)
+* GLib:Critical: g_strv_length: assertion `str_array != NULL' failed
 
 * Prepend rm_ to each external routermanager function?
 * Check router structure for different routers (speedport)
-* Areacodes plugin for every country (global list available as csv) (90% done, add special handling for countrys not starting with 0 indicator, e.g. Russian Federation)
+* Areacodes plugin for every country (global list available as csv)
+  (90% done, add special handling for countrys not starting with 0 indicator,
+  e.g. Russian Federation)
 * Addressbook selection in preferences
 * Better icons in journal/print
 * Secret check
 
-* GNetworkMonitor currently only works on Linux! Add implementation for Windows (patch added to glib bugtracker) and OS X in Roger and if it works ok, move it to glib!!
-* Audio plugin selection should update preferences immediately
+* GNetworkMonitor currently only works on Linux! Add implementation for:
+    - Windows (patch added: https://bugzilla.gnome.org/show_bug.cgi?id=685442)
+    - OS X
 
 * G_OS_LINUX??
 

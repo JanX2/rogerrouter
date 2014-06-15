@@ -8,10 +8,6 @@ if WITH_PORTAUDIO
 SUBDIRS += portaudio
 endif
 
-if WITH_GSTREAMER0
-SUBDIRS += gstreamer
-endif
-
 if WITH_GSTREAMER1
 SUBDIRS += gstreamer1
 endif
