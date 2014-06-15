@@ -288,7 +288,7 @@ static gsize gstreamer_read(void *priv, guchar *data, gsize size)
 	gst_adapter_copy(pipes->adapter, data, 0, read);
 	gst_adapter_flush(pipes->adapter, read);
 
-	g_usleep(19 * G_TIME_SPAN_MILLISECOND);
+	//g_usleep(19 * G_TIME_SPAN_MILLISECOND);
 
 	return read;
 }
