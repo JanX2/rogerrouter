@@ -26,6 +26,7 @@
 #include <libroutermanager/call.h>
 #include <libroutermanager/csv.h>
 #include <libroutermanager/profile.h>
+#include <libroutermanager/logging.h>
 
 #include "csv.h"
 #include "firmware-common.h"
@@ -77,6 +78,10 @@ GSList *csv_parse_fritzbox_journal_data(GSList *list, const gchar *data)
 		if (!new_list) {
 			new_list = csv_parse_data(data, CSV_FRITZBOX_JOURNAL_EN2, csv_parse_fritzbox, list);
 		}
+	}
+
+	if (!new_list) {
+		log_save_data("journal.csv", data, strlen(data));
 	}
 
 	/* Return call list */
