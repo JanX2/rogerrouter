@@ -9,5 +9,8 @@
 		<key name="play-ringtones" type="b">
 			<default>true</default>
 		</key>
+		<key name="duration" type="i">
+			<default>5</default>
+		</key>
 	</schema>
 </schemalist>

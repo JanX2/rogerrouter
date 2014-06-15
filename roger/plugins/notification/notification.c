@@ -268,8 +268,10 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 		notify_notification_add_action(notify, "accept", _("Accept"), notify_accept_clicked_cb, connection, NULL);
 		notify_notification_add_action(notify, "deny", _("Decline"), notify_deny_clicked_cb, connection, NULL);
 	} else if (connection->type == CONNECTION_TYPE_OUTGOING) {
+		gint duration = g_settings_get_int(notification_settings, "duration");
+
 		notify = notify_notification_new(_("Outgoing call"), text, "notification-message-roger-out.svg");
-		g_timeout_add_seconds(5, notification_close, notify);
+		g_timeout_add_seconds(duration, notification_close, notify);
 	} else {
 		g_warning("Unhandled case in connection notify - notification!");
 		g_free(text);
@@ -472,13 +474,20 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	GtkTreeViewColumn *enable_column;
 	GtkTreeViewColumn *number_column;
 	GtkWidget *play_ringtones_toggle;
+	GtkWidget *duration_label;
+	GtkWidget *duration_spinbutton;
+	GtkAdjustment *adjustment;
 
 	/* Settings grid */
 	settings_grid = gtk_grid_new();
 
+	/* Set standard spacing to 5 */
+	gtk_grid_set_row_spacing(GTK_GRID(settings_grid), 5);
+	gtk_grid_set_column_spacing(GTK_GRID(settings_grid), 15);
+
 	/* Scrolled window */
 	scroll_window = gtk_scrolled_window_new(NULL, NULL);
-	gtk_scrolled_window_set_min_content_height(GTK_SCROLLED_WINDOW(scroll_window), 380);
+	gtk_scrolled_window_set_min_content_height(GTK_SCROLLED_WINDOW(scroll_window), 200);
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(scroll_window), GTK_SHADOW_IN);
 	gtk_widget_set_vexpand(scroll_window, TRUE);
 
@@ -488,7 +497,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	gtk_widget_set_hexpand(view, TRUE);
 	gtk_widget_set_vexpand(view, TRUE);
 	gtk_container_add(GTK_CONTAINER(scroll_window), view);
-	gtk_grid_attach(GTK_GRID(settings_grid), scroll_window, 0, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(settings_grid), scroll_window, 0, 0, 2, 1);
 
 	list_store = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN);
 
@@ -512,9 +521,18 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	gtk_tree_view_append_column(GTK_TREE_VIEW(view), enable_column);
 	g_signal_connect(G_OBJECT(renderer), "toggled", G_CALLBACK(notification_incoming_toggle_cb), tree_model);
 
+	duration_label = ui_label_new(_("Duration (outgoing)"));
+	gtk_grid_attach(GTK_GRID(settings_grid), duration_label, 0, 1, 1, 1);
+
+	adjustment = gtk_adjustment_new(0, 1, 60, 1, 10, 0);
+	duration_spinbutton = gtk_spin_button_new(adjustment, 1, 0);
+	gtk_widget_set_hexpand(duration_spinbutton, TRUE);
+	g_settings_bind(notification_settings, "duration", duration_spinbutton, "value", G_SETTINGS_BIND_DEFAULT);
+	gtk_grid_attach(GTK_GRID(settings_grid), duration_spinbutton, 1, 1, 1, 1);
+
 	play_ringtones_toggle = gtk_check_button_new_with_label(_("Play ringtones"));
 	g_settings_bind(notification_settings, "play-ringtones", play_ringtones_toggle, "active", G_SETTINGS_BIND_DEFAULT);
-	gtk_grid_attach(GTK_GRID(settings_grid), play_ringtones_toggle, 0, 1, 1, 1);
+	gtk_grid_attach(GTK_GRID(settings_grid), play_ringtones_toggle, 0, 2, 1, 1);
 
 	return pref_group_create(settings_grid, _("Choose for which MSNs you want notifications:"), TRUE, TRUE);
 }
