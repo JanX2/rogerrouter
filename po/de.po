@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-15 16:21+0200\n"
+"POT-Creation-Date: 2014-06-15 16:41+0200\n"
 "PO-Revision-Date: 2013-09-07 19:34+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: German <jan.brummer@tabos.org>\n"
@@ -312,7 +312,7 @@ msgstr "_Kein Bild"
 #: ../roger/contact_edit.c:225 ../roger/journal.c:1016
 #: ../roger/pref_action.c:256 ../roger/pref_filters.c:202 ../roger/print.c:386
 #: ../roger/plugins/notification/notification.c:502
-#: ../roger/plugins/gtknotify/gtknotify.c:614
+#: ../roger/plugins/gtknotify/gtknotify.c:620
 msgid "Number"
 msgstr "Nummer"
 
@@ -796,7 +796,7 @@ msgstr "Anruf verpasst"
 #. Outgoing call label
 #: ../roger/pref_action.c:538 ../roger/plugins/notification/notification.c:135
 #: ../roger/plugins/notification/notification.c:271
-#: ../roger/plugins/gtknotify/gtknotify.c:374
+#: ../roger/plugins/gtknotify/gtknotify.c:375
 msgid "Outgoing call"
 msgstr "Ausgehender Anruf"
 
@@ -928,7 +928,7 @@ msgstr "Alle"
 
 #. Last calls - Incomming
 #: ../roger/pref_filters.c:58 ../roger/plugins/notification/notification.c:511
-#: ../roger/plugins/gtknotify/gtknotify.c:623
+#: ../roger/plugins/gtknotify/gtknotify.c:629
 #: ../roger/plugins/statusicon/gtk.c:145
 #: ../roger/plugins/indicator/indicator.c:151
 msgid "Incoming"
@@ -942,7 +942,7 @@ msgstr "Verpasst"
 
 #. Last calls - Outgoing
 #: ../roger/pref_filters.c:60 ../roger/plugins/notification/notification.c:506
-#: ../roger/plugins/gtknotify/gtknotify.c:618
+#: ../roger/plugins/gtknotify/gtknotify.c:624
 #: ../roger/plugins/statusicon/gtk.c:152
 #: ../roger/plugins/indicator/indicator.c:158
 msgid "Outgoing"
@@ -1314,7 +1314,7 @@ msgid "Decline"
 msgstr "Ablehnen"
 
 #: ../roger/plugins/notification/notification.c:515
-#: ../roger/plugins/gtknotify/gtknotify.c:646
+#: ../roger/plugins/gtknotify/gtknotify.c:661
 msgid "Play ringtones"
 msgstr "Spiele Klingeltöne"
 
@@ -1362,27 +1362,35 @@ msgstr "(an %s)"
 msgid "(on ?)"
 msgstr "(an ?)"
 
-#: ../roger/plugins/gtknotify/gtknotify.c:627
+#: ../roger/plugins/gtknotify/gtknotify.c:633
 msgid "Choose for which MSNs you want notifications"
 msgstr "Wähle für welche MSNs Benachrichtigungen angezeigt werden"
 
-#: ../roger/plugins/gtknotify/gtknotify.c:639
+#: ../roger/plugins/gtknotify/gtknotify.c:641
+msgid "Position"
+msgstr "Position"
+
+#: ../roger/plugins/gtknotify/gtknotify.c:645
 msgid "Top left"
 msgstr "Oben links"
 
-#: ../roger/plugins/gtknotify/gtknotify.c:640
+#: ../roger/plugins/gtknotify/gtknotify.c:646
 msgid "Top right"
 msgstr "Oben rechts"
 
-#: ../roger/plugins/gtknotify/gtknotify.c:641
+#: ../roger/plugins/gtknotify/gtknotify.c:647
 msgid "Bottom left"
 msgstr "Unten links"
 
-#: ../roger/plugins/gtknotify/gtknotify.c:642
+#: ../roger/plugins/gtknotify/gtknotify.c:648
 msgid "Bottom right"
 msgstr "Unten rechts"
 
-#: ../roger/plugins/gtknotify/gtknotify.c:650
+#: ../roger/plugins/gtknotify/gtknotify.c:652
+msgid "Duration (outgoing)"
+msgstr "Anzeigedauer (ausgehend)"
+
+#: ../roger/plugins/gtknotify/gtknotify.c:668
 msgid "Popup"
 msgstr "Popup"
 
