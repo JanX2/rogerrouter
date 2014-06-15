@@ -87,7 +87,13 @@ GtkWidget *pref_page_audio(void)
 				gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(output_combobox), device->internal_name, device->name);
 			}
 		}
+	}
 
+	g_settings_bind(profile_get_active()->settings, "audio-plugin", plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(profile_get_active()->settings, "audio-output", output_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(profile_get_active()->settings, "audio-input", input_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+
+	if (audio) {
 		if (!gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(input_combobox))) {
 			gtk_combo_box_set_active(GTK_COMBO_BOX(input_combobox), 0);
 		}
@@ -100,10 +106,6 @@ GtkWidget *pref_page_audio(void)
 			gtk_combo_box_set_active(GTK_COMBO_BOX(plugin_combobox), 0);
 		}
 	}
-
-	g_settings_bind(profile_get_active()->settings, "audio-plugin", plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
-	g_settings_bind(profile_get_active()->settings, "audio-output", output_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
-	g_settings_bind(profile_get_active()->settings, "audio-input", input_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 
 	return pref_group_create(grid, _("Audio"), TRUE, TRUE);
 }
