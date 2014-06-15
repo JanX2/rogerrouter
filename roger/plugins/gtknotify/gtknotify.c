@@ -176,6 +176,7 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 	gboolean found = FALSE;
 	gint width, height;
 	gint line = 0;
+	gint position = 0;
 
 	/* Get notification numbers */
 	if (connection->type & CONNECTION_TYPE_OUTGOING) {
@@ -381,7 +382,25 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 
 	gtk_window_get_size(GTK_WINDOW(notify), &width, &height);
 
-	gtk_window_move(GTK_WINDOW(notify), gdk_screen_width() - width, gdk_screen_height() - height);
+	position = g_settings_get_int(notification_gtk_settings, "position");
+	switch (position) {
+	case 0:
+		/* Top Left */
+		gtk_window_move(GTK_WINDOW(notify), 0, 0);
+		break;
+	case 1:
+		/* Top Right */
+		gtk_window_move(GTK_WINDOW(notify), gdk_screen_width() - width, 0);
+		break;
+	case 2:
+		/* Bottom Left */
+		gtk_window_move(GTK_WINDOW(notify), 0, gdk_screen_height() - height);
+		break;
+	case 3:
+		/* Bottom Right */
+		gtk_window_move(GTK_WINDOW(notify), gdk_screen_width() - width, gdk_screen_height() - height);
+		break;
+	}
 
 	gtk_window_stick(GTK_WINDOW(notify));
 	gtk_window_set_keep_above(GTK_WINDOW(notify), TRUE);
@@ -402,7 +421,7 @@ void impl_activate(PeasActivatable *plugin)
 {
 	RouterManagerNotificationGtkPlugin *notify_plugin = ROUTERMANAGER_NOTIFICATION_GTK_PLUGIN(plugin);
 
-	notification_gtk_settings = g_settings_new("org.tabos.roger.plugins.notification-gtk");
+	notification_gtk_settings = g_settings_new("org.tabos.roger.plugins.gtknotify");
 
 	gchar **incoming_numbers = g_settings_get_strv(notification_gtk_settings, "incoming-numbers");
 	gchar **outgoing_numbers = g_settings_get_strv(notification_gtk_settings, "outgoing-numbers");
@@ -562,14 +581,17 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *enable_column;
 	GtkTreeViewColumn *number_column;
+	GtkWidget *position_label;
+	GtkWidget *position_combobox;
 	GtkWidget *play_ringtones_toggle;
+	GtkWidget *popup_grid;
 
 	/* Settings grid */
 	settings_grid = gtk_grid_new();
 
 	/* Scrolled window */
 	scroll_window = gtk_scrolled_window_new(NULL, NULL);
-	gtk_scrolled_window_set_min_content_height(GTK_SCROLLED_WINDOW(scroll_window), 380);
+	gtk_scrolled_window_set_min_content_height(GTK_SCROLLED_WINDOW(scroll_window), 200);
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(scroll_window), GTK_SHADOW_IN);
 	gtk_widget_set_vexpand(scroll_window, TRUE);
 
@@ -579,7 +601,6 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	gtk_widget_set_hexpand(view, TRUE);
 	gtk_widget_set_vexpand(view, TRUE);
 	gtk_container_add(GTK_CONTAINER(scroll_window), view);
-	gtk_grid_attach(GTK_GRID(settings_grid), scroll_window, 0, 0, 1, 1);
 
 	list_store = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN);
 
@@ -603,9 +624,30 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	gtk_tree_view_append_column(GTK_TREE_VIEW(view), enable_column);
 	g_signal_connect(G_OBJECT(renderer), "toggled", G_CALLBACK(notification_gtk_incoming_toggle_cb), tree_model);
 
+	gtk_grid_attach(GTK_GRID(settings_grid), pref_group_create(scroll_window, _("Choose for which MSNs you want notifications"), TRUE, TRUE), 0, 0, 1, 1);
+
+	popup_grid = gtk_grid_new();
+
+	/* Set standard spacing to 5 */
+	gtk_grid_set_row_spacing(GTK_GRID(popup_grid), 5);
+	gtk_grid_set_column_spacing(GTK_GRID(popup_grid), 15);
+
+	position_label = ui_label_new("Position:");
+	gtk_grid_attach(GTK_GRID(popup_grid), position_label, 0, 0, 1, 1);
+
+	position_combobox = gtk_combo_box_text_new();
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(position_combobox), _("Top left"));
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(position_combobox), _("Top right"));
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(position_combobox), _("Bottom left"));
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(position_combobox), _("Bottom right"));
+	g_settings_bind(notification_gtk_settings, "position", position_combobox, "active", G_SETTINGS_BIND_DEFAULT);
+	gtk_grid_attach(GTK_GRID(popup_grid), position_combobox, 1, 0, 1, 1);
+
 	play_ringtones_toggle = gtk_check_button_new_with_label(_("Play ringtones"));
 	g_settings_bind(notification_gtk_settings, "play-ringtones", play_ringtones_toggle, "active", G_SETTINGS_BIND_DEFAULT);
-	gtk_grid_attach(GTK_GRID(settings_grid), play_ringtones_toggle, 0, 1, 1, 1);
+	gtk_grid_attach(GTK_GRID(popup_grid), play_ringtones_toggle, 0, 1, 2, 1);
 
-	return pref_group_create(settings_grid, _("Choose for which MSNs you want notifications"), TRUE, TRUE);
+	gtk_grid_attach(GTK_GRID(settings_grid), pref_group_create(popup_grid, _("Popup"), TRUE, TRUE), 0, 1, 1, 1);
+
+	return settings_grid;
 }
