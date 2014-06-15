@@ -1,8 +1,0 @@
-[Plugin]
-Module=gstreamer
-_Name=GStreamer plugin
-_Description=Audio plugin for GStreamer
-Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
-Copyright=Copyright © 2013 Jan-Michael Brummer
-Website=http://www.tabos.org/
-Help=http://www.tabos.org/forum/
