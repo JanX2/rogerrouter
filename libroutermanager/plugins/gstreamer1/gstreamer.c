@@ -85,13 +85,13 @@ static GSList *gstreamer_detect_devices(void)
 
 	audio_device = g_slice_new0(struct audio_device);
 	audio_device->internal_name = g_strdup("autoaudiosink");
-	audio_device->name = g_strdup("Output");
+	audio_device->name = g_strdup("Standard");
 	audio_device->type = AUDIO_OUTPUT;
 	devices = g_slist_prepend(devices, audio_device);
 
 	audio_device = g_slice_new0(struct audio_device);
 	audio_device->internal_name = g_strdup("autoaudiosrc");
-	audio_device->name = g_strdup("Input");
+	audio_device->name = g_strdup("Standard");
 	audio_device->type = AUDIO_INPUT;
 	devices = g_slist_prepend(devices, audio_device);
 
@@ -287,8 +287,6 @@ static gsize gstreamer_read(void *priv, guchar *data, gsize size)
 	read = MIN(gst_adapter_available(pipes->adapter), size);
 	gst_adapter_copy(pipes->adapter, data, 0, read);
 	gst_adapter_flush(pipes->adapter, read);
-
-	//g_usleep(19 * G_TIME_SPAN_MILLISECOND);
 
 	return read;
 }
