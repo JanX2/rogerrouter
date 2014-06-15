@@ -210,6 +210,8 @@ static void capi_connection_terminated_cb(AppObject *object, struct capi_connect
 	len = g_slist_length(phone_active_connections);
 	if (!len) {
 		snprintf(state->phone_status_text, sizeof(state->phone_status_text), _("Disconnected"));
+		gtk_widget_set_sensitive(state->port_combobox, TRUE);
+		gtk_widget_set_sensitive(state->number_combobox, TRUE);
 		phone_remove_timer(state);
 	} else {
 		phone_hold(phone_get_active_connection(), FALSE);
@@ -344,6 +346,8 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 
 					if (connection) {
 						phone_add_connection(connection);
+						gtk_widget_set_sensitive(state->port_combobox, FALSE);
+						gtk_widget_set_sensitive(state->number_combobox, FALSE);
 					} else {
 						phone_connection_failed();
 					}
@@ -714,14 +718,14 @@ GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct p
 	GtkWidget *my_number_label = ui_label_new(_("Own number:"));
 	gtk_grid_attach(GTK_GRID(dial_frame_grid), my_number_label, 1, line, 1, 1);
 
-	GtkWidget *my_number_combobox = gtk_combo_box_text_new();
-	gtk_widget_set_tooltip_text(my_number_combobox, _("Choose if your number should be visible for the called party"));
-	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(my_number_combobox), "Show", _("Show"));
-	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(my_number_combobox), "Suppress", _("Suppress"));
-	g_settings_bind(profile_get_active()->settings, "suppress", my_number_combobox, "active", G_SETTINGS_BIND_DEFAULT);
+	state->number_combobox = gtk_combo_box_text_new();
+	gtk_widget_set_tooltip_text(state->number_combobox, _("Choose if your number should be visible for the called party"));
+	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(state->number_combobox), "Show", _("Show"));
+	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(state->number_combobox), "Suppress", _("Suppress"));
+	g_settings_bind(profile_get_active()->settings, "suppress", state->number_combobox, "active", G_SETTINGS_BIND_DEFAULT);
 
-	gtk_widget_set_hexpand(my_number_combobox, TRUE);
-	gtk_grid_attach(GTK_GRID(dial_frame_grid), my_number_combobox, 2, line, 2, 1);
+	gtk_widget_set_hexpand(state->number_combobox, TRUE);
+	gtk_grid_attach(GTK_GRID(dial_frame_grid), state->number_combobox, 2, line, 2, 1);
 
 	return dial_frame_grid;
 }

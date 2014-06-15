@@ -42,6 +42,7 @@ struct phone_state {
 	GtkWidget *llevel_out;
 	GtkWidget *call_label;
 	GtkWidget *port_combobox;
+	GtkWidget *number_combobox;
 	gchar phone_status_text[255];
 	GTimer *phone_session_timer;
 	gint phone_session_timer_id;
