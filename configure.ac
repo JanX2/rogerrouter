@@ -644,7 +644,6 @@ AC_CONFIG_FILES([
     libroutermanager/plugins/reverselookup/Makefile
     libroutermanager/plugins/wincred/Makefile
     libroutermanager/plugins/portaudio/Makefile
-    libroutermanager/plugins/gstreamer/Makefile
     libroutermanager/plugins/gstreamer1/Makefile
     libroutermanager/plugins/secret/Makefile
     roger/Makefile
