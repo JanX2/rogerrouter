@@ -233,7 +233,7 @@ static gint fritzfon_read_book(void)
 	g_free(name);
 
 	if (msg->status_code != 200) {
-		g_warning("Could not firmware file");
+		g_warning("Could not get firmware file");
 		g_object_unref(msg);
 		return FALSE;
 	}
@@ -293,7 +293,7 @@ static gint fritzfon_get_books(void)
 
 	soup_session_send_message(soup_session_sync, msg);
 	if (msg->status_code != 200) {
-		g_warning("Could not fonbook file");
+		g_warning("Could not get fonbook file");
 		g_object_unref(msg);
 		goto end;
 	}
