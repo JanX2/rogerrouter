@@ -473,17 +473,15 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *enable_column;
 	GtkTreeViewColumn *number_column;
-	GtkWidget *play_ringtones_toggle;
+	GtkWidget *play_ringtones_label;
+	GtkWidget *play_ringtones_switch;
 	GtkWidget *duration_label;
 	GtkWidget *duration_spinbutton;
+	GtkWidget *popup_grid;
 	GtkAdjustment *adjustment;
 
 	/* Settings grid */
 	settings_grid = gtk_grid_new();
-
-	/* Set standard spacing to 5 */
-	gtk_grid_set_row_spacing(GTK_GRID(settings_grid), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(settings_grid), 15);
 
 	/* Scrolled window */
 	scroll_window = gtk_scrolled_window_new(NULL, NULL);
@@ -497,7 +495,6 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	gtk_widget_set_hexpand(view, TRUE);
 	gtk_widget_set_vexpand(view, TRUE);
 	gtk_container_add(GTK_CONTAINER(scroll_window), view);
-	gtk_grid_attach(GTK_GRID(settings_grid), scroll_window, 0, 0, 2, 1);
 
 	list_store = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN);
 
@@ -520,19 +517,32 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	enable_column = gtk_tree_view_column_new_with_attributes(_("Incoming"), renderer, "active", 2, NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(view), enable_column);
 	g_signal_connect(G_OBJECT(renderer), "toggled", G_CALLBACK(notification_incoming_toggle_cb), tree_model);
+	gtk_grid_attach(GTK_GRID(settings_grid), pref_group_create(scroll_window, _("Choose for which MSNs you want notifications"), TRUE, TRUE), 0, 0, 1, 1);
+
+	popup_grid = gtk_grid_new();
+
+	/* Set standard spacing to 5 */
+	gtk_grid_set_row_spacing(GTK_GRID(popup_grid), 5);
+	gtk_grid_set_column_spacing(GTK_GRID(popup_grid), 15);
 
 	duration_label = ui_label_new(_("Duration (outgoing)"));
-	gtk_grid_attach(GTK_GRID(settings_grid), duration_label, 0, 1, 1, 1);
+	gtk_grid_attach(GTK_GRID(popup_grid), duration_label, 0, 0, 1, 1);
 
 	adjustment = gtk_adjustment_new(0, 1, 60, 1, 10, 0);
 	duration_spinbutton = gtk_spin_button_new(adjustment, 1, 0);
 	gtk_widget_set_hexpand(duration_spinbutton, TRUE);
 	g_settings_bind(notification_settings, "duration", duration_spinbutton, "value", G_SETTINGS_BIND_DEFAULT);
-	gtk_grid_attach(GTK_GRID(settings_grid), duration_spinbutton, 1, 1, 1, 1);
+	gtk_grid_attach(GTK_GRID(popup_grid), duration_spinbutton, 1, 0, 1, 1);
 
-	play_ringtones_toggle = gtk_check_button_new_with_label(_("Play ringtones"));
-	g_settings_bind(notification_settings, "play-ringtones", play_ringtones_toggle, "active", G_SETTINGS_BIND_DEFAULT);
-	gtk_grid_attach(GTK_GRID(settings_grid), play_ringtones_toggle, 0, 2, 1, 1);
+	play_ringtones_label = ui_label_new(_("Play ringtones"));
+	gtk_grid_attach(GTK_GRID(popup_grid), play_ringtones_label, 0, 2, 1, 1);
 
-	return pref_group_create(settings_grid, _("Choose for which MSNs you want notifications:"), TRUE, TRUE);
+	play_ringtones_switch = gtk_switch_new();
+	gtk_widget_set_halign(play_ringtones_switch, GTK_ALIGN_START);
+	g_settings_bind(notification_settings, "play-ringtones", play_ringtones_switch, "active", G_SETTINGS_BIND_DEFAULT);
+	gtk_grid_attach(GTK_GRID(popup_grid), play_ringtones_switch, 1, 2, 1, 1);
+
+	gtk_grid_attach(GTK_GRID(settings_grid), pref_group_create(popup_grid, _("Popup"), TRUE, TRUE), 0, 1, 1, 1);
+
+	return settings_grid;
 }
