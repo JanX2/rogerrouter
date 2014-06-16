@@ -215,7 +215,7 @@ static void *gstreamer_open(void)
 	}
 
 	/* Create command for output pipeline */
-	command = g_strdup_printf("appsrc is-live=true name=routermanager_src format=3"
+	command = g_strdup_printf("appsrc is-live=true name=routermanager_src format=3 block=1 max-bytes=320"
 		" ! audio/x-raw,format=S16LE"
 		",rate=%d"
 		",channels=%d"
@@ -266,8 +266,6 @@ static gsize gstreamer_write(void *priv, guchar *data, gsize size)
 
 	buffer = gst_buffer_new_wrapped(tmp, size);
 	gst_app_src_push_buffer(GST_APP_SRC(src), buffer);
-
-	g_usleep(19 * G_TIME_SPAN_MILLISECOND);
 
 	return size;
 }
