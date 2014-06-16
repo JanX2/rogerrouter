@@ -662,6 +662,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	gtk_grid_attach(GTK_GRID(popup_grid), play_ringtones_label, 0, 2, 1, 1);
 
 	play_ringtones_switch = gtk_switch_new();
+	gtk_widget_set_halign(play_ringtones_switch, GTK_ALIGN_START);
 	g_settings_bind(notification_gtk_settings, "play-ringtones", play_ringtones_switch, "active", G_SETTINGS_BIND_DEFAULT);
 	gtk_grid_attach(GTK_GRID(popup_grid), play_ringtones_switch, 1, 2, 1, 1);
 
