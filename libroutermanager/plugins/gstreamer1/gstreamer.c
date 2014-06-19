@@ -24,8 +24,6 @@
 #include <gst/app/gstappsrc.h>
 #include <gst/app/gstappsink.h>
 
-#include <pulse/pulseaudio.h>
-
 #include <libroutermanager/profile.h>
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/audio.h>
