@@ -1,3 +1,19 @@
+roger - 1.8.7
+------------------------------------------------------------------------------------------------------------------
+* Reverse lookup cache
+* Add business fax number support
+* Moved contact processing into routermanager
+* Redesigned phone dialog
+* Experimental gstreamer 1.0 support (source code only)
+* Improved touchscreen handling
+* Set fax window to keep-above in order to make it visible to the user
+* Allow positioning of gtk notification window
+* Allow changing of popup timeout in notification windows
+* Workaround for Cinnamon statusicon bug
+* Moved debug files from global to local tmp directory
+* FTP fixes
+* Fix for upcoming GTK+ 3.14
+
 roger - 1.8.6
 ------------------------------------------------------------------------------------------------------------------
 * Statusicon and Indicator plugin are able to change their icon style
