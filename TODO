@@ -1,6 +1,5 @@
 TODO
 ----------
-
 * Allow to disable ringtones within popups
 * GLib:Critical: g_strv_length: assertion `str_array != NULL' failed
 
@@ -12,6 +11,7 @@ TODO
 * Addressbook selection in preferences
 * Better icons in journal/print
 * Secret check
+* Export contacts to router
 
 * GNetworkMonitor currently only works on Linux! Add implementation for:
     - Windows (patch added: https://bugzilla.gnome.org/show_bug.cgi?id=685442)
