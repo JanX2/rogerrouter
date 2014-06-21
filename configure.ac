@@ -626,6 +626,11 @@ then
 	EXTRA_CFLAGS+="-Werror"
 fi
 
+dnl ********************************************************************
+dnl Check for coverage tool gcov
+dnl ********************************************************************
+AC_TDD_GCOV
+
 AC_CONFIG_FILES([
     Makefile
     win32/roger.nsi
