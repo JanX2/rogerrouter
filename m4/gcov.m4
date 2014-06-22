@@ -36,9 +36,9 @@ AC_DEFUN([AC_TDD_GCOV],
   changequote([,])
 
   # Add the special gcc flags
-  CFLAGS="$CFLAGS --coverage"
-  CXXFLAGS="$CXXFLAGS --coverage"
-  LDFLAGS="$LDFLAGS --coverage"
+  CFLAGS="$CFLAGS --coverage -fprofile-arcs -ftest-coverage"
+  CXXFLAGS="$CXXFLAGS --coverage -fprofile-arcs -ftest-coverage"
+  LDFLAGS="$LDFLAGS --coverage -fprofile-arcs -ftest-coverage"
 fi
 ]) # AC_TDD_GCOV
 
