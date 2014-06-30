@@ -39,7 +39,7 @@
 #define ROUTERMANAGER_TYPE_REVERSE_LOOKUP_PLUGIN (routermanager_reverse_lookup_plugin_get_type ())
 #define ROUTERMANAGER_REVERSE_LOOKUP_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_REVERSE_LOOKUP_PLUGIN, RouterManagerReverseLookupPlugin))
 
-//#define RL_DEBUG 1
+#define RL_DEBUG 1
 
 typedef struct {
 	guint signal_id;
@@ -163,7 +163,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 	}
 
 #ifdef RL_DEBUG
-	g_debug("Match found: %s->%s", number, *name);
+	g_debug("Match found: %s->'%s'", number, *name);
 #endif
 
 	rl_tmp = g_match_info_fetch_named(info, "street");
@@ -488,7 +488,7 @@ static void lookup_read_cache(gchar *dir_name)
 		contact->name = g_strdup(split[1]);
 		contact->street = g_strdup(split[2]);
 		contact->zip = g_strdup(split[3]);
-		contact->city = g_strdup(split[4]);
+		contact->city = g_strstrip(g_strdup(split[4]));
 
 		g_hash_table_insert(table, g_strdup(split[0]), contact);
 
