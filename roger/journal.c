@@ -61,8 +61,8 @@ GdkPixbuf *icon_call_missed = NULL;
 GdkPixbuf *icon_call_out = NULL;
 GdkPixbuf *icon_fax = NULL;
 GdkPixbuf *icon_voice = NULL;
-struct filter *journal_filter = NULL;
-struct filter *journal_search_filter = NULL;
+static struct filter *journal_filter = NULL;
+static struct filter *journal_search_filter = NULL;
 static GtkWidget *spinner = NULL;
 static GMutex journal_mutex;
 gboolean use_header_bar = FALSE;
@@ -267,6 +267,7 @@ static gboolean reload_journal(gpointer user_data)
 
 		if (call->remote->lookup) {
 			gtk_list_store_set(list_store, &iter, JOURNAL_COL_NAME, call->remote->name, -1);
+			gtk_list_store_set(list_store, &iter, JOURNAL_COL_CITY, call->remote->city, -1);
 		}
 		valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(list_store), &iter);
 	}
