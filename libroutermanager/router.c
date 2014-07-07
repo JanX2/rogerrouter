@@ -465,6 +465,11 @@ gboolean router_delete_voice(struct profile *profile, const gchar *filename)
 	return router->delete_voice(profile, filename);
 }
 
+/**
+ * \brief Free router info structure
+ * \param info router_info structure
+ * \return TRUE if structure is freed, otherwise FALSE
+ */
 gboolean router_info_free(struct router_info *info)
 {
 	if (info) {
@@ -473,9 +478,26 @@ gboolean router_info_free(struct router_info *info)
 		g_free(info->serial);
 		g_free(info->version);
 		g_free(info->lang);
+		g_free(info->annex);
 		g_slice_free(struct router_info, info);
 		return TRUE;
 	}
 
 	return FALSE;
+}
+
+/**
+ * \brief Check if router is using cable as annex
+ * \param profile profile structure
+ * \return TRUE if cable is used, otherwise FALSE
+ */
+gboolean router_is_cable(struct profile *profile)
+{
+	gboolean is_cable = FALSE;
+
+	if (!EMPTY_STRING(profile->router_info->annex) && !strcmp(profile->router_info->annex, "Kabel")) {
+		is_cable = TRUE;
+	}
+
+	return is_cable;
 }

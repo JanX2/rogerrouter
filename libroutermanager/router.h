@@ -75,6 +75,7 @@ struct router_info {
 	gchar *serial;
 	gchar *session_id;
 	gchar *lang;
+	gchar *annex;
 
 	/* Extend */
 	gint box_id;
@@ -141,6 +142,7 @@ gchar *router_load_fax(struct profile *profile, const gchar *filename, gsize *le
 gchar *router_load_voice(struct profile *profile, const gchar *filename, gsize *len);
 
 gboolean router_info_free(struct router_info *info);
+gboolean router_is_cable(struct profile *profile);
 
 G_END_DECLS
 

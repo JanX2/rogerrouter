@@ -17,6 +17,8 @@ TODO
     - Windows (patch added: https://bugzilla.gnome.org/show_bug.cgi?id=685442)
     - OS X
 
+* Write error to fax report directory
+
 * G_OS_LINUX??
 
 **** WIN32 ****

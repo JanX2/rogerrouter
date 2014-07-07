@@ -47,6 +47,7 @@ static GtkWidget *pref_page_router_phone(void)
 	GtkWidget *area_code_label;
 	GtkWidget *area_code_entry;
 	gint line = 0;
+	gboolean is_cable = router_is_cable(profile_get_active());
 
 	/**
 	 * Group settings:
@@ -70,7 +71,6 @@ static GtkWidget *pref_page_router_phone(void)
 	line_access_code_entry = gtk_entry_new();
 	gtk_widget_set_tooltip_text(line_access_code_entry, _("If needed enter line access code"));
 	gtk_widget_set_hexpand(line_access_code_entry, TRUE);
-	//gtk_editable_set_editable(GTK_EDITABLE(line_access_code_entry), FALSE);
 	gtk_grid_attach(GTK_GRID(group), line_access_code_entry, 1, line, 1, 1);
 	g_settings_bind(profile_get_active()->settings, "line-access-code", line_access_code_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
@@ -82,7 +82,7 @@ static GtkWidget *pref_page_router_phone(void)
 	international_call_prefix_entry = gtk_entry_new();
 	gtk_widget_set_tooltip_text(international_call_prefix_entry, _("Prefix to be added before the country code to make an international call (usually 00)"));
 	gtk_widget_set_hexpand(international_call_prefix_entry, TRUE);
-	gtk_editable_set_editable(GTK_EDITABLE(international_call_prefix_entry), FALSE);
+	gtk_editable_set_editable(GTK_EDITABLE(international_call_prefix_entry), is_cable);
 	gtk_grid_attach(GTK_GRID(group), international_call_prefix_entry, 1, line, 1, 1);
 	g_settings_bind(profile_get_active()->settings, "international-call-prefix", international_call_prefix_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
@@ -94,7 +94,7 @@ static GtkWidget *pref_page_router_phone(void)
 	country_code_entry = gtk_entry_new();
 	gtk_widget_set_tooltip_text(country_code_entry, _("Country code without precending zero (e.g. 49=Germany)"));
 	gtk_widget_set_hexpand(country_code_entry, TRUE);
-	gtk_editable_set_editable(GTK_EDITABLE(country_code_entry), FALSE);
+	gtk_editable_set_editable(GTK_EDITABLE(country_code_entry), is_cable);
 	gtk_grid_attach(GTK_GRID(group), country_code_entry, 1, line, 1, 1);
 	g_settings_bind(profile_get_active()->settings, "country-code", country_code_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
@@ -106,7 +106,7 @@ static GtkWidget *pref_page_router_phone(void)
 	national_call_prefix_entry = gtk_entry_new();
 	gtk_widget_set_tooltip_text(national_call_prefix_entry, _("Prefix to be added before the area code to make a long distance national call (usually 0)"));
 	gtk_widget_set_hexpand(national_call_prefix_entry, TRUE);
-	gtk_editable_set_editable(GTK_EDITABLE(national_call_prefix_entry), FALSE);
+	gtk_editable_set_editable(GTK_EDITABLE(national_call_prefix_entry), is_cable);
 	gtk_grid_attach(GTK_GRID(group), national_call_prefix_entry, 1, line, 1, 1);
 	g_settings_bind(profile_get_active()->settings, "national-call-prefix", national_call_prefix_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
@@ -118,7 +118,7 @@ static GtkWidget *pref_page_router_phone(void)
 	area_code_entry = gtk_entry_new();
 	gtk_widget_set_tooltip_text(area_code_entry, _("Area Code without precending zero"));
 	gtk_widget_set_hexpand(area_code_entry, TRUE);
-	gtk_editable_set_editable(GTK_EDITABLE(area_code_entry), FALSE);
+	gtk_editable_set_editable(GTK_EDITABLE(area_code_entry), is_cable);
 	gtk_grid_attach(GTK_GRID(group), area_code_entry, 1, line, 1, 1);
 	g_settings_bind(profile_get_active()->settings, "area-code", area_code_entry, "text", G_SETTINGS_BIND_DEFAULT);
 

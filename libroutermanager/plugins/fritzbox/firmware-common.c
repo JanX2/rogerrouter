@@ -256,6 +256,7 @@ gboolean fritzbox_present(struct router_info *router_info)
 	gchar *lang;
 	gchar *serial;
 	gchar *url;
+	gchar *annex;
 	gboolean ret = FALSE;
 
 	if (router_info->name != NULL) {
@@ -292,17 +293,19 @@ gboolean fritzbox_present(struct router_info *router_info)
 	version = xml_extract_tag(data, "j:Version");
 	lang = xml_extract_tag(data, "j:Lang");
 	serial = xml_extract_tag(data, "j:Serial");
+	annex = xml_extract_tag(data, "j:Annex");
 
 	g_object_unref(msg);
 	g_free(url);
 
-	if (name && version && lang && serial) {
+	if (name && version && lang && serial && annex) {
 		gchar **split;
 
 		router_info->name = g_strdup(name);
 		router_info->version = g_strdup(version);
 		router_info->lang = g_strdup(lang);
 		router_info->serial = g_strdup(serial);
+		router_info->annex = g_strdup(annex);
 
 		/* Version: Box.Major.Minor(-XXXXX) */
 
@@ -318,6 +321,7 @@ gboolean fritzbox_present(struct router_info *router_info)
 		g_warning("name, version, lang or serial not valid");
 	}
 
+	g_free(annex);
 	g_free(serial);
 	g_free(lang);
 	g_free(version);
