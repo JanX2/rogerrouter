@@ -144,6 +144,8 @@ gchar *router_load_voice(struct profile *profile, const gchar *filename, gsize *
 gboolean router_info_free(struct router_info *info);
 gboolean router_is_cable(struct profile *profile);
 
+GSList *router_load_fax_reports(struct profile *profile, GSList *journal);
+
 G_END_DECLS
 
 #endif

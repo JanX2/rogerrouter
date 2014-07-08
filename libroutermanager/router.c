@@ -408,6 +408,10 @@ void router_process_journal(GSList *journal)
  */
 gchar *router_load_fax(struct profile *profile, const gchar *filename, gsize *len)
 {
+	if (filename[0] == '/') {
+		return file_load((gchar*)filename, len);
+	}
+
 	return router->load_fax(profile, filename, len);
 }
 
@@ -501,3 +505,47 @@ gboolean router_is_cable(struct profile *profile)
 
 	return is_cable;
 }
+
+GSList *router_load_fax_reports(struct profile *profile, GSList *journal)
+{
+	GDir *dir;
+	GError *error = NULL;
+	const gchar *file_name;
+	gchar *dir_name = g_settings_get_string(profile->settings, "fax-report-dir");
+
+	dir = g_dir_open(dir_name, 0, &error);
+
+	while ((file_name = g_dir_read_name(dir))) {
+		gchar *uri;
+		gchar **split;
+		//gchar *date;
+		//gchar *time;
+		//gchar *local;
+		//gchar *remote;
+
+		if (strncmp(file_name, "fax-report", 10)) {
+			continue;
+		}
+		g_debug("Fax report: %s", file_name);
+
+		split = g_strsplit(file_name, "_", -1);
+		g_debug("Len: %d", g_strv_length(split));
+		if (g_strv_length(split) != 5) {
+			g_strfreev(split);
+			continue;
+		}
+
+		uri = g_build_filename(dir_name, file_name, NULL);
+		g_debug("uri: '%s'", uri);
+
+		g_debug("%s %s %s %s %s", split[0], split[1], split[2], split[3], split[4]);
+
+		journal = call_add(journal, CALL_TYPE_FAX, g_strdup_printf("%s %s", split[3], split[4]), "", split[2], ("Report"), split[1], "0:01", g_strdup(uri));
+
+		g_free(uri);
+		g_strfreev(split);
+	}
+
+	return journal;
+}
+
