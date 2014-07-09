@@ -513,6 +513,40 @@ void journal_print(GtkWidget *view_widget)
 	}
 }
 
+GdkPixbuf *load_tiff_page(TIFF *tiff_file)
+{
+	TIFFRGBAImage img;
+	GdkPixbuf *gdkPixbuf;
+	gint row, col;
+	gint width, height;
+	uint32 *raster;
+
+	/* discover image height, width */
+	TIFFGetField(tiff_file, TIFFTAG_IMAGEWIDTH, &width);
+	TIFFGetField(tiff_file, TIFFTAG_IMAGELENGTH, &height);
+
+	/* allocate and fill raster from file. */
+	raster = (uint32*) _TIFFmalloc(width * height * sizeof(uint32));
+	TIFFRGBAImageBegin(&img, tiff_file, FALSE, NULL);
+	TIFFRGBAImageGet(&img, raster, width, height);
+	TIFFRGBAImageEnd(&img);
+
+	/* vertically flip the raster */
+	for (row = 0; row <= height/2; row += 1) {
+		for (col = 0; col < width; col += 1) {
+			uint32 tmp;
+
+			tmp = raster[row * width + col];
+			raster[row * width + col] = raster[(height - row - 1) * width + col];
+			raster[(height - row - 1) * width + col] = tmp;
+		}
+	}
+
+	gdkPixbuf = gdk_pixbuf_new_from_data((const guchar *) raster, GDK_COLORSPACE_RGB, TRUE, 8, width, height, width * 4, NULL, NULL);
+
+	return gdkPixbuf;
+}
+
 /**
  * \brief Create fax report based on give information
  * \param status fax status structure
@@ -535,6 +569,7 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	int pages = status->page_current;
 	int bitrate = status->bitrate;
 	struct profile *profile = profile_get_active();
+	TIFF *tiff;
 
 	if (file == NULL) {
 		g_warning("File is NULL\n");
@@ -546,7 +581,13 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 		return;
 	}
 
+	tiff = TIFFOpen(file, "r");
+
+#if 1
+	pixbuf = load_tiff_page(tiff);
+#else
 	pixbuf = gdk_pixbuf_new_from_file(file, NULL);
+#endif
 	if (pixbuf == NULL) {
 		g_warning("PixBuf is null (file '%s')\n", file);
 		return;
@@ -679,6 +720,26 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	cairo_stroke(cairo);
 
 	cairo_show_page(cairo);
+
+	while (TIFFReadDirectory(tiff)) {
+		pixbuf = load_tiff_page(tiff);
+
+		width = gdk_pixbuf_get_width(pixbuf);
+		height = gdk_pixbuf_get_height(pixbuf);
+		if (width != 1728 || height != 2292) {
+			width = 1728;
+			height = 2292;
+			GdkPixbuf *scale = gdk_pixbuf_scale_simple(pixbuf, width, height, GDK_INTERP_BILINEAR);
+
+			g_object_unref(pixbuf);
+			pixbuf = scale;
+		}
+
+		gdk_cairo_set_source_pixbuf(cairo, pixbuf, 0, 0);
+
+		cairo_paint(cairo);
+		cairo_show_page(cairo);
+	}
 
 	cairo_destroy(cairo);
 
