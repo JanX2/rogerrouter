@@ -34,11 +34,10 @@
  * \param chooser file chooser widget
  * \param user_data user data pointer (NULL)
  */
-void report_dir_file_set_cb(GtkFileChooser *chooser, gpointer user_data)
+void report_dir_file_set_cb(GtkFileChooserButton *chooser, gpointer user_data)
 {
-	gchar *filename = gtk_file_chooser_get_current_folder(chooser);
+	gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(chooser));
 
-	g_debug("uri: '%s'", filename);
 	g_settings_set_string(profile_get_active()->settings, "fax-report-dir", filename);
 
 	g_free(filename);
@@ -155,13 +154,12 @@ GtkWidget *pref_page_fax(void)
 	report_dir_label = ui_label_new(_("Report directory"));
 	gtk_grid_attach(GTK_GRID(report_grid), report_dir_label, 0, 1, 1, 1);
 
-#if 0
+#if 1
 	/* Currently the file chooser button implementation is buggy and therefore we will use a workaround (entry + button) */
 	GtkWidget *report_dir;
 	report_dir = gtk_file_chooser_button_new(_("Select report directory"), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
 	gtk_widget_set_hexpand(report_dir, TRUE);
 	const gchar *path = g_settings_get_string(profile_get_active()->settings, "fax-report-dir");
-	g_debug("path: '%s'", path);
 
 	if (!gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(report_dir), path)) {
 		g_debug("Setting fallback directory");
