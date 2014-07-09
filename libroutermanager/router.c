@@ -523,19 +523,14 @@ GSList *router_load_fax_reports(struct profile *profile, GSList *journal)
 		if (strncmp(file_name, "fax-report", 10)) {
 			continue;
 		}
-		g_debug("Fax report: %s", file_name);
 
 		split = g_strsplit(file_name, "_", -1);
-		g_debug("Len: %d", g_strv_length(split));
 		if (g_strv_length(split) != 9) {
 			g_strfreev(split);
 			continue;
 		}
 
 		uri = g_build_filename(dir_name, file_name, NULL);
-		g_debug("uri: '%s'", uri);
-
-		g_debug("%s %s %s %s %s", split[0], split[1], split[2], split[3], split[4]);
 
 		date_time = g_strdup_printf("%s.%s.%s %2.2s:%2.2s", split[3], split[4], split[5] + 2, split[6], split[7]);
 		journal = call_add(journal, CALL_TYPE_FAX, date_time, "", split[2], ("Fax-Report"), split[1], "0:01", g_strdup(uri));
