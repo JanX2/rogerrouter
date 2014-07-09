@@ -570,6 +570,11 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	out = cairo_pdf_surface_create(buffer, width, height + 200);
 	g_free(buffer);
 
+	if (!out) {
+		g_warning("Could not create pdf surface - is report directory writeable?\n");
+		return;
+	}
+
 	cairo = cairo_create(out);
 	gdk_cairo_set_source_pixbuf(cairo, pixbuf, 0, 200);
 	cairo_paint(cairo);
