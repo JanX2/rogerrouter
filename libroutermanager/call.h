@@ -33,6 +33,7 @@ enum {
 	CALL_TYPE_OUTGOING,
 	CALL_TYPE_VOICE,
 	CALL_TYPE_FAX,
+	CALL_TYPE_FAX_REPORT,
 };
 
 /* current number format */

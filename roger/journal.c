@@ -170,6 +170,7 @@ GdkPixbuf *journal_get_call_icon(gint type)
 	case CALL_TYPE_OUTGOING:
 		return icon_call_out;
 	case CALL_TYPE_FAX:
+	case CALL_TYPE_FAX_REPORT:
 		return icon_fax;
 	case CALL_TYPE_VOICE:
 		return icon_voice;
@@ -406,6 +407,7 @@ void delete_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, g
 		router_delete_voice(profile_get_active(), call->priv);
 		break;
 	case CALL_TYPE_FAX:
+	case CALL_TYPE_FAX_REPORT:
 		router_delete_fax(profile_get_active(), call->priv);
 		break;
 	default:
@@ -721,6 +723,7 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 	gtk_tree_model_get(model, iter, JOURNAL_COL_CALL_PTR, &call, -1);
 
 	switch (call->type) {
+	case CALL_TYPE_FAX_REPORT:
 	case CALL_TYPE_FAX: {
 		gsize len = 0;
 		gchar *data = router_load_fax(profile_get_active(), call->priv, &len);

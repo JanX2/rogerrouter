@@ -456,6 +456,12 @@ void filter_init(void)
 	filter = filter_new(_("Answering machine"));
 	filter_rule_add(filter, 0, CALL_TYPE_VOICE, NULL);
 	filter_add(filter);
+
+	/* Fax Report */
+	filter = filter_new(_("Fax Report"));
+	filter_rule_add(filter, 0, CALL_TYPE_FAX_REPORT, NULL);
+	filter_add(filter);
+
 }
 
 /**

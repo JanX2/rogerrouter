@@ -122,9 +122,9 @@ GSList *call_add(GSList *journal, gint type, const gchar *date_time, const gchar
 			if (type == CALL_TYPE_VOICE || type == CALL_TYPE_FAX) {
 				call->type = type;
 				call->priv = priv;
-			}
 
-			return journal;
+				return journal;
+			}
 		}
 	}
 
