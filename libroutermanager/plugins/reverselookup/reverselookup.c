@@ -189,11 +189,18 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 	}
 
 	rl_tmp = g_match_info_fetch_named(info, "city");
-	if (rl_tmp != NULL) {
+	if (!EMPTY_STRING(rl_tmp)) {
+		gchar **split;
+
 #ifdef RL_DEBUG
 		g_debug("city: %s", rl_tmp);
 #endif
 		*city = strip_html(rl_tmp);
+
+		split = g_strsplit(*city, "\n", -1);
+		*city = g_strdup(split[0]);
+		g_strfreev(split);
+
 		g_free(rl_tmp);
 	} else {
 		*city = g_strdup("");
