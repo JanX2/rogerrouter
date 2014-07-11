@@ -134,6 +134,23 @@ gboolean fritzbox_login_04_74(struct profile *profile)
 
 		g_free(response);
 
+		/* <iswriteaccess>X</iswriteaccess> */
+		writeaccess = xml_extract_tag(data, "iswriteaccess");
+
+		/* <Challenge>X</Challenge> */
+		challenge = xml_extract_tag(data, "Challenge");
+
+		if ((atoi(writeaccess) == 0) || !strcmp(profile->router_info->session_id, "0000000000000000")) {
+			g_debug("Login failure");
+
+			g_object_unref(msg);
+
+			g_timer_destroy(profile->router_info->session_timer);
+			profile->router_info->session_timer = NULL;
+
+			return FALSE;
+		}
+
 		g_debug("Login successful");
 
 		g_free(profile->router_info->session_id);
