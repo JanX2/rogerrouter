@@ -363,11 +363,13 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 			}
 			break;
 		case PHONE_TYPE_FAX: {
-			gpointer connection = fax_dial(state->priv, state->number);
+			struct fax_ui *fax_ui = state->priv;
+
+			gpointer connection = fax_dial(fax_ui->file, state->number);
 			if (connection) {
 				phone_add_connection(connection);
 				snprintf(state->phone_status_text, sizeof(state->phone_status_text), _("Dialing"));
-				fax_window_clear();
+				fax_window_clear(fax_ui);
 				phone_setup_timer(state);
 			} else {
 				phone_connection_failed();

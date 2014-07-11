@@ -17,14 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef FAX_H
-#define FAX_H
+#ifndef ROGER_FAX_H
+#define ROGER_FAX_H
 
 G_BEGIN_DECLS
 
+#include <libroutermanager/libfaxophone/fax.h>
+
+struct fax_ui {
+	gchar *file;
+
+	GtkWidget *progress_bar;
+	GtkWidget *remote_label;
+	GtkWidget *page_current_label;
+	GtkWidget *status_current_label;
+
+	struct fax_status *status;
+	struct capi_connection *fax_connection;
+};
+
 void fax_process_init(void);
 void app_show_fax_window(gchar *tiff_file);
-void fax_window_clear(void);
+void fax_window_clear(gpointer priv);
 
 G_END_DECLS
 
