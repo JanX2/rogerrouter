@@ -516,7 +516,6 @@ void journal_print(GtkWidget *view_widget)
 GdkPixbuf *load_tiff_page(TIFF *tiff_file)
 {
 	TIFFRGBAImage img;
-	GdkPixbuf *gdkPixbuf;
 	gint row, col;
 	gint width, height;
 	uint32 *raster;
@@ -532,8 +531,8 @@ GdkPixbuf *load_tiff_page(TIFF *tiff_file)
 	TIFFRGBAImageEnd(&img);
 
 	/* vertically flip the raster */
-	for (row = 0; row <= height/2; row += 1) {
-		for (col = 0; col < width; col += 1) {
+	for (row = 0; row <= height / 2; row++) {
+		for (col = 0; col < width; col++) {
 			uint32 tmp;
 
 			tmp = raster[row * width + col];
@@ -542,9 +541,7 @@ GdkPixbuf *load_tiff_page(TIFF *tiff_file)
 		}
 	}
 
-	gdkPixbuf = gdk_pixbuf_new_from_data((const guchar *) raster, GDK_COLORSPACE_RGB, TRUE, 8, width, height, width * 4, NULL, NULL);
-
-	return gdkPixbuf;
+	return gdk_pixbuf_new_from_data((const guchar *) raster, GDK_COLORSPACE_RGB, TRUE, 8, width, height, width * 4, NULL, NULL);
 }
 
 /**
@@ -572,12 +569,12 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	TIFF *tiff;
 
 	if (file == NULL) {
-		g_warning("File is NULL\n");
+		g_warning("file is NULL\n");
 		return;
 	}
 
 	if (report_dir == NULL) {
-		g_warning("ReportDir is NULL\n");
+		g_warning("report_dir is NULL\n");
 		return;
 	}
 
@@ -589,7 +586,7 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	pixbuf = gdk_pixbuf_new_from_file(file, NULL);
 #endif
 	if (pixbuf == NULL) {
-		g_warning("PixBuf is null (file '%s')\n", file);
+		g_warning("pixbuf is null (file '%s')\n", file);
 		return;
 	}
 
