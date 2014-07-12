@@ -140,8 +140,8 @@ gboolean fritzbox_login_04_74(struct profile *profile)
 		/* <Challenge>X</Challenge> */
 		challenge = xml_extract_tag(data, "Challenge");
 
-		if ((atoi(writeaccess) == 0) || !strcmp(profile->router_info->session_id, "0000000000000000")) {
-			g_debug("Login failure");
+		if ((atoi(writeaccess) == 0) || strcmp(profile->router_info->session_id, "0000000000000000")) {
+			g_debug("Login failure (%d should be non 0, %s should not be 0000000000000000)", atoi(writeaccess), profile->router_info->session_id);
 
 			g_object_unref(msg);
 
