@@ -129,7 +129,7 @@ gboolean csv_save_journal(GSList *journal)
 	for (list = journal; list; list = list->next) {
 		call = list->data;
 
-		if (call->type == CALL_TYPE_VOICE || call->type == CALL_TYPE_FAX) {
+		if (call->type == CALL_TYPE_VOICE || call->type == CALL_TYPE_FAX || call->type == CALL_TYPE_FAX_REPORT) {
 			continue;
 		}
 

@@ -23,6 +23,8 @@
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gdk/gdk.h>
+#include <glib.h>
+#include <glib/gstdio.h>
 
 #include <libroutermanager/profile.h>
 #include <libroutermanager/router.h>
@@ -407,8 +409,10 @@ void delete_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, g
 		router_delete_voice(profile_get_active(), call->priv);
 		break;
 	case CALL_TYPE_FAX:
-	case CALL_TYPE_FAX_REPORT:
 		router_delete_fax(profile_get_active(), call->priv);
+		break;
+	case CALL_TYPE_FAX_REPORT:
+		g_unlink(call->priv);
 		break;
 	default:
 		journal_list = g_slist_remove(journal_list, call);
