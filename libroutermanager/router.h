@@ -85,6 +85,7 @@ struct router_info {
 };
 
 struct router {
+	const gchar *name;
 	gboolean (*present)(struct router_info *router_info);
 	gboolean (*login)(struct profile *profile);
 	gboolean (*logout)(struct profile *profile, gboolean force);

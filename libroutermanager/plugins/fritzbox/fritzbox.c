@@ -127,6 +127,7 @@ gboolean fritzbox_clear_journal(struct profile *profile)
 
 /** FRITZ!Box router functions */
 static struct router fritzbox = {
+	"FRITZ!Box",
 	fritzbox_present,
 	fritzbox_login,
 	fritzbox_logout,
