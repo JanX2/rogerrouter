@@ -126,13 +126,10 @@ gboolean router_present(struct router_info *router_info)
 	for (list = router_list; list != NULL; list = list->next) {
 		struct router *router = list->data;
 
-		g_debug("Checking for router...");
 		if (router->present(router_info)) {
-			g_debug("done");
 			active_router = router;
 			return TRUE;
 		}
-		g_debug("done");
 	}
 
 	return FALSE;
