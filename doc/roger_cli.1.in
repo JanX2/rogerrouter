@@ -1,4 +1,4 @@
-.\" Copyright (c) 2009-2013, Jan-Michael Brummer <jan.brummer@tabos.org>
+.\" Copyright (c) 2009-2014, Jan-Michael Brummer <jan.brummer@tabos.org>
 .TH roger_cli 1 "" "Roger Router CLI Version @PACKAGE_VERSION@"
 .SH NAME
 roger \- Command Line Router Manager
@@ -8,11 +8,31 @@ roger \- Command Line Router Manager
 .SH DESCRIPTION
 \fBroger_cli\fP can print the current FRITZ!Box journal to the screen and send fax files.
 
+.SH OPTIONS
+.TP
+.BR \-c
+Call a number with the softphone. Needs target number, see -n.
+.TP
+.BR \-s
+Send fax file. Needs fax file name (PS/PDF) -f and target number -n.
+.TP
+.BR \-d
+Enable debug output.
+.TP
+.BR \-j
+Show journal.
+.TP
+.BR \-f
+File name of fax to transfer.
+.TP
+.BR \-n
+Target number.
+
 .SH SEE ALSO
 \fIhttp://www.tabos.org/roger/\fP
 
 .SH LICENSE
-Copyright (c) 2009-2013 Jan-Michael Brummer
+Copyright (c) 2009-2014 Jan-Michael Brummer
 
 .SH AUTHORS
 Roger Router's active developers are:
