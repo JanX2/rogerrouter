@@ -96,6 +96,8 @@ PKG_CHECK_MODULES([SOUP], [libsoup-2.4])
 PKG_CHECK_MODULES([PEAS], [libpeas-1.0])
 PKG_CHECK_MODULES([PEAS_GTK], [libpeas-gtk-1.0])
 
+PKG_CHECK_MODULES([TIFF], [libtiff-4])
+
 # Introspection
 #GOBJECT_INTROSPECTION_CHECK([0.9.3])
 
@@ -629,7 +631,7 @@ fi
 dnl ********************************************************************
 dnl Check for coverage tool gcov
 dnl ********************************************************************
-AC_TDD_GCOV
+dnl AC_TDD_GCOV
 
 AC_CONFIG_FILES([
     Makefile
