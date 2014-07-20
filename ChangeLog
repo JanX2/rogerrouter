@@ -1,3 +1,13 @@
+roger - 1.8.8
+------------------------------------------------------------------------------------------------------------------
+* Fax report within journal
+* Fax report can now store multiple pages
+* Fix 04.74 firmware login checks
+* Fix fax dialog issues
+* Added skeleton router plugin
+* Updated man pages
+* RL and UI fixes
+
 roger - 1.8.7
 ------------------------------------------------------------------------------------------------------------------
 * Reverse lookup cache
