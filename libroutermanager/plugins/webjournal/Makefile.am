@@ -10,6 +10,7 @@ sharedir = $(libdir)/routermanager/plugins/webjournal
 share_DATA  = share/header.html
 share_DATA  += share/entry.html
 share_DATA  += share/footer.html
+share_DATA  += share/style.css
 
 EXTRA_DIST += $(share_DATA)
 

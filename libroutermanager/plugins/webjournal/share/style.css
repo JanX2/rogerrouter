@@ -1,0 +1,71 @@
+@charset "utf-8";
+
+html, body {
+	height:101%;
+}
+
+body {
+	font-family:'Arial';
+	font-size:0.938em;
+	line-height:1.5em;
+}
+
+table {
+	margin:0 auto;
+	boder-collapse:collapse;
+}
+
+th {
+	background:#ededed;
+	color:#a7aba7;
+	padding:6px 9px;
+	font-weight:normal;
+	margin:0 !important;
+	cursor:pointer;
+}
+th:hover {
+	color:#4d6067;
+}
+
+tr:first-child th:first-child {
+	-webkit-border-top-left-radius: 20px;
+	-moz-border-radius-topleft: 20px;
+	border-top-left-radius: 20px;
+}
+
+tr:first-child th:last-child {
+	-webkit-border-top-right-radius: 20px;
+	-moz-border-radius-topright: 20px;
+	border-top-right-radius: 20px;
+}
+
+tr:nth-child(odd) td {
+	background-color:#fff;
+	color:#000;
+}
+
+tr:nth-child(even) td {
+	background-color:#f8f8f8;
+	color:#222;
+}
+
+td {
+	padding:7px 9px;
+}
+
+td.in, td.out, td.missed {
+	background-image:url(callin.png);
+	background-repeat:no-repeat;
+	background-position:center;
+	background-size:auto;
+}
+
+td.out {
+	background-image:url(callout.png);
+}
+
+td.missed {
+	background-image:url(callmissed.png);
+}
+
+

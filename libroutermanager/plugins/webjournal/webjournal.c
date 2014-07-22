@@ -46,20 +46,20 @@ gchar *get_call_type_string(gint type)
 {
 	switch (type) {
 	case CALL_TYPE_INCOMING:
-		return "IN";
+		return "in";
 	case CALL_TYPE_OUTGOING:
-		return "OUT";
+		return "out";
 	case CALL_TYPE_MISSED:
-		return "MISSED";
+		return "missed";
 	case CALL_TYPE_FAX:
-		return "FAX";
+		return "fax";
 	case CALL_TYPE_VOICE:
-		return "VOICE";
+		return "voice";
 	case CALL_TYPE_FAX_REPORT:
-		return "FAX-REPORT";
+		return "fax-report";
 	}
 
-	return "UNKNWON";
+	return "unknown";
 }
 
 void webjournal_journal_loaded_cb(AppObject *obj, GSList *journal, gpointer user_data)
