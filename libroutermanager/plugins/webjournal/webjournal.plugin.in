@@ -1,0 +1,8 @@
+[Plugin]
+Module=webjournal
+_Name=Web Journal
+_Description=Store journal as html file on a server
+Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
+Copyright=Copyright © 2014 Jan-Michael Brummer
+Website=http://www.tabos.org/
+Help=http://www.tabos.org/forum/

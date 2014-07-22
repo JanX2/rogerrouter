@@ -96,7 +96,9 @@ PKG_CHECK_MODULES([SOUP], [libsoup-2.4])
 PKG_CHECK_MODULES([PEAS], [libpeas-1.0])
 PKG_CHECK_MODULES([PEAS_GTK], [libpeas-gtk-1.0])
 
-PKG_CHECK_MODULES([TIFF], [libtiff-4])
+#PKG_CHECK_MODULES([TIFF], [libtiff-4])
+AC_CHECK_HEADERS([tiffio.h])
+AC_CHECK_LIB([tiff], [TIFFOpen], , AC_MSG_ERROR("Can't build without libtiff (does your system require a libtiff-devel package?)"), -lm)
 
 # Introspection
 #GOBJECT_INTROSPECTION_CHECK([0.9.3])
@@ -650,6 +652,7 @@ AC_CONFIG_FILES([
     libroutermanager/plugins/areacodes_global/Makefile
     libroutermanager/plugins/pulseaudio/Makefile
     libroutermanager/plugins/reverselookup/Makefile
+    libroutermanager/plugins/webjournal/Makefile
     libroutermanager/plugins/wincred/Makefile
     libroutermanager/plugins/portaudio/Makefile
     libroutermanager/plugins/gstreamer1/Makefile
