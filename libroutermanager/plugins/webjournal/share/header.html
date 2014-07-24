@@ -3,7 +3,78 @@
 <head>
 	<title>Journal – Profilname (2511 Anruf(e), 319:01h)</title>
 	<meta charset="utf-8" />
-	<link rel="stylesheet" href="style.css" type="text/css" media="screen" />
+	<style type="text/css">
+@charset "utf-8";
+
+html, body {
+	height:101%;
+}
+
+body {
+	font-family:'Arial';
+	font-size:0.938em;
+	line-height:1.5em;
+}
+
+table {
+	margin:0 auto;
+	boder-collapse:collapse;
+}
+
+th {
+	background:#ededed;
+	color:#a7aba7;
+	padding:6px 9px;
+	font-weight:normal;
+	margin:0 !important;
+	cursor:pointer;
+}
+th:hover {
+	color:#4d6067;
+}
+
+tr:first-child th:first-child {
+	-webkit-border-top-left-radius: 10px;
+	-moz-border-radius-topleft: 10px;
+	border-top-left-radius: 10px;
+}
+
+tr:first-child th:last-child {
+	-webkit-border-top-right-radius: 10px;
+	-moz-border-radius-topright: 10px;
+	border-top-right-radius: 10px;
+}
+
+tr:nth-child(odd) td {
+	background-color:#fff;
+	color:#000;
+}
+
+tr:nth-child(even) td {
+	background-color:#f8f8f8;
+	color:#222;
+}
+
+td {
+	padding:7px 9px;
+}
+
+td.in, td.out, td.missed {
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAABcRgAAXEYBFJRDQQAAAAd0SU1FB9kFBwshBCt1bpUAAAJCSURBVDjLrZTPS1RRFMc/5755M4PmDImCY1kbpyKo1KCFMAy0NGgttG2V/0uLQFoFEbRp06ptMJi2s1lI0Q8lFLM0LAfnh/reOS3evDczZtGiu7qHc873fO8533vEzACQuSUHlIApIM/fzx6wDCzY/LQCiJkhc0tngKfZtF8uDOfJ9WcR5EQEw6jVW2zt7NE6PKoAd2x+elO4t+iAl2Mjg+XSZBHEI1BQAzPAovTEBnwPPBeyWP3ExtfdCnAzBZRO9WXKN65eZLsuqCqhgmqUaGaEIah2wFQjwCvFIj9q1fJ+46DkgKnx86P8bP4dxIlwOiuoRnYQGOs7xrlCAWDKAblcLt9DP35CDOhEeHjL4/msx+VhSRiZGen0AEDeAThxhGrtalFQGEZ2qMZkQZgYgX4frhckKaIKag4AB6D2ZxCAlW/Giw/R/f333lht00/F6PE5DqIKvsC1ESFQqG5Zp6BaxCRm1OmJJc0cywszRUfGEx7MOM7m4PEbpda0ntg4NxUzUe1M6MKQ8Oi2R8aDu5MwloeVbWP+tXZi2wXN6wIyiyamZhjQOupUGuqHJ1Xl/ivlMLCon9YGSQTb1aMQS0a/tmvMPgvo84V328ZhEPnioYRhJ9a6ml1rNuv42XSiWlVjbbfNtEucsc+6FB6GDYA9Byyvrm8w0KXaOLlH4Sf4BgeErZ1NgOUUsLDfaFVWP38sT1wap95yHBxFn5aYiUmbiWAGGV/I9Rlv11bZb7QqwMJva2T0H9fIl+Nr5H8ttl+JvsqF9iOBLgAAAABJRU5ErkJggg==);
+	background-repeat:no-repeat;
+	background-position:center;
+	background-size:auto;
+}
+
+td.out {
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAAEhyb7BAAAACXBIWXMAAFxGAABcRgEUlENBAAAACXRFWHRDb21tZW50AACJKo0GAAACuUlEQVR4nH1Uz08TQRjd9NR2ty0EOHExHozeuHvo0ZP/gnePvZvYg4nBeILwQ6AUKC3FUhGNwQu4QBANbaW/aAHBCDUSjcSQGIyJec77dhZoRCeZtDvz5u33vfdmDQDGvUVvlL/yJ1ENIbVpweBKqhyEWuzkToS7xkjRQroWhDGUs8Bt2RovW5jaDCC7HUKiFHAoB/J+xEstSFQCSJRNWfRwQ8+wES9ZSFYDyGwFMfc+pEjfmeBIKa4ZxWX05fwY3jBROIzKIjnsZCkor36w7HNIWcvyp3YsHrTBbrRhqdGOFfX85rCD5dtSDisfU3VyzO9dly74jic7IWTqTiPRflUzi0jXrsEd2e1LAk5WLQGFB/NesDA2yOJimpmNdi97HekIPNesO6mixxXbfv25Q4p+1WDh7dIE19gQgUZ844ya/U/XnaJnVdHPdlsIihixoolRJWXu8M6peo+3HOBTJasC3TUGVbGUYLp2BfvHLzBZDTQBBdSf92GwYArw1+9j7H6fwtHP0ilQQH3rPlCnRxo4v3sDq43b4iRDIKDuJS961/1NQNrNpKSqJsR/RqtbmTipDHVN5RzJC4stOmkxO7lAx2NqM10J/XcSQyzP8KwrePjhig/zH1qVno6mSa3ClNY2o9XIao2Zyud7LVjYbwPPumVHx1Q/1JzmcGbql/HlxyrKX+8LIQPjSuumjF7QNKZNRCLRUMHxZUQT2vu3xMSjkyLmdrqE7F+E6Zp1RuR6x/i6hAfHL4Vs6yiGCdXu7PZVdaj1L0JG+4wo5/g7oK1jxEk2U+/Ct5MNnB8LH2826Zd0rBWiSM9bJwO8KxcRxnQmqN94udmQ4YLPCbf+aNg9az4kK36MlfzqoB+jasaLfDYxob4udHSyYkkr1CVbt9C7dhoBj+RIZ8mjL2fkggt60YUNu5eW8w9rxRrF6ZJtngAAAABJRU5ErkJggg==);
+}
+
+td.missed {
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAAEhyb7BAAAACXBIWXMAAFxGAABcRgEUlENBAAAACXRFWHRDb21tZW50AACJKo0GAAAC00lEQVR4nG1US2tTQRi95FcIkZrYNuTRNrYiImiD4kbcqSsRXHQvRkTRWpo+7Mu+krbpi9a+FgWhC6XV2mqia3EhKBTxsXEhdNX1ne/4fd/MTSp0YGg6c+65Z845cz0AHt0/lpO/wQ9QPgVPd1ZbwYth2cnKrmcGT4Kmk7w10Qxaa9Wns2asHlRMgBYaQePNltL0noAZqgWWL4MKCV0MyYabGc+M1IEm46C5FGg5Dc/0R0GlHpEAmm/gha4aYP87aOseaMpylGnlAr86A3pSY0nNaDP8nZvwN6/Bf83zzXX4b2/A/9gm8stWDis3o/XQUUwBv94BnwqgxSamTjvNPayZReDHexWhY6ZJj0yFpIIyJEzdNdADDkRhntUqM+VjoPaws06A1cMGU1wMBWaX/XKbFb0lwln0Nosu3YIcSIDsULpKzeenmaQaQ89Z08opAWU90xeDGWYrdzuAbxsqWGMU4FJaQJ0e5Vi0CGdgZew8AM2mLFBBXXyapxHQcNwh2IKfu/bVAlRQdwTiE02cBb28A0kRB3/4/7gtgYIeh2E6jyvQ9EXsqxmoTZlTpoxYEJYQafk8aJVDlbpJsMXTmpv65MwMa/LtzJY/A7NwEWbx0tFT9hgjWH2Gnw0Mz1BHFP76FQbErafSPjlc0Xk759yQIovH3EpabYHZuMp1i1Zk58xQSq2UcDSg8RiwcZublbSEXBjMp4HdrCWUlkkWEtp0izNJOtFda81x2dCHvmo+e6+A3yWXhAFKjyxZQJhvOESUs9lJfZVsiG/qGKvY36sS/v0CTDdWFFbCzycPK4ra2HptdPi85hT4oM27oO2HVo2Mry/+928iUSHKUk/EdkDuiiOkgTp7Z0Sh3Bv5BBQabC8OBzJSb8vtPhpl6mfgEvdiiiWPS3oJ/arQZNKuFfkYMzxnJTk2eP0caDAWVCCkPXJdCrnLmT3igh51YTPBpZX5DwIGbe2/xW1jAAAAAElFTkSuQmCC);
+}
+
+	</style>
 </head>
 <body>
 <h1>Roger Router Journal</h1>
