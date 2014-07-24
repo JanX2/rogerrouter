@@ -106,13 +106,21 @@ struct capi_connection *phone_dial(const gchar *trg_no, gboolean suppress)
 	struct profile *profile = profile_get_active();
 	gint controller = g_settings_get_int(profile->settings, "phone-controller") + 1;
 	const gchar *src_no = g_settings_get_string(profile->settings, "phone-number");
+	struct capi_connection *connection = NULL;
+	gchar *target;
 
 	if (EMPTY_STRING(src_no)) {
 		emit_message(0, "Source MSN not set, cannot dial");
 		return NULL;
 	}
 
-	return phone_call(controller, src_no, trg_no, suppress);
+	target = call_canonize_number(trg_no);
+
+	connection = phone_call(controller, src_no, trg_no, suppress);
+
+	g_free(target);
+
+	return connection;
 }
 
 /**
