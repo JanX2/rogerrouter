@@ -28,7 +28,7 @@
 
 #include <libxml/parser.h>
 
-#include "xml.h"
+#include <libroutermanager/xml.h>
 
 /**
  * \brief Create new xml node
@@ -36,7 +36,7 @@
  * \param type node type
  * \return new node pointer
  */
-xmlnode *new_node(const char *name, XMLNodeType type)
+xmlnode *new_node(const char *name, xml_node_type type)
 {
 	xmlnode *node = g_new0(xmlnode, 1);
 

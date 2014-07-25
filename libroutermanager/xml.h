@@ -22,19 +22,19 @@
  * \brief XML node header
  */
 
-#ifndef XML_H
-#define XML_H
+#ifndef LIBROUTERMANAGER_XML_H
+#define LIBROUTERMANAGER_XML_H
 
-typedef enum _XMLNodeType {
+typedef enum {
 	XMLNODE_TYPE_TAG,
 	XMLNODE_TYPE_ATTRIB,
 	XMLNODE_TYPE_DATA
-} XMLNodeType;
+} xml_node_type;
 
 typedef struct xml_node {
 	char *name;
 	char *xml_ns;
-	XMLNodeType type;
+	xml_node_type type;
 	char *data;
 	size_t data_size;
 	struct xml_node *parent;
