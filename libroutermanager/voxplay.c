@@ -35,12 +35,13 @@
 
 #define MAX_FRAME_SIZE 2000
 
+/** Private vox playback structure */
 struct vox_playback {
 	gchar *data;
 	gsize len;
 
 	GThread *thread;
-	void *speex;
+	gpointer speex;
 	SpeexBits bits;
 	struct audio *audio;
 	gpointer priv;
@@ -61,11 +62,11 @@ static gpointer playback_thread(gpointer user_data)
 	struct vox_playback *playback = user_data;
 	short output[MAX_FRAME_SIZE];
 	spx_int32_t frame_size;
-	int j;
-	unsigned char bytes = 0;
+	gint j;
+	guchar bytes = 0;
 	gsize offset = 0;
-	int cnt = 0;
-	int len_cnt = 0;
+	gint cnt = 0;
+	gint len_cnt = 0;
 
 	speex_decoder_ctl(playback->speex, SPEEX_GET_FRAME_SIZE, &frame_size);
 
@@ -112,7 +113,7 @@ static gpointer playback_thread(gpointer user_data)
 		offset += bytes;
 
 		for (j = 0; j != 2; j++) {
-			int ret;
+			gint ret;
 
 			ret = speex_decode_int(playback->speex, &playback->bits, output);
 			if (ret == -1) {
@@ -128,9 +129,9 @@ static gpointer playback_thread(gpointer user_data)
 			}
 		}
 
-		playback->audio->write(playback->priv, (unsigned char *) output, frame_size * sizeof(short));
+		playback->audio->write(playback->priv, (guchar *) output, frame_size * sizeof(short));
 		cnt++;
-		playback->cb(playback->cb_data, GINT_TO_POINTER(cnt * 100 / len_cnt));//(float)cnt / (float)len_cnt);
+		playback->cb(playback->cb_data, GINT_TO_POINTER(cnt * 100 / len_cnt));
 	}
 
 	speex_decoder_destroy(playback->speex);
