@@ -68,13 +68,10 @@ static gpointer playback_thread(gpointer user_data)
 	gint cnt = 0;
 	gint len_cnt = 0;
 
+	/* Get frame rate */
 	speex_decoder_ctl(playback->speex, SPEEX_GET_FRAME_SIZE, &frame_size);
 
-#ifdef VOX_DEBUG
-	g_debug("Frame Size: %d", frame_size);
-	g_debug("Playback len: %" G_GSIZE_FORMAT, playback->len);
-#endif
-
+	/* Loop through data in order to calculate frame counts */
 	while (offset < playback->len && !g_cancellable_is_cancelled(playback->cancel)) {
 		bytes = playback->data[offset];
 		offset++;
@@ -96,6 +93,7 @@ static gpointer playback_thread(gpointer user_data)
 	offset = 0;
 	cnt = 0;
 
+	/* Start playback */
 	while (offset < playback->len && !g_cancellable_is_cancelled(playback->cancel)) {
 		if (playback->pause) {
 			g_usleep(100);
@@ -129,7 +127,7 @@ static gpointer playback_thread(gpointer user_data)
 			}
 		}
 
-		playback->audio->write(playback->priv, (guchar *) output, frame_size * sizeof(short));
+		playback->audio->write(playback->priv, (guchar *) output, frame_size * sizeof(gshort));
 		cnt++;
 		playback->cb(playback->cb_data, GINT_TO_POINTER(cnt * 100 / len_cnt));
 	}
