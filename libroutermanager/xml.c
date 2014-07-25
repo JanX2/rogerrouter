@@ -23,6 +23,7 @@
  */
 
 #include <string.h>
+
 #include <gtk/gtk.h>
 #include <glib.h>
 
@@ -927,12 +928,23 @@ xmlnode *read_xml_from_file(const gchar *file_name)
 	return node;
 }
 
+/**
+ * \brief Insert key/value into hash-table
+ * \param key key type
+ * \param value value type
+ * \param user_data pointer to hash table
+ */
 static void xmlnode_copy_foreach_ns(gpointer key, gpointer value, gpointer user_data)
 {
 	GHashTable *ret = (GHashTable *)user_data;
 	g_hash_table_insert(ret, g_strdup(key), g_strdup(value));
 }
 
+/**
+ * \brief Make a copy of a given xmlnode
+ * \param src source xml node
+ * \return new xml node
+ */
 xmlnode *xmlnode_copy(const xmlnode *src)
 {
 	xmlnode *ret;
