@@ -521,6 +521,12 @@ gboolean router_is_cable(struct profile *profile)
 	return is_cable;
 }
 
+/**
+ * \brief Load fax reports and add them to the journal
+ * \param profile profile structure
+ * \param journal journal list pointer
+ * \return new journal list with attached fax reports
+ */
 GSList *router_load_fax_reports(struct profile *profile, GSList *journal)
 {
 	GDir *dir;
@@ -556,4 +562,3 @@ GSList *router_load_fax_reports(struct profile *profile, GSList *journal)
 
 	return journal;
 }
-

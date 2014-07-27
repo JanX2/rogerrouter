@@ -41,8 +41,13 @@
 #include <gtkmacintegration/gtkosxapplication.h>
 #endif
 
+/** Private data pointing to the plugin directory */
 static gchar *plugin_dir = NULL;
 
+/**
+ * \brief Print error quark
+ * \return quark
+ */
 GQuark rm_print_error_quark(void)
 {
 	return g_quark_from_static_string("rm-print-error-quark");
@@ -50,7 +55,7 @@ GQuark rm_print_error_quark(void)
 
 /**
  * \brief Get directory of requested type
- * \param pnType directory type name
+ * \param type directory type name
  * \return directory as duplicated string
  */
 gchar *get_directory(gchar *type)
@@ -58,7 +63,7 @@ gchar *get_directory(gchar *type)
 #ifdef G_OS_WIN32
 	GFile *directory;
 	GFile *child;
-	char *tmp = NULL;
+	gchar *tmp;
 
 	tmp = g_win32_get_package_installation_directory_of_module(NULL);
 
@@ -71,6 +76,7 @@ gchar *get_directory(gchar *type)
 	directory = child;
 
 	tmp = g_file_get_path(directory);
+	g_object_unref(directory);
 
 	return tmp;
 #elif __APPLE__
@@ -94,6 +100,10 @@ void init_directory_paths(void)
 	plugin_dir = get_directory(ROUTERMANAGER_PLUGINS);
 }
 
+/**
+ * \brief Return plugin directory
+ * \return plugin directory string
+ */
 gchar *get_plugin_dir(void)
 {
 	return plugin_dir;
