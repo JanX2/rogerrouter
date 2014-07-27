@@ -613,18 +613,12 @@ void vox_playback_cb(gpointer progress, gpointer frac)
 	if (playback_data && playback_data->scale) {
 		playback_data->fraction = fraction;
 		gtk_range_set_value(GTK_RANGE(playback_data->scale), (float)fraction / (float)100);
-		
 
 		if (fraction == 100) {
 			GtkWidget *media_image = gtk_image_new_from_icon_name("media-playback-start-symbolic", GTK_ICON_SIZE_BUTTON);
 			gtk_button_set_image(GTK_BUTTON(playback_data->media_button), media_image);
 		}
 	}
-}
-
-void remote_vox_playback_cb(gpointer progress, gpointer fraction)
-{
-	remote_port_invoke_call(remote_port_get_main(), vox_playback_cb, progress, fraction);
 }
 
 void vox_media_button_clicked_cb(GtkWidget *button, gpointer user_data)
@@ -645,7 +639,7 @@ void vox_media_button_clicked_cb(GtkWidget *button, gpointer user_data)
 		if (playback_data->vox_data) {
 			vox_stop(playback_data->vox_data);
 		}
-		playback_data->vox_data = vox_play(playback_data->data, playback_data->len, remote_vox_playback_cb, playback_data);
+		playback_data->vox_data = vox_play(playback_data->data, playback_data->len, vox_playback_cb, playback_data);
 
 		GtkWidget *media_image = gtk_image_new_from_icon_name("media-playback-pause-symbolic", GTK_ICON_SIZE_BUTTON);
 		gtk_button_set_image(GTK_BUTTON(playback_data->media_button), media_image);
@@ -673,7 +667,6 @@ void journal_play_voice(const gchar *name)
 	GtkWidget *label;
 	gsize len = 0;
 	gchar *data = router_load_voice(profile_get_active(), name, &len);
-	gpointer vox_data;
 	struct journal_playback *playback_data;
 
 	if (!data || !len) {
@@ -717,8 +710,7 @@ void journal_play_voice(const gchar *name)
 	gtk_widget_set_size_request(dialog, 300, 150);
 	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
 
-	vox_data = vox_play(data, len, remote_vox_playback_cb, playback_data);
-	playback_data->vox_data = vox_data;
+	playback_data->vox_data = vox_play(data, len, vox_playback_cb, playback_data);
 
 	gtk_widget_show_all(content_area);
 	gtk_dialog_run(GTK_DIALOG(dialog));

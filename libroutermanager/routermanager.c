@@ -149,9 +149,6 @@ gboolean routermanager_init(gboolean debug, GError **error)
 		return FALSE;
 	}
 
-	/* Initialize remote port */
-	remote_port_init();
-
 	/* Initialize network */
 	net_init();
 
