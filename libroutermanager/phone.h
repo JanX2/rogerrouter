@@ -27,6 +27,21 @@ struct phone {
 	gchar *type;
 };
 
+
+enum phone_number_type {
+	PHONE_NUMBER_HOME,
+	PHONE_NUMBER_WORK,
+	PHONE_NUMBER_MOBILE,
+	PHONE_NUMBER_FAX_HOME,
+	PHONE_NUMBER_FAX_WORK,
+	PHONE_NUMBER_PAGER,
+};
+
+struct phone_number {
+	enum phone_number_type type;
+	gchar *number;
+};
+
 G_END_DECLS
 
 #endif

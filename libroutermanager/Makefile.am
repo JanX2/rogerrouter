@@ -62,7 +62,6 @@ libroutermanager_la_SOURCES = \
 	net_monitor.h\
 	network.c\
 	network.h\
-	number.h\
 	osdep.c\
 	osdep.h\
 	password.c\
