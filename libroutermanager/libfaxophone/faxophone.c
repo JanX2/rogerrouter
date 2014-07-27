@@ -1654,7 +1654,7 @@ struct session *faxophone_init(struct session_handlers *handlers, const char *ho
 
 			return NULL;
 		} else {
-			session = g_malloc0(sizeof(struct session));
+			session = g_slice_alloc0(sizeof(struct session));
 
 			g_mutex_init(&session->isdn_mutex);
 

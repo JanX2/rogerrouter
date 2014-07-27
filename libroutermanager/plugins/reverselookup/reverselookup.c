@@ -437,7 +437,7 @@ static void lookup_add(xmlnode *node)
 		pattern = tmp;
 	}
 
-	lookup = g_malloc0(sizeof(struct lookup));
+	lookup = g_slice_alloc0(sizeof(struct lookup));
 	g_debug("Service: '%s', prefix: %s", service, prefix);
 	lookup->service = service;
 	lookup->prefix = prefix[ 0 ] == '1';

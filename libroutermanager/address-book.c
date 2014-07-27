@@ -150,7 +150,7 @@ void address_book_contact_process_cb(AppObject *obj, struct contact *contact, gp
 			contact_copy(tmp_contact, contact);
 		} else {
 			/* We have found no entry, mark it in table to speedup further lookup */
-			tmp_contact = g_malloc0(sizeof(struct contact));
+			tmp_contact = g_slice_alloc0(sizeof(struct contact));
 			g_hash_table_insert(table, contact->number, tmp_contact);
 		}
 

@@ -198,7 +198,7 @@ static void *gstreamer_open(void)
 	gchar *output;
 	gchar *input;
 
-	pipes = g_malloc(sizeof(struct pipes));
+	pipes = g_slice_alloc(sizeof(struct pipes));
 	if (pipes == NULL) {
 		return NULL;
 	}
@@ -316,7 +316,7 @@ int gstreamer_close(void *priv, gboolean force)
 		pipes->out_pipe = NULL;
 	}
 
-	free(pipes);
+	g_slice_free(pipes, struct pipes);
 	pipes = NULL;
 
 	return 0;
