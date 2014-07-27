@@ -602,7 +602,7 @@ struct journal_playback
 	gint fraction;
 
 	GtkWidget *media_button;
-	GtkWidget *progress;
+	GtkWidget *scale;
 };
 
 void vox_playback_cb(gpointer progress, gpointer frac)
@@ -610,9 +610,10 @@ void vox_playback_cb(gpointer progress, gpointer frac)
 	struct journal_playback *playback_data = progress;
 	gint fraction = GPOINTER_TO_INT(frac);
 
-	if (playback_data && playback_data->progress) {
+	if (playback_data && playback_data->scale) {
 		playback_data->fraction = fraction;
-		gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(playback_data->progress), (float)fraction / (float)100);
+		gtk_range_set_value(GTK_RANGE(playback_data->scale), (float)fraction / (float)100);
+		
 
 		if (fraction == 100) {
 			GtkWidget *media_image = gtk_image_new_from_icon_name("media-playback-start-symbolic", GTK_ICON_SIZE_BUTTON);
@@ -651,13 +652,24 @@ void vox_media_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	}
 }
 
+gboolean vox_scale_change_value_cb(GtkRange *range, GtkScrollType scroll, gdouble value, gpointer user_data)
+{
+	struct journal_playback *playback_data = user_data;
+
+	if (playback_data->vox_data && playback_data->fraction != 100) {
+		vox_seek(playback_data->vox_data, value);
+	}
+
+	return FALSE;
+}
+
 void journal_play_voice(const gchar *name)
 {
 	GtkWidget *dialog;
 	GtkWidget *content_area;
 	GtkWidget *grid;
 	GtkWidget *media_button;
-	GtkWidget *progress;
+	GtkWidget *scale;
 	GtkWidget *label;
 	gsize len = 0;
 	gchar *data = router_load_voice(profile_get_active(), name, &len);
@@ -693,11 +705,13 @@ void journal_play_voice(const gchar *name)
 	gtk_button_set_image(GTK_BUTTON(media_button), media_image);
 	gtk_grid_attach(GTK_GRID(grid), media_button, 0, 1, 1, 1);
 
-	progress = gtk_progress_bar_new();
-	gtk_widget_set_valign(progress, GTK_ALIGN_CENTER);
-	playback_data->progress = progress;
-	gtk_widget_set_hexpand(progress, TRUE);
-	gtk_grid_attach(GTK_GRID(grid), progress, 1, 1, 1, 1);
+	scale = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL, 0.0f, 1.0f, 0.1f);
+	gtk_scale_set_draw_value(GTK_SCALE(scale), FALSE);
+	gtk_widget_set_valign(scale, GTK_ALIGN_CENTER);
+	playback_data->scale = scale;
+	g_signal_connect(scale, "change-value", G_CALLBACK(vox_scale_change_value_cb), playback_data);
+	gtk_widget_set_hexpand(scale, TRUE);
+	gtk_grid_attach(GTK_GRID(grid), scale, 1, 1, 1, 1);
 
 	gtk_container_add(GTK_CONTAINER(content_area), grid);
 	gtk_widget_set_size_request(dialog, 300, 150);
@@ -714,7 +728,7 @@ void journal_play_voice(const gchar *name)
 	}
 
 	gtk_widget_destroy(dialog);
-	playback_data->progress = NULL;
+	playback_data->scale = NULL;
 
 	//TODO: Free memory
 	//g_free(data);
