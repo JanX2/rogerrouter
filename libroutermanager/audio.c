@@ -86,7 +86,7 @@ gboolean audio_close(gpointer audio_priv)
 		return FALSE;
 	}
 
-	return internal_audio->close(audio_priv, FALSE);
+	return internal_audio->close(audio_priv);
 }
 
 /**

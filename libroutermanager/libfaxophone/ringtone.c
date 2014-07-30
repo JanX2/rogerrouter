@@ -219,7 +219,7 @@ static gpointer ringtone_thread(gpointer user_data)
 		audio->write(priv, snd_buffer, snd_count);
 	}
 
-	audio->close(priv, FALSE);
+	audio->close(priv);
 
 	return NULL;
 }

@@ -290,10 +290,9 @@ static gsize gstreamer_read(void *priv, guchar *data, gsize size)
 /**
  * \brief Stop and remove pipeline
  * \param priv private data
- * \param force force quit
  * \return error code
  */
-int gstreamer_close(void *priv, gboolean force)
+int gstreamer_close(void *priv)
 {
 	struct pipes *pipes = priv;
 

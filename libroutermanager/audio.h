@@ -38,7 +38,7 @@ struct audio {
 	/* Read data of audio device */
 	gsize (*read)(gpointer priv, guchar *buffer, gsize max_len);
 	/* Close audio device */
-	gboolean (*close)(gpointer priv, gboolean force);
+	gboolean (*close)(gpointer priv);
 	/* Shutdown audio device */
 	gboolean (*deinit)(void);
 	/* Get possible audio input/output devices */

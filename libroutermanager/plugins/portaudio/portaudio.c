@@ -515,10 +515,9 @@ unsigned long RoundUpToNextPowerOf2(unsigned long n)
 /**
  * \brief Stop and remove pipeline
  * \param priv private data
- * \param force force quit - unhandled
  * \return error code
  */
-int port_audio_close(void *priv, gboolean force)
+int port_audio_close(void *priv)
 {
 	struct port_private *private = priv;
 	//int bytesEmpty;

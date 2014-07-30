@@ -221,7 +221,7 @@ gboolean vox_stop(gpointer vox_data)
 	speex_decoder_destroy(playback->speex);
 
 	/* Close audio device */
-	playback->audio->close(playback->audio_priv, FALSE);
+	playback->audio->close(playback->audio_priv);
 	playback->audio = NULL;
 
 	/* Unref cancellable and free structure */
@@ -337,7 +337,7 @@ gpointer vox_init(gchar *data, gsize len, GError **error)
 	playback->speex = speex_decoder_init(mode);
 	if (!playback->speex) {
 		g_warning("Decoder initialization failed.");
-		playback->audio->close(playback->audio_priv, FALSE);
+		playback->audio->close(playback->audio_priv);
 
 		g_slice_free(struct vox_playback, playback);
 

@@ -375,10 +375,9 @@ static void *pulse_audio_open(void)
 /**
  * \brief Close audio pipelines
  * \param priv pointer to private input/output pipes
- * \param force force quit
  * \return error code
  */
-static int pulse_audio_close(void *priv, gboolean force)
+static int pulse_audio_close(void *priv)
 {
 	struct pulse_pipes *pipes = priv;
 
