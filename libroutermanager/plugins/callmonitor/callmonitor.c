@@ -114,14 +114,13 @@ gboolean callmonitor_io_cb(GIOChannel *source, GIOCondition condition, gpointer 
 	case G_IO_PRI:
 		ret = g_io_channel_read_line(source, &msg, &len, NULL, &error);
 		if (ret != G_IO_STATUS_NORMAL) {
-			g_error("Error reading: %s", error -> message);
+			g_error("Error reading: %s", error->message);
 		}
 
 		gchar **lines = g_strsplit(msg, "\n", -1);
 		gint count = 0;
 		for (count = 0; count < g_strv_length(lines); count++) {
 			if (strlen(lines[count]) > 0) {
-				//g_debug("CallMonitor: '%s'", lines[count]);
 				callmonitor_convert(lines[count]);
 			}
 		}

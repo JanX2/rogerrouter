@@ -579,7 +579,7 @@ int port_audio_close(void *priv, gboolean force)
 	}
 #endif
 	g_debug("end");
-	free(private);
+	g_free(private);
 
 	return 0;
 }
@@ -590,7 +590,7 @@ int port_audio_close(void *priv, gboolean force)
  */
 static void *port_audio_open(void)
 {
-	struct port_private *private = malloc(sizeof(struct port_private));
+	struct port_private *private = g_malloc(sizeof(struct port_private));
 	PaStreamParameters output_parameters;
 	PaStreamParameters input_parameters;
 	PaError err;

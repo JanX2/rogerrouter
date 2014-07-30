@@ -22,10 +22,12 @@
 
 G_BEGIN_DECLS
 
-gpointer vox_play(gchar *data, gsize len, void (*vox_cb)(gpointer priv, gpointer fraction), gpointer priv);
-void vox_stop(gpointer vox_data);
+gpointer vox_init(gchar *data, gsize len);
+gboolean vox_play(gpointer vox_data);
+gboolean vox_stop(gpointer vox_data);
 gboolean vox_playpause(gpointer vox_data);
-void vox_seek(gpointer vox_data, gdouble pos);
+gboolean vox_seek(gpointer vox_data, gdouble pos);
+gint vox_get_fraction(gpointer vox_data);
 
 G_END_DECLS
 

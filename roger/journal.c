@@ -605,20 +605,25 @@ struct journal_playback
 	GtkWidget *scale;
 };
 
-void vox_playback_cb(gpointer progress, gpointer frac)
+gboolean vox_update_ui(gpointer data)
 {
-	struct journal_playback *playback_data = progress;
-	gint fraction = GPOINTER_TO_INT(frac);
+	struct journal_playback *playback_data = data;
+	gint fraction;
 
-	if (playback_data && playback_data->scale) {
+	fraction = vox_get_fraction(playback_data->vox_data);
+
+	if (playback_data->fraction != fraction) {
 		playback_data->fraction = fraction;
-		gtk_range_set_value(GTK_RANGE(playback_data->scale), (float)fraction / (float)100);
 
-		if (fraction == 100) {
+		gtk_range_set_value(GTK_RANGE(playback_data->scale), (float)playback_data->fraction / (float)100);
+
+		if (playback_data->fraction == 100) {
 			GtkWidget *media_image = gtk_image_new_from_icon_name("media-playback-start-symbolic", GTK_ICON_SIZE_BUTTON);
 			gtk_button_set_image(GTK_BUTTON(playback_data->media_button), media_image);
 		}
 	}
+
+	return TRUE;
 }
 
 void vox_media_button_clicked_cb(GtkWidget *button, gpointer user_data)
@@ -636,10 +641,7 @@ void vox_media_button_clicked_cb(GtkWidget *button, gpointer user_data)
 
 		gtk_button_set_image(GTK_BUTTON(playback_data->media_button), media_image);
 	} else {
-		if (playback_data->vox_data) {
-			vox_stop(playback_data->vox_data);
-		}
-		playback_data->vox_data = vox_play(playback_data->data, playback_data->len, vox_playback_cb, playback_data);
+		vox_play(playback_data->vox_data);
 
 		GtkWidget *media_image = gtk_image_new_from_icon_name("media-playback-pause-symbolic", GTK_ICON_SIZE_BUTTON);
 		gtk_button_set_image(GTK_BUTTON(playback_data->media_button), media_image);
@@ -668,6 +670,7 @@ void journal_play_voice(const gchar *name)
 	gsize len = 0;
 	gchar *data = router_load_voice(profile_get_active(), name, &len);
 	struct journal_playback *playback_data;
+	guint update_id;
 
 	if (!data || !len) {
 		g_debug("could not load file!");
@@ -710,10 +713,14 @@ void journal_play_voice(const gchar *name)
 	gtk_widget_set_size_request(dialog, 300, 150);
 	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
 
-	playback_data->vox_data = vox_play(data, len, vox_playback_cb, playback_data);
+	playback_data->vox_data = vox_init(data, len);
+	update_id = g_timeout_add(250, vox_update_ui, playback_data);
+	vox_play(playback_data->vox_data);
 
 	gtk_widget_show_all(content_area);
 	gtk_dialog_run(GTK_DIALOG(dialog));
+
+	g_source_remove(update_id);
 
 	if (playback_data->vox_data) {
 		vox_stop(playback_data->vox_data);
