@@ -36,7 +36,8 @@ G_BEGIN_DECLS
 
 typedef enum {
 	RM_ERROR_FAX,
-	RM_ERROR_ROUTER
+	RM_ERROR_ROUTER,
+	RM_ERROR_AUDIO,
 } rm_error;
 
 GQuark rm_print_error_quark(void);

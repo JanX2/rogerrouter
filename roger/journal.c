@@ -671,9 +671,18 @@ void journal_play_voice(const gchar *name)
 	gchar *data = router_load_voice(profile_get_active(), name, &len);
 	struct journal_playback *playback_data;
 	guint update_id;
+	GError *error = NULL;
+	gpointer vox;
 
 	if (!data || !len) {
 		g_debug("could not load file!");
+		g_free(data);
+		return;
+	}
+
+	vox = vox_init(data, len, &error);
+	if (!vox) {
+		g_debug("Could not init vox!");
 		g_free(data);
 		return;
 	}
@@ -685,6 +694,7 @@ void journal_play_voice(const gchar *name)
 	playback_data = g_slice_new(struct journal_playback);
 	playback_data->data = data;
 	playback_data->len = len;
+	playback_data->vox_data = vox;
 
 	grid = gtk_grid_new();
 	gtk_widget_set_margin(grid, 12, 12, 12, 12);
@@ -713,7 +723,6 @@ void journal_play_voice(const gchar *name)
 	gtk_widget_set_size_request(dialog, 300, 150);
 	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
 
-	playback_data->vox_data = vox_init(data, len);
 	update_id = g_timeout_add(250, vox_update_ui, playback_data);
 	vox_play(playback_data->vox_data);
 
@@ -729,8 +738,8 @@ void journal_play_voice(const gchar *name)
 	gtk_widget_destroy(dialog);
 	playback_data->scale = NULL;
 
-	//TODO: Free memory
-	//g_free(data);
+	g_free(data);
+	g_slice_free(struct journal_playback, playback_data);
 }
 
 void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)

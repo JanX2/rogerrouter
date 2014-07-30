@@ -22,7 +22,7 @@
 
 G_BEGIN_DECLS
 
-gpointer vox_init(gchar *data, gsize len);
+gpointer vox_init(gchar *data, gsize len, GError **error);
 gboolean vox_play(gpointer vox_data);
 gboolean vox_stop(gpointer vox_data);
 gboolean vox_playpause(gpointer vox_data);
