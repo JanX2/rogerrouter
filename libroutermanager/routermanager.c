@@ -104,7 +104,7 @@ void init_directory_paths(void)
  * \brief Return plugin directory
  * \return plugin directory string
  */
-gchar *get_plugin_dir(void)
+static gchar *get_plugin_dir(void)
 {
 	return plugin_dir;
 }

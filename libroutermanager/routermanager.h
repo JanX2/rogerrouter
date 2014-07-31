@@ -44,7 +44,6 @@ GQuark rm_print_error_quark(void);
 gboolean routermanager_init(gboolean debug, GError **error);
 void routermanager_shutdown(void);
 gchar *get_directory(gchar *type);
-gchar *get_plugin_dir(void);
 
 G_END_DECLS
 

@@ -92,9 +92,11 @@ static void log_func(const gchar *log_domain, GLogLevelFlags log_level, const gc
  */
 void log_init(gboolean debug)
 {
-	if (debug) {
-		g_log_set_default_handler(log_func, NULL);
+	if (!debug) {
+		return;
 	}
+
+	g_log_set_default_handler(log_func, NULL);
 }
 
 /**
