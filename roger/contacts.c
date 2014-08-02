@@ -22,8 +22,8 @@
 
 #include <libroutermanager/address-book.h>
 #include <libroutermanager/contact.h>
-#include <libroutermanager/number.h>
 #include <libroutermanager/gstring.h>
+#include <libroutermanager/router.h>
 #include <libroutermanager/call.h>
 #include <libroutermanager/appobject-emit.h>
 #include <roger/contacts.h>

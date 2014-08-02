@@ -28,7 +28,7 @@
 #include <libroutermanager/router.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/contact.h>
-#include <libroutermanager/phone.h>
+//#include <libroutermanager/phone.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/file.h>
 #include <libroutermanager/csv.h>

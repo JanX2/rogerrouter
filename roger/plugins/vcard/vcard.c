@@ -30,8 +30,8 @@
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/address-book.h>
 #include <libroutermanager/appobject.h>
-#include <libroutermanager/number.h>
 #include <libroutermanager/file.h>
+#include <libroutermanager/router.h>
 
 #include <roger/main.h>
 #include <roger/pref.h>

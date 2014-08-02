@@ -39,7 +39,6 @@
 #include <libroutermanager/lookup.h>
 #include <libroutermanager/csv.h>
 #include <libroutermanager/gstring.h>
-#include <libroutermanager/remote.h>
 
 #include <roger/main.h>
 #include <roger/phone.h>

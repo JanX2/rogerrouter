@@ -34,7 +34,6 @@
 #include <libroutermanager/fax_phone.h>
 #include <libroutermanager/fax_printer.h>
 #include <libroutermanager/action.h>
-#include <libroutermanager/remote.h>
 #include <libroutermanager/password.h>
 
 #ifdef __APPLE__

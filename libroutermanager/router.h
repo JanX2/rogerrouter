@@ -60,6 +60,25 @@ G_BEGIN_DECLS
 
 #define PORT_SOFTPHONE 0x10000000
 
+enum phone_number_type {
+	PHONE_NUMBER_HOME,
+	PHONE_NUMBER_WORK,
+	PHONE_NUMBER_MOBILE,
+	PHONE_NUMBER_FAX_HOME,
+	PHONE_NUMBER_FAX_WORK,
+	PHONE_NUMBER_PAGER,
+};
+
+struct phone {
+	gchar *name;
+	gchar *type;
+};
+
+struct phone_number {
+	enum phone_number_type type;
+	gchar *number;
+};
+
 struct phone_port {
 	gchar *name;
 	gint type;

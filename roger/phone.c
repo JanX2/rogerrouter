@@ -33,7 +33,6 @@
 #include <libroutermanager/routermanager.h>
 #include <libroutermanager/profile.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/phone.h>
 #include <libroutermanager/fax_phone.h>
 #include <libroutermanager/libfaxophone/phone.h>
 #include <libroutermanager/libfaxophone/isdn-convert.h>

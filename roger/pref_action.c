@@ -21,7 +21,6 @@
 
 #include <gtk/gtk.h>
 #include <libroutermanager/profile.h>
-#include <libroutermanager/phone.h>
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/action.h>
 #include <libroutermanager/router.h>

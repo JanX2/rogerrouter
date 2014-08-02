@@ -26,7 +26,7 @@
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/address-book.h>
 #include <libroutermanager/call.h>
-#include <libroutermanager/number.h>
+#include <libroutermanager/router.h>
 
 #include <roger/main.h>
 

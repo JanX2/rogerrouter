@@ -317,6 +317,7 @@ gpointer vox_init(gchar *data, gsize len, GError **error)
 
 		g_set_error(error, RM_ERROR, RM_ERROR_AUDIO, "%s", "No audio device");
 
+
 		return NULL;
 	}
 
@@ -327,6 +328,7 @@ gpointer vox_init(gchar *data, gsize len, GError **error)
 		g_slice_free(struct vox_playback, playback);
 
 		g_set_error(error, RM_ERROR, RM_ERROR_AUDIO, "%s", "Could not open audio device");
+
 
 		return NULL;
 	}

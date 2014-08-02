@@ -27,9 +27,9 @@
 #include <fcntl.h>
 #include <stdint.h>
 
-#include "faxophone.h"
-#include "phone.h"
-#include "isdn-convert.h"
+#include <libfaxophone/faxophone.h>
+#include <libfaxophone/phone.h>
+#include <libfaxophone/isdn-convert.h>
 
 /* Close recording */
 int recording_close(struct recorder *recorder);
