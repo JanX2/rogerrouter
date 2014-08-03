@@ -275,7 +275,8 @@ static void port_combobox_changed_cb(GtkComboBox *widget, gpointer user_data)
 
 void phone_fill_combobox(GtkWidget *port_combobox, struct phone_state *state)
 {
-	GSList *phone_list = router_get_phone_list(profile_get_active());
+	GSList *phone_list;
+	GSList *list;
 	struct profile *profile = profile_get_active();
 	struct phone *phone;
 	gchar tmp[10];
@@ -285,11 +286,12 @@ void phone_fill_combobox(GtkWidget *port_combobox, struct phone_state *state)
 		return;
 	}
 
-	while (phone_list) {
-		phone = phone_list->data;
+	phone_list = router_get_phone_list(profile_get_active());
+
+	for (list = phone_list; list != NULL; list = list->next) {
+		phone = list->data;
 
 		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(port_combobox), phone->type, phone->name);
-		phone_list = phone_list->next;
 	}
 
 	snprintf(tmp, sizeof(tmp), "%d", PORT_SOFTPHONE);
@@ -305,6 +307,8 @@ void phone_fill_combobox(GtkWidget *port_combobox, struct phone_state *state)
 	} else {
 		gtk_combo_box_set_active_id(GTK_COMBO_BOX(port_combobox), tmp);
 	}
+
+	router_free_phone_list(phone_list);
 }
 
 static void phone_connection_failed(void)

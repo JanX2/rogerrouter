@@ -166,6 +166,8 @@ gboolean router_is_cable(struct profile *profile);
 
 GSList *router_load_fax_reports(struct profile *profile, GSList *journal);
 
+void router_free_phone_list(GSList *phone_list);
+
 G_END_DECLS
 
 #endif

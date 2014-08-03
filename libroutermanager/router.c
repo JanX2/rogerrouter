@@ -17,18 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/**
- * TODO:
- *  - Free phone list function
- *  - Multiple router at the same time support?
- */
-
 #include <string.h>
 
 #include <libroutermanager/router.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/contact.h>
-//#include <libroutermanager/phone.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/file.h>
 #include <libroutermanager/csv.h>
@@ -101,6 +94,27 @@ GSList *router_get_phone_list(struct profile *profile)
 }
 
 /**
+ * \brief Free one phone list entry
+ * \param data pointer to phone structure
+ */
+static void free_phone_list(gpointer data)
+{
+	struct phone *phone = data;
+
+	g_free(phone->name);
+	g_free(phone->type);
+}
+
+/**
+ * \brief Free full phone list
+ * \param phone_list phone list
+ */
+void router_free_phone_list(GSList *phone_list)
+{
+	g_slist_free_full(phone_list, free_phone_list);
+}
+
+/**
  * \brief Get array of phone numbers
  * \param profile profile structure
  * \return phone number array
@@ -142,37 +156,27 @@ gboolean router_present(struct router_info *router_info)
  */
 gboolean router_login(struct profile *profile)
 {
-	if (active_router) {
-		return active_router->login(profile);
-	}
-	return FALSE;
+	return active_router ? active_router->login(profile) : FALSE;
 }
 
 /**
  * \brief Router logout
  * \param profile profile information structure
- * \return login state
+ * \return logout state
  */
 gboolean router_logout(struct profile *profile)
 {
-	if (active_router) {
-		return active_router->logout(profile, TRUE);
-	}
-	return FALSE;
+	return active_router ? active_router->logout(profile, TRUE) : FALSE;
 }
 
 /**
  * \brief Get router host
  * \param profile profile information structure
- * \return router host
+ * \return router host or "" if no profile is active
  */
 gchar *router_get_host(struct profile *profile)
 {
-	if (!profile) {
-		return "";
-	}
-
-	return g_settings_get_string(profile->settings, "host");
+	return profile ? g_settings_get_string(profile->settings, "host") : "";
 }
 
 /**
@@ -274,11 +278,7 @@ gchar *router_get_country_code(struct profile *profile)
  */
 gboolean router_get_settings(struct profile *profile)
 {
-	if (!active_router) {
-		return FALSE;
-	}
-
-	return active_router->get_settings(profile);
+	return active_router ? active_router->get_settings(profile) : FALSE;
 }
 
 /**
@@ -316,11 +316,7 @@ const gchar *router_get_version(struct profile *profile)
  */
 gboolean router_load_journal(struct profile *profile)
 {
-	if (!active_router) {
-		return FALSE;
-	}
-
-	return active_router->load_journal(profile, NULL);
+	return active_router ? active_router->load_journal(profile, NULL) : FALSE;
 }
 /**
  * \brief Clear router journal
@@ -378,7 +374,7 @@ gboolean router_init(void)
 		return TRUE;
 	}
 
-	g_warning("Warning, no router!");
+	g_warning("No router plugin registered!");
 	return FALSE;
 }
 
@@ -388,6 +384,13 @@ gboolean router_init(void)
  */
 void router_shutdown(void)
 {
+	/* Free router list */
+	if (router_list != NULL) {
+		g_slist_free(router_list);
+		router_list = NULL;
+	}
+
+	/* Unset active router */
 	active_router = NULL;
 }
 
@@ -399,10 +402,13 @@ void router_process_journal(GSList *journal)
 {
 	GSList *list;
 
-	/* Parse offline journal */
+	/* Parse offline journal and combine new entries */
 	journal = csv_load_journal(journal);
+
+	/* Store it back to disk */
 	csv_save_journal(journal);
 
+	/* Try to lookup entries in address book */
 	for (list = journal; list; list = list->next) {
 		struct call *call = list->data;
 
@@ -423,11 +429,7 @@ void router_process_journal(GSList *journal)
  */
 gchar *router_load_fax(struct profile *profile, const gchar *filename, gsize *len)
 {
-	if (filename[0] == '/') {
-		return file_load((gchar*)filename, len);
-	}
-
-	return active_router->load_fax(profile, filename, len);
+	return filename[0] == '/' ? file_load((gchar*)filename, len) : active_router->load_fax(profile, filename, len);
 }
 
 /**
@@ -492,13 +494,23 @@ gboolean router_delete_voice(struct profile *profile, const gchar *filename)
 gboolean router_info_free(struct router_info *info)
 {
 	if (info) {
-		/* FIXME */
 		g_free(info->name);
 		g_free(info->serial);
 		g_free(info->version);
 		g_free(info->lang);
 		g_free(info->annex);
+
+		g_free(info->host);
+		g_free(info->user);
+		g_free(info->password);
+		g_free(info->session_id);
+
+		if (info->session_timer) {
+			g_timer_destroy(info->session_timer);
+		}
+
 		g_slice_free(struct router_info, info);
+
 		return TRUE;
 	}
 
