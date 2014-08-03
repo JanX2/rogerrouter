@@ -116,23 +116,25 @@ void net_monitor_state_changed(gboolean state)
 
 	/* Call network function depending on network state */
 	if (!net_online) {
+		/* Offline: disconnect all network events */
 		for (list = net_event_list; list != NULL; list = list->next) {
 			struct net_event *event = list->data;
 
 			event->disconnect(event->user_data);
 		}
-	}
 
-	if (net_online) {
+		/* Disable active profile */
+		profile_set_active(NULL);
+	} else {
+		/* Online: Try to detect active profile */
 		if (profile_detect_active()) {
+			/* We have an active profile: Connect to all network events */
 			for (list = net_event_list; list != NULL; list = list->next) {
 				struct net_event *event = list->data;
 
 				event->connect(event->user_data);
 			}
 		}
-	} else {
-		profile_set_active(NULL);
 	}
 }
 

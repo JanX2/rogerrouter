@@ -33,7 +33,6 @@ SoupSession *soup_session_async = NULL;
 gboolean net_init(void)
 {
 	soup_session_sync = soup_session_sync_new_with_options(SOUP_SESSION_TIMEOUT, 5, NULL);
-	//soup_session_sync = soup_session_sync_new();
 	soup_session_async = soup_session_async_new();
 
 	return soup_session_sync && soup_session_async;
