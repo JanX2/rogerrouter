@@ -29,9 +29,10 @@
 
 /** Active router structure */
 static struct router *active_router = NULL;
-
+/** Global router plugin list */
 static GSList *router_list = NULL;
 
+/** Mapping between config value and port type */
 struct phone_port router_phone_ports[NUM_PHONE_PORTS] = {
 	{"name-analog1", PORT_ANALOG1, -1},
 	{"name-analog2", PORT_ANALOG2, -1},

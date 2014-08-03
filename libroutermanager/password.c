@@ -24,6 +24,11 @@
 /** Internal password manager list */
 static GSList *pm_plugins = NULL;
 
+/**
+ * \brief Find password manager as requested by profile
+ * \param profile profile structure
+ * \return password manager pointer or NULL on error
+ */
 struct password_manager *password_manager_find(struct profile *profile)
 {
 	gchar *name = g_settings_get_string(profile->settings, "password-manager");
@@ -88,21 +93,43 @@ void password_manager_register(struct password_manager *manager)
 	pm_plugins = g_slist_prepend(pm_plugins, manager);
 }
 
+/**
+ * \brief Get a list of all password manager plugins
+ * \return list of password manager plugins
+ */
 GSList *password_manager_get_plugins(void)
 {
 	return pm_plugins;
 }
 
+/**
+ * \brief Simple password storage - fallback implementation
+ * \param profile profile structure
+ * \param name id name
+ * \param password password linked with id name
+ */
 void simple_store_password(struct profile *profile, const gchar *name, const gchar *password)
 {
 	g_settings_set_string(profile->settings, name, password);
 }
 
+/**
+ * \brief Simple password retrieval - fallback implementation
+ * \param profile profile structure
+ * \param name id name
+ * \return password password linked with id name or NULL on error
+ */
 gchar *simple_get_password(struct profile *profile, const gchar *name)
 {
 	return g_settings_get_string(profile->settings, name);
 }
 
+/**
+ * \brief Simple password removal - fallback implementation
+ * \param profile profile structure
+ * \param name id name
+ * \return TRUE
+ */
 gboolean simple_remove_password(struct profile *profile, const gchar *name)
 {
 	g_settings_set_string(profile->settings, name, "");
@@ -110,6 +137,7 @@ gboolean simple_remove_password(struct profile *profile, const gchar *name)
 	return TRUE;
 }
 
+/** Simple password manager structure */
 struct password_manager simple = {
 	"Simple",
 	simple_store_password,
@@ -117,6 +145,9 @@ struct password_manager simple = {
 	simple_remove_password,
 };
 
+/**
+ * \brief Initialize password manager and register fallback implementation simple
+ */
 void password_manager_init(void)
 {
 	password_manager_register(&simple);

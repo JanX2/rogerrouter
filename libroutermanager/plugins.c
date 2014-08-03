@@ -120,13 +120,15 @@ void plugins_user_plugins(void)
  */
 void plugins_shutdown(void)
 {
-	if (exten) {
-		g_signal_handlers_disconnect_by_func(exten, G_CALLBACK(plugins_extension_added_cb), NULL);
-		g_signal_handlers_disconnect_by_func(exten, G_CALLBACK(plugins_extension_removed_cb), NULL);
-
-		peas_extension_set_foreach(exten, plugins_extension_removed_cb, NULL);
-
-		g_clear_object(&exten);
-		g_clear_object(&engine);
+	if (!exten) {
+		return;
 	}
+
+	g_signal_handlers_disconnect_by_func(exten, G_CALLBACK(plugins_extension_added_cb), NULL);
+	g_signal_handlers_disconnect_by_func(exten, G_CALLBACK(plugins_extension_removed_cb), NULL);
+
+	peas_extension_set_foreach(exten, plugins_extension_removed_cb, NULL);
+
+	g_clear_object(&exten);
+	g_clear_object(&engine);
 }

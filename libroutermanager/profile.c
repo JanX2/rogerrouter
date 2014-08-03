@@ -17,11 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/**
- * TODO:
- *  - move faxophone setup function to a higher level?
- */
-
 #include <string.h>
 
 #include <gio/gio.h>
@@ -173,6 +168,7 @@ static void profile_load(const gchar *name)
  *  * Connect user plugin bindings
  *  * Load and initialize action
  *  * faxophone setup
+ *  * Load journal
  */
 void profile_set_active(struct profile *profile)
 {
@@ -182,6 +178,7 @@ void profile_set_active(struct profile *profile)
 
 	profile_active = profile;
 
+	/* If we have no active profile, exit */
 	if (!profile_active) {
 		/* Clear journal list */
 		emit_journal_loaded(NULL);
@@ -212,11 +209,6 @@ gboolean profile_detect_active(void)
 	struct profile *profile;
 	struct router_info *router_info;
 
-	/* Workaround: Wait a little longer so that wifi is ready */
-	if (list) {
-		g_usleep(0.5f * G_USEC_PER_SEC);
-	}
-
 	/* Compare our profile list against available routers */
 	while (list) {
 		profile = list->data;
@@ -225,16 +217,14 @@ gboolean profile_detect_active(void)
 		router_info->host = g_settings_get_string(profile->settings, "host");
 
 		/* Check if router is present */
-		if (router_present(router_info) == TRUE) {
-			if (!strcmp(router_info->serial, g_settings_get_string(profile->settings, "serial"))) {
-				g_debug("Router detected: %s", router_info->name);
-				g_debug("Firmware: %d.%d.%d", router_info->box_id, router_info->maj_ver_id, router_info->min_ver_id);
+		if (router_present(router_info) == TRUE && !strcmp(router_info->serial, g_settings_get_string(profile->settings, "serial"))) {
+			g_debug("Configured router found: %s", router_info->name);
+			g_debug("Current router firmware: %d.%d.%d", router_info->box_id, router_info->maj_ver_id, router_info->min_ver_id);
 
-				router_info_free(router_info);
+			router_info_free(router_info);
 
-				profile_set_active(profile);
-				return TRUE;
-			}
+			profile_set_active(profile);
+			return TRUE;
 		}
 
 		router_info_free(router_info);
@@ -242,7 +232,7 @@ gboolean profile_detect_active(void)
 		list = list->next;
 	}
 
-	g_debug("Router not found!");
+	g_debug("No already configured router found!");
 
 	return FALSE;
 }
@@ -277,9 +267,12 @@ static void profile_free_entry(gpointer data)
 
 	/* Free entries */
 	g_free(profile->name);
-	g_free(profile->router_info->host);
-	g_free(profile->router_info->password);
-	g_slice_free(struct router_info, profile->router_info);
+
+	/* Free router information structure */
+	router_info_free(profile->router_info);
+
+	/* Free actions */
+	action_shutdown(profile);
 
 	/* Free profiles settings */
 	g_clear_object(&profile->settings);
@@ -293,8 +286,8 @@ static void profile_free_entry(gpointer data)
  */
 void profile_shutdown(void)
 {
-	/* Setting profile to NULL releases the current profile */
-	profile_set_active(NULL);
+	/* Set active profile to NULL */
+	profile_active = NULL;
 
 	if (profile_list) {
 		/* Free profile list */
