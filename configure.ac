@@ -625,7 +625,7 @@ AM_CONDITIONAL(WITH_APPINDICATOR3, test "x$with_appindicator3" != "xno")
 AC_ARG_ENABLE(werror,
 	AS_HELP_STRING([--disable-werror], [don't use gcc's -Werror option when building]))
 
-if test x"$enable_Werror" != xno
+if test x"$enable_werror" != xno
 then
 	EXTRA_CFLAGS+="-Werror"
 fi

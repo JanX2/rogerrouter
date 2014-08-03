@@ -83,7 +83,7 @@ gchar *g_convert_utf8(const gchar *text, gssize len)
 		str = g_strndup(text, len);
 
 		for (idx = 0; idx < len; idx++) {
-			if (str[idx] > 128) {
+			if ((guchar)str[idx] > 128) {
 				str[idx] = '?';
 			}
 		}
