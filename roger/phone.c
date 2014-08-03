@@ -574,9 +574,10 @@ static gboolean number_entry_match_selected_cb(GtkEntryCompletion *completion, G
 	return FALSE;
 }
 
-gboolean number_entry_contains_completion_cb(GtkEntryCompletion *completion, const gchar *key, GtkTreeIter *iter, gpointer user_data)
+gboolean number_entry_contains_completion_cb(GtkEntryCompletion *completion, const gchar *norm_key, GtkTreeIter *iter, gpointer user_data)
 {
 	GtkTreeModel *model = gtk_entry_completion_get_model(completion);
+	const gchar *key = gtk_entry_get_text(GTK_ENTRY(gtk_entry_completion_get_entry(completion)));
 	gchar *name;
 	gboolean found = FALSE;
 
@@ -669,14 +670,13 @@ GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct p
 		struct contact *contact = list->data;
 
 		gtk_list_store_append(list_store, &iter);
-		gtk_list_store_set(list_store, &iter, 0, contact->name, 1, contact,  -1);
+		gtk_list_store_set(list_store, &iter, 0, contact->name, 1, contact, -1);
 	}
 
 	gtk_entry_completion_set_model(completion, GTK_TREE_MODEL(list_store));
-	//gtk_entry_completion_set_inline_completion(completion, TRUE);
-	g_signal_connect(completion, "match-selected", G_CALLBACK(number_entry_match_selected_cb), state);
 	gtk_entry_completion_set_match_func(completion, number_entry_contains_completion_cb, NULL, NULL);
 	gtk_entry_set_completion(GTK_ENTRY(state->name_entry), completion);
+	g_signal_connect(completion, "match-selected", G_CALLBACK(number_entry_match_selected_cb), state);
 
 	/* Pickup button */
 	pickup_button = gtk_button_new();
