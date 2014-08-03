@@ -848,9 +848,14 @@ gchar *fritzbox_get_ip(struct profile *profile)
 	gchar *ip = NULL;
 	gchar *request;
 	SoupMessageHeaders *headers;
+	gchar *url;
 
 	/* Create POST message */
-	gchar *url = g_strdup_printf("http://%s/upnp/control/WANIPConn1", router_get_host(profile));
+	if (FIRMWARE_IS(6, 6)) {
+		url = g_strdup_printf("http://%s/igdupnp/control/WANIPConn1", router_get_host(profile));
+	} else {
+		url = g_strdup_printf("http://%s/upnp/control/WANIPConn1", router_get_host(profile));
+	}
 
 	uri = soup_uri_new(url);
 	soup_uri_set_port(uri, 49000);
@@ -897,9 +902,14 @@ gboolean fritzbox_reconnect(struct profile *profile)
 	SoupURI *uri;
 	gchar *request;
 	SoupMessageHeaders *headers;
+	gchar *url;
 
 	/* Create POST message */
-	gchar *url = g_strdup_printf("http://%s:49000/upnp/control/WANIPConn1", router_get_host(profile));
+	if (FIRMWARE_IS(6, 6)) {
+		url = g_strdup_printf("http://%s:49000/igdupnp/control/WANIPConn1", router_get_host(profile));
+	} else {
+		url = g_strdup_printf("http://%s:49000/upnp/control/WANIPConn1", router_get_host(profile));
+	}
 
 	uri = soup_uri_new(url);
 	soup_uri_set_port(uri, 49000);
