@@ -19,7 +19,6 @@
 
 /**
  * \TODO List
- * - Handle multiple audio plugins
  * - Move audio plugin information into audio private data, in order to switch device while playing
  */
 
@@ -29,6 +28,8 @@
 
 /** global pointer to current used audio plugin */
 static struct audio *internal_audio = NULL;
+
+static GSList *audio_list = NULL;
 
 /**
  * \brief Open current audio plugin
@@ -95,8 +96,10 @@ gboolean audio_close(gpointer audio_priv)
  */
 void routermanager_audio_register(struct audio *audio)
 {
+	audio->init(1, 8000, 16);
+
+	audio_list = g_slist_prepend(audio_list, audio);
 	internal_audio = audio;
-	internal_audio->init(1, 8000, 16);
 }
 
 /**
