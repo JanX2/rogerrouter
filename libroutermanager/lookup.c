@@ -20,7 +20,6 @@
 /**
  * TODO:
  *  - Asynchronous lookup
- *  - Support multiple lookup functions
  */
 
 #include <glib.h>
@@ -28,7 +27,10 @@
 #include <libroutermanager/lookup.h>
 
 /** Pointer to internal lookup function */
-static lookup_func internal_lookup = NULL;
+static lookup_func lookup_active = NULL;
+
+/** Lookup function list */
+static GSList *lookup_list = NULL;
 
 /**
  * \brief Lookup number and return name/address/zip/city
@@ -41,8 +43,8 @@ static lookup_func internal_lookup = NULL;
  */
 gboolean routermanager_lookup(gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city)
 {
-	if (internal_lookup) {
-		return internal_lookup(number, name, address, zip, city);
+	if (lookup_active) {
+		return lookup_active(number, name, address, zip, city);
 	}
 
 	return FALSE;
@@ -54,7 +56,8 @@ gboolean routermanager_lookup(gchar *number, gchar **name, gchar **address, gcha
  */
 gboolean routermanager_lookup_register(lookup_func lookup)
 {
-	internal_lookup = lookup;
+	lookup_list = g_slist_prepend(lookup_list, lookup);
+	lookup_active = lookup;
 
 	return TRUE;
 }

@@ -197,9 +197,6 @@ gchar *ftp_read_data_response(GIOChannel *channel, gsize *len)
 	}
 
 	if (len) {
-		if (data) {
-			//	data[data_offset - 2] = '\0';
-		}
 		*len = data_offset;
 	}
 
