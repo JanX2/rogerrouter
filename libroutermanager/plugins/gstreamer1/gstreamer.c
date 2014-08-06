@@ -315,7 +315,7 @@ int gstreamer_close(void *priv)
 		pipes->out_pipe = NULL;
 	}
 
-	g_slice_free(pipes, struct pipes);
+	g_slice_free(struct pipes, pipes);
 	pipes = NULL;
 
 	return 0;
