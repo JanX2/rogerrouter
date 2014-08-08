@@ -110,3 +110,8 @@ struct audio *audio_get_default(void)
 {
 	return internal_audio;
 }
+
+GSList *audio_get_plugins(void)
+{
+	return audio_list;
+}

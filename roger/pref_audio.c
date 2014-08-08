@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <string.h>
 #include <gtk/gtk.h>
 #include <libroutermanager/profile.h>
 #include <libroutermanager/plugins.h>
@@ -26,6 +27,55 @@
 #include <roger/pref.h>
 #include <roger/pref_audio.h>
 
+static GtkWidget *plugin_combobox = NULL;
+static GtkWidget *output_combobox = NULL;
+static GtkWidget *input_combobox = NULL;
+
+static void plugin_combobox_changed_cb(GtkComboBox *box, gpointer user_data) {
+	GSList *devices;
+	gchar *active;
+	struct audio *audio = NULL;
+	GSList *audio_plugins;
+	GSList *list;
+
+	gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(output_combobox));
+	gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(input_combobox));
+
+	active = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(plugin_combobox));
+
+	audio_plugins = audio_get_plugins();
+	for (list = audio_plugins; list != NULL; list = list->next) {
+		audio = list->data;
+
+		if (!strcmp(audio->name, active)) {
+			break;
+		}
+
+		audio = NULL;
+	}
+
+	devices = audio->get_devices();
+	for (list = devices; list; list = list->next) {
+		struct audio_device *device = list->data;
+
+		if (device->type == AUDIO_INPUT) {
+			gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(input_combobox), device->internal_name, device->name);
+		} else {
+			gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(output_combobox), device->internal_name, device->name);
+		}
+	}
+
+	if (devices) {
+		if (!gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(input_combobox))) {
+			gtk_combo_box_set_active(GTK_COMBO_BOX(input_combobox), 0);
+		}
+
+		if (!gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(output_combobox))) {
+			gtk_combo_box_set_active(GTK_COMBO_BOX(output_combobox), 0);
+		}
+	}
+}
+
 /**
  * \brief Create audio preferences widget
  * \return audio widget
@@ -34,12 +84,10 @@ GtkWidget *pref_page_audio(void)
 {
 	GtkWidget *grid = gtk_grid_new();
 	GtkWidget *plugin_label;
-	GtkWidget *plugin_combobox;
-	//GtkWidget *space;
 	GtkWidget *output_label;
-	GtkWidget *output_combobox;
 	GtkWidget *input_label;
-	GtkWidget *input_combobox;
+	GSList *audio_plugins;
+	GSList *list;
 
 	/* Audio:
 	 * Plugin: <COMBOBOX>
@@ -71,41 +119,27 @@ GtkWidget *pref_page_audio(void)
 	input_combobox = gtk_combo_box_text_new();
 	gtk_grid_attach(GTK_GRID(grid), input_combobox, 1, 3, 1, 1);
 
-	struct audio *audio = audio_get_default();
-	if (audio) {
-		GSList *devices = audio->get_devices();
-		GSList *list;
+	audio_plugins = audio_get_plugins();
+	for (list = audio_plugins; list != NULL; list = list->next) {
+		struct audio *audio = list->data;
+
+		g_assert(audio != NULL);
 
 		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(plugin_combobox), audio->name, audio->name);
-
-		for (list = devices; list; list = list->next) {
-			struct audio_device *device = list->data;
-
-			if (device->type == AUDIO_INPUT) {
-				gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(input_combobox), device->internal_name, device->name);
-			} else {
-				gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(output_combobox), device->internal_name, device->name);
-			}
-		}
 	}
 
 	g_settings_bind(profile_get_active()->settings, "audio-plugin", plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
-	g_settings_bind(profile_get_active()->settings, "audio-output", output_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
-	g_settings_bind(profile_get_active()->settings, "audio-input", input_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 
-	if (audio) {
-		if (!gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(input_combobox))) {
-			gtk_combo_box_set_active(GTK_COMBO_BOX(input_combobox), 0);
-		}
-
-		if (!gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(output_combobox))) {
-			gtk_combo_box_set_active(GTK_COMBO_BOX(output_combobox), 0);
-		}
-
+	if (audio_plugins) {
 		if (!gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(plugin_combobox))) {
 			gtk_combo_box_set_active(GTK_COMBO_BOX(plugin_combobox), 0);
 		}
 	}
+
+	g_signal_connect(plugin_combobox, "changed", G_CALLBACK(plugin_combobox_changed_cb), NULL);
+
+	g_settings_bind(profile_get_active()->settings, "audio-output", output_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(profile_get_active()->settings, "audio-input", input_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 
 	return pref_group_create(grid, _("Audio"), TRUE, TRUE);
 }

@@ -57,6 +57,7 @@ gpointer audio_open(void);
 gsize audio_read(gpointer audio_priv, guchar *data, gsize size);
 gsize audio_write(gpointer audio_priv, guchar *data, gsize size);
 gboolean audio_close(gpointer audio_priv);
+GSList *audio_get_plugins(void);
 
 G_END_DECLS
 
