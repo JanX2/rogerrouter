@@ -1438,7 +1438,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 
 	//gtk_window_set_hide_titlebar_when_maximized(GTK_WINDOW(journal_win), TRUE);
 	gtk_widget_hide_on_delete(journal_win);
-	gtk_window_set_has_resize_grip(GTK_WINDOW(journal_win), FALSE);
+	//gtk_window_set_has_resize_grip(GTK_WINDOW(journal_win), FALSE);
 
 	filter_box_changed(GTK_COMBO_BOX(journal_filter_box), NULL);
 

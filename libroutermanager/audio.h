@@ -20,6 +20,8 @@
 #ifndef LIBROUTERMANAGER_AUDIO_H
 #define LIBROUTERMANAGER_AUDIO_H
 
+#include <libroutermanager/profile.h>
+
 G_BEGIN_DECLS
 
 #define AUDIO_OUTPUT 0
