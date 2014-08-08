@@ -30,6 +30,7 @@
 #include <libroutermanager/net_monitor.h>
 #include <libroutermanager/password.h>
 #include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/audio.h>
 
 /** Internal profile list */
 static GSList *profile_list = NULL;
@@ -188,6 +189,9 @@ void profile_set_active(struct profile *profile)
 	router_present(profile->router_info);
 
 	plugins_user_plugins();
+
+	/* Init audio */
+	audio_init(profile);
 
 	/* Load and initialize action */
 	action_init(profile);

@@ -22,8 +22,11 @@
  * - Move audio plugin information into audio private data, in order to switch device while playing
  */
 
+#include <string.h>
+
 #include <glib.h>
 
+#include <libroutermanager/profile.h>
 #include <libroutermanager/audio.h>
 
 /** global pointer to current used audio plugin */
@@ -99,7 +102,6 @@ void routermanager_audio_register(struct audio *audio)
 	audio->init(1, 8000, 16);
 
 	audio_list = g_slist_prepend(audio_list, audio);
-	internal_audio = audio;
 }
 
 /**
@@ -111,7 +113,39 @@ struct audio *audio_get_default(void)
 	return internal_audio;
 }
 
+/**
+ * \brief Get list of audio plugins
+ * \return audio plugin list
+ */
 GSList *audio_get_plugins(void)
 {
 	return audio_list;
+}
+
+/**
+ * \brief Select default audio plugin
+ * \param name audio plugin name
+ */
+void audio_set_default(gchar *name)
+{
+	GSList *list;
+
+	for (list = audio_list; list != NULL; list = list->next) {
+		struct audio *audio = list->data;
+
+		if (!strcmp(audio->name, name)) {
+			internal_audio = audio;
+		}
+	}
+}
+
+/**
+ * \brief Initialize audio subsystem
+ * \param profile profile structure
+ */
+void audio_init(struct profile *profile)
+{
+	gchar *name = g_settings_get_string(profile->settings, "audio-plugin");
+
+	audio_set_default(name);
 }
