@@ -128,6 +128,7 @@ GtkWidget *pref_page_audio(void)
 		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(plugin_combobox), audio->name, audio->name);
 	}
 
+	g_signal_connect(plugin_combobox, "changed", G_CALLBACK(plugin_combobox_changed_cb), NULL);
 	g_settings_bind(profile_get_active()->settings, "audio-plugin", plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 
 	if (audio_plugins) {
@@ -135,8 +136,6 @@ GtkWidget *pref_page_audio(void)
 			gtk_combo_box_set_active(GTK_COMBO_BOX(plugin_combobox), 0);
 		}
 	}
-
-	g_signal_connect(plugin_combobox, "changed", G_CALLBACK(plugin_combobox_changed_cb), NULL);
 
 	g_settings_bind(profile_get_active()->settings, "audio-output", output_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 	g_settings_bind(profile_get_active()->settings, "audio-input", input_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
