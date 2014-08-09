@@ -11,6 +11,8 @@ libfritzbox_la_SOURCES = \
 	fritzbox.h \
 	firmware-common.c \
 	firmware-common.h \
+	firmware-plain.c \
+	firmware-plain.h \
 	firmware-04-74.c \
 	firmware-04-74.h \
 	firmware-05-50.c \

@@ -31,9 +31,11 @@
 #include <libroutermanager/network.h>
 #include <libroutermanager/call.h>
 #include <libroutermanager/ftp.h>
+#include <libroutermanager/gstring.h>
 
 #include "fritzbox.h"
 #include "firmware-common.h"
+#include "firmware-plain.h"
 
 /** phone port names */
 struct phone_port fritzbox_phone_ports[NUM_PHONE_PORTS] = {
@@ -277,9 +279,14 @@ gboolean fritzbox_present(struct router_info *router_info)
 
 	soup_session_send_message(soup_session_sync, msg);
 	if (msg->status_code != 200) {
-		g_warning("Could not read boxinfo file");
 		g_object_unref(msg);
 		g_free(url);
+
+		if (msg->status_code == 404) {
+			ret = fritzbox_present_plain(router_info);
+		} else {
+			g_warning("Could not read boxinfo file (Error: %d)", msg->status_code);
+		}
 
 		return ret;
 	}
