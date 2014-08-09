@@ -55,7 +55,7 @@
 		<branch repo="ghostscript" module="9.09/ghostscript-9.09.tar.bz2" version="9.09"/>
 	</autotools>
 
-	<autotools id="roger" autogen-sh="autogen.sh; ./configure --disable-Werror	">
+	<autotools id="roger" autogen-sh="autogen.sh; ./configure --disable-werror	">
 		<branch repo="roger"/>
 		<dependencies>
 			<dep package="librsvg"/>

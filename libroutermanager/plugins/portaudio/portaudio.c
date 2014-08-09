@@ -680,7 +680,7 @@ static void *port_audio_open(void)
 	err = init_fifo(&private->echo_fifo, num_frames, private->bytes_per_frame);
 	if (err) {
 		g_debug("Could not init echo fifo");
-		port_audio_close(private, TRUE);
+		port_audio_close(private);
 
 		return NULL;
 	}
@@ -696,7 +696,7 @@ static void *port_audio_open(void)
 	err = init_fifo(&private->out_fifo, num_frames, private->bytes_per_frame);
 	if (err) {
 		g_debug("Could not init output fifo");
-		port_audio_close(private, TRUE);
+		port_audio_close(private);
 
 		return NULL;
 	}
@@ -706,7 +706,7 @@ static void *port_audio_open(void)
 		Pa_StartStream(private->out_stream);
 	} else {
 		g_warning("Sorry, could not open output stream (%s)", Pa_GetErrorText(err));
-		port_audio_close(private, TRUE);
+		port_audio_close(private);
 
 		return NULL;
 	}
@@ -739,7 +739,7 @@ static void *port_audio_open(void)
 	err = init_fifo(&private->in_fifo, num_frames, private->bytes_per_frame);
 	if (err) {
 		g_debug("Could not init input fifo");
-		port_audio_close(private, TRUE);
+		port_audio_close(private);
 
 		return NULL;
 	}
@@ -749,7 +749,7 @@ static void *port_audio_open(void)
 		Pa_StartStream(private->in_stream);
 	} else {
 		g_warning("Sorry, could not open input stream (%s)", Pa_GetErrorText(err));
-		port_audio_close(private, TRUE);
+		port_audio_close(private);
 
 		private = NULL;
 	}
