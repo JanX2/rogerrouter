@@ -66,7 +66,6 @@ libroutermanager_la_SOURCES = \
 	osdep.h\
 	password.c\
 	password.h\
-	phone.h\
 	plugins.c\
 	plugins.h\
 	profile.c\
