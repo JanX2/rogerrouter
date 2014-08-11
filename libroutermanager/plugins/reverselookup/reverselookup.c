@@ -531,7 +531,7 @@ static void impl_activate(PeasActivatable *plugin)
 		g_free(file);
 		return;
 	}
-	g_debug("Using: '%s'", file);
+	g_debug("ReverseLookup: '%s'", file);
 	g_free(file);
 
 	/* Create new lookup hash table */

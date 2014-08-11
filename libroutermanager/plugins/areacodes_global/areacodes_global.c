@@ -181,7 +181,7 @@ static void impl_activate(PeasActivatable *plugin)
 	gchar *data;
 	gsize read;
 
-	g_debug("Loading: '%s'", areacodes);
+	g_debug("AreaCodes: '%s'", areacodes);
 
 	/* Load data file */
 	data = file_load(areacodes, &read);
