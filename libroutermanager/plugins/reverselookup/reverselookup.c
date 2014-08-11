@@ -470,6 +470,7 @@ static void country_code_add(xmlnode *node)
 
 static void lookup_read_cache(gchar *dir_name)
 {
+#ifndef RL_DEBUG
 	GDir *dir;
 	GError *error = NULL;
 	const gchar *file_name;
@@ -501,6 +502,7 @@ static void lookup_read_cache(gchar *dir_name)
 
 		g_strfreev(split);
 	}
+#endif
 }
 
 /**

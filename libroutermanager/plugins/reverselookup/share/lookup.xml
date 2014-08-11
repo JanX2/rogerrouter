@@ -46,9 +46,9 @@
 		 	<service>Das Oertliche</service>
 			<prefix>1</prefix>
 			<url>http://www.dasoertliche.de/Controller?&amp;form_name=search_inv&amp;ph=%NUMBER%</url>
-			<pattern>&lt;a href=&quot;[^&quot;]*&quot;\s+class=&quot;preview(.+)&gt;(?P&lt;name&gt;.+)</pattern>
-			<pattern>[^&lt;]*&lt;/a&gt;</pattern>
-			<pattern>[^&lt;]*&lt;div class=&quot;strasse&quot;&gt;\s+(?P&lt;street&gt;.+),\s+(?P&lt;zip&gt;\d+)\s+(?P&lt;city&gt;.+)&lt;/div&gt;</pattern>
+			<pattern>&lt;a href=&quot;[^&quot;]*&quot;\s+class=&quot;name &quot;.+&gt;&lt;span class=&quot;&quot;&gt;(?P&lt;name&gt;.+)&lt;/span&gt;</pattern>
+			<pattern>[^&lt;]*&lt;/a&gt;.+</pattern>
+			<pattern>[^&lt;]*&lt;address&gt;\s+(?P&lt;street&gt;.+),&amp;nbsp;(?P&lt;zip&gt;\d+)\s+&lt;span class=&quot;&quot;&gt;(?P&lt;city&gt;.+)&lt;/span&gt;&lt;span id</pattern>
 		</lookup>
 	</country>
 </lookup>
