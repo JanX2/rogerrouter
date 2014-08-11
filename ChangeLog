@@ -1,3 +1,14 @@
+roger - 1.8.9
+------------------------------------------------------------------------------------------------------------------
+* Seek function for vox playback
+* Audio device selection
+* Reverse lookup fixes
+* Fix umlaut problems in fax/phone dialogs
+* FRITZ!OS 6.6 fixes
+* Web journal plugin: Store journal as HTML file
+* Canonize number on phone call
+* Cleanup of libroutermanager
+
 roger - 1.8.8
 ------------------------------------------------------------------------------------------------------------------
 * Fax report within journal
