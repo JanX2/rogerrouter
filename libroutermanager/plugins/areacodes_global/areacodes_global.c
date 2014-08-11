@@ -177,7 +177,7 @@ static void global_areacodes_contact_process_cb(AppObject *obj, struct contact *
 static void impl_activate(PeasActivatable *plugin)
 {
 	RouterManagerGlobalAreaCodesPlugin *areacodes_plugin = ROUTERMANAGER_GLOBAL_AREACODES_PLUGIN(plugin);
-	gchar *areacodes = g_strconcat(get_directory(ROUTERMANAGER_PLUGINS), G_DIR_SEPARATOR_S, "areacodes_global", G_DIR_SEPARATOR_S, "globalareacodes.csv", NULL);
+	gchar *areacodes = g_build_filename(get_directory(ROUTERMANAGER_PLUGINS), "areacodes_global", "globalareacodes.csv", NULL);
 	gchar *data;
 	gsize read;
 

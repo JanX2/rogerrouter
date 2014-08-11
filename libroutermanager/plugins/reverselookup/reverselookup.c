@@ -516,13 +516,20 @@ static void impl_activate(PeasActivatable *plugin)
 	reverselookup_plugin->priv->table = g_hash_table_new(g_str_hash, g_str_equal);
 	table = g_hash_table_new(g_str_hash, g_str_equal);
 
-	file = g_strconcat(get_directory(ROUTERMANAGER_PLUGINS), G_DIR_SEPARATOR_S, "reverselookup", G_DIR_SEPARATOR_S, "lookup.xml", NULL);
+	file = g_build_filename(g_get_home_dir(), "lookup.xml", NULL);
+	if (!g_file_test(file, G_FILE_TEST_EXISTS)) {
+		g_free(file);
+
+		file = g_build_filename(get_directory(ROUTERMANAGER_PLUGINS), "reverselookup", "lookup.xml", NULL);
+	}
+
 	node = read_xml_from_file(file);
 	if (!node) {
 		g_debug("Could not read %s", file);
 		g_free(file);
 		return;
 	}
+	g_debug("Using: '%s'", file);
 	g_free(file);
 
 	/* Create new lookup hash table */
