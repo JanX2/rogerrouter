@@ -905,8 +905,6 @@ void vcard_write_file(char *file_name)
 
 	data = g_string_new("");
 
-	file_name = g_strdup("/home/buzz/roger-test.vcf");
-
 	current_position = 0;
 
 	for (list = contacts; list != NULL && list->data != NULL; list = list->next) {
