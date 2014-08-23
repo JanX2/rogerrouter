@@ -131,8 +131,12 @@ gboolean routermanager_init(gboolean debug, GError **error)
 	/* Say hello */
 	g_debug("%s %s", PACKAGE_NAME, PACKAGE_VERSION);
 
-	/* Create routermanager directory */
+	/* Create routermanager data & cache directory */
 	dir = g_build_filename(g_get_user_data_dir(), "routermanager", NULL);
+	g_mkdir_with_parents(dir, 0700);
+	g_free(dir);
+
+	dir = g_build_filename(g_get_user_cache_dir(), "routermanager", NULL);
 	g_mkdir_with_parents(dir, 0700);
 	g_free(dir);
 

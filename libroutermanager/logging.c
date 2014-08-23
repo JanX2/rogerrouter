@@ -18,7 +18,6 @@
  */
 
 #include <glib.h>
-#include <glib/gprintf.h>
 #include <gio/gio.h>
 
 #include <libroutermanager/logging.h>
@@ -59,32 +58,32 @@ static void log_func(const gchar *log_domain, GLogLevelFlags log_level, const gc
 	GDateTime *datetime = g_date_time_new_now_local();
 	gchar *time = g_date_time_format(datetime, "%H:%M:%S");
 
-	g_printf("%s ", time);
+	g_print("%s ", time);
 	g_free(time);
 	g_date_time_unref(datetime);
 
 	if (log_domain) {
-		g_printf("%s:", log_domain);
+		g_print("%s:", log_domain);
 	}
 
 	switch (log_level) {
 	case G_LOG_LEVEL_ERROR:
-		g_printf("Error: ");
+		g_print("Error: ");
 		break;
 	case G_LOG_LEVEL_CRITICAL:
-		g_printf("Critical: ");
+		g_print("Critical: ");
 		break;
 	case G_LOG_LEVEL_WARNING:
-		g_printf("Warning: ");
+		g_print("Warning: ");
 		break;
 	case G_LOG_LEVEL_DEBUG:
-		g_printf("Debug: ");
+		g_print("Debug: ");
 		break;
 	default:
 		break;
 	}
 
-	g_printf("%s\n", message);
+	g_print("%s\n", message);
 }
 
 /**
