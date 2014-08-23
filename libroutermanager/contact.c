@@ -86,3 +86,14 @@ gint contact_name_compare(gconstpointer a, gconstpointer b)
 
 	return strcasecmp(contact_a->name, contact_b->name);
 }
+
+struct contact *contact_find_by_number(gchar *number)
+{
+	struct contact *contact = g_slice_new0(struct contact);
+
+	/** Ask for contact information */
+	contact->number = number;
+	emit_contact_process(contact);
+
+	return contact;
+}

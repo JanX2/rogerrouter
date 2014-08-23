@@ -335,17 +335,14 @@ static gint application_command_line_cb(GApplication *app, GApplicationCommandLi
 	}
 
 	if (option_state.number) {
-		struct contact contact_s;
-		struct contact *contact = &contact_s;
+		struct contact *contact;
 		gchar *full_number;
 
 		g_debug("number: %s", option_state.number);
 		full_number = call_full_number(option_state.number, FALSE);
 
 		/** Ask for contact information */
-		memset(contact, 0, sizeof(struct contact));
-		contact_s.number = full_number;
-		emit_contact_process(contact);
+		contact = contact_find_by_number(full_number);
 
 		app_show_phone_window(contact);
 		g_free(full_number);

@@ -62,15 +62,12 @@ static gchar **selected_incoming_numbers = NULL;
 static void notify_accept_clicked_cb(NotifyNotification *notify, gchar *action, gpointer user_data)
 {
 	struct connection *connection = user_data;
-	struct contact contact_s;
-	struct contact *contact = &contact_s;
-
-	/** Ask for contact information */
-	memset(contact, 0, sizeof(struct contact));
-	contact_s.number = connection->remote_number;
-	emit_contact_process(contact);
+	struct contact *contact;
 
 	g_assert(connection != NULL);
+
+	/** Ask for contact information */
+	contact = contact_find_by_number(connection->remote_number);
 
 	notify_notification_close(connection->notification, NULL);
 	connection->notification = NULL;
@@ -174,8 +171,7 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 {
 	NotifyNotification *notify = NULL;
 	gchar *text = NULL;
-	struct contact contact_s;
-	struct contact *contact = &contact_s;
+	struct contact *contact;
 	gchar **numbers = NULL;
 	gint count;
 	gboolean found = FALSE;
@@ -244,9 +240,7 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 	}
 
 	/** Ask for contact information */
-	memset(contact, 0, sizeof(struct contact));
-	contact_s.number = connection->remote_number;
-	emit_contact_process(contact);
+	contact = contact_find_by_number(connection->remote_number);
 
 	/* Create notification message */
 	if (!intern) {

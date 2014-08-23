@@ -39,8 +39,7 @@ static gchar *action_regex(gchar *str, struct connection *connection)
 	GRegex *number = g_regex_new("%NUMBER%", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
 	GRegex *name = g_regex_new("%NAME%", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
 	GRegex *company = g_regex_new("%COMPANY%", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
-	struct contact contact_s;
-	struct contact *contact = &contact_s;
+	struct contact *contact;
 	gchar *tmp0;
 	gchar *tmp1;
 	gchar *tmp2;
@@ -52,14 +51,12 @@ static gchar *action_regex(gchar *str, struct connection *connection)
 	tmp1 = g_regex_replace_literal(line, tmp0, -1, 0, connection->local_number, 0, NULL);
 
 	/** Based on connection ask for contact information */
-	memset(contact, 0, sizeof(struct contact));
-	contact_s.number = connection->remote_number;
-	emit_contact_process(contact);
+	contact = contact_find_by_number(connection->remote_number);
 
 	/* Replace company template */
-	tmp2 = g_regex_replace_literal(company, tmp1, -1, 0, contact_s.company != NULL ? contact_s.company : "", 0, NULL);
+	tmp2 = g_regex_replace_literal(company, tmp1, -1, 0, contact->company != NULL ? contact->company : "", 0, NULL);
 	/* Replace name template */
-	out = g_regex_replace_literal(name, tmp2, -1, 0, contact_s.name != NULL ? contact_s.name : "", 0, NULL);
+	out = g_regex_replace_literal(name, tmp2, -1, 0, contact->name != NULL ? contact->name : "", 0, NULL);
 
 	/* Free temporary data fields */
 	g_free(tmp2);

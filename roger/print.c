@@ -661,13 +661,8 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	cairo_move_to(cairo, 60.0, 145.0);
 	cairo_show_text(cairo, _("Recipient name:"));
 
-	struct contact contact_s;
-
-	contact = &contact_s;
 	/** Ask for contact information */
-	memset(contact, 0, sizeof(struct contact));
-	contact_s.number = remote;
-	emit_contact_process(contact);
+	contact = contact_find_by_number(remote);
 	cairo_move_to(cairo, 280.0, 145.0);
 	cairo_show_text(cairo, contact ? contact->name : "");
 

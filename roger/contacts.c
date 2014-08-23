@@ -42,17 +42,13 @@ static GtkWidget *contacts_window_grid = NULL;
 
 void dial_clicked_cb(GtkWidget *button, gpointer user_data)
 {
-	struct contact contact_s;
-	struct contact *contact = &contact_s;
+	struct contact *contact;
 	gchar *full_number;
 	gchar *number = user_data;
 
 	full_number = call_full_number(number, FALSE);
 
-	/** Ask for contact information */
-	memset(contact, 0, sizeof(struct contact));
-	contact_s.number = full_number;
-	emit_contact_process(contact);
+	contact = contact_find_by_number(full_number);
 
 	app_show_phone_window(contact);
 	g_free(full_number);
