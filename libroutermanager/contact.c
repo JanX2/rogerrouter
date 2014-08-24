@@ -22,6 +22,7 @@
 #include <glib.h>
 
 #include <libroutermanager/contact.h>
+#include <libroutermanager/appobject-emit.h>
 
 void contact_copy(struct contact *src, struct contact *dst)
 {
