@@ -483,11 +483,11 @@ gboolean fritzbox_get_fax_information_06_00(struct profile *profile)
 	g_free(fax_msn);
 
 	g_settings_set_string(profile->settings, "fax-volume", "");
-	gchar *active = xml_extract_list_value(data, "telcfg:settings/FaxMailActive");
-	if (active) {
-		gint fax_mail_active = atoi(&active[0]);
+	gchar *use_stick = xml_extract_list_value(data, "tam:settings/UseStick");
+	if (use_stick) {
+		gint fax_use_stick = atoi(&use_stick[0]);
 
-		if ((fax_mail_active == 2 || fax_mail_active == 3)) {
+		if (fax_use_stick != 0) {
 			gchar *volume;
 			g_object_unref(msg);
 
@@ -520,7 +520,7 @@ gboolean fritzbox_get_fax_information_06_00(struct profile *profile)
 				g_settings_set_string(profile->settings, "fax-volume", "");
 			}
 
-			g_free(active);
+			g_free(use_stick);
 		}
 	}
 
