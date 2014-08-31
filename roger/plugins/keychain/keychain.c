@@ -1,3 +1,27 @@
+/**
+ * Roger Router
+ * Copyright (c) 2012-2014 Jan-Michael Brummer
+ *
+ * This file is part of Roger Router.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 only.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * TODO
+ * Instead of removing password during update, use SecKeychainItemModifyContent() instead
+ */
+
 #include <CoreFoundation/CoreFoundation.h>
 #include <Security/Security.h>
 #include <CoreServices/CoreServices.h>
@@ -19,6 +43,12 @@ ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_KEYCHAIN_PLUGIN, RouterManagerK
 
 static gboolean keychain_remove_password(struct profile *profile, const gchar *type);
 
+/**
+ * \brief Get password of secure chain
+ * \param profile profile structure pointer
+ * \param type password type
+ * \return password or NULL on error
+ */
 static gchar *keychain_get_password(struct profile *profile, const gchar *type) {
 	OSStatus status;
 	UInt32 pwd_length;
@@ -56,6 +86,12 @@ static gchar *keychain_get_password(struct profile *profile, const gchar *type) 
 	return NULL;
 }
 
+/**
+ * \brief Store a new password in secure chain
+ * \param profile profile structure pointer
+ * \param type password type
+ * \param password password text
+ */
 static void keychain_store_password(struct profile *profile, const gchar *type, const gchar *password) {
 	OSStatus status;
 	SecKeychainItemRef item_ref = NULL;
@@ -102,6 +138,12 @@ static void keychain_store_password(struct profile *profile, const gchar *type, 
 	}
 }
 
+/**
+ * \brief Remove password of secure chain
+ * \param profile profile structure pointer
+ * \param type type indicating which password to remove
+ * \return TRUE on success, otherwise FALSE on error
+ */
 static gboolean keychain_remove_password(struct profile *profile, const gchar *type) {
 	OSStatus status;
 	SecKeychainItemRef item_ref = NULL;
@@ -139,6 +181,7 @@ static gboolean keychain_remove_password(struct profile *profile, const gchar *t
 	return ret;
 }
 
+/** Keychain password manager structure */
 struct password_manager keychain = {
 	"OS X Keychain",
 	keychain_store_password,
@@ -146,12 +189,20 @@ struct password_manager keychain = {
 	keychain_remove_password,
 };
 
+/**
+ * \brief Activate plugin
+ * \param plugin peas plugin structure
+ */
 void impl_activate(PeasActivatable *plugin)
 {
 	g_debug("Register keychain password manager plugin");
 	password_manager_register(&keychain);
 }
 
+/**
+ * \brief Deactivate plugin
+ * \param plugin peas plugin structure
+ */
 void impl_deactivate(PeasActivatable *plugin)
 {
 }
