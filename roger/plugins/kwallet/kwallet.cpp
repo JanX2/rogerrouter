@@ -1,3 +1,27 @@
+/**
+ * Roger Router
+ * Copyright (c) 2012-2014 Jan-Michael Brummer
+ *
+ * This file is part of Roger Router.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 only.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * \TODO:
+ * Remove key with removeEntry()
+ */
+
 #include <qstring.h>
 #include <kaboutdata.h>
 #include <kapplication.h>
@@ -32,11 +56,18 @@ extern "C" int kwallet4_init(void)
 	return app && wallet;
 }
 
+/**
+ * \brief Get password
+ * \param name name of password
+ * \param password pointer to store password to
+ * \return 0 on success, negative values on error
+ */
 extern "C" int kwallet4_get_password(const char *name, char **password)
 {
 	QString entry, pwd;
 	int error = -1;
 
+	/* Sanity checks */
 	if (!wallet) {
 		return -2;
 	}
@@ -70,6 +101,12 @@ out:
 	return error;
 }
 
+/**
+ * \brief Store password in wallet
+ * \param name name of password
+ * \param password password text
+ * \return 0 on success, negative values on error
+ */
 extern "C" int kwallet4_store_password(const char *name, const char *password)
 {
 	QString entry, pwd;
