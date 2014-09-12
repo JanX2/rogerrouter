@@ -38,6 +38,8 @@
 #define GTK_PRINT_SETTINGS_OUTPUT_BASENAME "output-basename"
 #endif
 
+#define MM_TO_POINTS(mm) ((mm) / 25.4 * 72.0)
+
 /** Structure holds information about the page and start positions of columns */
 typedef struct {
 	gdouble font_width;
@@ -567,6 +569,7 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	int bitrate = status->bitrate;
 	struct profile *profile = profile_get_active();
 	TIFF *tiff;
+	GdkPixbuf *scale;
 
 	if (file == NULL) {
 		g_warning("file is NULL\n");
@@ -580,32 +583,21 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 
 	tiff = TIFFOpen(file, "r");
 
-#if 1
 	pixbuf = load_tiff_page(tiff);
-#else
-	pixbuf = gdk_pixbuf_new_from_file(file, NULL);
-#endif
 	if (pixbuf == NULL) {
 		g_warning("pixbuf is null (file '%s')\n", file);
 		return;
 	}
 
-	width = gdk_pixbuf_get_width(pixbuf);
-	height = gdk_pixbuf_get_height(pixbuf);
-	if (width != 1728 || height != 2292) {
-		width = 1728;
-		height = 2292;
-		GdkPixbuf *scale = gdk_pixbuf_scale_simple(pixbuf, width, height, GDK_INTERP_BILINEAR);
-
-		g_object_unref(pixbuf);
-		pixbuf = scale;
-	}
+	scale = gdk_pixbuf_scale_simple(pixbuf, MM_TO_POINTS(210), MM_TO_POINTS(297 - 75), GDK_INTERP_BILINEAR);
+	g_object_unref(pixbuf);
+	pixbuf = scale;
 
 	buffer = g_strdup_printf("%s/fax-report_%s_%s_%02d_%02d_%d_%02d_%02d_%02d.pdf",
 	                         report_dir, local, remote,
 	                         time_ptr->tm_mday, time_ptr->tm_mon + 1, time_ptr->tm_year + 1900,
 	                         time_ptr->tm_hour, time_ptr->tm_min, time_ptr->tm_sec);
-	out = cairo_pdf_surface_create(buffer, width, height + 200);
+	out = cairo_pdf_surface_create(buffer, MM_TO_POINTS(210), MM_TO_POINTS(297));
 	g_free(buffer);
 
 	if (!out) {
@@ -614,14 +606,14 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	}
 
 	cairo = cairo_create(out);
-	gdk_cairo_set_source_pixbuf(cairo, pixbuf, 0, 200);
+	gdk_cairo_set_source_pixbuf(cairo, pixbuf, 0, 75);
 	cairo_paint(cairo);
 
 	cairo_set_source_rgb(cairo, 0, 0, 0);
 	cairo_select_font_face(cairo, "cairo:monospace", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
-	cairo_set_font_size(cairo, 20.0);
+	cairo_set_font_size(cairo, 10.0);
 
-	cairo_move_to(cairo, 60.0, 60.0);
+	cairo_move_to(cairo, 15, 15);
 	buffer = g_strconcat(_("Fax Transfer Protocol"), " (", router_get_name(profile), ")", NULL);
 	cairo_show_text(cairo, buffer);
 	g_free(buffer);
@@ -629,86 +621,86 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	cairo_select_font_face(cairo, "cairo:monospace", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
 
 	/* Date/Time */
-	cairo_move_to(cairo, 60.0, 95.0);
+	cairo_move_to(cairo, 15.0, 30.0);
 	cairo_show_text(cairo, _("Date/Time:"));
-	cairo_move_to(cairo, 280.0, 95.0);
+	cairo_move_to(cairo, 115.0, 30.0);
 	buffer = get_date_time("%a %b %d %Y - %X");
 	cairo_show_text(cairo, buffer);
 
 	/* Status */
-	cairo_move_to(cairo, 625.0, 95.0);
+	cairo_move_to(cairo, 260, 30.0);
 	cairo_show_text(cairo, _("Transfer status:"));
-	cairo_move_to(cairo, 850.0, 95.0);
+	cairo_move_to(cairo, 370, 30.0);
 	cairo_show_text(cairo, status_code);
 
 	/* FAX-ID */
-	cairo_move_to(cairo, 60.0, 120.0);
+	cairo_move_to(cairo, 15.0, 40.0);
 	cairo_show_text(cairo, _("Receiver ID:"));
-	cairo_move_to(cairo, 280.0, 120.0);
+	cairo_move_to(cairo, 115.0, 40.0);
 	buffer = g_strdup_printf("%s", status->remote_ident);
 	cairo_show_text(cairo, buffer);
 	g_free(buffer);
 
 	/* Pages */
-	cairo_move_to(cairo, 625.0, 120.0);
+	cairo_move_to(cairo, 260.0, 40.0);
 	cairo_show_text(cairo, _("Pages sent:"));
-	cairo_move_to(cairo, 850.0, 120.0);
+	cairo_move_to(cairo, 370.0, 40.0);
 	buffer = g_strdup_printf("%d", pages);
 	cairo_show_text(cairo, buffer);
 	g_free(buffer);
 
 	/* Remote name */
-	cairo_move_to(cairo, 60.0, 145.0);
+	cairo_move_to(cairo, 15.0, 50.0);
 	cairo_show_text(cairo, _("Recipient name:"));
 
 	/** Ask for contact information */
 	contact = contact_find_by_number(remote);
-	cairo_move_to(cairo, 280.0, 145.0);
+	cairo_move_to(cairo, 115.0, 50.0);
 	cairo_show_text(cairo, contact ? contact->name : "");
 
 	/* Remote number */
-	cairo_move_to(cairo, 625.0, 145.0);
+	cairo_move_to(cairo, 260.0, 50.0);
 	cairo_show_text(cairo, _("Recipient number:"));
-	cairo_move_to(cairo, 850.0, 145.0);
+	cairo_move_to(cairo, 370.0, 50.0);
 	buffer = call_full_number(remote, FALSE);
 	cairo_show_text(cairo, buffer);
 	g_free(buffer);
 
 	/* Local name */
-	cairo_move_to(cairo, 60.0, 170.0);
+	cairo_move_to(cairo, 15.0, 60.0);
 	cairo_show_text(cairo, _("Sender name:"));
 	buffer = g_strdup_printf("%s", status->header);
-	cairo_move_to(cairo, 280.0, 170.0);
+	cairo_move_to(cairo, 115.0, 60.0);
 	cairo_show_text(cairo, buffer);
 	g_free(buffer);
 
 	/* Local number */
-	cairo_move_to(cairo, 625.0, 170.0);
+	cairo_move_to(cairo, 260.0, 60.0);
 	cairo_show_text(cairo, _("Sender number:"));
-	cairo_move_to(cairo, 850.0, 170.0);
+	cairo_move_to(cairo, 370.0, 60.0);
 	buffer = call_full_number(local, FALSE);
 	cairo_show_text(cairo, buffer);
 	g_free(buffer);
 
 	/* Bitrate */
-	cairo_move_to(cairo, 60.0, 195.0);
+	cairo_move_to(cairo, 15.0, 70.0);
 	cairo_show_text(cairo, _("Bitrate:"));
-	cairo_move_to(cairo, 280.0, 195.0);
+	cairo_move_to(cairo, 115.0, 70.0);
 	buffer = g_strdup_printf("%d", bitrate);
 	cairo_show_text(cairo, buffer);
 	g_free(buffer);
 
 	/* Error message */
-	cairo_move_to(cairo, 625.0, 195.0);
+	cairo_move_to(cairo, 260.0, 70.0);
 	cairo_show_text(cairo, _("Message:"));
-	cairo_move_to(cairo, 850.0, 195.0);
+	cairo_move_to(cairo, 370.0, 70.0);
 	buffer = (char *) t30_completion_code_to_str(status->error_code);
 	cairo_show_text(cairo, buffer);
 
 	/* line */
 	cairo_set_line_width(cairo, 0.5);
-	cairo_move_to(cairo, 0, 200);
-	cairo_rel_line_to(cairo, width, 0);
+	cairo_move_to(cairo, 0, 75);
+	cairo_rel_line_to(cairo, MM_TO_POINTS(297), 0);
 	cairo_stroke(cairo);
 
 	cairo_show_page(cairo);
@@ -716,16 +708,9 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	while (TIFFReadDirectory(tiff)) {
 		pixbuf = load_tiff_page(tiff);
 
-		width = gdk_pixbuf_get_width(pixbuf);
-		height = gdk_pixbuf_get_height(pixbuf);
-		if (width != 1728 || height != 2292) {
-			width = 1728;
-			height = 2292;
-			GdkPixbuf *scale = gdk_pixbuf_scale_simple(pixbuf, width, height, GDK_INTERP_BILINEAR);
-
-			g_object_unref(pixbuf);
-			pixbuf = scale;
-		}
+		scale = gdk_pixbuf_scale_simple(pixbuf, MM_TO_POINTS(210), MM_TO_POINTS(297), GDK_INTERP_BILINEAR);
+		g_object_unref(pixbuf);
+		pixbuf = scale;
 
 		gdk_cairo_set_source_pixbuf(cairo, pixbuf, 0, 0);
 
