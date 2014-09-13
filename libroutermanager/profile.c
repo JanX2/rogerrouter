@@ -19,8 +19,6 @@
 
 #include <string.h>
 
-#include <gio/gio.h>
-
 #include <libroutermanager/action.h>
 #include <libroutermanager/fax_phone.h>
 #include <libroutermanager/profile.h>
@@ -31,6 +29,7 @@
 #include <libroutermanager/password.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/audio.h>
+#include <libroutermanager/settings.h>
 
 /** Internal profile list */
 static GSList *profile_list = NULL;
@@ -89,6 +88,7 @@ struct profile *profile_new(const gchar *name, const gchar *host, const gchar *u
 {
 	struct profile *profile;
 	gchar *settings_path;
+	gchar *filename;
 
 	/* Create new profile structure */
 	profile = g_slice_new0(struct profile);
@@ -101,8 +101,10 @@ struct profile *profile_new(const gchar *name, const gchar *host, const gchar *u
 	profile->router_info->password = g_strdup(password);
 
 	/* Setup profiles settings */
+	filename = g_build_filename("profiles", name, NULL);
 	settings_path = g_strconcat("/org/tabos/routermanager/profile/", name, "/", NULL);
-	profile->settings = g_settings_new_with_path(ROUTERMANAGER_SCHEME_PROFILE, settings_path);
+	profile->settings = rm_settings_new_with_path(ROUTERMANAGER_SCHEME_PROFILE, settings_path, filename);
+	g_free(filename);
 
 	g_settings_set_string(profile->settings, "host", host);
 	g_settings_set_string(profile->settings, "login-user", user);
@@ -142,13 +144,16 @@ static void profile_load(const gchar *name)
 {
 	struct profile *profile;
 	gchar *settings_path;
+	gchar *filename;
 
 	profile = g_slice_new0(struct profile);
 
 	profile->name = g_strdup(name);
 
 	settings_path = g_strconcat("/org/tabos/routermanager/profile/", name, "/", NULL);
-	profile->settings = g_settings_new_with_path(ROUTERMANAGER_SCHEME_PROFILE, settings_path);
+	filename = g_build_filename("profiles", name, NULL);
+	profile->settings = rm_settings_new_with_path(ROUTERMANAGER_SCHEME_PROFILE, settings_path, filename);
+	g_free(filename);
 
 	profile->router_info = g_slice_new0(struct router_info);
 	profile->router_info->host = g_settings_get_string(profile->settings, "host");
@@ -247,7 +252,8 @@ gboolean profile_detect_active(void)
  */
 gboolean profile_init(void)
 {
-	settings = g_settings_new(ROUTERMANAGER_SCHEME);
+	settings = rm_settings_new(ROUTERMANAGER_SCHEME, "routermanager.conf");
+
 	gchar **profiles = g_settings_get_strv(settings, "profiles");
 	gint count;
 

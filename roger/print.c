@@ -555,7 +555,6 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 {
 	cairo_t *cairo;
 	cairo_surface_t *out;
-	int width, height;
 	time_t time_s = time(NULL);
 	struct tm *time_ptr = localtime(&time_s);
 	char *buffer;
