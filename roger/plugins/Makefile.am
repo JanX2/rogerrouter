@@ -1,6 +1,10 @@
-SUBDIRS = statusicon fritzfon gtknotify vcard thunderbird
+SUBDIRS = fritzfon gtknotify vcard thunderbird
 
 plugindir = ${libdir}/roger/
+
+if WITH_STATUSICON
+SUBDIRS += statusicon
+endif
 
 if WITH_EBOOK
 SUBDIRS += evolution

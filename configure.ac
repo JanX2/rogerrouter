@@ -154,26 +154,6 @@ case "$with_fax_spooler_type" in
 	;;
 esac
 
-AC_ARG_WITH([headerbar],
-	[AS_HELP_STRING([--with-headerbar=@<:@ARG@:>@],
-		[whether journal shoudl make use of GtkHeaderBar (possible values: no, yes) @<:@default=no@:>@])],
-	[],
-	[with_headerbar=no])
-
-AC_MSG_CHECKING(for headerbar)
-case "$with_headerbar" in
-	yes)
-		AC_DEFINE(USE_HEADERBAR, 1, [Use headerbar])
-		AC_MSG_RESULT([Using GtkHeaderBar])
-	;;
-	no)
-		AC_MSG_RESULT([Using statusbar])
-	;;
-	*)
-		AC_MSG_ERROR([Invalid option $with_headerbar])
-	;;
-esac
-
 dnl *******************************************************************
 dnl CUPS backend is optional
 dnl *******************************************************************
@@ -208,6 +188,14 @@ AS_IF([test "x$with_cups" != xsuper],
 
 AC_MSG_RESULT($with_cups)
 AM_CONDITIONAL(WITH_CUPS, test "x$with_cups" != "xno")
+
+dnl *******************************************************************
+dnl Check if we can support gtkstatusicon plugin
+dnl *******************************************************************
+AC_MSG_CHECKING(for statusicon support)
+AS_IF($PKG_CONFIG --atleast-version=3.13 gtk+-3.0, [with_statusicon=no], [with_statusicon=yes])
+AC_MSG_RESULT($with_statusicon)
+AM_CONDITIONAL(WITH_STATUSICON, test "x$with_statusicon" != "xno")
 
 dnl *******************************************************************
 dnl Check for cups backend directory if cups is found

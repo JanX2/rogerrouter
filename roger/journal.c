@@ -1417,7 +1417,6 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	gtk_widget_show_all(header_menu);
 
 	gtk_container_add(GTK_CONTAINER(scrolled), journal_view);
-	gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(journal_view), TRUE);
 
 	gtk_grid_attach(GTK_GRID(grid), scrolled, 0, 2, 5, 1);
 
@@ -1436,9 +1435,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	g_signal_connect(G_OBJECT(journal_win), "configure-event", G_CALLBACK(journal_configure_event_cb), NULL);
 	g_signal_connect(G_OBJECT(journal_win), "window-state-event", G_CALLBACK(journal_window_state_event_cb), NULL);
 
-	//gtk_window_set_hide_titlebar_when_maximized(GTK_WINDOW(journal_win), TRUE);
 	gtk_widget_hide_on_delete(journal_win);
-	//gtk_window_set_has_resize_grip(GTK_WINDOW(journal_win), FALSE);
 
 	filter_box_changed(GTK_COMBO_BOX(journal_filter_box), NULL);
 
