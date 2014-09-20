@@ -32,6 +32,7 @@
 #include <libroutermanager/xml.h>
 #include <libroutermanager/logging.h>
 #include <libroutermanager/file.h>
+#include <libroutermanager/settings.h>
 
 #include <roger/main.h>
 
@@ -644,7 +645,7 @@ struct address_book fritzfon_book = {
 
 void impl_activate(PeasActivatable *plugin)
 {
-	fritzfon_settings = g_settings_new("org.tabos.roger.plugins.fritzfon");
+	fritzfon_settings = rm_settings_new("org.tabos.roger.plugins.fritzfon", "fritzfon");
 
 	fritzfon_get_books();
 	fritzfon_read_book();

@@ -31,6 +31,7 @@
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/profile.h>
 #include <libroutermanager/routermanager.h>
+#include <libroutermanager/settings.h>
 
 #include <roger/about.h>
 #include <roger/application.h>
@@ -332,7 +333,7 @@ void impl_activate(PeasActivatable *plugin)
 
 	journal_set_hide_on_quit(TRUE);
 
-	indicator_settings = g_settings_new("org.tabos.roger.plugins.indicator");
+	indicator_settings = rm_settings_new("org.tabos.roger.plugins.indicator", "indicator");
 
 	/* Create Application Indicator */
 	gchar *path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, g_settings_get_string(indicator_settings, "default-icon"), ".png", NULL);

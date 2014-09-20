@@ -680,7 +680,7 @@ void impl_activate(PeasActivatable *plugin)
 {
 	//RouterManagerGooglePlugin *google_plugin = ROUTERMANAGER_GOOGLE_PLUGIN(plugin);
 
-	google_settings = g_settings_new("org.tabos.roger.plugins.google");
+	google_settings = rm_settings_new("org.tabos.roger.plugins.google", "google");
 
 	table = g_hash_table_new(g_str_hash, g_str_equal);
 

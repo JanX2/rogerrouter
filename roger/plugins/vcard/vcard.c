@@ -32,6 +32,7 @@
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/file.h>
 #include <libroutermanager/router.h>
+#include <libroutermanager/settings.h>
 
 #include <roger/main.h>
 #include <roger/pref.h>
@@ -1112,7 +1113,7 @@ void impl_activate(PeasActivatable *plugin)
 {
 	gchar *name;
 
-	vcard_settings = g_settings_new("org.tabos.roger.plugins.vcard");
+	vcard_settings = rm_settings_new("org.tabos.roger.plugins.vcard", "vcard");
 
 	name = g_settings_get_string(vcard_settings, "filename");
 

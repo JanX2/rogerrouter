@@ -30,6 +30,7 @@
 #include <libroutermanager/router.h>
 #include <libroutermanager/file.h>
 #include <libroutermanager/gstring.h>
+#include <libroutermanager/settings.h>
 
 #include <roger/main.h>
 #include <roger/pref.h>
@@ -981,7 +982,7 @@ void impl_activate(PeasActivatable *plugin)
 {
 	//RouterManagerThunderbirdPlugin *thunderbird_plugin = ROUTERMANAGER_THUNDERBIRD_PLUGIN(plugin);
 
-	thunderbird_settings = g_settings_new("org.tabos.roger.plugins.thunderbird");
+	thunderbird_settings = rm_settings_new("org.tabos.roger.plugins.thunderbird", "thunderbird");
 
 	table = g_hash_table_new(g_str_hash, g_str_equal);
 

@@ -34,6 +34,7 @@
 #include <libroutermanager/profile.h>
 #include <libroutermanager/lookup.h>
 #include <libroutermanager/gstring.h>
+#include <libroutermanager/settings.h>
 
 #include <roger/main.h>
 #include <roger/application.h>
@@ -301,7 +302,7 @@ void impl_activate(PeasActivatable *plugin)
 {
 	RouterManagerNotificationPlugin *notify_plugin = ROUTERMANAGER_NOTIFICATION_PLUGIN(plugin);
 
-	notification_settings = g_settings_new("org.tabos.roger.plugins.notification");
+	notification_settings = rm_settings_new("org.tabos.roger.plugins.notification", "notification");
 
 	gchar **incoming_numbers = g_settings_get_strv(notification_settings, "incoming-numbers");
 	gchar **outgoing_numbers = g_settings_get_strv(notification_settings, "outgoing-numbers");

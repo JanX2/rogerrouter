@@ -25,6 +25,7 @@
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/profile.h>
 #include <libroutermanager/routermanager.h>
+#include <libroutermanager/settings.h>
 
 #include <roger/about.h>
 #include <roger/application.h>
@@ -326,7 +327,7 @@ void impl_activate(PeasActivatable *plugin)
 
 	journal_set_hide_on_quit(TRUE);
 
-	statusicon_settings = g_settings_new("org.tabos.roger.plugins.statusicon");
+	statusicon_settings = rm_settings_new("org.tabos.roger.plugins.statusicon", "statusicon");
 
 	/* Connect to "call-notify" signal */
 	statusicon_plugin = ROUTERMANAGER_STATUSICON_PLUGIN(plugin);
