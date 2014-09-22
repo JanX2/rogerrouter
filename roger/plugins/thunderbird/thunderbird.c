@@ -982,7 +982,7 @@ void impl_activate(PeasActivatable *plugin)
 {
 	//RouterManagerThunderbirdPlugin *thunderbird_plugin = ROUTERMANAGER_THUNDERBIRD_PLUGIN(plugin);
 
-	thunderbird_settings = rm_settings_new("org.tabos.roger.plugins.thunderbird", "thunderbird");
+	thunderbird_settings = rm_settings_plugin_new("org.tabos.roger.plugins.thunderbird", "thunderbird");
 
 	table = g_hash_table_new(g_str_hash, g_str_equal);
 

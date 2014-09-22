@@ -333,7 +333,7 @@ void impl_activate(PeasActivatable *plugin)
 
 	journal_set_hide_on_quit(TRUE);
 
-	indicator_settings = rm_settings_new("org.tabos.roger.plugins.indicator", "indicator");
+	indicator_settings = rm_settings_plugin_new("org.tabos.roger.plugins.indicator", "indicator");
 
 	/* Create Application Indicator */
 	gchar *path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, g_settings_get_string(indicator_settings, "default-icon"), ".png", NULL);

@@ -29,14 +29,16 @@
 
 #include <libroutermanager/settings.h>
 #include <libroutermanager/routermanager.h>
+#include <libroutermanager/profile.h>
 
 /**
  * \brief Create new gsettings configuration (either keyfile based, or system based)
  * \param scheme scheme name
+ * \param path root path or NULL
  * \param file filename (used in keyfile case)
  * \return newly create gsettings
  */
-GSettings *rm_settings_new(gchar *scheme, gchar *file)
+GSettings *rm_settings_new(gchar *scheme, gchar *root_path, gchar *file)
 {
 	GSettings *settings = NULL;
 
@@ -45,8 +47,18 @@ GSettings *rm_settings_new(gchar *scheme, gchar *file)
 	gchar *filename;
 
 	filename = g_build_filename(g_get_user_config_dir(), "routermanager", file, NULL);
-	keyfile = g_keyfile_settings_backend_new(filename, ROUTERMANAGER_PATH, "General");
+	g_debug("filename: '%s'", filename);
+	//keyfile = g_keyfile_settings_backend_new(filename, ROUTERMANAGER_PATH, "General");
+	if (!root_path) {
+		root_path = "/";
+	}
+	if (root_path) {
+		g_debug("root_path: '%s'", root_path);
+	}
+	keyfile = g_keyfile_settings_backend_new(filename, root_path, "General");
+	g_debug("keyfile: '%p'", keyfile);
 	settings = g_settings_new_with_backend(scheme, keyfile);
+	g_debug("settings: '%p'", settings);
 	g_free(filename);
 #else
 	settings = g_settings_new(scheme);
@@ -58,11 +70,11 @@ GSettings *rm_settings_new(gchar *scheme, gchar *file)
 /**
  * \brief Create new gsettings configuration (either keyfile based, or system based)
  * \param scheme scheme name
- * \param path path name
+ * \param settings_path settings path name
  * \param file filename (used in keyfile case)
  * \return newly create gsettings
  */
-GSettings *rm_settings_new_with_path(gchar *scheme, gchar *path, gchar *file)
+GSettings *rm_settings_new_with_path(gchar *scheme, gchar *settings_path, gchar *file)
 {
 	GSettings *settings = NULL;
 
@@ -70,13 +82,33 @@ GSettings *rm_settings_new_with_path(gchar *scheme, gchar *path, gchar *file)
 	GSettingsBackend *keyfile;
 	gchar *filename;
 
-	filename = g_build_filename(g_get_user_config_dir(), "routermanager", file, NULL);
-	keyfile = g_keyfile_settings_backend_new(filename, ROUTERMANAGER_PATH, NULL);
-	settings = g_settings_new_with_backend_and_path(scheme, keyfile, path);
+	filename = g_build_filename(g_get_user_config_dir(), "routermanager/", file, NULL);
+	//keyfile = g_keyfile_settings_backend_new(filename, ROUTERMANAGER_PATH, NULL);
+	keyfile = g_keyfile_settings_backend_new(filename, "/", NULL);
+	settings = g_settings_new_with_backend_and_path(scheme, keyfile, settings_path);
 	g_free(filename);
 #else
-	settings = g_settings_new_with_path(scheme, path);
+	settings = g_settings_new_with_path(scheme, settings_path);
 #endif
+
+	return settings;
+}
+
+/**
+ * \brief Create new plugin gsettings configuration (either keyfile based, or system based)
+ * \param scheme scheme name
+ * \param name plugin name
+ * \return newly create gsettings
+ */
+GSettings *rm_settings_plugin_new(gchar *scheme, gchar *name)
+{
+	GSettings *settings = NULL;
+	struct profile *profile = profile_get_active();
+	gchar *filename;
+
+	filename = g_strconcat(profile->name, "/plugin-", name, ".conf", NULL);
+	settings = rm_settings_new(scheme, NULL, filename);
+	g_free(filename);
 
 	return settings;
 }

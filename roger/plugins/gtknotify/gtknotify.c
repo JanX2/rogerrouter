@@ -418,7 +418,7 @@ void impl_activate(PeasActivatable *plugin)
 {
 	RouterManagerNotificationGtkPlugin *notify_plugin = ROUTERMANAGER_NOTIFICATION_GTK_PLUGIN(plugin);
 
-	notification_gtk_settings = rm_settings_new("org.tabos.roger.plugins.gtknotify", "gtknotify");
+	notification_gtk_settings = rm_settings_plugin_new("org.tabos.roger.plugins.gtknotify", "gtknotify");
 
 	gchar **incoming_numbers = g_settings_get_strv(notification_gtk_settings, "incoming-numbers");
 	gchar **outgoing_numbers = g_settings_get_strv(notification_gtk_settings, "outgoing-numbers");

@@ -1113,7 +1113,7 @@ void impl_activate(PeasActivatable *plugin)
 {
 	gchar *name;
 
-	vcard_settings = rm_settings_new("org.tabos.roger.plugins.vcard", "vcard");
+	vcard_settings = rm_settings_plugin_new("org.tabos.roger.plugins.vcard", "vcard");
 
 	name = g_settings_get_string(vcard_settings, "filename");
 

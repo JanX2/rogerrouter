@@ -504,7 +504,7 @@ struct address_book evolution_book = {
 
 void impl_activate(PeasActivatable *plugin)
 {
-	ebook_settings = rm_settings_new("org.tabos.roger.plugins.evolution", "evolution");
+	ebook_settings = rm_settings_plugin_new("org.tabos.roger.plugins.evolution", "evolution");
 
 	ebook_read_book();
 

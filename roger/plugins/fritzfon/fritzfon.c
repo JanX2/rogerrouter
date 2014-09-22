@@ -645,7 +645,7 @@ struct address_book fritzfon_book = {
 
 void impl_activate(PeasActivatable *plugin)
 {
-	fritzfon_settings = rm_settings_new("org.tabos.roger.plugins.fritzfon", "fritzfon");
+	fritzfon_settings = rm_settings_plugin_new("org.tabos.roger.plugins.fritzfon", "fritzfon");
 
 	fritzfon_get_books();
 	fritzfon_read_book();

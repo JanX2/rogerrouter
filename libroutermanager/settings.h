@@ -22,7 +22,8 @@
 
 G_BEGIN_DECLS
 
-GSettings *rm_settings_new(gchar *scheme, gchar *file);
+GSettings *rm_settings_new(gchar *scheme, gchar *root_path, gchar *file);
+GSettings *rm_settings_plugin_new(gchar *scheme, gchar *file);
 GSettings *rm_settings_new_with_path(gchar *scheme, gchar *path, gchar *file);
 
 G_END_DECLS

@@ -101,8 +101,8 @@ struct profile *profile_new(const gchar *name, const gchar *host, const gchar *u
 	profile->router_info->password = g_strdup(password);
 
 	/* Setup profiles settings */
-	filename = g_build_filename("profiles", name, NULL);
-	settings_path = g_strconcat("/org/tabos/routermanager/profile/", name, "/", NULL);
+	filename = g_build_filename(name, "profile.conf", NULL);
+	settings_path = g_strconcat("/org/tabos/routermanager/profile", name, "/", NULL);
 	profile->settings = rm_settings_new_with_path(ROUTERMANAGER_SCHEME_PROFILE, settings_path, filename);
 	g_free(filename);
 
@@ -150,8 +150,8 @@ static void profile_load(const gchar *name)
 
 	profile->name = g_strdup(name);
 
+	filename = g_build_filename(name, "profile.conf", NULL);
 	settings_path = g_strconcat("/org/tabos/routermanager/profile/", name, "/", NULL);
-	filename = g_build_filename("profiles", name, NULL);
 	profile->settings = rm_settings_new_with_path(ROUTERMANAGER_SCHEME_PROFILE, settings_path, filename);
 	g_free(filename);
 
@@ -252,7 +252,7 @@ gboolean profile_detect_active(void)
  */
 gboolean profile_init(void)
 {
-	settings = rm_settings_new(ROUTERMANAGER_SCHEME, "routermanager.conf");
+	settings = rm_settings_new(ROUTERMANAGER_SCHEME, ROUTERMANAGER_PATH, "routermanager.conf");
 
 	gchar **profiles = g_settings_get_strv(settings, "profiles");
 	gint count;

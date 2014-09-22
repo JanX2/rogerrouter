@@ -366,7 +366,7 @@ Application *application_new(void)
 	                           "flags", G_APPLICATION_HANDLES_COMMAND_LINE,
 	                           NULL);
 
-	app_settings = rm_settings_new(APP_GSETTINGS_SCHEMA, "roger.conf");
+	app_settings = rm_settings_new(APP_GSETTINGS_SCHEMA, NULL, "roger.conf");
 	g_signal_connect(application, "startup", G_CALLBACK(application_startup), application);
 	g_signal_connect(application, "command-line", G_CALLBACK(application_command_line_cb), application);
 
