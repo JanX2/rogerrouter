@@ -28,6 +28,7 @@
 #include <libroutermanager/router.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/net_monitor.h>
+#include <libroutermanager/settings.h>
 
 #include <roger/journal.h>
 #include <roger/assistant.h>
@@ -365,7 +366,7 @@ Application *application_new(void)
 	                           "flags", G_APPLICATION_HANDLES_COMMAND_LINE,
 	                           NULL);
 
-	app_settings = g_settings_new(APP_GSETTINGS_SCHEMA);
+	app_settings = rm_settings_new(APP_GSETTINGS_SCHEMA, "roger.conf");
 	g_signal_connect(application, "startup", G_CALLBACK(application_startup), application);
 	g_signal_connect(application, "command-line", G_CALLBACK(application_command_line_cb), application);
 

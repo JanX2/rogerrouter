@@ -27,6 +27,7 @@
 #include <libroutermanager/address-book.h>
 #include <libroutermanager/call.h>
 #include <libroutermanager/router.h>
+#include <libroutermanager/settings.h>
 
 #include <roger/main.h>
 
