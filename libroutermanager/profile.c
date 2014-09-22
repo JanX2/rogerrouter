@@ -102,7 +102,7 @@ struct profile *profile_new(const gchar *name, const gchar *host, const gchar *u
 
 	/* Setup profiles settings */
 	filename = g_build_filename(name, "profile.conf", NULL);
-	settings_path = g_strconcat("/org/tabos/routermanager/profile", name, "/", NULL);
+	settings_path = g_strconcat("/org/tabos/routermanager/profile/", name, "/", NULL);
 	profile->settings = rm_settings_new_with_path(ROUTERMANAGER_SCHEME_PROFILE, settings_path, filename);
 	g_free(filename);
 
