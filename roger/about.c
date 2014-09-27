@@ -24,6 +24,7 @@
 #include <libroutermanager/routermanager.h>
 
 #include <roger/main.h>
+#include <roger/journal.h>
 
 #include <config.h>
 
@@ -73,6 +74,7 @@ void app_show_about(void)
 	g_free(path);
 	g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(about_response), dialog);
 
-	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(journal_get_window()));
+
 	gtk_dialog_run(GTK_DIALOG(dialog));
 }

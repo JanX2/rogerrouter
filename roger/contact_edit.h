@@ -22,7 +22,7 @@
 
 G_BEGIN_DECLS
 
-void contact_editor(struct contact *contact);
+void contact_editor(struct contact *contact, GtkWidget *parent);
 void contact_add_number(struct contact *contact, gchar *number);
 void contact_add_address(struct contact *contact, gchar *street, gchar *zip, gchar *city);
 

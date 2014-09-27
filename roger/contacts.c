@@ -363,7 +363,7 @@ void button_add_clicked_cb(GtkWidget *button, gpointer user_data)
 	struct contact *contact = g_slice_new0(struct contact);
 
 	contact->name = g_strdup("");
-	contact_editor(contact);
+	contact_editor(contact, contacts_window);
 
 	gtk_list_store_clear(list_store);
 	contacts_fill_list(list_store, NULL);
@@ -383,7 +383,7 @@ void button_edit_clicked_cb(GtkWidget *button, gpointer user_data)
 		GtkListStore *list_store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(view)));
 
 		gtk_tree_model_get(model, &iter, 2, &contact, -1);
-		contact_editor(contact);
+		contact_editor(contact, contacts_window);
 
 		gtk_list_store_clear(list_store);
 		contacts_fill_list(list_store, NULL);

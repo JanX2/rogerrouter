@@ -362,13 +362,14 @@ void add_detail_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 	}
 }
 
-void contact_editor(struct contact *contact)
+void contact_editor(struct contact *contact, GtkWidget *parent)
 {
 	edit_dialog = gtk_dialog_new_with_buttons(_("Edit contact"), NULL, GTK_DIALOG_MODAL, _("_Save"), GTK_RESPONSE_ACCEPT, _("Cancel"), GTK_RESPONSE_REJECT, NULL);
 
 	refresh_edit_dialog(contact);
 
-	gtk_window_set_position(GTK_WINDOW(edit_dialog), GTK_WIN_POS_CENTER);
+	gtk_window_set_transient_for(GTK_WINDOW(edit_dialog), GTK_WINDOW(parent));
+
 	gtk_widget_set_size_request(edit_dialog, 500, 500);
 	int response = gtk_dialog_run(GTK_DIALOG(edit_dialog));
 	gtk_widget_destroy(edit_dialog);

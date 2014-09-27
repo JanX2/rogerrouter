@@ -451,7 +451,7 @@ void journal_add_contact(struct call *call)
 	gboolean new_entry = FALSE;
 
 	gtk_window_set_title(GTK_WINDOW(add_dialog), _("Add entry"));
-	gtk_window_set_position(GTK_WINDOW(add_dialog), GTK_WIN_POS_CENTER);
+	gtk_window_set_transient_for(GTK_WINDOW(add_dialog), GTK_WINDOW(journal_win));
 
 	grid = gtk_grid_new();
 	content = gtk_dialog_get_content_area(GTK_DIALOG(add_dialog));
@@ -481,7 +481,7 @@ void journal_add_contact(struct call *call)
 		} else {
 			contact_add_address(call->remote, "", "", call->remote->city);
 		}
-		contact_editor(call->remote);
+		contact_editor(call->remote, journal_win);
 	} else {
 		gtk_clipboard_set_text(gtk_clipboard_get(GDK_NONE), call->remote->number, -1);
 		contacts();
