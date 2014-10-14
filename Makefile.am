@@ -31,9 +31,11 @@ share_DATA = \
 	share/roger-fax.ppd\
 	share/install-fax.sh
 
+@INTLTOOL_XML_RULE@
 appdatadir = $(datadir)/appdata
+appdata_in_files = share/roger.appdata.xml.in
 appdata_DATA = \
-	share/roger.appdata.xml
+	$(appdata_in_files:.xml.in=.xml)
 
 noinst_HEADERS = config.h
 
