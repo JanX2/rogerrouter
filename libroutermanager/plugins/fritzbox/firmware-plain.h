@@ -23,6 +23,8 @@
 G_BEGIN_DECLS
 
 gboolean fritzbox_present_plain(struct router_info *router_info);
+gboolean fritzbox_login_plain(struct profile *profile);
+gboolean fritzbox_get_settings_plain(struct profile *profile);
 
 G_END_DECLS
 

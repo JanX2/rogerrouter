@@ -64,6 +64,11 @@ gboolean fritzbox_login(struct profile *profile)
 		return fritzbox_login_04_74(profile);
 	}
 
+	if (FIRMWARE_IS(4, 0)) {
+		/* Plain login method */
+		return fritzbox_login_plain(profile);
+	}
+
 	return FALSE;
 }
 
@@ -80,6 +85,10 @@ gboolean fritzbox_get_settings(struct profile *profile)
 
 	if (FIRMWARE_IS(4, 74)) {
 		return fritzbox_get_settings_04_74(profile);
+	}
+
+	if (FIRMWARE_IS(4, 0)) {
+		return fritzbox_get_settings_plain(profile);
 	}
 
 	return FALSE;
