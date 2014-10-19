@@ -71,8 +71,9 @@ gboolean fritzbox_login_04_74(struct profile *profile)
 	g_free(url);
 
 	soup_session_send_message(soup_session_sync, msg);
-	if (msg->status_code != 200) {
+	if (msg->status_code != 200 || !msg->response_body->length) {
 		g_debug("Received status code: %d", msg->status_code);
+		g_debug("Message length: %d", msg->response_body->length);
 		g_object_unref(msg);
 
 		g_timer_destroy(profile->router_info->session_timer);
@@ -90,9 +91,25 @@ gboolean fritzbox_login_04_74(struct profile *profile)
 
 	/* <iswriteaccess>X</iswriteaccess> */
 	writeaccess = xml_extract_tag(data, "iswriteaccess");
+	if (writeaccess == NULL) {
+		g_debug("writeaccess is NULL");
+		g_object_unref(msg);
+
+		g_timer_destroy(profile->router_info->session_timer);
+		profile->router_info->session_timer = NULL;
+		return FALSE;
+	}
 
 	/* <Challenge>X</Challenge> */
 	challenge = xml_extract_tag(data, "Challenge");
+	if (challenge == NULL) {
+		g_debug("challenge is NULL");
+		g_object_unref(msg);
+
+		g_timer_destroy(profile->router_info->session_timer);
+		profile->router_info->session_timer = NULL;
+		return FALSE;
+	}
 
 	g_object_unref(msg);
 

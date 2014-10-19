@@ -23,6 +23,7 @@
     Multibox 7270 NGN
 
 * Tested devices are listed in the fritzbox.plugin.in file. Currently tested:
+    FRITZ!Box Fon WLAN 7112
     FRITZ!Box Fon WLAN 7170
     FRITZ!Box Fon WLAN 7320
     FRITZ!Box Fon WLAN 7390
@@ -31,4 +32,4 @@
 * This plugin supports any firmware >= 04.74 with update-check.
 
 
--- 28.12.2012 Jan-Michael Brummer --
+-- 19.10.2014 Jan-Michael Brummer --
