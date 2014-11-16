@@ -32,11 +32,16 @@ struct contact_address {
 };
 
 struct contact {
+	/* Name */
 	gchar *name;
+	/* Picture */
 	gpointer image;
+	/* Picture len */
 	gsize image_len;
+	/* Picture URI for online services */
 	gchar *image_uri;
 
+#if 1
 	/* currently active number */
 	gchar *number;
 	gchar *company;
@@ -44,10 +49,14 @@ struct contact {
 	gchar *zip;
 	gchar *city;
 	gboolean lookup;
+#endif
 
+	/* Phone numbers */
 	GSList *numbers;
+	/* Addresses */
 	GSList *addresses;
 
+	/* Private data */
 	gpointer priv;
 };
 

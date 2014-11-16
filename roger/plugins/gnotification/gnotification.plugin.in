@@ -1,0 +1,10 @@
+[Plugin]
+Depends=callmonitor
+Module=gnotification
+_Name=GLIB Notification
+_Description=Display notification about incoming/outgoing/missed calls and plays sounds
+Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
+Copyright=Copyright © 2014 Jan-Michael Brummer
+Website=http://www.tabos.org/
+Help=http://www.tabos.org/forum/
+
