@@ -152,6 +152,40 @@ static void reconnect_activated(GSimpleAction *action, GVariant *parameter, gpoi
 	app_reconnect();
 }
 
+#include <libroutermanager/libfaxophone/phone.h>
+#include <libroutermanager/fax_phone.h>
+
+static void pickup_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+{
+	g_debug("PICKUP");
+	gint32 id = g_variant_get_int32(parameter);
+
+	g_debug("id = %d", id);
+	struct connection *connection = connection_find_by_id(id);
+	g_debug("connection: %p", connection);
+
+	struct contact *contact;
+
+	g_assert(connection != NULL);
+
+	/** Ask for contact information */
+	contact = contact_find_by_number(connection->remote_number);
+
+	//notify_gnotification_close(connection->notification, NULL);
+	connection->notification = NULL;
+
+	app_show_phone_window(contact);
+
+	phone_pickup(connection->priv ? connection->priv : active_capi_connection);
+
+	phone_add_connection(connection->priv ? connection->priv : active_capi_connection);
+}
+
+static void hangup_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+{
+	g_debug("HANGUP");
+}
+
 static GActionEntry apps_entries[] = {
 	{"addressbook", addressbook_activated, NULL, NULL, NULL},
 	{"preferences", preferences_activated, NULL, NULL, NULL},
@@ -162,6 +196,8 @@ static GActionEntry apps_entries[] = {
 	{"forum", forum_activated, NULL, NULL, NULL},
 	{"about", about_activated, NULL, NULL, NULL},
 	{"quit", quit_activated, NULL, NULL, NULL},
+	{"pickup", pickup_activated, "i", NULL, NULL},
+	{"hangup", hangup_activated, "i", NULL, NULL},
 };
 
 static void application_startup(GApplication *application)
@@ -261,6 +297,14 @@ static void app_init(Application *app)
 	if (net_is_online() && !profile_get_active()) {
 		assistant();
 	}
+
+#if 1
+	//struct connection *connection = connection_add_call(2, CONNECTION_TYPE_INCOMING, "4646974", "0892050710");
+	struct connection *connection = connection_add_call(2, CONNECTION_TYPE_INCOMING, "4646974", "81570");
+	//struct connection *connection = connection_add_call(2, CONNECTION_TYPE_OUTGOING, "4646974", "81570");
+
+	emit_connection_notify(connection);
+#endif
 }
 
 static void application_class_init(ApplicationClass *class)

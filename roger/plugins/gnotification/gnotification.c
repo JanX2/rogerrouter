@@ -112,16 +112,15 @@ static gboolean gnotification_close(gpointer notification)
 gboolean gnotification_update(gpointer data) {
 	struct contact *contact = data;
 	struct connection *connection;
-	GNotification *notify; //=connection->notification;
+	GNotification *notify;
 
 	g_assert(contact != NULL);
 	g_assert(contact->priv != NULL);
 
 	connection = contact->priv;
+	notify = connection->notification;
 
-	notify = g_notification_new(_("Outgoing call"));
-
-	if (connection->notification && !EMPTY_STRING(contact->name)) {
+	if (notify && !EMPTY_STRING(contact->name)) {
 		gchar *text;
 
 		text = g_markup_printf_escaped(_("Name:\t%s\nNumber:\t%s\nCompany:\t%s\nStreet:\t%s\nCity:\t\t%s%s%s"),
@@ -272,8 +271,8 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 		g_notification_set_body(notify, text);
 		g_notification_set_icon(notify, G_ICON(icon));
 
-		g_notification_add_button_with_target(notify, _("Accept"), "app.accept", "p", connection);
-		g_notification_add_button_with_target(notify, _("Decline"), "app.decline", "p", connection);
+		g_notification_add_button_with_target(notify, _("Accept"), "app.pickup", "i", connection->id);
+		g_notification_add_button_with_target(notify, _("Decline"), "app.hangup", "i", connection->id);
 
 
 		//notify_gnotification_add_action(notify, "accept", _("Accept"), notify_accept_clicked_cb, connection, NULL);
@@ -312,7 +311,7 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 
 	//g_notification_set_urgent(notify, TRUE);
 	g_application_send_notification(G_APPLICATION(application), "new-call", notify);
-	g_object_unref(notify);
+	//g_object_unref(notify);
 
 	if (EMPTY_STRING(contact->name)) {
 		g_debug("Starting lookup thread");
