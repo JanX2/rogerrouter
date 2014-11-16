@@ -434,6 +434,7 @@ static void process_photo(struct vcard_data *card_data, struct contact *contact)
 	loader = gdk_pixbuf_loader_new();
 	if (gdk_pixbuf_loader_write(loader, image_ptr, len, &error)) {
 		contact->image = gdk_pixbuf_loader_get_pixbuf(loader);
+		contact->image_len = len;
 	} else {
 		g_debug("Error!! (%s)", error->message);
 		g_free(image_ptr);
