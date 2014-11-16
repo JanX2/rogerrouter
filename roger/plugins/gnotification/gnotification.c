@@ -97,26 +97,29 @@ static void notify_deny_clicked_cb(NotifyGNotification *notify, gchar *action, g
 
 	phone_hangup(connection->priv ? connection->priv : active_capi_connection);
 }
+#endif
 
 /**
  * \brief Close gnotification window
  */
-static gboolean gnotification_close(gpointer window)
+static gboolean gnotification_close(gpointer notification)
 {
-	//g_debug("Called gnotification_close()");
-	notify_gnotification_close(window, NULL);
-
+	g_debug("close");
+	g_application_withdraw_notification(G_APPLICATION(application), "new-call");
 	return FALSE;
 }
 
 gboolean gnotification_update(gpointer data) {
 	struct contact *contact = data;
 	struct connection *connection;
+	GNotification *notify; //=connection->notification;
 
 	g_assert(contact != NULL);
 	g_assert(contact->priv != NULL);
 
 	connection = contact->priv;
+
+	notify = g_notification_new(_("Outgoing call"));
 
 	if (connection->notification && !EMPTY_STRING(contact->name)) {
 		gchar *text;
@@ -130,15 +133,14 @@ gboolean gnotification_update(gpointer data) {
 		                               contact->zip ? " " : "",
 		                               contact->city);
 
-		notify_gnotification_update(connection->notification, connection->type == CALL_TYPE_INCOMING ? _("Incoming call") : _("Outgoing call"), text, "dialog-information");
+		g_notification_set_body(notify, text);
+		g_application_send_notification(G_APPLICATION(application), "new-call", notify);
 
-		notify_gnotification_show(connection->notification, NULL);
 		g_free(text);
 	}
 
 	return FALSE;
 }
-#endif
 
 /**
  * \brief Reverse lookup of connection data and gnotification redraw
@@ -157,7 +159,7 @@ static gpointer gnotification_reverse_lookup_thread(gpointer data)
 
 	routermanager_lookup(contact->number, &contact->name, &contact->street, &contact->zip, &contact->city);
 
-	//g_idle_add(gnotification_update, contact);
+	g_idle_add(gnotification_update, contact);
 	g_debug("done");
 
 	return NULL;
@@ -258,7 +260,6 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 	} else {
 		text = g_markup_printf_escaped(_("Number:\t%s"), connection->local_number);
 	}
-	g_debug("text: %s", text);
 
 	if (connection->type == CONNECTION_TYPE_INCOMING) {
 		GFile *file;
@@ -271,16 +272,25 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 		g_notification_set_body(notify, text);
 		g_notification_set_icon(notify, G_ICON(icon));
 
-		g_notification_add_button(notify, _("Accept"), "app.accept");
-		g_notification_add_button(notify, _("Decline"), "app.decline");
+		g_notification_add_button_with_target(notify, _("Accept"), "app.accept", "p", connection);
+		g_notification_add_button_with_target(notify, _("Decline"), "app.decline", "p", connection);
+
 
 		//notify_gnotification_add_action(notify, "accept", _("Accept"), notify_accept_clicked_cb, connection, NULL);
 		//notify_gnotification_add_action(notify, "deny", _("Decline"), notify_deny_clicked_cb, connection, NULL);
 	} else if (connection->type == CONNECTION_TYPE_OUTGOING) {
-		//gint duration = g_settings_get_int(gnotification_settings, "duration");
+		GFile *file;
+		GIcon *icon;
+		gint duration = g_settings_get_int(gnotification_settings, "duration");
 
-		//notify = notify_gnotification_new(_("Outgoing call"), text, "gnotification-message-roger-out.svg");
-		//g_timeout_add_seconds(duration, gnotification_close, notify);
+		file = g_file_new_for_path("notification-message-roger-out.svg");
+		icon = g_file_icon_new(file);
+
+		notify = g_notification_new(_("Outgoing call"));
+		g_notification_set_body(notify, text);
+		g_notification_set_icon(notify, G_ICON(icon));
+
+		g_timeout_add_seconds(duration, gnotification_close, notify);
 	} else {
 		g_warning("Unhandled case in connection notify - gnotification!");
 		g_free(text);
@@ -298,10 +308,9 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 		g_notification_set_icon(notify, G_ICON(icon));
 	}
 
-	g_notification_set_urgent(notify, TRUE);
-
 	connection->notification = notify;
 
+	//g_notification_set_urgent(notify, TRUE);
 	g_application_send_notification(G_APPLICATION(application), "new-call", notify);
 	g_object_unref(notify);
 
