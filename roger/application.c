@@ -261,12 +261,6 @@ static void app_init(Application *app)
 	if (net_is_online() && !profile_get_active()) {
 		assistant();
 	}
-
-#if 1
-	struct connection *connection = connection_add_call(2, CONNECTION_TYPE_INCOMING, "4646974", "015221665113");
-
-	emit_connection_notify(connection);
-#endif
 }
 
 static void application_class_init(ApplicationClass *class)
