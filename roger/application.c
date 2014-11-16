@@ -157,13 +157,8 @@ static void reconnect_activated(GSimpleAction *action, GVariant *parameter, gpoi
 
 static void pickup_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
-	g_debug("PICKUP");
 	gint32 id = g_variant_get_int32(parameter);
-
-	g_debug("id = %d", id);
 	struct connection *connection = connection_find_by_id(id);
-	g_debug("connection: %p", connection);
-
 	struct contact *contact;
 
 	g_assert(connection != NULL);
@@ -171,19 +166,37 @@ static void pickup_activated(GSimpleAction *action, GVariant *parameter, gpointe
 	/** Ask for contact information */
 	contact = contact_find_by_number(connection->remote_number);
 
+	/* Close notifications */
 	//notify_gnotification_close(connection->notification, NULL);
 	connection->notification = NULL;
 
+	if (!connection->priv)
+		connection->priv = active_capi_connection;
+	}
+
+	/* Show phone window */
 	app_show_phone_window(contact);
 
-	phone_pickup(connection->priv ? connection->priv : active_capi_connection);
-
-	phone_add_connection(connection->priv ? connection->priv : active_capi_connection);
+	/* Pickup phone and add connection */
+	phone_pickup(connection->priv);
+	phone_add_connection(connection->priv);
 }
 
 static void hangup_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
-	g_debug("HANGUP");
+	gint32 id = g_variant_get_int32(parameter);
+	struct connection *connection = connection_find_by_id(id);
+
+	g_assert(connection != NULL);
+
+	//notify_gnotification_close(connection->notification, NULL);
+	connection->notification = NULL;
+
+	if (!connection->priv)
+		connection->priv = active_capi_connection;
+	}
+
+	phone_hangup(connection->priv);
 }
 
 static GActionEntry apps_entries[] = {
