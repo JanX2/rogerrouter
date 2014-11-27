@@ -157,6 +157,7 @@ static void reconnect_activated(GSimpleAction *action, GVariant *parameter, gpoi
 
 static void pickup_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
+#if 0
 	gint32 id = g_variant_get_int32(parameter);
 	struct connection *connection = connection_find_by_id(id);
 	struct contact *contact;
@@ -180,10 +181,12 @@ static void pickup_activated(GSimpleAction *action, GVariant *parameter, gpointe
 	/* Pickup phone and add connection */
 	phone_pickup(connection->priv);
 	phone_add_connection(connection->priv);
+#endif
 }
 
 static void hangup_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
+#if 0
 	gint32 id = g_variant_get_int32(parameter);
 	struct connection *connection = connection_find_by_id(id);
 
@@ -197,6 +200,7 @@ static void hangup_activated(GSimpleAction *action, GVariant *parameter, gpointe
 	}
 
 	phone_hangup(connection->priv);
+#endif
 }
 
 static GActionEntry apps_entries[] = {
