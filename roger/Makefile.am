@@ -13,7 +13,7 @@ share_DATA = \
 	images/mono-lite.png \
 	images/notify.png
 
-EXTRA_DIST = $(share_DATA) images/hicolor_apps_scalable_roger.svg roger_winres.rc
+EXTRA_DIST = $(share_DATA) roger_winres.rc
 
 bin_PROGRAMS = roger
 
