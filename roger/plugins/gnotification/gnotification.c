@@ -259,6 +259,7 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 	} else {
 		text = g_markup_printf_escaped(_("Number:\t%s"), connection->local_number);
 	}
+	g_debug("text: '%s'", text);
 
 	if (connection->type == CONNECTION_TYPE_INCOMING) {
 		GFile *file;
@@ -309,13 +310,13 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 
 	connection->notification = notify;
 
-	//g_notification_set_urgent(notify, TRUE);
+	g_notification_set_priority(notify, G_NOTIFICATION_PRIORITY_URGENT);
 	g_application_send_notification(G_APPLICATION(application), "new-call", notify);
-	//g_object_unref(notify);
+	g_object_unref(notify);
 
 	if (EMPTY_STRING(contact->name)) {
 		g_debug("Starting lookup thread");
-		g_thread_new("gnotification reverse lookup", gnotification_reverse_lookup_thread, connection);
+		if (1==0)g_thread_new("gnotification reverse lookup", gnotification_reverse_lookup_thread, connection);
 	}
 
 	g_free(text);

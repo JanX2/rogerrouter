@@ -315,10 +315,8 @@ static void app_init(Application *app)
 		assistant();
 	}
 
-#if 1
-	//struct connection *connection = connection_add_call(2, CONNECTION_TYPE_INCOMING, "4646974", "0892050710");
-	struct connection *connection = connection_add_call(2, CONNECTION_TYPE_INCOMING, "4646974", "81570");
-	//struct connection *connection = connection_add_call(2, CONNECTION_TYPE_OUTGOING, "4646974", "81570");
+#if 0
+	struct connection *connection = connection_add_call(2, CONNECTION_TYPE_INCOMING, "456789", "81570");
 
 	emit_connection_notify(connection);
 #endif

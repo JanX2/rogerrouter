@@ -151,10 +151,10 @@ export python_dir=$HOME/.wine/drive_c/Python27
 make_pkg "http://ftp.gnome.org/pub/GNOME/sources/gobject-introspection/1.42/" "gobject-introspection-1.42.0.tar.xz" "gobject-introspection-1.42.0"
 
 # Download and compile libpeas (depends on gobject-introspection, g-ir-scanner)
+#make_pkg "http://ftp.gnome.org/pub/GNOME/sources/libpeas/1.12/" "libpeas-1.12.1.tar.xz" "libpeas-1.12.1"
 make_pkg "http://ftp.gnome.org/pub/GNOME/sources/libpeas/1.8/" "libpeas-1.8.1.tar.xz" "libpeas-1.8.1"
 
 # ******************** Roger Router *******************
-exit 0
 download http://downloads.ghostscript.com/public/ gs915w32.exe
 
 # Compile Roger Router
