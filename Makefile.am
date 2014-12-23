@@ -7,11 +7,11 @@ endif
 EXTRA_DIST = \
 	autogen.sh \
 	roger.desktop.in \
+	roger.appdata.xml.in \
 	remove-settings.sh \
 	share/roger-cups \
 	share/roger-fax.ppd \
 	share/install-fax.sh \
-	share/roger.appdata.xml \
 	win32/setup-mingw.sh \
 	win32/settings.ini \
 	win32/printer.nsh \
@@ -31,25 +31,17 @@ share_DATA = \
 	share/roger-fax.ppd\
 	share/install-fax.sh
 
-@INTLTOOL_XML_RULE@
-appdatadir = $(datadir)/appdata
-appdata_in_files = share/roger.appdata.xml.in
-appdata_DATA = \
-	$(appdata_in_files:.xml.in=.xml)
-
 noinst_HEADERS = config.h
 
-DISTCLEANFILES = intltool-extract intltool-merge intltool-update roger.desktop
+DISTCLEANFILES = intltool-extract intltool-merge intltool-update roger.desktop roger.appdata.xml
 
 appsdir = $(datadir)/applications
 apps_in_files = roger.desktop.in
 apps_DATA = $(apps_in_files:.desktop.in=.desktop)
 
+appdatadir = $(datadir)/appdata
+appdata_in_files = roger.appdata.xml.in
+appdata_DATA = $(appdata_in_files:.xml.in=.xml)
+
+@INTLTOOL_XML_RULE@
 @INTLTOOL_DESKTOP_RULE@
-
-install-data-local:
-#	xdg-mime default roger.desktop x-scheme-handler/tel
-#	xdg-mime install --mode system roger-tel.xml
-
-uninstall-local:
-#	xdg-mime uninstall --mode system roger-tel.xml

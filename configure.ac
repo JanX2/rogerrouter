@@ -610,6 +610,8 @@ AC_MSG_RESULT($with_appindicator3)
 
 AM_CONDITIONAL(WITH_APPINDICATOR3, test "x$with_appindicator3" != "xno")
 
+AM_CONDITIONAL(WITH_GNOTIFICATION, false)
+
 AC_ARG_ENABLE(werror,
 	AS_HELP_STRING([--disable-werror], [don't use gcc's -Werror option when building]))
 
@@ -672,6 +674,8 @@ AC_CONFIG_FILES([
     roger/plugins/keychain/Makefile
     roger/plugins/gnotification/Makefile
     roger/plugins/gnotification/data/Makefile
+    roger/images/Makefile
+    roger/images/scalable/Makefile
     cups-backend/Makefile
     macosx/roger.plist
     macosx/package

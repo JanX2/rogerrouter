@@ -39,6 +39,8 @@ roger/plugins/google/google.c
 [type: gettext/ini]roger/plugins/google/google.plugin.in
 roger/plugins/thunderbird/thunderbird.c
 [type: gettext/ini]roger/plugins/thunderbird/thunderbird.plugin.in
+roger/plugins/gnotification/gnotification.c
+[type: gettext/ini]roger/plugins/gnotification/gnotification.plugin.in
 roger-cli/main_cli.c
 libroutermanager/filter.c
 [type: gettext/ini]libroutermanager/plugins/areacodes_global/areacodes_global.plugin.in
@@ -47,4 +49,4 @@ libroutermanager/filter.c
 [type: gettext/ini]libroutermanager/plugins/pulseaudio/pulseaudio.plugin.in
 [type: gettext/ini]libroutermanager/plugins/reverselookup/reverselookup.plugin.in
 [type: gettext/ini]roger.desktop.in
-share/roger.appdata.xml.in
+roger.appdata.xml.in

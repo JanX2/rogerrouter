@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-14 22:40+0200\n"
+"POT-Creation-Date: 2014-12-23 20:59+0100\n"
 "PO-Revision-Date: 2013-09-07 19:34+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: German <jan.brummer@tabos.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../roger/about.c:65
+#: ../roger/about.c:66
 msgid ""
 "FRITZ!Box Journal, Soft/phone, and Fax\n"
 "Dedicated to my father"
@@ -24,72 +24,72 @@ msgstr ""
 "FRITZ!Box Journal, Soft/phone und Fax\n"
 "Gewidmet meinem Vater"
 
-#: ../roger/application.c:180
+#: ../roger/application.c:234
 msgid "Error"
 msgstr "Fehler"
 
 #. Contacts
-#: ../roger/application.c:206 ../roger/contacts.c:554
-#: ../roger/plugins/statusicon/gtk.c:196
-#: ../roger/plugins/indicator/indicator.c:218
+#: ../roger/application.c:260 ../roger/contacts.c:554
+#: ../roger/plugins/statusicon/gtk.c:197
+#: ../roger/plugins/indicator/indicator.c:219
 msgid "Contacts"
 msgstr "Kontakte"
 
 #. Phone
-#: ../roger/application.c:207 ../roger/contact_edit.c:288 ../roger/phone.c:980
-#: ../roger/phone.c:1016 ../roger/plugins/statusicon/gtk.c:201
-#: ../roger/plugins/indicator/indicator.c:223
+#: ../roger/application.c:261 ../roger/contact_edit.c:288 ../roger/phone.c:980
+#: ../roger/phone.c:1016 ../roger/plugins/statusicon/gtk.c:202
+#: ../roger/plugins/indicator/indicator.c:224
 msgid "Phone"
 msgstr "Telefon"
 
 #. Functions - Copy IP adress
-#: ../roger/application.c:210 ../roger/plugins/statusicon/gtk.c:67
-#: ../roger/plugins/indicator/indicator.c:73
+#: ../roger/application.c:264 ../roger/plugins/statusicon/gtk.c:68
+#: ../roger/plugins/indicator/indicator.c:74
 msgid "Copy IP address"
 msgstr "IP-Adresse kopieren"
 
 #. Functions - Reconnect
-#: ../roger/application.c:211 ../roger/plugins/statusicon/gtk.c:72
-#: ../roger/plugins/indicator/indicator.c:78
+#: ../roger/application.c:265 ../roger/plugins/statusicon/gtk.c:73
+#: ../roger/plugins/indicator/indicator.c:79
 msgid "Reconnect"
 msgstr "Neu verbinden"
 
 #. Functions
-#: ../roger/application.c:212 ../roger/plugins/statusicon/gtk.c:212
-#: ../roger/plugins/indicator/indicator.c:235
+#: ../roger/application.c:266 ../roger/plugins/statusicon/gtk.c:213
+#: ../roger/plugins/indicator/indicator.c:236
 msgid "Functions"
 msgstr "Funktionen"
 
 #. Preferences
-#: ../roger/application.c:215 ../roger/pref.c:103
-#: ../roger/plugins/statusicon/gtk.c:222
-#: ../roger/plugins/indicator/indicator.c:245
+#: ../roger/application.c:269 ../roger/pref.c:103
+#: ../roger/plugins/statusicon/gtk.c:223
+#: ../roger/plugins/indicator/indicator.c:246
 msgid "Preferences"
 msgstr "Einstellungen"
 
-#: ../roger/application.c:221
+#: ../roger/application.c:275
 msgid "Donate"
 msgstr "Spenden"
 
-#: ../roger/application.c:222
+#: ../roger/application.c:276
 msgid "Forum"
 msgstr "Forum"
 
 #. Help
-#: ../roger/application.c:223 ../roger/plugins/statusicon/gtk.c:231
-#: ../roger/plugins/indicator/indicator.c:254
+#: ../roger/application.c:277 ../roger/plugins/statusicon/gtk.c:232
+#: ../roger/plugins/indicator/indicator.c:255
 msgid "Help"
 msgstr "Hilfe"
 
 #. About
-#: ../roger/application.c:225 ../roger/plugins/statusicon/gtk.c:236
-#: ../roger/plugins/indicator/indicator.c:259
+#: ../roger/application.c:279 ../roger/plugins/statusicon/gtk.c:237
+#: ../roger/plugins/indicator/indicator.c:260
 msgid "About"
 msgstr "Info"
 
 #. Quit
-#: ../roger/application.c:229 ../roger/plugins/statusicon/gtk.c:245
-#: ../roger/plugins/indicator/indicator.c:268
+#: ../roger/application.c:283 ../roger/plugins/statusicon/gtk.c:246
+#: ../roger/plugins/indicator/indicator.c:269
 msgid "Quit"
 msgstr "Beenden"
 
@@ -294,14 +294,14 @@ msgstr "Bild öffnen"
 
 #: ../roger/contact_edit.c:130 ../roger/pref_action.c:163
 #: ../roger/pref_fax.c:53 ../roger/pref_filters.c:368 ../roger/pref_misc.c:49
-#: ../roger/plugins/vcard/vcard.c:1131
-#: ../roger/plugins/thunderbird/thunderbird.c:1012
+#: ../roger/plugins/vcard/vcard.c:1133
+#: ../roger/plugins/thunderbird/thunderbird.c:1013
 msgid "_Cancel"
 msgstr "A_bbrechen"
 
 #: ../roger/contact_edit.c:130 ../roger/pref_fax.c:53 ../roger/pref_misc.c:49
-#: ../roger/plugins/vcard/vcard.c:1131
-#: ../roger/plugins/thunderbird/thunderbird.c:1012
+#: ../roger/plugins/vcard/vcard.c:1133
+#: ../roger/plugins/thunderbird/thunderbird.c:1013
 msgid "_Open"
 msgstr "_Öffnen"
 
@@ -311,8 +311,8 @@ msgstr "_Kein Bild"
 
 #: ../roger/contact_edit.c:225 ../roger/journal.c:1045
 #: ../roger/pref_action.c:255 ../roger/pref_filters.c:202 ../roger/print.c:388
-#: ../roger/plugins/notification/notification.c:502
-#: ../roger/plugins/gtknotify/gtknotify.c:614
+#: ../roger/plugins/notification/notification.c:503
+#: ../roger/plugins/gtknotify/gtknotify.c:615
 msgid "Number"
 msgstr "Nummer"
 
@@ -356,7 +356,7 @@ msgstr "_Speichern"
 msgid "Cancel"
 msgstr "A_bbrechen"
 
-#: ../roger/contact_edit.c:380
+#: ../roger/contact_edit.c:381
 msgid ""
 "Note: Depending on the address book plugin not all information might be saved"
 msgstr ""
@@ -694,7 +694,7 @@ msgstr "Plugins"
 msgid "Security"
 msgstr "Sicherheit"
 
-#: ../roger/pref.c:130 ../roger/pref_audio.c:156
+#: ../roger/pref.c:130 ../roger/pref_audio.c:175
 msgid "Audio"
 msgstr "Audio"
 
@@ -765,9 +765,9 @@ msgid "Execute actions"
 msgstr "Aktionen ausführen:"
 
 #. Incoming call label
-#: ../roger/pref_action.c:513 ../roger/plugins/notification/notification.c:132
-#: ../roger/plugins/notification/notification.c:261
-#: ../roger/plugins/gtknotify/gtknotify.c:347
+#: ../roger/pref_action.c:513 ../roger/plugins/notification/notification.c:133
+#: ../roger/plugins/notification/notification.c:262
+#: ../roger/plugins/gtknotify/gtknotify.c:348
 msgid "Incoming call"
 msgstr "Eingehender Anruf"
 
@@ -794,9 +794,9 @@ msgid "Call missed"
 msgstr "Anruf verpasst"
 
 #. Outgoing call label
-#: ../roger/pref_action.c:537 ../roger/plugins/notification/notification.c:132
-#: ../roger/plugins/notification/notification.c:267
-#: ../roger/plugins/gtknotify/gtknotify.c:369
+#: ../roger/pref_action.c:537 ../roger/plugins/notification/notification.c:133
+#: ../roger/plugins/notification/notification.c:268
+#: ../roger/plugins/gtknotify/gtknotify.c:370
 msgid "Outgoing call"
 msgstr "Ausgehender Anruf"
 
@@ -822,15 +822,15 @@ msgstr "_Bearbeiten"
 msgid "Define actions"
 msgstr "Aktionen definieren"
 
-#: ../roger/pref_audio.c:117
+#: ../roger/pref_audio.c:135
 msgid "Plugin"
 msgstr "Plugin"
 
-#: ../roger/pref_audio.c:124
+#: ../roger/pref_audio.c:142
 msgid "Output"
 msgstr "Ausgabe"
 
-#: ../roger/pref_audio.c:130
+#: ../roger/pref_audio.c:148
 msgid "Input"
 msgstr "Eingabe"
 
@@ -871,8 +871,8 @@ msgid "Select report directory"
 msgstr "Wähle Berichtsverzeichnis"
 
 #: ../roger/pref_fax.c:172 ../roger/pref_misc.c:89
-#: ../roger/plugins/vcard/vcard.c:1166
-#: ../roger/plugins/thunderbird/thunderbird.c:1063
+#: ../roger/plugins/vcard/vcard.c:1168
+#: ../roger/plugins/thunderbird/thunderbird.c:1064
 msgid "Select"
 msgstr "Auswählen"
 
@@ -927,24 +927,24 @@ msgid "All"
 msgstr "Alle"
 
 #. Last calls - Incomming
-#: ../roger/pref_filters.c:58 ../roger/plugins/notification/notification.c:511
-#: ../roger/plugins/gtknotify/gtknotify.c:623
-#: ../roger/plugins/statusicon/gtk.c:145
-#: ../roger/plugins/indicator/indicator.c:151
+#: ../roger/pref_filters.c:58 ../roger/plugins/notification/notification.c:512
+#: ../roger/plugins/gtknotify/gtknotify.c:624
+#: ../roger/plugins/statusicon/gtk.c:146
+#: ../roger/plugins/indicator/indicator.c:152
 msgid "Incoming"
 msgstr "Eingehend"
 
 #. Last calls - Missed
-#: ../roger/pref_filters.c:59 ../roger/plugins/statusicon/gtk.c:159
-#: ../roger/plugins/indicator/indicator.c:165
+#: ../roger/pref_filters.c:59 ../roger/plugins/statusicon/gtk.c:160
+#: ../roger/plugins/indicator/indicator.c:166
 msgid "Missed"
 msgstr "Verpasst"
 
 #. Last calls - Outgoing
-#: ../roger/pref_filters.c:60 ../roger/plugins/notification/notification.c:506
-#: ../roger/plugins/gtknotify/gtknotify.c:618
-#: ../roger/plugins/statusicon/gtk.c:152
-#: ../roger/plugins/indicator/indicator.c:158
+#: ../roger/pref_filters.c:60 ../roger/plugins/notification/notification.c:507
+#: ../roger/plugins/gtknotify/gtknotify.c:619
+#: ../roger/plugins/statusicon/gtk.c:153
+#: ../roger/plugins/indicator/indicator.c:159
 msgid "Outgoing"
 msgstr "Ausgehend"
 
@@ -1254,15 +1254,15 @@ msgstr "Bitrate:"
 msgid "Message:"
 msgstr "Nachricht:"
 
-#: ../roger/plugins/evolution/evolution.c:532
-#: ../roger/plugins/fritzfon/fritzfon.c:672
+#: ../roger/plugins/evolution/evolution.c:533
+#: ../roger/plugins/fritzfon/fritzfon.c:673
 msgid "Book:"
 msgstr "Buch:"
 
-#: ../roger/plugins/evolution/evolution.c:545
-#: ../roger/plugins/fritzfon/fritzfon.c:685
-#: ../roger/plugins/vcard/vcard.c:1176
-#: ../roger/plugins/thunderbird/thunderbird.c:1073
+#: ../roger/plugins/evolution/evolution.c:546
+#: ../roger/plugins/fritzfon/fritzfon.c:686
+#: ../roger/plugins/vcard/vcard.c:1178
+#: ../roger/plugins/thunderbird/thunderbird.c:1074
 msgid "Contact book"
 msgstr "Kontaktbuch"
 
@@ -1282,8 +1282,8 @@ msgstr "FritzFon"
 msgid "FRITZ!Box address book support"
 msgstr "FRITZ!Box Adressbuch-Support"
 
-#: ../roger/plugins/notification/notification.c:123
-#: ../roger/plugins/notification/notification.c:247
+#: ../roger/plugins/notification/notification.c:124
+#: ../roger/plugins/notification/notification.c:248
 #, c-format
 msgid ""
 "Name:\t%s\n"
@@ -1298,38 +1298,38 @@ msgstr ""
 "Straße:\t%s\n"
 "Stadt:\t%s%s%s"
 
-#: ../roger/plugins/notification/notification.c:257
+#: ../roger/plugins/notification/notification.c:258
 #, c-format
 msgid "Number:\t%s"
 msgstr "Nummer:\t%s"
 
-#: ../roger/plugins/notification/notification.c:262
-#: ../roger/plugins/gtknotify/gtknotify.c:356
+#: ../roger/plugins/notification/notification.c:263
+#: ../roger/plugins/gtknotify/gtknotify.c:357
 msgid "Accept"
 msgstr "Annehmen"
 
-#: ../roger/plugins/notification/notification.c:263
-#: ../roger/plugins/gtknotify/gtknotify.c:361
+#: ../roger/plugins/notification/notification.c:264
+#: ../roger/plugins/gtknotify/gtknotify.c:362
 msgid "Decline"
 msgstr "Ablehnen"
 
-#: ../roger/plugins/notification/notification.c:514
-#: ../roger/plugins/gtknotify/gtknotify.c:627
+#: ../roger/plugins/notification/notification.c:515
+#: ../roger/plugins/gtknotify/gtknotify.c:628
 msgid "Choose for which MSNs you want notifications"
 msgstr "Wähle für welche MSNs Benachrichtigungen angezeigt werden"
 
-#: ../roger/plugins/notification/notification.c:522
-#: ../roger/plugins/gtknotify/gtknotify.c:646
+#: ../roger/plugins/notification/notification.c:523
+#: ../roger/plugins/gtknotify/gtknotify.c:647
 msgid "Duration (outgoing)"
 msgstr "Anzeigedauer (ausgehend)"
 
-#: ../roger/plugins/notification/notification.c:531
-#: ../roger/plugins/gtknotify/gtknotify.c:655
+#: ../roger/plugins/notification/notification.c:532
+#: ../roger/plugins/gtknotify/gtknotify.c:656
 msgid "Play ringtones"
 msgstr "Spiele Klingeltöne"
 
-#: ../roger/plugins/notification/notification.c:539
-#: ../roger/plugins/gtknotify/gtknotify.c:663
+#: ../roger/plugins/notification/notification.c:540
+#: ../roger/plugins/gtknotify/gtknotify.c:664
 msgid "Popup"
 msgstr "Popup"
 
@@ -1344,52 +1344,52 @@ msgstr ""
 "Zeigt Benachrichtigungen über eingehende/ausgehende/verpasste Anrufe und "
 "spielt Klänge"
 
-#: ../roger/plugins/gtknotify/gtknotify.c:270
+#: ../roger/plugins/gtknotify/gtknotify.c:271
 msgid "Name:"
 msgstr "Name:"
 
-#: ../roger/plugins/gtknotify/gtknotify.c:280
+#: ../roger/plugins/gtknotify/gtknotify.c:281
 msgid "Number:"
 msgstr "Nummer:"
 
-#: ../roger/plugins/gtknotify/gtknotify.c:290
+#: ../roger/plugins/gtknotify/gtknotify.c:291
 msgid "Company:"
 msgstr "Firma:"
 
-#: ../roger/plugins/gtknotify/gtknotify.c:300
+#: ../roger/plugins/gtknotify/gtknotify.c:301
 msgid "Street:"
 msgstr "Straße:"
 
-#: ../roger/plugins/gtknotify/gtknotify.c:310
+#: ../roger/plugins/gtknotify/gtknotify.c:311
 msgid "City:"
 msgstr "Stadt:"
 
-#: ../roger/plugins/gtknotify/gtknotify.c:323
+#: ../roger/plugins/gtknotify/gtknotify.c:324
 #, c-format
 msgid "(on %s)"
 msgstr "(an %s)"
 
-#: ../roger/plugins/gtknotify/gtknotify.c:323
+#: ../roger/plugins/gtknotify/gtknotify.c:324
 msgid "(on ?)"
 msgstr "(an ?)"
 
-#: ../roger/plugins/gtknotify/gtknotify.c:635
+#: ../roger/plugins/gtknotify/gtknotify.c:636
 msgid "Position"
 msgstr "Position"
 
-#: ../roger/plugins/gtknotify/gtknotify.c:639
+#: ../roger/plugins/gtknotify/gtknotify.c:640
 msgid "Top left"
 msgstr "Oben links"
 
-#: ../roger/plugins/gtknotify/gtknotify.c:640
+#: ../roger/plugins/gtknotify/gtknotify.c:641
 msgid "Top right"
 msgstr "Oben rechts"
 
-#: ../roger/plugins/gtknotify/gtknotify.c:641
+#: ../roger/plugins/gtknotify/gtknotify.c:642
 msgid "Bottom left"
 msgstr "Unten links"
 
-#: ../roger/plugins/gtknotify/gtknotify.c:642
+#: ../roger/plugins/gtknotify/gtknotify.c:643
 msgid "Bottom right"
 msgstr "Unten rechts"
 
@@ -1403,59 +1403,58 @@ msgstr ""
 "Zeigt Benachrichtigungen über eingehende/ausgehende/verpasste Anrufe (GTK)"
 
 #. Journal
-#: ../roger/plugins/statusicon/gtk.c:191
-#: ../roger/plugins/indicator/indicator.c:213
+#: ../roger/plugins/statusicon/gtk.c:192
+#: ../roger/plugins/indicator/indicator.c:214
 msgid "Journal"
 msgstr "Journal"
 
 #. Last calls
-#: ../roger/plugins/statusicon/gtk.c:206
-#: ../roger/plugins/indicator/indicator.c:228
+#: ../roger/plugins/statusicon/gtk.c:207
+#: ../roger/plugins/indicator/indicator.c:229
 msgid "Last calls"
 msgstr "Letzte Anrufe"
 
-#: ../roger/plugins/statusicon/gtk.c:317 ../roger.desktop.in.h:1
-#: ../share/roger.appdata.xml.in.h:1
+#: ../roger/plugins/statusicon/gtk.c:318 ../roger.desktop.in.h:1
 msgid "Roger Router"
 msgstr "Roger Router"
 
 #. Create label and switch for "Hide Journal on startup" and add to grid
-#: ../roger/plugins/statusicon/gtk.c:384
-#: ../roger/plugins/indicator/indicator.c:397
+#: ../roger/plugins/statusicon/gtk.c:385
+#: ../roger/plugins/indicator/indicator.c:398
 msgid "Hide Journal on startup"
 msgstr "Verstecke das Journal beim Starten"
 
 #. Create label and combo_box for "Default Icon" and add to grid
-#: ../roger/plugins/statusicon/gtk.c:393
-#: ../roger/plugins/indicator/indicator.c:406
+#: ../roger/plugins/statusicon/gtk.c:394
+#: ../roger/plugins/indicator/indicator.c:407
 msgid "Default Icon"
 msgstr "Standard-Symbol"
-
-#: ../roger/plugins/statusicon/gtk.c:397 ../roger/plugins/statusicon/gtk.c:407
-#: ../roger/plugins/indicator/indicator.c:410
-#: ../roger/plugins/indicator/indicator.c:420
-msgid "default"
-msgstr "default"
 
 #: ../roger/plugins/statusicon/gtk.c:398 ../roger/plugins/statusicon/gtk.c:408
 #: ../roger/plugins/indicator/indicator.c:411
 #: ../roger/plugins/indicator/indicator.c:421
-msgid "mono-dark"
-msgstr "mono-dark"
+msgid "default"
+msgstr "default"
 
 #: ../roger/plugins/statusicon/gtk.c:399 ../roger/plugins/statusicon/gtk.c:409
 #: ../roger/plugins/indicator/indicator.c:412
 #: ../roger/plugins/indicator/indicator.c:422
+msgid "mono-dark"
+msgstr "mono-dark"
+
+#: ../roger/plugins/statusicon/gtk.c:400 ../roger/plugins/statusicon/gtk.c:410
+#: ../roger/plugins/indicator/indicator.c:413
+#: ../roger/plugins/indicator/indicator.c:423
 msgid "mono-lite"
 msgstr "mono-lite"
 
 #. Create label and combo_box for "Notify Icon" and add to grid
-#: ../roger/plugins/statusicon/gtk.c:403
-#: ../roger/plugins/indicator/indicator.c:416
+#: ../roger/plugins/statusicon/gtk.c:404
+#: ../roger/plugins/indicator/indicator.c:417
 msgid "Notify Icon"
 msgstr "Benachrichtigungs-Symbol"
 
-#: ../roger/plugins/statusicon/gtk.c:420
+#: ../roger/plugins/statusicon/gtk.c:421
 msgid "Settings for Status icon GTK"
 msgstr "Einstellungen für Statusicon GTK"
 
@@ -1467,7 +1466,7 @@ msgstr "Statusicon GTK"
 msgid "Status icon plugin using GTK following FreeDesktop standard"
 msgstr "Statusicon-Plugin in GTK nach den FreeDesktop-Standard"
 
-#: ../roger/plugins/indicator/indicator.c:433
+#: ../roger/plugins/indicator/indicator.c:434
 msgid "Settings for Application Indicator"
 msgstr "Einstellungen für Application Indicator"
 
@@ -1479,11 +1478,11 @@ msgstr "Application Indicator"
 msgid "Status icon plugin using AppIndicator support"
 msgstr "Statusicon-Plugin mit AppIndicator-Unterstützung"
 
-#: ../roger/plugins/vcard/vcard.c:1131
+#: ../roger/plugins/vcard/vcard.c:1133
 msgid "Select vcard file"
 msgstr "VCard-Datei auswählen"
 
-#: ../roger/plugins/vcard/vcard.c:1162
+#: ../roger/plugins/vcard/vcard.c:1164
 msgid "VCard file"
 msgstr "VCard-Datei"
 
@@ -1495,15 +1494,15 @@ msgstr "VCard"
 msgid "VCard address book support"
 msgstr "VCard Adressbuch-Support"
 
-#: ../roger/plugins/google/google.c:723
+#: ../roger/plugins/google/google.c:724
 msgid "User:"
 msgstr "Benutzer:"
 
-#: ../roger/plugins/google/google.c:730
+#: ../roger/plugins/google/google.c:731
 msgid "Password:"
 msgstr "Passwort:"
 
-#: ../roger/plugins/google/google.c:736
+#: ../roger/plugins/google/google.c:737
 msgid "Access data"
 msgstr "Zugangsdaten"
 
@@ -1515,11 +1514,11 @@ msgstr "Google"
 msgid "Google address book support"
 msgstr "Google Adressbuch-Support"
 
-#: ../roger/plugins/thunderbird/thunderbird.c:1012
+#: ../roger/plugins/thunderbird/thunderbird.c:1013
 msgid "Select mab file"
 msgstr "VCard-Datei auswählen"
 
-#: ../roger/plugins/thunderbird/thunderbird.c:1059
+#: ../roger/plugins/thunderbird/thunderbird.c:1060
 msgid "Thunderbird file"
 msgstr "Thunderbird-Datei"
 
@@ -1591,8 +1590,8 @@ msgid "AVM FRITZ!Box"
 msgstr "AVM FRITZ!Box"
 
 #: ../libroutermanager/plugins/fritzbox/fritzbox.plugin.in.h:2
-msgid "FRITZ!Box router integration for 7170, 7320, 7390"
-msgstr "FRITZ!Box Routerintegration für 7170, 7320, 7390"
+msgid " 04.74"
+msgstr ""
 
 #: ../libroutermanager/plugins/pulseaudio/pulseaudio.plugin.in.h:1
 msgid "PulseAudio plugin"
@@ -1619,33 +1618,28 @@ msgstr ""
 msgid "fritz;box;fritzbox;router;manager;fax;softphone;"
 msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
 
-#: ../share/roger.appdata.xml.in.h:2
+#: ../share/roger.appdata.xml.in.h:1
 msgid "Router Manager"
 msgstr "Routerverwaltung"
 
+#: ../share/roger.appdata.xml.in.h:2
+msgid ""
+"<p>Roger Router is a clean solution for controlling the FRITZ!Box or "
+"compatible router with Linux. It offers a rich feature list, including call "
+"monitor, journal, fax support and also has a great integration into "
+"Evolution and FritzFon address books.</p> <p>Some plugins for Roger Router "
+"are packaged separately.</p>"
+msgstr ""
+
 #: ../share/roger.appdata.xml.in.h:3
-msgid ""
-"Roger Router is a clean solution for controlling the FRITZ!Box or compatible "
-"router with Linux. It offers a rich feature list, including call monitor, "
-"journal, fax support and also has a great integration into Evolution and "
-"FritzFon address books."
-msgstr ""
-
-#: ../share/roger.appdata.xml.in.h:4
-msgid "Some plugins for Roger Router are packaged separately."
-msgstr "Einige Plugins für Roger Router sind separat als Paket erhältlich."
-
-#: ../share/roger.appdata.xml.in.h:5
-msgid ""
-"Note: If you want to use the call notification in Roger Router you must "
-"enable this feature within your fritzbox with #96*5*. If you want to use the "
-"fax function in Roger Router you must enable capi-over-tcp within your "
-"fritzbox with #96*3* and the user must be a member of the group fax."
-msgstr ""
-
-#: ../share/roger.appdata.xml.in.h:6
 msgid "Journal view of all calls"
 msgstr "Journalansicht aller Anrufe"
+
+#~ msgid "FRITZ!Box router integration for 7170, 7320, 7390"
+#~ msgstr "FRITZ!Box Routerintegration für 7170, 7320, 7390"
+
+#~ msgid "Some plugins for Roger Router are packaged separately."
+#~ msgstr "Einige Plugins für Roger Router sind separat als Paket erhältlich."
 
 #~ msgid "Choose for which MSNs you want notifications:"
 #~ msgstr "Wähle für welche MSNs Benachrichtigungen angezeigt werden:"

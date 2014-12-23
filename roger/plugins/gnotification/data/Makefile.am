@@ -3,7 +3,7 @@ MOSTLYCLEANFILES =
 
 @INTLTOOL_SCHEMAS_RULE@
 
-gsettings_SCHEMAS = org.tabos.roger.plugins.gnotification.gschema.xml
+gsettings_SCHEMAS = org.tabos.roger.plugins.gnotify.gschema.xml
 @GSETTINGS_RULES@
 
 EXTRA_DIST = $(gsettings_SCHEMAS)

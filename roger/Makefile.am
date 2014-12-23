@@ -1,4 +1,4 @@
-SUBDIRS = . plugins data
+SUBDIRS = . plugins data images
 
 AM_CFLAGS = -I$(top_srcdir)
 
@@ -159,6 +159,7 @@ uninstall-icons:
 		CONTEXT=`echo $$icon | cut -d _ -f2`; \
 		SIZE=`echo $$icon | cut -d _ -f3`; \
 		ICONFILE=`echo $$icon | cut -d _ -f4`; \
+		echo "rm -f $(DESTDIR)/$(datadir)/icons/$$THEME/$$SIZE/$$CONTEXT/$$ICONFILE"; \
 		rm -f $(DESTDIR)/$(datadir)/icons/$$THEME/$$SIZE/$$CONTEXT/$$ICONFILE; \
 	done; \
 	for icon in $(private_icons); do \
@@ -169,6 +170,6 @@ uninstall-icons:
 		rm -f $(DESTDIR)/$(pkgdatadir)/icons/$$THEME/$$SIZE/$$CONTEXT/$$ICONFILE; \
 	done
 
-install-data-local: install-icons update-icon-cache
+install-data-hook: install-icons update-icon-cache
 
-uninstall-local: uninstall-icons update-icon-cache
+uninstall-hook: update-icon-cache uninstall-icons

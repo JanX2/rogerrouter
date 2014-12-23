@@ -4,20 +4,15 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0</project_license>
   <name>Roger Router</name>
-  <name xml:lang="de">Roger Router</name>
-  <summary>Router Manager</summary>
-  <summary xml:lang="de">Routerverwaltung</summary>
-  <description>
+  <_summary>Router Manager</_summary>
+  <_description>
     <p>Roger Router is a clean solution for controlling the FRITZ!Box or compatible router with Linux. It offers a rich feature list, including call monitor, journal, fax support and also has a great integration into Evolution and FritzFon address books.</p>
     <p>Some plugins for Roger Router are packaged separately.</p>
-    <p xml:lang="de">Einige Plugins für Roger Router sind separat als Paket erhältlich.</p>
-    <p>Note: If you want to use the call notification in Roger Router you must enable this feature within your fritzbox with #96*5*. If you want to use the fax function in Roger Router you must enable capi-over-tcp within your fritzbox with #96*3* and the user must be a member of the group fax.</p>
-  </description>
+  </_description>
   <screenshots>
     <screenshot width="1024" type="default" height="576">
       <image>http://de.tabos.org/images/screenshots/Roger-Router-Journal.png</image>
-      <caption>Journal view of all calls</caption>
-      <caption xml:lang="de">Journalansicht aller Anrufe</caption>
+      <_caption>Journal view of all calls</_caption>
     </screenshot>
   </screenshots>
   <url type="homepage">http://www.tabos.org</url>

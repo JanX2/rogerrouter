@@ -1,7 +1,5 @@
 SUBDIRS = fritzfon gtknotify vcard thunderbird
 
-#gnotification
-
 plugindir = ${libdir}/roger/
 
 if WITH_STATUSICON
@@ -31,3 +29,8 @@ endif
 if WITH_MACOS_KEYCHAIN
 SUBDIRS += keychain
 endif
+
+if WITH_GNOTIFICATION
+SUBDIRS += gnotification
+endif
+
