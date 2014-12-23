@@ -121,13 +121,13 @@ cd packages
 # ********************* 3rd PARTY PACKAGES ************************
 
 # Download and compile libcroco
-make_pkg "http://ftp.gnome.org/pub/GNOME/sources/libcroco/0.6/" "libcroco-0.6.8.tar.xz" "libcroco-0.6.8"
+#make_pkg "http://ftp.gnome.org/pub/GNOME/sources/libcroco/0.6/" "libcroco-0.6.8.tar.xz" "libcroco-0.6.8"
 
 # Download and compile librsvg (requires libcroco)
-#make_pkg "http://ftp.gnome.org/pub/GNOME/sources/librsvg/2.40/" "librsvg-2.40.1.tar.xz" "librsvg-2.40.1"
+##make_pkg "http://ftp.gnome.org/pub/GNOME/sources/librsvg/2.40/" "librsvg-2.40.6.tar.xz" "librsvg-2.40.6"
 
 # Download and compile libogg
-make_pkg "http://downloads.xiph.org/releases/ogg/" "libogg-1.3.1.tar.xz" "libogg-1.3.1"
+make_pkg "http://downloads.xiph.org/releases/ogg/" "libogg-1.3.2.tar.xz" "libogg-1.3.2"
 
 # Download and compile speex (requires libogg)
 make_pkg "http://downloads.xiph.org/releases/speex/" "speex-1.2rc1.tar.gz" "speex-1.2rc1"
@@ -141,21 +141,21 @@ make_pkg "http://tabos.org/download/" "libcapi20-3.0.7.tar.bz2" "capi20"
 # ************ PATCHED PACKAGES ********************
 
 # Download and compile portaudio (patch to make dll and do not depend on uuid)
-make_pkg "http://www.portaudio.com/archives/" "pa_stable_v19_20111121.tgz" "portaudio"
+make_pkg "http://www.portaudio.com/archives/" "pa_stable_v19_20140130.tgz" "portaudio"
 
 # Download and compile spandsp (configure needs to be patched, gethostname not resolved)
 make_pkg "http://soft-switch.org/downloads/spandsp/" "spandsp-0.0.6pre21.tgz" "spandsp-0.0.6"
 
 # Download and compile gobject-introspection (default compilation broken due to python)
 export python_dir=$HOME/.wine/drive_c/Python27
-make_pkg "http://ftp.gnome.org/pub/GNOME/sources/gobject-introspection/1.38/" "gobject-introspection-1.38.0.tar.xz" "gobject-introspection-1.38.0"
+make_pkg "http://ftp.gnome.org/pub/GNOME/sources/gobject-introspection/1.42/" "gobject-introspection-1.42.0.tar.xz" "gobject-introspection-1.42.0"
 
 # Download and compile libpeas (depends on gobject-introspection, g-ir-scanner)
 make_pkg "http://ftp.gnome.org/pub/GNOME/sources/libpeas/1.8/" "libpeas-1.8.1.tar.xz" "libpeas-1.8.1"
 
 # ******************** Roger Router *******************
-
-download http://downloads.ghostscript.com/public/ gs910w32.exe
+exit 0
+download http://downloads.ghostscript.com/public/ gs915w32.exe
 
 # Compile Roger Router
 cd $topdir
