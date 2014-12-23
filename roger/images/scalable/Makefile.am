@@ -1,0 +1,12 @@
+NULL =
+
+icondir = $(datadir)/icons/hicolor/scalable/apps
+icon_DATA = \
+	roger.svg \
+	$(NULL)
+
+EXTRA_DIST = \
+	$(icon_DATA)
+
+clean-local :
+	rm -f *~
