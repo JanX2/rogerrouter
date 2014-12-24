@@ -627,9 +627,9 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	cairo_show_text(cairo, buffer);
 
 	/* Status */
-	cairo_move_to(cairo, 260, 30.0);
+	cairo_move_to(cairo, 300, 30.0);
 	cairo_show_text(cairo, _("Transfer status:"));
-	cairo_move_to(cairo, 370, 30.0);
+	cairo_move_to(cairo, 410, 30.0);
 	cairo_show_text(cairo, status_code);
 
 	/* FAX-ID */
@@ -641,9 +641,9 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	g_free(buffer);
 
 	/* Pages */
-	cairo_move_to(cairo, 260.0, 40.0);
+	cairo_move_to(cairo, 300.0, 40.0);
 	cairo_show_text(cairo, _("Pages sent:"));
-	cairo_move_to(cairo, 370.0, 40.0);
+	cairo_move_to(cairo, 410.0, 40.0);
 	buffer = g_strdup_printf("%d", pages);
 	cairo_show_text(cairo, buffer);
 	g_free(buffer);
@@ -658,9 +658,9 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	cairo_show_text(cairo, contact ? contact->name : "");
 
 	/* Remote number */
-	cairo_move_to(cairo, 260.0, 50.0);
+	cairo_move_to(cairo, 300.0, 50.0);
 	cairo_show_text(cairo, _("Recipient number:"));
-	cairo_move_to(cairo, 370.0, 50.0);
+	cairo_move_to(cairo, 410.0, 50.0);
 	buffer = call_full_number(remote, FALSE);
 	cairo_show_text(cairo, buffer);
 	g_free(buffer);
@@ -674,9 +674,9 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	g_free(buffer);
 
 	/* Local number */
-	cairo_move_to(cairo, 260.0, 60.0);
+	cairo_move_to(cairo, 300.0, 60.0);
 	cairo_show_text(cairo, _("Sender number:"));
-	cairo_move_to(cairo, 370.0, 60.0);
+	cairo_move_to(cairo, 410.0, 60.0);
 	buffer = call_full_number(local, FALSE);
 	cairo_show_text(cairo, buffer);
 	g_free(buffer);
@@ -690,9 +690,9 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	g_free(buffer);
 
 	/* Error message */
-	cairo_move_to(cairo, 260.0, 70.0);
+	cairo_move_to(cairo, 300.0, 70.0);
 	cairo_show_text(cairo, _("Message:"));
-	cairo_move_to(cairo, 370.0, 70.0);
+	cairo_move_to(cairo, 410.0, 70.0);
 	buffer = (char *) t30_completion_code_to_str(status->error_code);
 	cairo_show_text(cairo, buffer);
 
