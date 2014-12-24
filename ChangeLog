@@ -1,3 +1,13 @@
+roger - 1.8.10
+------------------------------------------------------------------------------------------------------------------
+* Scale fax report size to A4
+* Update appdata.xml file and add initial translation
+* Update fax report layout
+* Fix vcard write support
+* Fix audio device selection after re-opening preferences
+* Add experimental: GNotification plugin & new settings layout (disabled by default)
+* Cleanup
+
 roger - 1.8.9
 ------------------------------------------------------------------------------------------------------------------
 * Seek function for vox playback

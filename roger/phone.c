@@ -747,6 +747,7 @@ static inline GtkWidget *phone_create_button(const gchar *text_hi, const gchar *
 
 	button = gtk_button_new();
 	label_hi = gtk_label_new(text_hi);
+	gtk_label_set_use_markup(GTK_LABEL(label_hi), TRUE);
 	gtk_grid_attach(GTK_GRID(grid), label_hi, 0, 0, 1, 1);
 	label_lo = gtk_label_new(text_lo);
 	gtk_label_set_use_markup(GTK_LABEL(label_lo), TRUE);
@@ -774,21 +775,21 @@ static void phone_dtmf_clicked_cb(GtkWidget *widget, gpointer user_data)
 }
 
 static struct phone_label {
-	gchar *subtext;
 	gchar *text;
+	gchar *subtext;
 	gchar chr;
 } phone_labels[] = {
 	{"<b>1</b>", "", '1'},
-	{"<b>2</b>", "ABC", '2'},
-	{"<b>3</b>", "DEF", '3'},
-	{"<b>4</b>", "GHI", '4'},
-	{"<b>5</b>", "JKL", '5'},
-	{"<b>6</b>", "MNO", '6'},
-	{"<b>7</b>", "PQRS", '7'},
-	{"<b>8</b>", "TUV", '8'},
-	{"<b>9</b>", "WXYZ", '9'},
+	{"<b>2</b>", "<small>ABC</small>", '2'},
+	{"<b>3</b>", "<small>DEF</small>", '3'},
+	{"<b>4</b>", "<small>GHI</small>", '4'},
+	{"<b>5</b>", "<small>JKL</small>", '5'},
+	{"<b>6</b>", "<small>MNO</small>", '6'},
+	{"<b>7</b>", "<small>PQRS</small>", '7'},
+	{"<b>8</b>", "<small>TUV</small>", '8'},
+	{"<b>9</b>", "<small>WXYZ</small>", '9'},
 	{"<b>*</b>", "", '*'},
-	{"<b>0</b>", "", '0'},
+	{"<b>0</b>", "<small>+</small>", '0'},
 	{"<b>#</b>", "", '#'},
 	{NULL, NULL}
 };
@@ -803,6 +804,9 @@ GtkWidget *phone_dialpad_frame(struct phone_state *state)
 	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
 	gtk_grid_set_column_homogeneous(GTK_GRID(grid), TRUE);
+
+	//gtk_style_context_add_class(gtk_widget_get_style_context(grid), GTK_STYLE_CLASS_RAISED);
+	//gtk_style_context_add_class(gtk_widget_get_style_context(grid), GTK_STYLE_CLASS_LINKED);
 
 	/* Add buttons */
 	for (index = 0; phone_labels[index].text != NULL; index++) {
