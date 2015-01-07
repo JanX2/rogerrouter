@@ -28,7 +28,7 @@
 #include <libroutermanager/network.h>
 #include <libroutermanager/ftp.h>
 
-//#define FTP_DEBUG 1
+#define FTP_DEBUG 1
 
 /**
  * \brief Open FTP port channel
@@ -119,11 +119,13 @@ gboolean ftp_read_control_response(struct ftp *client)
 	GError *error = NULL;
 	GIOStatus io_status;
 	gsize length;
+	gchar match[5];
+	gboolean multiline_start = FALSE;
+	gboolean multiline_end = FALSE;
 
 #ifdef FTP_DEBUG
 	g_debug("Wait for control response");
 #endif
-
 
 	/* Clear previous response message */
 	if (client->response) {
@@ -133,28 +135,40 @@ gboolean ftp_read_control_response(struct ftp *client)
 
 	g_timer_start(client->timer);
 
-	/* While timeout is not set, wait for data */
-	while (g_timer_elapsed(client->timer, NULL) < 3000000) {
+	do {
 		io_status = g_io_channel_read_line(client->control, &client->response, &length, NULL, &error);
-		if (io_status == G_IO_STATUS_NORMAL) {
-			if (client->response[length - 2] == '\r' && client->response[length - 1] == '\n') {
-				client->response[length - 2] = '\0';
-			}
-			if (isdigit(client->response[0]) && isdigit(client->response[1]) && isdigit(client->response[2]) && client->response[3] == ' ') {
-				client->code = (client->response[0] - '0') * 100 + (client->response[1] - '0') * 10 + (client->response[2] - '0');
-			}
 
-#ifdef FTP_DEBUG
-			g_debug("Response: '%s'", client->response);
-#endif
-			break;
-		} else if (io_status == G_IO_STATUS_AGAIN) {
+		if (io_status == G_IO_STATUS_AGAIN) {
 			g_usleep(500);
-		} else {
+			continue;
+		} else if (io_status != G_IO_STATUS_NORMAL) {
 			g_warning("Got: io status %d, Error: %s", io_status, error->message);
 			break;
 		}
-	}
+
+		if (!multiline_start) {
+			client->code = g_ascii_strtoll(client->response, NULL, 10);
+#ifdef FTP_DEBUG
+			g_debug("Response: '%s'", client->response);
+#endif
+			if (client->response[3] == '-') {
+				match[0] = client->response[0];
+				match[1] = client->response[1];
+				match[2] = client->response[2];
+				match[3] = ' ';
+				match[4] = '\0';
+
+				multiline_start = TRUE;
+			}
+		} else {
+#ifdef FTP_DEBUG
+			g_debug("Response: '%s'", client->response);
+#endif
+			if (!strncmp(client->response, match, 4)) {
+				multiline_end = TRUE;
+			}
+		}
+	} while ((g_timer_elapsed(client->timer, NULL) < 10) && (!client->response || (multiline_start && !multiline_end)));
 
 	g_timer_stop(client->timer);
 
