@@ -1,31 +1,57 @@
 .\" Copyright (c) 2009-2014, Jan-Michael Brummer <jan.brummer@tabos.org>
-.TH roger 1 "" "Roger Router Version @PACKAGE_VERSION@"
+.TH roger 1 "" "Roger Router Version @PACKAGE_VERSION@" "Roger Router - User Manual"
+
 .SH NAME
-roger \- Router Manager
+roger \- this is the graphical user interface of Roger Router.
+
 .SH SYNOPSIS
-.B roger
+.B roger [OPTIONS...]
 
 .SH DESCRIPTION
-.PP
-\fBRoger Router\fP is a clean solution for controlling the FRITZ!Box or compatible
-router with Linux. It offers a rich feature list, including caller monitor,
-fax and softphone support.
+\fBRoger Router\fR is a clean solution for controlling the FRITZ!Box or compatible router with Linux. It offers a rich feature list, including caller monitor, fax and softphone support.
 
 .SH OPTIONS
 .TP
-.BR \-d
-Enable debug output.
+\fB\-d\fR, \fB\-\-debug\fR
+Enable debug messages.
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Show help options.
+
+.SH NOTES
+.IP "\fIFaxing\fR" 4
+.RS
+If you want to use the capi fax function into Roger Router, you must enable capi-over-tcp within your FRITZ!Box with #96*3* and the user must be a member of the group fax.
+.RE
+.IP "\fINotifications\fR" 4
+.RS
+If you want to use the incoming and outgoing call notification into Roger Router, you must enable this feature  within  your  FRITZ!Box  with #96*5*.
+.RE
+.IP "\fIUPnP\fR" 4
+.RS
+Please activate the UPnP support of your FRITZ!Box.
+.RE
 
 .SH SEE ALSO
-\fIhttp://www.tabos.org/roger/\fP
+.BR roger_cli (1)
+.IP "Website:" 4
+.RS
+\fIhttp://www.tabos.org/home/\fR
+.RE
+.IP "Forum:" 4
+.RS
+\fIhttp://www.tabos.org/forum/\fR
+.RE
 
 .SH LICENSE
-Copyright (c) 2009-2014 Jan-Michael Brummer
+Copyright (c) 2009-2015 Jan-Michael Brummer <\fIjan.brummer@tabos.org\fR>
 
 .SH AUTHORS
-Roger Router's active developers are:
-.br
- Jan-Michael Brummer (developer)
-.br
-
-This manpage was written by Jan-Michael Brummer <\fIjan.brummer@tabos.org\fR>.
+.IP "Roger Router's active developers are:" 4
+.RS
+Jan-Michael Brummer (developer)  <\fIjan.brummer@tabos.org\fR>
+.RE
+.IP "This manpage was written by:" 4
+.RS
+Jan-Michael Brummer <\fIjan.brummer@tabos.org\fR>
+.RE
