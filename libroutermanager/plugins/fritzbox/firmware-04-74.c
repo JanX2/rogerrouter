@@ -73,7 +73,7 @@ gboolean fritzbox_login_04_74(struct profile *profile)
 	soup_session_send_message(soup_session_sync, msg);
 	if (msg->status_code != 200 || !msg->response_body->length) {
 		g_debug("Received status code: %d", msg->status_code);
-		g_debug("Message length: %d", msg->response_body->length);
+		g_debug("Message length: %" G_GOFFSET_FORMAT, msg->response_body->length);
 		g_object_unref(msg);
 
 		g_timer_destroy(profile->router_info->session_timer);
