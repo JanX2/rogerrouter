@@ -201,6 +201,8 @@ static void *gstreamer_open(void)
 	struct profile *profile = profile_get_active();
 	struct pipes *pipes = NULL;
 	GstElement *sink;
+	GstElement *audio_sink;
+	GstElement *audio_source;
 	GstElement *pipe;
 	GstDevice *output_device = NULL;
 	GstDevice *input_device = NULL;
@@ -216,29 +218,40 @@ static void *gstreamer_open(void)
 	}
 
 	/* Get devices */
-	gst_devices = gst_device_monitor_get_devices(monitor);
+	if (use_gst_device_monitor) {
+		gst_devices = gst_device_monitor_get_devices(monitor);
 
-	/* Get preferred input/output device names */
-	output_name = g_settings_get_string(profile->settings, "audio-output");
-	input_name = g_settings_get_string(profile->settings, "audio-input");
+		/* Get preferred input/output device names */
+		output_name = g_settings_get_string(profile->settings, "audio-output");
+		input_name = g_settings_get_string(profile->settings, "audio-input");
 
-	/* Find output device */
-	for (list = gst_devices; list != NULL; list = list->next) {
-		GstDevice *device = list->data;
+		/* Find output device */
+		for (list = gst_devices; list != NULL; list = list->next) {
+			GstDevice *device = list->data;
 
-		gchar *class = gst_device_get_device_class(device);
-		gchar *name = gst_device_get_display_name(device);
+			gchar *class = gst_device_get_device_class(device);
+			gchar *name = gst_device_get_display_name(device);
 
-		if (!strcmp(class, "Audio/Sink") && !strcmp(name, output_name)) {
-			output_device = device;
-		} else if (!strcmp(class, "Audio/Source") && !strcmp(name, input_name)) {
-			input_device = device;
+			if (!strcmp(class, "Audio/Sink") && !strcmp(name, output_name)) {
+				output_device = device;
+			} else if (!strcmp(class, "Audio/Source") && !strcmp(name, input_name)) {
+				input_device = device;
+			}
 		}
+
+		if (!output_device || !input_device) {
+			g_error("Audio device not found!");
+		}
+
+		audio_sink = gst_device_create_element(output_device, NULL);
+		audio_source = gst_device_create_element(input_device, NULL);
+	} else {
+		audio_sink = gst_element_factory_make("autoaudiosink", NULL);
+		audio_source = gst_element_factory_make("autoaudiosrc", NULL);
 	}
 
-	if (!output_device || !input_device) {
-		g_error("Audio device not found!");
-	}
+	g_assert(audio_sink != NULL);
+	g_assert(audio_source != NULL);
 
 	/* Create output pipeline */
 	pipe = gst_pipeline_new("output");
@@ -265,16 +278,8 @@ static void *gstreamer_open(void)
 	g_object_set(G_OBJECT(filter), "caps", filtercaps, NULL);
 	gst_caps_unref(filtercaps);
 
-	if (use_gst_device_monitor) {
-		sink = gst_device_create_element(output_device, NULL);
-	} else {
-		sink = gst_element_factory_make("autoaudiosink", NULL);
-	}
-
-	g_assert(sink != NULL);
-
-	gst_bin_add_many(GST_BIN(pipe), source, filter, sink, NULL);
-	gst_element_link_many(source, filter, sink, NULL);
+	gst_bin_add_many(GST_BIN(pipe), source, filter, audio_sink, NULL);
+	gst_element_link_many(source, filter, audio_sink, NULL);
 
 	ret = gst_element_set_state(pipe, GST_STATE_PLAYING);
 	if (ret == GST_STATE_CHANGE_FAILURE) {
@@ -309,16 +314,8 @@ static void *gstreamer_open(void)
 	g_object_set(G_OBJECT(filter), "caps", filtercaps, NULL);
 	gst_caps_unref(filtercaps);
 
-	if (use_gst_device_monitor) {
-		source = gst_device_create_element(input_device, NULL);
-	} else {
-		source = gst_element_factory_make("autoaudiosrc", NULL);
-	}
-
-	g_assert(source != NULL);
-
-	gst_bin_add_many(GST_BIN(pipe), source, filter, sink, NULL);
-	gst_element_link_many(source, filter, sink, NULL);
+	gst_bin_add_many(GST_BIN(pipe), audio_source, filter, sink, NULL);
+	gst_element_link_many(audio_source, filter, sink, NULL);
 
 	ret = gst_element_set_state(pipe, GST_STATE_PLAYING);
 	if (ret == GST_STATE_CHANGE_FAILURE) {
