@@ -42,8 +42,7 @@ ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_GSTREAMER_PLUGIN, RouterManager
 static gint gstreamer_channels = 2;
 static gint gstreamer_sample_rate = 8000;
 static gint gstreamer_bits_per_sample = 16;
-
-static GstDevice *gst_device = NULL;
+static GstDeviceMonitor *monitor = NULL;
 
 struct pipes {
 	GstElement *in_pipe;
@@ -83,26 +82,20 @@ static GSList *gstreamer_detect_devices(void)
 	GSList *devices = NULL;
 	struct audio_device *audio_device;
 	GList *gst_devices = NULL;
-	GstDeviceMonitor *monitor;
-
-	g_debug("Starting device monitor\n");
-	monitor = gst_device_monitor_new();
-	if (!gst_device_monitor_start(monitor)) {
-		g_error("Failed to start device monitor!");
-	}
 
 	gst_devices = gst_device_monitor_get_devices(monitor);
 	GList *list;
 
 	for (list = gst_devices; list != NULL; list = list->next) {
 		GstDevice *device = list->data;
-
 		gchar *name = gst_device_get_display_name(device);
-		gchar *class = gst_device_get_device_class(device);
+		gchar *class;
 
 		if (strstr(name, "Monitor")) {
 			continue;
 		}
+
+		class = gst_device_get_device_class(device);
 
 		if (!strcmp(class, "Audio/Sink")) {
 			audio_device = g_slice_new0(struct audio_device);
@@ -117,13 +110,9 @@ static GSList *gstreamer_detect_devices(void)
 			audio_device->name = g_strdup(name);
 			audio_device->type = AUDIO_INPUT;
 			audio_device->priv = device;
-			gst_device = device;
 			devices = g_slist_prepend(devices, audio_device);
 		}
 	}
-
-	gst_device_monitor_stop(monitor);
-	gst_object_unref(monitor);
 
 	return devices;
 }
@@ -169,6 +158,15 @@ static void gstreamer_set_buffer_input_size(gpointer priv, unsigned buffer_size)
  */
 static int gstreamer_init(unsigned char channels, unsigned short sample_rate, unsigned char bits_per_sample)
 {
+	monitor = gst_device_monitor_new();
+
+	gst_device_monitor_add_filter(monitor, "Audio/Sink", NULL);
+	gst_device_monitor_add_filter(monitor, "Audio/Source", NULL);
+
+	if (!gst_device_monitor_start(monitor)) {
+		g_error("Failed to start device monitor!");
+	}
+
 	/* TODO: Check if configuration is valid and usable */
 	gstreamer_channels = channels;
 	gstreamer_sample_rate = sample_rate;
@@ -187,7 +185,6 @@ static void *gstreamer_open(void)
 	struct pipes *pipes = NULL;
 	GstElement *sink;
 	GstElement *pipe;
-	GstDeviceMonitor *monitor;
 	GstDevice *output_device = NULL;
 	GstDevice *input_device = NULL;
 	GList *list;
@@ -202,11 +199,6 @@ static void *gstreamer_open(void)
 	}
 
 	/* Get devices */
-	monitor = gst_device_monitor_new();
-	if (!gst_device_monitor_start(monitor)) {
-		g_error("Failed to start device monitor!");
-	}
-
 	gst_devices = gst_device_monitor_get_devices(monitor);
 
 	/* Get preferred input/output device names */
@@ -402,6 +394,9 @@ int gstreamer_close(void *priv)
 
 int gstreamer_shutdown(void)
 {
+	gst_device_monitor_stop(monitor);
+	gst_object_unref(monitor);
+
 	return 0;
 }
 
