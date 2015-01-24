@@ -102,14 +102,12 @@ static GSList *gstreamer_detect_devices(void)
 			audio_device->internal_name = g_strdup(name);
 			audio_device->name = g_strdup(name);
 			audio_device->type = AUDIO_OUTPUT;
-			audio_device->priv = device;
 			devices = g_slist_prepend(devices, audio_device);
 		} else if (!strcmp(class, "Audio/Source")) {
 			audio_device = g_slice_new0(struct audio_device);
 			audio_device->internal_name = g_strdup(name);
 			audio_device->name = g_strdup(name);
 			audio_device->type = AUDIO_INPUT;
-			audio_device->priv = device;
 			devices = g_slist_prepend(devices, audio_device);
 		}
 	}
