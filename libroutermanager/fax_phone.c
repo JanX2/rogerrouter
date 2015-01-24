@@ -116,7 +116,7 @@ struct capi_connection *phone_dial(const gchar *trg_no, gboolean suppress)
 
 	target = call_canonize_number(trg_no);
 
-	connection = phone_call(controller, src_no, trg_no, suppress);
+	connection = phone_call(controller, src_no, target, suppress);
 
 	g_free(target);
 
