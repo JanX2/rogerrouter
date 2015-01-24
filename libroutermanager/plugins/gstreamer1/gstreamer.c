@@ -43,6 +43,7 @@ static gint gstreamer_channels = 2;
 static gint gstreamer_sample_rate = 8000;
 static gint gstreamer_bits_per_sample = 16;
 static GstDeviceMonitor *monitor = NULL;
+static gboolean use_gst_device_monitor = FALSE;
 
 struct pipes {
 	GstElement *in_pipe;
@@ -82,6 +83,23 @@ static GSList *gstreamer_detect_devices(void)
 	GSList *devices = NULL;
 	struct audio_device *audio_device;
 	GList *gst_devices = NULL;
+
+	if (!use_gst_device_monitor) {
+		audio_device = g_slice_new0(struct audio_device);
+
+		audio_device->internal_name = g_strdup("autoaudiosink");
+		audio_device->name = g_strdup("Standard");
+		audio_device->type = AUDIO_OUTPUT;
+		devices = g_slist_prepend(devices, audio_device);
+ 
+		audio_device = g_slice_new0(struct audio_device);
+		audio_device->internal_name = g_strdup("autoaudiosrc");
+		audio_device->name = g_strdup("Standard");
+		audio_device->type = AUDIO_INPUT;
+		devices = g_slist_prepend(devices, audio_device);
+
+		return devices;
+	}
 
 	gst_devices = gst_device_monitor_get_devices(monitor);
 	GList *list;
@@ -161,8 +179,9 @@ static int gstreamer_init(unsigned char channels, unsigned short sample_rate, un
 	gst_device_monitor_add_filter(monitor, "Audio/Sink", NULL);
 	gst_device_monitor_add_filter(monitor, "Audio/Source", NULL);
 
-	if (!gst_device_monitor_start(monitor)) {
-		g_error("Failed to start device monitor!");
+	use_gst_device_monitor = gst_device_monitor_start(monitor);
+	if (!use_gst_device_monitor) {
+		g_warning("Failed to start device monitor!");
 	}
 
 	/* TODO: Check if configuration is valid and usable */
@@ -246,7 +265,12 @@ static void *gstreamer_open(void)
 	g_object_set(G_OBJECT(filter), "caps", filtercaps, NULL);
 	gst_caps_unref(filtercaps);
 
-	sink = gst_device_create_element(output_device, NULL);
+	if (use_gst_device_monitor) {
+		sink = gst_device_create_element(output_device, NULL);
+	} else {
+		sink = gst_element_factory_make("autoaudiosink", NULL);
+	}
+
 	g_assert(sink != NULL);
 
 	gst_bin_add_many(GST_BIN(pipe), source, filter, sink, NULL);
@@ -285,7 +309,12 @@ static void *gstreamer_open(void)
 	g_object_set(G_OBJECT(filter), "caps", filtercaps, NULL);
 	gst_caps_unref(filtercaps);
 
-	source = gst_device_create_element(input_device, NULL);
+	if (use_gst_device_monitor) {
+		source = gst_device_create_element(input_device, NULL);
+	} else {
+		source = gst_element_factory_make("autoaudiosrc", NULL);
+	}
+
 	g_assert(source != NULL);
 
 	gst_bin_add_many(GST_BIN(pipe), source, filter, sink, NULL);
