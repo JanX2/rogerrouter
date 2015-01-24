@@ -28,7 +28,7 @@
 #include <libroutermanager/network.h>
 #include <libroutermanager/ftp.h>
 
-#define FTP_DEBUG 1
+//#define FTP_DEBUG 1
 
 /**
  * \brief Open FTP port channel
