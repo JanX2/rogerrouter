@@ -675,6 +675,11 @@ AC_CONFIG_FILES([
     roger/plugins/gnotification/Makefile
     roger/plugins/gnotification/data/Makefile
     roger/images/Makefile
+    roger/images/16x16/Makefile
+    roger/images/22x22/Makefile
+    roger/images/24x24/Makefile
+    roger/images/32x32/Makefile
+    roger/images/48x48/Makefile
     roger/images/scalable/Makefile
     cups-backend/Makefile
     macosx/roger.plist

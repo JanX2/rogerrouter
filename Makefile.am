@@ -4,6 +4,9 @@ if !WIN32
 SUBDIRS += cups-backend
 endif
 
+AM_DISTCHECK_CONFIGURE_FLAGS = \
+	--disable-werror
+
 EXTRA_DIST = \
 	autogen.sh \
 	roger.desktop.in \
