@@ -48,9 +48,6 @@
 #include <roger/application.h>
 
 static GSList *phone_active_connections = NULL;
-#if GTK_CHECK_VERSION(3,10,0)
-static gboolean use_header_bar = FALSE;
-#endif
 
 static GtkWidget *phone_window = NULL;
 
@@ -115,7 +112,7 @@ static gboolean phone_session_timer_cb(gpointer data)
 	snprintf(buf, sizeof(buf), _("Connection: %s | Time: %s"), state->phone_status_text, time_diff);
 
 #if GTK_CHECK_VERSION(3, 10, 0)
-	if (use_header_bar) {
+	if (state->use_header_bar) {
 		gtk_header_bar_set_subtitle(GTK_HEADER_BAR(state->phone_status_label), buf);
 	} else
 #endif
@@ -1009,9 +1006,9 @@ void app_show_phone_window(struct contact *contact)
 #if GTK_CHECK_VERSION(3,12,0)
 	g_object_get(gtk_settings_get_default(), "gtk-dialogs-use-header", &use_header, NULL);
 #endif
-	use_header_bar = use_header || g_settings_get_boolean(app_settings, "use-header");
+	state->use_header_bar = use_header || g_settings_get_boolean(app_settings, "use-header");
 
-	if (use_header_bar) {
+	if (state->use_header_bar) {
 		/* Create header bar and set it to window */
 		GtkWidget *header = gtk_header_bar_new();
 
