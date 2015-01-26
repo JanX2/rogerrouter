@@ -52,6 +52,8 @@ static void capi_connection_terminated_cb(AppObject *object, struct capi_connect
 	struct profile *profile = profile_get_active();
 	int reason;
 
+	g_debug("[%s]: connection %p, fax_connection %p", __FUNCTION__, connection, fax_ui ? fax_ui->fax_connection : NULL);
+
 	if (fax_ui->fax_connection != NULL && fax_ui->fax_connection != connection) {
 		return;
 	}
@@ -78,13 +80,14 @@ static void capi_connection_terminated_cb(AppObject *object, struct capi_connect
 			g_debug("Fax transfer failed");
 		}
 		}
+
+		g_print("Setting to disconnect");
+		snprintf(state->phone_status_text, sizeof(state->phone_status_text), _("Disconnected"));
+
+		phone_remove_connection(connection);
+		phone_remove_timer(state);
+		fax_ui->fax_connection = NULL;
 	}
-
-	snprintf(state->phone_status_text, sizeof(state->phone_status_text), _("Disconnected"));
-
-	phone_remove_connection(connection);
-	phone_remove_timer(state);
-	fax_ui->fax_connection = NULL;
 }
 
 gboolean fax_update_ui(gpointer user_data)
