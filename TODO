@@ -16,6 +16,8 @@ TODO
 * Fix possible race condition between telnet and CAPI plugin
 * Fax report currently a size of 610x879mm -> change to A4
 
+* FRITZ!Fon: label field
+
 * GNetworkMonitor currently only works on Linux! Add implementation for:
     - Windows (patch added: https://bugzilla.gnome.org/show_bug.cgi?id=685442)
     - OS X
