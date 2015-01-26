@@ -588,7 +588,7 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 		return;
 	}
 
-	scale = gdk_pixbuf_scale_simple(pixbuf, MM_TO_POINTS(210), MM_TO_POINTS(297 - 75), GDK_INTERP_BILINEAR);
+	scale = gdk_pixbuf_scale_simple(pixbuf, MM_TO_POINTS(210), MM_TO_POINTS(297) - 75, GDK_INTERP_BILINEAR);
 	g_object_unref(pixbuf);
 	pixbuf = scale;
 
