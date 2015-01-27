@@ -588,7 +588,7 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 		return;
 	}
 
-	scale = gdk_pixbuf_scale_simple(pixbuf, MM_TO_POINTS(210), MM_TO_POINTS(297) - 75, GDK_INTERP_BILINEAR);
+	scale = gdk_pixbuf_scale_simple(pixbuf, MM_TO_POINTS(210) - 53, MM_TO_POINTS(297) - 75, GDK_INTERP_BILINEAR);
 	g_object_unref(pixbuf);
 	pixbuf = scale;
 
@@ -605,7 +605,7 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	}
 
 	cairo = cairo_create(out);
-	gdk_cairo_set_source_pixbuf(cairo, pixbuf, 0, 75);
+	gdk_cairo_set_source_pixbuf(cairo, pixbuf, 27, 75);
 	cairo_paint(cairo);
 
 	cairo_set_source_rgb(cairo, 0, 0, 0);
