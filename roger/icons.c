@@ -37,7 +37,7 @@ struct icons app_icons[11] = {
 	{"printer-symbolic", "printer"},
 	{"edit-clear-symbolic", "edit-clear"},
 	{"edit-find-symbolic", "edit-find"},
-	{"call-end-symbolic", "call-stop"}
+	{"call-stop-symbolic", "call-stop"}
 };
 
 GtkWidget *get_icon(gint type, gint size)

@@ -164,9 +164,9 @@ GtkWidget *statusicon_menu_last_calls(void)
 
 void statusicon_activate_cb(void)
 {
-	gchar *path = g_strconcat("roger-", g_settings_get_string(statusicon_settings, "default-icon"), NULL);
-	gtk_status_icon_set_from_pixbuf(statusicon, gdk_pixbuf_new_from_file(path, NULL));
-	g_free(path);
+	gchar *iconname = g_strconcat("roger-", g_settings_get_string(statusicon_settings, "default-icon"), NULL);
+	gtk_status_icon_set_from_icon_name(statusicon, iconname);
+	g_free(iconname);
 
 	gtk_widget_set_visible(GTK_WIDGET(journal_win), !gtk_widget_get_visible(GTK_WIDGET(journal_win)));
 }
@@ -266,9 +266,9 @@ void statusicon_connection_notify_cb(AppObject *obj, struct connection *connecti
 	g_debug("Called: '%d/%d", connection->type, CONNECTION_TYPE_MISS);
 	if (connection->type == CONNECTION_TYPE_MISS) {
 		g_debug("Setting missed icon");
-		gchar *path = g_strconcat("roger-", g_settings_get_string(statusicon_settings, "notify-icon"), NULL);
-		gtk_status_icon_set_from_pixbuf(statusicon, gdk_pixbuf_new_from_file(path, NULL));
-		g_free(path);
+		gchar *iconname = g_strconcat("roger-", g_settings_get_string(statusicon_settings, "notify-icon"), NULL);
+		gtk_status_icon_set_from_icon_name(statusicon, iconname);
+		g_free(iconname);
 	}
 }
 
@@ -285,9 +285,9 @@ void statusicon_combobox_default_changed_cb(GtkComboBox *widget, gpointer user_d
 	g_settings_set_string(statusicon_settings, "default-icon", gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_box)));
 
 	/* Update statusicon icon */
-	gchar *path = g_strconcat("roger-", g_settings_get_string(statusicon_settings, "default-icon"), NULL);
-	gtk_status_icon_set_from_pixbuf(statusicon, gdk_pixbuf_new_from_file(path, NULL));
-	g_free(path);
+	gchar *iconname = g_strconcat("roger-", g_settings_get_string(statusicon_settings, "default-icon"), NULL);
+	gtk_status_icon_set_from_icon_name(statusicon, iconname);
+	g_free(iconname);
 }
 
 /**
@@ -311,9 +311,9 @@ static gboolean add_statusicon(gpointer user_data)
 	g_signal_connect(G_OBJECT(statusicon), "popup-menu", G_CALLBACK(statusicon_popup_menu_cb), NULL);
 	g_signal_connect(G_OBJECT(statusicon), "activate", G_CALLBACK(statusicon_activate_cb), NULL);
 
-	gchar *path = g_strconcat("roger-", g_settings_get_string(statusicon_settings, "default-icon"), NULL);
-	gtk_status_icon_set_from_pixbuf(statusicon, gdk_pixbuf_new_from_file(path, NULL));
-	g_free(path);
+	gchar *iconname = g_strconcat("roger-", g_settings_get_string(statusicon_settings, "default-icon"), NULL);
+	gtk_status_icon_set_from_icon_name(statusicon, iconname);
+	g_free(iconname);
 
 	gtk_status_icon_set_tooltip_text(statusicon, _("Roger Router"));
 	gtk_status_icon_set_visible(statusicon, TRUE);

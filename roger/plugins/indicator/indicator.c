@@ -303,9 +303,9 @@ void indicator_combobox_default_changed_cb(GtkComboBox *widget, gpointer user_da
 	g_settings_set_string(indicator_settings, "default-icon", gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_box)));
 
 	/* Update indicator icon */
-	gchar *path = g_strconcat("roger-", g_settings_get_string(indicator_settings, "default-icon"), NULL);
-	app_indicator_set_icon_full(indicator, path, "default-icon");
-	g_free(path);
+	gchar *iconname = g_strconcat("roger-", g_settings_get_string(indicator_settings, "default-icon"), NULL);
+	app_indicator_set_icon_full(indicator, iconname, "default-icon");
+	g_free(iconname);
 }
 
 /**
@@ -321,9 +321,9 @@ void indicator_combobox_notify_changed_cb(GtkComboBox *widget, gpointer user_dat
 	g_settings_set_string(indicator_settings, "notify-icon", gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_box)));
 
 	/* Update indicator attention icon */
-	gchar *path = g_strconcat("roger-", g_settings_get_string(indicator_settings, "notify-icon"), NULL);
-	app_indicator_set_attention_icon_full(indicator, path, "notify-icon");
-	g_free(path);
+	gchar *iconname = g_strconcat("roger-", g_settings_get_string(indicator_settings, "notify-icon"), NULL);
+	app_indicator_set_attention_icon_full(indicator, iconname, "notify-icon");
+	g_free(iconname);
 }
 
 void impl_activate(PeasActivatable *plugin)
@@ -336,11 +336,11 @@ void impl_activate(PeasActivatable *plugin)
 	indicator_settings = rm_settings_plugin_new("org.tabos.roger.plugins.indicator", "indicator");
 
 	/* Create Application Indicator */
-	gchar *path = g_strconcat("roger-", g_settings_get_string(indicator_settings, "default-icon"), NULL);
-	indicator = app_indicator_new("roger", path, APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
-	path = g_strconcat("roger-", g_settings_get_string(indicator_settings, "notify-icon"), NULL);
-	app_indicator_set_attention_icon_full(indicator, path, "notify-icon");
-	g_free(path);
+	gchar *iconname = g_strconcat("roger-", g_settings_get_string(indicator_settings, "default-icon"), NULL);
+	indicator = app_indicator_new("roger", iconname, APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
+	iconname = g_strconcat("roger-", g_settings_get_string(indicator_settings, "notify-icon"), NULL);
+	app_indicator_set_attention_icon_full(indicator, iconname, "notify-icon");
+	g_free(iconname);
 
 	menu = indicator_menu();
 	app_indicator_set_menu(indicator, GTK_MENU(menu));
