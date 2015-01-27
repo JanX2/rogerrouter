@@ -262,6 +262,8 @@ void app_show_fax_window(gchar *fax_file)
 	frame = gtk_frame_new(_("Information"));
 
 	frame_grid = gtk_grid_new();
+	gtk_widget_set_margin(frame_grid, 5, 0, 5, 5);
+
 	/* Set standard spacing to 5 */
 	gtk_grid_set_row_spacing(GTK_GRID(frame_grid), 5);
 	gtk_grid_set_column_spacing(GTK_GRID(frame_grid), 5);
