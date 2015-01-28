@@ -87,6 +87,8 @@ GtkWidget *pref_page_fax(void)
 	GtkWidget *bitrate_combobox;
 	GtkWidget *controller_label;
 	GtkWidget *controller_combobox;
+	GtkWidget *cip_label;
+	GtkWidget *cip_combobox;
 	GtkWidget *ecm_toggle;
 
 	/* General:
@@ -232,10 +234,19 @@ GtkWidget *pref_page_fax(void)
 	g_settings_bind(profile_get_active()->settings, "fax-controller", controller_combobox, "active", G_SETTINGS_BIND_DEFAULT);
 	gtk_grid_attach(GTK_GRID(modem_grid), controller_combobox, 1, 2, 1, 1);
 
+	cip_label = ui_label_new(_("Service"));
+	gtk_grid_attach(GTK_GRID(modem_grid), cip_label, 0, 3, 1, 1);
+
+	cip_combobox = gtk_combo_box_text_new();
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(cip_combobox), _("Analog"));
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(cip_combobox), _("ISDN"));
+	g_settings_bind(profile_get_active()->settings, "fax-cip", cip_combobox, "active", G_SETTINGS_BIND_DEFAULT);
+	gtk_grid_attach(GTK_GRID(modem_grid), cip_combobox, 1, 3, 1, 1);
+
 	ecm_toggle = gtk_check_button_new_with_label(_("Error correction mode (ECM)"));
 	gtk_widget_override_color(ecm_toggle, GTK_STATE_FLAG_NORMAL, &col);
 	g_settings_bind(profile_get_active()->settings, "fax-ecm", ecm_toggle, "active", G_SETTINGS_BIND_DEFAULT);
-	gtk_grid_attach(GTK_GRID(modem_grid), ecm_toggle, 0, 3, 2, 1);
+	gtk_grid_attach(GTK_GRID(modem_grid), ecm_toggle, 0, 4, 2, 1);
 
 	gtk_grid_attach(GTK_GRID(grid), pref_group_create(modem_grid, _("Modem"), TRUE, TRUE), 0, 2, 1, 1);
 
