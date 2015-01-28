@@ -70,7 +70,7 @@
 		</key>
 
 		<key name="use-header" type="b">
-			<default>false</default>
+			<default>true</default>
 		</key>
 	</schema>
 </schemalist>
