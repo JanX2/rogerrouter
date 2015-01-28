@@ -24,6 +24,7 @@
 #include <roger/main.h>
 #include <roger/pref.h>
 #include <roger/pref_misc.h>
+#include <roger/application.h>
 
 /**
  * \brief Ghostscript file set callback - set file name to settings
@@ -66,6 +67,15 @@ void gs_button_clicked_cb(GtkButton *button, gpointer user_data)
 GtkWidget *pref_page_misc(void)
 {
 	GtkWidget *grid = gtk_grid_new();
+	GtkWidget *headerbar_label;
+	GtkWidget *headerbar_switch;
+	gint y = 0;
+
+	/* Set standard spacing to 5 */
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 15);
+
+#ifdef G_OS_WIN32
 	GtkWidget *gs_label;
 	GtkWidget *gs_entry;
 	GtkWidget *gs_button;
@@ -74,21 +84,25 @@ GtkWidget *pref_page_misc(void)
 	 * <FILE-CHOOSER>
 	 */
 
-	/* Set standard spacing to 5 */
-	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(grid), 15);
-
 	gs_label = ui_label_new(_("Ghostscript executable"));
-	gtk_grid_attach(GTK_GRID(grid), gs_label, 0, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), gs_label, 0, y, 1, 1);
 
 	gs_entry = gtk_entry_new();
 	gtk_widget_set_hexpand(gs_entry, TRUE);
 	g_settings_bind(profile_get_active()->settings, "ghostscript", gs_entry, "text", G_SETTINGS_BIND_DEFAULT);
-	gtk_grid_attach(GTK_GRID(grid), gs_entry, 1, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), gs_entry, 1, y, 1, 1);
 
 	gs_button = gtk_button_new_with_label(_("Select"));
-	gtk_grid_attach(GTK_GRID(grid), gs_button, 2, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), gs_button, 2, y, 1, 1);
 	g_signal_connect(gs_button, "clicked", G_CALLBACK(gs_button_clicked_cb), gs_entry);
+	y++;
+#endif
+
+	headerbar_label = ui_label_new(_("Use headerbar (restart required)"));
+	gtk_grid_attach(GTK_GRID(grid), headerbar_label, 0, y, 1, 1);
+	headerbar_switch = gtk_switch_new();
+	g_settings_bind(app_settings, "use-header", headerbar_switch, "active", G_SETTINGS_BIND_DEFAULT);
+	gtk_grid_attach(GTK_GRID(grid), headerbar_switch, 1, y, 1, 1);
 
 	return pref_group_create(grid, _("Misc"), TRUE, TRUE);
 }

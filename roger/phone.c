@@ -1001,12 +1001,7 @@ void app_show_phone_window(struct contact *contact)
 	gtk_grid_attach(GTK_GRID(grid), state->control_frame, 1, pos_y, 1, 1);
 
 #if GTK_CHECK_VERSION(3,10,0)
-	gboolean use_header = FALSE;
-
-#if GTK_CHECK_VERSION(3,12,0)
-	g_object_get(gtk_settings_get_default(), "gtk-dialogs-use-header", &use_header, NULL);
-#endif
-	state->use_header_bar = use_header || g_settings_get_boolean(app_settings, "use-header");
+	state->use_header_bar = g_settings_get_boolean(app_settings, "use-header");
 
 	if (state->use_header_bar) {
 		/* Create header bar and set it to window */
