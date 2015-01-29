@@ -976,6 +976,8 @@ gboolean journal_button_press_event_cb(GtkWidget *treeview, GdkEventButton *even
 }
 
 #if GTK_CHECK_VERSION(3,10,0)
+static gboolean search_active = FALSE;
+
 gboolean window_key_press_event_cb(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 {
 	GtkWidget *button = g_object_get_data(G_OBJECT(widget), "button");
@@ -984,12 +986,12 @@ gboolean window_key_press_event_cb(GtkWidget *widget, GdkEvent *event, gpointer 
 
 	ret = gtk_search_bar_handle_event(GTK_SEARCH_BAR(user_data), event);
 
-	if (ret == GDK_EVENT_STOP) {
-		if (key->keyval == GDK_KEY_Escape) {
+	if (ret != GDK_EVENT_STOP) {
+		if (search_active && key->keyval == GDK_KEY_Escape) {
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), FALSE);
-		} else {
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
 		}
+	} else if (!search_active) {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
 	}
 
 	return ret;
@@ -997,8 +999,8 @@ gboolean window_key_press_event_cb(GtkWidget *widget, GdkEvent *event, gpointer 
 
 void find_button_pressed_cb(GtkWidget *widget, gpointer user_data)
 {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget), !gtk_search_bar_get_search_mode(GTK_SEARCH_BAR(user_data)));
-	gtk_search_bar_set_search_mode(GTK_SEARCH_BAR(user_data), !gtk_search_bar_get_search_mode(GTK_SEARCH_BAR(user_data)));
+	gtk_search_bar_set_search_mode(GTK_SEARCH_BAR(user_data), !search_active);
+	search_active = !search_active;
 }
 #endif
 
@@ -1139,12 +1141,14 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 		gtk_box_pack_start(GTK_BOX(box), button, FALSE, TRUE, 0);
 
 		entry = gtk_search_entry_new();
+		gtk_widget_set_size_request(entry, 500, -1);
+		gtk_container_add(GTK_CONTAINER(search), entry);
+
 		g_object_set_data(G_OBJECT(window), "button", button);
 		g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(search_entry_changed), journal_view);
 		gtk_widget_set_hexpand(entry, TRUE);
 		gtk_widget_set_hexpand(search, TRUE);
 
-		gtk_container_add(GTK_CONTAINER(search), entry);
 		gtk_widget_show_all(search);
 
 		gtk_grid_attach(GTK_GRID(grid), search, 0, 1, 5, 1);
@@ -1315,7 +1319,6 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	}
 
 	scrolled = gtk_scrolled_window_new(NULL, NULL);
-	//gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(scrolled), GTK_SHADOW_IN);
 	gtk_widget_set_hexpand(scrolled, TRUE);
 	gtk_widget_set_vexpand(scrolled, TRUE);
 
