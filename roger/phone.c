@@ -984,10 +984,10 @@ void app_show_phone_window(struct contact *contact)
 	g_signal_connect(window, "delete_event", G_CALLBACK(phone_window_delete_event_cb), state);
 
 	grid = gtk_grid_new();
-	gtk_widget_set_margin(grid, 12, 12, 12, 12);
+	gtk_widget_set_margin(grid, 12, 12, 12, 6);
 
 	/* Set standard spacing to 5 */
-	gtk_grid_set_row_spacing(GTK_GRID(grid), 16);
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
 
 	/* Yes, we start at pos_y = 1, pos_y = 0 will be set below */
