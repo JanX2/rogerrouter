@@ -72,20 +72,19 @@ GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand,
 	return grid;
 }
 
-static void pref_response_cb(GtkDialog *dialog_win, gint response_id, gpointer user_data)
-{
-	gtk_widget_destroy(GTK_WIDGET(dialog_win));
-	dialog = NULL;
-}
-
 GtkWindow *pref_get_window(void)
 {
 	return dialog ? GTK_WINDOW(dialog) : NULL;
 }
 
+void dialog_destroy_cb(GtkWidget *widget, gpointer user_data)
+{
+	gtk_widget_destroy(widget);
+	dialog = NULL;
+}
+
 void preferences(void)
 {
-	GtkWidget *content;
 	GtkWidget *notebook = gtk_notebook_new();
 	GtkWidget *page;
 	GtkWidget *parent = NULL;
@@ -100,10 +99,13 @@ void preferences(void)
 	}
 
 	parent = journal_get_window();
-	dialog = gtk_dialog_new_with_buttons(_("Preferences"), parent ? GTK_WINDOW(parent) : NULL, 0, _("_Close"), GTK_RESPONSE_CLOSE, NULL);
-	content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 
-	gtk_container_set_border_width(GTK_CONTAINER(dialog), 5);
+	dialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_title(GTK_WINDOW(dialog), _("Preferences"));
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(parent));
+	gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
+	g_signal_connect(G_OBJECT(dialog), "destroy", G_CALLBACK(dialog_destroy_cb), NULL);
 
 	page = pref_page_router();
 	pref_notebook_add_page(notebook, page, _("Router"));
@@ -136,15 +138,9 @@ void preferences(void)
 	pref_notebook_add_page(notebook, page, _("Misc"));
 
 	gtk_notebook_set_tab_pos(GTK_NOTEBOOK(notebook), GTK_POS_LEFT);
-	gtk_container_add(GTK_CONTAINER(content), notebook);
+	gtk_container_add(GTK_CONTAINER(dialog), notebook);
 
 	gtk_window_set_default_size(GTK_WINDOW(dialog), 700, 430);
-
-	g_signal_connect(dialog, "response", G_CALLBACK(pref_response_cb), dialog);
-
-#ifdef G_OS_WIN32
-	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-#endif
 
 	gtk_widget_show_all(dialog);
 }
