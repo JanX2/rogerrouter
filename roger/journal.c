@@ -1377,7 +1377,9 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 		 * true for versions < 3.10.0. Disable ellipsize text to show optimal column widths..... *grml*
 		 */
 #if GTK_CHECK_VERSION(3,10,0)
-		g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, NULL);
+		if (index == JOURNAL_COL_NAME) {
+			g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "width", 280, NULL);
+		}
 #endif
 		column = gtk_tree_view_column_new_with_attributes(column_name[index], renderer, "text", index, NULL);
 		gtk_tree_view_column_set_sort_column_id(column, index);
