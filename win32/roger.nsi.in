@@ -132,8 +132,8 @@ Section RogerRouter
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libsoup-2.4-1.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libsqlite3-0.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/lib/libportaudio-2.dll"
-	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libcroco-0.6-3.dll"
-	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/librsvg-2-2.dll"
+	;File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libcroco-0.6-3.dll"
+	;File "/usr/i686-w64-mingw32/sys-root/mingw/bin/librsvg-2-2.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libwinpthread-1.dll"
 
 	; Install data files
@@ -168,9 +168,9 @@ Section RogerRouter
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/share/glib-2.0"
 	;File /r "themes"
 
-	SetOutPath "$INSTDIR\share\icons\gnome\"
-	File /r "/usr/i686-w64-mingw32/sys-root/mingw/share/icons/gnome/scalable"
-	File "/usr/share/icons/gnome/index.theme"
+	;SetOutPath "$INSTDIR\share\icons\gnome\"
+	;File /r "/usr/i686-w64-mingw32/sys-root/mingw/share/icons/gnome/scalable"
+	;File "/usr/share/icons/gnome/index.theme"
 
 	SetOutPath "$INSTDIR\share\icons\hicolor\"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/share/icons/hicolor"

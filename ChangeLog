@@ -1,3 +1,18 @@
+roger - 1.8.11
+------------------------------------------------------------------------------------------------------------------
+* Improve FTP handling (Freetz Banner now supported)
+* GStreamer plugin supports device probing (select individual sound device)
+* Fax report: Proper scaling and alignment (dschaerf)
+* Statusicon: Added several image resolution for proper displaying (dschaerf)
+* Fax: Fix connection status message
+* UI tweaks (headerbar, fax & preference window design update, initial journal filling)
+* Preferences: Allow setting the CIP value for broken fax machines
+* Preferences: Allow toggling of headerbar use
+* Phone: Use canonize number for calling
+* OSX: Update to latest 3rd-party packages
+* Updated man pages
+* Cleanup
+
 roger - 1.8.10
 ------------------------------------------------------------------------------------------------------------------
 * Scale fax report size to A4
