@@ -338,7 +338,13 @@ gboolean router_clear_journal(struct profile *profile)
  */
 gboolean router_dial_number(struct profile *profile, gint port, const gchar *number)
 {
-	return active_router->dial_number(profile, port, number);
+	gchar *target = call_canonize_number(number);
+	gboolean ret;
+
+	ret = active_router->dial_number(profile, port, target);
+	g_free(target);
+
+	return ret;
 }
 
 /**
