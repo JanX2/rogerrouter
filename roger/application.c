@@ -75,7 +75,6 @@ void app_show_help(void)
 
 void app_quit(void)
 {
-	routermanager_shutdown();
 	g_application_quit(G_APPLICATION(application));
 }
 
@@ -103,8 +102,12 @@ void app_reconnect(void)
 
 static void application_finalize(GObject *object)
 {
-	routermanager_shutdown();
 	G_OBJECT_CLASS(application_parent_class)->finalize(object);
+}
+
+static void application_shutdown(GObject *object)
+{
+	routermanager_shutdown();
 }
 
 static void addressbook_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
@@ -427,6 +430,7 @@ Application *application_new(void)
 
 	app_settings = rm_settings_new(APP_GSETTINGS_SCHEMA, NULL, "roger.conf");
 	g_signal_connect(application, "startup", G_CALLBACK(application_startup), application);
+	g_signal_connect(application, "shutdown", G_CALLBACK(application_shutdown), application);
 	g_signal_connect(application, "command-line", G_CALLBACK(application_command_line_cb), application);
 
 	return application;
