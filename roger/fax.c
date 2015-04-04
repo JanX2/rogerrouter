@@ -151,7 +151,9 @@ gboolean fax_update_ui(gpointer user_data)
 				gtk_label_set_text(GTK_LABEL(fax_ui->status_current_label), _("Fax transfer failed"));
 				g_debug("Fax transfer failed");
 			}
-			create_fax_report(fax_status, g_settings_get_string(profile_get_active()->settings, "fax-report-dir"));
+			if (g_settings_get_boolean(profile_get_active()->settings, "fax-report")) {
+				create_fax_report(fax_status, g_settings_get_string(profile_get_active()->settings, "fax-report-dir"));
+			}
 			phone_hangup(fax_status->connection);
 			fax_status->done = TRUE;
 			break;
