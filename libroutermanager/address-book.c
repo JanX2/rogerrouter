@@ -20,7 +20,6 @@
 /**
  * \TODO List:
  *  - Support multiple books
- *  - Write support
  */
 
 #include <string.h>

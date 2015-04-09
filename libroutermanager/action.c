@@ -82,8 +82,9 @@ static gchar *action_regex(gchar *str, struct connection *connection)
 static inline gboolean action_check_number(const gchar *local_number, gchar **numbers)
 {
 	guint i;
+	guint len = g_strv_length(numbers);
 
-	for (i = 0; i < g_strv_length(numbers); i++) {
+	for (i = 0; i < len; i++) {
 		if (!strcmp(local_number, numbers[i])) {
 			return TRUE;
 		}
@@ -155,11 +156,7 @@ void action_connection_notify_cb(AppObject *object, struct connection *connectio
  */
 struct action *action_create(void)
 {
-	struct action *action = g_slice_new(struct action);
-
-	memset(action, 0, sizeof(struct action));
-
-	return action;
+	return g_slice_new0(struct action);
 }
 
 /**
@@ -226,7 +223,7 @@ void action_commit(struct profile *profile)
 
 	g_settings_set_strv(profile->settings, "actions", (const gchar * const *)actions);
 
-	//g_strfreev(actions);
+	g_strfreev(actions);
 }
 
 /**
