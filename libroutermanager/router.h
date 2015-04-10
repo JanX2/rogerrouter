@@ -26,39 +26,38 @@
 
 G_BEGIN_DECLS
 
-#define NUM_PHONE_PORTS 27
-
-#define PORT_ANALOG1 0x0001
-#define PORT_ANALOG2 0x0002
-#define PORT_ANALOG3 0x0004
-#define PORT_ISDNALL 0x0008
-#define PORT_ISDN1 0x0010
-#define PORT_ISDN2 0x0020
-#define PORT_ISDN3 0x0040
-#define PORT_ISDN4 0x0080
-#define PORT_ISDN5 0x0100
-#define PORT_ISDN6 0x0200
-#define PORT_ISDN7 0x0400
-#define PORT_ISDN8 0x0800
-#define PORT_DECT1 0x1000
-#define PORT_DECT2 0x2000
-#define PORT_DECT3 0x4000
-#define PORT_DECT4 0x8000
-#define PORT_DECT5 0x10000
-#define PORT_DECT6 0x20000
-
-#define PORT_IP1 0x40000
-#define PORT_IP2 0x80000
-#define PORT_IP3 0x100000
-#define PORT_IP4 0x200000
-#define PORT_IP5 0x400000
-#define PORT_IP6 0x800000
-#define PORT_IP7 0x1000000
-#define PORT_IP8 0x2000000
-#define PORT_IP9 0x4000000
-#define PORT_IP10 0x8000000
-
-#define PORT_SOFTPHONE 0x10000000
+enum phone_ports {
+	PORT_SOFTPHONE,
+	PORT_ANALOG1,
+	PORT_ANALOG2,
+	PORT_ANALOG3,
+	PORT_ISDNALL,
+	PORT_ISDN1,
+	PORT_ISDN2,
+	PORT_ISDN3,
+	PORT_ISDN4,
+	PORT_ISDN5,
+	PORT_ISDN6,
+	PORT_ISDN7,
+	PORT_ISDN8,
+	PORT_DECT1,
+	PORT_DECT2,
+	PORT_DECT3,
+	PORT_DECT4,
+	PORT_DECT5,
+	PORT_DECT6,
+	PORT_IP1,
+	PORT_IP2,
+	PORT_IP3,
+	PORT_IP4,
+	PORT_IP5,
+	PORT_IP6,
+	PORT_IP7,
+	PORT_IP8,
+	PORT_IP9,
+	PORT_IP10,
+	PORT_MAX
+};
 
 enum phone_number_type {
 	PHONE_NUMBER_HOME,
@@ -121,7 +120,7 @@ struct router {
 	gboolean (*delete_voice)(struct profile *profile, const gchar *filename);
 };
 
-extern struct phone_port router_phone_ports[NUM_PHONE_PORTS];
+extern struct phone_port router_phone_ports[PORT_MAX];
 
 gboolean router_present(struct router_info *router_info);
 gboolean router_login(struct profile *profile);

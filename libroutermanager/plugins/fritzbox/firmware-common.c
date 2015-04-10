@@ -38,7 +38,7 @@
 #include "firmware-plain.h"
 
 /** phone port names */
-struct phone_port fritzbox_phone_ports[NUM_PHONE_PORTS] = {
+struct phone_port fritzbox_phone_ports[PORT_MAX] = {
 	/* Analog */
 	{"telcfg:settings/MSN/Port0/Name", PORT_ANALOG1, 1},
 	{"telcfg:settings/MSN/Port1/Name", PORT_ANALOG2, 2},
@@ -496,7 +496,7 @@ static gint fritzbox_get_dialport(gint type)
 {
 	gint index;
 
-	for (index = 0; index < NUM_PHONE_PORTS; index++) {
+	for (index = 0; index < PORT_MAX; index++) {
 		if (fritzbox_phone_ports[index].type == type) {
 			return fritzbox_phone_ports[index].number;
 		}
@@ -834,7 +834,7 @@ gint fritzbox_find_phone_port(gint dial_port)
 {
 	gint index;
 
-	for (index = 0; index < NUM_PHONE_PORTS; index++) {
+	for (index = 0; index < PORT_MAX; index++) {
 		if (fritzbox_phone_ports[index].number == dial_port) {
 			return fritzbox_phone_ports[index].type;
 		}

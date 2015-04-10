@@ -69,7 +69,7 @@ struct voice_box {
 	gpointer data;
 };
 
-extern struct phone_port fritzbox_phone_ports[NUM_PHONE_PORTS];
+extern struct phone_port fritzbox_phone_ports[PORT_MAX];
 
 gchar *xml_extract_tag(const gchar *data, gchar *tag);
 gchar *xml_extract_input_value(const gchar *data, gchar *tag);

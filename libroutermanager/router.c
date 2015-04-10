@@ -33,7 +33,7 @@ static struct router *active_router = NULL;
 static GSList *router_list = NULL;
 
 /** Mapping between config value and port type */
-struct phone_port router_phone_ports[NUM_PHONE_PORTS] = {
+struct phone_port router_phone_ports[PORT_MAX] = {
 	{"name-analog1", PORT_ANALOG1, -1},
 	{"name-analog2", PORT_ANALOG2, -1},
 	{"name-analog3", PORT_ANALOG3, -1},
@@ -79,7 +79,7 @@ GSList *router_get_phone_list(struct profile *profile)
 		return list;
 	}
 
-	for (index = 0; index < NUM_PHONE_PORTS; index++) {
+	for (index = 0; index < PORT_MAX; index++) {
 		fon = g_settings_get_string(profile->settings, router_phone_ports[index].name);
 		if (!EMPTY_STRING(fon)) {
 			phone = g_slice_new(struct phone);

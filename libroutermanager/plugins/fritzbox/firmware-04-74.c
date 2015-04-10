@@ -448,7 +448,7 @@ gboolean fritzbox_get_settings_04_74(struct profile *profile)
 
 	fritzbox_extract_numbers_04_74(profile, data);
 
-	for (index = 0; index < NUM_PHONE_PORTS; index++) {
+	for (index = 0; index < PORT_MAX; index++) {
 		gchar *value;
 
 		value = xml_extract_input_value(data, fritzbox_phone_ports[index].name);
@@ -600,10 +600,8 @@ gboolean fritzbox_get_settings_04_74(struct profile *profile)
 	if (dialport) {
 		gint port = atoi(dialport);
 		gint phone_port = fritzbox_find_phone_port(port);
-		gchar tmp[10];
 		g_debug("Dial port: %s, phone_port: %d", dialport, phone_port);
-		snprintf(tmp, sizeof(tmp), "%d", phone_port);
-		g_settings_set_string(profile->settings, "port", tmp);
+		g_settings_set_int(profile->settings, "port", phone_port);
 	}
 	g_free(dialport);
 

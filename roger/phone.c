@@ -109,7 +109,7 @@ static gboolean phone_session_timer_cb(gpointer data)
 	gpointer connection = phone_get_active_connection();
 	gchar buf[64];
 
-	snprintf(buf, sizeof(buf), _("Connection: %s | Time: %s"), state->phone_status_text, time_diff);
+	snprintf(buf, sizeof(buf), _("Time: %s"), time_diff);
 
 #if GTK_CHECK_VERSION(3, 10, 0)
 	if (state->use_header_bar) {
@@ -205,8 +205,6 @@ static void capi_connection_terminated_cb(AppObject *object, struct capi_connect
 	len = g_slist_length(phone_active_connections);
 	if (!len) {
 		snprintf(state->phone_status_text, sizeof(state->phone_status_text), _("Disconnected"));
-		gtk_widget_set_sensitive(state->port_combobox, TRUE);
-		gtk_widget_set_sensitive(state->number_combobox, TRUE);
 		phone_remove_timer(state);
 	} else {
 		phone_hold(phone_get_active_connection(), FALSE);
@@ -250,68 +248,10 @@ void phone_connection_notify_cb(AppObject *object, struct connection *connection
 	}
 }
 
-static void port_combobox_changed_cb(GtkComboBox *widget, gpointer user_data)
-{
-	struct phone_state *state = user_data;
-	gchar tmp[10];
-
-	if (!state->dialpad_frame || !state->control_frame) {
-		return;
-	}
-
-	snprintf(tmp, sizeof(tmp), "%d", PORT_SOFTPHONE);
-
-	if (!strcmp(gtk_combo_box_get_active_id(GTK_COMBO_BOX(widget)), tmp)) {
-		gtk_widget_show(state->dialpad_frame);
-		gtk_widget_show(state->control_frame);
-	} else {
-		gtk_widget_hide(state->dialpad_frame);
-		gtk_widget_hide(state->control_frame);
-	}
-}
-
-void phone_fill_combobox(GtkWidget *port_combobox, struct phone_state *state)
-{
-	GSList *phone_list;
-	GSList *list;
-	struct profile *profile = profile_get_active();
-	struct phone *phone;
-	gchar tmp[10];
-	gchar *act;
-
-	if (!profile) {
-		return;
-	}
-
-	phone_list = router_get_phone_list(profile_get_active());
-
-	for (list = phone_list; list != NULL; list = list->next) {
-		phone = list->data;
-
-		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(port_combobox), phone->type, phone->name);
-	}
-
-	snprintf(tmp, sizeof(tmp), "%d", PORT_SOFTPHONE);
-	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(port_combobox), tmp, _("Softphone"));
-
-	g_signal_connect(port_combobox, "changed", G_CALLBACK(port_combobox_changed_cb), state);
-
-	g_settings_bind(profile->settings, "port", port_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
-
-	act = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(port_combobox));
-	if (act) {
-		g_free(act);
-	} else {
-		gtk_combo_box_set_active_id(GTK_COMBO_BOX(port_combobox), tmp);
-	}
-
-	router_free_phone_list(phone_list);
-}
-
 static void phone_connection_failed(void)
 {
-	GtkWidget *error_dialog = gtk_message_dialog_new(NULL, 0, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, _("Could not dial out"));
-	gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(error_dialog), _("Is CAPI port enabled? - Dial #96*3* with your phone\nAre phone numbers valid? - Check settings"));
+	GtkWidget *error_dialog = gtk_message_dialog_new(GTK_WINDOW(phone_window), GTK_DIALOG_MODAL | GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, _("Connection problem"));
+	gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(error_dialog), _("This is most likely due to a closed CAPI port or an invalid phone number.\n\nSolution: Dial #96*3* with your phone and check your numbers within the settings"));
 
 	gtk_dialog_run(GTK_DIALOG(error_dialog));
 	gtk_widget_destroy(error_dialog);
@@ -333,8 +273,8 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 
 		switch (state->type) {
 		case PHONE_TYPE_VOICE:
-			g_debug("port: %s", g_settings_get_string(profile->settings, "port"));
-			if (!strcmp(g_settings_get_string(profile->settings, "port"), _("Softphone"))) {
+			g_debug("port: %d", g_settings_get_int(profile->settings, "port"));
+			if (g_settings_get_int(profile->settings, "port") == PORT_SOFTPHONE) {
 				gint len = g_slist_length(phone_active_connections);
 				if (len < 2) {
 					/* Hold active call */
@@ -346,8 +286,6 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 
 					if (connection) {
 						phone_add_connection(connection);
-						gtk_widget_set_sensitive(state->port_combobox, FALSE);
-						gtk_widget_set_sensitive(state->number_combobox, FALSE);
 					} else {
 						phone_connection_failed();
 					}
@@ -358,7 +296,7 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 
 				number = g_strdup_printf("%s%s", g_settings_get_int(profile->settings, "suppress") ? "*31#" : "", state->number);
 
-				router_dial_number(profile, atoi(g_settings_get_string(profile->settings, "port")), number);
+				router_dial_number(profile, g_settings_get_int(profile->settings, "port"), number);
 				g_free(number);
 			}
 			break;
@@ -389,21 +327,15 @@ static void hangup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	struct phone_state *state = user_data;
 	const gchar *number = gtk_entry_get_text(GTK_ENTRY(state->name_entry));
 
-	if (state->type == PHONE_TYPE_FAX || !strcmp(gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(state->port_combobox)), _("Softphone"))) {
-		gint len = g_slist_length(phone_active_connections);
-
+	if (state->type == PHONE_TYPE_FAX || g_settings_get_int(profile->settings, "port") == PORT_SOFTPHONE) {
 		if (!phone_get_active_connection()) {
 			return;
 		}
 
 		g_debug("Hangup requested for %p", phone_get_active_connection());
 		phone_hangup(phone_get_active_connection());
-		if (!len) {
-			gtk_widget_set_sensitive(state->port_combobox, TRUE);
-		}
 	} else {
-		router_hangup(profile, atoi(g_settings_get_string(profile->settings, "port")), number);
-		gtk_widget_set_sensitive(state->port_combobox, TRUE);
+		router_hangup(profile, g_settings_get_int(profile->settings, "port"), number);
 	}
 
 	snprintf(state->phone_status_text, sizeof(state->phone_status_text), _("Idle"));

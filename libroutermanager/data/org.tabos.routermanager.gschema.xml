@@ -39,8 +39,8 @@
 		<key name="area-code" type="s">
 			<default>''</default>
 		</key>
-		<key name="port" type="s">
-			<default>'0'</default>
+		<key name="port" type="i">
+			<default>0</default>
 		</key>
 		<key name="serial" type="s">
 			<default>''</default>
