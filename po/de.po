@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-31 17:18+0100\n"
+"POT-Creation-Date: 2015-04-13 21:12+0200\n"
 "PO-Revision-Date: 2015-01-28 20:28+0100\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <jan.brummer@tabos.org>\n"
@@ -26,71 +26,71 @@ msgstr ""
 "FRITZ!Box Journal, Soft/phone und Fax\n"
 "Gewidmet meinem Vater"
 
-#: ../roger/application.c:234
+#: ../roger/application.c:237
 msgid "Error"
 msgstr "Fehler"
 
 #. Contacts
-#: ../roger/application.c:260 ../roger/contacts.c:554
+#: ../roger/application.c:263 ../roger/contacts.c:554
 #: ../roger/plugins/statusicon/gtk.c:197
 #: ../roger/plugins/indicator/indicator.c:219
 msgid "Contacts"
 msgstr "Kontakte"
 
 #. Phone
-#: ../roger/application.c:261 ../roger/contact_edit.c:288 ../roger/phone.c:981
-#: ../roger/phone.c:1012 ../roger/plugins/statusicon/gtk.c:202
+#: ../roger/application.c:264 ../roger/contact_edit.c:288 ../roger/phone.c:862
+#: ../roger/phone.c:894 ../roger/plugins/statusicon/gtk.c:202
 #: ../roger/plugins/indicator/indicator.c:224
 msgid "Phone"
 msgstr "Telefon"
 
 #. Functions - Copy IP adress
-#: ../roger/application.c:264 ../roger/plugins/statusicon/gtk.c:68
+#: ../roger/application.c:267 ../roger/plugins/statusicon/gtk.c:68
 #: ../roger/plugins/indicator/indicator.c:74
 msgid "Copy IP address"
 msgstr "IP-Adresse kopieren"
 
 #. Functions - Reconnect
-#: ../roger/application.c:265 ../roger/plugins/statusicon/gtk.c:73
+#: ../roger/application.c:268 ../roger/plugins/statusicon/gtk.c:73
 #: ../roger/plugins/indicator/indicator.c:79
 msgid "Reconnect"
 msgstr "Neu verbinden"
 
 #. Functions
-#: ../roger/application.c:266 ../roger/plugins/statusicon/gtk.c:213
+#: ../roger/application.c:269 ../roger/plugins/statusicon/gtk.c:213
 #: ../roger/plugins/indicator/indicator.c:236
 msgid "Functions"
 msgstr "Funktionen"
 
 #. Preferences
-#: ../roger/application.c:269 ../roger/pref.c:104
+#: ../roger/application.c:272 ../roger/pref.c:104
 #: ../roger/plugins/statusicon/gtk.c:223
 #: ../roger/plugins/indicator/indicator.c:246
 msgid "Preferences"
 msgstr "Einstellungen"
 
-#: ../roger/application.c:275
+#: ../roger/application.c:278
 msgid "Donate"
 msgstr "Spenden"
 
-#: ../roger/application.c:276
+#: ../roger/application.c:279
 msgid "Forum"
 msgstr "Forum"
 
 #. Help
-#: ../roger/application.c:277 ../roger/plugins/statusicon/gtk.c:232
+#: ../roger/application.c:280 ../roger/plugins/statusicon/gtk.c:232
 #: ../roger/plugins/indicator/indicator.c:255
 msgid "Help"
 msgstr "Hilfe"
 
 #. About
-#: ../roger/application.c:279 ../roger/plugins/statusicon/gtk.c:237
+#: ../roger/application.c:282 ../roger/plugins/statusicon/gtk.c:237
 #: ../roger/plugins/indicator/indicator.c:260
 msgid "About"
 msgstr "Info"
 
 #. Quit
-#: ../roger/application.c:283 ../roger/plugins/statusicon/gtk.c:246
+#: ../roger/application.c:286 ../roger/plugins/statusicon/gtk.c:246
 #: ../roger/plugins/indicator/indicator.c:269
 msgid "Quit"
 msgstr "Beenden"
@@ -366,7 +366,7 @@ msgstr ""
 "Hinweis: Je nach Adressbuchplugin können nicht alle Informationen "
 "gespeichert werden"
 
-#: ../roger/fax.c:46 ../roger/phone.c:180 ../roger-cli/main_cli.c:157
+#: ../roger/fax.c:46 ../roger/phone.c:169 ../roger-cli/main_cli.c:157
 #, c-format
 msgid "Connected"
 msgstr "Verbunden"
@@ -379,7 +379,7 @@ msgstr "Faxübertragung erfolgreich"
 msgid "Fax transfer failed"
 msgstr "Faxübertragung fehlgeschlagen"
 
-#: ../roger/fax.c:86 ../roger/phone.c:207 ../roger-cli/main_cli.c:168
+#: ../roger/fax.c:86 ../roger/phone.c:196 ../roger-cli/main_cli.c:168
 #, c-format
 msgid "Disconnected"
 msgstr "Nicht verbunden"
@@ -393,36 +393,36 @@ msgid "Transferring page"
 msgstr "Übertrage Seite"
 
 #. Fax
-#: ../roger/fax.c:241 ../roger/fax.c:316 ../roger/pref.c:117
+#: ../roger/fax.c:243 ../roger/fax.c:318 ../roger/pref.c:117
 #: ../libroutermanager/filter.c:451
 msgid "Fax"
 msgstr "Fax"
 
-#: ../roger/fax.c:262
+#: ../roger/fax.c:264
 msgid "Information"
 msgstr "Information"
 
-#: ../roger/fax.c:275
+#: ../roger/fax.c:277
 msgid "Status:"
 msgstr "Status:"
 
-#: ../roger/fax.c:282
+#: ../roger/fax.c:284
 msgid "Current page:"
 msgstr "Aktuelle Seite:"
 
-#: ../roger/fax.c:289
+#: ../roger/fax.c:291
 msgid "Remote station:"
 msgstr "Empfängerstation:"
 
-#: ../roger/fax.c:296
+#: ../roger/fax.c:298
 msgid "Progress:"
 msgstr "Fortschritt:"
 
-#: ../roger/fax.c:317 ../roger/phone.c:1013 ../roger/phone.c:1025
+#: ../roger/fax.c:319
 msgid "Connection: Idle | Time: 00:00:00"
 msgstr "Verbindung: Untätig | Dauer: 00:00:00"
 
-#: ../roger/fax.c:324
+#: ../roger/fax.c:326
 msgid "Connection: Idle | Duration: 00:00:00"
 msgstr "Verbindung: Untätig | Dauer: 00:00:00"
 
@@ -563,120 +563,97 @@ msgstr "Filter:"
 
 #: ../roger/phone.c:112
 #, c-format
-msgid "Connection: %s | Time: %s"
-msgstr "Verbindung: %s | Dauer: %s"
+msgid "Time: %s"
+msgstr "Zeit: %s"
 
-#: ../roger/phone.c:223 ../roger/phone.c:370
+#: ../roger/phone.c:210 ../roger/phone.c:296
 #, c-format
 msgid "Dialing"
 msgstr "Wählen"
 
-#: ../roger/phone.c:235
+#: ../roger/phone.c:222
 #, c-format
 msgid "Established"
 msgstr "Hergestellt"
 
-#: ../roger/phone.c:244
+#: ../roger/phone.c:231
 #, c-format
 msgid "Terminated"
 msgstr "Beendet"
 
-#: ../roger/phone.c:295 ../roger/phone.c:336 ../roger/phone.c:391
-#: ../roger/pref.c:120
-msgid "Softphone"
-msgstr "Softphone"
+#: ../roger/phone.c:242
+msgid "Connection problem"
+msgstr "Verbindungsproblem"
 
-#: ../roger/phone.c:313
-msgid "Could not dial out"
-msgstr "Konnte nicht herauswählen"
-
-#: ../roger/phone.c:314
+#: ../roger/phone.c:243
 msgid ""
-"Is CAPI port enabled? - Dial #96*3* with your phone\n"
-"Are phone numbers valid? - Check settings"
+"This is most likely due to a closed CAPI port or an invalid phone number.\n"
+"\n"
+"Solution: Dial #96*3* with your phone and check your numbers within the "
+"settings"
 msgstr ""
-"Ist der CAPI-Port aktiviert? - Wähle #96*3* mit dem Telefon\n"
-"Sind die Telefonnummer korrekt? - Überprüfe die Einstellungen"
+"Dies liegt meistens an einem geschlossenen CAPI Port oder an ungültigen "
+"Telefonnummern.\n"
+"\n"
+"Lösung: Wähle #96*3* mit dem Telefon und überprüfe die Nummern in den "
+"Einstellungen"
 
-#: ../roger/phone.c:408
+#: ../roger/phone.c:328
 #, c-format
 msgid "Idle"
 msgstr "Untätig"
 
-#: ../roger/phone.c:505
+#: ../roger/phone.c:425
 msgid "HOME"
 msgstr "Zuhause"
 
-#: ../roger/phone.c:508
+#: ../roger/phone.c:428
 msgid "WORK"
 msgstr "Arbeit"
 
-#: ../roger/phone.c:511
+#: ../roger/phone.c:431
 msgid "MOBILE"
 msgstr "Mobil"
 
-#: ../roger/phone.c:514
+#: ../roger/phone.c:434
 msgid "HOME FAX"
 msgstr "Fax Zuhause"
 
-#: ../roger/phone.c:517
+#: ../roger/phone.c:437
 msgid "WORK FAX"
 msgstr "Fax Arbeit"
 
-#: ../roger/phone.c:520
+#: ../roger/phone.c:440
 msgid "UNKNOWN"
 msgstr "UNBEKANNT"
 
-#. Name label
-#: ../roger/phone.c:622
-msgid "Connect to:"
-msgstr "Verbinden mit:"
-
-#: ../roger/phone.c:627
+#: ../roger/phone.c:511
 msgid "Use autocompletion while typing names from your address book"
 msgstr "Verwende Vervollständung aus dem Adressbuch während des Tippens"
 
-#: ../roger/phone.c:683
+#: ../roger/phone.c:512
+msgid "Enter name or number"
+msgstr "Name oder Nummer eingeben"
+
+#: ../roger/phone.c:581
 msgid "Pick up"
 msgstr "Abheben"
 
-#: ../roger/phone.c:692
+#: ../roger/phone.c:593
 msgid "Hang up"
 msgstr "Auflegen"
 
-#. Port label
-#: ../roger/phone.c:700
-msgid "Extension:"
-msgstr "Nebenstelle:"
-
-#: ../roger/phone.c:705
-msgid "Choose an extension for this call"
-msgstr "Wähle eine Nebenstelle für diesen Anruf"
-
-#. Port label
-#: ../roger/phone.c:719
-msgid "Own number:"
-msgstr "Eigene Nummer:"
-
-#: ../roger/phone.c:723
-msgid "Choose if your number should be visible for the called party"
-msgstr "Wähle, ob deine Rufnummer an den Anrufenden übertragen werden soll"
-
-#: ../roger/phone.c:724
-msgid "Show"
-msgstr "Anzeigen"
-
-#: ../roger/phone.c:725
-msgid "Suppress"
-msgstr "Unterdrücken"
-
-#: ../roger/phone.c:925
+#: ../roger/phone.c:807
 msgid "Active calls"
 msgstr "Aktive Anrufe"
 
-#: ../roger/phone.c:940
+#: ../roger/phone.c:822
 msgid "A call is in progress. Still close this window?"
 msgstr "Ein Anruf ist aktiv. Möchten Sie das Fenster trotzdem schließen?"
+
+#: ../roger/phone.c:895 ../roger/phone.c:931
+msgid "Time: 00:00:00"
+msgstr "Zeit: 00:00:00"
 
 #: ../roger/pref.c:111
 msgid "Router"
@@ -685,6 +662,10 @@ msgstr "Router"
 #: ../roger/pref.c:114
 msgid "Prefix"
 msgstr "Vorwahlen"
+
+#: ../roger/pref.c:120
+msgid "Softphone"
+msgstr "Softphone"
 
 #: ../roger/pref.c:123
 msgid "Filters"
@@ -868,74 +849,74 @@ msgstr "Hoch (196dpi)"
 msgid "Create fax report"
 msgstr "Erstelle Faxbericht"
 
-#: ../roger/pref_fax.c:156
+#: ../roger/pref_fax.c:153
 msgid "Report directory"
 msgstr "Berichtsverzeichnis"
 
-#: ../roger/pref_fax.c:162
+#: ../roger/pref_fax.c:159
 msgid "Select report directory"
 msgstr "Wähle Berichtsverzeichnis"
 
-#: ../roger/pref_fax.c:174 ../roger/pref_misc.c:95
+#: ../roger/pref_fax.c:171 ../roger/pref_misc.c:95
 #: ../roger/plugins/vcard/vcard.c:1168
 #: ../roger/plugins/thunderbird/thunderbird.c:1064
 msgid "Select"
 msgstr "Auswählen"
 
-#: ../roger/pref_fax.c:185
+#: ../roger/pref_fax.c:182
 msgid "Report"
 msgstr "Bericht"
 
 #. MSN
-#: ../roger/pref_fax.c:194 ../roger/pref_softphone.c:57
+#: ../roger/pref_fax.c:191 ../roger/pref_softphone.c:57
 msgid "MSN"
 msgstr "MSN"
 
-#: ../roger/pref_fax.c:209
+#: ../roger/pref_fax.c:206
 msgid "Bitrate"
 msgstr "Bitrate"
 
-#: ../roger/pref_fax.c:225 ../roger/pref_softphone.c:71
+#: ../roger/pref_fax.c:222 ../roger/pref_softphone.c:71
 msgid "Controller"
 msgstr "Kontroller"
 
-#: ../roger/pref_fax.c:229 ../roger/pref_softphone.c:75
+#: ../roger/pref_fax.c:226 ../roger/pref_softphone.c:75
 msgid "ISDN-Controller 1"
 msgstr "ISDN-Kontroller 1"
 
-#: ../roger/pref_fax.c:230 ../roger/pref_softphone.c:76
+#: ../roger/pref_fax.c:227 ../roger/pref_softphone.c:76
 msgid "ISDN-Controller 2"
 msgstr "ISDN-Kontroller 2"
 
-#: ../roger/pref_fax.c:231 ../roger/pref_softphone.c:77
+#: ../roger/pref_fax.c:228 ../roger/pref_softphone.c:77
 msgid "Outside line ISDN"
 msgstr "ISDN-Amt"
 
-#: ../roger/pref_fax.c:232 ../roger/pref_softphone.c:78
+#: ../roger/pref_fax.c:229 ../roger/pref_softphone.c:78
 msgid "Outside line Analog"
 msgstr "Analog-Amt"
 
-#: ../roger/pref_fax.c:233 ../roger/pref_softphone.c:79
+#: ../roger/pref_fax.c:230 ../roger/pref_softphone.c:79
 msgid "Internet"
 msgstr "Internet"
 
-#: ../roger/pref_fax.c:237
+#: ../roger/pref_fax.c:234
 msgid "Service"
 msgstr "DIenst"
 
-#: ../roger/pref_fax.c:241
+#: ../roger/pref_fax.c:238
 msgid "Analog"
 msgstr "Analog"
 
-#: ../roger/pref_fax.c:242
+#: ../roger/pref_fax.c:239
 msgid "ISDN"
 msgstr "ISDN"
 
-#: ../roger/pref_fax.c:246
+#: ../roger/pref_fax.c:243
 msgid "Error correction mode (ECM)"
 msgstr "Fehlerkorrekturmodus (ECM)"
 
-#: ../roger/pref_fax.c:251
+#: ../roger/pref_fax.c:247
 msgid "Modem"
 msgstr "Modem"
 
@@ -1165,24 +1146,24 @@ msgstr "Router FTP Passwort"
 msgid "Show passwords"
 msgstr "Passwörter anzeigen"
 
-#: ../roger/pref_router.c:255
+#: ../roger/pref_router.c:252
 msgid "Toggle passwords visibility"
 msgstr "Sichtbarkeit der Passwörter umstellen"
 
-#: ../roger/pref_router.c:262
+#: ../roger/pref_router.c:259
 msgid "Settings"
 msgstr "Einstellungen"
 
 #. Update button
-#: ../roger/pref_router.c:294
+#: ../roger/pref_router.c:291
 msgid "_Refresh"
 msgstr "_Aktualisieren"
 
-#: ../roger/pref_router.c:295
+#: ../roger/pref_router.c:292
 msgid "Refresh settings"
 msgstr "Einstellungen erneuern"
 
-#: ../roger/pref_router.c:302
+#: ../roger/pref_router.c:299
 #, c-format
 msgid "%s (Firmware: %s)"
 msgstr "%s (Firmware: %s)"
@@ -1634,8 +1615,8 @@ msgid "AVM FRITZ!Box"
 msgstr "AVM FRITZ!Box"
 
 #: ../libroutermanager/plugins/fritzbox/fritzbox.plugin.in.h:2
-msgid " 04.74"
-msgstr " 04.74"
+msgid "FRITZ!Box router integration for firmware >= 04.74"
+msgstr "FRITZ!Box Routerintegration für Firmware >= 04.74"
 
 #: ../libroutermanager/plugins/pulseaudio/pulseaudio.plugin.in.h:1
 msgid "PulseAudio plugin"
@@ -1684,8 +1665,39 @@ msgstr ""
 msgid "Journal view of all calls"
 msgstr "Journalansicht aller Anrufe"
 
-#~ msgid "FRITZ!Box router integration for 7170, 7320, 7390"
-#~ msgstr "FRITZ!Box Routerintegration für 7170, 7320, 7390"
+#~ msgid "Connection: %s | Time: %s"
+#~ msgstr "Verbindung: %s | Dauer: %s"
+
+#~ msgid "Could not dial out"
+#~ msgstr "Konnte nicht herauswählen"
+
+#~ msgid ""
+#~ "Is CAPI port enabled? - Dial #96*3* with your phone\n"
+#~ "Are phone numbers valid? - Check settings"
+#~ msgstr ""
+#~ "Ist der CAPI-Port aktiviert? - Wähle #96*3* mit dem Telefon\n"
+#~ "Sind die Telefonnummer korrekt? - Überprüfe die Einstellungen"
+
+#~ msgid "Extension:"
+#~ msgstr "Nebenstelle:"
+
+#~ msgid "Choose an extension for this call"
+#~ msgstr "Wähle eine Nebenstelle für diesen Anruf"
+
+#~ msgid "Own number:"
+#~ msgstr "Eigene Nummer:"
+
+#~ msgid "Choose if your number should be visible for the called party"
+#~ msgstr "Wähle, ob deine Rufnummer an den Anrufenden übertragen werden soll"
+
+#~ msgid "Show"
+#~ msgstr "Anzeigen"
+
+#~ msgid "Suppress"
+#~ msgstr "Unterdrücken"
+
+#~ msgid " 04.74"
+#~ msgstr " 04.74"
 
 #~ msgid "Some plugins for Roger Router are packaged separately."
 #~ msgstr "Einige Plugins für Roger Router sind separat als Paket erhältlich."

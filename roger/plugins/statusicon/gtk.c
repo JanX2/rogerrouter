@@ -358,11 +358,8 @@ void impl_deactivate(PeasActivatable *plugin)
 		gtk_widget_show(GTK_WIDGET(journal_win));
 	}
 
-//#if !GTK_CHECK_VERSION(3, 7, 0)
-	/* This is currently broken in GTK 3.8.0 - for now the application must be restart to remove the status icon..... */
 	gtk_status_icon_set_visible(statusicon, FALSE);
 	g_object_unref(statusicon);
-//#endif
 
 	statusicon = NULL;
 }

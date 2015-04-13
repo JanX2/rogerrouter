@@ -306,26 +306,16 @@ void app_show_fax_window(gchar *fax_file)
 
 	gtk_container_add(GTK_CONTAINER(frame), frame_grid);
 
-#if GTK_CHECK_VERSION(3,10,0)
-	state->use_header_bar = g_settings_get_boolean(app_settings, "use-header");
+	/* Create header bar and set it to window */
+	GtkWidget *header = gtk_header_bar_new();
 
-	if (state->use_header_bar) {
-		/* Create header bar and set it to window */
-		GtkWidget *header = gtk_header_bar_new();
+	gtk_widget_set_hexpand(header, TRUE);
+	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
+	gtk_header_bar_set_title(GTK_HEADER_BAR (header), _("Fax"));
+	gtk_header_bar_set_subtitle(GTK_HEADER_BAR (header), _("Connection: Idle | Time: 00:00:00"));
+	gtk_window_set_titlebar((GtkWindow *)(window), header);
 
-		gtk_widget_set_hexpand(header, TRUE);
-		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
-		gtk_header_bar_set_title(GTK_HEADER_BAR (header), _("Fax"));
-		gtk_header_bar_set_subtitle(GTK_HEADER_BAR (header), _("Connection: Idle | Time: 00:00:00"));
-		gtk_window_set_titlebar((GtkWindow *)(window), header);
-
-		state->phone_status_label = header;
-	} else
-#endif
-	{
-		state->phone_status_label = gtk_label_new(_("Connection: Idle | Duration: 00:00:00"));
-		gtk_grid_attach(GTK_GRID(grid), state->phone_status_label, 0, 2, 3, 1);
-	}
+	state->phone_status_label = header;
 
 	/* We set the dial frame last, so that all other widgets are in place */
 	frame = phone_dial_frame(window, NULL, state);

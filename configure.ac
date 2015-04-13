@@ -86,8 +86,8 @@ AM_CONDITIONAL(MACOSX, test "x$macos" != "xno")
 
 PKG_CHECK_MODULES([EXTRA], [glib-2.0 >= 2.32 gio-2.0 >= 2.32 speex >= 1.0 speexdsp >= 1.0 sndfile >= 1.0.0 libxml-2.0])
 
-# Check for GTK >= 3.0
-PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.0])
+# Check for GTK >= 3.12
+PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.12])
 
 PKG_CHECK_MODULES([GMODULE], [gmodule-2.0])
 

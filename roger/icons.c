@@ -37,7 +37,11 @@ struct icons app_icons[11] = {
 	{"printer-symbolic", "printer"},
 	{"edit-clear-symbolic", "edit-clear"},
 	{"edit-find-symbolic", "edit-find"},
+#if GTK_CHECK_VERSION(3, 14, 0)
 	{"call-stop-symbolic", "call-stop"}
+#else
+	{"call-end-symbolic", "call-stop"}
+#endif
 };
 
 GtkWidget *get_icon(gint type, gint size)

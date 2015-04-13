@@ -178,11 +178,7 @@ void refresh_edit_dialog(struct contact *contact)
 
 	gtk_widget_set_margin(grid, 10, 20, 10, 20);
 
-#if GTK_CHECK_VERSION(3,8,0)
 	gtk_container_add(GTK_CONTAINER(scrolled), grid);
-#else
-	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolled), grid);
-#endif
 
 	gtk_grid_set_row_spacing(GTK_GRID(grid), 10);
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 15);

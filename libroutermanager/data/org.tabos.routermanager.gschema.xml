@@ -199,8 +199,8 @@
 			<default>''</default>
 		</key>
 
-		<key name="suppress" type="i">
-			<default>0</default>
+		<key name="suppress" type="b">
+			<default>false</default>
 		</key>
 
 		<!-- TAM -->

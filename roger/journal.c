@@ -66,7 +66,6 @@ static struct filter *journal_filter = NULL;
 static struct filter *journal_search_filter = NULL;
 static GtkWidget *spinner = NULL;
 static GMutex journal_mutex;
-gboolean use_header_bar = FALSE;
 
 void profile_select(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
@@ -241,18 +240,10 @@ void journal_redraw(void)
 
 	profile = profile_get_active();
 
-#if GTK_CHECK_VERSION(3, 10, 0)
-	if (use_header_bar) {
-		status = g_object_get_data(G_OBJECT(journal_win), "headerbar");
-		text = g_strdup_printf(_("%s (%d call(s), %d:%2.2dh)"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
-		gtk_header_bar_set_subtitle(GTK_HEADER_BAR(status), text);
-	} else
-#endif
-	{
-		status = g_object_get_data(G_OBJECT(journal_win), "status_label");
-		text = g_strdup_printf(_("Profile: %s | Total: %d call(s) | Duration: %d:%2.2d"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
-		gtk_label_set_text(GTK_LABEL(status), text);
-	}
+	status = g_object_get_data(G_OBJECT(journal_win), "headerbar");
+	text = g_strdup_printf(_("%s (%d call(s), %d:%2.2dh)"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
+	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(status), text);
+
 	g_free(text);
 }
 
@@ -975,7 +966,6 @@ gboolean journal_button_press_event_cb(GtkWidget *treeview, GdkEventButton *even
 	return FALSE;
 }
 
-#if GTK_CHECK_VERSION(3,10,0)
 static gboolean search_active = FALSE;
 
 gboolean window_key_press_event_cb(GtkWidget *widget, GdkEvent *event, gpointer user_data)
@@ -1002,7 +992,6 @@ void find_button_pressed_cb(GtkWidget *widget, gpointer user_data)
 	gtk_search_bar_set_search_mode(GTK_SEARCH_BAR(user_data), !search_active);
 	search_active = !search_active;
 }
-#endif
 
 void refresh_journal_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
@@ -1050,7 +1039,6 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 		_("Line"),
 		_("Duration")
 	};
-#if GTK_CHECK_VERSION(3,10,0)
 	const GActionEntry journal_actions[] = {
 		{"refresh-journal", refresh_journal_activated},
 		{"print-journal", print_journal_activated},
@@ -1058,7 +1046,6 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 		{"delete-entry", delete_entry_activated},
 		{"add-entry", add_entry_activated},
 	};
-#endif
 
 	journal_startup(app);
 
@@ -1079,244 +1066,91 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
 	gtk_container_add(GTK_CONTAINER(window), grid);
 
-#if GTK_CHECK_VERSION(3,10,0)
-	use_header_bar = g_settings_get_boolean(app_settings, "use-header");
+	GtkWidget *header;
+	GtkWidget *box;
+	GtkWidget *search;
+	GtkWidget *icon;
+	GtkWidget *menu_button;
+	GtkWidget *entry;
+	GMenu *menu;
+	GMenu *section;
 
-	if (use_header_bar) {
-		GtkWidget *header;
-		GtkWidget *box;
-		GtkWidget *search;
-		GtkWidget *icon;
-		GtkWidget *menu_button;
-		GtkWidget *entry;
-		GMenu *menu;
-		GMenu *section;
+	/* Create header bar and set it to window */
+	header = gtk_header_bar_new();
+	gtk_widget_set_hexpand(header, TRUE);
+	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
+	gtk_header_bar_set_title(GTK_HEADER_BAR (header), "Journal");
+	gtk_window_set_titlebar((GtkWindow *)(window), header);
 
-		/* Create header bar and set it to window */
-		header = gtk_header_bar_new();
-		gtk_widget_set_hexpand(header, TRUE);
-		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
-		gtk_header_bar_set_title(GTK_HEADER_BAR (header), "Journal");
-		gtk_window_set_titlebar((GtkWindow *)(window), header);
+	/* Create button box as raised and linked */
+	box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+	gtk_container_add(GTK_CONTAINER(header), box);
+	gtk_style_context_add_class(gtk_widget_get_style_context(box), GTK_STYLE_CLASS_RAISED);
+	gtk_style_context_add_class(gtk_widget_get_style_context(box), GTK_STYLE_CLASS_LINKED);
 
-		/* Create button box as raised and linked */
-		box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-		gtk_container_add(GTK_CONTAINER(header), box);
-		gtk_style_context_add_class(gtk_widget_get_style_context(box), GTK_STYLE_CLASS_RAISED);
-		gtk_style_context_add_class(gtk_widget_get_style_context(box), GTK_STYLE_CLASS_LINKED);
+	/* Create menu button and menu */
+	menu_button = gtk_menu_button_new();
+	gtk_container_add(GTK_CONTAINER(menu_button), gtk_image_new_from_icon_name("view-list-symbolic", GTK_ICON_SIZE_MENU));
 
-		/* Create menu button and menu */
-		menu_button = gtk_menu_button_new();
-		gtk_container_add(GTK_CONTAINER(menu_button), gtk_image_new_from_icon_name("view-list-symbolic", GTK_ICON_SIZE_MENU));
+	menu = g_menu_new();
 
-		menu = g_menu_new();
+	g_action_map_add_action_entries(G_ACTION_MAP(app), journal_actions, G_N_ELEMENTS(journal_actions), app);
 
-		g_action_map_add_action_entries(G_ACTION_MAP(app), journal_actions, G_N_ELEMENTS(journal_actions), app);
+	g_menu_append(menu, _("Refresh journal"), "app.refresh-journal");
+	g_menu_append(menu, _("Print journal"), "app.print-journal");
+	g_menu_append(menu, _("Clear journal"), "app.clear-journal");
 
-		g_menu_append(menu, _("Refresh journal"), "app.refresh-journal");
-		g_menu_append(menu, _("Print journal"), "app.print-journal");
-		g_menu_append(menu, _("Clear journal"), "app.clear-journal");
+	section = g_menu_new();
+	g_menu_append(section, _("Delete entry"), "app.delete-entry");
+	g_menu_append(section, _("Add entry"), "app.add-entry");
 
-		section = g_menu_new();
-		g_menu_append(section, _("Delete entry"), "app.delete-entry");
-		g_menu_append(section, _("Add entry"), "app.add-entry");
+	g_menu_append_section(menu, NULL, G_MENU_MODEL(section));
 
-		g_menu_append_section(menu, NULL, G_MENU_MODEL(section));
+	gtk_menu_button_set_use_popover(GTK_MENU_BUTTON(menu_button), TRUE);
+	gtk_menu_button_set_menu_model(GTK_MENU_BUTTON(menu_button), G_MENU_MODEL(menu));
 
-#if GTK_CHECK_VERSION(3,12,0)
-		gtk_menu_button_set_use_popover(GTK_MENU_BUTTON(menu_button), TRUE);
-#endif
-		gtk_menu_button_set_menu_model(GTK_MENU_BUTTON(menu_button), G_MENU_MODEL(menu));
+	gtk_box_pack_start(GTK_BOX(box), menu_button, FALSE, TRUE, 0);
 
-		gtk_box_pack_start(GTK_BOX(box), menu_button, FALSE, TRUE, 0);
+	/* Create search bar */
+	search = gtk_search_bar_new();
 
-		/* Create search bar */
-		search = gtk_search_bar_new();
+	button = gtk_toggle_button_new();
+	icon = gtk_image_new_from_icon_name("edit-find-symbolic", GTK_ICON_SIZE_BUTTON);
+	g_signal_connect(button, "clicked", G_CALLBACK(find_button_pressed_cb), search);
+	gtk_button_set_image(GTK_BUTTON(button), icon);
 
-		button = gtk_toggle_button_new();
-		icon = gtk_image_new_from_icon_name("edit-find-symbolic", GTK_ICON_SIZE_BUTTON);
-		g_signal_connect(button, "clicked", G_CALLBACK(find_button_pressed_cb), search);
-		gtk_button_set_image(GTK_BUTTON(button), icon);
+	gtk_box_pack_start(GTK_BOX(box), button, FALSE, TRUE, 0);
 
-		gtk_box_pack_start(GTK_BOX(box), button, FALSE, TRUE, 0);
+	entry = gtk_search_entry_new();
+	gtk_widget_set_size_request(entry, 500, -1);
+	gtk_container_add(GTK_CONTAINER(search), entry);
 
-		entry = gtk_search_entry_new();
-		gtk_widget_set_size_request(entry, 500, -1);
-		gtk_container_add(GTK_CONTAINER(search), entry);
+	g_object_set_data(G_OBJECT(window), "button", button);
+	g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(search_entry_changed), journal_view);
+	gtk_widget_set_hexpand(entry, TRUE);
+	gtk_widget_set_hexpand(search, TRUE);
 
-		g_object_set_data(G_OBJECT(window), "button", button);
-		g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(search_entry_changed), journal_view);
-		gtk_widget_set_hexpand(entry, TRUE);
-		gtk_widget_set_hexpand(search, TRUE);
+	gtk_widget_show_all(search);
 
-		gtk_widget_show_all(search);
+	gtk_grid_attach(GTK_GRID(grid), search, 0, 1, 5, 1);
 
-		gtk_grid_attach(GTK_GRID(grid), search, 0, 1, 5, 1);
+	gtk_search_bar_connect_entry(GTK_SEARCH_BAR(search), GTK_ENTRY(entry));
 
-		gtk_search_bar_connect_entry(GTK_SEARCH_BAR(search), GTK_ENTRY(entry));
+	/* Create filter box */
+	journal_filter_box = gtk_combo_box_text_new();
+	journal_update_filter();
+	g_signal_connect(G_OBJECT(journal_filter_box), "changed", G_CALLBACK(filter_box_changed), NULL);
+	gtk_box_pack_start(GTK_BOX(box), journal_filter_box, FALSE, TRUE, 0);
 
-		/* Create filter box */
-		journal_filter_box = gtk_combo_box_text_new();
-		journal_update_filter();
-		g_signal_connect(G_OBJECT(journal_filter_box), "changed", G_CALLBACK(filter_box_changed), NULL);
-		gtk_box_pack_start(GTK_BOX(box), journal_filter_box, FALSE, TRUE, 0);
+	/* Create spinner */
+	spinner = gtk_spinner_new();
+	gtk_widget_set_no_show_all(spinner, TRUE);
+	gtk_container_add(GTK_CONTAINER(header), spinner);
 
-		/* Create spinner */
-		spinner = gtk_spinner_new();
-		gtk_widget_set_no_show_all(spinner, TRUE);
-		gtk_container_add(GTK_CONTAINER(header), spinner);
+	g_object_set_data(G_OBJECT(window), "headerbar", header);
+	gtk_widget_show_all(header);
 
-		g_object_set_data(G_OBJECT(window), "headerbar", header);
-		gtk_widget_show_all(header);
-
-		g_signal_connect(window, "key-press-event", G_CALLBACK(window_key_press_event_cb), search);
-	} else
-#endif
-	{
-		GtkWidget *label;
-		GtkWidget *entry;
-		GtkWidget *status;
-
-#if GTK_CHECK_VERSION(3,8,0)
-		GtkWidget *menu_button;
-		GtkWidget *menu, *menuitem;
-
-		menu_button = gtk_menu_button_new();
-		gtk_container_add(GTK_CONTAINER(menu_button), gtk_image_new_from_icon_name("view-list-symbolic", GTK_ICON_SIZE_MENU));
-		gtk_button_set_relief(GTK_BUTTON(menu_button), GTK_RELIEF_NONE);
-
-		menu = gtk_menu_new();
-
-		/* Refresh journal */
-		menuitem = gtk_menu_item_new_with_label(_("Refresh journal"));
-		g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_refresh_clicked_cb), window);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-		/* Print journal */
-		menuitem = gtk_menu_item_new_with_label(_("Print journal"));
-		g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_print_clicked_cb), journal_view);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-		/* Clear journal */
-		menuitem = gtk_menu_item_new_with_label(_("Clear journal"));
-		g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_clear_clicked_cb), window);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-		menuitem = gtk_separator_menu_item_new();
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-		/* Delete entry */
-		menuitem = gtk_menu_item_new_with_label(_("Delete entry"));
-		g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_delete_clicked_cb), journal_view);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-		/* Add entry */
-		menuitem = gtk_menu_item_new_with_label(_("Add entry"));
-		g_signal_connect(menuitem, "activate", G_CALLBACK(journal_button_add_clicked_cb), journal_view);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
-
-		gtk_widget_show_all(menu);
-
-		gtk_menu_button_set_popup(GTK_MENU_BUTTON(menu_button), menu);
-		gtk_grid_attach(GTK_GRID(grid), menu_button, 0, 0, 1, 1);
-#else
-		GtkWidget *image;
-		GtkWidget *print_button;
-		GtkWidget *clear_button;
-		GtkWidget *buttonbox;
-		GtkWidget *delete_button;
-		GtkWidget *add_button;
-
-		buttonbox = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
-
-		button = gtk_button_new();
-		gtk_widget_set_hexpand(button, FALSE);
-		gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-		image = get_icon(APP_ICON_REFRESH, GTK_ICON_SIZE_SMALL_TOOLBAR);
-		gtk_button_set_image(GTK_BUTTON(button), image);
-		gtk_widget_set_tooltip_text(GTK_WIDGET(button), _("Refresh journal"));
-		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(journal_button_refresh_clicked_cb), window);
-		gtk_box_pack_start(GTK_BOX(buttonbox), button, FALSE, FALSE, 0);
-		gtk_button_box_set_child_non_homogeneous(GTK_BUTTON_BOX(buttonbox), button, TRUE);
-
-		print_button = gtk_button_new();
-		gtk_widget_set_hexpand(print_button, FALSE);
-		gtk_button_set_relief(GTK_BUTTON(print_button), GTK_RELIEF_NONE);
-		image = get_icon(APP_ICON_PRINT, GTK_ICON_SIZE_SMALL_TOOLBAR);
-		gtk_button_set_image(GTK_BUTTON(print_button), image);
-		gtk_widget_set_tooltip_text(GTK_WIDGET(print_button), _("Print journal"));
-		g_signal_connect(G_OBJECT(print_button), "clicked", G_CALLBACK(journal_button_print_clicked_cb), journal_view);
-		gtk_box_pack_start(GTK_BOX(buttonbox), print_button, FALSE, FALSE, 0);
-		gtk_button_box_set_child_non_homogeneous(GTK_BUTTON_BOX(buttonbox), print_button, TRUE);
-
-		clear_button = gtk_button_new();
-		gtk_widget_set_hexpand(clear_button, FALSE);
-		gtk_button_set_relief(GTK_BUTTON(clear_button), GTK_RELIEF_NONE);
-		image = get_icon(APP_ICON_CLEAR, GTK_ICON_SIZE_SMALL_TOOLBAR);
-		gtk_button_set_image(GTK_BUTTON(clear_button), image);
-		gtk_widget_set_tooltip_text(GTK_WIDGET(clear_button), _("Clear journal on router"));
-		g_signal_connect(G_OBJECT(clear_button), "clicked", G_CALLBACK(journal_button_clear_clicked_cb), window);
-		gtk_box_pack_start(GTK_BOX(buttonbox), clear_button, FALSE, FALSE, 0);
-		gtk_button_box_set_child_non_homogeneous(GTK_BUTTON_BOX(buttonbox), clear_button, TRUE);
-
-		delete_button = gtk_button_new();
-		gtk_widget_set_hexpand(delete_button, FALSE);
-		gtk_button_set_relief(GTK_BUTTON(delete_button), GTK_RELIEF_NONE);
-		image = get_icon(APP_ICON_REMOVE, GTK_ICON_SIZE_SMALL_TOOLBAR);
-		gtk_button_set_image(GTK_BUTTON(delete_button), image);
-		gtk_widget_set_tooltip_text(GTK_WIDGET(delete_button), _("Delete selected entry"));
-		g_signal_connect(delete_button, "clicked", G_CALLBACK(journal_button_delete_clicked_cb), journal_view);
-		gtk_box_pack_start(GTK_BOX(buttonbox), delete_button, FALSE, FALSE, 0);
-		gtk_button_box_set_child_non_homogeneous(GTK_BUTTON_BOX(buttonbox), delete_button, TRUE);
-
-		add_button = gtk_button_new();
-		gtk_widget_set_hexpand(add_button, FALSE);
-		gtk_button_set_relief(GTK_BUTTON(add_button), GTK_RELIEF_NONE);
-		image = get_icon(APP_ICON_ADD, GTK_ICON_SIZE_SMALL_TOOLBAR);
-		gtk_button_set_image(GTK_BUTTON(add_button), image);
-		gtk_widget_set_tooltip_text(GTK_WIDGET(add_button), _("Add selected entry to address book"));
-		g_signal_connect(add_button, "clicked", G_CALLBACK(journal_button_add_clicked_cb), journal_view);
-		gtk_box_pack_start(GTK_BOX(buttonbox), add_button, FALSE, FALSE, 0);
-		gtk_button_box_set_child_non_homogeneous(GTK_BUTTON_BOX(buttonbox), add_button, TRUE);
-
-		gtk_grid_attach(GTK_GRID(grid), buttonbox, 0, 0, 1, 1);
-#endif
-
-		label = gtk_label_new(_("Search:"));
-		gtk_grid_attach(GTK_GRID(grid), label, 1, 0, 1, 1);
-
-		entry = gtk_entry_new();
-		gtk_widget_set_tooltip_text(entry, _("Search in journal for name or number"));
-		g_signal_connect(G_OBJECT(entry), "icon-release", G_CALLBACK(entry_icon_released), NULL);
-		g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(search_entry_changed), journal_view);
-
-		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_PRIMARY, "edit-find-symbolic");
-		gtk_widget_set_hexpand(entry, TRUE);
-		gtk_grid_attach(GTK_GRID(grid), entry, 2, 0, 1, 1);
-
-		label = gtk_label_new(_("Filter:"));
-		gtk_grid_attach(GTK_GRID(grid), label, 3, 0, 1, 1);
-
-		journal_filter_box = gtk_combo_box_text_new();
-		gtk_widget_set_vexpand(journal_filter_box, FALSE);
-		journal_update_filter();
-
-		g_signal_connect(G_OBJECT(journal_filter_box), "changed", G_CALLBACK(filter_box_changed), NULL);
-		gtk_grid_attach(GTK_GRID(grid), journal_filter_box, 4, 0, 1, 1);
-
-		GtkWidget *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
-
-		status = gtk_label_new("");
-		gtk_widget_set_halign(status, GTK_ALIGN_START);
-		gtk_widget_set_margin(status, 5, 0, 5, 0);
-		gtk_box_pack_start(GTK_BOX(box), status, TRUE, TRUE, 0);
-		spinner = gtk_spinner_new();
-		gtk_widget_set_no_show_all(spinner, TRUE);
-		gtk_box_pack_end(GTK_BOX(box), spinner, FALSE, FALSE, 0);
-
-		g_object_set_data(G_OBJECT(window), "status_label", status);
-		gtk_grid_attach(GTK_GRID(grid), box, 0, 3, 5, 1);
-	}
+	g_signal_connect(window, "key-press-event", G_CALLBACK(window_key_press_event_cb), search);
 
 	scrolled = gtk_scrolled_window_new(NULL, NULL);
 	gtk_widget_set_hexpand(scrolled, TRUE);
@@ -1376,11 +1210,9 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 		/* Usually we want GTK to autosize the columns for the optimal width. Unfortunately this is not
 		 * true for versions < 3.10.0. Disable ellipsize text to show optimal column widths..... *grml*
 		 */
-#if GTK_CHECK_VERSION(3,10,0)
 		if (index == JOURNAL_COL_NAME) {
 			g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "width", 280, NULL);
 		}
-#endif
 		column = gtk_tree_view_column_new_with_attributes(column_name[index], renderer, "text", index, NULL);
 		gtk_tree_view_column_set_sort_column_id(column, index);
 

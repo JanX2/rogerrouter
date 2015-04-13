@@ -79,13 +79,13 @@ GSList *router_get_phone_list(struct profile *profile)
 		return list;
 	}
 
-	for (index = 0; index < PORT_MAX; index++) {
+	for (index = 0; index < PORT_MAX - 2; index++) {
 		fon = g_settings_get_string(profile->settings, router_phone_ports[index].name);
 		if (!EMPTY_STRING(fon)) {
 			phone = g_slice_new(struct phone);
 
 			phone->name = g_strdup(fon);
-			phone->type = g_strdup_printf("%d", router_phone_ports[index].type);
+			phone->type = router_phone_ports[index].type;
 
 			list = g_slist_append(list, phone);
 		}
@@ -103,7 +103,6 @@ static void free_phone_list(gpointer data)
 	struct phone *phone = data;
 
 	g_free(phone->name);
-	g_free(phone->type);
 }
 
 /**

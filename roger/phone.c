@@ -42,7 +42,6 @@
 #include <roger/phone.h>
 #include <roger/fax.h>
 #include <roger/main.h>
-#include <roger/llevel.h>
 #include <roger/uitools.h>
 #include <roger/icons.h>
 #include <roger/application.h>
@@ -112,19 +111,9 @@ static gboolean phone_session_timer_cb(gpointer data)
 
 	snprintf(buf, sizeof(buf), _("Time: %s"), time_diff);
 
-#if GTK_CHECK_VERSION(3, 10, 0)
-	if (state->use_header_bar) {
-		gtk_header_bar_set_subtitle(GTK_HEADER_BAR(state->phone_status_label), buf);
-	} else
-#endif
-	{
-		gtk_label_set_text(GTK_LABEL(state->phone_status_label), buf);
-	}
+	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(state->phone_status_label), buf);
 
-	if (connection && state->llevel_in && state->llevel_out) {
-		line_level_set(state->llevel_in, log10(1.0 + 9.0 * get_line_level_in(connection)));
-		line_level_set(state->llevel_out, log10(1.0 + 9.0 * get_line_level_out(connection)));
-
+	if (connection) {
 		/* Flush recording buffer (if needed) */
 		phone_flush(connection);
 	}
@@ -160,14 +149,6 @@ void phone_remove_timer(struct phone_state *state)
 	if (state->phone_session_timer) {
 		g_timer_destroy(state->phone_session_timer);
 		state->phone_session_timer = NULL;
-	}
-
-	if (state->llevel_in) {
-		line_level_set(state->llevel_in, 0.0f);
-	}
-
-	if (state->llevel_out) {
-		line_level_set(state->llevel_out, 0.0f);
 	}
 }
 
@@ -273,7 +254,6 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 
 		switch (state->type) {
 		case PHONE_TYPE_VOICE:
-			g_debug("port: %d", g_settings_get_int(profile->settings, "port"));
 			if (g_settings_get_int(profile->settings, "port") == PORT_SOFTPHONE) {
 				gint len = g_slist_length(phone_active_connections);
 				if (len < 2) {
@@ -282,7 +262,7 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 						phone_hold(phone_get_active_connection(), TRUE);
 					}
 
-					gpointer connection = NULL;//phone_dial(state->number, g_settings_get_int(profile->settings, "suppress"));
+					gpointer connection = phone_dial(state->number, g_settings_get_boolean(profile->settings, "suppress"));
 
 					if (connection) {
 						phone_add_connection(connection);
@@ -294,7 +274,7 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 				g_debug("router_dial_number()");
 				gchar *number;
 
-				number = g_strdup_printf("%s%s", g_settings_get_int(profile->settings, "suppress") ? "*31#" : "", state->number);
+				number = g_strdup_printf("%s%s", g_settings_get_boolean(profile->settings, "suppress") ? "*31#" : "", state->number);
 
 				router_dial_number(profile, g_settings_get_int(profile->settings, "port"), number);
 				g_free(number);
@@ -487,14 +467,6 @@ static gboolean number_entry_match_selected_cb(GtkEntryCompletion *completion, G
 	gtk_tree_model_get_value(model, iter, 1, &value_contact);
 	contact = g_value_get_pointer(&value_contact);
 
-	if (contact->image) {
-		GdkPixbuf *buf = image_get_scaled(contact->image, -1, -1);
-		gtk_image_set_from_pixbuf(GTK_IMAGE(state->photo_image), buf);
-		gtk_widget_set_visible(state->photo_image, TRUE);
-	} else {
-		gtk_widget_set_visible(state->photo_image, FALSE);
-	}
-
 	if (!contact->numbers) {
 		return FALSE;
 	}
@@ -551,11 +523,6 @@ GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct p
 			gtk_entry_set_text(GTK_ENTRY(state->name_entry), contact_copy->number);
 			g_object_set_data(G_OBJECT(state->name_entry), "number", contact_copy->number);
 		}
-		if (contact_copy->image) {
-			GdkPixbuf *buf = image_get_scaled(contact_copy->image, -1, -1);
-			gtk_image_set_from_pixbuf(GTK_IMAGE(state->photo_image), buf);
-			gtk_widget_set_visible(state->photo_image, TRUE);
-		}
 	}
 
 	/* Entry completion */
@@ -598,23 +565,12 @@ GtkWidget *phone_dial_button_frame(GtkWidget *window, struct contact *contact, s
 
 	/* Pickup button */
 	pickup_button = gtk_button_new();
-	//gtk_style_context_add_class(gtk_widget_get_style_context(pickup_button), GTK_STYLE_CLASS_SUGGESTED_ACTION);
+	image = get_icon(APP_ICON_CALL, GTK_ICON_SIZE_BUTTON);
+	gtk_button_set_image(GTK_BUTTON(pickup_button), image);
+	gtk_style_context_add_class(gtk_widget_get_style_context(pickup_button), GTK_STYLE_CLASS_SUGGESTED_ACTION);
+
 	gtk_widget_set_vexpand(pickup_button, TRUE);
 
-#define OLD 1
-#ifdef OLD
-	image = get_icon(APP_ICON_CALL, GTK_ICON_SIZE_BUTTON);
-#elif RESOURCE
-	image = gtk_image_new_from_resource("/org/tabos/roger/call-start-symbolic.svg");
-#else
-	gchar *path = g_strconcat(get_directory(APP_DATA), G_DIR_SEPARATOR_S, "call-start.svg", NULL);
-	image = gtk_image_new_from_file(path);
-#endif
-	GdkRGBA col;
-	gdk_rgba_parse(&col, "#FFFFFF");
-	gtk_widget_override_color(image, GTK_STATE_FLAG_NORMAL, &col);
-
-	gtk_button_set_image(GTK_BUTTON(pickup_button), image);
 	gtk_widget_set_tooltip_text(pickup_button, _("Pick up"));
 	g_signal_connect(pickup_button, "clicked", G_CALLBACK(pickup_button_clicked_cb), state);
 	gtk_widget_set_can_default(pickup_button, TRUE);
@@ -623,14 +579,11 @@ GtkWidget *phone_dial_button_frame(GtkWidget *window, struct contact *contact, s
 
 	/* Hangup button */
 	hangup_button = gtk_button_new();
-	//image = get_icon(APP_ICON_HANGUP, GTK_ICON_SIZE_BUTTON);
-	image = gtk_image_new_from_resource("/org/tabos/roger/call-end-symbolic.svg");
-#ifndef GTK_STYLE_CLASS_DESTRUCTIVE_ACTION
+	image = get_icon(APP_ICON_HANGUP, GTK_ICON_SIZE_BUTTON);
+	gtk_button_set_image(GTK_BUTTON(hangup_button), image);
 	gtk_style_context_add_class(gtk_widget_get_style_context(hangup_button), GTK_STYLE_CLASS_DESTRUCTIVE_ACTION);
-#endif
 
 	gtk_widget_set_tooltip_text(hangup_button, _("Hang up"));
-	gtk_container_add(GTK_CONTAINER(hangup_button), image);
 	g_signal_connect(hangup_button, "clicked", G_CALLBACK(hangup_button_clicked_cb), state);
 	gtk_grid_attach(GTK_GRID(dial_frame_grid), hangup_button, 1, 0, 1, 1);
 
@@ -876,6 +829,15 @@ gboolean phone_window_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpoint
 	return FALSE;
 }
 
+void phone_toggled_cb(GtkCheckMenuItem *item, gpointer user_data)
+{
+	gint type = GPOINTER_TO_INT(user_data);
+
+	if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(item))) {
+		g_settings_set_int(profile_get_active()->settings, "port", type);
+	}
+}
+
 void app_show_phone_window(struct contact *contact)
 {
 	GtkWidget *window;
@@ -901,7 +863,7 @@ void app_show_phone_window(struct contact *contact)
 	gtk_window_set_title(GTK_WINDOW(window), _("Phone"));
 	gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
 	gtk_window_set_transient_for(GTK_WINDOW(window), GTK_WINDOW(journal_get_window()));
-	//gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
+	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 	g_signal_connect(window, "delete_event", G_CALLBACK(phone_window_delete_event_cb), state);
 
 	grid = gtk_grid_new();
@@ -921,56 +883,62 @@ void app_show_phone_window(struct contact *contact)
 	gtk_widget_set_no_show_all(state->control_frame, TRUE);
 	gtk_grid_attach(GTK_GRID(grid), state->control_frame, 1, pos_y, 1, 1);
 
-#if GTK_CHECK_VERSION(3,10,0)
-	state->use_header_bar = g_settings_get_boolean(app_settings, "use-header");
+	/* Create header bar and set it to window */
+	GtkWidget *header = gtk_header_bar_new();
 
-	if (state->use_header_bar) {
-		/* Create header bar and set it to window */
-		GtkWidget *header = gtk_header_bar_new();
+	gtk_widget_set_hexpand(header, TRUE);
+	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
+	gtk_header_bar_set_title(GTK_HEADER_BAR(header), _("Phone"));
+	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(header), _("Time: 00:00:00"));
+	gtk_window_set_titlebar((GtkWindow *)(window), header);
 
-		gtk_widget_set_hexpand(header, TRUE);
-		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
-		gtk_header_bar_set_title(GTK_HEADER_BAR(header), _("Phone"));
-		gtk_header_bar_set_subtitle(GTK_HEADER_BAR(header), _("Time: 00:00:00"));
-		gtk_window_set_titlebar((GtkWindow *)(window), header);
-		GtkWidget *button = gtk_menu_button_new();
-		gtk_menu_button_set_direction(GTK_MENU_BUTTON(button), GTK_ARROW_NONE);
-		gtk_header_bar_pack_end(GTK_HEADER_BAR(header), button);
+	GtkWidget *button = gtk_menu_button_new();
+	gtk_menu_button_set_direction(GTK_MENU_BUTTON(button), GTK_ARROW_NONE);
+	gtk_header_bar_pack_end(GTK_HEADER_BAR(header), button);
 
-		gtk_menu_button_set_use_popover(GTK_MENU_BUTTON(button), TRUE);
-		GMenu *menu = g_menu_new();
-		GMenuItem *item;
-		item = g_menu_item_new("Phones", "ignore");
-		g_menu_append_item(menu, item);
+	GtkWidget *menu = gtk_menu_new();
+	gtk_menu_button_set_popup(GTK_MENU_BUTTON(button), menu);
 
-		item = g_menu_item_new("Büro", NULL);
-		g_menu_item_set_attribute(item, "action", "b", TRUE);
-		g_menu_append_item(menu, item);
+	GtkWidget *item;
+	item = gtk_menu_item_new_with_label(_("Phones"));
+	gtk_widget_set_sensitive(item, FALSE);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
-		item = g_menu_item_new("Softphone", NULL);
-		g_menu_item_set_attribute(item, "action", "b", TRUE);
-		g_menu_append_item(menu, item);
+	GSList *phone_list = router_get_phone_list(profile_get_active());
+	GSList *phone_radio_list = NULL;
+	struct phone *phone;
+	gint type = g_settings_get_int(profile_get_active()->settings, "port");
 
-		gtk_menu_button_set_menu_model(GTK_MENU_BUTTON(button), G_MENU_MODEL(menu));
-
-		item = g_menu_item_new("Number", "ignore");
-		g_menu_append_item(menu, item);
-
-		item = g_menu_item_new("Suppress", NULL);
-		g_menu_append_item(menu, item);
-		item = g_menu_item_new("Visible", NULL);
-		g_menu_append_item(menu, item);
-
-		state->phone_status_label = header;
-	} else
-#endif
-	{
-		pos_y++;
-		GtkWidget *frame = gtk_frame_new(NULL);
-		state->phone_status_label = gtk_label_new(_("Time: 00:00:00"));
-		gtk_container_add(GTK_CONTAINER(frame), state->phone_status_label);
-		gtk_grid_attach(GTK_GRID(grid), frame, 0, pos_y, 2, 1);
+	item = gtk_radio_menu_item_new_with_label(phone_radio_list, _("Softphone"));
+	phone_radio_list = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(item));
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	if (!type) {
+		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), TRUE);
 	}
+	g_signal_connect(item, "toggled", G_CALLBACK(phone_toggled_cb), GINT_TO_POINTER(0));
+
+	while (phone_list) {
+		phone = phone_list->data;
+
+		item = gtk_radio_menu_item_new_with_label(phone_radio_list, phone->name);
+		if (type == phone->type) {
+			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), TRUE);
+		}
+		g_signal_connect(item, "toggled", G_CALLBACK(phone_toggled_cb), GINT_TO_POINTER(phone->type));
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		phone_list = phone_list->next;
+	}
+
+	item = gtk_separator_menu_item_new();
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+
+	item = gtk_check_menu_item_new_with_label(_("Suppress number"));
+	g_settings_bind(profile_get_active()->settings, "suppress", item, "active", G_SETTINGS_BIND_DEFAULT);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+
+	gtk_widget_show_all(menu);
+
+	state->phone_status_label = header;
 
 	/* We set the dial frame last, so that all other widgets are in place */
 	frame = phone_dial_frame(window, contact, state);

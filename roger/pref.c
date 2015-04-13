@@ -134,8 +134,10 @@ void preferences(void)
 	page = pref_page_action();
 	pref_notebook_add_page(notebook, page, _("Actions"));
 
+#ifdef G_OS_WIN32
 	page = pref_page_misc();
 	pref_notebook_add_page(notebook, page, _("Misc"));
+#endif
 
 	gtk_notebook_set_tab_pos(GTK_NOTEBOOK(notebook), GTK_POS_LEFT);
 	gtk_container_add(GTK_CONTAINER(dialog), notebook);

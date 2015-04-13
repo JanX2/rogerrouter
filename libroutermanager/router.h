@@ -70,7 +70,7 @@ enum phone_number_type {
 
 struct phone {
 	gchar *name;
-	gchar *type;
+	gint type;
 };
 
 struct phone_number {

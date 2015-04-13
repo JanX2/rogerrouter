@@ -7,9 +7,7 @@ share_DATA = \
 	images/app.png \
 	images/callin.png \
 	images/callmissed.png \
-	images/callout.png \
-	images/call-start.svg \
-	images/call-stop.svg
+	images/callout.png
 
 EXTRA_DIST = $(share_DATA) roger_winres.rc
 
