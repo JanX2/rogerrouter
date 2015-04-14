@@ -237,6 +237,9 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	switch (state->type) {
 	case PHONE_TYPE_VOICE:
 		if (g_settings_get_int(profile->settings, "port") == PORT_SOFTPHONE) {
+			if (state->connection) {
+				return;
+			}
 			state->connection = phone_dial(state->number, g_settings_get_boolean(profile->settings, "suppress"));
 
 			if (!state->connection) {
