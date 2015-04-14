@@ -85,7 +85,6 @@ static void capi_connection_terminated_cb(AppObject *object, struct capi_connect
 		g_print("Setting to disconnect");
 		snprintf(state->phone_status_text, sizeof(state->phone_status_text), _("Disconnected"));
 
-		phone_remove_connection(connection);
 		phone_remove_timer(state);
 		fax_ui->fax_connection = NULL;
 	}
@@ -315,7 +314,7 @@ void app_show_fax_window(gchar *fax_file)
 	gtk_header_bar_set_subtitle(GTK_HEADER_BAR (header), _("Connection: Idle | Time: 00:00:00"));
 	gtk_window_set_titlebar((GtkWindow *)(window), header);
 
-	state->phone_status_label = header;
+	state->headerbar = header;
 
 	/* We set the dial frame last, so that all other widgets are in place */
 	frame = phone_dial_frame(window, NULL, state);

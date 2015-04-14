@@ -35,16 +35,14 @@ struct phone_state {
 	GtkWidget *dialpad_frame;
 	GtkWidget *control_frame;
 	GtkWidget *call_frame;
-	GtkWidget *phone_status_label;
+	GtkWidget *headerbar;
 	GtkWidget *name_entry;
-	GtkWidget *call_label;
 	gchar phone_status_text[255];
 	GTimer *phone_session_timer;
 	gint phone_session_timer_id;
-	gboolean use_header_bar;
 
 	const gchar *number;
-	struct connection *connection;
+	gpointer connection;
 
 	gpointer priv;
 
