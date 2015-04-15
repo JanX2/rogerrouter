@@ -249,11 +249,16 @@ void journal_redraw(void)
 
 static gboolean reload_journal(gpointer user_data)
 {
-	GtkListStore *list_store = g_object_get_data(G_OBJECT(journal_win), "list_store");
+	GtkListStore *list_store;
 	GtkTreeIter iter;
 	gboolean valid;
 	struct call *call;
 
+	if (!journal_win) {
+		return FALSE;
+	}
+
+	list_store = g_object_get_data(G_OBJECT(journal_win), "list_store");
 	valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(list_store), &iter);
 	while (valid) {
 		gtk_tree_model_get(GTK_TREE_MODEL(list_store), &iter, JOURNAL_COL_CALL_PTR, &call, -1);

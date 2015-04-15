@@ -530,6 +530,31 @@ gboolean fritzbox_get_fax_information_06_00(struct profile *profile)
 }
 
 /**
+ * \brief Remove duplicate entries from string array
+ * \param numbers input string array
+ * \return duplicate free string array
+ */
+gchar **strv_remove_duplicates(gchar **numbers)
+{
+	gchar **ret = NULL;
+	gint len = g_strv_length(numbers);
+	gint idx;
+	gint ret_idx = 1;
+
+	for (idx = 0; idx < len; idx++) {
+		if (!ret || !g_strv_contains((const gchar * const *)ret, numbers[idx])) {
+			ret = g_realloc(ret, (ret_idx + 1) * sizeof(char *));
+			ret[ret_idx - 1] = g_strdup(numbers[idx]);
+			ret[ret_idx] = NULL;
+
+			ret_idx++;
+		}
+	}
+
+	return ret;
+}
+
+/**
  * \brief Get settings via lua-scripts (phone numbers/names, default controller, tam setting, fax volume/settings, prefixes, default dial port)
  * \param profile profile information structure
  * \return error code
@@ -569,13 +594,19 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 	g_assert(data != NULL);
 
 	gchar **numbers = xml_extract_tags(data, "td title=\"[^\"]*\"", "td");
-	if (g_strv_length(numbers)) {
-		gint idx;
-		for (idx = 0; idx < g_strv_length(numbers); idx++) {
-			g_debug("Adding MSN '%s'", call_scramble_number(numbers[idx]));
-		}
 
-		g_settings_set_strv(profile->settings, "numbers", (const gchar * const *)numbers);
+	if (g_strv_length(numbers)) {
+		gchar **profile_numbers = strv_remove_duplicates(numbers);
+		gint idx;
+
+		if (g_strv_length(profile_numbers)) {
+			for (idx = 0; idx < g_strv_length(profile_numbers); idx++) {
+				g_debug("Adding MSN '%s'", call_scramble_number(profile_numbers[idx]));
+			}
+			g_settings_set_strv(profile->settings, "numbers", (const gchar * const *)profile_numbers);
+		}
+		g_strfreev(numbers);
+
 	}
 	g_object_unref(msg);
 
