@@ -566,7 +566,12 @@ static inline GtkWidget *phone_create_button(const gchar *text_hi, const gchar *
 	gtk_widget_set_hexpand(grid, TRUE);
 	gtk_widget_set_halign(grid, GTK_ALIGN_CENTER);
 
-	button = gtk_button_new();
+	if (!icon) {
+		button = gtk_button_new();
+	} else {
+		button = gtk_toggle_button_new();
+	}
+
 	if (!icon) {
 		label_hi = gtk_label_new(text_hi);
 		gtk_label_set_use_markup(GTK_LABEL(label_hi), TRUE);
@@ -662,25 +667,13 @@ static void hold_clicked_cb(GtkWidget *widget, gpointer user_data)
 
 static void mute_clicked_cb(GtkWidget *widget, gpointer user_data)
 {
-	GtkWidget *image;
 	struct phone_state *state = user_data;
-	gboolean active = FALSE;
 
 	if (!state->connection) {
 		return;
 	}
 
-
-	active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
-
-	if (active) {
-		image = gtk_image_new_from_icon_name("microphone-sensitivity-muted-symbolic", GTK_ICON_SIZE_BUTTON);
-	} else {
-		image = gtk_image_new_from_icon_name("audio-input-microphone-symbolic", GTK_ICON_SIZE_BUTTON);
-	}
-	gtk_button_set_image(GTK_BUTTON(widget), image);
-
-	phone_mute(state->connection, active);
+	phone_mute(state->connection, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)));
 }
 
 static void record_clicked_cb(GtkWidget *widget, gpointer user_data)
