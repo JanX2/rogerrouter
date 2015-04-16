@@ -167,6 +167,9 @@ GSList *router_load_fax_reports(struct profile *profile, GSList *journal);
 
 void router_free_phone_list(GSList *phone_list);
 
+gint router_get_phone_port(struct profile *profile);
+void router_set_phone_port(struct profile *profile, gint port);
+
 G_END_DECLS
 
 #endif

@@ -601,7 +601,7 @@ gboolean fritzbox_get_settings_04_74(struct profile *profile)
 		gint port = atoi(dialport);
 		gint phone_port = fritzbox_find_phone_port(port);
 		g_debug("Dial port: %s, phone_port: %d", dialport, phone_port);
-		g_settings_set_int(profile->settings, "port", phone_port);
+		router_set_phone_port(profile, phone_port);
 	}
 	g_free(dialport);
 

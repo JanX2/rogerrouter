@@ -580,3 +580,23 @@ GSList *router_load_fax_reports(struct profile *profile, GSList *journal)
 
 	return journal;
 }
+
+/**
+ * \brief Get phone port
+ * \param profile router information structure
+ * \return phone port
+ */
+gint router_get_phone_port(struct profile *profile)
+{
+	return g_settings_get_int(profile->settings, "port");
+}
+
+/**
+ * \brief Set phone port
+ * \param profile router information structure
+ * \param port phone port
+ */
+void router_set_phone_port(struct profile *profile, gint port)
+{
+	g_settings_set_int(profile->settings, "port", port);
+}

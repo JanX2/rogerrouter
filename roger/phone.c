@@ -192,7 +192,7 @@ void phone_connection_notify_cb(AppObject *object, struct connection *connection
 	} else {
 		if (connection->type & CONNECTION_TYPE_DISCONNECT) {
 			g_debug("Disconnect, check %p == %p?", state->connection, connection);
-			if (state->connection != connection) {
+			if (state->connection && state->connection != connection) {
 				return;
 			}
 
@@ -217,6 +217,28 @@ static void phone_connection_failed(void)
 	gtk_widget_destroy(error_dialog);
 }
 
+static void show_active_call_dialog(GtkWidget *window)
+{
+	GtkWidget *dialog;
+
+	dialog = gtk_message_dialog_new(GTK_WINDOW(window), GTK_DIALOG_MODAL | GTK_DIALOG_USE_HEADER_BAR | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, _("A call is in progress, hangup first"));
+	gtk_dialog_run(GTK_DIALOG(dialog));
+	gtk_widget_destroy(dialog);
+}
+
+static void phone_reset_buttons(struct phone_state *state)
+{
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(state->mute_button))) {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(state->mute_button), FALSE);
+	}
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(state->hold_button))) {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(state->hold_button), FALSE);
+	}
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(state->record_button))) {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(state->record_button), FALSE);
+	}
+}
+
 static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 	struct profile *profile = profile_get_active();
@@ -236,8 +258,9 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 
 	switch (state->type) {
 	case PHONE_TYPE_VOICE:
-		if (g_settings_get_int(profile->settings, "port") == PORT_SOFTPHONE) {
+		if (router_get_phone_port(profile) == PORT_SOFTPHONE) {
 			if (state->connection) {
+				show_active_call_dialog(phone_window);
 				return;
 			}
 			state->connection = phone_dial(state->number, g_settings_get_boolean(profile->settings, "suppress"));
@@ -249,7 +272,7 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 			gchar *number;
 
 			number = g_strdup_printf("%s%s", g_settings_get_boolean(profile->settings, "suppress") ? "*31#" : "", state->number);
-			router_dial_number(profile, g_settings_get_int(profile->settings, "port"), number);
+			router_dial_number(profile, router_get_phone_port(profile), number);
 			g_free(number);
 		}
 		break;
@@ -276,15 +299,16 @@ static void hangup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	struct phone_state *state = user_data;
 	const gchar *number = gtk_entry_get_text(GTK_ENTRY(state->name_entry));
 
-	if (state->type == PHONE_TYPE_FAX || g_settings_get_int(profile->settings, "port") == PORT_SOFTPHONE) {
+	if (state->type == PHONE_TYPE_FAX || router_get_phone_port(profile) == PORT_SOFTPHONE) {
 		if (!state->connection) {
 			return;
 		}
 
 		g_debug("%s(): Hangup requested for %p", __FUNCTION__, state->connection);
+		phone_reset_buttons(state);
 		phone_hangup(state->connection);
 	} else {
-		router_hangup(profile, g_settings_get_int(profile->settings, "port"), number);
+		router_hangup(profile, router_get_phone_port(profile), number);
 	}
 
 	snprintf(state->phone_status_text, sizeof(state->phone_status_text), _("Idle"));
@@ -743,21 +767,21 @@ GtkWidget *phone_control_frame(struct phone_state *state)
 
 	/* Add mute button */
 	image = gtk_image_new_from_icon_name("audio-input-microphone-symbolic", GTK_ICON_SIZE_BUTTON);
-	button = phone_create_button(NULL, "<small>Mute</small>", image);
-	g_signal_connect(button, "clicked", G_CALLBACK(mute_clicked_cb), state);
-	gtk_grid_attach(GTK_GRID(grid), button, 0, 1, 1, 1);
+	state->mute_button = phone_create_button(NULL, "<small>Mute</small>", image);
+	g_signal_connect(state->mute_button, "clicked", G_CALLBACK(mute_clicked_cb), state);
+	gtk_grid_attach(GTK_GRID(grid), state->mute_button, 0, 1, 1, 1);
 
 	/* Add hold button */
 	image = gtk_image_new_from_icon_name("media-playback-pause-symbolic", GTK_ICON_SIZE_BUTTON);
-	button = phone_create_button(NULL, "<small>Hold</small>", image);
-	g_signal_connect(button, "clicked", G_CALLBACK(hold_clicked_cb), state);
-	gtk_grid_attach(GTK_GRID(grid), button, 0, 2, 1, 1);
+	state->hold_button = phone_create_button(NULL, "<small>Hold</small>", image);
+	g_signal_connect(state->hold_button, "clicked", G_CALLBACK(hold_clicked_cb), state);
+	gtk_grid_attach(GTK_GRID(grid), state->hold_button, 0, 2, 1, 1);
 
 	/* Add record button */
 	image = gtk_image_new_from_icon_name("media-record-symbolic", GTK_ICON_SIZE_BUTTON);
-	button = phone_create_button(NULL, "<small>Record</small>", image);
-	g_signal_connect(button, "clicked", G_CALLBACK(record_clicked_cb), state);
-	gtk_grid_attach(GTK_GRID(grid), button, 0, 3, 1, 1);
+	state->record_button = phone_create_button(NULL, "<small>Record</small>", image);
+	g_signal_connect(state->record_button, "clicked", G_CALLBACK(record_clicked_cb), state);
+	gtk_grid_attach(GTK_GRID(grid), state->record_button, 0, 3, 1, 1);
 
 	gtk_widget_show_all(frame);
 
@@ -776,11 +800,7 @@ gboolean phone_window_delete_event_cb(GtkWidget *window, GdkEvent *event, gpoint
 	struct phone_state *state = data;
 
 	if (state && state->connection) {
-		GtkWidget *dialog;
-
-		dialog = gtk_message_dialog_new(GTK_WINDOW(window), GTK_DIALOG_MODAL | GTK_DIALOG_USE_HEADER_BAR | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, _("A call is in progress, hangup first"));
-		gtk_dialog_run(GTK_DIALOG(dialog));
-		gtk_widget_destroy(dialog);
+		show_active_call_dialog(window);
 
 		/* Keep window */
 		return TRUE;
@@ -793,6 +813,13 @@ gboolean phone_window_delete_event_cb(GtkWidget *window, GdkEvent *event, gpoint
 	return FALSE;
 }
 
+static void phone_button_set_sensitive(struct phone_state *state, gint type)
+{
+	gtk_widget_set_sensitive(state->mute_button, type == PORT_SOFTPHONE);
+	gtk_widget_set_sensitive(state->hold_button, type == PORT_SOFTPHONE);
+	gtk_widget_set_sensitive(state->record_button, type == PORT_SOFTPHONE);
+}
+
 /**
  * \brief Phone toggled callback - sets selected port type to profile settings
  * \param item percieved check menu item
@@ -801,18 +828,22 @@ gboolean phone_window_delete_event_cb(GtkWidget *window, GdkEvent *event, gpoint
 static void phone_toggled_cb(GtkCheckMenuItem *item, gpointer user_data)
 {
 	gint type = GPOINTER_TO_INT(user_data);
+	struct phone_state *state = g_object_get_data(G_OBJECT(item), "phone_state");
 
 	if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(item))) {
-		g_settings_set_int(profile_get_active()->settings, "port", type);
+		router_set_phone_port(profile_get_active(), type);
+
+		phone_button_set_sensitive(state, type);
 	}
 }
 
 /**
  * \brief Create phone menu which contains phone selection and suppress number toggle
  * \param profile pointer to current profile
+ * \param state phone state pointer
  * \return newly create phone menu
  */
-static GtkWidget *phone_create_menu(struct profile *profile)
+static GtkWidget *phone_create_menu(struct profile *profile, struct phone_state *state)
 {
 	GtkWidget *menu;
 	GtkWidget *item;
@@ -830,7 +861,7 @@ static GtkWidget *phone_create_menu(struct profile *profile)
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
 	phone_list = router_get_phone_list(profile);
-	type = g_settings_get_int(profile->settings, "port");
+	type = router_get_phone_port(profile);
 
 	/* Add softphone first as it is always present and has index 0 */
 	item = gtk_radio_menu_item_new_with_label(phone_radio_list, _("Softphone"));
@@ -840,6 +871,7 @@ static GtkWidget *phone_create_menu(struct profile *profile)
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), TRUE);
 	}
 	g_signal_connect(item, "toggled", G_CALLBACK(phone_toggled_cb), GINT_TO_POINTER(0));
+	g_object_set_data(G_OBJECT(item), "phone_state", state);
 
 	/* Traverse phone list and add each phone */
 	while (phone_list) {
@@ -850,6 +882,7 @@ static GtkWidget *phone_create_menu(struct profile *profile)
 			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), TRUE);
 		}
 		g_signal_connect(item, "toggled", G_CALLBACK(phone_toggled_cb), GINT_TO_POINTER(phone->type));
+		g_object_set_data(G_OBJECT(item), "phone_state", state);
 
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		phone_list = phone_list->next;
@@ -920,7 +953,7 @@ void app_show_phone_window(struct contact *contact)
 	gtk_header_bar_pack_end(GTK_HEADER_BAR(header), menubutton);
 
 	/* Create menu and add it to menu button */
-	gtk_menu_button_set_popup(GTK_MENU_BUTTON(menubutton), phone_create_menu(profile));
+	gtk_menu_button_set_popup(GTK_MENU_BUTTON(menubutton), phone_create_menu(profile, state));
 	state->headerbar = header;
 
 	/* Create grid and attach it to the window */
@@ -949,6 +982,8 @@ void app_show_phone_window(struct contact *contact)
 	/* Add dial button frame */
 	frame = phone_dial_button_frame(window, contact, state);
 	gtk_grid_attach(GTK_GRID(grid), frame, 1, 0, 1, 1);
+
+	phone_button_set_sensitive(state, router_get_phone_port(profile));
 
 	g_signal_connect(app_object, "connection-notify", G_CALLBACK(phone_connection_notify_cb), state);
 	g_signal_connect(app_object, "connection-established", G_CALLBACK(capi_connection_established_cb), state);

@@ -56,6 +56,8 @@ static void capi_error(long error)
 		g_debug("->Error: 0x%lX", error);
 		if (error == 0x3301) {
 			g_warning("Protocol Error Layer 1");
+		} else if (error == 0x2001) {
+			g_warning("Message not supported in current state");
 		}
 		if (session) {
 			session->handlers->status(NULL, error);
@@ -167,6 +169,7 @@ void capi_hangup(struct capi_connection *connection)
 	case STATE_CONNECT_ACTIVE:
 	case STATE_DISCONNECT_B3_REQ:
 	case STATE_DISCONNECT_B3_WAIT:
+	case STATE_DISCONNECT_ACTIVE:
 	case STATE_INCOMING_WAIT:
 		g_debug("REQ: DISCONNECT - plci %ld", connection->plci);
 

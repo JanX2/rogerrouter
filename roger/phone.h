@@ -37,6 +37,9 @@ struct phone_state {
 	GtkWidget *call_frame;
 	GtkWidget *headerbar;
 	GtkWidget *name_entry;
+	GtkWidget *mute_button;
+	GtkWidget *hold_button;
+	GtkWidget *record_button;
 	gchar phone_status_text[255];
 	GTimer *phone_session_timer;
 	gint phone_session_timer_id;
