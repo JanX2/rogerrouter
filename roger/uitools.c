@@ -26,6 +26,7 @@ GtkWidget *ui_label_new(gchar *text)
 	GtkWidget *label;
 
 	label = gtk_label_new(text);
+	gtk_widget_set_sensitive(label, FALSE);
 	gtk_widget_set_halign(label, GTK_ALIGN_END);
 
 	return label;

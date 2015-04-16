@@ -60,6 +60,7 @@ void phone_setup_timer(struct phone_state *state);
 void phone_remove_timer(struct phone_state *state);
 void phone_add_connection(gpointer connection);
 void phone_remove_connection(gpointer connection);
+GtkWidget *phone_dial_button_frame(GtkWidget *window, struct contact *contact, struct phone_state *state);
 
 G_END_DECLS
 

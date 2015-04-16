@@ -33,6 +33,7 @@
 #include <roger/print.h>
 #include <roger/fax.h>
 #include <roger/application.h>
+#include <roger/journal.h>
 
 static void capi_connection_established_cb(AppObject *object, struct capi_connection *connection, gpointer user_data)
 {
@@ -215,124 +216,137 @@ void fax_window_clear(gpointer priv)
 	gtk_label_set_text(GTK_LABEL(fax_ui->status_current_label), "");
 }
 
-void app_show_fax_window(gchar *fax_file)
+GtkWidget *fax_information_frame(struct phone_state *state)
 {
-	GtkWidget *window;
-	GtkWidget *grid;
-	GtkWidget *frame_grid;
 	GtkWidget *frame;
+	GtkWidget *grid;
 	GtkWidget *status_label;
 	GtkWidget *progress_label;
 	GtkWidget *remote_station_label;
 	GtkWidget *pages_label;
+	struct fax_ui *fax_ui = state->priv;
 	gint pos_y = 0;
-	struct phone_state *state;
-	struct fax_ui *fax_ui;
-	struct profile *profile = profile_get_active();
 
-	fax_ui = g_malloc0(sizeof(struct fax_ui));
-	fax_ui->file = fax_file;
-	fax_ui->status = g_malloc0(sizeof(struct fax_status));
+	/* Create frame */
+	frame = gtk_frame_new(NULL);
 
-	state = g_malloc0(sizeof(struct phone_state));
-	state->type = PHONE_TYPE_FAX;
-	state->priv = fax_ui;
-
-	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_title(GTK_WINDOW(window), _("Fax"));
-	gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
-
+	/* Create inner grid */
 	grid = gtk_grid_new();
-	/* Set standard spacing to 5 */
-	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
+	gtk_widget_set_hexpand(grid, FALSE);
+	gtk_widget_set_margin(grid, 6, 6, 6, 6);
+	//gtk_grid_set_column_homogeneous(GTK_GRID(grid), TRUE);
+	gtk_grid_set_row_homogeneous(GTK_GRID(grid), TRUE);
+	gtk_container_add(GTK_CONTAINER(frame), grid);
 
-	/**
-	 * Connect to: <ENTRY> <PICKUP-BUTTON> <HANGUP-BUTTON>
-	 * My number:  <ENTRY> <PHOTO>
-	 *
-	 * -- Information -------------------
-	 * | Status         : <LABEL>       |
-	 * | Pages          : <LABEL>       |
-	 * | Remote-Station : <LABEL>       |
-	 * | Progress       : <-----------> |
-	 * ----------------------------------
-	 */
+	/* Set standard spacing */
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 6);
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 6);
 
-	pos_y++;
-	frame = gtk_frame_new(_("Information"));
-
-	frame_grid = gtk_grid_new();
-	gtk_widget_set_margin(frame_grid, 5, 0, 5, 5);
-
-	/* Set standard spacing to 5 */
-	gtk_grid_set_row_spacing(GTK_GRID(frame_grid), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(frame_grid), 5);
-	gtk_container_set_border_width(GTK_CONTAINER(frame_grid), 2);
-
-	gtk_grid_attach(GTK_GRID(grid), frame, 0, pos_y, 3, 1);
-
-	pos_y++;
+	/* Add status line */
 	status_label = ui_label_new(_("Status:"));
-	gtk_grid_attach(GTK_GRID(frame_grid), status_label, 0, pos_y, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), status_label, 0, pos_y, 1, 1);
 
 	fax_ui->status_current_label = gtk_label_new("");
-	gtk_grid_attach(GTK_GRID(frame_grid), fax_ui->status_current_label, 1, pos_y, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), fax_ui->status_current_label, 1, pos_y, 1, 1);
 
+	/* Add current page line */
 	pos_y++;
 	pages_label = ui_label_new(_("Current page:"));
-	gtk_grid_attach(GTK_GRID(frame_grid), pages_label, 0, pos_y, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), pages_label, 0, pos_y, 1, 1);
 
 	fax_ui->page_current_label = gtk_label_new("");
-	gtk_grid_attach(GTK_GRID(frame_grid), fax_ui->page_current_label, 1, pos_y, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), fax_ui->page_current_label, 1, pos_y, 1, 1);
 
+	/* Add remote station line */
 	pos_y++;
 	remote_station_label = ui_label_new(_("Remote station:"));
-	gtk_grid_attach(GTK_GRID(frame_grid), remote_station_label, 0, pos_y, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), remote_station_label, 0, pos_y, 1, 1);
 
 	fax_ui->remote_label = gtk_label_new("");
-	gtk_grid_attach(GTK_GRID(frame_grid), fax_ui->remote_label, 1, pos_y, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), fax_ui->remote_label, 1, pos_y, 1, 1);
 
+	/* Add progress line */
 	pos_y++;
 	progress_label = ui_label_new(_("Progress:"));
-	gtk_grid_attach(GTK_GRID(frame_grid), progress_label, 0, pos_y, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), progress_label, 0, pos_y, 1, 1);
 
 	fax_ui->progress_bar = gtk_progress_bar_new();
 	gtk_progress_bar_set_show_text(GTK_PROGRESS_BAR(fax_ui->progress_bar), TRUE);
 	gtk_widget_set_hexpand(fax_ui->progress_bar, TRUE);
 	gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar), "0%");
-	gtk_grid_attach(GTK_GRID(frame_grid), fax_ui->progress_bar, 1, pos_y, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), fax_ui->progress_bar, 1, pos_y, 1, 1);
 
-	gtk_container_add(GTK_CONTAINER(frame), frame_grid);
-
-	/* Create header bar and set it to window */
-	GtkWidget *header = gtk_header_bar_new();
-
-	gtk_widget_set_hexpand(header, TRUE);
-	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
-	gtk_header_bar_set_title(GTK_HEADER_BAR (header), _("Fax"));
-	gtk_header_bar_set_subtitle(GTK_HEADER_BAR (header), _("Connection: Idle | Time: 00:00:00"));
-	gtk_window_set_titlebar((GtkWindow *)(window), header);
-
-	state->headerbar = header;
-
-	/* We set the dial frame last, so that all other widgets are in place */
-	frame = phone_dial_frame(window, NULL, state);
-	gtk_grid_attach(GTK_GRID(grid), frame, 0, 0, 3, 1);
-
-	gtk_container_add(GTK_CONTAINER(window), grid);
-	gtk_container_set_border_width(GTK_CONTAINER(window), 5);
-
-	if (g_settings_get_boolean(profile->settings, "fax-sff")) {
+	if (g_settings_get_boolean(profile_get_active()->settings, "fax-sff")) {
 		gtk_widget_set_no_show_all(pages_label, TRUE);
 		gtk_widget_set_no_show_all(fax_ui->page_current_label, TRUE);
 		gtk_widget_set_no_show_all(remote_station_label, TRUE);
 		gtk_widget_set_no_show_all(fax_ui->remote_label, TRUE);
 	}
 
-	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
+	return frame;
+}
 
+void app_show_fax_window(gchar *fax_file)
+{
+	GtkWidget *window;
+	GtkWidget *header;
+	GtkWidget *grid;
+	GtkWidget *frame;
+	struct phone_state *state;
+	struct fax_ui *fax_ui;
+	struct profile *profile = profile_get_active();
+
+	if (!profile) {
+		return;
+	}
+
+	fax_ui = g_malloc0(sizeof(struct fax_ui));
+	fax_ui->file = fax_file;
+	fax_ui->status = g_malloc0(sizeof(struct fax_status));
+
+	/* Allocate phone state structure */
+	state = g_malloc0(sizeof(struct phone_state));
+	state->type = PHONE_TYPE_FAX;
+	state->priv = fax_ui;
+
+	/* Create window */
+	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_title(GTK_WINDOW(window), _("Fax"));
+	gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
+	gtk_window_set_transient_for(GTK_WINDOW(window), GTK_WINDOW(journal_get_window()));
+	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 	g_signal_connect(G_OBJECT(window), "delete_event", G_CALLBACK(fax_window_delete_event_cb), state);
+
+	/* Create header bar and set it to window */
+	header = gtk_header_bar_new();
+	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
+	gtk_header_bar_set_title(GTK_HEADER_BAR (header), _("Fax"));
+	gtk_header_bar_set_subtitle(GTK_HEADER_BAR (header), _("Time: 00:00:00"));
+	gtk_window_set_titlebar((GtkWindow *)(window), header);
+
+	state->headerbar = header;
+
+	/* Create grid and attach it to the window */
+	grid = gtk_grid_new();
+	gtk_container_add(GTK_CONTAINER(window), grid);
+
+	/* Set margin to 12px for all sides */
+	gtk_widget_set_margin(grid, 12, 12, 12, 12);
+
+	/* Set standard spacing */
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 18);
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 12);
+
+	frame = fax_information_frame(state);
+	gtk_grid_attach(GTK_GRID(grid), frame, 0, 1, 2, 1);
+
+	/* We set the dial frame last, so that all other widgets are in place */
+	frame = phone_dial_frame(window, NULL, state);
+	gtk_grid_attach(GTK_GRID(grid), frame, 0, 0, 1, 1);
+
+	/* Add dial button frame */
+	frame = phone_dial_button_frame(window, NULL, state);
+	gtk_grid_attach(GTK_GRID(grid), frame, 1, 0, 1, 1);
 
 	g_signal_connect(app_object, "connection-status", G_CALLBACK(fax_connection_status_cb), state);
 	g_signal_connect(app_object, "connection-established", G_CALLBACK(capi_connection_established_cb), state);

@@ -104,14 +104,14 @@ static gboolean phone_session_timer_cb(gpointer data)
 void phone_setup_timer(struct phone_state *state)
 {
 	if (state->phone_session_timer && state->phone_session_timer_id) {
-		g_debug("Skip timer setup");
+		g_debug("%s(): Skip timer setup", __FUNCTION__);
 		return;
 	}
 
-	g_debug("phone_setup_timer()");
+	g_debug("%s(): called", __FUNCTION__);
 	state->phone_session_timer = g_timer_new();
 	g_timer_start(state->phone_session_timer);
-	state->phone_session_timer_id = g_timeout_add(200, phone_session_timer_cb, state);
+	state->phone_session_timer_id = g_timeout_add(250, phone_session_timer_cb, state);
 }
 
 void phone_remove_timer(struct phone_state *state)
@@ -941,7 +941,6 @@ void app_show_phone_window(struct contact *contact)
 
 	/* Create header bar and set it to window */
 	header = gtk_header_bar_new();
-	//gtk_widget_set_hexpand(header, TRUE);
 	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
 	gtk_header_bar_set_title(GTK_HEADER_BAR(header), _("Phone"));
 	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(header), _("Time: 00:00:00"));
