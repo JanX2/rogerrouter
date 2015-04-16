@@ -89,6 +89,7 @@ gchar *fritzbox_get_ip(struct profile *profile);
 gboolean fritzbox_reconnect(struct profile *profile);
 gboolean fritzbox_delete_fax(struct profile *profile, const gchar *filename);
 gboolean fritzbox_delete_voice(struct profile *profile, const gchar *filename);
+gboolean strv_contains(const gchar *const *strv, const gchar *str);
 
 /**
  * \brief Make dots (UTF8 -> UTF16)

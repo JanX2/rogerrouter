@@ -542,7 +542,7 @@ gchar **strv_remove_duplicates(gchar **numbers)
 	gint ret_idx = 1;
 
 	for (idx = 0; idx < len; idx++) {
-		if (!ret || !g_strv_contains((const gchar * const *)ret, numbers[idx])) {
+		if (!ret || !strv_contains((const gchar * const *)ret, numbers[idx])) {
 			ret = g_realloc(ret, (ret_idx + 1) * sizeof(char *));
 			ret[ret_idx - 1] = g_strdup(numbers[idx]);
 			ret[ret_idx] = NULL;

@@ -1041,3 +1041,24 @@ gboolean fritzbox_delete_voice(struct profile *profile, const gchar *filename)
 
 	return TRUE;
 }
+
+/**
+ * \brief Checks if @strv contains @str. @strv must not be %NULL.
+ * \strv a %NULL-terminated array of strings
+ * \str a string
+ * \return %TRUE if @str is an element of @strv, according to g_str_equal().
+ */
+gboolean strv_contains(const gchar *const *strv, const gchar *str)
+{
+	g_return_val_if_fail(strv != NULL, FALSE);
+	g_return_val_if_fail(str != NULL, FALSE);
+
+	for (; *strv != NULL; strv++) {
+		if (g_str_equal(str, *strv)) {
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
