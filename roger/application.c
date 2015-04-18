@@ -117,7 +117,7 @@ static void addressbook_activated(GSimpleAction *action, GVariant *parameter, gp
 
 static void dialnumber_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
-	app_show_phone_window(NULL);
+	app_show_phone_window(NULL, NULL);
 }
 
 static void preferences_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
@@ -407,7 +407,7 @@ static gint application_command_line_cb(GApplication *app, GApplicationCommandLi
 		/** Ask for contact information */
 		contact = contact_find_by_number(full_number);
 
-		app_show_phone_window(contact);
+		app_show_phone_window(contact, NULL);
 		g_free(full_number);
 	}
 

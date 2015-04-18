@@ -50,7 +50,7 @@ void dial_clicked_cb(GtkWidget *button, gpointer user_data)
 
 	contact = contact_find_by_number(full_number);
 
-	app_show_phone_window(contact);
+	app_show_phone_window(contact, NULL);
 	g_free(full_number);
 }
 

@@ -52,14 +52,12 @@ struct phone_state {
 	enum phone_type type;
 };
 
-void app_show_phone_window(struct contact *contact);
+void app_show_phone_window(struct contact *contact, struct connection *connection);
 GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct phone_state *state);
 void phone_call_notify_cb(AppObject *object, struct call *call, gint connection, gchar *medium, gpointer user_data);
 gboolean phone_window_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpointer data);
 void phone_setup_timer(struct phone_state *state);
 void phone_remove_timer(struct phone_state *state);
-void phone_add_connection(gpointer connection);
-void phone_remove_connection(gpointer connection);
 GtkWidget *phone_dial_button_frame(GtkWidget *window, struct contact *contact, struct phone_state *state);
 
 G_END_DECLS

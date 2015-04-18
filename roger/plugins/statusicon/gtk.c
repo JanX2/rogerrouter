@@ -35,6 +35,8 @@
 #include <roger/pref.h>
 #include <roger/uitools.h>
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+
 #define MAX_LASTCALLS 5
 
 #define ROUTERMANAGER_TYPE_STATUSICON_PLUGIN        (routermanager_statusicon_plugin_get_type ())
@@ -84,7 +86,7 @@ GtkWidget *statusicon_menu_functions(void)
  */
 void statusicon_dial_number_cb(GtkMenuItem *item, gpointer user_data)
 {
-	app_show_phone_window(user_data);
+	app_show_phone_window(user_data, NULL);
 }
 
 /**
@@ -419,3 +421,5 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 
 	return group;
 }
+
+G_GNUC_END_IGNORE_DEPRECATIONS

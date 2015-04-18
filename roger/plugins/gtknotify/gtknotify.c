@@ -71,11 +71,7 @@ static void notify_accept_clicked_cb(GtkWidget *notify, gpointer user_data)
 	gtk_widget_destroy(connection->notification);
 	connection->notification = NULL;
 
-	app_show_phone_window(contact);
-
-	phone_pickup(connection->priv ? connection->priv : active_capi_connection);
-
-	phone_add_connection(connection->priv ? connection->priv : active_capi_connection);
+	app_show_phone_window(contact, connection);
 }
 
 /**

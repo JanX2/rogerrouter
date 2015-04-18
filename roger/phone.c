@@ -902,11 +902,21 @@ static GtkWidget *phone_create_menu(struct profile *profile, struct phone_state 
 	return menu;
 }
 
+static void phone_pickup_incoming(struct phone_state *state, struct connection *connection)
+{
+	struct capi_connection *capi_connection = connection->priv ? connection->priv : active_capi_connection;
+
+	phone_pickup(capi_connection);
+
+	state->connection = capi_connection;
+}
+
 /**
  * \brief Create and show phone window
  * \param contact pointer to contact structure
+ * \param connection incoming connection to pickup
  */
-void app_show_phone_window(struct contact *contact)
+void app_show_phone_window(struct contact *contact, struct connection *connection)
 {
 	GtkWidget *window;
 	GtkWidget *header;
@@ -923,6 +933,12 @@ void app_show_phone_window(struct contact *contact)
 
 	/* If there is already an open phone window, present it to the user and return */
 	if (phone_window) {
+		state = g_object_get_data(G_OBJECT(phone_window), "state");
+
+		if (state && !state->connection && connection) {
+			phone_pickup_incoming(state, connection);
+		}
+
 		gtk_window_present(GTK_WINDOW(phone_window));
 		return;
 	}
@@ -937,6 +953,7 @@ void app_show_phone_window(struct contact *contact)
 	gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
 	gtk_window_set_transient_for(GTK_WINDOW(window), GTK_WINDOW(journal_get_window()));
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
+	g_object_set_data(G_OBJECT(window), "state", state);
 	g_signal_connect(window, "delete_event", G_CALLBACK(phone_window_delete_event_cb), state);
 
 	/* Create header bar and set it to window */
@@ -991,4 +1008,8 @@ void app_show_phone_window(struct contact *contact)
 	gtk_widget_show_all(window);
 
 	phone_window = window;
+
+	if (connection) {
+		phone_pickup_incoming(state, connection);
+	}
 }

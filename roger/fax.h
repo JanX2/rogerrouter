@@ -29,11 +29,8 @@ struct fax_ui {
 
 	GtkWidget *progress_bar;
 	GtkWidget *remote_label;
-	GtkWidget *page_current_label;
-	GtkWidget *status_current_label;
 
 	struct fax_status *status;
-	struct capi_connection *fax_connection;
 };
 
 void fax_process_init(void);

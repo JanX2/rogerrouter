@@ -763,7 +763,7 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 		journal_play_voice(call->priv);
 		break;
 	default:
-		app_show_phone_window(call->remote);
+		app_show_phone_window(call->remote, NULL);
 		break;
 	}
 }
@@ -902,7 +902,7 @@ void journal_popup_copy_number(GtkWidget *widget, struct call *call)
 
 void journal_popup_call_number(GtkWidget *widget, struct call *call)
 {
-	app_show_phone_window(call->remote);
+	app_show_phone_window(call->remote, NULL);
 }
 
 void journal_popup_add_contact(GtkWidget *widget, struct call *call)
@@ -1282,8 +1282,10 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 		gtk_widget_show(GTK_WIDGET(window));
 	}
 
+#ifdef FAX_DBEUG
 	extern gboolean app_show_fax_window_idle(gpointer data);
 	app_show_fax_window_idle(NULL);
+#endif
 
 	return journal_win;
 }
