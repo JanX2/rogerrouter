@@ -340,14 +340,20 @@ void menu_set_position(GtkMenu *menu, gint *x, gint *y, gboolean *push_in, gpoin
 static void phone_set_dial_number(GtkMenuItem *item, gpointer user_data)
 {
 	GtkWidget *entry = g_object_get_data(G_OBJECT(item), "entry");
+	GtkWidget *menu = g_object_get_data(G_OBJECT(item), "menu");
 	gchar *name = g_object_get_data(G_OBJECT(item), "name");
 
 	g_object_set_data(G_OBJECT(entry), "number", user_data);
+
 	if (!EMPTY_STRING(name)) {
 		gtk_entry_set_text(GTK_ENTRY(entry), name);
 		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, "go-down-symbolic");
 	} else {
 		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, NULL);
+	}
+
+	if (menu) {
+		gtk_widget_destroy(menu);
 	}
 }
 
@@ -364,9 +370,9 @@ static void contact_number_menu(GtkWidget *entry, struct contact *contact)
 	menu = gtk_menu_new();
 #else
 	GtkWidget *box;
-	GSList *number_radio_list = NULL;
 
 	menu = gtk_popover_new(entry);
+	gtk_popover_set_position(GTK_POPOVER(menu), GTK_POS_BOTTOM);
 	box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
 	gtk_widget_set_margin(box, 12, 12, 12, 12);
 	gtk_container_add(GTK_CONTAINER(menu), box);
@@ -382,22 +388,22 @@ static void contact_number_menu(GtkWidget *entry, struct contact *contact)
 
 		switch (number->type) {
 		case PHONE_NUMBER_HOME:
-			tmp = g_strdup_printf("%s:\t%s", _("HOME"), number->number);
+			tmp = g_strdup_printf("%s (%s)", _("HOME"), number->number);
 			break;
 		case PHONE_NUMBER_WORK:
-			tmp = g_strdup_printf("%s:\t%s", _("WORK"), number->number);
+			tmp = g_strdup_printf("%s (%s)", _("WORK"), number->number);
 			break;
 		case PHONE_NUMBER_MOBILE:
-			tmp = g_strdup_printf("%s:\t%s", _("MOBILE"), number->number);
+			tmp = g_strdup_printf("%s (%s)", _("MOBILE"), number->number);
 			break;
 		case PHONE_NUMBER_FAX_HOME:
-			tmp = g_strdup_printf("%s:\t%s", _("HOME FAX"), number->number);
+			tmp = g_strdup_printf("%s (%s)", _("HOME FAX"), number->number);
 			break;
 		case PHONE_NUMBER_FAX_WORK:
-			tmp = g_strdup_printf("%s:\t%s", _("WORK FAX"), number->number);
+			tmp = g_strdup_printf("%s (%s)", _("WORK FAX"), number->number);
 			break;
 		default:
-			tmp = g_strdup_printf("%s:\t%s", _("UNKNOWN"), number->number);
+			tmp = g_strdup_printf("%s (%s)", _("UNKNOWN"), number->number);
 			break;
 		}
 
@@ -413,8 +419,7 @@ static void contact_number_menu(GtkWidget *entry, struct contact *contact)
 		g_object_set_data(G_OBJECT(item), "name", contact->name);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(phone_set_dial_number), number->number);
 #else
-		item = gtk_radio_button_new_with_label(number_radio_list, tmp);
-		number_radio_list = gtk_radio_button_get_group(GTK_RADIO_BUTTON(item));
+		item = gtk_check_button_new_with_label(tmp);
 
 		if (!EMPTY_STRING(prev_number) && !strcmp(prev_number, number->number)) {
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(item), TRUE);
@@ -423,6 +428,7 @@ static void contact_number_menu(GtkWidget *entry, struct contact *contact)
 
 		g_object_set_data(G_OBJECT(item), "entry", entry);
 		g_object_set_data(G_OBJECT(item), "name", contact->name);
+		g_object_set_data(G_OBJECT(item), "menu", menu);
 		g_signal_connect(G_OBJECT(item), "toggled", G_CALLBACK(phone_set_dial_number), number->number);
 #endif
 		g_free(tmp);
