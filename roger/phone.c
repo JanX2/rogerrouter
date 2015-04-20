@@ -351,6 +351,7 @@ static void phone_set_dial_number(GtkMenuItem *item, gpointer user_data)
 	}
 }
 
+#define OLD_MENU 1
 static void contact_number_menu(GtkWidget *entry, struct contact *contact)
 {
 	GtkWidget *menu;
