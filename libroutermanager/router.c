@@ -79,6 +79,13 @@ GSList *router_get_phone_list(struct profile *profile)
 		return list;
 	}
 
+	phone = g_slice_new(struct phone);
+
+	phone->name = g_strdup("Softphone");
+	phone->type = PORT_SOFTPHONE;
+
+	list = g_slist_append(list, phone);
+
 	for (index = 0; index < PORT_MAX - 2; index++) {
 		fon = g_settings_get_string(profile->settings, router_phone_ports[index].name);
 		if (!EMPTY_STRING(fon)) {

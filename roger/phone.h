@@ -40,7 +40,8 @@ struct phone_state {
 	GtkWidget *mute_button;
 	GtkWidget *hold_button;
 	GtkWidget *record_button;
-	gchar phone_status_text[255];
+	GtkWidget *pickup_button;
+	GtkWidget *hangup_button;
 	GTimer *phone_session_timer;
 	gint phone_session_timer_id;
 
@@ -53,12 +54,12 @@ struct phone_state {
 };
 
 void app_show_phone_window(struct contact *contact, struct connection *connection);
-GtkWidget *phone_dial_frame(GtkWidget *window, struct contact *contact, struct phone_state *state);
+GtkWidget *phone_create_name_frame(GtkWidget *window, struct contact *contact, struct phone_state *state);
 void phone_call_notify_cb(AppObject *object, struct call *call, gint connection, gchar *medium, gpointer user_data);
 gboolean phone_window_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpointer data);
 void phone_setup_timer(struct phone_state *state);
 void phone_remove_timer(struct phone_state *state);
-GtkWidget *phone_dial_button_frame(GtkWidget *window, struct contact *contact, struct phone_state *state);
+GtkWidget *phone_dial_button_frame(GtkWidget *window, struct phone_state *state);
 
 G_END_DECLS
 

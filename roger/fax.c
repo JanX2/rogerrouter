@@ -390,11 +390,11 @@ void app_show_fax_window(gchar *fax_file)
 	gtk_grid_attach(GTK_GRID(grid), frame, 0, 1, 2, 1);
 
 	/* We set the dial frame last, so that all other widgets are in place */
-	frame = phone_dial_frame(window, NULL, state);
+	frame = phone_create_name_frame(window, NULL, state);
 	gtk_grid_attach(GTK_GRID(grid), frame, 0, 0, 1, 1);
 
 	/* Add dial button frame */
-	frame = phone_dial_button_frame(window, NULL, state);
+	frame = phone_dial_button_frame(window, state);
 	gtk_grid_attach(GTK_GRID(grid), frame, 1, 0, 1, 1);
 
 	g_signal_connect(app_object, "connection-status", G_CALLBACK(fax_connection_status_cb), state);
