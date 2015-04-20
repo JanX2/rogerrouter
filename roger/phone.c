@@ -357,14 +357,17 @@ static void contact_number_menu(GtkWidget *entry, struct contact *contact)
 	GSList *list;
 	GtkWidget *item;
 	gchar *tmp;
+	gchar *prev_number = g_object_get_data(G_OBJECT(entry), "number");
 
 #ifdef OLD_MENU
-	gchar *prev_number = g_object_get_data(G_OBJECT(entry), "number");
 	menu = gtk_menu_new();
 #else
 	GtkWidget *box;
+	GSList *number_radio_list = NULL;
+
 	menu = gtk_popover_new(entry);
-	box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
+	box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
+	gtk_widget_set_margin(box, 12, 12, 12, 12);
 	gtk_container_add(GTK_CONTAINER(menu), box);
 #endif
 
@@ -409,9 +412,17 @@ static void contact_number_menu(GtkWidget *entry, struct contact *contact)
 		g_object_set_data(G_OBJECT(item), "name", contact->name);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(phone_set_dial_number), number->number);
 #else
-		item = gtk_radio_button_new_with_label(NULL, tmp);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(phone_set_dial_number), number->number);
-		gtk_box_pack_end(GTK_BOX(box), item, TRUE, TRUE, 5);
+		item = gtk_radio_button_new_with_label(number_radio_list, tmp);
+		number_radio_list = gtk_radio_button_get_group(GTK_RADIO_BUTTON(item));
+
+		if (!EMPTY_STRING(prev_number) && !strcmp(prev_number, number->number)) {
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(item), TRUE);
+		}
+		gtk_box_pack_end(GTK_BOX(box), item, TRUE, TRUE, 0);
+
+		g_object_set_data(G_OBJECT(item), "entry", entry);
+		g_object_set_data(G_OBJECT(item), "name", contact->name);
+		g_signal_connect(G_OBJECT(item), "toggled", G_CALLBACK(phone_set_dial_number), number->number);
 #endif
 		g_free(tmp);
 	}
