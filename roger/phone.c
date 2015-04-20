@@ -351,7 +351,7 @@ static void phone_set_dial_number(GtkMenuItem *item, gpointer user_data)
 	}
 }
 
-#define OLD_MENU 1
+//#define OLD_MENU 1
 static void contact_number_menu(GtkWidget *entry, struct contact *contact)
 {
 	GtkWidget *menu;
@@ -912,7 +912,7 @@ static void phone_toggled_cb(GtkCheckMenuItem *item, gpointer user_data)
  * \param state phone state pointer
  * \return newly create phone menu
  */
-static GtkWidget *phone_create_menu(struct profile *profile, struct phone_state *state, GtkWidget *button)
+static GtkWidget *phone_create_menu(struct profile *profile, struct phone_state *state)
 {
 	GtkWidget *menu;
 	GtkWidget *item;
@@ -1047,8 +1047,7 @@ void app_show_phone_window(struct contact *contact, struct connection *connectio
 	gtk_header_bar_pack_end(GTK_HEADER_BAR(header), menubutton);
 
 	/* Create menu and add it to menu button */
-	//gtk_menu_button_set_popup(GTK_MENU_BUTTON(menubutton), phone_create_menu(profile, state, menubutton));
-	gtk_menu_button_set_popover(GTK_MENU_BUTTON(menubutton), phone_create_menu(profile, state, menubutton));
+	gtk_menu_button_set_popover(GTK_MENU_BUTTON(menubutton), phone_create_menu(profile, state));
 	state->headerbar = header;
 
 	/* Create grid and attach it to the window */
