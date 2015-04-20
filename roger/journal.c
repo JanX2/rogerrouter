@@ -1282,10 +1282,10 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 		gtk_widget_show(GTK_WIDGET(window));
 	}
 
-//#ifdef FAX_DBEUG
+#ifdef FAX_DBEUG
 	extern gboolean app_show_fax_window_idle(gpointer data);
 	app_show_fax_window_idle(NULL);
-//#endif
+#endif
 
 	return journal_win;
 }
