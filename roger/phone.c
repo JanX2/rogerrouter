@@ -291,6 +291,7 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 		state->connection = fax_dial(fax_ui->file, state->number, router_get_suppress_state(profile));
 		if (state->connection) {
 			fax_window_clear(fax_ui);
+			phone_allow_dial(state, FALSE);
 		} else {
 			phone_connection_failed();
 		}
@@ -841,6 +842,7 @@ GtkWidget *phone_control_frame(struct phone_state *state)
 
 	/* Set standard spacing */
 	gtk_widget_set_margin(grid, 6, 6, 6, 6);
+	gtk_widget_set_hexpand(grid, FALSE);
 	gtk_grid_set_row_spacing(GTK_GRID(grid), 6);
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 6);
 	gtk_grid_set_column_homogeneous(GTK_GRID(grid), TRUE);
@@ -1054,7 +1056,8 @@ void app_show_phone_window(struct contact *contact, struct connection *connectio
 	/* Create window */
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window), _("Phone"));
-	gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
+	gtk_window_set_default_size(GTK_WINDOW(window), 450, -1);
+	//gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
 	gtk_window_set_transient_for(GTK_WINDOW(window), GTK_WINDOW(journal_get_window()));
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 	g_object_set_data(G_OBJECT(window), "state", state);
@@ -1065,7 +1068,7 @@ void app_show_phone_window(struct contact *contact, struct connection *connectio
 	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
 	gtk_header_bar_set_title(GTK_HEADER_BAR(header), _("Phone"));
 	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(header), _("Time: 00:00:00"));
-	gtk_window_set_titlebar((GtkWindow *)(window), header);
+	gtk_window_set_titlebar(GTK_WINDOW(window), header);
 
 	/* Create and add menu button to header bar */
 	menubutton = gtk_menu_button_new();
