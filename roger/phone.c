@@ -1057,8 +1057,6 @@ void app_show_phone_window(struct contact *contact, struct connection *connectio
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window), _("Phone"));
 	gtk_window_set_default_size(GTK_WINDOW(window), 450, -1);
-	//gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
-	gtk_window_set_transient_for(GTK_WINDOW(window), GTK_WINDOW(journal_get_window()));
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 	g_object_set_data(G_OBJECT(window), "state", state);
 	g_signal_connect(window, "delete_event", G_CALLBACK(phone_window_delete_event_cb), state);

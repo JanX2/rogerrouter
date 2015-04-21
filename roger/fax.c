@@ -386,8 +386,6 @@ void app_show_fax_window(gchar *fax_file)
 	/* Create window */
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_default_size(GTK_WINDOW(window), 450, -1);
-	//gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
-	gtk_window_set_transient_for(GTK_WINDOW(window), GTK_WINDOW(journal_get_window()));
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 	g_signal_connect(G_OBJECT(window), "delete_event", G_CALLBACK(fax_window_delete_event_cb), state);
 
@@ -395,13 +393,10 @@ void app_show_fax_window(gchar *fax_file)
 	header = gtk_header_bar_new();
 	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
 
-#if 0
-	gchar *tmp = g_strdup_printf(_("Fax (%s)"), g_settings_get_string(profile->settings, "fax-header"));
+	gchar *tmp = g_strdup_printf(_("Fax - %s"), g_settings_get_string(profile->settings, "fax-header"));
 	gtk_header_bar_set_title(GTK_HEADER_BAR (header), tmp);
 	g_free(tmp);
-#else
-	gtk_header_bar_set_title(GTK_HEADER_BAR (header), _("Fax"));
-#endif
+
 	gtk_header_bar_set_subtitle(GTK_HEADER_BAR (header), _("Time: 00:00:00"));
 	gtk_window_set_titlebar((GtkWindow *)(window), header);
 
