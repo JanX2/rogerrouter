@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-20 21:47+0200\n"
+"POT-Creation-Date: 2015-04-21 20:20+0200\n"
 "PO-Revision-Date: 2015-01-28 20:28+0100\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <jan.brummer@tabos.org>\n"
@@ -39,7 +39,7 @@ msgstr "Kontakte"
 
 #. Phone
 #: ../roger/application.c:264 ../roger/contact_edit.c:284
-#: ../roger/phone.c:1030 ../roger/phone.c:1040
+#: ../roger/phone.c:1036 ../roger/phone.c:1046
 #: ../roger/plugins/statusicon/gtk.c:204
 #: ../roger/plugins/indicator/indicator.c:224
 msgid "Phone"
@@ -312,7 +312,7 @@ msgstr "_Kein Bild"
 
 #: ../roger/contact_edit.c:221 ../roger/journal.c:1041
 #: ../roger/pref_action.c:255 ../roger/pref_filters.c:202 ../roger/print.c:388
-#: ../roger/plugins/notification/notification.c:499
+#: ../roger/plugins/notification/notification.c:503
 #: ../roger/plugins/gtknotify/gtknotify.c:611
 #: ../roger/plugins/gnotification/gnotification.c:521
 msgid "Number"
@@ -388,7 +388,7 @@ msgid "Faxes"
 msgstr "Faxe"
 
 #. Add suppress check item
-#: ../roger/fax.c:267 ../roger/fax.c:289 ../roger/phone.c:964
+#: ../roger/fax.c:267 ../roger/fax.c:289 ../roger/phone.c:970
 msgid "Suppress number"
 msgstr "Nummer unterdrücken"
 
@@ -410,7 +410,7 @@ msgstr "Status:"
 msgid "Fax (%s)"
 msgstr "Fax (%s)"
 
-#: ../roger/fax.c:398 ../roger/phone.c:1041
+#: ../roger/fax.c:398 ../roger/phone.c:1047
 msgid "Time: 00:00:00"
 msgstr "Zeit: 00:00:00"
 
@@ -538,65 +538,65 @@ msgstr ""
 "Lösung: Wähle #96*3* mit dem Telefon und überprüfe die Nummern in den "
 "Einstellungen"
 
-#: ../roger/phone.c:385
+#: ../roger/phone.c:391
 msgid "HOME"
 msgstr "Zuhause"
 
-#: ../roger/phone.c:388
+#: ../roger/phone.c:394
 msgid "WORK"
 msgstr "Arbeit"
 
-#: ../roger/phone.c:391
+#: ../roger/phone.c:397
 msgid "MOBILE"
 msgstr "Mobil"
 
-#: ../roger/phone.c:394
+#: ../roger/phone.c:400
 msgid "HOME FAX"
 msgstr "Fax Zuhause"
 
-#: ../roger/phone.c:397
+#: ../roger/phone.c:403
 msgid "WORK FAX"
 msgstr "Fax Arbeit"
 
-#: ../roger/phone.c:400
+#: ../roger/phone.c:406
 msgid "UNKNOWN"
 msgstr "UNBEKANNT"
 
-#: ../roger/phone.c:511
+#: ../roger/phone.c:517
 msgid "Use autocompletion while typing names from your address book"
 msgstr "Verwende Vervollständung aus dem Adressbuch während des Tippens"
 
-#: ../roger/phone.c:512
+#: ../roger/phone.c:518
 msgid "Enter name or number"
 msgstr "Name oder Nummer eingeben"
 
-#: ../roger/phone.c:582
+#: ../roger/phone.c:588
 msgid "Pick up"
 msgstr "Abheben"
 
-#: ../roger/phone.c:594
+#: ../roger/phone.c:600
 msgid "Hang up"
 msgstr "Auflegen"
 
 #. Add clear button
-#: ../roger/phone.c:826
+#: ../roger/phone.c:832
 msgid "<small>Clear</small>"
 msgstr "<small>Löschen</small>"
 
-#: ../roger/phone.c:832
+#: ../roger/phone.c:838
 msgid "<small>Mute</small>"
 msgstr "<small>Mute</small>"
 
-#: ../roger/phone.c:838
+#: ../roger/phone.c:844
 msgid "<small>Hold</small>"
 msgstr "<small>Halten</small>"
 
-#: ../roger/phone.c:844
+#: ../roger/phone.c:850
 msgid "<small>Record</small>"
 msgstr "<small>Aufnehmen</small>"
 
 #. Fill menu
-#: ../roger/phone.c:933
+#: ../roger/phone.c:939
 msgid "Phones"
 msgstr "Telefone"
 
@@ -701,7 +701,6 @@ msgstr "Aktionen ausführen:"
 
 #. Incoming call label
 #: ../roger/pref_action.c:513 ../roger/plugins/notification/notification.c:129
-#: ../roger/plugins/notification/notification.c:258
 #: ../roger/plugins/gtknotify/gtknotify.c:344
 #: ../roger/plugins/gnotification/gnotification.c:267
 msgid "Incoming call"
@@ -731,7 +730,7 @@ msgstr "Anruf verpasst"
 
 #. Outgoing call label
 #: ../roger/pref_action.c:537 ../roger/plugins/notification/notification.c:129
-#: ../roger/plugins/notification/notification.c:264
+#: ../roger/plugins/notification/notification.c:268
 #: ../roger/plugins/gtknotify/gtknotify.c:366
 #: ../roger/plugins/gnotification/gnotification.c:285
 msgid "Outgoing call"
@@ -876,7 +875,7 @@ msgid "All"
 msgstr "Alle"
 
 #. Last calls - Incomming
-#: ../roger/pref_filters.c:58 ../roger/plugins/notification/notification.c:508
+#: ../roger/pref_filters.c:58 ../roger/plugins/notification/notification.c:512
 #: ../roger/plugins/gtknotify/gtknotify.c:620
 #: ../roger/plugins/statusicon/gtk.c:148
 #: ../roger/plugins/indicator/indicator.c:152
@@ -891,7 +890,7 @@ msgid "Missed"
 msgstr "Verpasst"
 
 #. Last calls - Outgoing
-#: ../roger/pref_filters.c:60 ../roger/plugins/notification/notification.c:503
+#: ../roger/pref_filters.c:60 ../roger/plugins/notification/notification.c:507
 #: ../roger/plugins/gtknotify/gtknotify.c:615
 #: ../roger/plugins/statusicon/gtk.c:155
 #: ../roger/plugins/indicator/indicator.c:159
@@ -1260,36 +1259,40 @@ msgstr ""
 msgid "Number:\t%s"
 msgstr "Nummer:\t%s"
 
-#: ../roger/plugins/notification/notification.c:259
+#: ../roger/plugins/notification/notification.c:258
+msgid "Incoming call (on %s)"
+msgstr "Eingehender Anruf (auf %s)"
+
+#: ../roger/plugins/notification/notification.c:261
 #: ../roger/plugins/gtknotify/gtknotify.c:353
 #: ../roger/plugins/gnotification/gnotification.c:271
 msgid "Accept"
 msgstr "Annehmen"
 
-#: ../roger/plugins/notification/notification.c:260
+#: ../roger/plugins/notification/notification.c:262
 #: ../roger/plugins/gtknotify/gtknotify.c:358
 #: ../roger/plugins/gnotification/gnotification.c:272
 msgid "Decline"
 msgstr "Ablehnen"
 
-#: ../roger/plugins/notification/notification.c:511
+#: ../roger/plugins/notification/notification.c:515
 #: ../roger/plugins/gtknotify/gtknotify.c:624
 msgid "Choose for which MSNs you want notifications"
 msgstr "Wähle für welche MSNs Benachrichtigungen angezeigt werden"
 
-#: ../roger/plugins/notification/notification.c:519
+#: ../roger/plugins/notification/notification.c:523
 #: ../roger/plugins/gtknotify/gtknotify.c:643
 #: ../roger/plugins/gnotification/gnotification.c:541
 msgid "Duration (outgoing)"
 msgstr "Anzeigedauer (ausgehend)"
 
-#: ../roger/plugins/notification/notification.c:528
+#: ../roger/plugins/notification/notification.c:532
 #: ../roger/plugins/gtknotify/gtknotify.c:652
 #: ../roger/plugins/gnotification/gnotification.c:550
 msgid "Play ringtones"
 msgstr "Spiele Klingeltöne"
 
-#: ../roger/plugins/notification/notification.c:536
+#: ../roger/plugins/notification/notification.c:540
 #: ../roger/plugins/gtknotify/gtknotify.c:660
 #: ../roger/plugins/gnotification/gnotification.c:558
 msgid "Popup"
