@@ -132,6 +132,12 @@ void phone_remove_timer(struct phone_state *state)
 	}
 }
 
+void phone_allow_dial(struct phone_state *state, gboolean allow)
+{
+	gtk_widget_set_sensitive(state->pickup_button, allow);
+	gtk_widget_set_sensitive(state->hangup_button, !allow);
+}
+
 /**
  * \brief CAPI connection established callback - Starts timer if needed
  * \param object appobject
@@ -168,6 +174,7 @@ static void capi_connection_terminated_cb(AppObject *object, struct capi_connect
 	/* Remove timer */
 	phone_remove_timer(state);
 
+	phone_allow_dial(state, TRUE);
 	state->connection = NULL;
 }
 
@@ -268,8 +275,7 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 			if (!state->connection) {
 				phone_connection_failed();
 			} else {
-				gtk_widget_set_sensitive(state->pickup_button, FALSE);
-				gtk_widget_set_sensitive(state->hangup_button, TRUE);
+				phone_allow_dial(state, FALSE);
 			}
 		} else {
 			gchar *number;
@@ -310,8 +316,7 @@ static void hangup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 		g_debug("%s(): Hangup requested for %p", __FUNCTION__, state->connection);
 		phone_reset_buttons(state);
 		phone_hangup(state->connection);
-		gtk_widget_set_sensitive(state->pickup_button, TRUE);
-		gtk_widget_set_sensitive(state->hangup_button, FALSE);
+		phone_allow_dial(state, TRUE);
 	} else {
 		router_hangup(profile, router_get_phone_port(profile), number);
 	}
@@ -498,6 +503,34 @@ gboolean number_entry_contains_completion_cb(GtkEntryCompletion *completion, con
 }
 
 /**
+ * \brief Set contact name in phone dialog
+ * \param state phone state structure
+ * \param contact contact structure
+ */
+void phone_set_contact_name(struct phone_state *state, struct contact *contact)
+{
+	struct contact *contact_copy;
+
+	if (!state || !contact) {
+		return;
+	}
+
+	contact_copy = contact_dup(contact);
+
+	emit_contact_process(contact_copy);
+
+	if (!EMPTY_STRING(contact_copy->name)) {
+		gtk_entry_set_text(GTK_ENTRY(state->name_entry), contact_copy->name);
+		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(state->name_entry), GTK_ENTRY_ICON_SECONDARY, "go-down-symbolic");
+		g_object_set_data(G_OBJECT(state->name_entry), "contact", contact_copy);
+		g_object_set_data(G_OBJECT(state->name_entry), "number", contact_copy->number);
+	} else if (contact_copy->number) {
+		gtk_entry_set_text(GTK_ENTRY(state->name_entry), contact_copy->number);
+		g_object_set_data(G_OBJECT(state->name_entry), "number", contact_copy->number);
+	}
+}
+
+/**
  * \brief Create name (number) frame
  * \param window phone window
  * \param contact contact structure (fill name entry if present)
@@ -520,23 +553,8 @@ GtkWidget *phone_create_name_frame(GtkWidget *window, struct contact *contact, s
 	gtk_entry_set_activates_default(GTK_ENTRY(state->name_entry), TRUE);
 	g_signal_connect(state->name_entry, "icon-press", G_CALLBACK(name_entry_icon_press_cb), NULL);
 
-	if (contact) {
-		struct contact *contact_copy;
-
-		contact_copy = contact_dup(contact);
-
-		emit_contact_process(contact_copy);
-
-		if (!EMPTY_STRING(contact_copy->name)) {
-			gtk_entry_set_text(GTK_ENTRY(state->name_entry), contact_copy->name);
-			gtk_entry_set_icon_from_icon_name(GTK_ENTRY(state->name_entry), GTK_ENTRY_ICON_SECONDARY, "go-down-symbolic");
-			g_object_set_data(G_OBJECT(state->name_entry), "contact", contact_copy);
-			g_object_set_data(G_OBJECT(state->name_entry), "number", contact_copy->number);
-		} else if (contact_copy->number) {
-			gtk_entry_set_text(GTK_ENTRY(state->name_entry), contact_copy->number);
-			g_object_set_data(G_OBJECT(state->name_entry), "number", contact_copy->number);
-		}
-	}
+	/* Set contact name */
+	phone_set_contact_name(state, contact);
 
 	/* Entry completion */
 	completion = gtk_entry_completion_new();
@@ -990,8 +1008,7 @@ static void phone_pickup_incoming(struct phone_state *state, struct connection *
 		/* Set internal connection */
 		state->connection = capi_connection;
 
-		gtk_widget_set_sensitive(state->pickup_button, FALSE);
-		gtk_widget_set_sensitive(state->hangup_button, TRUE);
+		phone_allow_dial(state, FALSE);
 	}
 }
 
@@ -1021,6 +1038,9 @@ void app_show_phone_window(struct contact *contact, struct connection *connectio
 
 		if (state && !state->connection && connection) {
 			phone_pickup_incoming(state, connection);
+
+			/* Set contact name */
+			phone_set_contact_name(state, contact);
 		}
 
 		gtk_window_present(GTK_WINDOW(phone_window));
@@ -1091,12 +1111,14 @@ void app_show_phone_window(struct contact *contact, struct connection *connectio
 	g_signal_connect(app_object, "connection-established", G_CALLBACK(capi_connection_established_cb), state);
 	g_signal_connect(app_object, "connection-terminated", G_CALLBACK(capi_connection_terminated_cb), state);
 
-	/* Show window and set phone_window */
-	gtk_widget_show_all(window);
-	phone_window = window;
-
 	/* In case there is an incoming connection, pick it up */
 	if (connection) {
 		phone_pickup_incoming(state, connection);
+	} else {
+		phone_allow_dial(state, TRUE);
 	}
+
+	/* Show window and set phone_window */
+	gtk_widget_show_all(window);
+	phone_window = window;
 }
