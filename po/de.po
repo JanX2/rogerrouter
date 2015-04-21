@@ -585,7 +585,7 @@ msgstr "<small>Löschen</small>"
 
 #: ../roger/phone.c:838
 msgid "<small>Mute</small>"
-msgstr "<small>Mute</small>"
+msgstr "<small>Stumm</small>"
 
 #: ../roger/phone.c:844
 msgid "<small>Hold</small>"
