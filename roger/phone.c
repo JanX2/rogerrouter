@@ -270,7 +270,7 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 				show_active_call_dialog(phone_window);
 				return;
 			}
-			state->connection = phone_dial(state->number, g_settings_get_boolean(profile->settings, "suppress"));
+			state->connection = phone_dial(state->number, router_get_suppress_state(profile));
 
 			if (!state->connection) {
 				phone_connection_failed();
@@ -280,7 +280,7 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 		} else {
 			gchar *number;
 
-			number = g_strdup_printf("%s%s", g_settings_get_boolean(profile->settings, "suppress") ? "*31#" : "", state->number);
+			number = g_strdup_printf("%s%s", router_get_suppress_state(profile) ? "*31#" : "", state->number);
 			router_dial_number(profile, router_get_phone_port(profile), number);
 			g_free(number);
 		}
@@ -288,7 +288,7 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	case PHONE_TYPE_FAX: {
 		struct fax_ui *fax_ui = state->priv;
 
-		state->connection = fax_dial(fax_ui->file, state->number);
+		state->connection = fax_dial(fax_ui->file, state->number, router_get_suppress_state(profile));
 		if (state->connection) {
 			fax_window_clear(fax_ui);
 		} else {

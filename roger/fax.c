@@ -102,6 +102,8 @@ static void capi_connection_terminated_cb(AppObject *object, struct capi_connect
 	/* Remove timer */
 	phone_remove_timer(state);
 
+	phone_allow_dial(state, TRUE);
+
 	state->connection = NULL;
 }
 
@@ -367,7 +369,6 @@ void app_show_fax_window(gchar *fax_file)
 	struct phone_state *state;
 	struct fax_ui *fax_ui;
 	struct profile *profile = profile_get_active();
-	gchar *tmp;
 
 	if (!profile) {
 		return;
@@ -392,9 +393,14 @@ void app_show_fax_window(gchar *fax_file)
 	/* Create header bar and set it to window */
 	header = gtk_header_bar_new();
 	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
-	tmp = g_strdup_printf(_("Fax (%s)"), g_settings_get_string(profile->settings, "fax-header"));
+
+#if 0
+	gchar *tmp = g_strdup_printf(_("Fax (%s)"), g_settings_get_string(profile->settings, "fax-header"));
 	gtk_header_bar_set_title(GTK_HEADER_BAR (header), tmp);
 	g_free(tmp);
+#else
+	gtk_header_bar_set_title(GTK_HEADER_BAR (header), _("Fax"));
+#endif
 	gtk_header_bar_set_subtitle(GTK_HEADER_BAR (header), _("Time: 00:00:00"));
 	gtk_window_set_titlebar((GtkWindow *)(window), header);
 
@@ -437,6 +443,9 @@ void app_show_fax_window(gchar *fax_file)
 	g_signal_connect(app_object, "connection-status", G_CALLBACK(fax_connection_status_cb), state);
 	g_signal_connect(app_object, "connection-established", G_CALLBACK(capi_connection_established_cb), state);
 	g_signal_connect(app_object, "connection-terminated", G_CALLBACK(capi_connection_terminated_cb), state);
+
+	/* Allow dial out */
+	phone_allow_dial(state, TRUE);
 
 	gtk_widget_show_all(window);
 	gtk_window_set_keep_above(GTK_WINDOW(window), TRUE);

@@ -294,7 +294,7 @@ int main(int argc, char **argv)
 
 		tiff = convert_fax_to_tiff(file_name);
 		if (tiff) {
-			gpointer connection = fax_dial(tiff, number);
+			gpointer connection = fax_dial(tiff, number, router_get_suppress_state(profile_get_active()));
 			if (!connection) {
 				g_error("could not create connection!");
 				exit(-2);

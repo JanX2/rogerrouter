@@ -25,7 +25,7 @@ G_BEGIN_DECLS
 extern struct capi_connection *active_capi_connection;
 
 void faxophone_setup(void);
-struct capi_connection *fax_dial(gchar *tiff, const gchar *number);
+struct capi_connection *fax_dial(gchar *tiff, const gchar *number, gboolean suppress);
 struct capi_connection *phone_dial(const gchar *trg_no, gboolean suppress);
 
 G_END_DECLS

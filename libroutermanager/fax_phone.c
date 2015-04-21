@@ -52,9 +52,10 @@ struct capi_connection *active_capi_connection = NULL;
  * \brief Dial number via fax
  * \param tiff tiff file name
  * \param trg_no target number
+ * \param suppress suppress number flag
  * \return capi connection pointer
  */
-struct capi_connection *fax_dial(gchar *tiff, const gchar *trg_no)
+struct capi_connection *fax_dial(gchar *tiff, const gchar *trg_no, gboolean suppress)
 {
 	struct profile *profile = profile_get_active();
 	gint modem = g_settings_get_int(profile->settings, "fax-bitrate");
@@ -83,9 +84,9 @@ struct capi_connection *fax_dial(gchar *tiff, const gchar *trg_no)
 	}
 
 	if (g_settings_get_boolean(profile->settings, "fax-sff")) {
-		connection = sff_send(tiff, modem, ecm, controller, src_no, target, ident, header, 0);
+		connection = sff_send(tiff, modem, ecm, controller, src_no, target, ident, header, suppress);
 	} else {
-		connection = fax_send(tiff, modem, ecm, controller, cip, src_no, target, ident, header, 0);
+		connection = fax_send(tiff, modem, ecm, controller, cip, src_no, target, ident, header, suppress);
 	}
 	g_free(target);
 

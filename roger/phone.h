@@ -60,6 +60,7 @@ gboolean phone_window_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpoint
 void phone_setup_timer(struct phone_state *state);
 void phone_remove_timer(struct phone_state *state);
 GtkWidget *phone_dial_button_frame(GtkWidget *window, struct phone_state *state);
+void phone_allow_dial(struct phone_state *state, gboolean allow);
 
 G_END_DECLS
 

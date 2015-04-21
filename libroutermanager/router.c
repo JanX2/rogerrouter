@@ -607,3 +607,13 @@ void router_set_phone_port(struct profile *profile, gint port)
 {
 	g_settings_set_int(profile->settings, "port", port);
 }
+
+/**
+ * \brief Get number suppress state
+ * \param profile router information structure
+ * \return suppress state
+ */
+gboolean router_get_suppress_state(struct profile *profile)
+{
+	return g_settings_get_boolean(profile->settings, "suppress");
+}

@@ -170,6 +170,9 @@ void router_free_phone_list(GSList *phone_list);
 gint router_get_phone_port(struct profile *profile);
 void router_set_phone_port(struct profile *profile, gint port);
 
+gboolean router_get_suppress_state(struct profile *profile);
+
+
 G_END_DECLS
 
 #endif
