@@ -45,6 +45,7 @@ struct icons {
 };
 
 GtkWidget *get_icon(gint type, gint size);
+GdkPixbuf *image_get_scaled(GdkPixbuf *image, gint req_width, gint req_height);
 
 G_END_DECLS
 

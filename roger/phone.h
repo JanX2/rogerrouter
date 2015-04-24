@@ -42,6 +42,13 @@ struct phone_state {
 	GtkWidget *record_button;
 	GtkWidget *pickup_button;
 	GtkWidget *hangup_button;
+
+	GtkWidget *menu;
+	GtkWidget *scrolled_win;
+	GtkWidget *box;
+	const gchar *filter;
+	gboolean discard;
+
 	GTimer *phone_session_timer;
 	gint phone_session_timer_id;
 

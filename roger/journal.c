@@ -518,8 +518,6 @@ void search_entry_changed(GtkEditable *entry, GtkTreeView *view)
 	}
 
 	if (strlen(text)) {
-		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, "edit-clear-symbolic");
-
 		journal_search_filter = filter_new("internal_search");
 
 		if (g_ascii_isdigit(text[0])) {
@@ -527,8 +525,6 @@ void search_entry_changed(GtkEditable *entry, GtkTreeView *view)
 		} else {
 			filter_rule_add(journal_search_filter, FILTER_REMOTE_NAME, FILTER_CONTAINS, (gchar *)text);
 		}
-	} else {
-		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, NULL);
 	}
 
 	journal_clear();

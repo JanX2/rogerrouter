@@ -33,7 +33,6 @@
 #include <roger/phone.h>
 #include <roger/icons.h>
 
-GdkPixbuf *image_get_scaled(GdkPixbuf *image, gint req_width, gint req_height);
 void contacts_fill_list(GtkListStore *list_store, const gchar *text);
 
 static GtkWidget *detail_grid = NULL;
