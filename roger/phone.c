@@ -550,7 +550,7 @@ void number_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_data)
 
 	state->filter = gtk_entry_get_text(GTK_ENTRY(entry));
 
-	if (EMPTY_STRING(state->filter) || isdigit(state->filter[0]) || state->discard) {
+	if (EMPTY_STRING(state->filter) || isdigit(state->filter[0]) || state->discard || state->filter[0] == '*' || state->filter[0] == '#') {
 		state->discard = FALSE;
 		if (state->menu) {
 			gtk_widget_destroy(state->menu);
