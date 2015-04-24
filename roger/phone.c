@@ -568,6 +568,7 @@ void number_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_data)
 		gtk_popover_set_relative_to(GTK_POPOVER(state->menu), GTK_WIDGET(entry));
 
 		state->scrolled_win = gtk_scrolled_window_new(NULL, NULL);
+		gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(state->scrolled_win), GTK_SHADOW_ETCHED_IN);
 		//gtk_widget_set_can_focus(win, FALSE);
 		gtk_widget_set_size_request(state->menu, 400, 280);
 		gtk_container_add(GTK_CONTAINER(state->menu), state->scrolled_win);
