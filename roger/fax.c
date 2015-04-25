@@ -319,6 +319,8 @@ GtkWidget *fax_information_frame(struct phone_state *state)
 
 	/* Create frame */
 	frame = gtk_frame_new(NULL);
+	//gtk_widget_set_valign(frame, GTK_ALIGN_CENTER);
+	gtk_widget_set_vexpand(frame, TRUE);
 
 	/* Create inner grid */
 	grid = gtk_grid_new();
@@ -385,7 +387,7 @@ void app_show_fax_window(gchar *fax_file)
 
 	/* Create window */
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_default_size(GTK_WINDOW(window), 450, -1);
+	gtk_window_set_default_size(GTK_WINDOW(window), 450, 280);
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 	g_signal_connect(G_OBJECT(window), "delete_event", G_CALLBACK(fax_window_delete_event_cb), state);
 

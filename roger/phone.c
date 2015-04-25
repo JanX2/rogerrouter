@@ -238,13 +238,13 @@ static void show_active_call_dialog(GtkWidget *window)
 
 static void phone_reset_buttons(struct phone_state *state)
 {
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(state->mute_button))) {
+	if (state->mute_button && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(state->mute_button))) {
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(state->mute_button), FALSE);
 	}
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(state->hold_button))) {
+	if (state->hold_button && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(state->hold_button))) {
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(state->hold_button), FALSE);
 	}
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(state->record_button))) {
+	if (state->record_button && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(state->record_button))) {
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(state->record_button), FALSE);
 	}
 }
@@ -356,9 +356,6 @@ static void phone_set_dial_number(GtkMenuItem *item, gpointer user_data)
 
 	if (!EMPTY_STRING(name)) {
 		gtk_entry_set_text(GTK_ENTRY(entry), name);
-		//gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, "go-down-symbolic");
-	} else {
-		//gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, NULL);
 	}
 
 	if (menu) {
@@ -512,6 +509,28 @@ void phone_destroy_contacts(GtkWidget *widget, gpointer user_data)
 	gtk_widget_destroy(widget);
 }
 
+void phone_set_number(struct phone_state *state, GtkListBoxRow *row)
+{
+	GtkWidget *grid = gtk_bin_get_child(GTK_BIN(row));
+	struct contact *contact;
+	gchar *number = g_object_get_data(G_OBJECT(grid), "number");
+
+	g_object_set_data(G_OBJECT(state->name_entry), "number", number);
+
+	contact = g_object_get_data(G_OBJECT(grid), "contact");
+	state->discard = TRUE;
+	gtk_entry_set_text(GTK_ENTRY(state->name_entry), contact->name);
+
+	gtk_widget_destroy(state->menu);
+}
+
+void row_activated_cb(GtkListBox *box, GtkListBoxRow *row, gpointer user_data)
+{
+	struct phone_state *state = user_data;
+
+	phone_set_number(state, row);
+}
+
 void name_box_set_focus_child_cb(GtkContainer *container, GtkWidget *widget, gpointer user_data)
 {
 	g_debug("MOEP");
@@ -537,21 +556,24 @@ void number_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_data)
 	if (!state->menu) {
 		/* Create popover */
 		state->menu = gtk_popover_new(NULL);
+
+		gtk_widget_set_size_request(state->menu, 400, state->type == PHONE_TYPE_VOICE ? 280 : 160);
+
 		gtk_popover_set_modal(GTK_POPOVER(state->menu), FALSE);
 		gtk_container_set_border_width(GTK_CONTAINER(state->menu), 6);
 		gtk_popover_set_position(GTK_POPOVER(state->menu), GTK_POS_BOTTOM);
 		gtk_popover_set_relative_to(GTK_POPOVER(state->menu), GTK_WIDGET(entry));
+		g_signal_connect(G_OBJECT(state->menu), "closed", G_CALLBACK(menu_closed_cb), state);
 
 		state->scrolled_win = gtk_scrolled_window_new(NULL, NULL);
 		gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(state->scrolled_win), GTK_SHADOW_ETCHED_IN);
-		gtk_widget_set_size_request(state->menu, 400, 280);
 		gtk_container_add(GTK_CONTAINER(state->menu), state->scrolled_win);
 
 		state->box = gtk_list_box_new();
 		gtk_list_box_set_filter_func(GTK_LIST_BOX(state->box), name_entry_filter_cb, state, NULL);
 		gtk_container_add(GTK_CONTAINER(state->scrolled_win), state->box);
+		g_signal_connect(G_OBJECT(state->box), "row-activated", G_CALLBACK(row_activated_cb), state);
 		gtk_widget_show_all(state->menu);
-		g_signal_connect(G_OBJECT(state->menu), "closed", G_CALLBACK(menu_closed_cb), state);
 	}
 
 	gtk_container_foreach(GTK_CONTAINER(state->box), phone_destroy_contacts, NULL);
@@ -656,7 +678,6 @@ void phone_set_contact_name(struct phone_state *state, struct contact *contact)
 
 	if (!EMPTY_STRING(contact_copy->name)) {
 		gtk_entry_set_text(GTK_ENTRY(state->name_entry), contact_copy->name);
-		//gtk_entry_set_icon_from_icon_name(GTK_ENTRY(state->name_entry), GTK_ENTRY_ICON_SECONDARY, "go-down-symbolic");
 		g_object_set_data(G_OBJECT(state->name_entry), "contact", contact_copy);
 		g_object_set_data(G_OBJECT(state->name_entry), "number", contact_copy->number);
 	} else if (contact_copy->number) {
@@ -674,13 +695,15 @@ void listbox_set_focus(GtkWidget *scrolled_win, GtkWidget *box, GtkListBoxRow *r
 	gtk_widget_translate_coordinates(GTK_WIDGET(row), box, 0, 0, &wleft, &wtop);
 	wbottom = wtop + gtk_widget_get_allocated_height(GTK_WIDGET(row));
 
-	value = top = gtk_adjustment_get_value(vadj);
+	top = gtk_adjustment_get_value(vadj);
 	bottom = top + gtk_adjustment_get_page_size(vadj);
 
 	if (wtop < top) {
 		value = wtop;
 	} else if (wbottom > bottom) {
 		value = wbottom - gtk_adjustment_get_page_size(vadj);
+	} else {
+		value = top;
 	}
 
 	gtk_adjustment_set_value(vadj, value);
@@ -698,6 +721,12 @@ gboolean number_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event, gpoi
 		return FALSE;
 	}
 
+	if (keyval == GDK_KEY_Escape) {
+		gtk_list_box_unselect_all(GTK_LIST_BOX(state->box));
+		gtk_widget_destroy(state->menu);
+		return TRUE;
+	}
+
 	row = gtk_list_box_get_selected_row(GTK_LIST_BOX(state->box));
 	if (!row) {
 		row = gtk_list_box_get_row_at_index(GTK_LIST_BOX(state->box), 0);
@@ -707,26 +736,9 @@ gboolean number_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event, gpoi
 		return FALSE;
 	}
 
-	if (keyval == GDK_KEY_Escape) {
-		gtk_list_box_unselect_all(GTK_LIST_BOX(state->box));
-		gtk_widget_destroy(state->menu);
-		return TRUE;
-	}
-
 	if (gtk_list_box_row_is_selected(GTK_LIST_BOX_ROW(row))) {
-		GtkWidget *grid = gtk_bin_get_child(GTK_BIN(row));
-		struct contact *contact;
-
 		if (keyval == GDK_KEY_Return || keyval == GDK_KEY_KP_Enter || keyval == GDK_KEY_ISO_Enter) {
-			gchar *number = g_object_get_data(G_OBJECT(grid), "number");
-
-			g_object_set_data(G_OBJECT(entry), "number", number);
-
-			contact = g_object_get_data(G_OBJECT(grid), "contact");
-			state->discard = TRUE;
-			gtk_entry_set_text(GTK_ENTRY(entry), contact->name);
-
-			gtk_widget_destroy(state->menu);
+			phone_set_number(state, row);
 
 			return TRUE;
 		}
@@ -781,6 +793,7 @@ GtkWidget *phone_create_name_frame(GtkWidget *window, struct contact *contact, s
 {
 	/* Name entry */
 	state->name_entry = gtk_search_entry_new();
+	gtk_widget_set_size_request(state->name_entry, 270, -1);
 	g_object_set(state->name_entry, "primary-icon-activatable", TRUE, "primary-icon-sensitive", TRUE, NULL);
 	gtk_widget_set_tooltip_text(state->name_entry, _("Use autocompletion while typing names from your address book"));
 	gtk_entry_set_placeholder_text(GTK_ENTRY(state->name_entry), _("Enter name or number"));
@@ -1309,6 +1322,7 @@ void app_show_phone_window(struct contact *contact, struct connection *connectio
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window), _("Phone"));
 	gtk_window_set_default_size(GTK_WINDOW(window), 450, -1);
+	gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 	g_object_set_data(G_OBJECT(window), "state", state);
 	g_signal_connect(window, "delete_event", G_CALLBACK(phone_window_delete_event_cb), state);
