@@ -48,7 +48,9 @@
 #include <roger/application.h>
 #include <roger/journal.h>
 
+#if GTK_CHECK_VERSION(3,14,0)
 #define USE_POPOVER 1
+#endif
 
 /** Phone window */
 static GtkWidget *phone_window = NULL;
@@ -181,7 +183,7 @@ static void capi_connection_terminated_cb(AppObject *object, struct capi_connect
 	state->connection = NULL;
 }
 
-void phone_connection_notify_cb(AppObject *object, struct connection *connection, gpointer user_data)
+static void phone_connection_notify_cb(AppObject *object, struct connection *connection, gpointer user_data)
 {
 	struct phone_state *state = user_data;
 
@@ -326,7 +328,63 @@ static void hangup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	}
 }
 
-void menu_set_position(GtkMenu *menu, gint *x, gint *y, gboolean *push_in, gpointer user_data)
+static gchar *number_type_to_string(enum phone_number_type type)
+{
+	gchar *tmp;
+
+	switch (type) {
+	case PHONE_NUMBER_HOME:
+		tmp = g_strdup(_("Home"));
+		break;
+	case PHONE_NUMBER_WORK:
+		tmp = g_strdup(_("Work"));
+		break;
+	case PHONE_NUMBER_MOBILE:
+		tmp = g_strdup(_("Cell"));
+		break;
+	case PHONE_NUMBER_FAX_HOME:
+		tmp = g_strdup(_("Fax Home"));
+		break;
+	case PHONE_NUMBER_FAX_WORK:
+		tmp = g_strdup(_("Fax Work"));
+		break;
+	default:
+		tmp = g_strdup(_("Unknown"));
+		break;
+	}
+
+	return tmp;
+}
+
+/**
+ * \brief Set contact name in phone dialog
+ * \param state phone state structure
+ * \param contact contact structure
+ */
+static void phone_set_contact_name(struct phone_state *state, struct contact *contact)
+{
+	struct contact *contact_copy;
+
+	if (!state || !contact) {
+		return;
+	}
+
+	contact_copy = contact_dup(contact);
+
+	emit_contact_process(contact_copy);
+
+	if (!EMPTY_STRING(contact_copy->name)) {
+		gtk_entry_set_text(GTK_ENTRY(state->name_entry), contact_copy->name);
+		g_object_set_data(G_OBJECT(state->name_entry), "contact", contact_copy);
+		g_object_set_data(G_OBJECT(state->name_entry), "number", contact_copy->number);
+	} else if (contact_copy->number) {
+		gtk_entry_set_text(GTK_ENTRY(state->name_entry), contact_copy->number);
+		g_object_set_data(G_OBJECT(state->name_entry), "number", contact_copy->number);
+	}
+}
+
+#ifndef USE_POPOVER
+static void menu_set_position(GtkMenu *menu, gint *x, gint *y, gboolean *push_in, gpointer user_data)
 {
 	GtkAllocation allocation;
 	GtkRequisition request;
@@ -361,34 +419,6 @@ static void phone_set_dial_number(GtkMenuItem *item, gpointer user_data)
 	if (menu) {
 		gtk_widget_destroy(menu);
 	}
-}
-
-gchar *number_type_to_string(enum phone_number_type type)
-{
-	gchar *tmp;
-
-	switch (type) {
-	case PHONE_NUMBER_HOME:
-		tmp = g_strdup(_("Home"));
-		break;
-	case PHONE_NUMBER_WORK:
-		tmp = g_strdup(_("Work"));
-		break;
-	case PHONE_NUMBER_MOBILE:
-		tmp = g_strdup(_("Cell"));
-		break;
-	case PHONE_NUMBER_FAX_HOME:
-		tmp = g_strdup(_("Fax Home"));
-		break;
-	case PHONE_NUMBER_FAX_WORK:
-		tmp = g_strdup(_("Fax Work"));
-		break;
-	default:
-		tmp = g_strdup(_("Unknown"));
-		break;
-	}
-
-	return tmp;
 }
 
 static void contact_number_menu(GtkWidget *entry, struct contact *contact)
@@ -435,27 +465,6 @@ static void contact_number_menu(GtkWidget *entry, struct contact *contact)
 	gtk_menu_popup(GTK_MENU(menu), NULL, NULL, menu_set_position, entry, 0, gtk_get_current_event_time());
 }
 
-void number_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_data);
-
-void name_entry_icon_press_cb(GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEvent *event, gpointer user_data)
-{
-	if (icon_pos == GTK_ENTRY_ICON_PRIMARY) {
-#ifdef USE_POPOVER
-		struct phone_state *state = user_data;
-
-		if (!state->menu) {
-			number_entry_search_changed_cb(GTK_SEARCH_ENTRY(entry), user_data);
-		} else {
-			gtk_widget_destroy(state->menu);
-		}
-#else
-		struct contact *contact = g_object_get_data(G_OBJECT(entry), "contact");
-
-		contact_number_menu(GTK_WIDGET(entry), contact);
-#endif
-	}
-}
-
 /**
  * \brief Number entry match selected callback
  * \param completion entry completion
@@ -464,7 +473,7 @@ void name_entry_icon_press_cb(GtkEntry *entry, GtkEntryIconPosition icon_pos, Gd
  * \param user_data phone state pointer
  * \return TRUE if signal has been handled
  */
-gboolean number_entry_match_selected_cb(GtkEntryCompletion *completion, GtkTreeModel *model, GtkTreeIter *iter, gpointer user_data)
+static gboolean number_entry_match_selected_cb(GtkEntryCompletion *completion, GtkTreeModel *model, GtkTreeIter *iter, gpointer user_data)
 {
 	GValue value_contact = {0, };
 	struct phone_state *state = user_data;
@@ -483,7 +492,56 @@ gboolean number_entry_match_selected_cb(GtkEntryCompletion *completion, GtkTreeM
 	return TRUE;
 }
 
-gboolean name_entry_filter_cb(GtkListBoxRow *row, gpointer user_data)
+/**
+ * \brief Check if entry contains text
+ * \param completion entry completion
+ * \param norm_key unused
+ * \param iter current tree iterator
+ * \param user_data unused
+ * \return TRUE if it is part of the entry, otherwise FALSE
+ */
+static gboolean number_entry_contains_completion_cb(GtkEntryCompletion *completion, const gchar *norm_key, GtkTreeIter *iter, gpointer user_data)
+{
+	GtkTreeModel *model = gtk_entry_completion_get_model(completion);
+	const gchar *key = gtk_entry_get_text(GTK_ENTRY(gtk_entry_completion_get_entry(completion)));
+	gchar *name;
+	gboolean found;
+
+	gtk_tree_model_get(model, iter, 1, &name, -1);
+	found = g_strcasestr(name, key) != 0;
+	g_free(name);
+
+	return found;
+}
+
+
+static void name_entry_icon_press_cb(GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEvent *event, gpointer user_data)
+{
+	if (icon_pos == GTK_ENTRY_ICON_PRIMARY) {
+		struct contact *contact = g_object_get_data(G_OBJECT(entry), "contact");
+
+		contact_number_menu(GTK_WIDGET(entry), contact);
+	}
+}
+
+#else
+
+static void number_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_data);
+
+static void name_entry_icon_press_cb(GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEvent *event, gpointer user_data)
+{
+	if (icon_pos == GTK_ENTRY_ICON_PRIMARY) {
+		struct phone_state *state = user_data;
+
+		if (!state->menu) {
+			number_entry_search_changed_cb(GTK_SEARCH_ENTRY(entry), user_data);
+		} else {
+			gtk_widget_destroy(state->menu);
+		}
+	}
+}
+
+static gboolean name_entry_filter_cb(GtkListBoxRow *row, gpointer user_data)
 {
 	struct phone_state *state = user_data;
 	GtkWidget *grid = gtk_bin_get_child(GTK_BIN(row));
@@ -496,7 +554,7 @@ gboolean name_entry_filter_cb(GtkListBoxRow *row, gpointer user_data)
 	return g_strcasestr(contact->name, state->filter) != NULL;
 }
 
-void menu_closed_cb(GtkWidget *menu, gpointer user_data)
+static void menu_closed_cb(GtkWidget *menu, gpointer user_data)
 {
 	struct phone_state *state = user_data;
 
@@ -504,12 +562,12 @@ void menu_closed_cb(GtkWidget *menu, gpointer user_data)
 	state->box = NULL;
 }
 
-void phone_destroy_contacts(GtkWidget *widget, gpointer user_data)
+static void phone_destroy_contacts(GtkWidget *widget, gpointer user_data)
 {
 	gtk_widget_destroy(widget);
 }
 
-void phone_set_number(struct phone_state *state, GtkListBoxRow *row)
+static void phone_set_number(struct phone_state *state, GtkListBoxRow *row)
 {
 	GtkWidget *grid = gtk_bin_get_child(GTK_BIN(row));
 	struct contact *contact;
@@ -524,27 +582,14 @@ void phone_set_number(struct phone_state *state, GtkListBoxRow *row)
 	gtk_widget_destroy(state->menu);
 }
 
-void row_activated_cb(GtkListBox *box, GtkListBoxRow *row, gpointer user_data)
+static void row_activated_cb(GtkListBox *box, GtkListBoxRow *row, gpointer user_data)
 {
 	struct phone_state *state = user_data;
 
 	phone_set_number(state, row);
 }
 
-void name_box_set_focus_child_cb(GtkContainer *container, GtkWidget *widget, gpointer user_data)
-{
-	g_debug("MOEP");
-}
-
-#if !GTK_CHECK_VERSION(3,14,0)
-void menu_unmap_cb(GtkWidget *widget, gpointer user_data)
-{
-	/* Prevent warning message: Gtk:Warning: GtkWindow 0x1b19640 is mapped but visible child GtkPopover 0x1b54530 is not mapped */
-	gtk_widget_hide(widget);
-}
-#endif
-
-void number_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_data)
+static void number_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_data)
 {
 	GtkWidget *label;
 	struct phone_state *state = user_data;
@@ -577,9 +622,6 @@ void number_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_data)
 		gtk_popover_set_position(GTK_POPOVER(state->menu), GTK_POS_BOTTOM);
 		gtk_popover_set_relative_to(GTK_POPOVER(state->menu), GTK_WIDGET(entry));
 		g_signal_connect(G_OBJECT(state->menu), "closed", G_CALLBACK(menu_closed_cb), state);
-#if !GTK_CHECK_VERSION(3,14,0)
-		g_signal_connect(G_OBJECT(state->menu), "unmap", G_CALLBACK(menu_unmap_cb), state);
-#endif
 
 		state->scrolled_win = gtk_scrolled_window_new(NULL, NULL);
 		gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(state->scrolled_win), GTK_SHADOW_ETCHED_IN);
@@ -653,56 +695,7 @@ void number_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_data)
 	}
 }
 
-/**
- * \brief Check if entry contains text
- * \param completion entry completion
- * \param norm_key unused
- * \param iter current tree iterator
- * \param user_data unused
- * \return TRUE if it is part of the entry, otherwise FALSE
- */
-gboolean number_entry_contains_completion_cb(GtkEntryCompletion *completion, const gchar *norm_key, GtkTreeIter *iter, gpointer user_data)
-{
-	GtkTreeModel *model = gtk_entry_completion_get_model(completion);
-	const gchar *key = gtk_entry_get_text(GTK_ENTRY(gtk_entry_completion_get_entry(completion)));
-	gchar *name;
-	gboolean found;
-
-	gtk_tree_model_get(model, iter, 1, &name, -1);
-	found = g_strcasestr(name, key) != 0;
-	g_free(name);
-
-	return found;
-}
-
-/**
- * \brief Set contact name in phone dialog
- * \param state phone state structure
- * \param contact contact structure
- */
-void phone_set_contact_name(struct phone_state *state, struct contact *contact)
-{
-	struct contact *contact_copy;
-
-	if (!state || !contact) {
-		return;
-	}
-
-	contact_copy = contact_dup(contact);
-
-	emit_contact_process(contact_copy);
-
-	if (!EMPTY_STRING(contact_copy->name)) {
-		gtk_entry_set_text(GTK_ENTRY(state->name_entry), contact_copy->name);
-		g_object_set_data(G_OBJECT(state->name_entry), "contact", contact_copy);
-		g_object_set_data(G_OBJECT(state->name_entry), "number", contact_copy->number);
-	} else if (contact_copy->number) {
-		gtk_entry_set_text(GTK_ENTRY(state->name_entry), contact_copy->number);
-		g_object_set_data(G_OBJECT(state->name_entry), "number", contact_copy->number);
-	}
-}
-
-void listbox_set_focus(GtkWidget *scrolled_win, GtkWidget *box, GtkListBoxRow *row)
+static void listbox_set_focus(GtkWidget *scrolled_win, GtkWidget *box, GtkListBoxRow *row)
 {
 	GtkAdjustment *vadj = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(scrolled_win));
 	gint wleft, wtop, wbottom;
@@ -725,16 +718,7 @@ void listbox_set_focus(GtkWidget *scrolled_win, GtkWidget *box, GtkListBoxRow *r
 	gtk_adjustment_set_value(vadj, value);
 }
 
-gboolean row_is_selected(struct phone_state *state, GtkListBoxRow *row)
-{
-#if GTK_CHECK_VERSION(3,14,0)
-	return gtk_list_box_row_is_selected(GTK_LIST_BOX_ROW(row));
-#else
-	return gtk_list_box_get_selected_row(GTK_LIST_BOX(state->box)) == row;
-#endif
-}
-
-gboolean number_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event, gpointer user_data)
+static gboolean number_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event, gpointer user_data)
 {
 	GtkListBoxRow *row;
 	struct phone_state *state = user_data;
@@ -747,9 +731,7 @@ gboolean number_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event, gpoi
 	}
 
 	if (keyval == GDK_KEY_Escape) {
-#if GTK_CHECK_VERSION(3,14,0)
 		gtk_list_box_unselect_all(GTK_LIST_BOX(state->box));
-#endif
 		gtk_widget_destroy(state->menu);
 		return TRUE;
 	}
@@ -763,7 +745,7 @@ gboolean number_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event, gpoi
 		return FALSE;
 	}
 
-	if (row_is_selected(state, row)) {
+	if (gtk_list_box_row_is_selected(GTK_LIST_BOX_ROW(row))) {
 		if (keyval == GDK_KEY_Return || keyval == GDK_KEY_KP_Enter || keyval == GDK_KEY_ISO_Enter) {
 			phone_set_number(state, row);
 
@@ -777,7 +759,7 @@ gboolean number_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event, gpoi
 	length = g_list_length(childs);
 
 	if (keyval == GDK_KEY_Up) {
-		if (!row_is_selected(state, row)) {
+		if (!gtk_list_box_row_is_selected(GTK_LIST_BOX_ROW(row))) {
 			row = gtk_list_box_get_row_at_index(GTK_LIST_BOX(state->box), length - 1);
 			gtk_list_box_select_row(GTK_LIST_BOX(state->box), GTK_LIST_BOX_ROW(row));
 			return FALSE;
@@ -787,12 +769,10 @@ gboolean number_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event, gpoi
 			row = gtk_list_box_get_row_at_index(GTK_LIST_BOX(state->box), gtk_list_box_row_get_index(GTK_LIST_BOX_ROW(row)) - 1);
 			gtk_list_box_select_row(GTK_LIST_BOX(state->box), GTK_LIST_BOX_ROW(row));
 		} else {
-#if GTK_CHECK_VERSION(3,14,0)
 			gtk_list_box_unselect_all(GTK_LIST_BOX(state->box));
-#endif
 		}
 	} else if (keyval == GDK_KEY_Down) {
-		if (!row_is_selected(state, row)) {
+		if (!gtk_list_box_row_is_selected(GTK_LIST_BOX_ROW(row))) {
 			gtk_list_box_select_row(GTK_LIST_BOX(state->box), GTK_LIST_BOX_ROW(row));
 			return FALSE;
 		}
@@ -802,9 +782,7 @@ gboolean number_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event, gpoi
 			gtk_list_box_select_row(GTK_LIST_BOX(state->box), GTK_LIST_BOX_ROW(row));
 
 		} else {
-#if GTK_CHECK_VERSION(3,14,0)
 			gtk_list_box_unselect_all(GTK_LIST_BOX(state->box));
-#endif
 		}
 	}
 
@@ -812,6 +790,7 @@ gboolean number_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event, gpoi
 
 	return FALSE;
 }
+#endif
 
 /**
  * \brief Create name (number) frame
@@ -858,7 +837,6 @@ GtkWidget *phone_create_name_frame(GtkWidget *window, struct contact *contact, s
 		GdkPixbuf *pixbuf = image_get_scaled(contact ? contact->image : NULL, 16, 16);
 
 		gtk_list_store_append(list_store, &iter);
-		//gtk_list_store_set(list_store, &iter, 0, pixbuf, 1, contact->name, 2, contact, -1);
 		gtk_list_store_insert_with_values(list_store, &iter, -1, 0, pixbuf, 1, contact->name, 2, contact, -1);
 	}
 
@@ -1367,8 +1345,7 @@ void app_show_phone_window(struct contact *contact, struct connection *connectio
 	/* Create and add menu button to header bar */
 	menubutton = gtk_menu_button_new();
 	gtk_menu_button_set_direction(GTK_MENU_BUTTON(menubutton), GTK_ARROW_NONE);
-#if GTK_CHECK_VERSION(3,14,0)
-#else
+#if !GTK_CHECK_VERSION(3,14,0)
 	gtk_container_add(GTK_CONTAINER(menubutton), gtk_image_new_from_icon_name("view-list-symbolic", GTK_ICON_SIZE_MENU));
 #endif
 	gtk_header_bar_pack_end(GTK_HEADER_BAR(header), menubutton);
