@@ -562,10 +562,15 @@ void number_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_data)
 	}
 
 	if (!state->menu) {
+		gint width, height;
+
 		/* Create popover */
 		state->menu = gtk_popover_new(NULL);
 
-		gtk_widget_set_size_request(state->menu, 400, state->type == PHONE_TYPE_VOICE ? 280 : 160);
+		width = gtk_widget_get_allocated_width(state->name_entry) + gtk_widget_get_allocated_width(state->pickup_button) + gtk_widget_get_allocated_width(state->hangup_button);
+		height = gtk_widget_get_allocated_height(state->dialpad_frame) + gtk_widget_get_allocated_height(state->name_entry);
+
+		gtk_widget_set_size_request(state->menu, width, height);
 
 		gtk_popover_set_modal(GTK_POPOVER(state->menu), FALSE);
 		gtk_container_set_border_width(GTK_CONTAINER(state->menu), 6);
@@ -1347,7 +1352,6 @@ void app_show_phone_window(struct contact *contact, struct connection *connectio
 	/* Create window */
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window), _("Phone"));
-	gtk_window_set_default_size(GTK_WINDOW(window), 450, -1);
 	gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 	g_object_set_data(G_OBJECT(window), "state", state);
