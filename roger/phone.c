@@ -1352,6 +1352,10 @@ void app_show_phone_window(struct contact *contact, struct connection *connectio
 	/* Create and add menu button to header bar */
 	menubutton = gtk_menu_button_new();
 	gtk_menu_button_set_direction(GTK_MENU_BUTTON(menubutton), GTK_ARROW_NONE);
+#if GTK_CHECK_VERSION(3,14,0)
+#else
+	gtk_container_add(GTK_CONTAINER(menubutton), gtk_image_new_from_icon_name("view-list-symbolic", GTK_ICON_SIZE_MENU));
+#endif
 	gtk_header_bar_pack_end(GTK_HEADER_BAR(header), menubutton);
 
 	/* Create menu and add it to menu button */

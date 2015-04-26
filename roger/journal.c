@@ -1092,6 +1092,10 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	/* Create menu button and menu */
 	menu_button = gtk_menu_button_new();
 	gtk_menu_button_set_direction(GTK_MENU_BUTTON(menu_button), GTK_ARROW_NONE);
+#if GTK_CHECK_VERSION(3,14,0)
+#else
+	gtk_container_add(GTK_CONTAINER(menu_button), gtk_image_new_from_icon_name("view-list-symbolic", GTK_ICON_SIZE_MENU));
+#endif
 
 	menu = g_menu_new();
 
