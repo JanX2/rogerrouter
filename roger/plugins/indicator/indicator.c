@@ -1,9 +1,9 @@
 /**
  * Roger Router - Plugin Application Indicator
- * Copyright (c) 2013-2014 Dieter Schärf
+ * Copyright (c) 2013-2015 Dieter Schärf
  *
  * Roger Router
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2015 Jan-Michael Brummer
  *
  * This file is part of Roger Router.
  *
@@ -90,7 +90,7 @@ GtkWidget *indicator_menu_functions(void)
  */
 void indicator_dial_number_cb(GtkMenuItem *item, gpointer user_data)
 {
-	app_show_phone_window(user_data);
+	app_show_phone_window(user_data, NULL);
 }
 
 /**
@@ -122,8 +122,8 @@ void indicator_menu_last_calls_group(GtkWidget *menu, gchar *label, int call_typ
 			} else {
 				gtk_menu_item_set_label(GTK_MENU_ITEM(item), call->remote->number);
 			}
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(indicator_dial_number_cb), call->remote);
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
 			count++;
 
@@ -197,6 +197,11 @@ void indicator_journal_cb(void)
 	}
 }
 
+void indicator_phone_cb(GtkWidget *widget, gpointer user_data)
+{
+	app_show_phone_window(NULL, NULL);
+}
+
 /**
  * \brief create menu
  * \param none
@@ -223,7 +228,7 @@ GtkWidget *indicator_menu(void)
 	/* Phone */
 	item = gtk_menu_item_new_with_label(_("Phone"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(app_show_phone_window), NULL);
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(indicator_phone_cb), NULL);
 
 	/* Last calls */
 	item = gtk_menu_item_new_with_label(_("Last calls"));

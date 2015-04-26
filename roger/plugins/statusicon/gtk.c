@@ -182,6 +182,11 @@ void statusicon_journal_cb(void)
 	}
 }
 
+void statusicon_phone_cb(GtkWidget *widget, gpointer user_data)
+{
+	app_show_phone_window(NULL, NULL);
+}
+
 void statusicon_popup_menu_cb(GtkStatusIcon *statusicon, guint button, guint activate_time, gpointer user_data)
 {
 	GtkWidget *menu;
@@ -203,7 +208,7 @@ void statusicon_popup_menu_cb(GtkStatusIcon *statusicon, guint button, guint act
 	/* Phone */
 	item = gtk_menu_item_new_with_label(_("Phone"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(app_show_phone_window), NULL);
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(statusicon_phone_cb), NULL);
 
 	/* Last calls */
 	item = gtk_menu_item_new_with_label(_("Last calls"));
