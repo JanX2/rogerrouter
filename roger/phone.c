@@ -709,6 +709,15 @@ void listbox_set_focus(GtkWidget *scrolled_win, GtkWidget *box, GtkListBoxRow *r
 	gtk_adjustment_set_value(vadj, value);
 }
 
+gboolean row_is_selected(struct phone_state *state, GtkListBoxRow *row)
+{
+#if GTK_CHECK_VERSION(3,14,0)
+	return gtk_list_box_row_is_selected(GTK_LIST_BOX_ROW(row));
+#else
+	return gtk_list_box_get_selected_row(GTK_LIST_BOX(state->box)) == row;
+#endif
+}
+
 gboolean number_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event, gpointer user_data)
 {
 	GtkListBoxRow *row;
@@ -722,7 +731,9 @@ gboolean number_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event, gpoi
 	}
 
 	if (keyval == GDK_KEY_Escape) {
+#if GTK_CHECK_VERSION(3,14,0)
 		gtk_list_box_unselect_all(GTK_LIST_BOX(state->box));
+#endif
 		gtk_widget_destroy(state->menu);
 		return TRUE;
 	}
@@ -736,7 +747,7 @@ gboolean number_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event, gpoi
 		return FALSE;
 	}
 
-	if (gtk_list_box_row_is_selected(GTK_LIST_BOX_ROW(row))) {
+	if (row_is_selected(state, row)) {
 		if (keyval == GDK_KEY_Return || keyval == GDK_KEY_KP_Enter || keyval == GDK_KEY_ISO_Enter) {
 			phone_set_number(state, row);
 
@@ -750,7 +761,7 @@ gboolean number_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event, gpoi
 	length = g_list_length(childs);
 
 	if (keyval == GDK_KEY_Up) {
-		if (!gtk_list_box_row_is_selected(GTK_LIST_BOX_ROW(row))) {
+		if (!row_is_selected(state, row)) {
 			row = gtk_list_box_get_row_at_index(GTK_LIST_BOX(state->box), length - 1);
 			gtk_list_box_select_row(GTK_LIST_BOX(state->box), GTK_LIST_BOX_ROW(row));
 			return FALSE;
@@ -760,10 +771,12 @@ gboolean number_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event, gpoi
 			row = gtk_list_box_get_row_at_index(GTK_LIST_BOX(state->box), gtk_list_box_row_get_index(GTK_LIST_BOX_ROW(row)) - 1);
 			gtk_list_box_select_row(GTK_LIST_BOX(state->box), GTK_LIST_BOX_ROW(row));
 		} else {
+#if GTK_CHECK_VERSION(3,14,0)
 			gtk_list_box_unselect_all(GTK_LIST_BOX(state->box));
+#endif
 		}
 	} else if (keyval == GDK_KEY_Down) {
-		if (!gtk_list_box_row_is_selected(GTK_LIST_BOX_ROW(row))) {
+		if (!row_is_selected(state, row)) {
 			gtk_list_box_select_row(GTK_LIST_BOX(state->box), GTK_LIST_BOX_ROW(row));
 			return FALSE;
 		}
@@ -773,7 +786,9 @@ gboolean number_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event, gpoi
 			gtk_list_box_select_row(GTK_LIST_BOX(state->box), GTK_LIST_BOX_ROW(row));
 
 		} else {
+#if GTK_CHECK_VERSION(3,14,0)
 			gtk_list_box_unselect_all(GTK_LIST_BOX(state->box));
+#endif
 		}
 	}
 
