@@ -536,6 +536,14 @@ void name_box_set_focus_child_cb(GtkContainer *container, GtkWidget *widget, gpo
 	g_debug("MOEP");
 }
 
+#if !GTK_CHECK_VERSION(3,14,0)
+void menu_unmap_cb(GtkWidget *widget, gpointer user_data)
+{
+	/* Prevent warning message: Gtk:Warning: GtkWindow 0x1b19640 is mapped but visible child GtkPopover 0x1b54530 is not mapped */
+	gtk_widget_hide(widget);
+}
+#endif
+
 void number_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_data)
 {
 	GtkWidget *label;
@@ -564,6 +572,9 @@ void number_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_data)
 		gtk_popover_set_position(GTK_POPOVER(state->menu), GTK_POS_BOTTOM);
 		gtk_popover_set_relative_to(GTK_POPOVER(state->menu), GTK_WIDGET(entry));
 		g_signal_connect(G_OBJECT(state->menu), "closed", G_CALLBACK(menu_closed_cb), state);
+#if !GTK_CHECK_VERSION(3,14,0)
+		g_signal_connect(G_OBJECT(state->menu), "unmap", G_CALLBACK(menu_unmap_cb), state);
+#endif
 
 		state->scrolled_win = gtk_scrolled_window_new(NULL, NULL);
 		gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(state->scrolled_win), GTK_SHADOW_ETCHED_IN);
