@@ -102,7 +102,7 @@ static void capi_connection_terminated_cb(AppObject *object, struct capi_connect
 	/* Remove timer */
 	phone_remove_timer(state);
 
-	phone_allow_dial(state, TRUE);
+	phone_dial_buttons_set_dial(state, TRUE);
 
 	state->connection = NULL;
 }
@@ -414,7 +414,7 @@ void app_show_fax_window(gchar *fax_file)
 	gtk_menu_button_set_popover(GTK_MENU_BUTTON(menubutton), fax_create_menu(profile, state));
 #endif
 
-	state->headerbar = header;
+	state->header_bar = header;
 
 	/* Create grid and attach it to the window */
 	grid = gtk_grid_new();
@@ -431,11 +431,11 @@ void app_show_fax_window(gchar *fax_file)
 	gtk_grid_attach(GTK_GRID(grid), frame, 0, 1, 2, 1);
 
 	/* We set the dial frame last, so that all other widgets are in place */
-	frame = phone_create_name_frame(window, NULL, state);
+	frame = phone_search_entry_new(window, NULL, state);
 	gtk_grid_attach(GTK_GRID(grid), frame, 0, 0, 1, 1);
 
 	/* Add dial button frame */
-	frame = phone_dial_button_frame(window, state);
+	frame = phone_dial_buttons_new(window, state);
 	gtk_grid_attach(GTK_GRID(grid), frame, 1, 0, 1, 1);
 
 	g_signal_connect(app_object, "connection-status", G_CALLBACK(fax_connection_status_cb), state);
@@ -443,7 +443,7 @@ void app_show_fax_window(gchar *fax_file)
 	g_signal_connect(app_object, "connection-terminated", G_CALLBACK(capi_connection_terminated_cb), state);
 
 	/* Allow dial out */
-	phone_allow_dial(state, TRUE);
+	phone_dial_buttons_set_dial(state, TRUE);
 
 	gtk_widget_show_all(window);
 	gtk_window_set_keep_above(GTK_WINDOW(window), TRUE);

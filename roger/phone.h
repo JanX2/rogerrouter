@@ -35,15 +35,15 @@ struct phone_state {
 	GtkWidget *dialpad_frame;
 	GtkWidget *control_frame;
 	GtkWidget *call_frame;
-	GtkWidget *headerbar;
-	GtkWidget *name_entry;
+	GtkWidget *header_bar;
+	GtkWidget *search_entry;
 	GtkWidget *mute_button;
 	GtkWidget *hold_button;
 	GtkWidget *record_button;
 	GtkWidget *pickup_button;
 	GtkWidget *hangup_button;
 
-	GtkWidget *menu;
+	GtkWidget *contact_menu;
 	GtkWidget *scrolled_win;
 	GtkWidget *box;
 	const gchar *filter;
@@ -61,13 +61,12 @@ struct phone_state {
 };
 
 void app_show_phone_window(struct contact *contact, struct connection *connection);
-GtkWidget *phone_create_name_frame(GtkWidget *window, struct contact *contact, struct phone_state *state);
+GtkWidget *phone_search_entry_new(GtkWidget *window, struct contact *contact, struct phone_state *state);
 void phone_call_notify_cb(AppObject *object, struct call *call, gint connection, gchar *medium, gpointer user_data);
-gboolean phone_window_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpointer data);
 void phone_setup_timer(struct phone_state *state);
 void phone_remove_timer(struct phone_state *state);
-GtkWidget *phone_dial_button_frame(GtkWidget *window, struct phone_state *state);
-void phone_allow_dial(struct phone_state *state, gboolean allow);
+GtkWidget *phone_dial_buttons_new(GtkWidget *window, struct phone_state *state);
+void phone_dial_buttons_set_dial(struct phone_state *state, gboolean allow);
 
 G_END_DECLS
 
