@@ -32,7 +32,7 @@ enum phone_type {
 };
 
 struct phone_state {
-	GtkWidget *dialpad_frame;
+	GtkWidget *child_frame;
 	GtkWidget *control_frame;
 	GtkWidget *call_frame;
 	GtkWidget *header_bar;
@@ -58,6 +58,10 @@ struct phone_state {
 	gpointer priv;
 
 	enum phone_type type;
+};
+
+struct phone_device {
+	gint dummy;
 };
 
 void app_show_phone_window(struct contact *contact, struct connection *connection);

@@ -538,7 +538,7 @@ static void phone_search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer
 		state->contact_menu = gtk_popover_new(NULL);
 
 		width = gtk_widget_get_allocated_width(state->search_entry) + gtk_widget_get_allocated_width(state->pickup_button) + gtk_widget_get_allocated_width(state->hangup_button);
-		height = gtk_widget_get_allocated_height(state->dialpad_frame) + gtk_widget_get_allocated_height(state->search_entry);
+		height = gtk_widget_get_allocated_height(state->child_frame) + gtk_widget_get_allocated_height(state->search_entry);
 
 		gtk_widget_set_size_request(state->contact_menu, width, height);
 
@@ -1340,8 +1340,8 @@ void app_show_phone_window(struct contact *contact, struct connection *connectio
 	gtk_grid_attach(GTK_GRID(grid), frame, 1, 0, 1, 1);
 
 	/* Add dial pad */
-	state->dialpad_frame = phone_dialpad_new(state);
-	gtk_grid_attach(GTK_GRID(grid), state->dialpad_frame, 0, 1, 1, 1);
+	state->child_frame = phone_dialpad_new(state);
+	gtk_grid_attach(GTK_GRID(grid), state->child_frame, 0, 1, 1, 1);
 
 	/* Add control frame */
 	state->control_frame = phone_control_buttons_new(state);

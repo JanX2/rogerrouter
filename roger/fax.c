@@ -238,40 +238,13 @@ static GtkWidget *fax_create_menu(struct profile *profile, struct phone_state *s
 	GtkWidget *item;
 
 	/* Create menu */
-#ifdef OLD_MENU
-	menu = gtk_menu_new();
-#else
 	GtkWidget *box;
 
 	menu = gtk_popover_new(NULL);
 	box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
 	gtk_widget_set_margin(box, 12, 12, 12, 12);
 	gtk_container_add(GTK_CONTAINER(menu), box);
-#endif
 
-#ifdef OLD_MENU
-	/* Fill menu */
-	item = gtk_menu_item_new_with_label(_("Faxes"));
-	gtk_widget_set_sensitive(item, FALSE);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-
-	/* Add fax as it is always present and has index 0 */
-	item = gtk_radio_menu_item_new_with_label(NULL, g_settings_get_string(profile->settings, "fax-header"));
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), TRUE);
-	g_object_set_data(G_OBJECT(item), "phone_state", state);
-
-	/* Add separator */
-	item = gtk_separator_menu_item_new();
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-
-	/* Add suppress check item */
-	item = gtk_check_menu_item_new_with_label(_("Suppress number"));
-	g_settings_bind(profile->settings, "suppress", item, "active", G_SETTINGS_BIND_DEFAULT);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-
-	gtk_widget_show_all(menu);
-#else
 	/* Fill menu */
 	item = gtk_label_new(_("Fax devices"));
 	gtk_widget_set_sensitive(item, FALSE);
@@ -293,7 +266,6 @@ static GtkWidget *fax_create_menu(struct profile *profile, struct phone_state *s
 	gtk_box_pack_start(GTK_BOX(box), item, FALSE, FALSE, 0);
 
 	gtk_widget_show_all(box);
-#endif
 
 	return menu;
 }
@@ -408,11 +380,7 @@ void app_show_fax_window(gchar *fax_file)
 	gtk_header_bar_pack_end(GTK_HEADER_BAR(header), menubutton);
 
 	/* Create menu and add it to menu button */
-#ifdef OLD_MENU
-	gtk_menu_button_set_popup(GTK_MENU_BUTTON(menubutton), fax_create_menu(profile, state));
-#else
 	gtk_menu_button_set_popover(GTK_MENU_BUTTON(menubutton), fax_create_menu(profile, state));
-#endif
 
 	state->header_bar = header;
 
@@ -427,8 +395,8 @@ void app_show_fax_window(gchar *fax_file)
 	gtk_grid_set_row_spacing(GTK_GRID(grid), 18);
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 12);
 
-	frame = fax_information_frame(state);
-	gtk_grid_attach(GTK_GRID(grid), frame, 0, 1, 2, 1);
+	state->child_frame = fax_information_frame(state);
+	gtk_grid_attach(GTK_GRID(grid), state->child_frame, 0, 1, 2, 1);
 
 	/* We set the dial frame last, so that all other widgets are in place */
 	frame = phone_search_entry_new(window, NULL, state);
