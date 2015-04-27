@@ -196,40 +196,6 @@ static void capi_connection_terminated_cb(AppObject *object, struct capi_connect
 	state->connection = NULL;
 }
 
-static void phone_connection_notify_cb(AppObject *object, struct connection *connection, gpointer user_data)
-{
-	struct phone_state *state = user_data;
-
-	g_debug("%s(): called", __FUNCTION__);
-
-	if (connection->type == CONNECTION_TYPE_OUTGOING) {
-		g_debug("Outgoing");
-		if (!state->connection && state->number && !strcmp(state->number, connection->remote_number)) {
-			phone_setup_timer(state);
-		}
-	} else if (connection->type == (CONNECTION_TYPE_OUTGOING | CONNECTION_TYPE_CONNECT)) {
-		g_debug("Connect, check %p == %p?", state->connection, connection);
-		if (state->connection != connection) {
-			return;
-		}
-
-		g_debug("Established");
-	} else {
-		if (connection->type & CONNECTION_TYPE_DISCONNECT) {
-			g_debug("Disconnect, check %p == %p?", state->connection, connection);
-			if (state->connection && state->connection != connection) {
-				return;
-			}
-
-			g_debug("Terminated");
-			phone_remove_timer(state);
-
-			state->connection = NULL;
-			state->number = NULL;
-		}
-	}
-}
-
 /**
  * \brief Phone connection failed - Show error dialog including user support text
  */
@@ -1351,7 +1317,6 @@ void app_show_phone_window(struct contact *contact, struct connection *connectio
 	phone_control_buttons_set_sensitive(state, router_get_phone_port(profile));
 
 	/* Connect connection signals */
-	g_signal_connect(app_object, "connection-notify", G_CALLBACK(phone_connection_notify_cb), state);
 	g_signal_connect(app_object, "connection-established", G_CALLBACK(capi_connection_established_cb), state);
 	g_signal_connect(app_object, "connection-terminated", G_CALLBACK(capi_connection_terminated_cb), state);
 
