@@ -1070,7 +1070,12 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	grid = gtk_grid_new();
 
 	journal_view = gtk_tree_view_new();
+
+	/* Show horizontal grid lines */
 	gtk_tree_view_set_grid_lines(GTK_TREE_VIEW(journal_view), GTK_TREE_VIEW_GRID_LINES_HORIZONTAL);
+
+	/* Set fixed height mode (improves rendering speed) */
+	gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(journal_view), TRUE);
 
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
 	gtk_container_add(GTK_CONTAINER(window), grid);
@@ -1191,6 +1196,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	/* Add pixbuf renderer, it's always the first in row */
 	renderer = gtk_cell_renderer_pixbuf_new();
 	column = gtk_tree_view_column_new_with_attributes(column_name[0], renderer, "pixbuf", JOURNAL_COL_TYPE, NULL);
+	gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_FIXED);
 	gtk_tree_view_column_set_sort_column_id(column, 1);
 	if (g_settings_get_uint(app_settings, "col-0-width")) {
 		gtk_tree_view_column_set_fixed_width(column, g_settings_get_uint(app_settings, "col-0-width"));
@@ -1199,7 +1205,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	gtk_tree_view_column_set_visible(column, g_settings_get_boolean(app_settings, "col-0-visible"));
 	g_signal_connect(column, "notify::fixed-width", G_CALLBACK(journal_column_fixed_width_cb), NULL);
 	g_signal_connect(column, "notify::visible", G_CALLBACK(journal_column_fixed_width_cb), NULL);
-	gtk_tree_view_column_set_resizable(column, TRUE);
+	//gtk_tree_view_column_set_resizable(column, TRUE);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(journal_view), column);
 
 	title = column_name[0];
@@ -1234,6 +1240,8 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 		tmp = g_strdup_printf("col-%d-visible", index);
 		gtk_tree_view_column_set_visible(column, g_settings_get_boolean(app_settings, tmp));
 		g_free(tmp);
+
+		gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_FIXED);
 
 		g_signal_connect(column, "notify::fixed-width", G_CALLBACK(journal_column_fixed_width_cb), NULL);
 		g_signal_connect(column, "notify::visible", G_CALLBACK(journal_column_fixed_width_cb), NULL);
