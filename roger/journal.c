@@ -947,9 +947,17 @@ void journal_popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer use
 	g_signal_connect(menuitem, "activate", (GCallback) journal_popup_call_number, call);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
+	/* Separator */
+	menuitem = gtk_separator_menu_item_new();
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
 	/* Add contact */
 	menuitem = gtk_menu_item_new_with_label(_("Add contact"));
 	g_signal_connect(menuitem, "activate", (GCallback) journal_popup_add_contact, call);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+	/* Separator */
+	menuitem = gtk_separator_menu_item_new();
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
 	/* Delete entry */
