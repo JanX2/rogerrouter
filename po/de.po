@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-01 15:42+0200\n"
+"POT-Creation-Date: 2015-05-01 16:43+0200\n"
 "PO-Revision-Date: 2015-01-28 20:28+0100\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <jan.brummer@tabos.org>\n"
@@ -256,7 +256,7 @@ msgid "Photo"
 msgstr "Foto"
 
 #. Name
-#: ../roger/contacts.c:331 ../roger/contact_edit.c:192 ../roger/journal.c:1042
+#: ../roger/contacts.c:331 ../roger/contact_edit.c:192 ../roger/journal.c:1052
 #: ../roger/pref_action.c:192 ../roger/pref_action.c:502
 #: ../roger/pref_filters.c:201 ../roger/pref_filters.c:510
 #: ../roger/print.c:384
@@ -268,7 +268,8 @@ msgstr "Name"
 msgid "Do you want to delete the entry '%s'?"
 msgstr "Wollen Sie den Eintrag '%s' löschen?"
 
-#: ../roger/contacts.c:410 ../roger/journal.c:427 ../roger/journal.c:1118
+#. Delete entry
+#: ../roger/contacts.c:410 ../roger/journal.c:427 ../roger/journal.c:956
 msgid "Delete entry"
 msgstr "Eintrag löschen"
 
@@ -309,7 +310,7 @@ msgstr "_Öffnen"
 msgid "_No image"
 msgstr "_Kein Bild"
 
-#: ../roger/contact_edit.c:220 ../roger/journal.c:1044
+#: ../roger/contact_edit.c:220 ../roger/journal.c:1054
 #: ../roger/pref_action.c:255 ../roger/pref_filters.c:202 ../roger/print.c:388
 #: ../roger/plugins/notification/notification.c:503
 #: ../roger/plugins/gtknotify/gtknotify.c:611
@@ -333,7 +334,7 @@ msgstr "Straße"
 msgid "ZIP"
 msgstr "PLZ"
 
-#: ../roger/contact_edit.c:263 ../roger/journal.c:1045
+#: ../roger/contact_edit.c:263 ../roger/journal.c:1055
 msgid "City"
 msgstr "Stadt"
 
@@ -429,17 +430,18 @@ msgstr "Wollen Sie den ausgewählten Eintrag löschen?"
 msgid "Where shall i add the number?"
 msgstr "Wo soll die Nummer hinzugefügt werden?"
 
-#: ../roger/journal.c:453 ../roger/journal.c:1119
-msgid "Add entry"
-msgstr "Eintrag hinzufügen"
+#. Add contact
+#: ../roger/journal.c:453 ../roger/journal.c:951
+msgid "Add contact"
+msgstr "Kontakt hinzufügen"
 
 #: ../roger/journal.c:459
-msgid "Existing entry"
-msgstr "Existierender Eintrag"
+msgid "Existing contact"
+msgstr "Existierender Kontakt"
 
 #: ../roger/journal.c:460
-msgid "New entry"
-msgstr "Neuer Eintrag"
+msgid "New contact"
+msgstr "Neuer Kontakt"
 
 #. Create dialog
 #: ../roger/journal.c:686 ../roger/pref_filters.c:61
@@ -456,53 +458,48 @@ msgid "Playing voice box entry..."
 msgstr "Spiele Anrufbeantworter-Eintrag"
 
 #. Copy phone number
-#: ../roger/journal.c:936
+#: ../roger/journal.c:941
 msgid "Copy number"
-msgstr "Kopiere Nummer"
+msgstr "Nummer kopieren"
 
 #. Call phone number
-#: ../roger/journal.c:941
+#: ../roger/journal.c:946
 msgid "Call number"
 msgstr "Nummer wählen"
 
-#. Add contact
-#: ../roger/journal.c:946
-msgid "Add contact"
-msgstr "Kontakt hinzufügen"
-
-#: ../roger/journal.c:1040 ../roger/pref_filters.c:199 ../roger/print.c:376
+#: ../roger/journal.c:1050 ../roger/pref_filters.c:199 ../roger/print.c:376
 msgid "Type"
 msgstr "Typ"
 
-#: ../roger/journal.c:1041 ../roger/pref_filters.c:200 ../roger/print.c:380
+#: ../roger/journal.c:1051 ../roger/pref_filters.c:200 ../roger/print.c:380
 msgid "Date/Time"
 msgstr "Datum/Zeit"
 
-#: ../roger/journal.c:1043
+#: ../roger/journal.c:1053
 msgid "Company"
 msgstr "Firma"
 
-#: ../roger/journal.c:1046 ../roger/pref_filters.c:203
+#: ../roger/journal.c:1056 ../roger/pref_filters.c:203
 msgid "Extension"
 msgstr "Nebenstelle"
 
-#: ../roger/journal.c:1047 ../roger/pref_filters.c:204
+#: ../roger/journal.c:1057 ../roger/pref_filters.c:204
 msgid "Line"
 msgstr "Leitung"
 
-#: ../roger/journal.c:1048 ../roger/print.c:400
+#: ../roger/journal.c:1058 ../roger/print.c:400
 msgid "Duration"
 msgstr "Dauer"
 
-#: ../roger/journal.c:1113
+#: ../roger/journal.c:1123
 msgid "Refresh journal"
 msgstr "Journal laden"
 
-#: ../roger/journal.c:1114
+#: ../roger/journal.c:1124
 msgid "Print journal"
 msgstr "Journal drucken"
 
-#: ../roger/journal.c:1115
+#: ../roger/journal.c:1125
 msgid "Clear journal"
 msgstr "Journal löschen"
 
@@ -1617,6 +1614,15 @@ msgstr ""
 #: ../roger.appdata.xml.in.h:3
 msgid "Journal view of all calls"
 msgstr "Journalansicht aller Anrufe"
+
+#~ msgid "Add entry"
+#~ msgstr "Eintrag hinzufügen"
+
+#~ msgid "Existing entry"
+#~ msgstr "Existierender Eintrag"
+
+#~ msgid "New entry"
+#~ msgstr "Neuer Eintrag"
 
 #~ msgid "Faxes"
 #~ msgstr "Faxe"

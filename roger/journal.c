@@ -450,14 +450,14 @@ void journal_add_contact(struct call *call)
 	GtkWidget *radio2;
 	gboolean new_entry = FALSE;
 
-	gtk_window_set_title(GTK_WINDOW(add_dialog), _("Add entry"));
+	gtk_window_set_title(GTK_WINDOW(add_dialog), _("Add contact"));
 	gtk_window_set_transient_for(GTK_WINDOW(add_dialog), GTK_WINDOW(journal_win));
 
 	grid = gtk_grid_new();
 	content = gtk_dialog_get_content_area(GTK_DIALOG(add_dialog));
 
-	radio1 = gtk_radio_button_new_with_label(NULL, _("Existing entry"));
-	radio2 = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(radio1), _("New entry"));
+	radio1 = gtk_radio_button_new_with_label(NULL, _("Existing contact"));
+	radio2 = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(radio1), _("New contact"));
 
 	gtk_grid_attach(GTK_GRID(grid), radio1, 0, 0, 1, 1);
 	gtk_grid_attach(GTK_GRID(grid), radio2, 0, 1, 1, 1);
@@ -913,6 +913,11 @@ void journal_popup_add_contact(GtkWidget *widget, struct call *call)
 	journal_add_contact(call);
 }
 
+void journal_popup_delete_entry(GtkWidget *widget, struct call *call)
+{
+	journal_button_delete_clicked_cb(NULL, journal_view);
+}
+
 void journal_popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer user_data)
 {
 	GtkWidget *menu, *menuitem;
@@ -945,6 +950,11 @@ void journal_popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer use
 	/* Add contact */
 	menuitem = gtk_menu_item_new_with_label(_("Add contact"));
 	g_signal_connect(menuitem, "activate", (GCallback) journal_popup_add_contact, call);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+	/* Delete entry */
+	menuitem = gtk_menu_item_new_with_label(_("Delete entry"));
+	g_signal_connect(menuitem, "activate", (GCallback) journal_popup_delete_entry, call);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
 	gtk_widget_show_all(menu);
@@ -1021,7 +1031,7 @@ void delete_entry_activated(GSimpleAction *action, GVariant *parameter, gpointer
 	journal_button_delete_clicked_cb(NULL, journal_view);
 }
 
-void add_entry_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+void add_contact_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
 	journal_button_add_clicked_cb(NULL, journal_view);
 }
@@ -1051,8 +1061,8 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 		{"refresh-journal", refresh_journal_activated},
 		{"print-journal", print_journal_activated},
 		{"clear-journal", clear_journal_activated},
+		{"add-contact", add_contact_activated},
 		{"delete-entry", delete_entry_activated},
-		{"add-entry", add_entry_activated},
 	};
 
 	journal_startup(app);
@@ -1087,7 +1097,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	GtkWidget *menu_button;
 	GtkWidget *entry;
 	GMenu *menu;
-	GMenu *section;
+	//GMenu *section;
 
 	/* Create header bar and set it to window */
 	header = gtk_header_bar_new();
@@ -1114,11 +1124,11 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	g_menu_append(menu, _("Print journal"), "app.print-journal");
 	g_menu_append(menu, _("Clear journal"), "app.clear-journal");
 
-	section = g_menu_new();
-	g_menu_append(section, _("Delete entry"), "app.delete-entry");
-	g_menu_append(section, _("Add entry"), "app.add-entry");
+	//section = g_menu_new();
+	//g_menu_append(section, _("Add contact"), "app.add-contact");
+	//g_menu_append(section, _("Delete entry"), "app.delete-entry");
 
-	g_menu_append_section(menu, NULL, G_MENU_MODEL(section));
+	//g_menu_append_section(menu, NULL, G_MENU_MODEL(section));
 
 	gtk_menu_button_set_use_popover(GTK_MENU_BUTTON(menu_button), TRUE);
 	gtk_menu_button_set_menu_model(GTK_MENU_BUTTON(menu_button), G_MENU_MODEL(menu));
