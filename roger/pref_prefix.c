@@ -69,6 +69,7 @@ static GtkWidget *pref_page_router_phone(void)
 	gtk_grid_attach(GTK_GRID(group), line_access_code_label, 0, line, 1, 1);
 
 	line_access_code_entry = gtk_entry_new();
+	gtk_entry_set_input_purpose(GTK_ENTRY(line_access_code_entry), GTK_INPUT_PURPOSE_NUMBER);
 	gtk_widget_set_tooltip_text(line_access_code_entry, _("If needed enter line access code"));
 	gtk_widget_set_hexpand(line_access_code_entry, TRUE);
 	gtk_grid_attach(GTK_GRID(group), line_access_code_entry, 1, line, 1, 1);

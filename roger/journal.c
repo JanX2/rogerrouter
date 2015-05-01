@@ -454,6 +454,12 @@ void journal_add_contact(struct call *call)
 	gtk_window_set_transient_for(GTK_WINDOW(add_dialog), GTK_WINDOW(journal_win));
 
 	grid = gtk_grid_new();
+
+	/* Set standard spacing */
+	gtk_widget_set_margin(grid, 12, 0, 0, 0);
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 15);
+
 	content = gtk_dialog_get_content_area(GTK_DIALOG(add_dialog));
 
 	radio1 = gtk_radio_button_new_with_label(NULL, _("Existing contact"));
