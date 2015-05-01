@@ -173,6 +173,7 @@ GdkPixbuf *journal_get_call_icon(gint type)
 	case CALL_TYPE_FAX_REPORT:
 		return icon_fax;
 	case CALL_TYPE_VOICE:
+	case CALL_TYPE_RECORD:
 		return icon_voice;
 	default:
 		g_debug("Unknown icon type: %d", type);
@@ -400,6 +401,9 @@ void delete_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, g
 	call = g_value_get_pointer(&ptr);
 
 	switch (call->type) {
+	case CALL_TYPE_RECORD:
+		g_debug("TODO: Remove record\n");
+		break;
 	case CALL_TYPE_VOICE:
 		router_delete_voice(profile_get_active(), call->priv);
 		break;
@@ -755,6 +759,9 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 		g_free(data);
 		break;
 	}
+	case CALL_TYPE_RECORD:
+		os_execute(call->priv);
+		break;
 	case CALL_TYPE_VOICE:
 		journal_play_voice(call->priv);
 		break;

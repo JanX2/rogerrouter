@@ -164,6 +164,7 @@ gboolean router_info_free(struct router_info *info);
 gboolean router_is_cable(struct profile *profile);
 
 GSList *router_load_fax_reports(struct profile *profile, GSList *journal);
+GSList *router_load_voice_records(struct profile *profile, GSList *journal);
 
 void router_free_phone_list(GSList *phone_list);
 

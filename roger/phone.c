@@ -816,6 +816,7 @@ GtkWidget *phone_search_entry_new(GtkWidget *window, struct contact *contact, st
 	g_signal_connect(state->search_entry, "icon-press", G_CALLBACK(phone_search_entry_icon_press_cb), state);
 
 	/* Set contact name */
+	state->discard = TRUE;
 	phone_search_entry_set_contact(state, contact, TRUE);
 
 	g_signal_connect(state->search_entry, "search-changed", G_CALLBACK(phone_search_entry_search_changed_cb), state);
@@ -1347,9 +1348,6 @@ GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struc
 
 	/* Add dial pad */
 	phone_devices[state->type]->create_child(state, grid);
-
-	/* Toggle phone control buttons depending on active phone port */
-	//phone_control_buttons_set_sensitive(state, router_get_phone_port(profile));
 
 	/* Connect connection signals */
 	g_signal_connect(app_object, "connection-established", G_CALLBACK(capi_connection_established_cb), state);

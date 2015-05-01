@@ -589,6 +589,58 @@ GSList *router_load_fax_reports(struct profile *profile, GSList *journal)
 }
 
 /**
+ * \brief Load voice records and add them to the journal
+ * \param profile profile structure
+ * \param journal journal list pointer
+ * \return new journal list with attached fax reports
+ */
+GSList *router_load_voice_records(struct profile *profile, GSList *journal)
+{
+	GDir *dir;
+	GError *error = NULL;
+	const gchar *file_name;
+	const gchar *user_plugins = g_get_user_data_dir();
+	gchar *dir_name = g_build_filename(user_plugins, "roger", G_DIR_SEPARATOR_S, NULL);
+
+	dir = g_dir_open(dir_name, 0, &error);
+
+	while ((file_name = g_dir_read_name(dir))) {
+		gchar *uri;
+		gchar **split;
+		gchar *date_time;
+		gchar *num;
+
+		/* %2.2d.%2.2d.%4.4d-%2.2d-%2.2d-%s-%s.wav",
+			time_val->tm_mday, time_val->tm_mon, 1900 + time_val->tm_year,
+			time_val->tm_hour, time_val->tm_min, connection->source, connection->target);
+		*/
+
+		if (!strstr(file_name, ".wav")) {
+			continue;
+		}
+
+		split = g_strsplit(file_name, "-", -1);
+		if (g_strv_length(split) != 5) {
+			g_strfreev(split);
+			continue;
+		}
+
+		uri = g_build_filename(dir_name, file_name, NULL);
+		num = split[4];
+		num[strlen(num) - 4] = '\0';
+
+		//date_time = g_strdup_printf("%s.%s.%s %2.2s:%2.2s", split[3], split[4], split[5] + 2, split[6], split[7]);
+		date_time = g_strdup_printf("%s %2.2s:%2.2s", split[0], split[1], split[2]);
+		journal = call_add(journal, CALL_TYPE_RECORD, date_time, "", num, ("Record"), split[3], "0:01", g_strdup(uri));
+
+		g_free(uri);
+		g_strfreev(split);
+	}
+
+	return journal;
+}
+
+/**
  * \brief Get phone port
  * \param profile router information structure
  * \return phone port

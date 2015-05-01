@@ -34,6 +34,7 @@ enum {
 	CALL_TYPE_VOICE,
 	CALL_TYPE_FAX,
 	CALL_TYPE_FAX_REPORT,
+	CALL_TYPE_RECORD
 };
 
 /* current number format */

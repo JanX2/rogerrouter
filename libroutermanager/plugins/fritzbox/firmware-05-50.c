@@ -777,6 +777,9 @@ void fritzbox_journal_05_50_cb(SoupSession *session, SoupMessage *msg, gpointer 
 	/* Load fax reports */
 	journal = router_load_fax_reports(profile, journal);
 
+	/* Load voice records */
+	journal = router_load_voice_records(profile, journal);
+
 	/* Process journal list */
 	router_process_journal(journal);
 

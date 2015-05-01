@@ -389,9 +389,9 @@ void phone_record(struct capi_connection *connection, guchar record, const char 
 			recording_init(&connection->recorder);
 		}
 
-		file = g_strdup_printf("%s/%2.2d.%2.2d.%4.4d-%2.2d-%2.2d-%s-%s.wav",
+		file = g_strdup_printf("%s/%2.2d.%2.2d.%2.2d-%2.2d-%2.2d-%s-%s.wav",
 		                       dir,
-		                       time_val->tm_mday, time_val->tm_mon, 1900 + time_val->tm_year,
+		                       time_val->tm_mday, time_val->tm_mon + 1, time_val->tm_year - 100,
 		                       time_val->tm_hour, time_val->tm_min, connection->source, connection->target);
 
 		recording_open(&connection->recorder, file);

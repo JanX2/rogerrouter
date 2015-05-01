@@ -635,6 +635,12 @@ void fritzbox_journal_04_74_cb(SoupSession *session, SoupMessage *msg, gpointer 
 	/* Load and add voicebox */
 	journal = fritzbox_load_voicebox(journal);
 
+	/* Load fax reports */
+	journal = router_load_fax_reports(profile, journal);
+
+	/* Load voice records */
+	journal = router_load_voice_records(profile, journal);
+
 	router_process_journal(journal);
 
 	/* Logout */
