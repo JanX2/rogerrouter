@@ -1070,6 +1070,7 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	grid = gtk_grid_new();
 
 	journal_view = gtk_tree_view_new();
+	gtk_tree_view_set_grid_lines(GTK_TREE_VIEW(journal_view), GTK_TREE_VIEW_GRID_LINES_HORIZONTAL);
 
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
 	gtk_container_add(GTK_CONTAINER(window), grid);
