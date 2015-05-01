@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-24 23:10+0200\n"
+"POT-Creation-Date: 2015-05-01 13:53+0200\n"
 "PO-Revision-Date: 2015-01-28 20:28+0100\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <jan.brummer@tabos.org>\n"
@@ -32,16 +32,15 @@ msgstr "Fehler"
 
 #. Contacts
 #: ../roger/application.c:263 ../roger/contacts.c:553
-#: ../roger/plugins/statusicon/gtk.c:199
-#: ../roger/plugins/indicator/indicator.c:219
+#: ../roger/plugins/statusicon/gtk.c:204
+#: ../roger/plugins/indicator/indicator.c:224
 msgid "Contacts"
 msgstr "Kontakte"
 
 #. Phone
 #: ../roger/application.c:264 ../roger/contact_edit.c:283
-#: ../roger/phone.c:1298 ../roger/phone.c:1307
-#: ../roger/plugins/statusicon/gtk.c:204
-#: ../roger/plugins/indicator/indicator.c:224
+#: ../roger/phone.c:1361 ../roger/plugins/statusicon/gtk.c:209
+#: ../roger/plugins/indicator/indicator.c:229
 msgid "Phone"
 msgstr "Telefon"
 
@@ -58,15 +57,15 @@ msgid "Reconnect"
 msgstr "Neu verbinden"
 
 #. Functions
-#: ../roger/application.c:269 ../roger/plugins/statusicon/gtk.c:215
-#: ../roger/plugins/indicator/indicator.c:236
+#: ../roger/application.c:269 ../roger/plugins/statusicon/gtk.c:220
+#: ../roger/plugins/indicator/indicator.c:241
 msgid "Functions"
 msgstr "Funktionen"
 
 #. Preferences
 #: ../roger/application.c:272 ../roger/pref.c:104
-#: ../roger/plugins/statusicon/gtk.c:225
-#: ../roger/plugins/indicator/indicator.c:246
+#: ../roger/plugins/statusicon/gtk.c:230
+#: ../roger/plugins/indicator/indicator.c:251
 msgid "Preferences"
 msgstr "Einstellungen"
 
@@ -79,20 +78,20 @@ msgid "Forum"
 msgstr "Forum"
 
 #. Help
-#: ../roger/application.c:280 ../roger/plugins/statusicon/gtk.c:234
-#: ../roger/plugins/indicator/indicator.c:255
+#: ../roger/application.c:280 ../roger/plugins/statusicon/gtk.c:239
+#: ../roger/plugins/indicator/indicator.c:260
 msgid "Help"
 msgstr "Hilfe"
 
 #. About
-#: ../roger/application.c:282 ../roger/plugins/statusicon/gtk.c:239
-#: ../roger/plugins/indicator/indicator.c:260
+#: ../roger/application.c:282 ../roger/plugins/statusicon/gtk.c:244
+#: ../roger/plugins/indicator/indicator.c:265
 msgid "About"
 msgstr "Info"
 
 #. Quit
-#: ../roger/application.c:286 ../roger/plugins/statusicon/gtk.c:248
-#: ../roger/plugins/indicator/indicator.c:269
+#: ../roger/application.c:286 ../roger/plugins/statusicon/gtk.c:253
+#: ../roger/plugins/indicator/indicator.c:274
 msgid "Quit"
 msgstr "Beenden"
 
@@ -244,7 +243,7 @@ msgstr "Geschäftliches Fax"
 msgid "Pager"
 msgstr "Pager"
 
-#: ../roger/contacts.c:123 ../roger/phone.c:388
+#: ../roger/contacts.c:123 ../roger/phone.c:405
 msgid "Unknown"
 msgstr "Unbekannt"
 
@@ -365,54 +364,45 @@ msgstr ""
 "Hinweis: Je nach Adressbuchplugin können nicht alle Informationen "
 "gespeichert werden"
 
-#: ../roger/fax.c:94 ../roger/fax.c:159
-msgid "Fax transfer successful"
-msgstr "Faxübertragung erfolgreich"
-
-#: ../roger/fax.c:96 ../roger/fax.c:161
-msgid "Fax transfer failed"
-msgstr "Faxübertragung fehlgeschlagen"
-
-#: ../roger/fax.c:144 ../roger/fax.c:150
+#: ../roger/fax.c:74 ../roger/fax.c:80
 #, c-format
 msgid "Transferring page %d of %d"
 msgstr "Übertrage Seite %d von %d"
 
-#: ../roger/fax.c:183 ../roger/phone.c:232
-msgid "A call is in progress, hangup first"
-msgstr "Ein Anruf wird gerade geführt, bitte erst auflegen"
+#: ../roger/fax.c:89 ../roger/fax.c:396
+msgid "Fax transfer successful"
+msgstr "Faxübertragung erfolgreich"
+
+#: ../roger/fax.c:91 ../roger/fax.c:398
+msgid "Fax transfer failed"
+msgstr "Faxübertragung fehlgeschlagen"
 
 #. Fill menu
-#: ../roger/fax.c:254
-msgid "Faxes"
-msgstr "Faxe"
-
-#. Add suppress check item
-#: ../roger/fax.c:269 ../roger/fax.c:291 ../roger/phone.c:1230
-msgid "Suppress number"
-msgstr "Nummer unterdrücken"
-
-#. Fill menu
-#: ../roger/fax.c:276
+#: ../roger/fax.c:143
 msgid "Fax devices"
 msgstr "Faxgeräte"
 
-#: ../roger/fax.c:336
+#. Add suppress check item
+#: ../roger/fax.c:158 ../roger/phone.c:1231
+msgid "Suppress number"
+msgstr "Nummer unterdrücken"
+
+#: ../roger/fax.c:202
+msgid "From:"
+msgstr "Von:"
+
+#: ../roger/fax.c:210
 msgid "To:"
 msgstr "An:"
 
-#: ../roger/fax.c:344
+#: ../roger/fax.c:218
 msgid "Status:"
 msgstr "Status:"
 
-#: ../roger/fax.c:396
-#, c-format
-msgid "Fax - %s"
-msgstr "Fax - %s"
-
-#: ../roger/fax.c:400 ../roger/phone.c:1308
-msgid "Time: 00:00:00"
-msgstr "Zeit: 00:00:00"
+#. Fax
+#: ../roger/fax.c:357 ../roger/pref.c:117 ../libroutermanager/filter.c:451
+msgid "Fax"
+msgstr "Fax"
 
 #: ../roger/journal.c:244
 #, c-format
@@ -516,16 +506,16 @@ msgstr "Journal drucken"
 msgid "Clear journal"
 msgstr "Journal löschen"
 
-#: ../roger/phone.c:93
+#: ../roger/phone.c:124
 #, c-format
 msgid "Time: %s"
 msgstr "Zeit: %s"
 
-#: ../roger/phone.c:221
+#: ../roger/phone.c:254
 msgid "Connection problem"
 msgstr "Verbindungsproblem"
 
-#: ../roger/phone.c:222
+#: ../roger/phone.c:255
 msgid ""
 "This is most likely due to a closed CAPI port or an invalid phone number.\n"
 "\n"
@@ -538,63 +528,68 @@ msgstr ""
 "Lösung: Wähle #96*3* mit dem Telefon und überprüfe die Nummern in den "
 "Einstellungen"
 
-#: ../roger/phone.c:373
+#. Create dialog and run it
+#: ../roger/phone.c:270
+msgid "A call is in progress, hangup first"
+msgstr "Ein Anruf wird gerade geführt, bitte erst auflegen"
+
+#: ../roger/phone.c:390
 msgid "Home"
 msgstr "Zuhause"
 
-#: ../roger/phone.c:376
+#: ../roger/phone.c:393
 msgid "Work"
 msgstr "Arbeit"
 
-#: ../roger/phone.c:379
+#: ../roger/phone.c:396
 msgid "Cell"
 msgstr "Mobil"
 
-#: ../roger/phone.c:382
+#: ../roger/phone.c:399
 msgid "Fax Home"
 msgstr "Fax Zuhause"
 
-#: ../roger/phone.c:385
+#: ../roger/phone.c:402
 msgid "Fax Work"
 msgstr "Fax Arbeit"
 
-#: ../roger/phone.c:767 ../roger/phone.c:785
-msgid "Use autocompletion while typing names from your address book"
-msgstr "Verwende Vervollständung aus dem Adressbuch während des Tippens"
-
-#: ../roger/phone.c:768 ../roger/phone.c:786
+#: ../roger/phone.c:799 ../roger/phone.c:800
 msgid "Enter name or number"
 msgstr "Name oder Nummer eingeben"
 
-#: ../roger/phone.c:843
+#: ../roger/phone.c:840
 msgid "Pick up"
 msgstr "Abheben"
 
-#: ../roger/phone.c:855
+#: ../roger/phone.c:853
 msgid "Hang up"
 msgstr "Auflegen"
 
 #. Add clear button
-#: ../roger/phone.c:1092
+#: ../roger/phone.c:1099
 msgid "<small>Clear</small>"
 msgstr "<small>Löschen</small>"
 
-#: ../roger/phone.c:1098
+#: ../roger/phone.c:1105
 msgid "<small>Mute</small>"
 msgstr "<small>Stumm</small>"
 
-#: ../roger/phone.c:1104
+#: ../roger/phone.c:1111
 msgid "<small>Hold</small>"
 msgstr "<small>Halten</small>"
 
-#: ../roger/phone.c:1110
+#: ../roger/phone.c:1117
 msgid "<small>Record</small>"
 msgstr "<small>Aufnehmen</small>"
 
 #. Fill menu
-#: ../roger/phone.c:1199
+#: ../roger/phone.c:1197
 msgid "Phones"
 msgstr "Telefone"
+
+#: ../roger/phone.c:1304
+msgid "Time: 00:00:00"
+msgstr "Zeit: 00:00:00"
 
 #: ../roger/pref.c:111
 msgid "Router"
@@ -603,11 +598,6 @@ msgstr "Router"
 #: ../roger/pref.c:114
 msgid "Prefix"
 msgstr "Vorwahlen"
-
-#. Fax
-#: ../roger/pref.c:117 ../libroutermanager/filter.c:451
-msgid "Fax"
-msgstr "Fax"
 
 #: ../roger/pref.c:120
 msgid "Softphone"
@@ -1366,58 +1356,58 @@ msgstr ""
 "Zeigt Benachrichtigungen über eingehende/ausgehende/verpasste Anrufe (GTK)"
 
 #. Journal
-#: ../roger/plugins/statusicon/gtk.c:194
-#: ../roger/plugins/indicator/indicator.c:214
+#: ../roger/plugins/statusicon/gtk.c:199
+#: ../roger/plugins/indicator/indicator.c:219
 msgid "Journal"
 msgstr "Journal"
 
 #. Last calls
-#: ../roger/plugins/statusicon/gtk.c:209
-#: ../roger/plugins/indicator/indicator.c:229
+#: ../roger/plugins/statusicon/gtk.c:214
+#: ../roger/plugins/indicator/indicator.c:234
 msgid "Last calls"
 msgstr "Letzte Anrufe"
 
-#: ../roger/plugins/statusicon/gtk.c:320 ../roger.desktop.in.h:1
+#: ../roger/plugins/statusicon/gtk.c:325 ../roger.desktop.in.h:1
 msgid "Roger Router"
 msgstr "Roger Router"
 
 #. Create label and switch for "Hide Journal on startup" and add to grid
-#: ../roger/plugins/statusicon/gtk.c:384
-#: ../roger/plugins/indicator/indicator.c:398
+#: ../roger/plugins/statusicon/gtk.c:389
+#: ../roger/plugins/indicator/indicator.c:403
 msgid "Hide Journal on startup"
 msgstr "Verstecke das Journal beim Starten"
 
 #. Create label and combo_box for "Default Icon" and add to grid
-#: ../roger/plugins/statusicon/gtk.c:393
-#: ../roger/plugins/indicator/indicator.c:407
+#: ../roger/plugins/statusicon/gtk.c:398
+#: ../roger/plugins/indicator/indicator.c:412
 msgid "Default Icon"
 msgstr "Standard-Symbol"
 
-#: ../roger/plugins/statusicon/gtk.c:397 ../roger/plugins/statusicon/gtk.c:407
-#: ../roger/plugins/indicator/indicator.c:411
-#: ../roger/plugins/indicator/indicator.c:421
+#: ../roger/plugins/statusicon/gtk.c:402 ../roger/plugins/statusicon/gtk.c:412
+#: ../roger/plugins/indicator/indicator.c:416
+#: ../roger/plugins/indicator/indicator.c:426
 msgid "default"
 msgstr "default"
 
-#: ../roger/plugins/statusicon/gtk.c:398 ../roger/plugins/statusicon/gtk.c:408
-#: ../roger/plugins/indicator/indicator.c:412
-#: ../roger/plugins/indicator/indicator.c:422
+#: ../roger/plugins/statusicon/gtk.c:403 ../roger/plugins/statusicon/gtk.c:413
+#: ../roger/plugins/indicator/indicator.c:417
+#: ../roger/plugins/indicator/indicator.c:427
 msgid "mono-dark"
 msgstr "mono-dark"
 
-#: ../roger/plugins/statusicon/gtk.c:399 ../roger/plugins/statusicon/gtk.c:409
-#: ../roger/plugins/indicator/indicator.c:413
-#: ../roger/plugins/indicator/indicator.c:423
+#: ../roger/plugins/statusicon/gtk.c:404 ../roger/plugins/statusicon/gtk.c:414
+#: ../roger/plugins/indicator/indicator.c:418
+#: ../roger/plugins/indicator/indicator.c:428
 msgid "mono-lite"
 msgstr "mono-lite"
 
 #. Create label and combo_box for "Notify Icon" and add to grid
-#: ../roger/plugins/statusicon/gtk.c:403
-#: ../roger/plugins/indicator/indicator.c:417
+#: ../roger/plugins/statusicon/gtk.c:408
+#: ../roger/plugins/indicator/indicator.c:422
 msgid "Notify Icon"
 msgstr "Benachrichtigungs-Symbol"
 
-#: ../roger/plugins/statusicon/gtk.c:420
+#: ../roger/plugins/statusicon/gtk.c:425
 msgid "Settings for Status icon GTK"
 msgstr "Einstellungen für Statusicon GTK"
 
@@ -1429,7 +1419,7 @@ msgstr "Statusicon GTK"
 msgid "Status icon plugin using GTK following FreeDesktop standard"
 msgstr "Statusicon-Plugin in GTK nach den FreeDesktop-Standard"
 
-#: ../roger/plugins/indicator/indicator.c:434
+#: ../roger/plugins/indicator/indicator.c:439
 msgid "Settings for Application Indicator"
 msgstr "Einstellungen für Application Indicator"
 
@@ -1622,6 +1612,15 @@ msgstr ""
 #: ../roger.appdata.xml.in.h:3
 msgid "Journal view of all calls"
 msgstr "Journalansicht aller Anrufe"
+
+#~ msgid "Faxes"
+#~ msgstr "Faxe"
+
+#~ msgid "Fax - %s"
+#~ msgstr "Fax - %s"
+
+#~ msgid "Use autocompletion while typing names from your address book"
+#~ msgstr "Verwende Vervollständung aus dem Adressbuch während des Tippens"
 
 #~ msgid "HOME"
 #~ msgstr "Zuhause"

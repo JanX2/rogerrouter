@@ -37,76 +37,6 @@
 
 #define FAX_SFF 1
 
-/**
- * \brief CAPI connection established callback - Starts timer if needed
- * \param object appobject
- * \param connection capi connection pointer
- * \param user_data phone state pointer
- */
-static void capi_connection_established_cb(AppObject *object, struct capi_connection *connection, gpointer user_data)
-{
-	struct phone_state *state = user_data;
-
-	g_debug("%s(): called", __FUNCTION__);
-
-	if (state->connection == connection) {
-		phone_setup_timer(state);
-	}
-}
-
-/**
- * \brief CAPI connection terminated callback - Stops timer
- * \param object appobject
- * \param connection capi connection pointer
- * \param user_data phone state pointer
- */
-static void capi_connection_terminated_cb(AppObject *object, struct capi_connection *connection, gpointer user_data)
-{
-	struct phone_state *state = user_data;
-
-	g_debug("%s(): called", __FUNCTION__);
-
-	if (state->connection != connection) {
-		return;
-	}
-
-#ifdef FAX_SFF
-	struct fax_ui *fax_ui = state->priv;
-	struct profile *profile = profile_get_active();
-
-	if (g_settings_get_boolean(profile->settings, "fax-sff")) {
-		int reason;
-
-		g_debug("%s(): 0x%x/0x%x", __FUNCTION__, connection->reason, connection->reason_b3);
-
-		switch (connection->reason) {
-		case 0x3490:
-		case 0x349f:
-			reason = connection->reason_b3;
-			break;
-		default:
-			reason = connection->reason;
-			break;
-		}
-
-		if (reason == 0) {
-			g_debug("Fax transfer successful");
-			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar), _("Fax transfer successful"));
-		} else {
-			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar), _("Fax transfer failed"));
-			g_debug("Fax transfer failed");
-		}
-	}
-#endif
-
-	/* Remove timer */
-	phone_remove_timer(state);
-
-	phone_dial_buttons_set_dial(state, TRUE);
-
-	state->connection = NULL;
-}
-
 gboolean fax_update_ui(gpointer user_data)
 {
 	struct fax_ui *fax_ui = user_data;
@@ -176,18 +106,8 @@ gboolean fax_update_ui(gpointer user_data)
 	return FALSE;
 }
 
-static void show_active_call_dialog(GtkWidget *window)
+void phone_fax_status(struct phone_state *state, struct capi_connection *connection)
 {
-	GtkWidget *dialog;
-
-	dialog = gtk_message_dialog_new(GTK_WINDOW(window), GTK_DIALOG_MODAL | GTK_DIALOG_USE_HEADER_BAR | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, _("A call is in progress, hangup first"));
-	gtk_dialog_run(GTK_DIALOG(dialog));
-	gtk_widget_destroy(dialog);
-}
-
-void fax_connection_status_cb(AppObject *object, gint status, struct capi_connection *connection, gpointer user_data)
-{
-	struct phone_state *state = user_data;
 	struct fax_ui *fax_ui = state->priv;
 
 	if (connection && connection->priv) {
@@ -200,39 +120,12 @@ void fax_connection_status_cb(AppObject *object, gint status, struct capi_connec
 }
 
 /**
- * \brief Fax window delete event callback
- * \param widget window widget
- * \param event event structure
- * \param data pointer to phone_state structure
- * \return FALSE if window should be deleted, otherwise TRUE
- */
-gboolean fax_window_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpointer data)
-{
-	struct phone_state *state = data;
-	struct fax_ui *fax_ui = state->priv;
-
-	if (state && state->connection) {
-		show_active_call_dialog(widget);
-
-		/* Keep window */
-		return TRUE;
-	}
-
-	/* Disconnect all signal handlers */
-	g_signal_handlers_disconnect_by_data(app_object, state);
-
-	g_unlink(fax_ui->file);
-
-	return FALSE;
-}
-
-/**
  * \brief Create fax menu which contains fax selection and suppress number toggle
  * \param profile pointer to current profile
  * \param state phone state pointer
  * \return newly create phone menu
  */
-static GtkWidget *fax_create_menu(struct profile *profile, struct phone_state *state)
+GtkWidget *phone_fax_create_menu(struct profile *profile, struct phone_state *state)
 {
 	GtkWidget *menu;
 	GtkWidget *item;
@@ -285,13 +178,11 @@ GtkWidget *fax_information_frame(struct phone_state *state)
 	GtkWidget *grid;
 	GtkWidget *remote_station_label;
 	GtkWidget *progress_label;
-	//GtkWidget *pages_label;
 	struct fax_ui *fax_ui = state->priv;
 	gint pos_y = 0;
 
 	/* Create frame */
 	frame = gtk_frame_new(NULL);
-	//gtk_widget_set_valign(frame, GTK_ALIGN_CENTER);
 	gtk_widget_set_vexpand(frame, TRUE);
 
 	/* Create inner grid */
@@ -304,6 +195,14 @@ GtkWidget *fax_information_frame(struct phone_state *state)
 	/* Set standard spacing */
 	gtk_grid_set_row_spacing(GTK_GRID(grid), 6);
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 6);
+
+	/* Add remote station line */
+	pos_y++;
+	remote_station_label = ui_label_new(_("From:"));
+	gtk_grid_attach(GTK_GRID(grid), remote_station_label, 0, pos_y, 1, 1);
+
+	fax_ui->remote_label = gtk_label_new(g_settings_get_string(profile_get_active()->settings, "fax-header"));
+	gtk_grid_attach(GTK_GRID(grid), fax_ui->remote_label, 1, pos_y, 1, 1);
 
 	/* Add remote station line */
 	pos_y++;
@@ -336,11 +235,6 @@ GtkWidget *fax_information_frame(struct phone_state *state)
 void app_show_fax_window(gchar *fax_file)
 {
 	GtkWidget *window;
-	GtkWidget *header;
-	GtkWidget *menubutton;
-	GtkWidget *grid;
-	GtkWidget *frame;
-	struct phone_state *state;
 	struct fax_ui *fax_ui;
 	struct profile *profile = profile_get_active();
 
@@ -352,68 +246,10 @@ void app_show_fax_window(gchar *fax_file)
 	fax_ui->file = fax_file;
 	fax_ui->status = g_malloc0(sizeof(struct fax_status));
 
-	/* Allocate phone state structure */
-	state = g_malloc0(sizeof(struct phone_state));
-	state->type = PHONE_TYPE_FAX;
-	state->priv = fax_ui;
+	/* 450, 280 */
+	window = phone_window_new(PHONE_TYPE_FAX, NULL, NULL, fax_ui);
 
-	/* Create window */
-	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_default_size(GTK_WINDOW(window), 450, 280);
-	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
-	g_signal_connect(G_OBJECT(window), "delete_event", G_CALLBACK(fax_window_delete_event_cb), state);
-
-	/* Create header bar and set it to window */
-	header = gtk_header_bar_new();
-	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
-
-	gchar *tmp = g_strdup_printf(_("Fax - %s"), g_settings_get_string(profile->settings, "fax-header"));
-	gtk_header_bar_set_title(GTK_HEADER_BAR (header), tmp);
-	g_free(tmp);
-
-	gtk_header_bar_set_subtitle(GTK_HEADER_BAR (header), _("Time: 00:00:00"));
-	gtk_window_set_titlebar((GtkWindow *)(window), header);
-
-	/* Create and add menu button to header bar */
-	menubutton = gtk_menu_button_new();
-	gtk_menu_button_set_direction(GTK_MENU_BUTTON(menubutton), GTK_ARROW_NONE);
-	gtk_header_bar_pack_end(GTK_HEADER_BAR(header), menubutton);
-
-	/* Create menu and add it to menu button */
-	gtk_menu_button_set_popover(GTK_MENU_BUTTON(menubutton), fax_create_menu(profile, state));
-
-	state->header_bar = header;
-
-	/* Create grid and attach it to the window */
-	grid = gtk_grid_new();
-	gtk_container_add(GTK_CONTAINER(window), grid);
-
-	/* Set margin to 12px for all sides */
-	gtk_widget_set_margin(grid, 12, 12, 12, 12);
-
-	/* Set standard spacing */
-	gtk_grid_set_row_spacing(GTK_GRID(grid), 18);
-	gtk_grid_set_column_spacing(GTK_GRID(grid), 12);
-
-	state->child_frame = fax_information_frame(state);
-	gtk_grid_attach(GTK_GRID(grid), state->child_frame, 0, 1, 2, 1);
-
-	/* We set the dial frame last, so that all other widgets are in place */
-	frame = phone_search_entry_new(window, NULL, state);
-	gtk_grid_attach(GTK_GRID(grid), frame, 0, 0, 1, 1);
-
-	/* Add dial button frame */
-	frame = phone_dial_buttons_new(window, state);
-	gtk_grid_attach(GTK_GRID(grid), frame, 1, 0, 1, 1);
-
-	g_signal_connect(app_object, "connection-status", G_CALLBACK(fax_connection_status_cb), state);
-	g_signal_connect(app_object, "connection-established", G_CALLBACK(capi_connection_established_cb), state);
-	g_signal_connect(app_object, "connection-terminated", G_CALLBACK(capi_connection_terminated_cb), state);
-
-	/* Allow dial out */
-	phone_dial_buttons_set_dial(state, TRUE);
-
-	gtk_widget_show_all(window);
+	//g_signal_connect(app_object, "connection-status", G_CALLBACK(fax_connection_status_cb), state);
 	gtk_window_set_keep_above(GTK_WINDOW(window), TRUE);
 }
 
@@ -514,3 +350,77 @@ void fax_process_init(void)
 {
 	g_signal_connect(app_object, "fax-process", G_CALLBACK(fax_process_cb), NULL);
 }
+
+gchar *phone_fax_get_title(void)
+{
+	return _("Fax");
+}
+
+gboolean phone_fax_init(struct contact *contact, struct connection *connection)
+{
+	return TRUE;
+}
+
+GtkWidget *phone_fax_create_child(struct phone_state *state, GtkWidget *grid)
+{
+	state->child_frame = fax_information_frame(state);
+	gtk_grid_attach(GTK_GRID(grid), state->child_frame, 0, 1, 2, 1);
+
+	return state->child_frame;
+}
+
+void phone_fax_terminated(struct phone_state *state, struct capi_connection *connection)
+{
+#ifdef FAX_SFF
+	struct fax_ui *fax_ui = state->priv;
+	struct profile *profile = profile_get_active();
+
+	if (g_settings_get_boolean(profile->settings, "fax-sff")) {
+		int reason;
+
+		g_debug("%s(): 0x%x/0x%x", __FUNCTION__, connection->reason, connection->reason_b3);
+
+		switch (connection->reason) {
+		case 0x3490:
+		case 0x349f:
+			reason = connection->reason_b3;
+			break;
+		default:
+			reason = connection->reason;
+			break;
+		}
+
+		if (reason == 0) {
+			g_debug("Fax transfer successful");
+			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar), _("Fax transfer successful"));
+		} else {
+			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar), _("Fax transfer failed"));
+			g_debug("Fax transfer failed");
+		}
+	}
+#endif
+}
+
+void phone_fax_delete(struct phone_state *state)
+{
+	struct fax_ui *fax_ui = state->priv;
+
+	g_unlink(fax_ui->file);
+}
+
+struct phone_device phone_device_fax = {
+	/* Title */
+	phone_fax_get_title,
+	/* Init */
+	phone_fax_init,
+	/* Terminated */
+	phone_fax_terminated,
+	/* Create menu */
+	phone_fax_create_menu,
+	/* Create child */
+	phone_fax_create_child,
+	/* Delete */
+	phone_fax_delete,
+	/* Status */
+	phone_fax_status,
+};

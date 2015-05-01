@@ -61,7 +61,13 @@ struct phone_state {
 };
 
 struct phone_device {
-	gint dummy;
+	gchar *(*get_title)(void);
+	gboolean (*init)(struct contact *contact, struct connection *connection);
+	void (*terminated)(struct phone_state *state, struct capi_connection *connection);
+	GtkWidget *(*create_menu)(struct profile *profile, struct phone_state *state);
+	GtkWidget *(*create_child)(struct phone_state *state, GtkWidget *grid);
+	void (*delete)(struct phone_state *state);
+	void (*status)(struct phone_state *state, struct capi_connection *connection);
 };
 
 void app_show_phone_window(struct contact *contact, struct connection *connection);
@@ -71,6 +77,7 @@ void phone_setup_timer(struct phone_state *state);
 void phone_remove_timer(struct phone_state *state);
 GtkWidget *phone_dial_buttons_new(GtkWidget *window, struct phone_state *state);
 void phone_dial_buttons_set_dial(struct phone_state *state, gboolean allow);
+GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struct connection *connection, gpointer priv);
 
 G_END_DECLS
 
