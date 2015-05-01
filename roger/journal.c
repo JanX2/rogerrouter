@@ -402,7 +402,7 @@ void delete_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, g
 
 	switch (call->type) {
 	case CALL_TYPE_RECORD:
-		g_debug("TODO: Remove record\n");
+		g_unlink(call->priv);
 		break;
 	case CALL_TYPE_VOICE:
 		router_delete_voice(profile_get_active(), call->priv);
