@@ -202,6 +202,7 @@ static GtkWidget *pref_page_router_settings(void)
 	login_password_entry = gtk_entry_new();
 	gtk_widget_set_tooltip_text(login_password_entry, _("Router login password"));
 	gtk_entry_set_visibility(GTK_ENTRY(login_password_entry), FALSE);
+	gtk_entry_set_input_purpose(GTK_ENTRY(login_password_entry), GTK_INPUT_PURPOSE_PASSWORD);
 	gtk_widget_set_hexpand(login_password_entry, TRUE);
 	gtk_grid_attach(GTK_GRID(group), login_password_entry, 1, line, 1, 1);
 	gtk_entry_set_text(GTK_ENTRY(login_password_entry), router_get_login_password(profile));
@@ -231,6 +232,7 @@ static GtkWidget *pref_page_router_settings(void)
 	gtk_grid_attach(GTK_GRID(group), ftp_password_label, 0, line, 1, 1);
 
 	ftp_password_entry = gtk_entry_new();
+	gtk_entry_set_input_purpose(GTK_ENTRY(ftp_password_entry), GTK_INPUT_PURPOSE_PASSWORD);
 	gtk_widget_set_tooltip_text(ftp_password_entry, _("Router FTP password"));
 	gtk_entry_set_visibility(GTK_ENTRY(ftp_password_entry), FALSE);
 	gtk_widget_set_hexpand(ftp_password_entry, TRUE);
