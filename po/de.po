@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-01 14:58+0200\n"
+"POT-Creation-Date: 2015-05-01 15:42+0200\n"
 "PO-Revision-Date: 2015-01-28 20:28+0100\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <jan.brummer@tabos.org>\n"
@@ -268,7 +268,7 @@ msgstr "Name"
 msgid "Do you want to delete the entry '%s'?"
 msgstr "Wollen Sie den Eintrag '%s' löschen?"
 
-#: ../roger/contacts.c:410 ../roger/journal.c:427 ../roger/journal.c:1112
+#: ../roger/contacts.c:410 ../roger/journal.c:427 ../roger/journal.c:1118
 msgid "Delete entry"
 msgstr "Eintrag löschen"
 
@@ -429,7 +429,7 @@ msgstr "Wollen Sie den ausgewählten Eintrag löschen?"
 msgid "Where shall i add the number?"
 msgstr "Wo soll die Nummer hinzugefügt werden?"
 
-#: ../roger/journal.c:453 ../roger/journal.c:1113
+#: ../roger/journal.c:453 ../roger/journal.c:1119
 msgid "Add entry"
 msgstr "Eintrag hinzufügen"
 
@@ -494,15 +494,15 @@ msgstr "Leitung"
 msgid "Duration"
 msgstr "Dauer"
 
-#: ../roger/journal.c:1107
+#: ../roger/journal.c:1113
 msgid "Refresh journal"
 msgstr "Journal laden"
 
-#: ../roger/journal.c:1108
+#: ../roger/journal.c:1114
 msgid "Print journal"
 msgstr "Journal drucken"
 
-#: ../roger/journal.c:1109
+#: ../roger/journal.c:1115
 msgid "Clear journal"
 msgstr "Journal löschen"
 
@@ -1538,6 +1538,11 @@ msgstr "Anrufbeantworter"
 msgid "Fax Report"
 msgstr "Faxbericht"
 
+#. Voice Record
+#: ../libroutermanager/filter.c:466
+msgid "Record"
+msgstr "Aufnahme"
+
 #: ../libroutermanager/plugins/areacodes_global/areacodes_global.plugin.in.h:1
 msgid "Areacodes (Global)"
 msgstr "Ortsvorwahl (Global)"
@@ -1748,9 +1753,6 @@ msgstr "Journalansicht aller Anrufe"
 
 #~ msgid "Hold"
 #~ msgstr "Halten"
-
-#~ msgid "Record"
-#~ msgstr "Aufnahme"
 
 #~ msgid "Mute"
 #~ msgstr "Stumm"
