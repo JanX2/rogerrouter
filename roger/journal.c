@@ -423,7 +423,7 @@ void delete_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, g
 
 void journal_button_delete_clicked_cb(GtkWidget *button, GtkWidget *view)
 {
-	GtkWidget *delete_dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Do you want to delete the selected entry?"));
+	GtkWidget *delete_dialog = gtk_message_dialog_new(GTK_WINDOW(journal_win), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Do you want to delete the selected entry?"));
 	gtk_window_set_title(GTK_WINDOW(delete_dialog), _("Delete entry"));
 	gtk_window_set_position(GTK_WINDOW(delete_dialog), GTK_WIN_POS_CENTER);
 
@@ -443,7 +443,7 @@ void journal_button_delete_clicked_cb(GtkWidget *button, GtkWidget *view)
 
 void journal_add_contact(struct call *call)
 {
-	GtkWidget *add_dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Where shall i add the number?"));
+	GtkWidget *add_dialog = gtk_message_dialog_new(GTK_WINDOW(journal_win), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Where shall i add the number?"));
 	GtkWidget *content;
 	GtkWidget *grid;
 	GtkWidget *radio1;
