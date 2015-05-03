@@ -178,8 +178,7 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 			continue;
 		}
 
-		//contact = g_slice_new0(struct contact);
-		contact = g_malloc0(sizeof(struct contact));
+		contact = g_slice_new0(struct contact);
 
 		contact->priv = (gpointer) e_contact_get_const(e_contact, E_CONTACT_UID);
 
@@ -204,9 +203,10 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 				GRegex *pro = g_regex_new("%25", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
 
 				if (!strncmp(photo->data.uri, "file://", 7)) {
-					gchar *uri = g_regex_replace_literal(pro, photo->data.uri + 7, -1, 0, "%", 0, NULL);
-					buf = gdk_pixbuf_new_from_file(uri, NULL);
-					len = gdk_pixbuf_get_byte_length(buf);
+					// TODO!!
+					//gchar *uri = g_regex_replace_literal(pro, photo->data.uri + 7, -1, 0, "%", 0, NULL);
+					//buf = gdk_pixbuf_new_from_file(uri, NULL);
+					//len = gdk_pixbuf_get_byte_length(buf);
 				} else {
 					g_debug("Cannot handle URI: '%s'!", photo->data.uri);
 				}
