@@ -1050,7 +1050,7 @@ void add_contact_activated(GSimpleAction *action, GVariant *parameter, gpointer 
 	journal_button_add_clicked_cb(NULL, journal_view);
 }
 
-GtkWidget *journal_window(GApplication *app, GFile *file)
+void journal_window(GApplication *app)
 {
 	GtkWidget *window, *grid, *scrolled;
 	GtkWidget *button;
@@ -1322,8 +1322,6 @@ GtkWidget *journal_window(GApplication *app, GFile *file)
 	extern gboolean app_show_fax_window_idle(gpointer data);
 	app_show_fax_window_idle(NULL);
 #endif
-
-	return journal_win;
 }
 
 void journal_quit(void)

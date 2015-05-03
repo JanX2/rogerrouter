@@ -38,7 +38,7 @@ enum {
 	JOURNAL_COL_CALL_PTR,
 };
 
-GtkWidget *journal_window(GApplication *app, GFile *file);
+void journal_window(GApplication *app);
 void journal_set_visible(gboolean state);
 GdkPixbuf *journal_get_call_icon(gint type);
 

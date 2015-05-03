@@ -47,6 +47,7 @@ GSettings *app_settings = NULL;
 
 struct cmd_line_option_state {
 	gboolean debug;
+	gboolean start_hidden;
 	gboolean quit;
 	gchar *number;
 };
@@ -312,7 +313,12 @@ static void app_init(Application *app)
 
 	fax_process_init();
 
-	journal_window(G_APPLICATION(app), NULL);
+	if (option_state.start_hidden) {
+		journal_set_hide_on_start(TRUE);
+		journal_set_hide_on_quit(TRUE);
+	}
+
+	journal_window(G_APPLICATION(app));
 
 	if (net_is_online() && !profile_get_active()) {
 		assistant();
@@ -340,6 +346,7 @@ G_GNUC_NORETURN static gboolean option_version_cb(const gchar *option_name, cons
 
 const GOptionEntry all_options[] = {
 	{"debug", 'd', 0, G_OPTION_ARG_NONE, &option_state.debug, "Enable debug", NULL},
+	{"hidden", 'h', 0, G_OPTION_ARG_NONE, &option_state.start_hidden, "Start with hidden window", NULL},
 	{"quit", 'q', 0, G_OPTION_ARG_NONE, &option_state.quit, "Quit", NULL},
 	{"call", 'c', 0, G_OPTION_ARG_STRING, &option_state.number, "Remote phone number", NULL},
 	{"version", 0, G_OPTION_FLAG_NO_ARG | G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_CALLBACK, option_version_cb, NULL, NULL},
@@ -391,10 +398,14 @@ static gint application_command_line_cb(GApplication *app, GApplicationCommandLi
 
 	application_options_process(application, &option_state);
 
+	g_debug("startup_called: %d", startup_called);
 	if (startup_called != FALSE) {
 		app_init(application);
 		gdk_notify_startup_complete();
 		startup_called = FALSE;
+	} else {
+		extern GtkWidget *journal_win;
+		gtk_widget_set_visible(GTK_WIDGET(journal_win), TRUE);
 	}
 
 	if (option_state.number) {

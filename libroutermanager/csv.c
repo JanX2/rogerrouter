@@ -195,6 +195,7 @@ GSList *csv_load_journal(GSList *journal)
 	file_name = g_build_filename(g_get_user_data_dir(), "routermanager", profile->name, "journal.csv", NULL);
 	file_data = file_load(file_name, NULL);
 	g_free(file_name);
+
 	if (file_data) {
 		list = csv_parse_journal_data(journal, file_data);
 		g_free(file_data);
