@@ -559,7 +559,15 @@ GSList *router_load_fax_reports(struct profile *profile, GSList *journal)
 	const gchar *file_name;
 	gchar *dir_name = g_settings_get_string(profile->settings, "fax-report-dir");
 
+	if (!dir_name) {
+		return journal;
+	}
+
 	dir = g_dir_open(dir_name, 0, &error);
+	if (!dir) {
+		g_debug("Could not open fax report directory");
+		return journal;
+	}
 
 	while ((file_name = g_dir_read_name(dir))) {
 		gchar *uri;
@@ -602,7 +610,15 @@ GSList *router_load_voice_records(struct profile *profile, GSList *journal)
 	const gchar *user_plugins = g_get_user_data_dir();
 	gchar *dir_name = g_build_filename(user_plugins, "roger", G_DIR_SEPARATOR_S, NULL);
 
+	if (!dir_name) {
+		return journal;
+	}
+
 	dir = g_dir_open(dir_name, 0, &error);
+	if (!dir) {
+		g_debug("Could not open voice records directory");
+		return journal;
+	}
 
 	while ((file_name = g_dir_read_name(dir))) {
 		gchar *uri;

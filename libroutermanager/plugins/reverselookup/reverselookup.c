@@ -475,7 +475,15 @@ static void lookup_read_cache(gchar *dir_name)
 	GError *error = NULL;
 	const gchar *file_name;
 
+	if (!dir_name) {
+		return;
+	}
+
 	dir = g_dir_open(dir_name, 0, &error);
+	if (!dir) {
+		g_debug("Could not open lookup directory");
+		return;
+	}
 
 	while ((file_name = g_dir_read_name(dir))) {
 		gchar *data;
