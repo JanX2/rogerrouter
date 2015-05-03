@@ -377,7 +377,7 @@ void journal_button_print_clicked_cb(GtkWidget *button, GtkWidget *view)
 
 void journal_button_clear_clicked_cb(GtkWidget *button, GtkWidget *view)
 {
-	GtkWidget *remove_dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Do you want to delete the router journal?"));
+	GtkWidget *remove_dialog = gtk_message_dialog_new(GTK_WINDOW(journal_win), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Do you want to delete the router journal?"));
 	gtk_window_set_title(GTK_WINDOW(remove_dialog), _("Delete journal"));
 	gtk_window_set_position(GTK_WINDOW(remove_dialog), GTK_WIN_POS_CENTER_ON_PARENT);
 
