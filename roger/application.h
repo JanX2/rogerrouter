@@ -23,7 +23,7 @@
 G_BEGIN_DECLS
 
 extern GSettings *app_settings;
-extern GtkApplication *application;
+extern GtkApplication *roger_app;
 
 void app_show_contacts(void);
 void app_show_preferences(void);

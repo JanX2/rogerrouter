@@ -24,13 +24,12 @@
 
 #include <libroutermanager/routermanager.h>
 
+#include <roger/application.h>
 #include <roger/main.h>
 
 #include <config.h>
 
-typedef GtkApplication Application;
-
-Application *application_new(void);
+GtkApplication *application_new(void);
 
 #ifdef G_OS_WIN32
 #include <windows.h>
@@ -54,27 +53,20 @@ int roger_main(HINSTANCE hint, int argc, char **argv)
 int main(int argc, char **argv)
 {
 #endif
-	Application *application;
 	int status;
 
 	/* Set local bindings */
 	bindtextdomain(GETTEXT_PACKAGE, get_directory(APP_LOCALE));
-
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);
 
-#if !GLIB_CHECK_VERSION(2, 36, 0)
-	/* Init g_type */
-	g_type_init();
-#endif
-
-	application = application_new();
+	roger_app = application_new();
 
 	gtk_window_set_default_icon_name("roger");
 	gdk_notify_startup_complete();
-	status = g_application_run(G_APPLICATION(application), argc, argv);
+	status = g_application_run(G_APPLICATION(roger_app), argc, argv);
 
-	g_object_unref(application);
+	g_object_unref(roger_app);
 
 	return status;
 }

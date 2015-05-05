@@ -9,7 +9,7 @@ AM_DISTCHECK_CONFIGURE_FLAGS = \
 
 EXTRA_DIST = \
 	autogen.sh \
-	roger.desktop.in \
+	org.tabos.roger.desktop.in \
 	roger.appdata.xml.in \
 	remove-settings.sh \
 	share/roger-cups \
@@ -36,10 +36,10 @@ share_DATA = \
 
 noinst_HEADERS = config.h
 
-DISTCLEANFILES = intltool-extract intltool-merge intltool-update roger.desktop roger.appdata.xml
+DISTCLEANFILES = intltool-extract intltool-merge intltool-update org.tabos.roger.desktop roger.appdata.xml
 
 appsdir = $(datadir)/applications
-apps_in_files = roger.desktop.in
+apps_in_files = org.tabos.roger.desktop.in
 apps_DATA = $(apps_in_files:.desktop.in=.desktop)
 
 appdatadir = $(datadir)/appdata

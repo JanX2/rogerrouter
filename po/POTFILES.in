@@ -48,5 +48,5 @@ libroutermanager/filter.c
 [type: gettext/ini]libroutermanager/plugins/fritzbox/fritzbox.plugin.in
 [type: gettext/ini]libroutermanager/plugins/pulseaudio/pulseaudio.plugin.in
 [type: gettext/ini]libroutermanager/plugins/reverselookup/reverselookup.plugin.in
-[type: gettext/ini]roger.desktop.in
+[type: gettext/ini]org.tabos.roger.desktop.in
 roger.appdata.xml.in
