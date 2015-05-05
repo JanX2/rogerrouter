@@ -297,8 +297,8 @@ static void app_init(GtkApplication *app)
 		assistant();
 	}
 
-#if 1
-	struct connection *connection = connection_add_call(2, CONNECTION_TYPE_INCOMING, "6197", "02992");
+#if 0
+	struct connection *connection = connection_add_call(2, CONNECTION_TYPE_INCOMING, "6173097", "022896172992");
 
 	emit_connection_notify(connection);
 #endif
