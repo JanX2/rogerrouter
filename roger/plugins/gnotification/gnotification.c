@@ -53,111 +53,73 @@ static GSettings *gnotification_settings = NULL;
 static gchar **selected_outgoing_numbers = NULL;
 static gchar **selected_incoming_numbers = NULL;
 
-#if 0
-/**
- * \brief Notify accept clicked
- * \param notify gnotification window
- * \param action clicked action
- * \param user_data user data - phone number
- */
-static void notify_accept_clicked_cb(NotifyGNotification *notify, gchar *action, gpointer user_data)
-{
-	struct connection *connection = user_data;
-	struct contact *contact;
-
-	g_assert(connection != NULL);
-
-	/** Ask for contact information */
-	contact = contact_find_by_number(connection->remote_number);
-
-	notify_gnotification_close(connection->notification, NULL);
-	connection->notification = NULL;
-
-	app_show_phone_window(contact, connection);
-}
-
-/**
- * \brief Deny incoming call
- * \param notify gnotification window
- * \param action clicked action
- * \param user_data popup widget pointer
- */
-static void notify_deny_clicked_cb(NotifyGNotification *notify, gchar *action, gpointer user_data)
-{
-	struct connection *connection = user_data;
-
-	g_assert(connection != NULL);
-
-	notify_gnotification_close(connection->notification, NULL);
-	connection->notification = NULL;
-
-	phone_hangup(connection->priv ? connection->priv : active_capi_connection);
-}
-#endif
-
 /**
  * \brief Close gnotification window
  */
 static gboolean gnotification_close(gpointer notification)
 {
 	g_debug("close");
-	g_application_withdraw_notification(G_APPLICATION(application), "new-call");
+	g_application_withdraw_notification(G_APPLICATION(roger_app), "new-call");
 	return FALSE;
 }
 
-gboolean gnotification_update(gpointer data) {
-	struct contact *contact = data;
-	struct connection *connection;
-	GNotification *notify;
+gboolean gnotification_show_or_update(struct connection *connection, struct contact *contact)
+{
+	GNotification *notify = NULL;
+	GIcon *icon;
+	GFile *file;
+	gchar *title;
+	gchar *text = NULL;
 
-	g_assert(contact != NULL);
-	g_assert(contact->priv != NULL);
+	/* Create gnotification message */
+	text = g_markup_printf_escaped(_("Name:\t%s\nNumber:\t%s\nCompany:\t%s\nStreet:\t%s\nCity:\t\t%s%s%s"),
+	                               contact->name ? contact->name : "",
+	                               contact->number ? contact->number : "",
+	                               contact->company ? contact->company : "",
+	                               contact->street ? contact->street : "",
+	                               contact->zip ? contact->zip : "",
+	                               contact->zip ? " " : "",
+	                               contact->city ? contact->city : ""
+	                              );
+	g_debug("text: '%s'", text);
 
-	connection = contact->priv;
-	notify = connection->notification;
+	if (connection->type == CONNECTION_TYPE_INCOMING) {
+		title = g_strdup_printf(_("Incoming call (on %s)"), connection->local_number);
 
-	if (notify && !EMPTY_STRING(contact->name)) {
-		gchar *text;
-
-		text = g_markup_printf_escaped(_("Name:\t%s\nNumber:\t%s\nCompany:\t%s\nStreet:\t%s\nCity:\t\t%s%s%s"),
-		                               contact->name,
-		                               contact->number,
-		                               "",
-		                               contact->street,
-		                               contact->zip,
-		                               contact->zip ? " " : "",
-		                               contact->city);
+		icon = g_themed_icon_new("roger");
+		notify = g_notification_new(title);
+		g_free(title);
 
 		g_notification_set_body(notify, text);
-		g_application_send_notification(G_APPLICATION(application), "new-call", notify);
+		g_notification_set_icon(notify, icon);
 
+		g_notification_add_button_with_target(notify, _("Accept"), "app.pickup", "i", connection->id);
+		g_notification_add_button_with_target(notify, _("Decline"), "app.hangup", "i", connection->id);
+	} else if (connection->type == CONNECTION_TYPE_OUTGOING) {
+		gint duration = g_settings_get_int(gnotification_settings, "duration");
+
+		file = g_file_new_for_path("notification-message-roger-out.svg");
+		icon = g_file_icon_new(file);
+
+		notify = g_notification_new(_("Outgoing call"));
+		g_notification_set_body(notify, text);
+		g_notification_set_icon(notify, G_ICON(icon));
+
+		g_timeout_add_seconds(duration, gnotification_close, notify);
+	} else {
+		g_warning("Unhandled case in connection notify - gnotification!");
 		g_free(text);
+
+		return FALSE;
 	}
 
-	return FALSE;
-}
+	g_notification_set_priority(notify, G_NOTIFICATION_PRIORITY_URGENT);
+	g_application_send_notification(G_APPLICATION(roger_app), "new-call", notify);
+	g_object_unref(notify);
 
-/**
- * \brief Reverse lookup of connection data and gnotification redraw
- * \param data connection pointer
- * \return NULL
- */
-static gpointer gnotification_reverse_lookup_thread(gpointer data)
-{
-	struct connection *connection = data;
-	struct contact *contact;
+	g_free(text);
 
-	contact = g_slice_new0(struct contact);
-
-	contact->number = g_strdup(connection->remote_number);
-	contact->priv = data;
-
-	routermanager_lookup(contact->number, &contact->name, &contact->street, &contact->zip, &contact->city);
-
-	g_idle_add(gnotification_update, contact);
-	g_debug("done");
-
-	return NULL;
+	return EMPTY_STRING(contact->name);
 }
 
 /**
@@ -168,13 +130,9 @@ static gpointer gnotification_reverse_lookup_thread(gpointer data)
  */
 void gnotifications_connection_notify_cb(AppObject *obj, struct connection *connection, gpointer unused_pointer)
 {
-	GNotification *notify = NULL;
-	gchar *text = NULL;
-	struct contact *contact;
 	gchar **numbers = NULL;
 	gint count;
 	gboolean found = FALSE;
-	gboolean intern = FALSE;
 
 	/* Get gnotification numbers */
 	if (connection->type & CONNECTION_TYPE_OUTGOING) {
@@ -212,13 +170,6 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 		g_free(tmp);
 	}
 
-#ifdef ACCEPT_INTERN
-	if (!found && !strncmp(connection->local_number, "**", 2)) {
-		intern = TRUE;
-		found = TRUE;
-	}
-#endif
-
 	/* No match found? -> exit */
 	if (!found) {
 		return;
@@ -227,10 +178,9 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 	/* If its a disconnect or a connect, close previous gnotification window */
 	if ((connection->type & CONNECTION_TYPE_DISCONNECT) || (connection->type & CONNECTION_TYPE_CONNECT)) {
 		ringtone_stop();
-		if (connection->notification) {
-			g_object_unref(connection->notification);
-			connection->notification = NULL;
-		}
+
+		g_application_withdraw_notification(G_APPLICATION(roger_app), "new-call");
+
 		return;
 	}
 
@@ -239,83 +189,14 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 	}
 
 	/** Ask for contact information */
-	contact = contact_find_by_number(connection->remote_number);
-
-	/* Create gnotification message */
-	if (!intern) {
-		text = g_markup_printf_escaped(_("Name:\t%s\nNumber:\t%s\nCompany:\t%s\nStreet:\t%s\nCity:\t\t%s%s%s"),
-		                               contact->name ? contact->name : "",
-		                               contact->number ? contact->number : "",
-		                               contact->company ? contact->company : "",
-		                               contact->street ? contact->street : "",
-		                               contact->zip ? contact->zip : "",
-		                               contact->zip ? " " : "",
-		                               contact->city ? contact->city : ""
-		                              );
-	} else {
-		text = g_markup_printf_escaped(_("Number:\t%s"), connection->local_number);
-	}
-	g_debug("text: '%s'", text);
-
-	if (connection->type == CONNECTION_TYPE_INCOMING) {
-		GFile *file;
-		GIcon *icon;
-
-		file = g_file_new_for_path("notification-message-roger-in.svg");
-		icon = g_file_icon_new(file);
-
-		notify = g_notification_new(_("Incoming call"));
-		g_notification_set_body(notify, text);
-		g_notification_set_icon(notify, G_ICON(icon));
-
-		g_notification_add_button_with_target(notify, _("Accept"), "app.pickup", "i", connection->id);
-		g_notification_add_button_with_target(notify, _("Decline"), "app.hangup", "i", connection->id);
-
-
-		//notify_gnotification_add_action(notify, "accept", _("Accept"), notify_accept_clicked_cb, connection, NULL);
-		//notify_gnotification_add_action(notify, "deny", _("Decline"), notify_deny_clicked_cb, connection, NULL);
-	} else if (connection->type == CONNECTION_TYPE_OUTGOING) {
-		GFile *file;
-		GIcon *icon;
-		gint duration = g_settings_get_int(gnotification_settings, "duration");
-
-		file = g_file_new_for_path("notification-message-roger-out.svg");
-		icon = g_file_icon_new(file);
-
-		notify = g_notification_new(_("Outgoing call"));
-		g_notification_set_body(notify, text);
-		g_notification_set_icon(notify, G_ICON(icon));
-
-		g_timeout_add_seconds(duration, gnotification_close, notify);
-	} else {
-		g_warning("Unhandled case in connection notify - gnotification!");
-		g_free(text);
-		return;
-	}
-
-	if (contact->image) {
-		GtkWidget *image;
-		GIcon *icon = NULL;
-
-		image = gtk_image_new_from_pixbuf(contact->image);
-		g_debug("image: %p", image),
-		gtk_image_get_gicon(GTK_IMAGE(image), &icon, NULL);
-		g_debug("icon: %p", icon),
-		g_notification_set_icon(notify, G_ICON(icon));
-	}
-
-	connection->notification = notify;
-
-	g_notification_set_priority(notify, G_NOTIFICATION_PRIORITY_URGENT);
-	g_application_send_notification(G_APPLICATION(application), "new-call", notify);
-	g_object_unref(notify);
+	struct contact *contact = contact_find_by_number(connection->remote_number);
 
 	if (EMPTY_STRING(contact->name)) {
-		g_debug("Starting lookup thread");
-		if (1==0)g_thread_new("gnotification reverse lookup", gnotification_reverse_lookup_thread, connection);
+		routermanager_lookup(contact->number, &contact->name, &contact->street, &contact->zip, &contact->city);
 	}
 
-	g_free(text);
+	g_application_withdraw_notification(G_APPLICATION(roger_app), "new-call");
+	gnotification_show_or_update(connection, contact);
 }
 
 /**
@@ -347,6 +228,8 @@ void impl_activate(PeasActivatable *plugin)
 void impl_deactivate(PeasActivatable *plugin)
 {
 	RouterManagerGNotificationPlugin *notify_plugin = ROUTERMANAGER_GNOTIFICATION_PLUGIN(plugin);
+
+	g_application_withdraw_notification(G_APPLICATION(roger_app), "new-call");
 
 	/* If signal handler is connected: disconnect */
 	if (g_signal_handler_is_connected(G_OBJECT(app_object), notify_plugin->priv->signal_id)) {
