@@ -59,7 +59,7 @@ static gchar **selected_incoming_numbers = NULL;
 static gboolean gnotification_close(gpointer notification)
 {
 	g_debug("close");
-	g_application_withdraw_notification(G_APPLICATION(roger_app), "new-call");
+	g_application_withdraw_notification(G_APPLICATION(roger_app), notification);
 	return FALSE;
 }
 
@@ -114,17 +114,19 @@ gboolean gnotification_show(struct connection *connection, struct contact *conta
 	g_notification_set_body(notify, text);
 	g_free(text);
 
+	connection->notification = g_strdup_printf("%s%s", connection->local_number, contact->number);
+
 	if (connection->type == CONNECTION_TYPE_INCOMING) {
 		g_notification_add_button_with_target(notify, _("Accept"), "app.pickup", "i", connection->id);
 		g_notification_add_button_with_target(notify, _("Decline"), "app.hangup", "i", connection->id);
 	} else if (connection->type == CONNECTION_TYPE_OUTGOING) {
 		gint duration = g_settings_get_int(gnotification_settings, "duration");
 
-		g_timeout_add_seconds(duration, gnotification_close, notify);
+		g_timeout_add_seconds(duration, gnotification_close, connection->notification);
 	}
 
 	g_notification_set_priority(notify, G_NOTIFICATION_PRIORITY_URGENT);
-	g_application_send_notification(G_APPLICATION(roger_app), "new-call", notify);
+	g_application_send_notification(G_APPLICATION(roger_app), connection->notification, notify);
 	g_object_unref(notify);
 
 	return EMPTY_STRING(contact->name);
@@ -187,7 +189,7 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 	if ((connection->type & CONNECTION_TYPE_DISCONNECT) || (connection->type & CONNECTION_TYPE_CONNECT)) {
 		ringtone_stop();
 
-		g_application_withdraw_notification(G_APPLICATION(roger_app), "new-call");
+		g_application_withdraw_notification(G_APPLICATION(roger_app), connection->notification);
 
 		return;
 	}
@@ -203,7 +205,6 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 		routermanager_lookup(contact->number, &contact->name, &contact->street, &contact->zip, &contact->city);
 	}
 
-	g_application_withdraw_notification(G_APPLICATION(roger_app), "new-call");
 	gnotification_show(connection, contact);
 }
 
@@ -236,8 +237,6 @@ void impl_activate(PeasActivatable *plugin)
 void impl_deactivate(PeasActivatable *plugin)
 {
 	RouterManagerGNotificationPlugin *notify_plugin = ROUTERMANAGER_GNOTIFICATION_PLUGIN(plugin);
-
-	g_application_withdraw_notification(G_APPLICATION(roger_app), "new-call");
 
 	/* If signal handler is connected: disconnect */
 	if (g_signal_handler_is_connected(G_OBJECT(app_object), notify_plugin->priv->signal_id)) {
