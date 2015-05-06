@@ -63,61 +63,69 @@ static gboolean gnotification_close(gpointer notification)
 	return FALSE;
 }
 
-gboolean gnotification_show_or_update(struct connection *connection, struct contact *contact)
+gboolean gnotification_show(struct connection *connection, struct contact *contact)
 {
 	GNotification *notify = NULL;
-	GIcon *icon;
-	GFile *file;
 	gchar *title;
 	gchar *text = NULL;
+	gchar *map = NULL;
 
-	/* Create gnotification message */
-	text = g_markup_printf_escaped(_("Name:\t%s\nNumber:\t%s\nCompany:\t%s\nStreet:\t%s\nCity:\t\t%s%s%s"),
+	if (connection->type != CONNECTION_TYPE_INCOMING && connection->type != CONNECTION_TYPE_OUTGOING) {
+		g_warning("Unhandled case in connection notify - gnotification!");
+
+		return FALSE;
+	}
+
+	if (!EMPTY_STRING(contact->street) && !EMPTY_STRING(contact->city)) {
+		gchar *map_un;
+
+		map_un = g_strdup_printf("http://maps.google.de/?q=%s,%s %s",
+					contact->street,
+					contact->zip,
+					contact->city);
+		GRegex *pro = g_regex_new(" ", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
+		map = g_regex_replace_literal(pro, map_un, -1, 0, "%20", 0, NULL);
+		g_regex_unref(pro);
+		g_free(map_un);
+	}
+
+	/* Create notification message */
+	text = g_markup_printf_escaped(_("Name:\t\t%s\nNumber:\t\t%s\nCompany:\t%s\nStreet:\t\t%s\nCity:\t\t%s%s%s\nMap:\t\t%s"),
 	                               contact->name ? contact->name : "",
 	                               contact->number ? contact->number : "",
 	                               contact->company ? contact->company : "",
 	                               contact->street ? contact->street : "",
 	                               contact->zip ? contact->zip : "",
 	                               contact->zip ? " " : "",
-	                               contact->city ? contact->city : ""
+	                               contact->city ? contact->city : "",
+	                               map ? map : ""
 	                              );
 	g_debug("text: '%s'", text);
 
 	if (connection->type == CONNECTION_TYPE_INCOMING) {
 		title = g_strdup_printf(_("Incoming call (on %s)"), connection->local_number);
+	} else {
+		title = g_strdup_printf(_("Outgoing call (on %s)"), connection->local_number);
+	}
 
-		icon = g_themed_icon_new("roger");
-		notify = g_notification_new(title);
-		g_free(title);
+	notify = g_notification_new(title);
+	g_free(title);
 
-		g_notification_set_body(notify, text);
-		g_notification_set_icon(notify, icon);
+	g_notification_set_body(notify, text);
+	g_free(text);
 
+	if (connection->type == CONNECTION_TYPE_INCOMING) {
 		g_notification_add_button_with_target(notify, _("Accept"), "app.pickup", "i", connection->id);
 		g_notification_add_button_with_target(notify, _("Decline"), "app.hangup", "i", connection->id);
 	} else if (connection->type == CONNECTION_TYPE_OUTGOING) {
 		gint duration = g_settings_get_int(gnotification_settings, "duration");
 
-		file = g_file_new_for_path("notification-message-roger-out.svg");
-		icon = g_file_icon_new(file);
-
-		notify = g_notification_new(_("Outgoing call"));
-		g_notification_set_body(notify, text);
-		g_notification_set_icon(notify, G_ICON(icon));
-
 		g_timeout_add_seconds(duration, gnotification_close, notify);
-	} else {
-		g_warning("Unhandled case in connection notify - gnotification!");
-		g_free(text);
-
-		return FALSE;
 	}
 
 	g_notification_set_priority(notify, G_NOTIFICATION_PRIORITY_URGENT);
 	g_application_send_notification(G_APPLICATION(roger_app), "new-call", notify);
 	g_object_unref(notify);
-
-	g_free(text);
 
 	return EMPTY_STRING(contact->name);
 }
@@ -196,7 +204,7 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 	}
 
 	g_application_withdraw_notification(G_APPLICATION(roger_app), "new-call");
-	gnotification_show_or_update(connection, contact);
+	gnotification_show(connection, contact);
 }
 
 /**
