@@ -52,6 +52,7 @@ ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_GNOTIFICATION_PLUG
 static GSettings *gnotification_settings = NULL;
 static gchar **selected_outgoing_numbers = NULL;
 static gchar **selected_incoming_numbers = NULL;
+static guint missed_calls = 0;
 
 /**
  * \brief Close gnotification window
@@ -132,6 +133,26 @@ gboolean gnotification_show(struct connection *connection, struct contact *conta
 	return EMPTY_STRING(contact->name);
 }
 
+void gnotification_show_missed_calls(void)
+{
+	GNotification *notify = NULL;
+	gchar *text = NULL;
+
+	g_application_withdraw_notification(G_APPLICATION(roger_app), "missed-calls");
+
+	/* Create notification message */
+	text = g_strdup_printf(_("You have missed calls"));
+
+	notify = g_notification_new(_("Missed call(s)"));
+
+	g_notification_set_body(notify, text);
+	g_free(text);
+
+	g_notification_add_button_with_target(notify, _("Open journal"), "app.journal", NULL);
+	g_application_send_notification(G_APPLICATION(roger_app), "missed-calls", notify);
+	g_object_unref(notify);
+}
+
 /**
  * \brief "connection-notify" callback function
  * \param obj app object
@@ -191,6 +212,11 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 
 		g_application_withdraw_notification(G_APPLICATION(roger_app), connection->notification);
 
+		if (connection->type == CONNECTION_TYPE_MISSED) {
+			missed_calls++;
+			gnotification_show_missed_calls();
+		}
+
 		return;
 	}
 
@@ -237,6 +263,8 @@ void impl_activate(PeasActivatable *plugin)
 void impl_deactivate(PeasActivatable *plugin)
 {
 	RouterManagerGNotificationPlugin *notify_plugin = ROUTERMANAGER_GNOTIFICATION_PLUGIN(plugin);
+
+	g_application_withdraw_notification(G_APPLICATION(roger_app), "missed-calls");
 
 	/* If signal handler is connected: disconnect */
 	if (g_signal_handler_is_connected(G_OBJECT(app_object), notify_plugin->priv->signal_id)) {

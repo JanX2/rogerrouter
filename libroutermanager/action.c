@@ -128,7 +128,7 @@ void action_connection_notify_cb(AppObject *object, struct connection *connectio
 		    /* Outgoing connection */
 		    ((connection->type == CONNECTION_TYPE_OUTGOING) && (action->flags & ACTION_OUTGOING_DIAL)) ||
 		    /* Incoming connection missed */
-		    ((connection->type == CONNECTION_TYPE_MISS) && (action->flags & ACTION_INCOMING_MISSED)) ||
+		    ((connection->type == CONNECTION_TYPE_MISSED) && (action->flags & ACTION_INCOMING_MISSED)) ||
 		    /* Incoming connection established */
 		    ((connection->type == (CONNECTION_TYPE_INCOMING | CONNECTION_TYPE_CONNECT)) && (action->flags & ACTION_INCOMING_BEGIN)) ||
 		    /* Outgoing connection established */

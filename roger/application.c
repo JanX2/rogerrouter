@@ -185,6 +185,17 @@ static void hangup_activated(GSimpleAction *action, GVariant *parameter, gpointe
 	phone_hangup(connection->priv);
 }
 
+static void journal_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+{
+	GtkWidget *journal_win = journal_get_window();
+
+	if (gtk_widget_get_visible(GTK_WIDGET(journal_win))) {
+		gtk_window_present(GTK_WINDOW(journal_win));
+	} else {
+		gtk_widget_set_visible(GTK_WIDGET(journal_win), !gtk_widget_get_visible(GTK_WIDGET(journal_win)));
+	}
+}
+
 static GActionEntry apps_entries[] = {
 	{"addressbook", addressbook_activated, NULL, NULL, NULL},
 	{"preferences", preferences_activated, NULL, NULL, NULL},
@@ -197,6 +208,7 @@ static GActionEntry apps_entries[] = {
 	{"quit", quit_activated, NULL, NULL, NULL},
 	{"pickup", pickup_activated, "i", NULL, NULL},
 	{"hangup", hangup_activated, "i", NULL, NULL},
+	{"journal", journal_activated, NULL, NULL, NULL},
 };
 
 static void application_startup(GtkApplication *application)
@@ -298,7 +310,7 @@ static void app_init(GtkApplication *app)
 	}
 
 #if 0
-	struct connection *connection = connection_add_call(2, CONNECTION_TYPE_INCOMING, "6173097", "022896172992");
+	struct connection *connection = connection_add_call(2, CONNECTION_TYPE_OUTGOING, "6173097", "08001888444");
 
 	emit_connection_notify(connection);
 #endif
@@ -392,6 +404,12 @@ static gint application_command_line_cb(GtkApplication *app, GApplicationCommand
 	return 0;
 }
 
+static void application_activated(GtkApplication *app, gpointer data)
+{
+	g_debug("called");
+	journal_activated(NULL, NULL, NULL);
+}
+
 #define APP_GSETTINGS_SCHEMA "org.tabos.roger"
 
 GtkApplication *application_new(void)
@@ -402,6 +420,7 @@ GtkApplication *application_new(void)
 	roger_app = gtk_application_new("org.tabos.roger", G_APPLICATION_HANDLES_COMMAND_LINE);
 
 	app_settings = rm_settings_new(APP_GSETTINGS_SCHEMA, NULL, "roger.conf");
+	g_signal_connect(roger_app, "activate", G_CALLBACK(application_activated), roger_app);
 	g_signal_connect(roger_app, "startup", G_CALLBACK(application_startup), roger_app);
 	g_signal_connect(roger_app, "shutdown", G_CALLBACK(application_shutdown), roger_app);
 	g_signal_connect(roger_app, "command-line", G_CALLBACK(application_command_line_cb), roger_app);
