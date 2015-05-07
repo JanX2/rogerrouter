@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-06 12:19+0200\n"
+"POT-Creation-Date: 2015-05-07 22:55+0200\n"
 "PO-Revision-Date: 2015-01-28 20:28+0100\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <jan.brummer@tabos.org>\n"
@@ -26,71 +26,71 @@ msgstr ""
 "FRITZ!Box Journal, Soft/phone und Fax\n"
 "Gewidmet meinem Vater"
 
-#: ../roger/application.c:211
+#: ../roger/application.c:223
 msgid "Error"
 msgstr "Fehler"
 
 #. Contacts
-#: ../roger/application.c:237 ../roger/contacts.c:485 ../roger/contacts.c:562
+#: ../roger/application.c:249 ../roger/contacts.c:485 ../roger/contacts.c:562
 #: ../roger/plugins/statusicon/gtk.c:204
 #: ../roger/plugins/indicator/indicator.c:224
 msgid "Contacts"
 msgstr "Kontakte"
 
 #. Phone
-#: ../roger/application.c:238 ../roger/contact_edit.c:283
+#: ../roger/application.c:250 ../roger/contact_edit.c:283
 #: ../roger/phone.c:1373 ../roger/plugins/statusicon/gtk.c:209
 #: ../roger/plugins/indicator/indicator.c:229
 msgid "Phone"
 msgstr "Telefon"
 
 #. Functions - Copy IP adress
-#: ../roger/application.c:241 ../roger/plugins/statusicon/gtk.c:70
+#: ../roger/application.c:253 ../roger/plugins/statusicon/gtk.c:70
 #: ../roger/plugins/indicator/indicator.c:74
 msgid "Copy IP address"
 msgstr "IP-Adresse kopieren"
 
 #. Functions - Reconnect
-#: ../roger/application.c:242 ../roger/plugins/statusicon/gtk.c:75
+#: ../roger/application.c:254 ../roger/plugins/statusicon/gtk.c:75
 #: ../roger/plugins/indicator/indicator.c:79
 msgid "Reconnect"
 msgstr "Neu verbinden"
 
 #. Functions
-#: ../roger/application.c:243 ../roger/plugins/statusicon/gtk.c:220
+#: ../roger/application.c:255 ../roger/plugins/statusicon/gtk.c:220
 #: ../roger/plugins/indicator/indicator.c:241
 msgid "Functions"
 msgstr "Funktionen"
 
 #. Preferences
-#: ../roger/application.c:246 ../roger/pref.c:104
+#: ../roger/application.c:258 ../roger/pref.c:104
 #: ../roger/plugins/statusicon/gtk.c:230
 #: ../roger/plugins/indicator/indicator.c:251
 msgid "Preferences"
 msgstr "Einstellungen"
 
-#: ../roger/application.c:252
+#: ../roger/application.c:264
 msgid "Donate"
 msgstr "Spenden"
 
-#: ../roger/application.c:253
+#: ../roger/application.c:265
 msgid "Forum"
 msgstr "Forum"
 
 #. Help
-#: ../roger/application.c:254 ../roger/plugins/statusicon/gtk.c:239
+#: ../roger/application.c:266 ../roger/plugins/statusicon/gtk.c:239
 #: ../roger/plugins/indicator/indicator.c:260
 msgid "Help"
 msgstr "Hilfe"
 
 #. About
-#: ../roger/application.c:256 ../roger/plugins/statusicon/gtk.c:244
+#: ../roger/application.c:268 ../roger/plugins/statusicon/gtk.c:244
 #: ../roger/plugins/indicator/indicator.c:265
 msgid "About"
 msgstr "Info"
 
 #. Quit
-#: ../roger/application.c:260 ../roger/plugins/statusicon/gtk.c:253
+#: ../roger/application.c:272 ../roger/plugins/statusicon/gtk.c:253
 #: ../roger/plugins/indicator/indicator.c:274
 msgid "Quit"
 msgstr "Beenden"
@@ -314,7 +314,7 @@ msgstr "_Kein Bild"
 #: ../roger/pref_action.c:255 ../roger/pref_filters.c:202 ../roger/print.c:388
 #: ../roger/plugins/notification/notification.c:503
 #: ../roger/plugins/gtknotify/gtknotify.c:611
-#: ../roger/plugins/gnotification/gnotification.c:412
+#: ../roger/plugins/gnotification/gnotification.c:439
 msgid "Number"
 msgstr "Nummer"
 
@@ -860,7 +860,7 @@ msgstr "Alle"
 #: ../roger/plugins/gtknotify/gtknotify.c:620
 #: ../roger/plugins/statusicon/gtk.c:148
 #: ../roger/plugins/indicator/indicator.c:152
-#: ../roger/plugins/gnotification/gnotification.c:421
+#: ../roger/plugins/gnotification/gnotification.c:448
 msgid "Incoming"
 msgstr "Eingehend"
 
@@ -875,7 +875,7 @@ msgstr "Verpasst"
 #: ../roger/plugins/gtknotify/gtknotify.c:615
 #: ../roger/plugins/statusicon/gtk.c:155
 #: ../roger/plugins/indicator/indicator.c:159
-#: ../roger/plugins/gnotification/gnotification.c:416
+#: ../roger/plugins/gnotification/gnotification.c:443
 msgid "Outgoing"
 msgstr "Ausgehend"
 
@@ -1238,20 +1238,20 @@ msgid "Number:\t%s"
 msgstr "Nummer:\t%s"
 
 #: ../roger/plugins/notification/notification.c:258
-#: ../roger/plugins/gnotification/gnotification.c:106
+#: ../roger/plugins/gnotification/gnotification.c:107
 #, c-format
 msgid "Incoming call (on %s)"
 msgstr "Eingehender Anruf (auf %s)"
 
 #: ../roger/plugins/notification/notification.c:261
 #: ../roger/plugins/gtknotify/gtknotify.c:353
-#: ../roger/plugins/gnotification/gnotification.c:118
+#: ../roger/plugins/gnotification/gnotification.c:121
 msgid "Accept"
 msgstr "Annehmen"
 
 #: ../roger/plugins/notification/notification.c:262
 #: ../roger/plugins/gtknotify/gtknotify.c:358
-#: ../roger/plugins/gnotification/gnotification.c:119
+#: ../roger/plugins/gnotification/gnotification.c:122
 msgid "Decline"
 msgstr "Ablehnen"
 
@@ -1262,19 +1262,19 @@ msgstr "Wähle für welche MSNs Benachrichtigungen angezeigt werden"
 
 #: ../roger/plugins/notification/notification.c:523
 #: ../roger/plugins/gtknotify/gtknotify.c:643
-#: ../roger/plugins/gnotification/gnotification.c:432
+#: ../roger/plugins/gnotification/gnotification.c:459
 msgid "Duration (outgoing)"
 msgstr "Anzeigedauer (ausgehend)"
 
 #: ../roger/plugins/notification/notification.c:532
 #: ../roger/plugins/gtknotify/gtknotify.c:652
-#: ../roger/plugins/gnotification/gnotification.c:441
+#: ../roger/plugins/gnotification/gnotification.c:468
 msgid "Play ringtones"
 msgstr "Spiele Klingeltöne"
 
 #: ../roger/plugins/notification/notification.c:540
 #: ../roger/plugins/gtknotify/gtknotify.c:660
-#: ../roger/plugins/gnotification/gnotification.c:449
+#: ../roger/plugins/gnotification/gnotification.c:476
 msgid "Popup"
 msgstr "Popup"
 
@@ -1477,7 +1477,8 @@ msgid "Thunderbird address book support"
 msgstr "Thunderbird Adressbuch-Support"
 
 #. Create notification message
-#: ../roger/plugins/gnotification/gnotification.c:93
+#: ../roger/plugins/gnotification/gnotification.c:94
+#, c-format
 msgid ""
 "Name:\t\t%s\n"
 "Number:\t\t%s\n"
@@ -1493,11 +1494,26 @@ msgstr ""
 "Stadt:\t%s%s%s\n"
 "Map:\t%s"
 
-#: ../roger/plugins/gnotification/gnotification.c:108
+#: ../roger/plugins/gnotification/gnotification.c:109
+#, c-format
 msgid "Outgoing call (on %s)"
 msgstr "Ausgehender Anruf (auf %s)"
 
-#: ../roger/plugins/gnotification/gnotification.c:424
+#. Create notification message
+#: ../roger/plugins/gnotification/gnotification.c:144
+#, c-format
+msgid "You have missed calls"
+msgstr "Sie haben verpasste Anrufe"
+
+#: ../roger/plugins/gnotification/gnotification.c:146
+msgid "Missed call(s)"
+msgstr "Verpasste Anrufe"
+
+#: ../roger/plugins/gnotification/gnotification.c:151
+msgid "Open journal"
+msgstr "Journal öffnen"
+
+#: ../roger/plugins/gnotification/gnotification.c:451
 msgid "Choose for which MSNs you want gnotifications"
 msgstr "Wähle für welche MSNs Benachrichtigungen angezeigt werden"
 
