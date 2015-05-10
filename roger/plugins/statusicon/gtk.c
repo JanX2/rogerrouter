@@ -270,8 +270,8 @@ void statusicon_popup_menu_cb(GtkStatusIcon *statusicon, guint button, guint act
  */
 void statusicon_connection_notify_cb(AppObject *obj, struct connection *connection, gpointer unused_pointer)
 {
-	g_debug("Called: '%d/%d", connection->type, CONNECTION_TYPE_MISS);
-	if (connection->type == CONNECTION_TYPE_MISS) {
+	g_debug("Called: '%d/%d", connection->type, CONNECTION_TYPE_MISSED);
+	if (connection->type == CONNECTION_TYPE_MISSED) {
 		g_debug("Setting missed icon");
 		gchar *iconname = g_strconcat("roger-", g_settings_get_string(statusicon_settings, "notify-icon"), NULL);
 		gtk_status_icon_set_from_icon_name(statusicon, iconname);

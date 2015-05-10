@@ -288,8 +288,8 @@ GtkWidget *indicator_menu(void)
  */
 void indicator_connection_notify_cb(AppObject *obj, struct connection *connection, gpointer unused_pointer)
 {
-	g_debug("Called: '%d/%d", connection->type, CONNECTION_TYPE_MISS);
-	if (connection->type == CONNECTION_TYPE_MISS) {
+	g_debug("Called: '%d/%d", connection->type, CONNECTION_TYPE_MISSED);
+	if (connection->type == CONNECTION_TYPE_MISSED) {
 		g_debug("Setting missed icon");
 		app_indicator_set_status(indicator, APP_INDICATOR_STATUS_ATTENTION);
 	}
