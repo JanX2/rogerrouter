@@ -856,7 +856,6 @@ void journal_play_voice(const gchar *name)
 	GtkWidget *grid;
 	GtkWidget *media_button;
 	GtkWidget *scale;
-	GtkWidget *label;
 	gsize len = 0;
 	gchar *data = router_load_voice(profile_get_active(), name, &len);
 	struct journal_playback *playback_data;
@@ -878,7 +877,7 @@ void journal_play_voice(const gchar *name)
 	}
 
 	/* Create dialog */
-	dialog = gtk_dialog_new_with_buttons(_("Voice box"), GTK_WINDOW(journal_win), 0/*GTK_DIALOG_MODAL*/, _("_Close"), GTK_RESPONSE_CLOSE, NULL);
+	dialog = gtk_dialog_new_with_buttons(_("Voice box"), GTK_WINDOW(journal_win), GTK_DIALOG_USE_HEADER_BAR, _("_Close"), GTK_RESPONSE_CLOSE, NULL);
 	content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 
 	playback_data = g_slice_new(struct journal_playback);
@@ -890,9 +889,6 @@ void journal_play_voice(const gchar *name)
 	gtk_widget_set_margin(grid, 12, 12, 12, 12);
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 6);
 	gtk_grid_set_row_spacing(GTK_GRID(grid), 12);
-
-	label = gtk_label_new(_("Playing voice box entry..."));
-	gtk_grid_attach(GTK_GRID(grid), label, 0, 0, 2, 1);
 
 	media_button = gtk_button_new();
 	playback_data->media_button = media_button;
