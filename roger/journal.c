@@ -50,7 +50,8 @@
 #include <roger/application.h>
 #include <roger/uitools.h>
 
-#define JOURNAL_OLD_ICONS 1
+//#define JOURNAL_OLD_ICONS 1
+#define JOURNAL_NEW_ICONS_COL 1
 
 GtkWidget *journal_view = NULL;
 GtkWidget *journal_win = NULL;
@@ -90,6 +91,166 @@ void journal_clear(void)
 	gtk_list_store_clear(list_store);
 }
 
+#ifdef JOURNAL_NEW_ICONS_COL
+static GdkPixbuf *
+create_colorized_pixbuf (GdkPixbuf *src,
+                         GdkRGBA   *new_color)
+{
+  gint i, j;
+  gint width, height, has_alpha, src_row_stride, dst_row_stride;
+  gint red_value, green_value, blue_value;
+  guchar *target_pixels;
+  guchar *original_pixels;
+  guchar *pixsrc;
+  guchar *pixdest;
+  GdkPixbuf *dest;
+
+  red_value = (new_color->red * 65535.0) / 255.0;
+  green_value = (new_color->green * 65535.0) / 255.0;
+  blue_value = (new_color->blue * 65535.0) / 255.0;
+
+  dest = gdk_pixbuf_new (gdk_pixbuf_get_colorspace (src),
+                   gdk_pixbuf_get_has_alpha (src),
+                   gdk_pixbuf_get_bits_per_sample (src),
+                   gdk_pixbuf_get_width (src),
+                   gdk_pixbuf_get_height (src));
+  
+  has_alpha = gdk_pixbuf_get_has_alpha (src);
+  width = gdk_pixbuf_get_width (src);
+  height = gdk_pixbuf_get_height (src);
+  src_row_stride = gdk_pixbuf_get_rowstride (src);
+  dst_row_stride = gdk_pixbuf_get_rowstride (dest);
+  target_pixels = gdk_pixbuf_get_pixels (dest);
+  original_pixels = gdk_pixbuf_get_pixels (src);
+  
+  for (i = 0; i < height; i++) {
+    pixdest = target_pixels + i*dst_row_stride;
+    pixsrc = original_pixels + i*src_row_stride;
+    for (j = 0; j < width; j++) {         
+      *pixdest++ = (*pixsrc++ * red_value) >> 8;
+      *pixdest++ = (*pixsrc++ * green_value) >> 8;
+      *pixdest++ = (*pixsrc++ * blue_value) >> 8;
+      if (has_alpha) {
+      *pixdest++ = *pixsrc++;
+      }
+    }
+  }
+  return dest;
+}
+
+GdkPixbuf *pixbuf_copy_mirror(GdkPixbuf *src, gint mirror, gint flip)
+{
+    GdkPixbuf *dest;
+    gint has_alpha;
+    gint w, h, srs;
+    gint drs;
+    guchar *s_pix;
+    guchar *d_pix;
+    guchar *sp;
+    guchar *dp;
+    gint i, j;
+    gint a;
+    
+    if (!src)
+	return NULL;
+    
+    w = gdk_pixbuf_get_width(src);
+    h = gdk_pixbuf_get_height(src);
+    has_alpha = gdk_pixbuf_get_has_alpha(src);
+    srs = gdk_pixbuf_get_rowstride(src);
+    s_pix = gdk_pixbuf_get_pixels(src);
+    
+    dest = gdk_pixbuf_new(GDK_COLORSPACE_RGB, has_alpha, 8, w, h);
+    drs = gdk_pixbuf_get_rowstride(dest);
+    d_pix = gdk_pixbuf_get_pixels(dest);
+    
+    a = has_alpha ? 4 : 3;
+    
+    for (i = 0; i < h; i++) {
+    sp = s_pix + (i * srs);
+    if (flip) {
+        dp = d_pix + ((h - i - 1) * drs);
+    } else {
+        dp = d_pix + (i * drs);
+    }
+    if (mirror) {
+        dp += (w - 1) * a;
+        for (j = 0; j < w; j++) {
+	*(dp++) = *(sp++);	/* r */
+	*(dp++) = *(sp++);	/* g */
+	*(dp++) = *(sp++);	/* b */
+	if (has_alpha)
+	    *(dp) = *(sp++);	/* a */
+	dp -= (a + 3);
+        }
+    } else {
+        for (j = 0; j < w; j++) {
+	*(dp++) = *(sp++);	/* r */
+	*(dp++) = *(sp++);	/* g */
+	*(dp++) = *(sp++);	/* b */
+	if (has_alpha)
+	    *(dp++) = *(sp++);	/* a */
+        }
+    }
+    }
+    
+    return dest;
+}
+
+GdkPixbuf *pixbuf_copy_rotate_90(GdkPixbuf *src, gint counter_clockwise)
+{
+    GdkPixbuf *dest;
+    gint has_alpha;
+    gint sw, sh, srs;
+    gint dw, dh, drs;
+    guchar *s_pix;
+    guchar *d_pix;
+    guchar *sp;
+    guchar *dp;
+    gint i, j;
+    gint a;
+    
+    if (!src)
+	return NULL;
+    
+    sw = gdk_pixbuf_get_width(src);
+    sh = gdk_pixbuf_get_height(src);
+    has_alpha = gdk_pixbuf_get_has_alpha(src);
+    srs = gdk_pixbuf_get_rowstride(src);
+    s_pix = gdk_pixbuf_get_pixels(src);
+    
+    dw = sh;
+    dh = sw;
+    dest = gdk_pixbuf_new(GDK_COLORSPACE_RGB, has_alpha, 8, dw, dh);
+    g_assert(dest != NULL);
+    drs = gdk_pixbuf_get_rowstride(dest);
+    d_pix = gdk_pixbuf_get_pixels(dest);
+    
+    a = (has_alpha ? 4 : 3);
+    
+    for (i = 0; i < sh; i++) {
+    sp = s_pix + (i * srs);
+    for (j = 0; j < sw; j++) {
+        if (counter_clockwise) {
+	dp = d_pix + ((dh - j - 1) * drs) + (i * a);
+        } else {
+	dp = d_pix + (j * drs) + ((dw - i - 1) * a);
+        }
+        
+        *(dp++) = *(sp++);	/* r */
+        *(dp++) = *(sp++);	/* g */
+        *(dp++) = *(sp++);	/* b */
+        if (has_alpha)
+	*(dp) = *(sp++);	/* a */
+    }
+    }
+    
+    return dest;
+}
+
+
+#endif
+
 GdkPixbuf *journal_get_call_icon(gint type)
 {
 #ifdef JOURNAL_OLD_ICONS
@@ -110,7 +271,16 @@ GdkPixbuf *journal_get_call_icon(gint type)
 		GtkIconTheme *icons;
 
 		icons = gtk_icon_theme_get_default();
-		icon_call_in = gtk_icon_theme_load_icon(icons, "call-end-symbolic", 18, 0, NULL);
+		icon_call_in = gtk_icon_theme_load_icon(icons, "call-start-symbolic", 18, 0, NULL);
+
+#ifdef JOURNAL_NEW_ICONS_COL
+		GdkRGBA col;
+		col.red = 0.0;
+		col.green = 0.4;
+		col.blue = 1.0;
+		col.alpha = 1.0;
+		icon_call_in = create_colorized_pixbuf(icon_call_in, &col);
+#endif
 #endif
 	}
 
@@ -124,6 +294,14 @@ GdkPixbuf *journal_get_call_icon(gint type)
 
 		icons = gtk_icon_theme_get_default();
 		icon_call_missed = gtk_icon_theme_load_icon(icons, "call-missed-symbolic", 18, 0, NULL);
+#ifdef JOURNAL_NEW_ICONS_COL
+		GdkRGBA col;
+		col.red = 1.0;
+		col.green = 0.2;
+		col.blue = 0.0;
+		col.alpha = 1.0;
+		icon_call_missed = create_colorized_pixbuf(icon_call_missed, &col);
+#endif
 #endif
 	}
 
@@ -137,6 +315,17 @@ GdkPixbuf *journal_get_call_icon(gint type)
 
 		icons = gtk_icon_theme_get_default();
 		icon_call_out = gtk_icon_theme_load_icon(icons, "call-start-symbolic", 18, 0, NULL);
+
+		icon_call_out = pixbuf_copy_mirror(icon_call_out, 1, 0);
+
+#ifdef JOURNAL_NEW_ICONS_COL
+		GdkRGBA col;
+		col.red = 0.0;
+		col.green = 1.0;
+		col.blue = 0.0;
+		col.alpha = 1.0;
+		icon_call_out = create_colorized_pixbuf(icon_call_out, &col);
+#endif
 #endif
 	}
 
