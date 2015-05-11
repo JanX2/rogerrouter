@@ -51,7 +51,7 @@
 #include <roger/uitools.h>
 
 //#define JOURNAL_OLD_ICONS 1
-#define JOURNAL_NEW_ICONS_COL 1
+//#define JOURNAL_NEW_ICONS_COL 1
 
 GtkWidget *journal_view = NULL;
 GtkWidget *journal_win = NULL;
@@ -138,6 +138,60 @@ create_colorized_pixbuf (GdkPixbuf *src,
   return dest;
 }
 
+GdkPixbuf *pixbuf_copy_rotate_90(GdkPixbuf *src, gint counter_clockwise)
+{
+    GdkPixbuf *dest;
+    gint has_alpha;
+    gint sw, sh, srs;
+    gint dw, dh, drs;
+    guchar *s_pix;
+    guchar *d_pix;
+    guchar *sp;
+    guchar *dp;
+    gint i, j;
+    gint a;
+    
+    if (!src)
+	return NULL;
+    
+    sw = gdk_pixbuf_get_width(src);
+    sh = gdk_pixbuf_get_height(src);
+    has_alpha = gdk_pixbuf_get_has_alpha(src);
+    srs = gdk_pixbuf_get_rowstride(src);
+    s_pix = gdk_pixbuf_get_pixels(src);
+    
+    dw = sh;
+    dh = sw;
+    dest = gdk_pixbuf_new(GDK_COLORSPACE_RGB, has_alpha, 8, dw, dh);
+    g_assert(dest != NULL);
+    drs = gdk_pixbuf_get_rowstride(dest);
+    d_pix = gdk_pixbuf_get_pixels(dest);
+    
+    a = (has_alpha ? 4 : 3);
+    
+    for (i = 0; i < sh; i++) {
+    sp = s_pix + (i * srs);
+    for (j = 0; j < sw; j++) {
+        if (counter_clockwise) {
+	dp = d_pix + ((dh - j - 1) * drs) + (i * a);
+        } else {
+	dp = d_pix + (j * drs) + ((dw - i - 1) * a);
+        }
+        
+        *(dp++) = *(sp++);	/* r */
+        *(dp++) = *(sp++);	/* g */
+        *(dp++) = *(sp++);	/* b */
+        if (has_alpha)
+	*(dp) = *(sp++);	/* a */
+    }
+    }
+    
+    return dest;
+}
+
+
+#endif
+
 GdkPixbuf *pixbuf_copy_mirror(GdkPixbuf *src, gint mirror, gint flip)
 {
     GdkPixbuf *dest;
@@ -196,60 +250,6 @@ GdkPixbuf *pixbuf_copy_mirror(GdkPixbuf *src, gint mirror, gint flip)
     
     return dest;
 }
-
-GdkPixbuf *pixbuf_copy_rotate_90(GdkPixbuf *src, gint counter_clockwise)
-{
-    GdkPixbuf *dest;
-    gint has_alpha;
-    gint sw, sh, srs;
-    gint dw, dh, drs;
-    guchar *s_pix;
-    guchar *d_pix;
-    guchar *sp;
-    guchar *dp;
-    gint i, j;
-    gint a;
-    
-    if (!src)
-	return NULL;
-    
-    sw = gdk_pixbuf_get_width(src);
-    sh = gdk_pixbuf_get_height(src);
-    has_alpha = gdk_pixbuf_get_has_alpha(src);
-    srs = gdk_pixbuf_get_rowstride(src);
-    s_pix = gdk_pixbuf_get_pixels(src);
-    
-    dw = sh;
-    dh = sw;
-    dest = gdk_pixbuf_new(GDK_COLORSPACE_RGB, has_alpha, 8, dw, dh);
-    g_assert(dest != NULL);
-    drs = gdk_pixbuf_get_rowstride(dest);
-    d_pix = gdk_pixbuf_get_pixels(dest);
-    
-    a = (has_alpha ? 4 : 3);
-    
-    for (i = 0; i < sh; i++) {
-    sp = s_pix + (i * srs);
-    for (j = 0; j < sw; j++) {
-        if (counter_clockwise) {
-	dp = d_pix + ((dh - j - 1) * drs) + (i * a);
-        } else {
-	dp = d_pix + (j * drs) + ((dw - i - 1) * a);
-        }
-        
-        *(dp++) = *(sp++);	/* r */
-        *(dp++) = *(sp++);	/* g */
-        *(dp++) = *(sp++);	/* b */
-        if (has_alpha)
-	*(dp) = *(sp++);	/* a */
-    }
-    }
-    
-    return dest;
-}
-
-
-#endif
 
 GdkPixbuf *journal_get_call_icon(gint type)
 {
