@@ -566,12 +566,34 @@ void journal_button_print_clicked_cb(GtkWidget *button, GtkWidget *view)
 
 void journal_button_clear_clicked_cb(GtkWidget *button, GtkWidget *view)
 {
-	GtkWidget *remove_dialog = gtk_message_dialog_new(GTK_WINDOW(journal_win), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Do you want to delete the router journal?"));
-	gtk_window_set_title(GTK_WINDOW(remove_dialog), _("Delete journal"));
-	gtk_window_set_position(GTK_WINDOW(remove_dialog), GTK_WIN_POS_CENTER_ON_PARENT);
+	GtkWidget *dialog;
+	gchar *tmp;
 
-	gint result = gtk_dialog_run(GTK_DIALOG(remove_dialog));
-	gtk_widget_destroy(remove_dialog);
+	dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", TRUE, NULL);
+
+	gtk_window_set_title(GTK_WINDOW(dialog), _("Journal"));
+	gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(journal_win));
+	gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
+	GtkWidget *remove = gtk_dialog_add_button(GTK_DIALOG(dialog), _("Delete"), GTK_RESPONSE_OK);
+	gtk_style_context_add_class(gtk_widget_get_style_context(remove), GTK_STYLE_CLASS_DESTRUCTIVE_ACTION);
+	GtkWidget *content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+
+	tmp = g_strdup_printf(_("Do you want to delete the router journal?"));
+	GtkWidget *label = gtk_label_new(tmp);
+	gtk_container_add(GTK_CONTAINER(content), label);
+
+	gtk_widget_set_margin_start(label, 18);
+	gtk_widget_set_margin_end(label, 18);
+	gtk_widget_set_margin_top(label, 18);
+	gtk_widget_set_margin_bottom(label, 18);
+	gtk_widget_show_all(content);
+	g_free(tmp);
+
+	//gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
+
+	gint result = gtk_dialog_run(GTK_DIALOG(dialog));
+	gtk_widget_destroy(dialog);
 
 	if (result != GTK_RESPONSE_OK) {
 		return;
@@ -612,12 +634,34 @@ void delete_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, g
 
 void journal_button_delete_clicked_cb(GtkWidget *button, GtkWidget *view)
 {
-	GtkWidget *delete_dialog = gtk_message_dialog_new(GTK_WINDOW(journal_win), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Do you want to delete the selected entry?"));
-	gtk_window_set_title(GTK_WINDOW(delete_dialog), _("Delete entry"));
-	gtk_window_set_position(GTK_WINDOW(delete_dialog), GTK_WIN_POS_CENTER);
+	GtkWidget *dialog;
+	gchar *tmp;
 
-	gint result = gtk_dialog_run(GTK_DIALOG(delete_dialog));
-	gtk_widget_destroy(delete_dialog);
+	dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", TRUE, NULL);
+
+	gtk_window_set_title(GTK_WINDOW(dialog), _("Entry"));
+	gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(journal_win));
+	gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
+	GtkWidget *remove = gtk_dialog_add_button(GTK_DIALOG(dialog), _("Delete"), GTK_RESPONSE_OK);
+	gtk_style_context_add_class(gtk_widget_get_style_context(remove), GTK_STYLE_CLASS_DESTRUCTIVE_ACTION);
+	GtkWidget *content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+
+	tmp = g_strdup_printf(_("Do you really want to delete the selected entry?"));
+	GtkWidget *label = gtk_label_new(tmp);
+	gtk_container_add(GTK_CONTAINER(content), label);
+
+	gtk_widget_set_margin_start(label, 18);
+	gtk_widget_set_margin_end(label, 18);
+	gtk_widget_set_margin_top(label, 18);
+	gtk_widget_set_margin_bottom(label, 18);
+	gtk_widget_show_all(content);
+	g_free(tmp);
+
+	//gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
+
+	gint result = gtk_dialog_run(GTK_DIALOG(dialog));
+	gtk_widget_destroy(dialog);
 
 	if (result != GTK_RESPONSE_OK) {
 		return;
@@ -632,24 +676,31 @@ void journal_button_delete_clicked_cb(GtkWidget *button, GtkWidget *view)
 
 void journal_add_contact(struct call *call)
 {
-	GtkWidget *add_dialog = gtk_message_dialog_new(GTK_WINDOW(journal_win), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Where shall i add the number?"));
-	GtkWidget *content;
+	//GtkWidget *add_dialog = gtk_message_dialog_new(GTK_WINDOW(journal_win), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Where shall i add the number?"));
+	//GtkWidget *content;
 	GtkWidget *grid;
 	GtkWidget *radio1;
 	GtkWidget *radio2;
 	gboolean new_entry = FALSE;
 
-	gtk_window_set_title(GTK_WINDOW(add_dialog), _("Add contact"));
-	gtk_window_set_transient_for(GTK_WINDOW(add_dialog), GTK_WINDOW(journal_win));
+	GtkWidget *dialog;
+
+	dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", TRUE, NULL);
+
+	gtk_window_set_title(GTK_WINDOW(dialog), _("Contact"));
+	gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(journal_win));
+	gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
+	GtkWidget *remove = gtk_dialog_add_button(GTK_DIALOG(dialog), _("Add"), GTK_RESPONSE_OK);
+	gtk_style_context_add_class(gtk_widget_get_style_context(remove), GTK_STYLE_CLASS_SUGGESTED_ACTION);
+	GtkWidget *content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 
 	grid = gtk_grid_new();
 
 	/* Set standard spacing */
-	gtk_widget_set_margin(grid, 12, 0, 0, 0);
+	gtk_widget_set_margin(grid, 18, 18, 18, 18);
 	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 15);
-
-	content = gtk_dialog_get_content_area(GTK_DIALOG(add_dialog));
 
 	radio1 = gtk_radio_button_new_with_label(NULL, _("Existing contact"));
 	radio2 = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(radio1), _("New contact"));
@@ -661,9 +712,9 @@ void journal_add_contact(struct call *call)
 
 	gtk_widget_show_all(grid);
 
-	gint result = gtk_dialog_run(GTK_DIALOG(add_dialog));
+	gint result = gtk_dialog_run(GTK_DIALOG(dialog));
 	new_entry = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radio2));
-	gtk_widget_destroy(add_dialog);
+	gtk_widget_destroy(dialog);
 
 	if (result != GTK_RESPONSE_OK) {
 		return;

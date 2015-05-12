@@ -9,7 +9,7 @@ share_DATA = \
 	images/callmissed.png \
 	images/callout.png
 
-EXTRA_DIST = $(share_DATA) roger_winres.rc
+EXTRA_DIST = $(share_DATA) roger_winres.rc roger.gresource.xml
 
 bin_PROGRAMS = roger
 
