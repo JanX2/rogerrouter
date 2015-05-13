@@ -1468,7 +1468,7 @@ void journal_window(GApplication *app)
 	renderer = gtk_cell_renderer_pixbuf_new();
 	column = gtk_tree_view_column_new_with_attributes(column_name[0], renderer, "pixbuf", JOURNAL_COL_TYPE, NULL);
 	gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_FIXED);
-	gtk_tree_view_column_set_sort_column_id(column, 1);
+	//gtk_tree_view_column_set_sort_column_id(column, JOURNAL_COL_TYPE);
 	if (g_settings_get_uint(app_settings, "col-0-width")) {
 		gtk_tree_view_column_set_fixed_width(column, g_settings_get_uint(app_settings, "col-0-width"));
 	}
