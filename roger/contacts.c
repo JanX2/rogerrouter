@@ -312,10 +312,24 @@ void button_edit_clicked_cb(GtkWidget *button, gpointer user_data)
 void button_remove_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 	GtkListBoxRow *row = gtk_list_box_get_selected_row(GTK_LIST_BOX(user_data));
-	GtkWidget *child = gtk_container_get_children(GTK_CONTAINER(row))->data;
-	struct contact *contact = g_object_get_data(G_OBJECT(child), "contact");
+	GtkWidget *child;
+	struct contact *contact;
 	GtkWidget *dialog;
 	gchar *tmp;
+
+	if (!row) {
+		return;
+	}
+
+	child = gtk_container_get_children(GTK_CONTAINER(row))->data;
+	if (!child) {
+		return;
+	}
+
+	contact = g_object_get_data(G_OBJECT(child), "contact");
+	if (!contact) {
+		return;
+	}
 
 	dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", TRUE, NULL);
 
