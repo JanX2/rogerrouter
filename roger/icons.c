@@ -66,15 +66,13 @@ GdkPixbuf *image_get_scaled(GdkPixbuf *image, gint req_width, gint req_height)
 	gint orig_width, orig_height;
 	gfloat factor;
 
+	g_assert(image != NULL);
+
 	if (req_width != -1 && req_height != -1) {
 		orig_width = req_width;
 		orig_height = req_height;
 	} else {
 		gtk_icon_size_lookup(GTK_ICON_SIZE_DIALOG, &orig_width, &orig_height);
-	}
-
-	if (!image) {
-		image = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "avatar-default-symbolic", orig_width, 0, NULL);
 	}
 
 	width = gdk_pixbuf_get_width(image);
@@ -93,4 +91,3 @@ GdkPixbuf *image_get_scaled(GdkPixbuf *image, gint req_width, gint req_height)
 
 	return scaled;
 }
-

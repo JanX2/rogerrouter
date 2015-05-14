@@ -33,7 +33,7 @@
 #include <roger/phone.h>
 #include <roger/icons.h>
 
-void contacts_fill_list(GtkListStore *list_store, const gchar *text);
+void contacts_fill_list(gpointer fill, const gchar *text);
 
 static GtkWidget *detail_grid = NULL;
 static GtkWidget *contacts_window = NULL;
@@ -61,10 +61,21 @@ void contacts_clear_details(void)
 	}
 }
 
+void contacts_clear_cb(GtkWidget *widget, gpointer data)
+{
+	gtk_widget_destroy(widget);
+}
+
+void contacts_clear(GtkWidget *box)
+{
+	gtk_container_foreach(GTK_CONTAINER(box), contacts_clear_cb, NULL);
+}
+
 void contacts_update_details(struct contact *contact)
 {
 	GtkWidget *detail_photo_image = NULL;
 	GtkWidget *detail_name_label = NULL;
+	GtkWidget *frame;
 	GSList *numbers;
 	GSList *addresses;
 	GtkWidget *grid;
@@ -77,8 +88,13 @@ void contacts_update_details(struct contact *contact)
 	if (contact) {
 		gtk_grid_set_row_spacing(GTK_GRID(grid), 15);
 		gtk_grid_set_column_spacing(GTK_GRID(grid), 15);
+
+		frame = gtk_frame_new(NULL);
+		gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_ETCHED_IN);
+		gtk_grid_attach(GTK_GRID(grid), frame, 0, 0, 1, 1);
+
 		detail_photo_image = gtk_image_new();
-		gtk_grid_attach(GTK_GRID(grid), detail_photo_image, 0, 0, 1, 1);
+		gtk_container_add(GTK_CONTAINER(frame), detail_photo_image);
 
 		detail_name_label = gtk_label_new("");
 		gtk_label_set_ellipsize(GTK_LABEL(detail_name_label), PANGO_ELLIPSIZE_END);
@@ -86,8 +102,13 @@ void contacts_update_details(struct contact *contact)
 		gtk_widget_set_hexpand(detail_name_label, TRUE);
 		gtk_grid_attach(GTK_GRID(grid), detail_name_label, 1, 0, 1, 1);
 
-		GdkPixbuf *buf = image_get_scaled(contact->image, 96, 96);
-		gtk_image_set_from_pixbuf(GTK_IMAGE(detail_photo_image), buf);
+		if (contact->image) {
+			GdkPixbuf *buf = image_get_scaled(contact->image, 96, 96);
+			gtk_image_set_from_pixbuf(GTK_IMAGE(detail_photo_image), buf);
+		} else {
+			gtk_image_set_from_icon_name(GTK_IMAGE(detail_photo_image), AVATAR_DEFAULT, GTK_ICON_SIZE_DIALOG);
+			gtk_image_set_pixel_size(GTK_IMAGE(detail_photo_image), 96);
+		}
 
 		markup = g_markup_printf_escaped("<span size=\"x-large\">%s</span>", contact->name);
 		gtk_label_set_markup(GTK_LABEL(detail_name_label), markup);
@@ -180,261 +201,154 @@ void contacts_update_details(struct contact *contact)
 	}
 
 	detail_grid = grid;
-	gtk_grid_attach(GTK_GRID(contacts_window_grid), detail_grid, 1, 0, 1, 3);
+	gtk_grid_attach(GTK_GRID(contacts_window_grid), detail_grid, 1, 0, 1, 2);
 }
 
-static void search_entry_changed(GtkEditable *entry, gpointer user_data)
+static void search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_data)
 {
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 
-	if (!EMPTY_STRING(text)) {
-		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, "edit-clear-symbolic");
-	} else {
-		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, NULL);
-	}
-
-	GtkTreeView *view = user_data;
-	GtkListStore *list_store = GTK_LIST_STORE(gtk_tree_view_get_model(view));
-
-	gtk_list_store_clear(list_store);
-	contacts_fill_list(list_store, text);
+	contacts_clear(user_data);
+	contacts_fill_list(user_data, text);
 }
 
-static void entry_icon_released(GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEvent *event, gpointer user_data)
-{
-	switch (icon_pos) {
-	case GTK_ENTRY_ICON_PRIMARY:
-		break;
-	case GTK_ENTRY_ICON_SECONDARY:
-		gtk_entry_set_text(entry, "");
-		break;
-	}
-}
-
-void contacts_fill_list(GtkListStore *list_store, const gchar *text)
+void contacts_fill_list(gpointer box, const gchar *text)
 {
 	GSList *list;
 	GSList *contact_list = address_book_get_contacts();
 
 	for (list = contact_list; list != NULL; list = list->next) {
 		struct contact *contact = list->data;
-		GtkTreeIter iter;
+		GtkWidget *child_box;
+		GtkWidget *img;
 
 		if (text && (!g_strcasestr(contact->name, text) && !g_strcasestr(contact->company, text))) {
 			continue;
 		}
 
-		gtk_list_store_append(list_store, &iter);
-		gtk_list_store_set(list_store, &iter, 0, image_get_scaled(contact->image, -1, -1), -1);
-		gtk_list_store_set(list_store, &iter, 1, contact->name, -1);
-		gtk_list_store_set(list_store, &iter, 2, contact, -1);
-	}
-}
+		child_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+		g_object_set_data(G_OBJECT(child_box), "contact", contact);
 
-static gboolean contacts_list_button_press_event_cb(GtkTreeView *view, GdkEventButton *event, gpointer user_data)
-{
-	GtkTreeSelection *selection = gtk_tree_view_get_selection(view);
-	GtkTreeModel *model = NULL;
-	GtkTreeIter iter;
-
-	if (!((event->type == GDK_BUTTON_PRESS && event->button == 1) || event->type == GDK_KEY_PRESS)) {
-		return FALSE;
-	}
-
-	if (gtk_tree_selection_count_selected_rows(selection) <= 1) {
-		GtkTreePath *path;
-
-		/* Get tree path for row that was clicked */
-		if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(view), (gint)event->x, (gint)event->y, &path, NULL, NULL, NULL)) {
-			gtk_tree_selection_unselect_all(selection);
-			gtk_tree_selection_select_path(selection, path);
-
-			model = gtk_tree_view_get_model(view);
-			if (gtk_tree_model_get_iter(model, &iter, path)) {
-				struct contact *contact;
-
-				gtk_tree_model_get(model, &iter, 2, &contact, -1);
-				contacts_update_details(contact);
-			}
-			gtk_tree_path_free(path);
+		if (contact->image) {
+			img = gtk_image_new_from_pixbuf(image_get_scaled(contact->image, -1, -1));
+		} else {
+			img = gtk_image_new_from_icon_name(AVATAR_DEFAULT, GTK_ICON_SIZE_DIALOG);
 		}
-	}
 
-	return FALSE;
+		gtk_box_pack_start(GTK_BOX(child_box), img, FALSE, FALSE, 5);
+
+		GtkWidget *txt = gtk_label_new(contact->name);
+		gtk_box_pack_start(GTK_BOX(child_box), txt, FALSE, FALSE, 5);
+		gtk_widget_show_all(child_box);
+
+		gtk_list_box_insert(GTK_LIST_BOX(box), child_box, -1);
+	}
 }
 
-static gboolean contacts_list_move_cursor_cb(GtkTreeView *view, GtkMovementStep step, gint direction, gpointer user_data)
+void contacts_list_row_selected_cb(GtkListBox *box, GtkListBoxRow *row, gpointer user_data)
 {
-	GtkTreeSelection *selection = gtk_tree_view_get_selection(view);
-	GtkTreeModel *model = NULL;
-	GtkTreeIter iter;
+	GList *childrens = gtk_container_get_children(GTK_CONTAINER(row));
+	GtkWidget *child;
+	struct contact *contact;
 
-	if (gtk_tree_selection_count_selected_rows(selection) <= 1) {
-		GtkTreePath *path;
-
-		if (step == GTK_MOVEMENT_DISPLAY_LINES) {
-			gtk_tree_view_get_cursor(view, &path, NULL);
-
-			if (path == NULL) {
-				return FALSE;
-			}
-
-			if (direction == 1) {
-				gtk_tree_path_next(path);
-			} else {
-				gtk_tree_path_prev(path);
-			}
-
-			model = gtk_tree_view_get_model(view);
-			if (gtk_tree_model_get_iter(model, &iter, path)) {
-				struct contact *contact;
-
-				gtk_tree_model_get(model, &iter, 2, &contact, -1);
-				contacts_update_details(contact);
-			}
-			gtk_tree_path_free(path);
-		}
+	if (!childrens || !childrens->data) {
+		return;
 	}
 
-	return FALSE;
-}
+	child = childrens->data;
 
-GtkWidget *contacts_list_view(GtkWidget *entry)
-{
-	GtkListStore *list_store;
-	GtkTreeModel *tree_model;
-	GtkCellRenderer *renderer;
-	GtkTreeViewColumn *photo_column;
-	GtkTreeViewColumn *name_column;
-	GtkWidget *view;
+	contact = g_object_get_data(G_OBJECT(child), "contact");
 
-	view = gtk_tree_view_new();
-	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(view), FALSE);
-
-	list_store = gtk_list_store_new(3,
-	                                GDK_TYPE_PIXBUF,
-	                                G_TYPE_STRING,
-	                                G_TYPE_POINTER);
-
-	tree_model = GTK_TREE_MODEL(list_store);
-
-	gtk_tree_view_set_model(GTK_TREE_VIEW(view), GTK_TREE_MODEL(tree_model));
-
-	g_signal_connect(entry, "changed", G_CALLBACK(search_entry_changed), view);
-
-	renderer = gtk_cell_renderer_pixbuf_new();
-	photo_column = gtk_tree_view_column_new_with_attributes(_("Photo"), renderer, "pixbuf", 0, NULL);
-	gtk_tree_view_append_column(GTK_TREE_VIEW(view), photo_column);
-
-	renderer = gtk_cell_renderer_text_new();
-	g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, NULL);
-	name_column = gtk_tree_view_column_new_with_attributes(_("Name"), renderer, "text", 1, NULL);
-	gtk_tree_view_append_column(GTK_TREE_VIEW(view), name_column);
-
-	g_signal_connect(view, "button-press-event", G_CALLBACK(contacts_list_button_press_event_cb), list_store);
-	g_signal_connect(view, "move-cursor", (GCallback) contacts_list_move_cursor_cb, list_store);
-	contacts_fill_list(list_store, NULL);
-
-	return view;
-}
-
-void contacts_select(GtkListStore *store, struct contact *contact)
-{
-	GtkTreeIter iter;
-	GtkTreeModel *model = GTK_TREE_MODEL(store);
-	gboolean valid = gtk_tree_model_get_iter_first(model, &iter);
-	struct contact *iter_contact;
-
-	while (valid) {
-		gtk_tree_model_get(model, &iter, 2, &iter_contact, -1);
-		if (iter_contact == contact) {
-			contacts_update_details(contact);
-			break;
-		}
-		valid = gtk_tree_model_iter_next(model, &iter);
+	if (!contact) {
+		return;
 	}
+
+	contacts_update_details(contact);
 }
 
 void button_add_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 	GtkWidget *view = user_data;
-	GtkListStore *list_store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(view)));
 	struct contact *contact = g_slice_new0(struct contact);
 
 	contact->name = g_strdup("");
 	contact_editor(contact, contacts_window);
 
-	gtk_list_store_clear(list_store);
-	contacts_fill_list(list_store, NULL);
-	contacts_select(list_store, contact);
+	contacts_clear(view);
+	contacts_fill_list(view, NULL);
 	contacts_clear_details();
 }
 
 void button_edit_clicked_cb(GtkWidget *button, gpointer user_data)
 {
-	GtkTreeIter iter;
-	GtkTreeModel *model;
-	GtkWidget *view = user_data;
-	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(view));
+	GtkListBoxRow *row = gtk_list_box_get_selected_row(GTK_LIST_BOX(user_data));
+	GtkWidget *child;
+	struct contact *contact;
 
-	if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
-		struct contact *contact;
-		GtkListStore *list_store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(view)));
-
-		gtk_tree_model_get(model, &iter, 2, &contact, -1);
-		contact_editor(contact, contacts_window);
-
-		gtk_list_store_clear(list_store);
-		contacts_fill_list(list_store, NULL);
-		contacts_clear_details();
-		contacts_select(list_store, contact);
+	if (!row) {
+		return;
 	}
+
+	child = gtk_container_get_children(GTK_CONTAINER(row))->data;
+	if (!child) {
+		return;
+	}
+
+	contact = g_object_get_data(G_OBJECT(child), "contact");
+	if (!contact) {
+		return;
+	}
+
+	contact_editor(contact, contacts_window);
+
+	contacts_clear(user_data);
+
+	contacts_fill_list(user_data, NULL);
+	contacts_clear_details();
+
+	contacts_update_details(contact);
 }
 
 void button_remove_clicked_cb(GtkWidget *button, gpointer user_data)
 {
-	GtkWidget *view = user_data;
-	GtkTreeIter iter;
-	GtkTreeModel *model;
-	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(view));
+	GtkListBoxRow *row = gtk_list_box_get_selected_row(GTK_LIST_BOX(user_data));
+	GtkWidget *child = gtk_container_get_children(GTK_CONTAINER(row))->data;
+	struct contact *contact = g_object_get_data(G_OBJECT(child), "contact");
+	GtkWidget *dialog;
+	gchar *tmp;
 
-	if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
-		GValue name = {0};
-		struct contact *contact;
-		GtkListStore *list_store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(view)));
+	dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", TRUE, NULL);
 
-		gtk_tree_model_get_value(model, &iter, 1, &name);
-		gtk_tree_model_get(model, &iter, 2, &contact, -1);
+	gtk_window_set_title(GTK_WINDOW(dialog), _("Contact"));
+	gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(contacts_window));
+	gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
+	GtkWidget *remove = gtk_dialog_add_button(GTK_DIALOG(dialog), _("Delete"), GTK_RESPONSE_OK);
+	gtk_style_context_add_class(gtk_widget_get_style_context(remove), GTK_STYLE_CLASS_DESTRUCTIVE_ACTION);
+	GtkWidget *content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 
-		GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(contacts_window), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Do you want to delete the entry '%s'?"), g_value_get_string(&name));
-		gtk_window_set_title(GTK_WINDOW(dialog), _("Delete entry"));
-		gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
-		gint result = gtk_dialog_run(GTK_DIALOG(dialog));
-		gtk_widget_destroy(dialog);
+	tmp = g_strdup_printf(_("Do you want to delete the entry '%s'?"), contact->name);
+	GtkWidget *label = gtk_label_new(tmp);
+	gtk_container_add(GTK_CONTAINER(content), label);
 
-		if (result != GTK_RESPONSE_OK) {
-			return;
-		}
+	gtk_widget_set_margin_start(label, 18);
+	gtk_widget_set_margin_end(label, 18);
+	gtk_widget_set_margin_top(label, 18);
+	gtk_widget_set_margin_bottom(label, 18);
+	gtk_widget_show_all(content);
+	g_free(tmp);
 
-		address_book_remove_contact(contact);
-		gtk_list_store_clear(list_store);
-		contacts_fill_list(list_store, NULL);
-		contacts_update_details(NULL);
+	gint result = gtk_dialog_run(GTK_DIALOG(dialog));
+	gtk_widget_destroy(dialog);
 
-		/* Remove contact */
-		g_value_unset(&name);
+	if (result != GTK_RESPONSE_OK) {
+		return;
 	}
-}
 
-void button_reload_clicked_cb(GtkWidget *button, gpointer user_data)
-{
-	GtkWidget *view = user_data;
-	GtkListStore *list_store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(view)));
+	address_book_remove_contact(contact);
 
-	address_book_reload_contacts();
-
-	gtk_list_store_clear(list_store);
-	contacts_fill_list(list_store, NULL);
+	contacts_clear(user_data);
+	contacts_fill_list(user_data, NULL);
 	contacts_update_details(NULL);
 }
 
@@ -443,6 +357,7 @@ static gint contacts_window_delete_event_cb(GtkWidget *widget, GdkEvent event, g
 	contacts_window = NULL;
 	contacts_window_grid = NULL;
 	detail_grid = NULL;
+
 	return FALSE;
 }
 
@@ -453,7 +368,6 @@ void contacts(void)
 	GtkWidget *button_add;
 	GtkWidget *button_remove;
 	GtkWidget *button_edit;
-	/*GtkWidget *button_reload;*/
 	GtkWidget *contacts_view;
 
 	if (contacts_window) {
@@ -511,48 +425,29 @@ void contacts(void)
 	gtk_grid_set_column_spacing(GTK_GRID(contacts_window_grid), 5);
 
 	entry = gtk_search_entry_new();
-	g_signal_connect(G_OBJECT(entry), "icon-release", G_CALLBACK(entry_icon_released), NULL);
 	gtk_widget_set_vexpand(entry, FALSE);
-	gtk_widget_set_margin(entry, 0, 5, 0, 5);
+	gtk_widget_set_margin(entry, 5, 5, 5, 0);
 	gtk_grid_attach(GTK_GRID(contacts_window_grid), entry, 0, 0, 1, 1);
 
 	scrolled = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(scrolled), GTK_SHADOW_IN);
 	gtk_widget_set_vexpand(scrolled, TRUE);
 
-	contacts_view = contacts_list_view(entry);
+	contacts_view = gtk_list_box_new();
+	g_signal_connect(contacts_view, "row-selected", (GCallback) contacts_list_row_selected_cb, NULL);
+
+	contacts_fill_list(contacts_view, NULL);
 
 	gtk_container_add(GTK_CONTAINER(scrolled), contacts_view);
 	gtk_widget_set_size_request(scrolled, 300, -1);
 	gtk_grid_attach(GTK_GRID(contacts_window_grid), scrolled, 0, 1, 1, 1);
 
-	/*action_grid = gtk_grid_new();
-
-	button_edit = gtk_button_new();
-	image = get_icon(APP_ICON_EDIT, GTK_ICON_SIZE_MENU);
-	gtk_button_set_image(GTK_BUTTON(button_edit), image);
-	gtk_button_set_relief(GTK_BUTTON(button_edit), GTK_RELIEF_NONE);
-	gtk_widget_set_tooltip_text(button_edit, _("Edit selected contact"));
-	g_signal_connect(button_edit, "clicked", G_CALLBACK(button_edit_clicked_cb), contacts_view);
-	gtk_grid_attach(GTK_GRID(action_grid), button_edit, 2, 0, 1, 1);
-
-
-	button_reload = gtk_button_new();
-	image = get_icon(APP_ICON_REFRESH, GTK_ICON_SIZE_MENU);
-	gtk_button_set_image(GTK_BUTTON(button_reload), image);
-	gtk_button_set_relief(GTK_BUTTON(button_reload), GTK_RELIEF_NONE);
-	gtk_widget_set_tooltip_text(button_reload, _("Reload address book"));
-	g_signal_connect(button_reload, "clicked", G_CALLBACK(button_reload_clicked_cb), contacts_view);
-	gtk_grid_attach(GTK_GRID(action_grid), button_reload, 3, 0, 1, 1);
-
-	gtk_grid_attach(GTK_GRID(contacts_window_grid), action_grid, 0, 2, 1, 1);*/
-
 	if (!address_book_can_save()) {
 		gtk_widget_set_sensitive(button_add, FALSE);
-		//gtk_widget_set_sensitive(button_edit, FALSE);
 		gtk_widget_set_sensitive(button_remove, FALSE);
 	}
 
+	g_signal_connect(entry, "search-changed", G_CALLBACK(search_entry_search_changed_cb), contacts_view);
 	g_signal_connect(button_add, "clicked", G_CALLBACK(button_add_clicked_cb), contacts_view);
 	g_signal_connect(button_remove, "clicked", G_CALLBACK(button_remove_clicked_cb), contacts_view);
 	g_signal_connect(button_edit, "clicked", G_CALLBACK(button_edit_clicked_cb), contacts_view);

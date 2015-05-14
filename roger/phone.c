@@ -611,7 +611,6 @@ static void phone_search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer
 
 		for (numbers = contact->numbers; numbers != NULL; numbers = numbers->next) {
 			struct phone_number *number = numbers->data;
-			GdkPixbuf *buf = image_get_scaled(contact ? contact->image : NULL, 32, 32);
 			GtkWidget *image;
 			gchar *num_str;
 			gchar *type;
@@ -625,7 +624,14 @@ static void phone_search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer
 			g_object_set_data(G_OBJECT(grid), "contact", contact);
 			g_object_set_data(G_OBJECT(grid), "number", number->number);
 
-			image = gtk_image_new_from_pixbuf(buf);
+			if (contact && contact->image) {
+				GdkPixbuf *buf = image_get_scaled(contact->image, 32, 32);
+
+				image = gtk_image_new_from_pixbuf(buf);
+			} else {
+				image = gtk_image_new_from_icon_name("avatar-default-symbolic", GTK_ICON_SIZE_DND);
+			}
+
 			gtk_grid_attach(GTK_GRID(grid), image, 0, 0, 1, 2);
 
 			label = gtk_label_new(NULL);

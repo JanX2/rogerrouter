@@ -31,7 +31,7 @@
 #include <roger/uitools.h>
 #include <roger/phone.h>
 #include <roger/icons.h>
-
+#include <roger/journal.h>
 
 static GtkWidget *edit_dialog = NULL;
 static GtkWidget *edit_widget = NULL;
@@ -175,7 +175,7 @@ void refresh_edit_dialog(struct contact *contact)
 	gtk_widget_set_vexpand(scrolled, TRUE);
 	gtk_widget_set_hexpand(scrolled, TRUE);
 
-	gtk_widget_set_margin(grid, 10, 20, 10, 20);
+	gtk_widget_set_margin(grid, 18, 18, 18, 18);
 
 	gtk_container_add(GTK_CONTAINER(scrolled), grid);
 
@@ -194,8 +194,13 @@ void refresh_edit_dialog(struct contact *contact)
 	gtk_widget_set_hexpand(detail_name_label, TRUE);
 	gtk_grid_attach(GTK_GRID(grid), detail_name_label, 1, 0, 1, 1);
 
-	GdkPixbuf *buf = image_get_scaled(contact ? contact->image : NULL, 96, 96);
-	gtk_image_set_from_pixbuf(GTK_IMAGE(detail_photo_image), buf);
+	if (contact && contact->image) {
+		GdkPixbuf *buf = image_get_scaled(contact->image, 96, 96);
+		gtk_image_set_from_pixbuf(GTK_IMAGE(detail_photo_image), buf);
+	} else {
+		gtk_image_set_from_icon_name(GTK_IMAGE(detail_photo_image), AVATAR_DEFAULT, GTK_ICON_SIZE_DIALOG);
+		gtk_image_set_pixel_size(GTK_IMAGE(detail_photo_image), 96);
+	}
 
 	for (numbers = contact ? contact->numbers : NULL; numbers != NULL; numbers = numbers->next) {
 		GtkWidget *number;
@@ -359,7 +364,25 @@ void add_detail_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 
 void contact_editor(struct contact *contact, GtkWidget *parent)
 {
-	edit_dialog = gtk_dialog_new_with_buttons(_("Edit contact"), NULL, GTK_DIALOG_MODAL, _("_Save"), GTK_RESPONSE_ACCEPT, _("Cancel"), GTK_RESPONSE_REJECT, NULL);
+	//edit_dialog = gtk_dialog_new_with_buttons(_("Edit contact"), NULL, GTK_DIALOG_MODAL, _("_Save"), GTK_RESPONSE_ACCEPT, _("Cancel"), GTK_RESPONSE_REJECT, NULL);
+	GtkWidget *dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", TRUE, NULL);
+
+	gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+	gtk_window_set_title(GTK_WINDOW(dialog), _("Contact"));
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(journal_get_window()));
+	gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
+	GtkWidget *save = gtk_dialog_add_button(GTK_DIALOG(dialog), _("Save"), GTK_RESPONSE_OK);
+	gtk_style_context_add_class(gtk_widget_get_style_context(save), GTK_STYLE_CLASS_SUGGESTED_ACTION);
+	/*GtkWidget *content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+ 
+        gtk_widget_set_margin_start(label, 18);
+        gtk_widget_set_margin_end(label, 18);
+        gtk_widget_set_margin_top(label, 18);
+        gtk_widget_set_margin_bottom(label, 18);
+        gtk_widget_show_all(content);
+        g_free(tmp);*/
+
+	edit_dialog = dialog;
 
 	refresh_edit_dialog(contact);
 
