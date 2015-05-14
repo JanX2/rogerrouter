@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-14 12:53+0200\n"
+"POT-Creation-Date: 2015-05-15 01:15+0200\n"
 "PO-Revision-Date: 2015-01-28 20:28+0100\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <jan.brummer@tabos.org>\n"
@@ -31,7 +31,7 @@ msgid "Error"
 msgstr "Fehler"
 
 #. Contacts
-#: ../roger/application.c:249 ../roger/contacts.c:413 ../roger/contacts.c:471
+#: ../roger/application.c:249 ../roger/contacts.c:489 ../roger/contacts.c:496
 #: ../roger/plugins/statusicon/gtk.c:204
 #: ../roger/plugins/indicator/indicator.c:224
 msgid "Contacts"
@@ -164,7 +164,7 @@ msgid " on: "
 msgstr " an: "
 
 #. In every case add also an other button + entry box
-#: ../roger/assistant.c:331 ../roger/contacts.c:175
+#: ../roger/assistant.c:331 ../roger/contacts.c:170
 msgid "Other"
 msgstr "Andere"
 
@@ -217,73 +217,81 @@ msgstr "Zusammenfassung"
 msgid " Profile Assistant"
 msgstr " Profilassistent"
 
-#: ../roger/contacts.c:126 ../roger/contacts.c:169 ../roger/contact_edit.c:213
+#: ../roger/contacts.c:121 ../roger/contacts.c:164 ../roger/contact_edit.c:213
 #: ../roger/contact_edit.c:251
 msgid "Private"
 msgstr "Privat"
 
-#: ../roger/contacts.c:129 ../roger/contacts.c:172 ../roger/contact_edit.c:214
+#: ../roger/contacts.c:124 ../roger/contacts.c:167 ../roger/contact_edit.c:214
 #: ../roger/contact_edit.c:252
 msgid "Business"
 msgstr "Geschäftlich"
 
-#: ../roger/contacts.c:132 ../roger/contact_edit.c:215
+#: ../roger/contacts.c:127 ../roger/contact_edit.c:215
 msgid "Mobile"
 msgstr "Mobil"
 
-#: ../roger/contacts.c:135 ../roger/contact_edit.c:216
+#: ../roger/contacts.c:130 ../roger/contact_edit.c:216
 msgid "Private Fax"
 msgstr "Privates Fax"
 
-#: ../roger/contacts.c:138 ../roger/contact_edit.c:217
+#: ../roger/contacts.c:133 ../roger/contact_edit.c:217
 msgid "Business Fax"
 msgstr "Geschäftliches Fax"
 
-#: ../roger/contacts.c:141 ../roger/contact_edit.c:218
+#: ../roger/contacts.c:136 ../roger/contact_edit.c:218
 msgid "Pager"
 msgstr "Pager"
 
-#: ../roger/contacts.c:144 ../roger/phone.c:418
+#: ../roger/contacts.c:139 ../roger/phone.c:418
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: ../roger/contacts.c:150
+#: ../roger/contacts.c:145
 msgid "Dial number"
 msgstr "Nummer wählen"
 
-#: ../roger/contacts.c:336 ../roger/contact_edit.c:371 ../roger/journal.c:690
+#: ../roger/contacts.c:419 ../roger/contact_edit.c:371 ../roger/journal.c:690
 msgid "Contact"
 msgstr "Kontakt"
 
-#: ../roger/contacts.c:339 ../roger/contact_edit.c:373 ../roger/journal.c:577
+#. Add cancel button
+#: ../roger/contacts.c:424 ../roger/contact_edit.c:373 ../roger/journal.c:577
 #: ../roger/journal.c:645 ../roger/journal.c:693
 msgid "Cancel"
 msgstr "A_bbrechen"
 
-#: ../roger/contacts.c:340 ../roger/journal.c:578 ../roger/journal.c:646
+#. Add remove button
+#: ../roger/contacts.c:427 ../roger/journal.c:578 ../roger/journal.c:646
 msgid "Delete"
 msgstr "Löschen"
 
-#: ../roger/contacts.c:344
+#. Create label
+#: ../roger/contacts.c:434
 #, c-format
 msgid "Do you want to delete the entry '%s'?"
 msgstr "Wollen Sie den Eintrag '%s' löschen?"
 
-#: ../roger/contacts.c:423
+#: ../roger/contacts.c:507
 msgid "Add new contact"
 msgstr "Neuen Kontakt hinzufügen"
 
-#: ../roger/contacts.c:427
+#: ../roger/contacts.c:512
 msgid "Remove selected contact"
 msgstr "Ausgewählten Kontakt löschen"
 
-#: ../roger/contacts.c:430
+#. Edit button
+#: ../roger/contacts.c:516
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: ../roger/contacts.c:431
+#: ../roger/contacts.c:517
 msgid "Edit selected contact"
 msgstr "Ausgewählten Kontakt editieren"
+
+#: ../roger/contacts.c:530
+msgid "Type to search"
+msgstr "Tippen zum Suchen"
 
 #: ../roger/contact_edit.c:128
 msgid "Open image"
