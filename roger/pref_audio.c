@@ -113,6 +113,7 @@ static void plugin_combobox_changed_cb(GtkComboBox *box, gpointer user_data) {
  */
 GtkWidget *pref_page_audio(void)
 {
+	GtkWidget *g;
 	GtkWidget *grid = gtk_grid_new();
 	GtkWidget *plugin_label;
 	GtkWidget *output_label;
@@ -172,5 +173,8 @@ GtkWidget *pref_page_audio(void)
 		}
 	}
 
-	return pref_group_create(grid, _("Audio"), TRUE, TRUE);
+	g = pref_group_create(grid, _("Audio"), TRUE, TRUE);
+	gtk_widget_set_margin(g, 6, 6, 6, 6);
+
+	return g;
 }

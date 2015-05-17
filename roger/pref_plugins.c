@@ -35,6 +35,7 @@
  */
 GtkWidget *pref_page_plugins(void)
 {
+	GtkWidget *grid;
 	GtkWidget *plugins = peas_gtk_plugin_manager_new(engine);
 
 	gtk_widget_set_hexpand(plugins, TRUE);
@@ -46,5 +47,8 @@ GtkWidget *pref_page_plugins(void)
 	peas_gtk_plugin_manager_view_set_show_builtin(PEAS_GTK_PLUGIN_MANAGER_VIEW(peas_gtk_plugin_manager_get_view(PEAS_GTK_PLUGIN_MANAGER(plugins))), TRUE);
 #endif
 
-	return pref_group_create(plugins, _("Choose which plugins should be loaded at startup"), TRUE, TRUE);
+	grid = pref_group_create(plugins, _("Choose which plugins should be loaded at startup"), TRUE, TRUE);
+	gtk_widget_set_margin(grid, 6, 6, 6, 6);
+
+	return grid;
 }

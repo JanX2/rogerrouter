@@ -60,9 +60,9 @@ static GtkWidget *pref_page_router_phone(void)
 	 */
 	group = gtk_grid_new();
 
-	/* Set standard spacing to 5 */
-	gtk_grid_set_row_spacing(GTK_GRID(group), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(group), 15);
+	/* Set standard spacing */
+	gtk_grid_set_row_spacing(GTK_GRID(group), 6);
+	gtk_grid_set_column_spacing(GTK_GRID(group), 12);
 
 	/* Line access code */
 	line_access_code_label = ui_label_new(_("Line access code"));
@@ -139,8 +139,14 @@ GtkWidget *pref_page_prefix(void)
 
 	grid = gtk_grid_new();
 
+	/* Set standard spacing */
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 18);
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 18);
+
 	group = pref_page_router_phone();
 	gtk_grid_attach(GTK_GRID(grid), group, 0, 1, 1, 1);
+
+	gtk_widget_set_margin(grid, 6, 6, 6, 6);
 
 	return grid;
 }

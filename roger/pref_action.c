@@ -160,7 +160,7 @@ gboolean action_edit(struct action *action)
 	gint result;
 	gboolean changed = FALSE;
 
-	dialog = gtk_dialog_new_with_buttons(_("Action"), pref_get_window(), GTK_DIALOG_MODAL, _("_Apply"), GTK_RESPONSE_APPLY, _("_Cancel"), GTK_RESPONSE_CANCEL, NULL);
+	dialog = gtk_dialog_new_with_buttons(_("Action"), pref_get_window(), GTK_DIALOG_MODAL | GTK_DIALOG_USE_HEADER_BAR, _("_Apply"), GTK_RESPONSE_APPLY, _("_Cancel"), GTK_RESPONSE_CANCEL, NULL);
 
 	/**
 	 * General:
@@ -267,6 +267,7 @@ gboolean action_edit(struct action *action)
 			selected_action = action;
 		}
 
+		g_debug("Name: '%s'", gtk_entry_get_text(GTK_ENTRY(name_entry)));
 		action = action_modify(action, gtk_entry_get_text(GTK_ENTRY(name_entry)), gtk_entry_get_text(GTK_ENTRY(description_entry)), gtk_entry_get_text(GTK_ENTRY(exec_entry)), selected_numbers);
 		action_commit(profile_get_active());
 
@@ -306,7 +307,7 @@ static void pref_action_remove_button_clicked_cb(GtkWidget *widget, gpointer dat
 	gtk_tree_model_get_value(model, &selected_iter, 1, &ptr);
 
 	action = g_value_get_pointer(&ptr);
-	GtkWidget *remove_dialog = gtk_message_dialog_new(pref_get_window(), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Do you want to delete the action '%s'?"), action->name);
+	GtkWidget *remove_dialog = gtk_message_dialog_new(pref_get_window(), GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Do you want to delete the action '%s'?"), action->name);
 	gtk_window_set_title(GTK_WINDOW(remove_dialog), _("Delete action"));
 	gtk_window_set_position(GTK_WINDOW(remove_dialog), GTK_WIN_POS_CENTER_ON_PARENT);
 
@@ -373,22 +374,24 @@ static gboolean view_cursor_changed_cb(GtkTreeView *view, gpointer user_data)
 		guint flags;
 		gtk_tree_model_get(model, &iter, 1, &action, -1);
 
-		gtk_label_set_text(GTK_LABEL(user_data), action->description);
-
 		selected_action = action;
+		if (action) {
+			gtk_label_set_text(GTK_LABEL(user_data), action->description);
 
-		/* Store flags as otherwise we would mix up the settings */
-		flags = selected_action->flags;
 
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(incoming_call_rings_toggle), flags & ACTION_INCOMING_RING);
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(incoming_call_begins_toggle), flags & ACTION_INCOMING_BEGIN);
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(incoming_call_ends_toggle), flags & ACTION_INCOMING_END);
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(outgoing_call_begins_toggle), flags & ACTION_OUTGOING_BEGIN);
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(outgoing_call_ends_toggle), flags & ACTION_OUTGOING_END);
+			/* Store flags as otherwise we would mix up the settings */
+			flags = selected_action->flags;
 
-		set_toggle_buttons(TRUE);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(incoming_call_rings_toggle), flags & ACTION_INCOMING_RING);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(incoming_call_begins_toggle), flags & ACTION_INCOMING_BEGIN);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(incoming_call_ends_toggle), flags & ACTION_INCOMING_END);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(outgoing_call_begins_toggle), flags & ACTION_OUTGOING_BEGIN);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(outgoing_call_ends_toggle), flags & ACTION_OUTGOING_END);
 
-		selected_action = action;
+			set_toggle_buttons(TRUE);
+		} else {
+			set_toggle_buttons(FALSE);
+		}
 	}
 
 	return FALSE;
@@ -441,6 +444,7 @@ void action_toggle_cb(GtkToggleButton *button, gpointer user_data)
 
 GtkWidget *pref_page_action(void)
 {
+	GtkWidget *g;
 	GtkWidget *grid = gtk_grid_new();
 	GtkWidget *scroll_window;
 	GtkWidget *view;
@@ -475,9 +479,9 @@ GtkWidget *pref_page_action(void)
 	 * Just another narrator
 	 */
 
-	/* Set standard spacing to 5 */
-	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
+	/* Set standard spacing */
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 6);
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 12);
 
 	/* Scrolled window */
 	scroll_window = gtk_scrolled_window_new(NULL, NULL);
@@ -584,5 +588,8 @@ GtkWidget *pref_page_action(void)
 
 	action_refresh_list(list_store);
 
-	return pref_group_create(grid, _("Define actions"), TRUE, TRUE);
+	g = pref_group_create(grid, _("Define actions"), TRUE, TRUE);
+	gtk_widget_set_margin(g, 6, 6, 6, 6);
+
+	return g;
 }

@@ -50,9 +50,9 @@ GtkWidget *pref_page_softphone(void)
 	 */
 
 	/* General */
-	/* Set standard spacing to 5 */
-	gtk_grid_set_row_spacing(GTK_GRID(general_grid), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(general_grid), 15);
+	/* Set standard spacing */
+	gtk_grid_set_row_spacing(GTK_GRID(general_grid), 6);
+	gtk_grid_set_column_spacing(GTK_GRID(general_grid), 12);
 
 	phone_number_label = ui_label_new(_("MSN"));
 	gtk_grid_attach(GTK_GRID(general_grid), phone_number_label, 0, 0, 1, 1);
@@ -82,6 +82,8 @@ GtkWidget *pref_page_softphone(void)
 	gtk_grid_attach(GTK_GRID(general_grid), controller_combobox, 1, 1, 1, 1);
 
 	gtk_grid_attach(GTK_GRID(grid), pref_group_create(general_grid, _("General"), TRUE, TRUE), 0, 0, 1, 1);
+
+	gtk_widget_set_margin(grid, 6, 6, 6, 6);
 
 	return grid;
 }

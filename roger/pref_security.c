@@ -32,6 +32,7 @@
  */
 GtkWidget *pref_page_security(void)
 {
+	GtkWidget *g;
 	GtkWidget *grid = gtk_grid_new();
 	GtkWidget *pm_label;
 	GtkWidget *pm_combobox;
@@ -62,5 +63,8 @@ GtkWidget *pref_page_security(void)
 
 	g_settings_bind(profile_get_active()->settings, "password-manager", pm_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 
-	return pref_group_create(grid, _("Security"), TRUE, TRUE);
+	g = pref_group_create(grid, _("Security"), TRUE, TRUE);
+	gtk_widget_set_margin(g, 6, 6, 6, 6);
+
+	return g;
 }

@@ -169,9 +169,9 @@ static GtkWidget *pref_page_router_settings(void)
 	 */
 	group = gtk_grid_new();
 
-	/* Set standard spacing to 5 */
-	gtk_grid_set_row_spacing(GTK_GRID(group), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(group), 15);
+	/* Set standard spacing */
+	gtk_grid_set_row_spacing(GTK_GRID(group), 6);
+	gtk_grid_set_column_spacing(GTK_GRID(group), 12);
 
 	/* Host */
 	host_label = ui_label_new(_("Host"));
@@ -281,9 +281,9 @@ static GtkWidget *pref_page_router_information(void)
 	 */
 	group = gtk_grid_new();
 
-	/* Set standard spacing to 5 */
-	gtk_grid_set_row_spacing(GTK_GRID(group), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(group), 5);
+	/* Set standard spacing */
+	gtk_grid_set_row_spacing(GTK_GRID(group), 6);
+	gtk_grid_set_column_spacing(GTK_GRID(group), 12);
 
 	space = gtk_label_new("");
 	gtk_widget_set_vexpand(space, TRUE);
@@ -319,11 +319,17 @@ GtkWidget *pref_page_router(void)
 
 	grid = gtk_grid_new();
 
+	/* Set standard spacing */
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 18);
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 18);
+
 	group = pref_page_router_settings();
 	gtk_grid_attach(GTK_GRID(grid), group, 0, 0, 1, 1);
 
 	group = pref_page_router_information();
 	gtk_grid_attach(GTK_GRID(grid), group, 0, 2, 1, 1);
+
+	gtk_widget_set_margin(grid, 6, 6, 6, 6);
 
 	return grid;
 }

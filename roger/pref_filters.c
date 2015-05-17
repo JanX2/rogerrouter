@@ -186,9 +186,9 @@ static void pref_filters_add_rule(gpointer grid_ptr, struct filter_rule *rule)
 
 	own_grid = gtk_grid_new();
 
-	/* Set standard spacing to 5 */
-	gtk_grid_set_row_spacing(GTK_GRID(own_grid), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(own_grid), 15);
+	/* Set standard spacing */
+	gtk_grid_set_row_spacing(GTK_GRID(own_grid), 6);
+	gtk_grid_set_column_spacing(GTK_GRID(own_grid), 12);
 	//gtk_grid_set_column_homogeneous(GTK_GRID(own_grid), TRUE);
 
 	g_object_set_data(G_OBJECT(own_grid), "rule", rule);
@@ -275,15 +275,17 @@ void filter_edit_cb(GtkWidget *widget, gpointer data)
 	GtkTreeModel *model;
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(data));
 	struct filter *filter;
-	GtkWidget *edit_dialog;
+	GtkWidget *dialog;
 	GtkWidget *grid;
+	GtkWidget *content;
 	GtkWidget *label;
 	GtkWidget *entry;
+	GtkWidget *save;
 	GSList *list;
 	struct filter_rule *rule;
-	GtkWidget *box;
 	GValue ptr = {0};
 	GtkListStore *list_store;
+	gint result;
 
 	if (!gtk_tree_selection_get_selected(selection, &model, &selected_iter)) {
 		return;
@@ -294,40 +296,66 @@ void filter_edit_cb(GtkWidget *widget, gpointer data)
 	filter = g_value_get_pointer(&ptr);
 	g_value_unset(&ptr);
 
-	edit_dialog = gtk_dialog_new_with_buttons(_("Edit filter"), pref_get_window(), GTK_DIALOG_DESTROY_WITH_PARENT, _("_Close"), GTK_RESPONSE_CLOSE, NULL);
+	//dialog = gtk_dialog_new_with_buttons(_("Edit filter"), pref_get_window(), GTK_DIALOG_DESTROY_WITH_PARENT, _("_Close"), GTK_RESPONSE_CLOSE, NULL);
+
+	dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", TRUE, NULL);
+
+	gtk_window_set_title(GTK_WINDOW(dialog), _("Edit filter"));
+	gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(pref_get_window()));
+	gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
+	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
+
+	save = gtk_dialog_add_button(GTK_DIALOG(dialog), _("Save"), GTK_RESPONSE_OK);
+	gtk_style_context_add_class(gtk_widget_get_style_context(save), GTK_STYLE_CLASS_SUGGESTED_ACTION);
+
+	content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 
 	grid = gtk_grid_new();
+	gtk_container_add(GTK_CONTAINER(content), grid);
+	gtk_widget_set_margin(grid, 18, 18, 18, 18);
 
-	/* Set standard spacing to 5 */
-	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(grid), 15);
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 6);
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 12);
 
-	label = gtk_label_new(_("Enter filter name"));
+	label = ui_label_new(_("Name:"));
+	gtk_widget_set_margin(label, 0, 0, 0, 6);
+	gtk_grid_attach(GTK_GRID(grid), label, 0, table_y, 1, 1);
 
-	table_y = 0;
-	gtk_grid_attach(GTK_GRID(grid), GTK_WIDGET(label), 0, table_y, 1, 1);
 	entry = gtk_entry_new();
-	gtk_widget_set_hexpand(entry, TRUE);
-	gtk_grid_attach(GTK_GRID(grid), GTK_WIDGET(entry), 1, table_y, 1, 1);
 	gtk_entry_set_text(GTK_ENTRY(entry), filter->name);
+	gtk_widget_set_margin(entry, 0, 0, 0, 6);
+	gtk_widget_set_hexpand(entry, TRUE);
+	gtk_grid_attach(GTK_GRID(grid), entry, 1, table_y, 1, 1);
 	table_y++;
+
+	GtkWidget *type_in_grid = gtk_grid_new();
+	gtk_grid_set_row_spacing(GTK_GRID(type_in_grid), 6);
+	gtk_grid_set_column_spacing(GTK_GRID(type_in_grid), 12);
+
+	GtkWidget *type_grid = pref_group_create(type_in_grid, _("Rules"), TRUE, FALSE);
+	gtk_grid_attach(GTK_GRID(grid), type_grid, 0, table_y, 2, 1);
+	table_y++;
+
+	//pref_filters_add_rule(type_in_grid, NULL);
 
 	pref_filters_current_rules = NULL;
 	for (list = filter->rules; list != NULL; list = list->next) {
 		rule = list->data;
 
-		pref_filters_add_rule(grid, rule);
+		pref_filters_add_rule(type_in_grid, rule);
 	}
 
 	pref_filters_current_rules = filter->rules;
 
 	gtk_widget_show_all(grid);
 
-	box = gtk_dialog_get_content_area(GTK_DIALOG(edit_dialog));
-	gtk_box_pack_start(GTK_BOX(box), grid, TRUE, TRUE, 5);
-	gtk_window_set_position(GTK_WINDOW(edit_dialog), GTK_WIN_POS_CENTER_ON_PARENT);
+	result = gtk_dialog_run(GTK_DIALOG(dialog));
 
-	gtk_dialog_run(GTK_DIALOG(edit_dialog));
+	if (result != GTK_RESPONSE_OK) {
+		gtk_widget_destroy(dialog);
+		return;
+	}
 
 	if (filter->name) {
 		g_free(filter->name);
@@ -336,7 +364,7 @@ void filter_edit_cb(GtkWidget *widget, gpointer data)
 
 	filter->rules = pref_filters_current_rules;
 
-	gtk_widget_destroy(edit_dialog);
+	gtk_widget_destroy(dialog);
 
 	model = gtk_tree_view_get_model(data);
 	list_store = GTK_LIST_STORE(model);
@@ -354,44 +382,66 @@ void filter_edit_cb(GtkWidget *widget, gpointer data)
  */
 void filter_add_cb(GtkWidget *widget, gpointer data)
 {
-	GtkWidget *add_dialog;
+	GtkWidget *dialog;
 	GtkWidget *grid;
 	GtkWidget *label;
 	GtkWidget *entry;
-	GtkWidget *box;
+	GtkWidget *add;
+	GtkWidget *content;
 	GtkListStore *list_store;
 	GtkTreeModel *model;
 	struct filter *filter;
 	gint result;
 
 	pref_filters_current_rules = NULL;
-	add_dialog = gtk_dialog_new_with_buttons(_("Add new filter"), pref_get_window(), GTK_DIALOG_DESTROY_WITH_PARENT, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_OK"), GTK_RESPONSE_OK, NULL);
+	//dialog = gtk_dialog_new_with_buttons(_("Add new filter"), pref_get_window(), GTK_DIALOG_DESTROY_WITH_PARENT, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_OK"), GTK_RESPONSE_OK, NULL);
+
+	dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", TRUE, NULL);
+
+	gtk_window_set_title(GTK_WINDOW(dialog), _("New filter"));
+	gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(pref_get_window()));
+	gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
+	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
+
+	add = gtk_dialog_add_button(GTK_DIALOG(dialog), _("Add"), GTK_RESPONSE_OK);
+	gtk_style_context_add_class(gtk_widget_get_style_context(add), GTK_STYLE_CLASS_SUGGESTED_ACTION);
+
+	content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 
 	grid = gtk_grid_new();
-	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(grid), 15);
+	gtk_container_add(GTK_CONTAINER(content), grid);
+	gtk_widget_set_margin(grid, 18, 18, 18, 18);
 
-	label = gtk_label_new(_("Enter filter name"));
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 6);
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 12);
+
+	label = ui_label_new(_("Name:"));
+	gtk_widget_set_margin(label, 0, 0, 0, 6);
 	gtk_grid_attach(GTK_GRID(grid), label, 0, table_y, 1, 1);
 
 	entry = gtk_entry_new();
+	gtk_widget_set_margin(entry, 0, 0, 0, 6);
 	gtk_widget_set_hexpand(entry, TRUE);
 	gtk_grid_attach(GTK_GRID(grid), entry, 1, table_y, 1, 1);
 	table_y++;
 
-	pref_filters_add_rule(grid, NULL);
+	GtkWidget *type_in_grid = gtk_grid_new();
+	gtk_grid_set_row_spacing(GTK_GRID(type_in_grid), 6);
+	gtk_grid_set_column_spacing(GTK_GRID(type_in_grid), 12);
+
+	GtkWidget *type_grid = pref_group_create(type_in_grid, _("Rules"), TRUE, FALSE);
+	gtk_grid_attach(GTK_GRID(grid), type_grid, 0, table_y, 2, 1);
+	table_y++;
+
+	pref_filters_add_rule(type_in_grid, NULL);
 
 	gtk_widget_show_all(grid);
 
-	box = gtk_dialog_get_content_area(GTK_DIALOG(add_dialog));
-	gtk_container_add(GTK_CONTAINER(box), grid);
-
-	gtk_window_set_position(GTK_WINDOW(add_dialog), GTK_WIN_POS_CENTER_ON_PARENT);
-
-	result = gtk_dialog_run(GTK_DIALOG(add_dialog));
+	result = gtk_dialog_run(GTK_DIALOG(dialog));
 
 	if (result != GTK_RESPONSE_OK) {
-		gtk_widget_destroy(add_dialog);
+		gtk_widget_destroy(dialog);
 		return;
 	}
 
@@ -401,7 +451,7 @@ void filter_add_cb(GtkWidget *widget, gpointer data)
 	filter->rules = pref_filters_current_rules;
 	filter_add(filter);
 
-	gtk_widget_destroy(add_dialog);
+	gtk_widget_destroy(dialog);
 
 	model = gtk_tree_view_get_model(data);
 	list_store = GTK_LIST_STORE(model);
@@ -433,7 +483,7 @@ void filter_remove_cb(GtkWidget *widget, gpointer data)
 	gtk_tree_model_get_value(model, &selected_iter, 1, &ptr);
 
 	filter = g_value_get_pointer(&ptr);
-	GtkWidget *remove_dialog = gtk_message_dialog_new(pref_get_window(), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Do you want to delete the filter '%s'?"), filter->name);
+	GtkWidget *remove_dialog = gtk_message_dialog_new(pref_get_window(), GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL | GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Do you want to delete the filter '%s'?"), filter->name);
 	gtk_window_set_title(GTK_WINDOW(remove_dialog), _("Delete filter"));
 	gtk_window_set_position(GTK_WINDOW(remove_dialog), GTK_WIN_POS_CENTER_ON_PARENT);
 
@@ -463,6 +513,7 @@ void filter_remove_cb(GtkWidget *widget, gpointer data)
  */
 GtkWidget *pref_page_filters(void)
 {
+	GtkWidget *grid;
 	GtkWidget *group;
 	GtkWidget *scroll_window;
 	GtkWidget *view;
@@ -482,8 +533,8 @@ GtkWidget *pref_page_filters(void)
 	group = gtk_grid_new();
 
 	/* Set standard spacing to 5 */
-	gtk_grid_set_row_spacing(GTK_GRID(group), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(group), 15);
+	gtk_grid_set_row_spacing(GTK_GRID(group), 6);
+	gtk_grid_set_column_spacing(GTK_GRID(group), 12);
 
 	/* Scroll window */
 	scroll_window = gtk_scrolled_window_new(NULL, NULL);
@@ -523,5 +574,8 @@ GtkWidget *pref_page_filters(void)
 	g_signal_connect(edit_button, "clicked", G_CALLBACK(filter_edit_cb), view);
 	gtk_grid_attach(GTK_GRID(group), edit_button, 2, 2, 1, 1);
 
-	return pref_group_create(group, _("Manage filters"), TRUE, FALSE);
+	grid = pref_group_create(group, _("Manage filters"), TRUE, FALSE);
+	gtk_widget_set_margin(grid, 6, 6, 6, 6);
+
+	return grid;
 }
