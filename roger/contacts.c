@@ -386,11 +386,7 @@ static void remove_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	GtkListBoxRow *row = gtk_list_box_get_selected_row(GTK_LIST_BOX(user_data));
 	GtkWidget *child;
 	GtkWidget *dialog;
-	GtkWidget *remove_button;
-	GtkWidget *content_area;
-	GtkWidget *label;
 	struct contact *contact;
-	gchar *tmp;
 	gint result;
 
 	/* Sanity check #1 */
@@ -414,31 +410,14 @@ static void remove_button_clicked_cb(GtkWidget *button, gpointer user_data)
 		return;
 	}
 
-	/* Create new dialog */
-	dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", TRUE, NULL);
-	gtk_window_set_title(GTK_WINDOW(dialog), _("Contact"));
-	gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
-	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(contacts_window));
+	/* Create dialog */
+	dialog = gtk_message_dialog_new(GTK_WINDOW(contacts_window), GTK_DIALOG_USE_HEADER_BAR | GTK_DIALOG_MODAL, GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE, _("Do you want to delete the entry '%s'?"), contact->name);
 
 	/* Add cancel button */
 	gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
 
 	/* Add remove button */
-	remove_button = gtk_dialog_add_button(GTK_DIALOG(dialog), _("Delete"), GTK_RESPONSE_OK);
-	gtk_style_context_add_class(gtk_widget_get_style_context(remove_button), GTK_STYLE_CLASS_DESTRUCTIVE_ACTION);
-
-	/* Get content area */
-	content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
-
-	/* Create label */
-	tmp = g_strdup_printf(_("Do you want to delete the entry '%s'?"), contact->name);
-	label = gtk_label_new(tmp);
-	g_free(tmp);
-
-	gtk_widget_set_margin(label, 18, 18, 18, 18);
-	gtk_container_add(GTK_CONTAINER(content_area), label);
-
-	gtk_widget_show_all(content_area);
+	gtk_dialog_add_button(GTK_DIALOG(dialog), _("Delete"), GTK_RESPONSE_OK);
 
 	result = gtk_dialog_run(GTK_DIALOG(dialog));
 	gtk_widget_destroy(dialog);

@@ -139,10 +139,10 @@ void preferences(void)
 	pref_notebook_add_page(notebook, page, _("Misc"));
 #endif
 
-	gtk_notebook_set_tab_pos(GTK_NOTEBOOK(notebook), GTK_POS_LEFT);
+	//gtk_notebook_set_tab_pos(GTK_NOTEBOOK(notebook), GTK_POS_LEFT);
 	gtk_container_add(GTK_CONTAINER(dialog), notebook);
 
-	gtk_window_set_default_size(GTK_WINDOW(dialog), 700, 430);
+	//gtk_window_set_default_size(GTK_WINDOW(dialog), 700, 430);
 
 	gtk_widget_show_all(dialog);
 }

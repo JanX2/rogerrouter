@@ -364,7 +364,6 @@ void add_detail_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 
 void contact_editor(struct contact *contact, GtkWidget *parent)
 {
-	//edit_dialog = gtk_dialog_new_with_buttons(_("Edit contact"), NULL, GTK_DIALOG_MODAL, _("_Save"), GTK_RESPONSE_ACCEPT, _("Cancel"), GTK_RESPONSE_REJECT, NULL);
 	GtkWidget *dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", TRUE, NULL);
 
 	gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
@@ -373,14 +372,6 @@ void contact_editor(struct contact *contact, GtkWidget *parent)
 	gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
 	GtkWidget *save = gtk_dialog_add_button(GTK_DIALOG(dialog), _("Save"), GTK_RESPONSE_OK);
 	gtk_style_context_add_class(gtk_widget_get_style_context(save), GTK_STYLE_CLASS_SUGGESTED_ACTION);
-	/*GtkWidget *content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
- 
-        gtk_widget_set_margin_start(label, 18);
-        gtk_widget_set_margin_end(label, 18);
-        gtk_widget_set_margin_top(label, 18);
-        gtk_widget_set_margin_bottom(label, 18);
-        gtk_widget_show_all(content);
-        g_free(tmp);*/
 
 	edit_dialog = dialog;
 
@@ -396,7 +387,7 @@ void contact_editor(struct contact *contact, GtkWidget *parent)
 	edit_widget = NULL;
 
 	if (response == GTK_RESPONSE_ACCEPT) {
-		GtkWidget *info_dialog = gtk_message_dialog_new(NULL, 0, GTK_MESSAGE_INFO, GTK_BUTTONS_OK_CANCEL, _("Note: Depending on the address book plugin not all information might be saved"));
+		GtkWidget *info_dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_INFO, GTK_BUTTONS_OK_CANCEL, _("Note: Depending on the address book plugin not all information might be saved"));
 
 		response = gtk_dialog_run(GTK_DIALOG(info_dialog));
 		gtk_widget_destroy(info_dialog);
