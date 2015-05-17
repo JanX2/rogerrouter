@@ -386,7 +386,7 @@ void contact_editor(struct contact *contact, GtkWidget *parent)
 	edit_dialog = NULL;
 	edit_widget = NULL;
 
-	if (response == GTK_RESPONSE_ACCEPT) {
+	if (response == GTK_RESPONSE_OK) {
 		GtkWidget *info_dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_INFO, GTK_BUTTONS_OK_CANCEL, _("Note: Depending on the address book plugin not all information might be saved"));
 
 		response = gtk_dialog_run(GTK_DIALOG(info_dialog));

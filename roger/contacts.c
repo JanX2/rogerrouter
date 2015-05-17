@@ -259,7 +259,6 @@ static void contacts_update_list(gpointer box, struct contact *selected_contact)
 		if (selected_contact && !strcmp(selected_contact->name, contact->name)) {
 			GtkListBoxRow *row = gtk_list_box_get_row_at_index(GTK_LIST_BOX(box), pos);
 
-			g_debug("Select row");
 			gtk_list_box_select_row(GTK_LIST_BOX(box), row);
 		}
 	}
@@ -466,7 +465,7 @@ void contacts(void)
 	contacts_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_position(GTK_WINDOW(contacts_window), GTK_WIN_POS_CENTER);
 	gtk_window_set_title(GTK_WINDOW(contacts_window), _("Contacts"));
-	gtk_widget_set_size_request(contacts_window, 800, 500);
+	gtk_widget_set_size_request(contacts_window, 850, 550);
 	g_signal_connect(contacts_window, "delete_event", G_CALLBACK(contacts_window_delete_event_cb), NULL);
 
 	/* Create header bar and add it to the window */
