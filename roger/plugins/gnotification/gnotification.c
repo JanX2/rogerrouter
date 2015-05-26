@@ -59,7 +59,6 @@ static guint missed_calls = 0;
  */
 static gboolean gnotification_close(gpointer notification)
 {
-	g_debug("close");
 	g_application_withdraw_notification(G_APPLICATION(roger_app), notification);
 	return FALSE;
 }
@@ -101,7 +100,6 @@ gboolean gnotification_show(struct connection *connection, struct contact *conta
 	                               contact->city ? contact->city : "",
 	                               map ? map : ""
 	                              );
-	g_debug("text: '%s'", text);
 
 	if (connection->type == CONNECTION_TYPE_INCOMING) {
 		title = g_strdup_printf(_("Incoming call (on %s)"), connection->local_number);
