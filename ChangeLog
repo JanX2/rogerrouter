@@ -1,3 +1,19 @@
+roger - 1.8.12
+------------------------------------------------------------------------------------------------------------------
+* UI redesign #1 using header bar and respecting human interface guidelines
+    - Phone
+    - Fax
+    - Contacts
+    - Journal
+    - Preferences
+    - ...
+* GLib Notification plugin: Plugin which integrates seamless into the desktop environment
+* Voice records are now shown and playable within the journal
+* Start hidden option for background services
+* Fix fax volume detection for FW 6.0+
+* Remove experimental cups backend as long as it is not ready, which solves some distribution issues
+* Set GTK+ minimum to 3.14
+
 roger - 1.8.11
 ------------------------------------------------------------------------------------------------------------------
 * Improve FTP handling (Freetz Banner now supported)
