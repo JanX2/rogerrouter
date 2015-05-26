@@ -96,19 +96,8 @@ PKG_CHECK_MODULES([SOUP], [libsoup-2.4])
 PKG_CHECK_MODULES([PEAS], [libpeas-1.0])
 PKG_CHECK_MODULES([PEAS_GTK], [libpeas-gtk-1.0])
 
-#PKG_CHECK_MODULES([TIFF], [libtiff-4])
 AC_CHECK_HEADERS([tiffio.h])
 AC_CHECK_LIB([tiff], [TIFFOpen], , AC_MSG_ERROR("Can't build without libtiff (does your system require a libtiff-devel package?)"), -lm)
-
-# Introspection
-#GOBJECT_INTROSPECTION_CHECK([0.9.3])
-
-#if test "$found_introspection" = "yes"; then
-#	enable_introspection=yes
-#	AC_DEFINE([ENABLE_INTROSPECTION], [1], [Define to enable GObject Introspection])
-#else
-#	enable_introspection=no
-#fi
 
 dnl *******************************************************************
 dnl Decide which fax spooler solution to use
@@ -155,68 +144,12 @@ case "$with_fax_spooler_type" in
 esac
 
 dnl *******************************************************************
-dnl CUPS backend is optional
-dnl *******************************************************************
-AC_ARG_WITH([cups],
-	[AS_HELP_STRING([--with-cups=@<:@ARG@:>@],
-		[Use cups (possible values: no, yes or check) @<:@default=no@:>@])],
-	[],
-	[with_cups=no])
-
-AC_MSG_CHECKING(for cups)
-AS_IF([test "x$with_cups" != xsuper],
-[
-        if test "x$with_cups" = xcheck; then
-		if test -n "`cups-config --build 2> /dev/null`"; then
-			with_cups=yes
-		fi	
-        elif test "x$with_cups" = xyes; then
-		if ! test -n "`cups-config --build 2> /dev/null`"; then
-			AC_MSG_FAILURE([--with-cups=yes was given, but test for cups-config failed])
-		fi
-        fi
-        if test "x$with_cups" = xyes; then
-                AC_SUBST([CUPS_CFLAGS], ["`cups-config --cflags`"])
-                AC_SUBST([CUPS_LIBS], ["`cups-config --libs`"])
-                ROGER_FEATURES_YES="\tcups backend\n$ROGER_FEATURES_YES"
-        else
-                with_cups=no
-                ROGER_FEATURES_NO="\tcups backend\n$ROGER_FEATURES_NO"
-        fi
-
-])
-
-AC_MSG_RESULT($with_cups)
-AM_CONDITIONAL(WITH_CUPS, test "x$with_cups" != "xno")
-
-dnl *******************************************************************
 dnl Check if we can support gtkstatusicon plugin
 dnl *******************************************************************
 AC_MSG_CHECKING(for statusicon support)
 AS_IF($PKG_CONFIG --atleast-version=3.16 gtk+-3.0, [with_statusicon=no], [with_statusicon=yes])
 AC_MSG_RESULT($with_statusicon)
 AM_CONDITIONAL(WITH_STATUSICON, test "x$with_statusicon" != "xno")
-
-dnl *******************************************************************
-dnl Check for cups backend directory if cups is found
-dnl *******************************************************************
-
-if test "x$with_cups" = xyes; then
-	AC_MSG_CHECKING(for cups backend  directory)
-	AC_ARG_WITH(cupsbackenddir,
-		AC_HELP_STRING([--with-cupsbackenddir=DIR],
-			[ cups-backends directory (auto)]),
-		[ cupsbackenddir="${withval}" ],
-		[ cupsbackenddir=`cups-config --serverbin`/backend ]
-	)
-	if test -d "$cupsbackenddir"; then
-		AC_SUBST([cupsbackenddir])
-		AC_MSG_RESULT([$cupsbackenddir])
-		AC_DEFINE([HAVE_CUPS_BACKEND], 1, [Use new CUPS backend])
-	else
-		AC_MSG_FAILURE([Cups backend directory not found!])
-	fi
-fi
 
 # Check for unistd.h
 AC_CHECK_HEADERS([unistd.h])
@@ -679,7 +612,6 @@ AC_CONFIG_FILES([
     roger/images/32x32/Makefile
     roger/images/48x48/Makefile
     roger/images/scalable/Makefile
-    cups-backend/Makefile
     macosx/roger.plist
     macosx/package
 ])

@@ -1,9 +1,5 @@
 SUBDIRS = libroutermanager roger roger-cli po doc
 
-if !WIN32
-SUBDIRS += cups-backend
-endif
-
 AM_DISTCHECK_CONFIGURE_FLAGS = \
 	--disable-werror
 
