@@ -367,7 +367,7 @@ AC_ARG_WITH([gstreamer1],
 	[AS_HELP_STRING([--with-gstreamer1=@<:@ARG@:>@],
 	[Use gstreamer-1.0 (possible values: no, yes, check, or the path to gstreamer) @<:@default=check@:>@])],
 	[],
-	[with_gstreamer1=no])
+	[with_gstreamer1=check])
 
 AC_MSG_CHECKING(for gstreamer-1.0 and gstreamer-app-1.0)
 AS_IF([test "x$with_gstreamer1" != xno],
@@ -397,9 +397,9 @@ dnl pulseaudio is optional
 dnl ********************************************************************
 AC_ARG_WITH([pulseaudio],
 	[AS_HELP_STRING([--with-pulseaudio=@<:@ARG@:>@],
-	[Use pulseaudio (possible values: no, yes, check, or the path to pulseaudio) @<:@default=check@:>@])],
+	[Use pulseaudio (possible values: no, yes, check, or the path to pulseaudio) @<:@default=no@:>@])],
 	[],
-	[with_pulseaudio=check])
+	[with_pulseaudio=no])
 
 AC_MSG_CHECKING(for libpulse-simple)
 AS_IF([test "x$with_pulseaudio" != xsuper],
@@ -429,9 +429,9 @@ dnl portaudio is optional
 dnl ********************************************************************
 AC_ARG_WITH([portaudio],
 	[AS_HELP_STRING([--with-portaudio=@<:@ARG@:>@],
-	[Use portaudio (possible values: no, yes, check, or the path to portaudio) @<:@default=check@:>@])],
+	[Use portaudio (possible values: no, yes, check, or the path to portaudio) @<:@default=no@:>@])],
 	[],
-	[with_portaudio=check])
+	[with_portaudio=no])
 
 AC_MSG_CHECKING(for portaudio-2.0 version 19)
 AS_IF([test "x$with_portaudio" != xsuper],

@@ -91,6 +91,7 @@ Section RogerRouter
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libcairo-2.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libcairo-gobject-2.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgdk-3-0.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libepoxy-0.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgdk_pixbuf-2.0-0.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgio-2.0-0.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libglib-2.0-0.dll"
@@ -131,9 +132,9 @@ Section RogerRouter
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgirepository-1.0-1.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libsoup-2.4-1.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libsqlite3-0.dll"
-	File "/usr/i686-w64-mingw32/sys-root/mingw/lib/libportaudio-2.dll"
-	;File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libcroco-0.6-3.dll"
-	;File "/usr/i686-w64-mingw32/sys-root/mingw/bin/librsvg-2-2.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgstreamer-1.0-0.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libcroco-0.6-3.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/librsvg-2-2.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libwinpthread-1.dll"
 
 	; Install data files
@@ -168,12 +169,12 @@ Section RogerRouter
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/share/glib-2.0"
 	;File /r "themes"
 
-	;SetOutPath "$INSTDIR\share\icons\gnome\"
-	;File /r "/usr/i686-w64-mingw32/sys-root/mingw/share/icons/gnome/scalable"
-	;File "/usr/share/icons/gnome/index.theme"
+	SetOutPath "$INSTDIR\share\icons\Adwaita"
+	File /r "/usr/i686-w64-mingw32/sys-root/mingw/share/icons/Adwaita/*"
+	File "/usr/share/icons/Adwaita/index.theme"
 
-	SetOutPath "$INSTDIR\share\icons\hicolor\"
-	File /r "/usr/i686-w64-mingw32/sys-root/mingw/share/icons/hicolor"
+	SetOutPath "$INSTDIR\share\icons\hicolor"
+	File /r "/usr/i686-w64-mingw32/sys-root/mingw/share/icons/hicolor/*"
 	File "/usr/share/icons/hicolor/index.theme"
 
 	SetOutPath "$INSTDIR\share\locale\de\LC_MESSAGES\"
@@ -186,8 +187,9 @@ Section RogerRouter
 	ReadEnvStr $0 COMSPEC
 
 	SetOutPath "$INSTDIR"
-	nsExec::ExecToLog '$0 /C .\pango-querymodules.exe > etc\pango\pango.modules'
-	nsExec::ExecToLog '$0 /C .\gdk-pixbuf-query-loaders.exe > lib\gdk-pixbuf-2.0\2.10.0\loaders.cache'
+	DetailPrint "Creating loaders.cache"
+	nsExec::ExecToLog '"$0" /C .\pango-querymodules.exe > etc\pango\pango.modules'
+	nsExec::ExecToLog '"$0" /C .\gdk-pixbuf-query-loaders.exe > lib\gdk-pixbuf-2.0\2.10.0\loaders.cache'
 
 	WriteUninstaller "$INSTDIR\uninstall.exe"
 

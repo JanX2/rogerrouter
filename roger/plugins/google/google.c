@@ -32,6 +32,7 @@
 #include <roger/main.h>
 
 #include <gdata/gdata.h>
+#include <gdata/gdata-oauth1-authorizer.h>
 
 #define ROUTERMANAGER_TYPE_GOOGLE_PLUGIN        (routermanager_google_plugin_get_type ())
 #define ROUTERMANAGER_GOOGLE_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_GOOGLE_PLUGIN, RouterManagerGooglePlugin))
@@ -49,8 +50,37 @@ static GSList *contacts = NULL;
 static GSettings *google_settings = NULL;
 static GHashTable *table = NULL;
 
-static GDataClientLoginAuthorizer *authorizer = NULL;
 static GDataContactsService *service = NULL;
+
+#ifdef OAUTH2
+#define CLIENT_ID	"943191323673-f8sm9idvulv05eib5c2aq5a181s7a10f.apps.googleusercontent.com"
+#define CLIENT_KEY	"WDvD1ghMuNq8yph6UAedN0Oo"
+#define CLIENT_RURI	"urn:ietf:wg:oauth:2.0:oob"
+
+static GDataOAuth2Authorizer *authorizer = NULL;
+#else
+
+static GDataOAuth1Authorizer *authorizer = NULL;
+#endif
+
+gchar *ask_user_for_code(gchar *uri)
+{
+	gchar *code = g_malloc(100);
+
+	g_print("Please navigate to the following URI and grant access:\n%s\n", uri);
+	g_print("Enter verifier (EOF to abort): ");
+
+	g_free (uri);
+
+	if (scanf ("%100s", code) != 1) {
+		/* User chose to abort. */
+		g_print ("\n");
+		g_clear_object (&authorizer);
+		return NULL;
+	}
+
+	return code;
+}
 
 /**
  * \brief Initialize gdata and authenticate user
@@ -58,16 +88,50 @@ static GDataContactsService *service = NULL;
  */
 static int google_init(void)
 {
-	gboolean result;
-	GError *error = NULL;
-	gchar *user;
-	 gchar *pwd;
+	gchar *authentication_uri, *authorization_code;
 
-	authorizer = gdata_client_login_authorizer_new("roger router", GDATA_TYPE_CONTACTS_SERVICE);
+#ifdef OAUTH2
+	authorizer = gdata_oauth2_authorizer_new(CLIENT_ID, CLIENT_KEY, CLIENT_RURI, GDATA_TYPE_CONTACTS_SERVICE);
 	if (authorizer == NULL) {
 		g_debug("Could not create authorizer");
 		return -1;
 	}
+
+	authentication_uri = gdata_oauth2_authorizer_build_authentication_uri(authorizer, NULL, FALSE);
+
+	/* (Present the page at the authentication URI to the user, either in an embedded or stand-alone web browser, and
+	 * ask them to grant access to the application and return the code Google gives them.)
+	 */
+	authorization_code = ask_user_for_code(authentication_uri);
+
+	gdata_oauth2_authorizer_request_authorization(authorizer, authorization_code, NULL, NULL);
+
+	g_free (authentication_uri);
+
+	/* Zero out the code before freeing. */
+	if (authorization_code != NULL) {
+		memset(authorization_code, 0, strlen (authorization_code));
+	}
+
+	g_free (authorization_code);
+#else
+	gchar *token, *token_secret;
+
+	authorizer = gdata_oauth1_authorizer_new(_("Roger Router"), GDATA_TYPE_CONTACTS_SERVICE);
+
+	authentication_uri = gdata_oauth1_authorizer_request_authentication_uri(authorizer, &token, &token_secret, NULL, NULL);
+
+	authorization_code = ask_user_for_code(authentication_uri);
+
+	gdata_oauth1_authorizer_request_authorization(authorizer, token, token_secret, authorization_code, NULL, NULL);
+
+	if (token_secret != NULL) {
+		memset(token_secret, 0, strlen(token_secret));
+		g_free(token_secret);
+	}
+
+	g_free(token);
+#endif
 
 	service = gdata_contacts_service_new(GDATA_AUTHORIZER(authorizer));
 	if (service == NULL) {
@@ -76,7 +140,7 @@ static int google_init(void)
 		return -2;
 	}
 
-	user = g_settings_get_string(google_settings, "user");
+	/*user = g_settings_get_string(google_settings, "user");
 	pwd = g_settings_get_string(google_settings, "password");
 	result = gdata_client_login_authorizer_authenticate(authorizer, user, pwd, NULL, &error);
 	if (result == FALSE) {
@@ -87,7 +151,7 @@ static int google_init(void)
 		g_object_unref(service);
 		g_object_unref(authorizer);
 		return -3;
-	}
+	}*/
 
 	return 0;
 }

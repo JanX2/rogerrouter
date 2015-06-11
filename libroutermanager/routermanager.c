@@ -161,8 +161,11 @@ gboolean routermanager_init(gboolean debug, GError **error)
 	/* Initialize plugins */
 	plugins_init();
 
-	/* Initialize password manager */
-	password_manager_init();
+	/* Check password manager */
+	if (!password_manager_get_plugins()) {
+		g_set_error(error, RM_ERROR, RM_ERROR_ROUTER, "%s", "No password manager plugins active");
+		return FALSE;
+	}
 
 	/* Initialize router */
 	if (!router_init()) {
