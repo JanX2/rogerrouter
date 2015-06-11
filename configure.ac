@@ -74,7 +74,7 @@ case "$host" in
 	*)
 		WIN32=no
 		macos=no
-		OS_CFLAGS="-DROUTERMANAGER_PLUGINS='\"\$(libdir)/routermanager/plugins/\"' -DAPP_PLUGINS='\"\$(libdir)/roger/plugins/\"' -DAPP_DATA='\"\$(datadir)/roger/\"' -DAPP_LOCALE='\"\$(localedir)\"' -Wall"
+		OS_CFLAGS="-DROUTERMANAGER_PLUGINS='\"\$(libdir)/routermanager/\"' -DAPP_PLUGINS='\"\$(libdir)/roger/\"' -DAPP_DATA='\"\$(datadir)/roger/\"' -DAPP_LOCALE='\"\$(localedir)\"' -Wall"
 		OS_LIBS="-rdynamic"
 	;;
 esac

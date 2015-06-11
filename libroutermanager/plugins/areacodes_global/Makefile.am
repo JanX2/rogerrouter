@@ -2,11 +2,11 @@ plugin_in_files = areacodes_global.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/routermanager/plugins/areacodes_global
+plugindir = $(libdir)/routermanager/areacodes_global
 
 plugin_LTLIBRARIES = libareacodes_global.la
 
-sharedir = $(libdir)/routermanager/plugins/areacodes_global
+sharedir = $(libdir)/routermanager/areacodes_global
 share_DATA  = share/globalareacodes.csv
 
 EXTRA_DIST += $(share_DATA)

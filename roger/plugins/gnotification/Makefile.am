@@ -4,7 +4,7 @@ plugin_in_files = gnotification.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/roger/plugins/gnotification
+plugindir = $(libdir)/roger/gnotification
 
 plugin_LTLIBRARIES = libgnotification.la
 

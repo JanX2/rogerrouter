@@ -4,7 +4,7 @@ plugin_in_files = fritzfon.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/roger/plugins/fritzfon
+plugindir = $(libdir)/roger/fritzfon
 
 plugin_LTLIBRARIES = libfritzfon.la
 

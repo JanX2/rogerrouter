@@ -4,7 +4,7 @@ plugin_in_files = gtknotify.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/roger/plugins/gtknotify
+plugindir = $(libdir)/roger/gtknotify
 
 plugin_LTLIBRARIES = libgtknotify.la
 

@@ -2,11 +2,11 @@ plugin_in_files = reverselookup.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/routermanager/plugins/reverselookup
+plugindir = $(libdir)/routermanager/reverselookup
 
 plugin_LTLIBRARIES = libreverselookup.la
 
-sharedir = $(libdir)/routermanager/plugins/reverselookup
+sharedir = $(libdir)/routermanager/reverselookup
 share_DATA  = share/lookup.xml
 
 EXTRA_DIST += $(share_DATA)

@@ -2,7 +2,7 @@ plugin_in_files = pulseaudio.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/routermanager/plugins/pulseaudio
+plugindir = $(libdir)/routermanager/pulseaudio
 
 plugin_LTLIBRARIES = libpulseaudio.la
 

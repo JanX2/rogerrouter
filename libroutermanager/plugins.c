@@ -84,7 +84,7 @@ void plugins_init(void)
 	g_signal_connect(exten, "extension-removed", G_CALLBACK(plugins_extension_removed_cb), NULL);
 
 	/* Look for plugins in plugin_dir */
-	peas_engine_add_search_path(engine, ROUTERMANAGER_PLUGINS "/plugins/", ROUTERMANAGER_PLUGINS "/plugins/");
+	peas_engine_add_search_path(engine, ROUTERMANAGER_PLUGINS, ROUTERMANAGER_PLUGINS);
 
 	/* And all other directories */
 	for (slist = search_path_list; slist != NULL; slist = slist->next) {

@@ -2,7 +2,7 @@ plugin_in_files = speedport.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/routermanager/plugins/speedport
+plugindir = $(libdir)/routermanager/speedport
 
 plugin_LTLIBRARIES = libspeedport.la
 

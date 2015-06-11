@@ -2,7 +2,7 @@ plugin_in_files = secret.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/routermanager/plugins/secret
+plugindir = $(libdir)/routermanager/secret
 
 plugin_LTLIBRARIES = libsecret.la
 

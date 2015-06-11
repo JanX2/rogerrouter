@@ -4,7 +4,7 @@ plugin_in_files = google.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/roger/plugins/google
+plugindir = $(libdir)/roger/google
 
 plugin_LTLIBRARIES = libgoogle.la
 

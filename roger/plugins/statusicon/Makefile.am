@@ -4,7 +4,7 @@ plugin_in_files = statusicon.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/roger/plugins/statusicon
+plugindir = $(libdir)/roger/statusicon
 
 plugin_LTLIBRARIES = libstatusicon.la
 

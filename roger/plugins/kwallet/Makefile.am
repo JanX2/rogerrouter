@@ -2,7 +2,7 @@ plugin_in_files = kwallet.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/roger/plugins/kwallet
+plugindir = $(libdir)/roger/kwallet
 
 plugin_LTLIBRARIES = libkwallet.la
 

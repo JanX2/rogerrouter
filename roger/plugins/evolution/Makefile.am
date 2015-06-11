@@ -4,7 +4,7 @@ plugin_in_files = evolution.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/roger/plugins/evolution
+plugindir = $(libdir)/roger/evolution
 
 plugin_LTLIBRARIES = libevolution.la
 

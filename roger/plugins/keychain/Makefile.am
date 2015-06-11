@@ -2,7 +2,7 @@ plugin_in_files = keychain.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/roger/plugins/keychain
+plugindir = $(libdir)/roger/keychain
 
 plugin_LTLIBRARIES = libkeychain.la
 

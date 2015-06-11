@@ -2,7 +2,7 @@ plugin_in_files = portaudio.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/routermanager/plugins/portaudio
+plugindir = $(libdir)/routermanager/portaudio
 
 plugin_LTLIBRARIES = libportaudio.la
 

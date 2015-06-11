@@ -2,11 +2,11 @@ plugin_in_files = webjournal.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/routermanager/plugins/webjournal
+plugindir = $(libdir)/routermanager/webjournal
 
 plugin_LTLIBRARIES = libwebjournal.la
 
-sharedir = $(libdir)/routermanager/plugins/webjournal
+sharedir = $(libdir)/routermanager/webjournal
 share_DATA  = share/header.html
 share_DATA  += share/entry.html
 share_DATA  += share/footer.html

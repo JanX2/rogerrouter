@@ -2,7 +2,7 @@ plugin_in_files = wincred.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/roger/plugins/wincred
+plugindir = $(libdir)/roger/wincred
 
 plugin_LTLIBRARIES = libwincred.la
 

@@ -2,7 +2,7 @@ plugin_in_files = gstreamer1.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/routermanager/plugins/gstreamer1
+plugindir = $(libdir)/routermanager/gstreamer1
 
 plugin_LTLIBRARIES = libgstreamer1.la
 

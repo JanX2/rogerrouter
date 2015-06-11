@@ -4,7 +4,7 @@ plugin_in_files = thunderbird.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/roger/plugins/thunderbird
+plugindir = $(libdir)/roger/thunderbird
 
 plugin_LTLIBRARIES = libthunderbird.la
 

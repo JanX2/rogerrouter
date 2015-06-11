@@ -2,7 +2,7 @@ plugin_in_files = fritzbox.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/routermanager/plugins/fritzbox
+plugindir = $(libdir)/routermanager/fritzbox
 
 plugin_LTLIBRARIES = libfritzbox.la
 

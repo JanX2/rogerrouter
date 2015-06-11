@@ -4,7 +4,7 @@ plugin_in_files = indicator.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/roger/plugins/indicator
+plugindir = $(libdir)/roger/indicator
 
 plugin_LTLIBRARIES = libindicator.la
 

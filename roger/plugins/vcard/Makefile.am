@@ -4,7 +4,7 @@ plugin_in_files = vcard.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/roger/plugins/vcard
+plugindir = $(libdir)/roger/vcard
 
 plugin_LTLIBRARIES = libvcard.la
 

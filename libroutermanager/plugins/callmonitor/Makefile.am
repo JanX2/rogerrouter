@@ -2,7 +2,7 @@ plugin_in_files = callmonitor.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/routermanager/plugins/callmonitor
+plugindir = $(libdir)/routermanager/callmonitor
 
 plugin_LTLIBRARIES = libcallmonitor.la
 
