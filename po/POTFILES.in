@@ -25,8 +25,6 @@ roger/plugins/evolution/evolution.c
 [type: gettext/ini]roger/plugins/evolution/evolution.plugin.in
 roger/plugins/fritzfon/fritzfon.c
 [type: gettext/ini]roger/plugins/fritzfon/fritzfon.plugin.in
-roger/plugins/notification/notification.c
-[type: gettext/ini]roger/plugins/notification/notification.plugin.in
 roger/plugins/gtknotify/gtknotify.c
 [type: gettext/ini]roger/plugins/gtknotify/gtknotify.plugin.in
 roger/plugins/statusicon/gtk.c

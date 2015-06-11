@@ -84,7 +84,7 @@ AC_MSG_RESULT([$WIN32])
 AM_CONDITIONAL(WIN32, test "x$WIN32" != "xno")
 AM_CONDITIONAL(MACOSX, test "x$macos" != "xno")
 
-PKG_CHECK_MODULES([EXTRA], [glib-2.0 >= 2.32 gio-2.0 >= 2.32 speex >= 1.0 speexdsp >= 1.0 sndfile >= 1.0.0 libxml-2.0])
+PKG_CHECK_MODULES([EXTRA], [glib-2.0 >= 2.40 gio-2.0 >= 2.40 speex >= 1.0 speexdsp >= 1.0 sndfile >= 1.0.0 libxml-2.0])
 
 # Check for GTK >= 3.14
 PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.14])
@@ -164,40 +164,6 @@ AC_CACHE_CHECK([for sigset()],[ac_cv_sigset],[
 if test x"ac_cv_sigset" = xyes; then
 	AC_DEFINE([HAVE_SIGSET],1,[Define to 1 if you have the `sigset' function.])
 fi
-
-	
-
-dnl ********************************************************************
-dnl libnotify is optional
-dnl ********************************************************************
-AC_ARG_WITH([libnotify],
-        [AS_HELP_STRING([--with-libnotify=@<:@ARG@:>@],
-        [Use libnotify (possible values: no, yes, check, or the path to libnotify) @<:@default=check@:>@])],
-        [],
-        [with_libnotify=check])
-
-AC_MSG_CHECKING(for libnotify)
-AS_IF([test "x$with_libnotify" != xsuper],
-        [if test "x$with_libnotify" = xcheck; then
-                $PKG_CONFIG --exists libnotify && with_libnotify=yes
-        elif test "x$with_libnotify" = xyes; then
-                ( $PKG_CONFIG --exists libnotify ) || AC_MSG_FAILURE(
-                        [--with-libnotify=yes was given, but test for libnotify failed])
-        fi
-        if test "x$with_libnotify" = xyes; then
-                AC_SUBST([LIBNOTIFY_CFLAGS], ["`$PKG_CONFIG --cflags libnotify`"])
-                AC_SUBST([LIBNOTIFY_LIBS], ["`$PKG_CONFIG --libs libnotify`"])
-                AC_DEFINE([HAVE_LIBNOTIFY], 1, [Have libnotify])
-                ROGER_FEATURES_YES="\tlibnotify\n$ROGER_FEATURES_YES"
-        else
-                with_libnotify=no
-                ROGER_FEATURES_NO="\tlibnotify\n$ROGER_FEATURES_NO"
-        fi
-])
-
-AC_MSG_RESULT($with_libnotify)
-
-AM_CONDITIONAL(WITH_LIBNOTIFY, test "x$with_libnotify" != "xno")
 
 dnl ********************************************************************
 dnl secret is optional
@@ -585,8 +551,6 @@ AC_CONFIG_FILES([
     roger/plugins/Makefile
     roger/plugins/statusicon/Makefile
     roger/plugins/statusicon/data/Makefile
-    roger/plugins/notification/Makefile
-    roger/plugins/notification/data/Makefile
     roger/plugins/fritzfon/Makefile
     roger/plugins/fritzfon/data/Makefile
     roger/plugins/evolution/Makefile
