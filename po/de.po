@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-15 01:15+0200\n"
+"POT-Creation-Date: 2015-06-11 15:31+0200\n"
 "PO-Revision-Date: 2015-01-28 20:28+0100\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <jan.brummer@tabos.org>\n"
@@ -31,7 +31,7 @@ msgid "Error"
 msgstr "Fehler"
 
 #. Contacts
-#: ../roger/application.c:249 ../roger/contacts.c:489 ../roger/contacts.c:496
+#: ../roger/application.c:249 ../roger/contacts.c:467 ../roger/contacts.c:474
 #: ../roger/plugins/statusicon/gtk.c:204
 #: ../roger/plugins/indicator/indicator.c:224
 msgid "Contacts"
@@ -251,45 +251,42 @@ msgstr "Unbekannt"
 msgid "Dial number"
 msgstr "Nummer wählen"
 
-#: ../roger/contacts.c:419 ../roger/contact_edit.c:371 ../roger/journal.c:690
-msgid "Contact"
-msgstr "Kontakt"
-
-#. Add cancel button
-#: ../roger/contacts.c:424 ../roger/contact_edit.c:373 ../roger/journal.c:577
-#: ../roger/journal.c:645 ../roger/journal.c:693
-msgid "Cancel"
-msgstr "A_bbrechen"
-
-#. Add remove button
-#: ../roger/contacts.c:427 ../roger/journal.c:578 ../roger/journal.c:646
-msgid "Delete"
-msgstr "Löschen"
-
-#. Create label
-#: ../roger/contacts.c:434
+#. Create dialog
+#: ../roger/contacts.c:413
 #, c-format
 msgid "Do you want to delete the entry '%s'?"
 msgstr "Wollen Sie den Eintrag '%s' löschen?"
 
-#: ../roger/contacts.c:507
+#. Add cancel button
+#: ../roger/contacts.c:416 ../roger/contact_edit.c:372 ../roger/journal.c:573
+#: ../roger/journal.c:622 ../roger/journal.c:655 ../roger/pref_filters.c:306
+#: ../roger/pref_filters.c:404
+msgid "Cancel"
+msgstr "A_bbrechen"
+
+#. Add remove button
+#: ../roger/contacts.c:419 ../roger/journal.c:574 ../roger/journal.c:623
+msgid "Delete"
+msgstr "Löschen"
+
+#: ../roger/contacts.c:485
 msgid "Add new contact"
 msgstr "Neuen Kontakt hinzufügen"
 
-#: ../roger/contacts.c:512
+#: ../roger/contacts.c:490
 msgid "Remove selected contact"
 msgstr "Ausgewählten Kontakt löschen"
 
 #. Edit button
-#: ../roger/contacts.c:516
+#: ../roger/contacts.c:494
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: ../roger/contacts.c:517
+#: ../roger/contacts.c:495
 msgid "Edit selected contact"
 msgstr "Ausgewählten Kontakt editieren"
 
-#: ../roger/contacts.c:530
+#: ../roger/contacts.c:508
 msgid "Type to search"
 msgstr "Tippen zum Suchen"
 
@@ -298,7 +295,7 @@ msgid "Open image"
 msgstr "Bild öffnen"
 
 #: ../roger/contact_edit.c:129 ../roger/pref_action.c:163
-#: ../roger/pref_fax.c:53 ../roger/pref_filters.c:368 ../roger/pref_misc.c:50
+#: ../roger/pref_fax.c:53 ../roger/pref_misc.c:50
 #: ../roger/plugins/vcard/vcard.c:1133
 #: ../roger/plugins/thunderbird/thunderbird.c:1013
 msgid "_Cancel"
@@ -315,18 +312,17 @@ msgid "_No image"
 msgstr "_Kein Bild"
 
 #. Name
-#: ../roger/contact_edit.c:192 ../roger/journal.c:1313
-#: ../roger/pref_action.c:192 ../roger/pref_action.c:502
-#: ../roger/pref_filters.c:201 ../roger/pref_filters.c:510
+#: ../roger/contact_edit.c:192 ../roger/journal.c:1275
+#: ../roger/pref_action.c:192 ../roger/pref_action.c:506
+#: ../roger/pref_filters.c:201 ../roger/pref_filters.c:561
 #: ../roger/print.c:384
 msgid "Name"
 msgstr "Name"
 
-#: ../roger/contact_edit.c:225 ../roger/journal.c:1315
+#: ../roger/contact_edit.c:225 ../roger/journal.c:1277
 #: ../roger/pref_action.c:255 ../roger/pref_filters.c:202 ../roger/print.c:388
-#: ../roger/plugins/notification/notification.c:503
 #: ../roger/plugins/gtknotify/gtknotify.c:611
-#: ../roger/plugins/gnotification/gnotification.c:439
+#: ../roger/plugins/gnotification/gnotification.c:437
 msgid "Number"
 msgstr "Nummer"
 
@@ -346,7 +342,7 @@ msgstr "Straße"
 msgid "ZIP"
 msgstr "PLZ"
 
-#: ../roger/contact_edit.c:268 ../roger/journal.c:1316
+#: ../roger/contact_edit.c:268 ../roger/journal.c:1278
 msgid "City"
 msgstr "Stadt"
 
@@ -358,11 +354,15 @@ msgstr "Detail hinzufügen"
 msgid "Address"
 msgstr "Adresse"
 
-#: ../roger/contact_edit.c:374
+#: ../roger/contact_edit.c:370 ../roger/journal.c:652
+msgid "Contact"
+msgstr "Kontakt"
+
+#: ../roger/contact_edit.c:373 ../roger/pref_filters.c:309
 msgid "Save"
 msgstr "Speichern"
 
-#: ../roger/contact_edit.c:399
+#: ../roger/contact_edit.c:390
 msgid ""
 "Note: Depending on the address book plugin not all information might be saved"
 msgstr ""
@@ -418,96 +418,84 @@ msgstr "%s (%d Anruf(e), %d:%2.2dh)"
 msgid "<No profile>"
 msgstr "<Kein Profil>"
 
-#. Journal
-#: ../roger/journal.c:574 ../roger/plugins/statusicon/gtk.c:199
-#: ../roger/plugins/indicator/indicator.c:219
-msgid "Journal"
-msgstr "Journal"
-
-#: ../roger/journal.c:582
-#, c-format
+#: ../roger/journal.c:571
 msgid "Do you want to delete the router journal?"
 msgstr "Wollen Sie das Journal vom Router löschen?"
 
-#: ../roger/journal.c:642
-msgid "Entry"
-msgstr "Eintrag"
-
-#: ../roger/journal.c:650
-#, c-format
+#: ../roger/journal.c:620
 msgid "Do you really want to delete the selected entry?"
 msgstr "Wollen Sie den ausgewählten Eintrag wirklich löschen?"
 
-#: ../roger/journal.c:694
+#: ../roger/journal.c:656 ../roger/pref_filters.c:407
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: ../roger/journal.c:705
+#: ../roger/journal.c:667
 msgid "Existing contact"
 msgstr "Existierender Kontakt"
 
-#: ../roger/journal.c:706
+#: ../roger/journal.c:668
 msgid "New contact"
 msgstr "Neuer Kontakt"
 
 #. Create dialog
-#: ../roger/journal.c:931 ../roger/pref_filters.c:61
+#: ../roger/journal.c:893 ../roger/pref_filters.c:61
 msgid "Voice box"
 msgstr "Anrufbeantworter"
 
 #. Copy phone number
-#: ../roger/journal.c:1194
+#: ../roger/journal.c:1156
 msgid "Copy number"
 msgstr "Nummer kopieren"
 
 #. Call phone number
-#: ../roger/journal.c:1199
+#: ../roger/journal.c:1161
 msgid "Call number"
 msgstr "Nummer wählen"
 
 #. Add contact
-#: ../roger/journal.c:1208
+#: ../roger/journal.c:1170
 msgid "Add contact"
 msgstr "Kontakt hinzufügen"
 
 #. Delete entry
-#: ../roger/journal.c:1217
+#: ../roger/journal.c:1179
 msgid "Delete entry"
 msgstr "Eintrag löschen"
 
-#: ../roger/journal.c:1311 ../roger/pref_filters.c:199 ../roger/print.c:376
+#: ../roger/journal.c:1273 ../roger/pref_filters.c:199 ../roger/print.c:376
 msgid "Type"
 msgstr "Typ"
 
-#: ../roger/journal.c:1312 ../roger/pref_filters.c:200 ../roger/print.c:380
+#: ../roger/journal.c:1274 ../roger/pref_filters.c:200 ../roger/print.c:380
 msgid "Date/Time"
 msgstr "Datum/Zeit"
 
-#: ../roger/journal.c:1314
+#: ../roger/journal.c:1276
 msgid "Company"
 msgstr "Firma"
 
-#: ../roger/journal.c:1317 ../roger/pref_filters.c:203
+#: ../roger/journal.c:1279 ../roger/pref_filters.c:203
 msgid "Extension"
 msgstr "Nebenstelle"
 
-#: ../roger/journal.c:1318 ../roger/pref_filters.c:204
+#: ../roger/journal.c:1280 ../roger/pref_filters.c:204
 msgid "Line"
 msgstr "Leitung"
 
-#: ../roger/journal.c:1319 ../roger/print.c:400
+#: ../roger/journal.c:1281 ../roger/print.c:400
 msgid "Duration"
 msgstr "Dauer"
 
-#: ../roger/journal.c:1384
+#: ../roger/journal.c:1346
 msgid "Refresh journal"
 msgstr "Journal laden"
 
-#: ../roger/journal.c:1385
+#: ../roger/journal.c:1347
 msgid "Print journal"
 msgstr "Journal drucken"
 
-#: ../roger/journal.c:1386
+#: ../roger/journal.c:1348
 msgid "Clear journal"
 msgstr "Journal löschen"
 
@@ -616,11 +604,11 @@ msgstr "Filter"
 msgid "Plugins"
 msgstr "Plugins"
 
-#: ../roger/pref.c:129 ../roger/pref_security.c:65
+#: ../roger/pref.c:129 ../roger/pref_security.c:66
 msgid "Security"
 msgstr "Sicherheit"
 
-#: ../roger/pref.c:132 ../roger/pref_audio.c:175
+#: ../roger/pref.c:132 ../roger/pref_audio.c:176
 msgid "Audio"
 msgstr "Audio"
 
@@ -641,7 +629,7 @@ msgid "_Apply"
 msgstr "_Anwenden"
 
 #. Description
-#: ../roger/pref_action.c:199 ../roger/pref_action.c:572
+#: ../roger/pref_action.c:199 ../roger/pref_action.c:576
 msgid "Description"
 msgstr "Beschreibung"
 
@@ -664,7 +652,7 @@ msgstr ""
 "%NAME% - Anrufername\n"
 "%COMPANY% - Anruferfirma"
 
-#: ../roger/pref_action.c:220 ../roger/pref_fax.c:140
+#: ../roger/pref_action.c:220 ../roger/pref_fax.c:144
 #: ../roger/pref_softphone.c:84
 msgid "General"
 msgstr "Allgemein"
@@ -677,85 +665,82 @@ msgstr "Aktivieren"
 msgid "MSN Settings"
 msgstr "MSN Einstellungen"
 
-#: ../roger/pref_action.c:309
+#: ../roger/pref_action.c:310
 #, c-format
 msgid "Do you want to delete the action '%s'?"
 msgstr "Wollen Sie die Aktion '%s' löschen?"
 
-#: ../roger/pref_action.c:310
+#: ../roger/pref_action.c:311
 msgid "Delete action"
 msgstr "Aktion löschen"
 
-#: ../roger/pref_action.c:507
+#: ../roger/pref_action.c:511
 msgid "Execute actions"
 msgstr "Aktionen ausführen:"
 
 #. Incoming call label
-#: ../roger/pref_action.c:513 ../roger/plugins/notification/notification.c:129
-#: ../roger/plugins/gtknotify/gtknotify.c:344
+#: ../roger/pref_action.c:517 ../roger/plugins/gtknotify/gtknotify.c:344
 msgid "Incoming call"
 msgstr "Eingehender Anruf"
 
 #. Incoming call rings toggle
-#: ../roger/pref_action.c:517
+#: ../roger/pref_action.c:521
 msgid "Call rings"
 msgstr "Anruf klingelt"
 
 #. Incoming call begins toggle
 #. Outgoing call begins toggle
-#: ../roger/pref_action.c:522 ../roger/pref_action.c:546
+#: ../roger/pref_action.c:526 ../roger/pref_action.c:550
 msgid "Call begins"
 msgstr "Anruf beginnt"
 
 #. Incoming call ends toggle
 #. Outgoing call ends toggle
-#: ../roger/pref_action.c:527 ../roger/pref_action.c:551
+#: ../roger/pref_action.c:531 ../roger/pref_action.c:555
 msgid "Call ends"
 msgstr "Anruf beendet"
 
 #. Incoming call missed toggle
-#: ../roger/pref_action.c:532
+#: ../roger/pref_action.c:536
 msgid "Call missed"
 msgstr "Anruf verpasst"
 
 #. Outgoing call label
-#: ../roger/pref_action.c:537 ../roger/plugins/notification/notification.c:129
-#: ../roger/plugins/notification/notification.c:268
-#: ../roger/plugins/gtknotify/gtknotify.c:366
+#: ../roger/pref_action.c:541 ../roger/plugins/gtknotify/gtknotify.c:366
 msgid "Outgoing call"
 msgstr "Ausgehender Anruf"
 
 #. Outgoing call dial toggle
-#: ../roger/pref_action.c:541
+#: ../roger/pref_action.c:545
 msgid "Call dial"
 msgstr "Anruf wählen"
 
 #. Buttons
-#: ../roger/pref_action.c:556 ../roger/pref_filters.c:514
+#: ../roger/pref_action.c:560 ../roger/pref_filters.c:565
 msgid "_Add"
 msgstr "_Hinzufügen"
 
-#: ../roger/pref_action.c:560 ../roger/pref_filters.c:518
+#: ../roger/pref_action.c:564 ../roger/pref_filters.c:569
 msgid "_Remove"
 msgstr "_Entfernen"
 
-#: ../roger/pref_action.c:564 ../roger/pref_filters.c:522
+#: ../roger/pref_action.c:568 ../roger/pref_filters.c:573
 msgid "_Edit"
 msgstr "_Bearbeiten"
 
-#: ../roger/pref_action.c:587
+#: ../roger/pref_action.c:591
 msgid "Define actions"
 msgstr "Aktionen definieren"
 
-#: ../roger/pref_audio.c:135
+#: ../roger/pref_audio.c:136
 msgid "Plugin"
 msgstr "Plugin"
 
-#: ../roger/pref_audio.c:142
+#: ../roger/pref_audio.c:143
 msgid "Output"
 msgstr "Ausgabe"
 
-#: ../roger/pref_audio.c:148
+#: ../roger/pref_audio.c:149
 msgid "Input"
 msgstr "Eingabe"
 
@@ -763,98 +748,92 @@ msgstr "Eingabe"
 msgid "Select fax report directory"
 msgstr "Wähle Fax-Berichtsverzeichnis"
 
-#: ../roger/pref_fax.c:115
+#: ../roger/pref_fax.c:119
 msgid "Header"
 msgstr "Kopfzeile"
 
-#: ../roger/pref_fax.c:123
+#: ../roger/pref_fax.c:127
 msgid "Ident"
 msgstr "Ident"
 
-#: ../roger/pref_fax.c:131
+#: ../roger/pref_fax.c:135
 msgid "Resolution"
 msgstr "Auflösung"
 
-#: ../roger/pref_fax.c:135
+#: ../roger/pref_fax.c:139
 msgid "Low (98dpi)"
 msgstr "Niedrig (98dpi)"
 
-#: ../roger/pref_fax.c:136
+#: ../roger/pref_fax.c:140
 msgid "High (196dpi)"
 msgstr "Hoch (196dpi)"
 
-#: ../roger/pref_fax.c:148
+#: ../roger/pref_fax.c:152
 msgid "Create fax report"
 msgstr "Erstelle Faxbericht"
 
-#: ../roger/pref_fax.c:153
+#: ../roger/pref_fax.c:157
 msgid "Report directory"
 msgstr "Berichtsverzeichnis"
 
-#: ../roger/pref_fax.c:159
+#: ../roger/pref_fax.c:162
 msgid "Select report directory"
 msgstr "Wähle Berichtsverzeichnis"
 
-#: ../roger/pref_fax.c:171 ../roger/pref_misc.c:90
-#: ../roger/plugins/vcard/vcard.c:1168
-#: ../roger/plugins/thunderbird/thunderbird.c:1064
-msgid "Select"
-msgstr "Auswählen"
-
-#: ../roger/pref_fax.c:182
+#: ../roger/pref_fax.c:173
 msgid "Report"
 msgstr "Bericht"
 
 #. MSN
-#: ../roger/pref_fax.c:191 ../roger/pref_softphone.c:57
+#: ../roger/pref_fax.c:182 ../roger/pref_softphone.c:57
 msgid "MSN"
 msgstr "MSN"
 
-#: ../roger/pref_fax.c:206
+#: ../roger/pref_fax.c:197
 msgid "Bitrate"
 msgstr "Bitrate"
 
-#: ../roger/pref_fax.c:222 ../roger/pref_softphone.c:71
+#: ../roger/pref_fax.c:213 ../roger/pref_softphone.c:71
 msgid "Controller"
 msgstr "Kontroller"
 
-#: ../roger/pref_fax.c:226 ../roger/pref_softphone.c:75
+#: ../roger/pref_fax.c:217 ../roger/pref_softphone.c:75
 msgid "ISDN-Controller 1"
 msgstr "ISDN-Kontroller 1"
 
-#: ../roger/pref_fax.c:227 ../roger/pref_softphone.c:76
+#: ../roger/pref_fax.c:218 ../roger/pref_softphone.c:76
 msgid "ISDN-Controller 2"
 msgstr "ISDN-Kontroller 2"
 
-#: ../roger/pref_fax.c:228 ../roger/pref_softphone.c:77
+#: ../roger/pref_fax.c:219 ../roger/pref_softphone.c:77
 msgid "Outside line ISDN"
 msgstr "ISDN-Amt"
 
-#: ../roger/pref_fax.c:229 ../roger/pref_softphone.c:78
+#: ../roger/pref_fax.c:220 ../roger/pref_softphone.c:78
 msgid "Outside line Analog"
 msgstr "Analog-Amt"
 
-#: ../roger/pref_fax.c:230 ../roger/pref_softphone.c:79
+#: ../roger/pref_fax.c:221 ../roger/pref_softphone.c:79
 msgid "Internet"
 msgstr "Internet"
 
-#: ../roger/pref_fax.c:234
+#: ../roger/pref_fax.c:225
 msgid "Service"
 msgstr "DIenst"
 
-#: ../roger/pref_fax.c:238
+#: ../roger/pref_fax.c:229
 msgid "Analog"
 msgstr "Analog"
 
-#: ../roger/pref_fax.c:239
+#: ../roger/pref_fax.c:230
 msgid "ISDN"
 msgstr "ISDN"
 
-#: ../roger/pref_fax.c:243
+#: ../roger/pref_fax.c:234
 msgid "Error correction mode (ECM)"
 msgstr "Fehlerkorrekturmodus (ECM)"
 
-#: ../roger/pref_fax.c:247
+#: ../roger/pref_fax.c:238
 msgid "Modem"
 msgstr "Modem"
 
@@ -864,11 +843,10 @@ msgid "All"
 msgstr "Alle"
 
 #. Last calls - Incomming
-#: ../roger/pref_filters.c:58 ../roger/plugins/notification/notification.c:512
-#: ../roger/plugins/gtknotify/gtknotify.c:620
+#: ../roger/pref_filters.c:58 ../roger/plugins/gtknotify/gtknotify.c:620
 #: ../roger/plugins/statusicon/gtk.c:148
 #: ../roger/plugins/indicator/indicator.c:152
-#: ../roger/plugins/gnotification/gnotification.c:448
+#: ../roger/plugins/gnotification/gnotification.c:446
 msgid "Incoming"
 msgstr "Eingehend"
 
@@ -879,11 +857,10 @@ msgid "Missed"
 msgstr "Verpasst"
 
 #. Last calls - Outgoing
-#: ../roger/pref_filters.c:60 ../roger/plugins/notification/notification.c:507
-#: ../roger/plugins/gtknotify/gtknotify.c:615
+#: ../roger/pref_filters.c:60 ../roger/plugins/gtknotify/gtknotify.c:615
 #: ../roger/plugins/statusicon/gtk.c:155
 #: ../roger/plugins/indicator/indicator.c:159
-#: ../roger/plugins/gnotification/gnotification.c:443
+#: ../roger/plugins/gnotification/gnotification.c:441
 msgid "Outgoing"
 msgstr "Ausgehend"
 
@@ -917,40 +894,37 @@ msgstr "Beginnt mit"
 msgid "Contains"
 msgstr "Enthält"
 
-#: ../roger/pref_filters.c:297
+#: ../roger/pref_filters.c:303
 msgid "Edit filter"
 msgstr "Filter bearbeiten"
 
-#: ../roger/pref_filters.c:297
-msgid "_Close"
-msgstr "_Schließen"
+#: ../roger/pref_filters.c:321 ../roger/pref_filters.c:419
+#: ../roger/plugins/gtknotify/gtknotify.c:267
+msgid "Name:"
+msgstr "Name:"
 
-#: ../roger/pref_filters.c:305 ../roger/pref_filters.c:374
-msgid "Enter filter name"
-msgstr "Filternamen eingeben"
+#: ../roger/pref_filters.c:336 ../roger/pref_filters.c:433
+msgid "Rules"
+msgstr "Regeln"
 
-#: ../roger/pref_filters.c:368
-msgid "Add new filter"
-msgstr "Neuen Filter hinzufügen"
+#: ../roger/pref_filters.c:401
+msgid "New filter"
+msgstr "Neuer Filter"
 
-#: ../roger/pref_filters.c:368
-msgid "_OK"
-msgstr "_OK"
-
-#: ../roger/pref_filters.c:436
+#: ../roger/pref_filters.c:486
 #, c-format
 msgid "Do you want to delete the filter '%s'?"
 msgstr "Wollen Sie den Filter '%s' löschen?"
 
-#: ../roger/pref_filters.c:437
+#: ../roger/pref_filters.c:487
 msgid "Delete filter"
 msgstr "Filter löschen"
 
-#: ../roger/pref_filters.c:526
+#: ../roger/pref_filters.c:577
 msgid "Manage filters"
 msgstr "Filter verwalten"
 
-#: ../roger/pref_plugins.c:49
+#: ../roger/pref_plugins.c:50
 msgid "Choose which plugins should be loaded at startup"
 msgstr "Wähle welche Plugins beim Starten geladen werden"
 
@@ -1110,7 +1084,7 @@ msgstr "Einstellungen erneuern"
 msgid "%s (Firmware: %s)"
 msgstr "%s (Firmware: %s)"
 
-#: ../roger/pref_security.c:43
+#: ../roger/pref_security.c:44
 msgid "Password manager"
 msgstr "Passwort-Verwaltung"
 
@@ -1124,6 +1098,11 @@ msgstr "Wähle das Ghostscript-Programm aus"
 #: ../roger/pref_misc.c:82
 msgid "Ghostscript executable"
 msgstr "Ghostscript-Programm"
+
+#: ../roger/pref_misc.c:90 ../roger/plugins/vcard/vcard.c:1168
+#: ../roger/plugins/thunderbird/thunderbird.c:1064
+msgid "Select"
+msgstr "Auswählen"
 
 #. Title
 #: ../roger/print.c:320
@@ -1228,84 +1207,6 @@ msgstr "FritzFon"
 msgid "FRITZ!Box address book support"
 msgstr "FRITZ!Box Adressbuch-Support"
 
-#: ../roger/plugins/notification/notification.c:120
-#: ../roger/plugins/notification/notification.c:244
-#, c-format
-msgid ""
-"Name:\t%s\n"
-"Number:\t%s\n"
-"Company:\t%s\n"
-"Street:\t%s\n"
-"City:\t\t%s%s%s"
-msgstr ""
-"Name:\t%s\n"
-"Nummer:\t%s\n"
-"Firma:\t%s\n"
-"Straße:\t%s\n"
-"Stadt:\t%s%s%s"
-
-#: ../roger/plugins/notification/notification.c:254
-#, c-format
-msgid "Number:\t%s"
-msgstr "Nummer:\t%s"
-
-#: ../roger/plugins/notification/notification.c:258
-#: ../roger/plugins/gnotification/gnotification.c:107
-#, c-format
-msgid "Incoming call (on %s)"
-msgstr "Eingehender Anruf (auf %s)"
-
-#: ../roger/plugins/notification/notification.c:261
-#: ../roger/plugins/gtknotify/gtknotify.c:353
-#: ../roger/plugins/gnotification/gnotification.c:121
-msgid "Accept"
-msgstr "Annehmen"
-
-#: ../roger/plugins/notification/notification.c:262
-#: ../roger/plugins/gtknotify/gtknotify.c:358
-#: ../roger/plugins/gnotification/gnotification.c:122
-msgid "Decline"
-msgstr "Ablehnen"
-
-#: ../roger/plugins/notification/notification.c:515
-#: ../roger/plugins/gtknotify/gtknotify.c:624
-msgid "Choose for which MSNs you want notifications"
-msgstr "Wähle für welche MSNs Benachrichtigungen angezeigt werden"
-
-#: ../roger/plugins/notification/notification.c:523
-#: ../roger/plugins/gtknotify/gtknotify.c:643
-#: ../roger/plugins/gnotification/gnotification.c:459
-msgid "Duration (outgoing)"
-msgstr "Anzeigedauer (ausgehend)"
-
-#: ../roger/plugins/notification/notification.c:532
-#: ../roger/plugins/gtknotify/gtknotify.c:652
-#: ../roger/plugins/gnotification/gnotification.c:468
-msgid "Play ringtones"
-msgstr "Spiele Klingeltöne"
-
-#: ../roger/plugins/notification/notification.c:540
-#: ../roger/plugins/gtknotify/gtknotify.c:660
-#: ../roger/plugins/gnotification/gnotification.c:476
-msgid "Popup"
-msgstr "Popup"
-
-#: ../roger/plugins/notification/notification.plugin.in.h:1
-msgid "Notification"
-msgstr "Benachrichtigung"
-
-#: ../roger/plugins/notification/notification.plugin.in.h:2
-#: ../roger/plugins/gnotification/gnotification.plugin.in.h:2
-msgid ""
-"Display notification about incoming/outgoing/missed calls and plays sounds"
-msgstr ""
-"Zeigt Benachrichtigungen über eingehende/ausgehende/verpasste Anrufe und "
-"spielt Klänge"
-
-#: ../roger/plugins/gtknotify/gtknotify.c:267
-msgid "Name:"
-msgstr "Name:"
-
 #: ../roger/plugins/gtknotify/gtknotify.c:277
 msgid "Number:"
 msgstr "Nummer:"
@@ -1331,6 +1232,20 @@ msgstr "(an %s)"
 msgid "(on ?)"
 msgstr "(an ?)"
 
+#: ../roger/plugins/gtknotify/gtknotify.c:353
+#: ../roger/plugins/gnotification/gnotification.c:119
+msgid "Accept"
+msgstr "Annehmen"
+
+#: ../roger/plugins/gtknotify/gtknotify.c:358
+#: ../roger/plugins/gnotification/gnotification.c:120
+msgid "Decline"
+msgstr "Ablehnen"
+
+#: ../roger/plugins/gtknotify/gtknotify.c:624
+msgid "Choose for which MSNs you want notifications"
+msgstr "Wähle für welche MSNs Benachrichtigungen angezeigt werden"
+
 #: ../roger/plugins/gtknotify/gtknotify.c:632
 msgid "Position"
 msgstr "Position"
@@ -1351,14 +1266,35 @@ msgstr "Unten links"
 msgid "Bottom right"
 msgstr "Unten rechts"
 
+#: ../roger/plugins/gtknotify/gtknotify.c:643
+#: ../roger/plugins/gnotification/gnotification.c:457
+msgid "Duration (outgoing)"
+msgstr "Anzeigedauer (ausgehend)"
+
+#: ../roger/plugins/gtknotify/gtknotify.c:652
+#: ../roger/plugins/gnotification/gnotification.c:466
+msgid "Play ringtones"
+msgstr "Spiele Klingeltöne"
+
+#: ../roger/plugins/gtknotify/gtknotify.c:660
+#: ../roger/plugins/gnotification/gnotification.c:474
+msgid "Popup"
+msgstr "Popup"
+
 #: ../roger/plugins/gtknotify/gtknotify.plugin.in.h:1
-msgid "Notifications (GTK)"
-msgstr "Benachrichtigungen (GTK)"
+msgid "Notifications (Fallback)"
+msgstr "Benachrichtigungen (Fallback)"
 
 #: ../roger/plugins/gtknotify/gtknotify.plugin.in.h:2
 msgid "Display notification about incoming/outgoing/missed calls using GTK"
 msgstr ""
 "Zeigt Benachrichtigungen über eingehende/ausgehende/verpasste Anrufe (GTK)"
+
+#. Journal
+#: ../roger/plugins/statusicon/gtk.c:199
+#: ../roger/plugins/indicator/indicator.c:219
+msgid "Journal"
+msgstr "Journal"
 
 #. Last calls
 #: ../roger/plugins/statusicon/gtk.c:214
@@ -1366,7 +1302,8 @@ msgstr ""
 msgid "Last calls"
 msgstr "Letzte Anrufe"
 
-#: ../roger/plugins/statusicon/gtk.c:325 ../org.tabos.roger.desktop.in.h:1
+#: ../roger/plugins/statusicon/gtk.c:325 ../roger/plugins/google/google.c:120
+#: ../org.tabos.roger.desktop.in.h:1
 msgid "Roger Router"
 msgstr "Roger Router"
 
@@ -1446,15 +1383,15 @@ msgstr "VCard"
 msgid "VCard address book support"
 msgstr "VCard Adressbuch-Support"
 
-#: ../roger/plugins/google/google.c:724
+#: ../roger/plugins/google/google.c:788
 msgid "User:"
 msgstr "Benutzer:"
 
-#: ../roger/plugins/google/google.c:731
+#: ../roger/plugins/google/google.c:795
 msgid "Password:"
 msgstr "Passwort:"
 
-#: ../roger/plugins/google/google.c:737
+#: ../roger/plugins/google/google.c:801
 msgid "Access data"
 msgstr "Zugangsdaten"
 
@@ -1483,7 +1420,7 @@ msgid "Thunderbird address book support"
 msgstr "Thunderbird Adressbuch-Support"
 
 #. Create notification message
-#: ../roger/plugins/gnotification/gnotification.c:94
+#: ../roger/plugins/gnotification/gnotification.c:93
 #, c-format
 msgid ""
 "Name:\t\t%s\n"
@@ -1500,32 +1437,44 @@ msgstr ""
 "Stadt:\t%s%s%s\n"
 "Map:\t%s"
 
-#: ../roger/plugins/gnotification/gnotification.c:109
+#: ../roger/plugins/gnotification/gnotification.c:105
+#, c-format
+msgid "Incoming call (on %s)"
+msgstr "Eingehender Anruf (auf %s)"
+
+#: ../roger/plugins/gnotification/gnotification.c:107
 #, c-format
 msgid "Outgoing call (on %s)"
 msgstr "Ausgehender Anruf (auf %s)"
 
 #. Create notification message
-#: ../roger/plugins/gnotification/gnotification.c:144
+#: ../roger/plugins/gnotification/gnotification.c:142
 #, c-format
 msgid "You have missed calls"
 msgstr "Sie haben verpasste Anrufe"
 
-#: ../roger/plugins/gnotification/gnotification.c:146
+#: ../roger/plugins/gnotification/gnotification.c:144
 msgid "Missed call(s)"
 msgstr "Verpasste Anrufe"
 
-#: ../roger/plugins/gnotification/gnotification.c:151
+#: ../roger/plugins/gnotification/gnotification.c:149
 msgid "Open journal"
 msgstr "Journal öffnen"
 
-#: ../roger/plugins/gnotification/gnotification.c:451
+#: ../roger/plugins/gnotification/gnotification.c:449
 msgid "Choose for which MSNs you want gnotifications"
 msgstr "Wähle für welche MSNs Benachrichtigungen angezeigt werden"
 
 #: ../roger/plugins/gnotification/gnotification.plugin.in.h:1
-msgid "GLIB Notification"
-msgstr "GLIB Benachrichtigung"
+msgid "Notifications"
+msgstr "Benachrichtigungen"
+
+#: ../roger/plugins/gnotification/gnotification.plugin.in.h:2
+msgid ""
+"Display notification about incoming/outgoing/missed calls and plays sounds"
+msgstr ""
+"Zeigt Benachrichtigungen über eingehende/ausgehende/verpasste Anrufe und "
+"spielt Klänge"
 
 #: ../roger-cli/main_cli.c:157
 msgid "Connected"
@@ -1653,6 +1602,37 @@ msgstr ""
 #: ../roger.appdata.xml.in.h:3
 msgid "Journal view of all calls"
 msgstr "Journalansicht aller Anrufe"
+
+#~ msgid "Entry"
+#~ msgstr "Eintrag"
+
+#~ msgid "_Close"
+#~ msgstr "_Schließen"
+
+#~ msgid "Enter filter name"
+#~ msgstr "Filternamen eingeben"
+
+#~ msgid "_OK"
+#~ msgstr "_OK"
+
+#~ msgid ""
+#~ "Name:\t%s\n"
+#~ "Number:\t%s\n"
+#~ "Company:\t%s\n"
+#~ "Street:\t%s\n"
+#~ "City:\t\t%s%s%s"
+#~ msgstr ""
+#~ "Name:\t%s\n"
+#~ "Nummer:\t%s\n"
+#~ "Firma:\t%s\n"
+#~ "Straße:\t%s\n"
+#~ "Stadt:\t%s%s%s"
+
+#~ msgid "Number:\t%s"
+#~ msgstr "Nummer:\t%s"
+
+#~ msgid "GLIB Notification"
+#~ msgstr "GLIB Benachrichtigung"
 
 #~ msgid "Photo"
 #~ msgstr "Foto"
