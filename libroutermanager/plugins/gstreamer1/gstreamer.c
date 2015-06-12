@@ -252,15 +252,9 @@ static void *gstreamer_open(void)
 		audio_sink = gst_device_create_element(output_device, NULL);
 		audio_source = gst_device_create_element(input_device, NULL);
 	} else {
-#ifdef G_OS_WIN32
-		g_debug("%s(): Using Windows audio src/sink", __FUNCTION__);
-		audio_sink = gst_element_factory_make("wasapisink", NULL);
-		audio_source = gst_element_factory_make("wasapisoundsrc", NULL);
-#else
 		g_debug("%s(): Using auto audio src/sink", __FUNCTION__);
 		audio_sink = gst_element_factory_make("autoaudiosink", NULL);
 		audio_source = gst_element_factory_make("autoaudiosrc", NULL);
-#endif
 	}
 
 	/* Create output pipeline */
