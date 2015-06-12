@@ -854,6 +854,7 @@ void vox_media_button_clicked_cb(GtkWidget *button, gpointer user_data)
 gboolean vox_scale_change_value_cb(GtkRange *range, GtkScrollType scroll, gdouble value, gpointer user_data)
 {
 	struct journal_playback *playback_data = user_data;
+	value = ABS(value);
 
 	if (playback_data->vox_data && playback_data->fraction != 100) {
 		vox_seek(playback_data->vox_data, value);
