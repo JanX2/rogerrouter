@@ -256,8 +256,8 @@ static void *gstreamer_open(void)
 		audio_source = gst_element_factory_make("wasapisoundsrc", NULL);
 #else
 		g_debug("%s(): Using auto audio src/sink", __FUNCTION__);
-		audio_sink = gst_element_factory_make("osxaudiosink", NULL);
-		audio_source = gst_element_factory_make("osxaudiosrc", NULL);
+		audio_sink = gst_element_factory_make("autoaudiosink", NULL);
+		audio_source = gst_element_factory_make("autoaudiosrc", NULL);
 #endif
 	}
 
