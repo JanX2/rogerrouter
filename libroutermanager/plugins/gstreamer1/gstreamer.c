@@ -396,8 +396,10 @@ static gsize gstreamer_read(void *priv, guchar *data, gsize size)
 	}
 
 	read = MIN(gst_adapter_available(pipes->adapter), size);
-	gst_adapter_copy(pipes->adapter, data, 0, read);
-	gst_adapter_flush(pipes->adapter, read);
+	if (read != 0) {
+		gst_adapter_copy(pipes->adapter, data, 0, read);
+		gst_adapter_flush(pipes->adapter, read);
+	}
 
 	return read;
 }
