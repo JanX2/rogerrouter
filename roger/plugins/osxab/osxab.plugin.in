@@ -1,0 +1,9 @@
+[Plugin]
+Module=osxab
+_Name=OSX Address book
+_Description=OS X Address book
+Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
+Copyright=Copyright © 2015 Jan-Michael Brummer
+Website=http://www.tabos.org/
+Help=http://www.tabos.org/forum/
+Builtin=false

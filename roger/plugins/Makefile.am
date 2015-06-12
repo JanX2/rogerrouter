@@ -25,3 +25,7 @@ endif
 if WITH_MACOS_KEYCHAIN
 SUBDIRS += keychain
 endif
+
+if WITH_OSX_AB
+SUBDIRS += osxab
+endif

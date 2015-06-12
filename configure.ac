@@ -54,14 +54,14 @@ case "$host" in
 	*-*-*mingw*)
 		WIN32=yes
 		macos=no
-		OS_CFLAGS="-D_WIN32_WINNT=0x0501 -DROUTERMANAGER_PLUGINS='\"lib/routermanager/plugins/\"' -DAPP_PLUGINS='\"lib/roger/plugins/\"' -DAPP_DATA='\"share/roger/\"' -DAPP_LOCALE='\"share/locale\"'"
+		OS_CFLAGS="-D_WIN32_WINNT=0x0501 -DROUTERMANAGER_PLUGINS='\"lib/routermanager/\"' -DAPP_PLUGINS='\"lib/roger/\"' -DAPP_DATA='\"share/roger/\"' -DAPP_LOCALE='\"share/locale\"'"
 		OS_LIBS="-mwindows -mms-bitfields -Wl,-subsystem,windows -lws2_32"
 		AC_CHECK_TOOL(WINDRES, windres)
 	;;
 	*darwin*)
 		WIN32=no
 		macos=yes
-		OS_CFLAGS="-DROUTERMANAGER_PLUGINS='\"lib/routermanager/plugins/\"' -DAPP_PLUGINS='\"lib/roger/plugins/\"' -DAPP_DATA='\"share/roger/\"' -DAPP_LOCALE='\"share/locale\"'"
+		OS_CFLAGS="-DROUTERMANAGER_PLUGINS='\"lib/routermanager/\"' -DAPP_PLUGINS='\"lib/roger/\"' -DAPP_DATA='\"share/roger/\"' -DAPP_LOCALE='\"share/locale\"'"
 		OS_LIBS="-rdynamic"
 	;;
 	*freebsd*)
@@ -179,7 +179,7 @@ AS_IF([test "x$with_secret" != xno],
 	[if test "x$with_secret" = xcheck; then
 		$PKG_CONFIG --atleast-version=0.11 libsecret-1 && with_secret=yes
 	elif test "x$with_secret" = xyes; then
-		$PKG_CONFIG --atleast-version=0.11 libsecret-1 || AC_MSG_FAILURE(
+		$PKG_CONFIG --atleast-verson=0.11 libsecret-1 || AC_MSG_FAILURE(
 		[--with-secret=yes was given, but test for secret failed])
 	fi
 	if test "x$with_secret" = xyes; then
@@ -235,6 +235,8 @@ fi
 AC_MSG_RESULT($with_macos_keychain)
 
 AM_CONDITIONAL(WITH_MACOS_KEYCHAIN, test "x$with_macos_keychain" != "xno")
+
+AM_CONDITIONAL(WITH_OSX_AB, test "x$with_macos_keychain" != "xno")
 
 dnl ********************************************************************
 dnl kwallet is optional
@@ -569,6 +571,7 @@ AC_CONFIG_FILES([
     roger/plugins/keychain/Makefile
     roger/plugins/gnotification/Makefile
     roger/plugins/gnotification/data/Makefile
+    roger/plugins/osxab/Makefile
     roger/images/Makefile
     roger/images/16x16/Makefile
     roger/images/22x22/Makefile
