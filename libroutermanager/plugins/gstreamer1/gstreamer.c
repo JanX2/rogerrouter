@@ -205,6 +205,8 @@ static void *gstreamer_open(void)
 	GstElement *audio_source;
 	GstElement *pipe;
 	GstElement *filter;
+	GstElement *convert;
+	GstElement *resample;
 	GstCaps *filtercaps;
 	GstDevice *output_device = NULL;
 	GstDevice *input_device = NULL;
@@ -287,7 +289,10 @@ static void *gstreamer_open(void)
 		g_object_set(G_OBJECT(filter), "caps", filtercaps, NULL);
 		gst_caps_unref(filtercaps);
 
-		gst_bin_add_many(GST_BIN(pipe), source, filter, audio_sink, NULL);
+		convert = gst_element_factory_make("audioconvert", "convert");
+		resample = gst_element_factory_make("audioresample", "resample");
+
+		gst_bin_add_many(GST_BIN(pipe), source, filter, convert1, resample, audio_sink, NULL);
 		gst_element_link_many(source, filter, audio_sink, NULL);
 
 		ret = gst_element_set_state(pipe, GST_STATE_PLAYING);
