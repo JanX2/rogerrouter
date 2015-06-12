@@ -292,8 +292,8 @@ static void *gstreamer_open(void)
 		convert = gst_element_factory_make("audioconvert", "convert");
 		resample = gst_element_factory_make("audioresample", "resample");
 
-		gst_bin_add_many(GST_BIN(pipe), source, filter, convert1, resample, audio_sink, NULL);
-		gst_element_link_many(source, filter, audio_sink, NULL);
+		gst_bin_add_many(GST_BIN(pipe), source, filter, convert, resample, audio_sink, NULL);
+		gst_element_link_many(source, filter, convert, resample, audio_sink, NULL);
 
 		ret = gst_element_set_state(pipe, GST_STATE_PLAYING);
 		if (ret == GST_STATE_CHANGE_FAILURE) {
@@ -330,8 +330,11 @@ static void *gstreamer_open(void)
 		g_object_set(G_OBJECT(filter), "caps", filtercaps, NULL);
 		gst_caps_unref(filtercaps);
 
-		gst_bin_add_many(GST_BIN(pipe), audio_source, filter, sink, NULL);
-		gst_element_link_many(audio_source, filter, sink, NULL);
+		convert = gst_element_factory_make("audioconvert", "convert");
+		resample = gst_element_factory_make("audioresample", "resample");
+
+		gst_bin_add_many(GST_BIN(pipe), audio_source, filter, convert, resample, sink, NULL);
+		gst_element_link_many(audio_source, filter, convert, resample, sink, NULL);
 
 		ret = gst_element_set_state(pipe, GST_STATE_PLAYING);
 		if (ret == GST_STATE_CHANGE_FAILURE) {
