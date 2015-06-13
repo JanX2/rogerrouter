@@ -207,8 +207,17 @@ struct session_handlers session_handlers = {
 gboolean faxophone_connect(gpointer user_data)
 {
 	struct profile *profile = profile_get_active();
+	gboolean retry = TRUE;
 
+again:
 	session = faxophone_init(&session_handlers, router_get_host(profile), g_settings_get_int(profile->settings, "phone-controller") + 1);
+	if (!session && retry) {
+		/* Maybe the port is closed, try to activate it and try again */
+		router_dial_number(profile, PORT_ISDN1, "#96*3*");
+		g_usleep(G_USEC_PER_SEC * 2);
+		retry = FALSE;
+		goto again;
+	}
 
 	return session != NULL;
 }
