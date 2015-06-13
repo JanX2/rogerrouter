@@ -138,11 +138,9 @@ gpointer get_settings_thread(gpointer data)
 
 	/* Enable telnet & capi port */
 	if (router_dial_number(profile, 1, "#96*5*")) {
-		g_usleep(G_USEC_PER_SEC);
 		router_hangup(profile, 1, "#96*5*");
 	}
 	if (router_dial_number(profile, 1, "#96*3*")) {
-		g_usleep(G_USEC_PER_SEC);
 		router_hangup(profile, 1, "#96*3*");
 	}
 
