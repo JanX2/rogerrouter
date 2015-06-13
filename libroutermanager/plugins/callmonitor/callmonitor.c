@@ -159,6 +159,7 @@ gboolean callmonitor_connect(gpointer user_data)
 	gint sock = -1;
 	const gchar *hostname;
 	gint tcp_keepalive_time = 600;
+	gboolean retry = TRUE;
 
 	profile = profile_get_active();
 	if (!profile) {
@@ -172,6 +173,7 @@ gboolean callmonitor_connect(gpointer user_data)
 		return FALSE;
 	}
 
+again:
 #ifdef CALLMONITOR_DEBUG
 	g_debug("Trying to connect to '%s' on port 1012", hostname);
 #endif
@@ -226,6 +228,14 @@ gboolean callmonitor_connect(gpointer user_data)
 		g_object_unref(sock_address);
 
 		g_resolver_free_addresses(list);
+
+		if (retry) {
+			router_dial_number(profile, PORT_ISDN1, "#96*5*");
+			retry = FALSE;
+			error = NULL;
+			goto again;
+		}
+
 		return FALSE;
 	}
 
