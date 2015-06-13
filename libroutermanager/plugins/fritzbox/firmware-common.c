@@ -472,21 +472,6 @@ void fritzbox_read_msn(struct profile *profile, const gchar *data)
 	}
 }
 
-
-/**
- * \brief Dial number callback function (logout from box)
- * \param session soup session
- * \param msg soup message
- * \param user_data pointer to profile structure
- */
-static void dial_number_cb(SoupSession *session, SoupMessage *msg, gpointer user_data)
-{
-	struct profile *profile = user_data;
-
-	/* Logout */
-	fritzbox_logout(profile, FALSE);
-}
-
 /**
  * \brief Depending on type get dialport
  * \param type phone type
@@ -537,8 +522,9 @@ gboolean fritzbox_dial_number(struct profile *profile, gint port, const gchar *n
 	g_free(port_str);
 	g_free(url);
 
-	/* Add message to queue */
-	soup_session_queue_message(soup_session_async, msg, dial_number_cb, profile);
+	/* Send message */
+	soup_session_send_message(soup_session_async, msg);
+	fritzbox_logout(profile, FALSE);
 
 	return TRUE;
 }
@@ -576,8 +562,9 @@ gboolean fritzbox_hangup(struct profile *profile, gint port, const gchar *number
 	g_free(port_str);
 	g_free(url);
 
-	/* Add message to queue */
-	soup_session_queue_message(soup_session_async, msg, dial_number_cb, profile);
+	/* Send message */
+	soup_session_send_message(soup_session_async, msg);
+	fritzbox_logout(profile, FALSE);
 
 	return TRUE;
 }
