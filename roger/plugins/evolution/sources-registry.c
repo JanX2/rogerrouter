@@ -59,6 +59,7 @@ EBookClient *get_selected_ebook_client(void)
 	ESource *source = get_selected_ebook_esource();
 
 	if (!source) {
+		g_debug("Book could not be found....");
 		return NULL;
 	}
 
@@ -84,12 +85,27 @@ GList *get_ebook_list(void)
 
 	for (source = sources; source != NULL; source = source->next) {
 		ESource *e_source = E_SOURCE(source -> data);
+		ESource *parent_source;
+
+		if (!e_source_get_enabled(e_source)) {
+			g_debug("Source %s not enabled... skip it", e_source_get_uid(e_source));
+			continue;
+		}
 
 		ebook_data = g_slice_new(struct ebook_data);
-		ebook_data->name = g_strdup(e_source_get_display_name(e_source));
-		ebook_data->id = g_strdup(e_source_get_uid(e_source));
+		g_debug("Parent: %s", e_source_get_parent(e_source));
+		g_debug("UID: %s", e_source_get_uid(e_source));
+		g_debug("Display name: %s", e_source_get_display_name(e_source));
+
+		parent_source = e_source_registry_ref_source(get_source_registry(), e_source_get_parent(e_source));
+		g_debug("Parent name: %s", e_source_get_display_name(parent_source));
+
+		ebook_data->name = g_strdup_printf("%s (%s)", e_source_get_display_name(e_source), e_source_get_display_name(parent_source));
+		ebook_data->id = e_source_dup_uid(e_source);
 
 		ebook_list = g_list_append(ebook_list, ebook_data);
+
+		g_object_unref(parent_source);
 	}
 
 	g_list_free_full(sources, g_object_unref);
