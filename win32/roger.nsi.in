@@ -154,11 +154,11 @@ Section RogerRouter
 	SetOutPath "$INSTDIR\lib\capi"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/capi/*fritz*.dll"
 
-	SetOutPath "$INSTDIR\lib\roger\plugins"
+	SetOutPath "$INSTDIR\lib\roger"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/roger/plugins/*.dll"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/roger/plugins/*.plugin"
 
-	SetOutPath "$INSTDIR\lib\routermanager\plugins"
+	SetOutPath "$INSTDIR\lib\routermanager"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/routermanager/plugins/*.dll"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/routermanager/plugins/*.plugin"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/routermanager/plugins/*.csv"

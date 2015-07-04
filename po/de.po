@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-11 15:31+0200\n"
+"POT-Creation-Date: 2015-07-04 16:19+0200\n"
 "PO-Revision-Date: 2015-01-28 20:28+0100\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <jan.brummer@tabos.org>\n"
@@ -95,12 +95,12 @@ msgstr "Info"
 msgid "Quit"
 msgstr "Beenden"
 
-#: ../roger/assistant.c:53
+#: ../roger/assistant.c:55
 msgid "Profile name already in use!"
 msgstr "Profilename ist bereits in Verwendung!"
 
 #. Error: Could not detect box on this host name
-#: ../roger/assistant.c:116
+#: ../roger/assistant.c:118
 msgid ""
 "Error: Could not detect box on this host name\n"
 "Please check the host name"
@@ -109,7 +109,7 @@ msgstr ""
 "Bitte überprüfen Sie den Hostnamen"
 
 #. Error: Could not get settings from box
-#: ../roger/assistant.c:123
+#: ../roger/assistant.c:125
 msgid ""
 "Error: Could not get settings from box\n"
 "Please check your user/password."
@@ -118,7 +118,7 @@ msgstr ""
 "Bitte überprüfen Sie Benutzer/Passwort"
 
 #. Error: Could not login to ftp
-#: ../roger/assistant.c:132
+#: ../roger/assistant.c:134 ../roger/assistant.c:866
 msgid ""
 "Error: Could not login to box ftp server\n"
 "Please check your ftp user/password."
@@ -216,6 +216,99 @@ msgstr "Zusammenfassung"
 #: ../roger/assistant.c:511
 msgid " Profile Assistant"
 msgstr " Profilassistent"
+
+#: ../roger/assistant.c:566
+msgid "<span font_desc=\"30.0\"><b>Welcome!</b></span>"
+msgstr "<span font_desc=\"30.0\"><b>Willkommen!</b></span>"
+
+#: ../roger/assistant.c:574
+msgid ""
+"In order to use Roger Router you have to connect a router with the "
+"application.\n"
+"The following wizard will help you adding a router to the application.\n"
+msgstr "Zur Verwendung von Roger Router muss ein Router mit der "
+"Anwendung verbunden werden\n"
+"Der folgende Assistent wird Ihnen dabei helfen diesen Router hinzuzufügen.\n"
+
+#: ../roger/assistant.c:673
+msgid "Automatic"
+msgstr "Automatisch"
+
+#: ../roger/assistant.c:679
+msgid "Router IP:"
+msgstr "Router IP:"
+
+#: ../roger/assistant.c:686
+msgid "Manual"
+msgstr "Manuell"
+
+#: ../roger/assistant.c:729
+msgid ""
+"Could not load router configuration. Please change the router ip and try "
+"again"
+msgstr ""
+"Konnte die Routerkonfiguration nicht laden. Bitte ändere die Router IPund "
+"probiere es erneut"
+
+#: ../roger/assistant.c:750
+msgid "Router user:"
+msgstr "Router Benutzername:"
+
+#: ../roger/assistant.c:754
+msgid "Optional"
+msgstr "Optional"
+
+#: ../roger/assistant.c:758
+msgid "Router password:"
+msgstr "Router Passwort:"
+
+#: ../roger/assistant.c:791
+msgid ""
+"Could not detect box on this host name\n"
+"Please check the host name"
+msgstr ""
+"Konnte die Box an diesem Hostnamen nicht erkennen\n"
+"Bitte überprüfen Sie den Hostnamen"
+
+#: ../roger/assistant.c:798
+msgid ""
+"Login failed. Login data are wrong or permissions are missing.\n"
+"Please check your login data."
+msgstr ""
+"Anmeldung fehlgeschlagen. Anmeldedaten sind fehlerhaft oder es fehlen Berechtigungen.\n"
+"Bitte überprüfen sie ihre Anmeldedaten."
+
+#: ../roger/assistant.c:823
+msgid "FTP User:"
+msgstr "FTP Benutzer:"
+
+#: ../roger/assistant.c:830
+msgid "FTP Password:"
+msgstr "FTP Passwort:"
+
+#: ../roger/assistant.c:889
+msgid "<span font_desc=\"30.0\"><b>Finish!</b></span>"
+msgstr "<span font_desc=\"30.0\"><b>Fertig!</b></span>"
+
+#: ../roger/assistant.c:899
+msgid "If you like Roger Router please consider a donation.\n"
+msgstr "Wenn sie Roger Router mögen, denke Sie bitte daran zu spenden.\n""
+
+#: ../roger/assistant.c:965 ../roger/assistant.c:1033
+msgid "Next"
+msgstr "Weiter"
+
+#: ../roger/assistant.c:997
+msgid "Done"
+msgstr "Fertig"
+
+#: ../roger/assistant.c:1025
+msgid "Setup Wizard"
+msgstr "Setup Wizard"
+
+#: ../roger/assistant.c:1028
+msgid "Back"
+msgstr "Zurück"
 
 #: ../roger/contacts.c:121 ../roger/contacts.c:164 ../roger/contact_edit.c:213
 #: ../roger/contact_edit.c:251
@@ -1602,6 +1695,23 @@ msgstr ""
 #: ../roger.appdata.xml.in.h:3
 msgid "Journal view of all calls"
 msgstr "Journalansicht aller Anrufe"
+
+#~ msgid ""
+#~ "Could not get settings from box\n"
+#~ "Please check your user/password."
+#~ msgstr ""
+#~ "Konnte die Einstellungen von der Box nicht holen\n"
+#~ "Bitte überprüfen Sie Benutzer/Passwort"
+
+#~ msgid ""
+#~ "The profile setup is now complete. Please go to the preferences and "
+#~ "customize Roger Router.\n"
+#~ "If you like Roger Router please consider a donation.\n"
+#~ msgstr ""
+#~ "Das Profilsetup ist nun beendet. Bitte gehen Sie in die Einstellungen von "
+#~ "Roger Roger und richten es weiter ein.\n"
+#~ "Wenn sie Roger Router mögen denken Sie bitte daran zu spenden.\n"
+#~ "Wir wünschen Ihnen viel Spaß!\n"
 
 #~ msgid "Entry"
 #~ msgstr "Eintrag"
