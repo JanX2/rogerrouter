@@ -292,7 +292,7 @@ msgstr "<span font_desc=\"30.0\"><b>Fertig!</b></span>"
 
 #: ../roger/assistant.c:899
 msgid "If you like Roger Router please consider a donation.\n"
-msgstr "Wenn sie Roger Router mögen, denke Sie bitte daran zu spenden.\n""
+msgstr "Wenn sie Roger Router mögen, denke Sie bitte daran zu spenden.\n"
 
 #: ../roger/assistant.c:965 ../roger/assistant.c:1033
 msgid "Next"
