@@ -532,6 +532,7 @@ struct assistant_priv {
 	GtkWidget *assistant;
 	GtkWidget *back;
 	GtkWidget *next;
+	GtkWidget *profile_name;
 	GtkWidget *server;
 	GtkWidget *user;
 	GtkWidget *router_stack;
@@ -587,6 +588,63 @@ gboolean welcome_pre(struct assistant_priv *priv)
 	gtk_widget_grab_focus(priv->next);
 
 	return FALSE;
+}
+
+static void profile_entry_changed(GtkEditable *entry, struct assistant_priv *priv)
+{
+	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
+	GSList *profile_list = profile_get_list();
+	struct profile *profile;
+
+	while (profile_list != NULL) {
+		profile = profile_list->data;
+		g_assert(profile != NULL);
+
+		if (!strcmp(profile->name, text)) {
+			gtk_widget_set_sensitive(priv->next, FALSE);
+			//gtk_label_set_text(GTK_LABEL(warning_label), _("Profile name already in use!"));
+			return;
+		}
+
+		profile_list = profile_list->next;
+	}
+
+	//gtk_label_set_text(GTK_LABEL(warning_label), "");
+	gtk_widget_set_sensitive(priv->next, TRUE);
+	//gtk_assistant_set_page_complete(assistant, page, TRUE);
+}
+
+gboolean profile_pre(struct assistant_priv *priv)
+{
+	g_debug("%s(): called", __FUNCTION__);
+	gtk_widget_set_sensitive(priv->next, FALSE);
+
+	return FALSE;
+}
+
+GtkWidget *profile_page(struct assistant_priv *priv)
+{
+	GtkWidget *grid;
+	GtkWidget *label;
+	GtkWidget *name;
+
+	/* Box */
+	grid = gtk_grid_new();
+	gtk_widget_set_hexpand(grid, TRUE);
+	gtk_widget_set_vexpand(grid, TRUE);
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 12);
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 6);
+
+	label = ui_label_new(_("Profile name:"));
+	gtk_grid_attach(GTK_GRID(grid), label, 0, 0, 1, 1);
+
+	name = gtk_entry_new();
+	priv->profile_name = name;
+	g_signal_connect(G_OBJECT(name), "changed", G_CALLBACK(profile_entry_changed), priv);
+	gtk_grid_attach(GTK_GRID(grid), name, 1, 0, 1, 1);
+	priv->user = name;
+
+	return grid;
 }
 
 void router_listbox_destroy(GtkWidget *widget, gpointer user_data)
@@ -775,7 +833,7 @@ GtkWidget *password_page(struct assistant_priv *priv)
 
 gboolean password_post(struct assistant_priv *priv)
 {
-	gchar *name = "MOEP";
+	const gchar *name = gtk_entry_get_text(GTK_ENTRY(priv->profile_name));
 	const gchar *host = g_object_get_data(G_OBJECT(priv->router_stack), "server");
 	const gchar *user = gtk_entry_get_text(GTK_ENTRY(priv->user));
 	const gchar *password = gtk_entry_get_text(GTK_ENTRY(priv->password));
@@ -943,6 +1001,7 @@ gboolean finish_pre(struct assistant_priv *priv)
 
 struct assistant_page assistant_pages[] = {
 	{welcome_page, welcome_pre, NULL, "welcome"},
+	{profile_page, profile_pre, NULL, "profile"},
 	{router_page, router_pre, router_post, "router"},
 	{password_page, NULL, password_post, "password"},
 	{ftp_password_page, ftp_password_pre, ftp_password_post, "ftp_password"},
