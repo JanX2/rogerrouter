@@ -618,6 +618,7 @@ gboolean profile_pre(struct assistant_priv *priv)
 {
 	g_debug("%s(): called", __FUNCTION__);
 	gtk_widget_set_sensitive(priv->next, FALSE);
+	gtk_widget_grab_focus(priv->profile_name);
 
 	return FALSE;
 }
@@ -640,6 +641,7 @@ GtkWidget *profile_page(struct assistant_priv *priv)
 
 	name = gtk_entry_new();
 	priv->profile_name = name;
+	gtk_entry_set_activates_default(GTK_ENTRY(name), TRUE);
 	g_signal_connect(G_OBJECT(name), "changed", G_CALLBACK(profile_entry_changed), priv);
 	gtk_grid_attach(GTK_GRID(grid), name, 1, 0, 1, 1);
 	priv->user = name;
@@ -818,6 +820,7 @@ GtkWidget *password_page(struct assistant_priv *priv)
 	gtk_grid_attach(GTK_GRID(grid), label, 0, 1, 1, 1);
 
 	password = gtk_entry_new();
+	gtk_entry_set_activates_default(GTK_ENTRY(password), TRUE);
 	gtk_entry_set_visibility(GTK_ENTRY(password), FALSE);
 	gtk_grid_attach(GTK_GRID(grid), password, 1, 1, 1, 1);
 	priv->password = password;
@@ -890,6 +893,7 @@ GtkWidget *ftp_password_page(struct assistant_priv *priv)
 	gtk_grid_attach(GTK_GRID(grid), label, 0, 1, 1, 1);
 
 	ftp_password = gtk_entry_new();
+	gtk_entry_set_activates_default(GTK_ENTRY(ftp_password), TRUE);
 	gtk_entry_set_visibility(GTK_ENTRY(ftp_password), FALSE);
 	gtk_grid_attach(GTK_GRID(grid), ftp_password, 1, 1, 1, 1);
 	priv->ftp_password = ftp_password;
@@ -1034,7 +1038,7 @@ void back_button_clicked_cb(GtkWidget *next, gpointer user_data)
 	gtk_stack_set_visible_child_name(GTK_STACK(stack), assistant_pages[priv->current_page].name);
 }
 
-void next_button_clicked_cb(GtkButton *next, gpointer user_data)
+void next_button_clicked_cb(GtkWidget *next, gpointer user_data)
 {
 	GtkWidget *stack = user_data;
 	struct assistant_priv *priv = g_object_get_data(G_OBJECT(stack), "priv");
@@ -1062,6 +1066,8 @@ void next_button_clicked_cb(GtkButton *next, gpointer user_data)
 		assistant_pages[priv->current_page].pre(priv);
 	}
 
+	gtk_widget_set_can_default(next, TRUE);
+	gtk_widget_grab_default(next);
 	gtk_stack_set_transition_type(GTK_STACK(stack), GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT);
 	gtk_stack_set_visible_child_name(GTK_STACK(stack), assistant_pages[priv->current_page].name);
 }
