@@ -584,6 +584,7 @@ gboolean welcome_pre(struct assistant_priv *priv)
 {
 	g_debug("%s(): called", __FUNCTION__);
 	gtk_widget_set_sensitive(priv->back, FALSE);
+	gtk_widget_grab_focus(priv->next);
 
 	return FALSE;
 }
@@ -851,12 +852,10 @@ gboolean ftp_password_pre(struct assistant_priv *priv)
 
 gboolean ftp_password_post(struct assistant_priv *priv)
 {
-	const gchar *host = gtk_entry_get_text(GTK_ENTRY(priv->server));
+	const gchar *host = g_object_get_data(G_OBJECT(priv->router_stack), "server");
 	const gchar *ftp_user = gtk_entry_get_text(GTK_ENTRY(priv->ftp_user));
 	const gchar *ftp_password = gtk_entry_get_text(GTK_ENTRY(priv->ftp_password));
 	gchar *message;
-
-	g_debug("host: %s user: %s password: %s", host, ftp_user, ftp_password);
 
 	/* Test ftp login */
 	struct ftp *ftp = ftp_init(host);
@@ -1041,6 +1040,7 @@ void assistant()
 	gtk_container_add(GTK_CONTAINER(window), stack);
 
 	priv->next = next_button;
+	gtk_widget_grab_focus(priv->next);
 
 	for (i = 0; assistant_pages[i].create_child != NULL; i++) {
 		GtkWidget *child = assistant_pages[i].create_child(priv);
