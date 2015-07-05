@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-05 13:39+0200\n"
+"POT-Creation-Date: 2015-07-05 14:01+0200\n"
 "PO-Revision-Date: 2015-01-28 20:28+0100\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <jan.brummer@tabos.org>\n"
@@ -393,8 +393,8 @@ msgstr "Tippen zum Suchen"
 msgid "Open image"
 msgstr "Bild öffnen"
 
-#: ../roger/contact_edit.c:129 ../roger/pref_action.c:163
-#: ../roger/pref_fax.c:53 ../roger/pref_misc.c:50
+#: ../roger/contact_edit.c:129 ../roger/journal.c:1257
+#: ../roger/pref_action.c:163 ../roger/pref_fax.c:53 ../roger/pref_misc.c:50
 #: ../roger/plugins/vcard/vcard.c:1133
 #: ../roger/plugins/thunderbird/thunderbird.c:1013
 msgid "_Cancel"
@@ -411,14 +411,14 @@ msgid "_No image"
 msgstr "_Kein Bild"
 
 #. Name
-#: ../roger/contact_edit.c:192 ../roger/journal.c:1282
+#: ../roger/contact_edit.c:192 ../roger/journal.c:1292
 #: ../roger/pref_action.c:192 ../roger/pref_action.c:506
 #: ../roger/pref_filters.c:201 ../roger/pref_filters.c:561
 #: ../roger/print.c:384
 msgid "Name"
 msgstr "Name"
 
-#: ../roger/contact_edit.c:225 ../roger/journal.c:1284
+#: ../roger/contact_edit.c:225 ../roger/journal.c:1294
 #: ../roger/pref_action.c:255 ../roger/pref_filters.c:202 ../roger/print.c:388
 #: ../roger/plugins/gtknotify/gtknotify.c:611
 #: ../roger/plugins/gnotification/gnotification.c:437
@@ -441,7 +441,7 @@ msgstr "Straße"
 msgid "ZIP"
 msgstr "PLZ"
 
-#: ../roger/contact_edit.c:268 ../roger/journal.c:1285
+#: ../roger/contact_edit.c:268 ../roger/journal.c:1295
 msgid "City"
 msgstr "Stadt"
 
@@ -562,45 +562,49 @@ msgstr "Kontakt hinzufügen"
 msgid "Delete entry"
 msgstr "Eintrag löschen"
 
-#: ../roger/journal.c:1280 ../roger/pref_filters.c:199 ../roger/print.c:376
+#: ../roger/journal.c:1257 ../roger/journal.c:1367
+msgid "Export journal"
+msgstr "Journal exportieren"
+
+#: ../roger/journal.c:1257
+msgid "_Save"
+msgstr "_Speichern"
+
+#: ../roger/journal.c:1290 ../roger/pref_filters.c:199 ../roger/print.c:376
 msgid "Type"
 msgstr "Typ"
 
-#: ../roger/journal.c:1281 ../roger/pref_filters.c:200 ../roger/print.c:380
+#: ../roger/journal.c:1291 ../roger/pref_filters.c:200 ../roger/print.c:380
 msgid "Date/Time"
 msgstr "Datum/Zeit"
 
-#: ../roger/journal.c:1283
+#: ../roger/journal.c:1293
 msgid "Company"
 msgstr "Firma"
 
-#: ../roger/journal.c:1286 ../roger/pref_filters.c:203
+#: ../roger/journal.c:1296 ../roger/pref_filters.c:203
 msgid "Extension"
 msgstr "Nebenstelle"
 
-#: ../roger/journal.c:1287 ../roger/pref_filters.c:204
+#: ../roger/journal.c:1297 ../roger/pref_filters.c:204
 msgid "Line"
 msgstr "Leitung"
 
-#: ../roger/journal.c:1288 ../roger/print.c:400
+#: ../roger/journal.c:1298 ../roger/print.c:400
 msgid "Duration"
 msgstr "Dauer"
 
-#: ../roger/journal.c:1354
+#: ../roger/journal.c:1364
 msgid "Refresh journal"
 msgstr "Journal laden"
 
-#: ../roger/journal.c:1355
+#: ../roger/journal.c:1365
 msgid "Print journal"
 msgstr "Journal drucken"
 
-#: ../roger/journal.c:1356
+#: ../roger/journal.c:1366
 msgid "Clear journal"
 msgstr "Journal löschen"
-
-#: ../roger/journal.c:1357
-msgid "Export journal"
-msgstr "Journal exportieren"
 
 #: ../roger/phone.c:130
 #, c-format
