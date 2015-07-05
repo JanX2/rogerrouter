@@ -536,7 +536,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	for (source = sources; source != NULL; source = source->next) {
 		struct ebook_data *ebook_data = source->data;
 
-		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box), ebook_data->id, ebook_data->name);
+		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box), ebook_data->name, ebook_data->name);
 	}
 
 	gtk_box_pack_start(GTK_BOX(box), combo_box, FALSE, TRUE, 5);

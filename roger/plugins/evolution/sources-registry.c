@@ -17,8 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <string.h>
 #include <libebook/libebook.h>
 #include "ebook-sources.h"
+
+GList *get_ebook_list(void);
 
 /**
  * \brief Retrieve source registry
@@ -45,7 +48,24 @@ static ESourceRegistry *get_source_registry(void)
  */
 static ESource *get_selected_ebook_esource(void)
 {
-	return e_source_registry_ref_source(get_source_registry(), get_selected_ebook_id());
+	GList *list;
+	ESourceRegistry *registry = get_source_registry();
+	const gchar *id = get_selected_ebook_id();
+
+	g_debug("registry: %p id %s", registry, id);
+	list = get_ebook_list();
+	g_debug("list: %p", list);
+	while (list) {
+		struct ebook_data *ebook_data = list->data;
+
+		g_debug("%s <-> %s", ebook_data->name, id);
+		if (!strcmp(ebook_data->name, id)) {
+			return e_source_registry_ref_source(registry, ebook_data->id);
+		}
+		list = list->next;
+	}
+
+	return NULL;
 }
 
 /**
