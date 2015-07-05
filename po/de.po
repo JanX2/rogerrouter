@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-04 16:19+0200\n"
+"POT-Creation-Date: 2015-07-05 13:39+0200\n"
 "PO-Revision-Date: 2015-01-28 20:28+0100\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <jan.brummer@tabos.org>\n"
@@ -118,7 +118,7 @@ msgstr ""
 "Bitte überprüfen Sie Benutzer/Passwort"
 
 #. Error: Could not login to ftp
-#: ../roger/assistant.c:134 ../roger/assistant.c:866
+#: ../roger/assistant.c:134 ../roger/assistant.c:927
 msgid ""
 "Error: Could not login to box ftp server\n"
 "Please check your ftp user/password."
@@ -217,32 +217,37 @@ msgstr "Zusammenfassung"
 msgid " Profile Assistant"
 msgstr " Profilassistent"
 
-#: ../roger/assistant.c:566
+#: ../roger/assistant.c:567
 msgid "<span font_desc=\"30.0\"><b>Welcome!</b></span>"
 msgstr "<span font_desc=\"30.0\"><b>Willkommen!</b></span>"
 
-#: ../roger/assistant.c:574
+#: ../roger/assistant.c:575
 msgid ""
 "In order to use Roger Router you have to connect a router with the "
 "application.\n"
 "The following wizard will help you adding a router to the application.\n"
-msgstr "Zur Verwendung von Roger Router muss ein Router mit der "
-"Anwendung verbunden werden\n"
+msgstr ""
+"Zur Verwendung von Roger Router muss ein Router mit der Anwendung verbunden "
+"werden\n"
 "Der folgende Assistent wird Ihnen dabei helfen diesen Router hinzuzufügen.\n"
 
-#: ../roger/assistant.c:673
+#: ../roger/assistant.c:639
+msgid "Profile name:"
+msgstr "Filternamen:"
+
+#: ../roger/assistant.c:734
 msgid "Automatic"
 msgstr "Automatisch"
 
-#: ../roger/assistant.c:679
+#: ../roger/assistant.c:740
 msgid "Router IP:"
 msgstr "Router IP:"
 
-#: ../roger/assistant.c:686
+#: ../roger/assistant.c:747
 msgid "Manual"
 msgstr "Manuell"
 
-#: ../roger/assistant.c:729
+#: ../roger/assistant.c:790
 msgid ""
 "Could not load router configuration. Please change the router ip and try "
 "again"
@@ -250,19 +255,19 @@ msgstr ""
 "Konnte die Routerkonfiguration nicht laden. Bitte ändere die Router IPund "
 "probiere es erneut"
 
-#: ../roger/assistant.c:750
+#: ../roger/assistant.c:811
 msgid "Router user:"
 msgstr "Router Benutzername:"
 
-#: ../roger/assistant.c:754
+#: ../roger/assistant.c:815
 msgid "Optional"
 msgstr "Optional"
 
-#: ../roger/assistant.c:758
+#: ../roger/assistant.c:819
 msgid "Router password:"
 msgstr "Router Passwort:"
 
-#: ../roger/assistant.c:791
+#: ../roger/assistant.c:853
 msgid ""
 "Could not detect box on this host name\n"
 "Please check the host name"
@@ -270,43 +275,44 @@ msgstr ""
 "Konnte die Box an diesem Hostnamen nicht erkennen\n"
 "Bitte überprüfen Sie den Hostnamen"
 
-#: ../roger/assistant.c:798
+#: ../roger/assistant.c:860
 msgid ""
 "Login failed. Login data are wrong or permissions are missing.\n"
 "Please check your login data."
 msgstr ""
-"Anmeldung fehlgeschlagen. Anmeldedaten sind fehlerhaft oder es fehlen Berechtigungen.\n"
+"Anmeldung fehlgeschlagen. Anmeldedaten sind fehlerhaft oder es fehlen "
+"Berechtigungen.\n"
 "Bitte überprüfen sie ihre Anmeldedaten."
 
-#: ../roger/assistant.c:823
+#: ../roger/assistant.c:885
 msgid "FTP User:"
 msgstr "FTP Benutzer:"
 
-#: ../roger/assistant.c:830
+#: ../roger/assistant.c:892
 msgid "FTP Password:"
 msgstr "FTP Passwort:"
 
-#: ../roger/assistant.c:889
+#: ../roger/assistant.c:950
 msgid "<span font_desc=\"30.0\"><b>Finish!</b></span>"
 msgstr "<span font_desc=\"30.0\"><b>Fertig!</b></span>"
 
-#: ../roger/assistant.c:899
+#: ../roger/assistant.c:960
 msgid "If you like Roger Router please consider a donation.\n"
 msgstr "Wenn sie Roger Router mögen, denke Sie bitte daran zu spenden.\n"
 
-#: ../roger/assistant.c:965 ../roger/assistant.c:1033
+#: ../roger/assistant.c:1027 ../roger/assistant.c:1097
 msgid "Next"
 msgstr "Weiter"
 
-#: ../roger/assistant.c:997
+#: ../roger/assistant.c:1059
 msgid "Done"
 msgstr "Fertig"
 
-#: ../roger/assistant.c:1025
+#: ../roger/assistant.c:1089
 msgid "Setup Wizard"
 msgstr "Setup Wizard"
 
-#: ../roger/assistant.c:1028
+#: ../roger/assistant.c:1092
 msgid "Back"
 msgstr "Zurück"
 
@@ -405,14 +411,14 @@ msgid "_No image"
 msgstr "_Kein Bild"
 
 #. Name
-#: ../roger/contact_edit.c:192 ../roger/journal.c:1275
+#: ../roger/contact_edit.c:192 ../roger/journal.c:1282
 #: ../roger/pref_action.c:192 ../roger/pref_action.c:506
 #: ../roger/pref_filters.c:201 ../roger/pref_filters.c:561
 #: ../roger/print.c:384
 msgid "Name"
 msgstr "Name"
 
-#: ../roger/contact_edit.c:225 ../roger/journal.c:1277
+#: ../roger/contact_edit.c:225 ../roger/journal.c:1284
 #: ../roger/pref_action.c:255 ../roger/pref_filters.c:202 ../roger/print.c:388
 #: ../roger/plugins/gtknotify/gtknotify.c:611
 #: ../roger/plugins/gnotification/gnotification.c:437
@@ -435,7 +441,7 @@ msgstr "Straße"
 msgid "ZIP"
 msgstr "PLZ"
 
-#: ../roger/contact_edit.c:268 ../roger/journal.c:1278
+#: ../roger/contact_edit.c:268 ../roger/journal.c:1285
 msgid "City"
 msgstr "Stadt"
 
@@ -532,65 +538,69 @@ msgid "New contact"
 msgstr "Neuer Kontakt"
 
 #. Create dialog
-#: ../roger/journal.c:893 ../roger/pref_filters.c:61
+#: ../roger/journal.c:894 ../roger/pref_filters.c:61
 msgid "Voice box"
 msgstr "Anrufbeantworter"
 
 #. Copy phone number
-#: ../roger/journal.c:1156
+#: ../roger/journal.c:1157
 msgid "Copy number"
 msgstr "Nummer kopieren"
 
 #. Call phone number
-#: ../roger/journal.c:1161
+#: ../roger/journal.c:1162
 msgid "Call number"
 msgstr "Nummer wählen"
 
 #. Add contact
-#: ../roger/journal.c:1170
+#: ../roger/journal.c:1171
 msgid "Add contact"
 msgstr "Kontakt hinzufügen"
 
 #. Delete entry
-#: ../roger/journal.c:1179
+#: ../roger/journal.c:1180
 msgid "Delete entry"
 msgstr "Eintrag löschen"
 
-#: ../roger/journal.c:1273 ../roger/pref_filters.c:199 ../roger/print.c:376
+#: ../roger/journal.c:1280 ../roger/pref_filters.c:199 ../roger/print.c:376
 msgid "Type"
 msgstr "Typ"
 
-#: ../roger/journal.c:1274 ../roger/pref_filters.c:200 ../roger/print.c:380
+#: ../roger/journal.c:1281 ../roger/pref_filters.c:200 ../roger/print.c:380
 msgid "Date/Time"
 msgstr "Datum/Zeit"
 
-#: ../roger/journal.c:1276
+#: ../roger/journal.c:1283
 msgid "Company"
 msgstr "Firma"
 
-#: ../roger/journal.c:1279 ../roger/pref_filters.c:203
+#: ../roger/journal.c:1286 ../roger/pref_filters.c:203
 msgid "Extension"
 msgstr "Nebenstelle"
 
-#: ../roger/journal.c:1280 ../roger/pref_filters.c:204
+#: ../roger/journal.c:1287 ../roger/pref_filters.c:204
 msgid "Line"
 msgstr "Leitung"
 
-#: ../roger/journal.c:1281 ../roger/print.c:400
+#: ../roger/journal.c:1288 ../roger/print.c:400
 msgid "Duration"
 msgstr "Dauer"
 
-#: ../roger/journal.c:1346
+#: ../roger/journal.c:1354
 msgid "Refresh journal"
 msgstr "Journal laden"
 
-#: ../roger/journal.c:1347
+#: ../roger/journal.c:1355
 msgid "Print journal"
 msgstr "Journal drucken"
 
-#: ../roger/journal.c:1348
+#: ../roger/journal.c:1356
 msgid "Clear journal"
 msgstr "Journal löschen"
+
+#: ../roger/journal.c:1357
+msgid "Export journal"
+msgstr "Journal exportieren"
 
 #: ../roger/phone.c:130
 #, c-format
@@ -912,7 +922,7 @@ msgstr "Internet"
 
 #: ../roger/pref_fax.c:225
 msgid "Service"
-msgstr "DIenst"
+msgstr "Dienst"
 
 #: ../roger/pref_fax.c:229
 msgid "Analog"
@@ -1718,9 +1728,6 @@ msgstr "Journalansicht aller Anrufe"
 
 #~ msgid "_Close"
 #~ msgstr "_Schließen"
-
-#~ msgid "Enter filter name"
-#~ msgstr "Filternamen eingeben"
 
 #~ msgid "_OK"
 #~ msgstr "_OK"

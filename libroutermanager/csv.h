@@ -25,6 +25,7 @@ G_BEGIN_DECLS
 typedef gpointer (*csv_parse_line_func)(gpointer ptr, gchar **split);
 
 gpointer csv_parse_data(const gchar *data, const gchar *header, csv_parse_line_func csv_parse_line, gpointer ptr);
+gboolean csv_save_journal_as(GSList *journal, gchar *file_name);
 gboolean csv_save_journal(GSList *journal);
 GSList *csv_load_journal(GSList *journal);
 
