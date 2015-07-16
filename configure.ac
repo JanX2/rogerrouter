@@ -179,7 +179,7 @@ AS_IF([test "x$with_secret" != xno],
 	[if test "x$with_secret" = xcheck; then
 		$PKG_CONFIG --atleast-version=0.11 libsecret-1 && with_secret=yes
 	elif test "x$with_secret" = xyes; then
-		$PKG_CONFIG --atleast-verson=0.11 libsecret-1 || AC_MSG_FAILURE(
+		$PKG_CONFIG --atleast-version=0.11 libsecret-1 || AC_MSG_FAILURE(
 		[--with-secret=yes was given, but test for secret failed])
 	fi
 	if test "x$with_secret" = xyes; then
