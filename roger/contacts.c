@@ -58,6 +58,8 @@ static void dial_clicked_cb(GtkWidget *button, gpointer user_data)
 	g_free(full_number);
 	g_assert(contact != NULL);
 
+	contact->number = number;
+
 	/* Show phone window with given contact */
 	app_show_phone_window(contact, NULL);
 }
