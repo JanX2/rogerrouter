@@ -561,6 +561,7 @@ static void phone_search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer
 
 	/* if needed, create contact menu */
 	if (!state->contact_menu) {
+		GtkWidget *placeholder;
 		gint width, height;
 
 		/* Create popover */
@@ -582,6 +583,10 @@ static void phone_search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer
 		gtk_container_add(GTK_CONTAINER(state->contact_menu), state->scrolled_win);
 
 		state->box = gtk_list_box_new();
+		placeholder = gtk_label_new(NULL);
+		gtk_label_set_markup(GTK_LABEL(placeholder), _("<b>No contacts found</b>"));
+		gtk_widget_set_visible(placeholder, TRUE);
+		gtk_list_box_set_placeholder(GTK_LIST_BOX(state->box), placeholder);
 		gtk_list_box_set_filter_func(GTK_LIST_BOX(state->box), phone_search_entry_filter_cb, state, NULL);
 		gtk_container_add(GTK_CONTAINER(state->scrolled_win), state->box);
 		g_signal_connect(G_OBJECT(state->box), "row-activated", G_CALLBACK(phone_list_box_activated_cb), state);
