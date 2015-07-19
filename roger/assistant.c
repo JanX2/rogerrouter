@@ -610,14 +610,15 @@ static void profile_entry_changed(GtkEditable *entry, struct assistant_priv *pri
 	}
 
 	//gtk_label_set_text(GTK_LABEL(warning_label), "");
-	gtk_widget_set_sensitive(priv->next, TRUE);
+	gtk_widget_set_sensitive(priv->next, !EMPTY_STRING(text));
 	//gtk_assistant_set_page_complete(assistant, page, TRUE);
 }
 
 gboolean profile_pre(struct assistant_priv *priv)
 {
+	const gchar *text = gtk_entry_get_text(GTK_ENTRY(priv->profile_name));
 	g_debug("%s(): called", __FUNCTION__);
-	gtk_widget_set_sensitive(priv->next, FALSE);
+	gtk_widget_set_sensitive(priv->next, !EMPTY_STRING(text));
 	gtk_widget_grab_focus(priv->profile_name);
 
 	return FALSE;
@@ -641,6 +642,7 @@ GtkWidget *profile_page(struct assistant_priv *priv)
 
 	name = gtk_entry_new();
 	priv->profile_name = name;
+	gtk_widget_set_hexpand(name, TRUE);
 	gtk_entry_set_activates_default(GTK_ENTRY(name), TRUE);
 	g_signal_connect(G_OBJECT(name), "changed", G_CALLBACK(profile_entry_changed), priv);
 	gtk_grid_attach(GTK_GRID(grid), name, 1, 0, 1, 1);
@@ -696,7 +698,7 @@ void router_entry_changed(GtkEditable *entry, struct assistant_priv *priv)
 {
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 
-	gtk_widget_set_sensitive(priv->next, !EMPTY_STRING(text));
+	gtk_widget_set_sensitive(priv->next, strlen(text) > 0);
 }
 
 GtkWidget *router_page(struct assistant_priv *priv)
@@ -952,9 +954,32 @@ GtkWidget *finish_page(struct assistant_priv *priv)
 	gtk_label_set_justify(GTK_LABEL(welcome), GTK_JUSTIFY_CENTER);
 	gtk_grid_attach(GTK_GRID(grid), welcome, 0, 0, 1, 1);
 
-	//logo = gtk_image_new_from_file(path);
+#if 1
 	logo = gtk_image_new_from_icon_name("face-smile-big-symbolic", GTK_ICON_SIZE_DIALOG);
-	gtk_image_set_pixel_size(GTK_IMAGE(logo), 96);
+#else
+	GdkPixbuf *pixbuf;
+	GdkRGBA col;
+
+	col.red = 0.0;
+	col.green = 1.0;
+	col.blue = 0.0;
+	col.alpha = 1.0;
+
+	GtkIconTheme *icons;
+
+	extern GdkPixbuf *
+create_colorized_pixbuf (GdkPixbuf *src,
+                         GdkRGBA   *new_color);
+                
+    
+                icons = gtk_icon_theme_get_default();
+
+	pixbuf = gtk_icon_theme_load_icon(icons, "face-smile-big-symbolic", 128, 0, NULL);
+	pixbuf = create_colorized_pixbuf(pixbuf, &col);
+	logo = gtk_image_new_from_pixbuf(pixbuf);
+#endif
+
+	gtk_image_set_pixel_size(GTK_IMAGE(logo), 128);
 	gtk_grid_attach(GTK_GRID(grid), logo, 0, 1, 1, 1);
 
 	description = gtk_label_new(_("If you like Roger Router please consider a donation.\n"));
@@ -1055,9 +1080,6 @@ void next_button_clicked_cb(GtkWidget *next, gpointer user_data)
 	}
 
 	priv->current_page++;
-	if (priv->current_page >= priv->max_page - 1) {
-		gtk_button_set_label(GTK_BUTTON(priv->next), _("Done"));
-	}
 
 	gtk_widget_set_sensitive(priv->next, TRUE);
 	gtk_widget_set_sensitive(priv->back, TRUE);
@@ -1070,6 +1092,10 @@ void next_button_clicked_cb(GtkWidget *next, gpointer user_data)
 	gtk_widget_grab_default(next);
 	gtk_stack_set_transition_type(GTK_STACK(stack), GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT);
 	gtk_stack_set_visible_child_name(GTK_STACK(stack), assistant_pages[priv->current_page].name);
+
+	if (priv->current_page >= priv->max_page - 1) {
+		gtk_button_set_label(GTK_BUTTON(priv->next), _("Done"));
+	}
 }
 
 void assistant()

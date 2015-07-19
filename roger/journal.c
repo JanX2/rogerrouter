@@ -91,8 +91,7 @@ void journal_clear(void)
 	gtk_list_store_clear(list_store);
 }
 
-#ifdef JOURNAL_NEW_ICONS_COL
-static GdkPixbuf *
+GdkPixbuf *
 create_colorized_pixbuf (GdkPixbuf *src,
                          GdkRGBA   *new_color)
 {
@@ -138,6 +137,7 @@ create_colorized_pixbuf (GdkPixbuf *src,
   return dest;
 }
 
+#ifdef JOURNAL_NEW_ICONS_COL
 GdkPixbuf *pixbuf_copy_rotate_90(GdkPixbuf *src, gint counter_clockwise)
 {
     GdkPixbuf *dest;
