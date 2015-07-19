@@ -17,6 +17,7 @@ Fedora packages
 sudo dnf install autoconf automake gtk3-devel intltool libtool speex-devel speexdsp-devel libsndfile-devel libxml2-devel libsoup-devel libpeas-devel spandsp-devel
 
 # Plugins
+gstreamer1-devel gstreamer1-plugins-base-devel
 evolution-devel
 pulseaudio-libs-devel
 libsecret-devel
