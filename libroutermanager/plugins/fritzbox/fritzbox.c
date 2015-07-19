@@ -35,6 +35,7 @@
 #include "firmware-common.h"
 #include "firmware-04-74.h"
 #include "firmware-05-50.h"
+#include "firmware-06-35.h"
 #include "firmware-plain.h"
 #include "csv.h"
 

@@ -118,6 +118,54 @@ gchar *xml_extract_tag(const gchar *data, gchar *tag)
 }
 
 /**
+ * \brief Extract XML Tags: <TAG>VALUE</TAG>
+ * \param data data to parse
+ * \param tag tag to extract
+ * \return tag values
+ */
+gchar **xml_extract_tags(const gchar *data, gchar *tag_start, gchar *tag_end)
+{
+	gchar *regex_str = g_strdup_printf("<%s>[^<]*</%s>", tag_start, tag_end);
+	GRegex *regex = NULL;
+	GError *error = NULL;
+	GMatchInfo *match_info;
+	gchar **entries = NULL;
+	gint index = 0;
+
+	regex = g_regex_new(regex_str, 0, 0, &error);
+	g_assert(regex != NULL);
+
+	g_regex_match(regex, data, 0, &match_info);
+
+	while (match_info && g_match_info_matches(match_info)) {
+		gint start;
+		gint end;
+		gboolean fetched = g_match_info_fetch_pos(match_info, 0, &start, &end);
+
+		if (fetched == TRUE) {
+			gchar *tag_start_pos = strchr(data + start, '>');
+			gchar *tag_end_pos = strchr(tag_start_pos + 1, '<');
+			gint entry_size = tag_end_pos - tag_start_pos - 1;
+
+			entries = g_realloc(entries, (index + 2) * sizeof(gchar *));
+			entries[index] = g_malloc0(entry_size + 1);
+			strncpy(entries[index], tag_start_pos + 1, entry_size);
+			entries[index + 1] = NULL;
+			index++;
+		}
+
+		if (g_match_info_next(match_info, NULL) == FALSE) {
+			break;
+		}
+	}
+
+	g_match_info_free(match_info);
+	g_free(regex_str);
+
+	return entries;
+}
+
+/**
  * \brief Extract XML input tag: name="TAG" ... value="VALUE"
  * \param data data to parse
  * \param tag tag to extract
@@ -278,6 +326,33 @@ gchar *html_extract_assignment(const gchar *data, gchar *tag, gboolean p)
 
 	return value;
 }
+
+
+/**
+ * \brief Remove duplicate entries from string array
+ * \param numbers input string array
+ * \return duplicate free string array
+ */
+gchar **strv_remove_duplicates(gchar **numbers)
+{
+	gchar **ret = NULL;
+	gint len = g_strv_length(numbers);
+	gint idx;
+	gint ret_idx = 1;
+
+	for (idx = 0; idx < len; idx++) {
+		if (!ret || !strv_contains((const gchar * const *)ret, numbers[idx])) {
+			ret = g_realloc(ret, (ret_idx + 1) * sizeof(char *));
+			ret[ret_idx - 1] = g_strdup(numbers[idx]);
+			ret[ret_idx] = NULL;
+
+			ret_idx++;
+		}
+	}
+
+	return ret;
+}
+
 
 /**
  * \brief Check if a FRITZ!Box router is present

@@ -184,10 +184,29 @@ gboolean fritzbox_get_fax_information_06_35(struct profile *profile)
 	g_settings_set_int(profile->settings, "tam-stick", store);
 	g_settings_set_string(profile->settings, "fax-volume", "");
 
-	if (store) {
-		/* <span class="ShowPath">Pfad: &#92;&#92;FRITZ&#92;&#92;faxbox</span> */
+	g_object_unref(msg);
 
-		regex_str = g_strdup_printf("<span class=\"ShowPath\">Pfad: (?P<path>.+faxbox)</span>");
+	if (store) {
+		url = g_strdup_printf("http://%s/storage/settings.lua", router_get_host(profile));
+		msg = soup_form_request_new(SOUP_METHOD_GET, url,
+		                            "sid", profile->router_info->session_id,
+		                            NULL);
+		g_free(url);
+
+		soup_session_send_message(soup_session_sync, msg);
+		if (msg->status_code != 200) {
+			g_debug("Received status code: %d", msg->status_code);
+			g_object_unref(msg);
+			return FALSE;
+		}
+		data = msg->response_body->data;
+		read = msg->response_body->length;
+
+		log_save_data("fritzbox-06_35-get-settings-fax-usb.html", data, read);
+
+		/* <td id="/var/media/ftp/PatriotMemory-01"> */
+
+		regex_str = g_strdup_printf("<td id=\"/var/media/ftp/(?P<volume>(\\w|\\d|-)+)\">");
 		error = NULL;
 
 		regex = g_regex_new(regex_str, 0, 0, &error);
@@ -196,14 +215,11 @@ gboolean fritzbox_get_fax_information_06_35(struct profile *profile)
 		g_regex_match(regex, data, 0, &match_info);
 
 		while (match_info && g_match_info_matches(match_info)) {
-			gchar *checked = g_match_info_fetch_named(match_info, "path");
+			gchar *volume = g_match_info_fetch_named(match_info, "volume");
 
-			if (checked) {
-				GRegex *pro = g_regex_new("&#92;&#92;", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
-				gchar *path = g_regex_replace_literal(pro, checked, -1, 0, "/", 0, NULL);
-				g_regex_unref(pro);
-				g_debug("Fax-Storage-Volume: '%s'", path);
-				g_settings_set_string(profile->settings, "fax-volume", path);
+			if (volume) {
+				g_debug("Fax-Storage-Volume: '%s'", volume);
+				g_settings_set_string(profile->settings, "fax-volume", volume);
 				break;
 			}
 
@@ -214,9 +230,9 @@ gboolean fritzbox_get_fax_information_06_35(struct profile *profile)
 
 		g_match_info_free(match_info);
 		g_free(regex_str);
-	}
 
-	g_object_unref(msg);
+		g_object_unref(msg);
+	}
 
 	url = g_strdup_printf("http://%s/fon_devices/fax_send.lua", router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
@@ -392,7 +408,7 @@ gboolean fritzbox_get_settings_06_35(struct profile *profile)
 	/* Try to detect controller */
 	fritzbox_detect_controller_06_35(profile, data);
 
-	gchar *dialport = xml_extract_tag_value(data, "option selected");
+	gchar *dialport = xml_extract_tag_value((gchar*)data, "option selected");
 	if (dialport) {
 		gint port = atoi(dialport);
 		gint phone_port = fritzbox_find_phone_port(port);

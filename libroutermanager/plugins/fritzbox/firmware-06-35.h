@@ -23,6 +23,8 @@
 G_BEGIN_DECLS
 
 gboolean fritzbox_get_settings_06_35(struct profile *profile);
+gboolean fritzbox_dial_number_06_35(struct profile *profile, gint port, const gchar *number);
+gboolean fritzbox_hangup_06_35(struct profile *profile, gint port, const gchar *number);
 
 G_END_DECLS
 

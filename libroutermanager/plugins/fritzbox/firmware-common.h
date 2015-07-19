@@ -71,11 +71,13 @@ struct voice_box {
 
 extern struct phone_port fritzbox_phone_ports[PORT_MAX];
 
+gchar **xml_extract_tags(const gchar *data, gchar *tag_start, gchar *tag_end);
 gchar *xml_extract_tag(const gchar *data, gchar *tag);
 gchar *xml_extract_input_value(const gchar *data, gchar *tag);
 gchar *xml_extract_input_value_r(const gchar *data, gchar *tag);
 gchar *xml_extract_list_value(const gchar *data, gchar *tag);
 gchar *html_extract_assignment(const gchar *data, gchar *tag, gboolean p);
+gchar **strv_remove_duplicates(gchar **numbers);
 gboolean fritzbox_present(struct router_info *router_info);
 gboolean fritzbox_logout(struct profile *profile, gboolean force);
 void fritzbox_read_msn(struct profile *profile, const gchar *data);
