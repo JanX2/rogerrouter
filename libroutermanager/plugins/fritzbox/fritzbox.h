@@ -27,6 +27,8 @@ G_BEGIN_DECLS
 gboolean fritzbox_login(struct profile *profile);
 gboolean fritzbox_get_settings(struct profile *profile);
 gboolean fritzbox_load_journal(struct profile *profile, gchar **data_ptr);
+gboolean fritzbox_dial_number(struct profile *profile, gint port, const gchar *number);
+gboolean fritzbox_hangup(struct profile *profile, gint port, const gchar *number);
 
 G_END_DECLS
 

@@ -79,6 +79,10 @@ gboolean fritzbox_login(struct profile *profile)
  */
 gboolean fritzbox_get_settings(struct profile *profile)
 {
+	if (FIRMWARE_IS(6, 35)) {
+		return fritzbox_get_settings_06_35(profile);
+	}
+
 	if (FIRMWARE_IS(5, 50)) {
 		return fritzbox_get_settings_05_50(profile);
 	}
@@ -130,6 +134,54 @@ gboolean fritzbox_clear_journal(struct profile *profile)
 
 	if (FIRMWARE_IS(4, 74)) {
 		return fritzbox_clear_journal_04_74(profile);
+	}
+
+	return FALSE;
+}
+
+/**
+ * \brief Dial number using router ui
+ * \param profile profile information structure
+ * \param port dial port
+ * \param number remote number
+ * \return TRUE on success, otherwise FALSE
+ */
+gboolean fritzbox_dial_number(struct profile *profile, gint port, const gchar *number)
+{
+	if (!profile) {
+		return FALSE;
+	}
+
+	if (FIRMWARE_IS(6, 35)) {
+		return fritzbox_dial_number_06_35(profile, port, number);
+	}
+
+	if (FIRMWARE_IS(4, 74)) {
+		return fritzbox_dial_number_common(profile, port, number);
+	}
+
+	return FALSE;
+}
+
+/**
+ * \brief Hangup call using router ui
+ * \param profile profile information structure
+ * \param port dial port
+ * \param number remote number
+ * \return TRUE on success, otherwise FALSE
+ */
+gboolean fritzbox_hangup(struct profile *profile, gint port, const gchar *number)
+{
+	if (!profile) {
+		return FALSE;
+	}
+
+	if (FIRMWARE_IS(6, 35)) {
+		return fritzbox_hangup_06_35(profile, port, number);
+	}
+
+	if (FIRMWARE_IS(4, 74)) {
+		return fritzbox_hangup_common(profile, port, number);
 	}
 
 	return FALSE;

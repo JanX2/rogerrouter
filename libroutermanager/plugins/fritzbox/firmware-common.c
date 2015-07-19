@@ -154,6 +154,42 @@ gchar *xml_extract_input_value(const gchar *data, gchar *tag)
 }
 
 /**
+ * \brief Extract XML input tag reverse: name="TAG" ... value="VALUE"
+ * \param data data to parse
+ * \param tag tag to extract
+ * \return tag value
+ */
+gchar *xml_extract_input_value_r(const gchar *data, gchar *tag)
+{
+	gchar *name = g_strdup_printf("name=\"%s\"", tag);
+	gchar *start = g_strstr_len(data, -1, name);
+	gchar *val_start = NULL;
+	gchar *val_end = NULL;
+	gchar *value = NULL;
+	gssize val_size;
+
+	g_free(name);
+	if (start == NULL) {
+		return NULL;
+	}
+
+	val_start = g_strrstr_len(data, start - data, "value=\"");
+	g_assert(val_start != NULL);
+
+	val_start += 7;
+
+	val_end = g_strstr_len(val_start, -1, "\"");
+
+	val_size = val_end - val_start;
+	g_assert(val_size >= 0);
+
+	value = g_malloc0(val_size + 1);
+	memcpy(value, val_start, val_size);
+
+	return value;
+}
+
+/**
  * \brief Extract XML list tag: ["TAG"] = "VALUE"
  * \param data data to parse
  * \param tag tag to extract
@@ -477,7 +513,7 @@ void fritzbox_read_msn(struct profile *profile, const gchar *data)
  * \param type phone type
  * \return dialport
  */
-static gint fritzbox_get_dialport(gint type)
+gint fritzbox_get_dialport(gint type)
 {
 	gint index;
 
@@ -497,7 +533,7 @@ static gint fritzbox_get_dialport(gint type)
  * \param number remote number
  * \return TRUE on success, otherwise FALSE
  */
-gboolean fritzbox_dial_number(struct profile *profile, gint port, const gchar *number)
+gboolean fritzbox_dial_number_common(struct profile *profile, gint port, const gchar *number)
 {
 	SoupMessage *msg;
 	gchar *port_str;
@@ -531,13 +567,13 @@ gboolean fritzbox_dial_number(struct profile *profile, gint port, const gchar *n
 
 
 /**
- * \brief Hangup call
+ * \brief Hangup call - common
  * \param profile profile information structure
  * \param port dial port
  * \param number remote number
  * \return TRUE on success, otherwise FALSE
  */
-gboolean fritzbox_hangup(struct profile *profile, gint port, const gchar *number)
+gboolean fritzbox_hangup_common(struct profile *profile, gint port, const gchar *number)
 {
 	SoupMessage *msg;
 	gchar *port_str;
@@ -875,6 +911,8 @@ gchar *fritzbox_get_ip(struct profile *profile)
 		g_object_unref(msg);
 		return NULL;
 	}
+
+	g_debug("buffer: %s\n\n", msg->response_body->data);
 
 	ip = xml_extract_tag(msg->response_body->data, "NewExternalIPAddress");
 

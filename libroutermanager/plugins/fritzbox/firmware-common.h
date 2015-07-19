@@ -73,13 +73,15 @@ extern struct phone_port fritzbox_phone_ports[PORT_MAX];
 
 gchar *xml_extract_tag(const gchar *data, gchar *tag);
 gchar *xml_extract_input_value(const gchar *data, gchar *tag);
+gchar *xml_extract_input_value_r(const gchar *data, gchar *tag);
 gchar *xml_extract_list_value(const gchar *data, gchar *tag);
 gchar *html_extract_assignment(const gchar *data, gchar *tag, gboolean p);
 gboolean fritzbox_present(struct router_info *router_info);
 gboolean fritzbox_logout(struct profile *profile, gboolean force);
 void fritzbox_read_msn(struct profile *profile, const gchar *data);
-gboolean fritzbox_dial_number(struct profile *profile, gint port, const gchar *number);
-gboolean fritzbox_hangup(struct profile *profile, gint port, const gchar *number);
+gint fritzbox_get_dialport(gint type);
+gboolean fritzbox_dial_number_common(struct profile *profile, gint port, const gchar *number);
+gboolean fritzbox_hangup_common(struct profile *profile, gint port, const gchar *number);
 gchar *fritzbox_load_fax(struct profile *profile, const gchar *filename, gsize *len);
 gchar *fritzbox_load_voice(struct profile *profile, const gchar *filename, gsize *len);
 GSList *fritzbox_load_voicebox(GSList *journal);
