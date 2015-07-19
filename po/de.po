@@ -228,7 +228,7 @@ msgid ""
 "The following wizard will help you adding a router to the application.\n"
 msgstr ""
 "Zur Verwendung von Roger Router muss ein Router mit der Anwendung verbunden "
-"werden\n"
+"werden.\n"
 "Der folgende Assistent wird Ihnen dabei helfen diesen Router hinzuzufügen.\n"
 
 #: ../roger/assistant.c:639
