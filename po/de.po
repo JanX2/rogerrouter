@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-05 14:01+0200\n"
+"POT-Creation-Date: 2015-07-31 00:00+0200\n"
 "PO-Revision-Date: 2015-01-28 20:28+0100\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <jan.brummer@tabos.org>\n"
@@ -31,7 +31,7 @@ msgid "Error"
 msgstr "Fehler"
 
 #. Contacts
-#: ../roger/application.c:249 ../roger/contacts.c:467 ../roger/contacts.c:474
+#: ../roger/application.c:249 ../roger/contacts.c:469 ../roger/contacts.c:476
 #: ../roger/plugins/statusicon/gtk.c:204
 #: ../roger/plugins/indicator/indicator.c:224
 msgid "Contacts"
@@ -39,7 +39,7 @@ msgstr "Kontakte"
 
 #. Phone
 #: ../roger/application.c:250 ../roger/contact_edit.c:288
-#: ../roger/phone.c:1379 ../roger/plugins/statusicon/gtk.c:209
+#: ../roger/phone.c:1384 ../roger/plugins/statusicon/gtk.c:209
 #: ../roger/plugins/indicator/indicator.c:229
 msgid "Phone"
 msgstr "Telefon"
@@ -118,7 +118,7 @@ msgstr ""
 "Bitte überprüfen Sie Benutzer/Passwort"
 
 #. Error: Could not login to ftp
-#: ../roger/assistant.c:134 ../roger/assistant.c:927
+#: ../roger/assistant.c:134 ../roger/assistant.c:929
 msgid ""
 "Error: Could not login to box ftp server\n"
 "Please check your ftp user/password."
@@ -164,7 +164,7 @@ msgid " on: "
 msgstr " an: "
 
 #. In every case add also an other button + entry box
-#: ../roger/assistant.c:331 ../roger/contacts.c:170
+#: ../roger/assistant.c:331 ../roger/contacts.c:172
 msgid "Other"
 msgstr "Andere"
 
@@ -231,23 +231,23 @@ msgstr ""
 "werden.\n"
 "Der folgende Assistent wird Ihnen dabei helfen diesen Router hinzuzufügen.\n"
 
-#: ../roger/assistant.c:639
+#: ../roger/assistant.c:640
 msgid "Profile name:"
 msgstr "Profilname:"
 
-#: ../roger/assistant.c:734
+#: ../roger/assistant.c:736
 msgid "Automatic"
 msgstr "Automatisch"
 
-#: ../roger/assistant.c:740
+#: ../roger/assistant.c:742
 msgid "Router IP:"
 msgstr "Router IP:"
 
-#: ../roger/assistant.c:747
+#: ../roger/assistant.c:749
 msgid "Manual"
 msgstr "Manuell"
 
-#: ../roger/assistant.c:790
+#: ../roger/assistant.c:792
 msgid ""
 "Could not load router configuration. Please change the router ip and try "
 "again"
@@ -255,19 +255,19 @@ msgstr ""
 "Konnte die Routerkonfiguration nicht laden. Bitte ändere die Router IPund "
 "probiere es erneut"
 
-#: ../roger/assistant.c:811
+#: ../roger/assistant.c:813
 msgid "Router user:"
 msgstr "Router Benutzername:"
 
-#: ../roger/assistant.c:815
+#: ../roger/assistant.c:817
 msgid "Optional"
 msgstr "Optional"
 
-#: ../roger/assistant.c:819
+#: ../roger/assistant.c:821
 msgid "Router password:"
 msgstr "Router Passwort:"
 
-#: ../roger/assistant.c:853
+#: ../roger/assistant.c:855
 msgid ""
 "Could not detect box on this host name\n"
 "Please check the host name"
@@ -275,7 +275,7 @@ msgstr ""
 "Konnte die Box an diesem Hostnamen nicht erkennen\n"
 "Bitte überprüfen Sie den Hostnamen"
 
-#: ../roger/assistant.c:860
+#: ../roger/assistant.c:862
 msgid ""
 "Login failed. Login data are wrong or permissions are missing.\n"
 "Please check your login data."
@@ -284,108 +284,108 @@ msgstr ""
 "Berechtigungen.\n"
 "Bitte überprüfen sie ihre Anmeldedaten."
 
-#: ../roger/assistant.c:885
+#: ../roger/assistant.c:887
 msgid "FTP User:"
 msgstr "FTP Benutzer:"
 
-#: ../roger/assistant.c:892
+#: ../roger/assistant.c:894
 msgid "FTP Password:"
 msgstr "FTP Passwort:"
 
-#: ../roger/assistant.c:950
+#: ../roger/assistant.c:952
 msgid "<span font_desc=\"30.0\"><b>Finish!</b></span>"
 msgstr "<span font_desc=\"30.0\"><b>Fertig!</b></span>"
 
-#: ../roger/assistant.c:960
+#: ../roger/assistant.c:985
 msgid "If you like Roger Router please consider a donation.\n"
 msgstr "Wenn sie Roger Router mögen, denke Sie bitte daran zu spenden.\n"
 
-#: ../roger/assistant.c:1027 ../roger/assistant.c:1097
+#: ../roger/assistant.c:1052 ../roger/assistant.c:1123
 msgid "Next"
 msgstr "Weiter"
 
-#: ../roger/assistant.c:1059
+#: ../roger/assistant.c:1097
 msgid "Done"
 msgstr "Fertig"
 
-#: ../roger/assistant.c:1089
+#: ../roger/assistant.c:1115
 msgid "Setup Wizard"
 msgstr "Setup Wizard"
 
-#: ../roger/assistant.c:1092
+#: ../roger/assistant.c:1118
 msgid "Back"
 msgstr "Zurück"
 
-#: ../roger/contacts.c:121 ../roger/contacts.c:164 ../roger/contact_edit.c:213
+#: ../roger/contacts.c:123 ../roger/contacts.c:166 ../roger/contact_edit.c:213
 #: ../roger/contact_edit.c:251
 msgid "Private"
 msgstr "Privat"
 
-#: ../roger/contacts.c:124 ../roger/contacts.c:167 ../roger/contact_edit.c:214
+#: ../roger/contacts.c:126 ../roger/contacts.c:169 ../roger/contact_edit.c:214
 #: ../roger/contact_edit.c:252
 msgid "Business"
 msgstr "Geschäftlich"
 
-#: ../roger/contacts.c:127 ../roger/contact_edit.c:215
+#: ../roger/contacts.c:129 ../roger/contact_edit.c:215
 msgid "Mobile"
 msgstr "Mobil"
 
-#: ../roger/contacts.c:130 ../roger/contact_edit.c:216
+#: ../roger/contacts.c:132 ../roger/contact_edit.c:216
 msgid "Private Fax"
 msgstr "Privates Fax"
 
-#: ../roger/contacts.c:133 ../roger/contact_edit.c:217
+#: ../roger/contacts.c:135 ../roger/contact_edit.c:217
 msgid "Business Fax"
 msgstr "Geschäftliches Fax"
 
-#: ../roger/contacts.c:136 ../roger/contact_edit.c:218
+#: ../roger/contacts.c:138 ../roger/contact_edit.c:218
 msgid "Pager"
 msgstr "Pager"
 
-#: ../roger/contacts.c:139 ../roger/phone.c:418
+#: ../roger/contacts.c:141 ../roger/phone.c:418
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: ../roger/contacts.c:145
+#: ../roger/contacts.c:147
 msgid "Dial number"
 msgstr "Nummer wählen"
 
 #. Create dialog
-#: ../roger/contacts.c:413
+#: ../roger/contacts.c:415
 #, c-format
 msgid "Do you want to delete the entry '%s'?"
 msgstr "Wollen Sie den Eintrag '%s' löschen?"
 
 #. Add cancel button
-#: ../roger/contacts.c:416 ../roger/contact_edit.c:372 ../roger/journal.c:573
+#: ../roger/contacts.c:418 ../roger/contact_edit.c:374 ../roger/journal.c:573
 #: ../roger/journal.c:622 ../roger/journal.c:655 ../roger/pref_filters.c:306
 #: ../roger/pref_filters.c:404
 msgid "Cancel"
 msgstr "A_bbrechen"
 
 #. Add remove button
-#: ../roger/contacts.c:419 ../roger/journal.c:574 ../roger/journal.c:623
+#: ../roger/contacts.c:421 ../roger/journal.c:574 ../roger/journal.c:623
 msgid "Delete"
 msgstr "Löschen"
 
-#: ../roger/contacts.c:485
+#: ../roger/contacts.c:487
 msgid "Add new contact"
 msgstr "Neuen Kontakt hinzufügen"
 
-#: ../roger/contacts.c:490
+#: ../roger/contacts.c:492
 msgid "Remove selected contact"
 msgstr "Ausgewählten Kontakt löschen"
 
 #. Edit button
-#: ../roger/contacts.c:494
+#: ../roger/contacts.c:496
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: ../roger/contacts.c:495
+#: ../roger/contacts.c:497
 msgid "Edit selected contact"
 msgstr "Ausgewählten Kontakt editieren"
 
-#: ../roger/contacts.c:508
+#: ../roger/contacts.c:510
 msgid "Type to search"
 msgstr "Tippen zum Suchen"
 
@@ -453,20 +453,24 @@ msgstr "Detail hinzufügen"
 msgid "Address"
 msgstr "Adresse"
 
-#: ../roger/contact_edit.c:370 ../roger/journal.c:652
+#: ../roger/contact_edit.c:372 ../roger/journal.c:652
 msgid "Contact"
 msgstr "Kontakt"
 
-#: ../roger/contact_edit.c:373 ../roger/pref_filters.c:309
+#: ../roger/contact_edit.c:375 ../roger/pref_filters.c:309
 msgid "Save"
 msgstr "Speichern"
 
-#: ../roger/contact_edit.c:390
+#: ../roger/contact_edit.c:395
 msgid ""
 "Note: Depending on the address book plugin not all information might be saved"
 msgstr ""
 "Hinweis: Je nach Adressbuchplugin können nicht alle Informationen "
 "gespeichert werden"
+
+#: ../roger/contact_edit.c:397
+msgid "Do not show again"
+msgstr "Nicht noch einmal anzeigen"
 
 #: ../roger/fax.c:74 ../roger/fax.c:80
 #, c-format
@@ -487,7 +491,7 @@ msgid "Fax devices"
 msgstr "Faxgeräte"
 
 #. Add suppress check item
-#: ../roger/fax.c:157 ../roger/phone.c:1251
+#: ../roger/fax.c:157 ../roger/phone.c:1256
 msgid "Suppress number"
 msgstr "Nummer unterdrücken"
 
@@ -653,41 +657,45 @@ msgstr "Fax Zuhause"
 msgid "Fax Work"
 msgstr "Fax Arbeit"
 
-#: ../roger/phone.c:818 ../roger/phone.c:819
+#: ../roger/phone.c:587
+msgid "<b>No contacts found</b>"
+msgstr "<b>Keine Kontakte gefunden</b>"
+
+#: ../roger/phone.c:823 ../roger/phone.c:824
 msgid "Enter name or number"
 msgstr "Name oder Nummer eingeben"
 
-#: ../roger/phone.c:860
+#: ../roger/phone.c:865
 msgid "Pick up"
 msgstr "Abheben"
 
-#: ../roger/phone.c:873
+#: ../roger/phone.c:878
 msgid "Hang up"
 msgstr "Auflegen"
 
 #. Add clear button
-#: ../roger/phone.c:1119
+#: ../roger/phone.c:1124
 msgid "<small>Clear</small>"
 msgstr "<small>Löschen</small>"
 
-#: ../roger/phone.c:1125
+#: ../roger/phone.c:1130
 msgid "<small>Mute</small>"
 msgstr "<small>Stumm</small>"
 
-#: ../roger/phone.c:1131
+#: ../roger/phone.c:1136
 msgid "<small>Hold</small>"
 msgstr "<small>Halten</small>"
 
-#: ../roger/phone.c:1137
+#: ../roger/phone.c:1142
 msgid "<small>Record</small>"
 msgstr "<small>Aufnehmen</small>"
 
 #. Fill menu
-#: ../roger/phone.c:1217
+#: ../roger/phone.c:1222
 msgid "Phones"
 msgstr "Telefone"
 
-#: ../roger/phone.c:1324
+#: ../roger/phone.c:1329
 msgid "Time: 00:00:00"
 msgstr "Zeit: 00:00:00"
 

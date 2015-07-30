@@ -362,6 +362,8 @@ void add_detail_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 	}
 }
 
+extern GSettings *app_settings;
+
 void contact_editor(struct contact *contact, GtkWidget *parent)
 {
 	GtkWidget *dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", TRUE, NULL);
@@ -387,11 +389,27 @@ void contact_editor(struct contact *contact, GtkWidget *parent)
 	edit_widget = NULL;
 
 	if (response == GTK_RESPONSE_OK) {
-		GtkWidget *info_dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_INFO, GTK_BUTTONS_OK_CANCEL, _("Note: Depending on the address book plugin not all information might be saved"));
+		gboolean ok = g_settings_get_boolean(app_settings, "contacts-hide-warning");
 
-		response = gtk_dialog_run(GTK_DIALOG(info_dialog));
-		gtk_widget_destroy(info_dialog);
-		if (response == GTK_RESPONSE_OK) {
+		if (!ok) {
+			GtkWidget *info_dialog = gtk_message_dialog_new(GTK_WINDOW(journal_get_window()), GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_INFO, GTK_BUTTONS_OK_CANCEL, _("Note: Depending on the address book plugin not all information might be saved"));
+			GtkWidget *content = gtk_dialog_get_content_area(GTK_DIALOG(info_dialog));
+			GtkWidget *check_button = gtk_check_button_new_with_label(_("Do not show again"));
+
+			g_settings_bind(app_settings, "contacts-hide-warning", check_button, "active", G_SETTINGS_BIND_DEFAULT);
+			gtk_widget_set_halign(check_button, GTK_ALIGN_CENTER);
+			gtk_widget_show(check_button);
+			gtk_container_add(GTK_CONTAINER(content), check_button);
+
+			response = gtk_dialog_run(GTK_DIALOG(info_dialog));
+			gtk_widget_destroy(info_dialog);
+
+			if (response == GTK_RESPONSE_OK) {
+				ok = TRUE;
+			}
+		}
+
+		if (ok) {
 			address_book_save_contact(contact);
 		}
 	}
