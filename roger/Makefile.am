@@ -41,8 +41,6 @@ roger_core_SOURCES =\
 	icons.h\
 	journal.c\
 	journal.h\
-	llevel.c\
-	llevel.h\
 	main.h\
 	main_ui.c \
 	phone.c\
