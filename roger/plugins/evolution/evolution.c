@@ -166,14 +166,7 @@ GList *get_ebook_list(void)
 
 void ebook_objects_changed_cb(EBookClientView *view, const GSList *ids, gpointer user_data)
 {
-	const GSList *l;
-
-	for (l = ids; l != NULL; l = l->next) {
-		EContact *contact = l->data;
-		const gchar *name = e_contact_get_const(contact, E_CONTACT_NAME_OR_ORG);
-
-		g_debug("Changed contact: %s", name);
-	}
+	g_debug("%s(): called", __FUNCTION__);
 
 	/* Reload contacts */
 	evolution_reload();
