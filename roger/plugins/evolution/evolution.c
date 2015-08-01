@@ -34,12 +34,7 @@
 #include <roger/main.h>
 #include "config.h"
 
-#ifdef HAVE_EBOOK_SOURCE_REGISTRY
 #include <libebook/libebook.h>
-#else
-#include <libebook/e-book-client.h>
-#include <libebook/e-book-query.h>
-#endif
 
 #include "ebook-sources.h"
 
@@ -57,6 +52,7 @@ GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand,
 
 static GSList *contacts = NULL;
 static GSettings *ebook_settings = NULL;
+static EClient *e_client = NULL;
 
 gboolean evolution_reload(void);
 
@@ -87,6 +83,87 @@ void free_ebook_list(GList *ebook_list)
 	g_list_free_full(ebook_list, (GDestroyNotify) free_ebook_data);
 }
 
+/**
+ * \brief Retrieve source registry
+ * \return Registry pointer
+ */
+static ESourceRegistry *get_source_registry(void)
+{
+	static ESourceRegistry *registry = NULL;
+	GError *error = NULL;
+
+	if (!registry) {
+		registry = e_source_registry_new_sync(NULL, &error);
+		if (!registry) {
+			g_warning("Could not get source registry. Error: %s", error->message);
+		}
+	}
+
+	return registry;
+}
+
+/**
+ * \brief Get ESource for active address book
+ * \return Esource
+ */
+static ESource *get_selected_ebook_esource(void)
+{
+	GList *list;
+	ESourceRegistry *registry = get_source_registry();
+	const gchar *id = get_selected_ebook_id();
+
+	list = get_ebook_list();
+	while (list) {
+		struct ebook_data *ebook_data = list->data;
+
+		//g_debug("%s <-> %s", ebook_data->name, id);
+		if (!strcmp(ebook_data->name, id)) {
+			return e_source_registry_ref_source(registry, ebook_data->id);
+		}
+		list = list->next;
+	}
+
+	return NULL;
+}
+
+/**
+ * \brief Retrieve a list of all address book sources
+ * \return List of address book sources
+ */
+GList *get_ebook_list(void)
+{
+	GList *source, *sources;
+	GList *ebook_list = NULL;
+	struct ebook_data *ebook_data = NULL;
+
+	sources = e_source_registry_list_sources(get_source_registry(), E_SOURCE_EXTENSION_ADDRESS_BOOK);
+
+	for (source = sources; source != NULL; source = source->next) {
+		ESource *e_source = E_SOURCE(source -> data);
+		ESource *parent_source;
+
+		if (!e_source_get_enabled(e_source)) {
+			g_debug("Source %s not enabled... skip it", e_source_get_uid(e_source));
+			continue;
+		}
+
+		ebook_data = g_slice_new(struct ebook_data);
+
+		parent_source = e_source_registry_ref_source(get_source_registry(), e_source_get_parent(e_source));
+
+		ebook_data->name = g_strdup_printf("%s (%s)", e_source_get_display_name(e_source), e_source_get_display_name(parent_source));
+		ebook_data->id = e_source_dup_uid(e_source);
+
+		ebook_list = g_list_append(ebook_list, ebook_data);
+
+		g_object_unref(parent_source);
+	}
+
+	g_list_free_full(sources, g_object_unref);
+
+	return ebook_list;
+}
+
 void ebook_objects_changed_cb(EBookClientView *view, const GSList *ids, gpointer user_data)
 {
 	const GSList *l;
@@ -107,7 +184,7 @@ void ebook_objects_changed_cb(EBookClientView *view, const GSList *ids, gpointer
 
 void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 {
-	EBookClient *client = E_BOOK_CLIENT(source);
+	EBookClient *client;
 	EBookQuery *query;
 	gchar *sexp = NULL;
 	EContact *e_contact;
@@ -119,10 +196,14 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 	/* TODO: Free list */
 	contacts = NULL;
 
-	if (!client) {
+	e_client = e_book_client_connect_finish(res, NULL);
+
+	if (!e_client) {
 		g_debug("no callback!!!!");
 		return;
 	}
+
+	client = E_BOOK_CLIENT(e_client);
 
 	query = e_book_query_any_field_contains("");
 	if (!query) {
@@ -131,7 +212,6 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 	}
 	sexp = e_book_query_to_string(query);
 
-#ifdef HAVE_EBOOK_SOURCE_REGISTRY
 	EBookClientView *view;
 	GError *error = NULL;
 
@@ -153,7 +233,6 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 	}
 
 	e_book_client_view_start(view, &error);
-#endif
 
 	if (!e_book_client_get_contacts_sync(client, sexp, &ebook_contacts, NULL, NULL)) {
 		g_warning("Couldn't get query results.");
@@ -315,13 +394,14 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
  */
 gboolean ebook_read_book(void)
 {
-	EBookClient *client = get_selected_ebook_client();
+	ESource *source = get_selected_ebook_esource();
 
-	if (!client) {
-		return FALSE;
+	if (!source) {
+		g_debug("Book could not be found....");
+		return NULL;
 	}
 
-	e_client_open(E_CLIENT(client), TRUE, NULL, read_callback, NULL);
+	e_book_client_connect(source, 5, NULL, read_callback, NULL);
 
 	return TRUE;
 }
@@ -332,13 +412,16 @@ gboolean ebook_read_book(void)
  */
 gboolean ebook_read_book_sync(void)
 {
-	EBookClient *client = get_selected_ebook_client();
+	EClient *client;
+	ESource *source = get_selected_ebook_esource();
 
-	if (!client) {
-		return FALSE;
+	if (!source) {
+		g_debug("Book could not be found....");
+		return NULL;
 	}
 
-	if (e_client_open_sync(E_CLIENT(client), TRUE, NULL, NULL)) {
+	client = e_book_client_connect_sync(source, 5, NULL, NULL);
+	if (client) {
 		read_callback(G_OBJECT(client), NULL, NULL);
 	}
 
@@ -372,8 +455,14 @@ gboolean evolution_reload(void)
 
 gboolean evolution_remove_contact(struct contact *contact)
 {
-	EBookClient *client = get_selected_ebook_client();
+	EBookClient *client;
 	gboolean ret = FALSE;
+
+	if (!e_client) {
+		return FALSE;
+	}
+
+	client = E_BOOK_CLIENT(e_client);
 
 	ret = e_book_client_remove_contact_by_uid_sync(client, contact->priv, NULL, NULL);
 	if (ret) {
@@ -404,12 +493,18 @@ static void evolution_set_image(EContact *e_contact, struct contact *contact)
 
 gboolean evolution_save_contact(struct contact *contact)
 {
-	EBookClient *client = get_selected_ebook_client();
+	EBookClient *client;
 	EContact *e_contact;
 	gboolean ret = FALSE;
 	GError *error = NULL;
 	GSList *numbers;
 	GSList *addresses;
+
+	if (!e_client) {
+		return FALSE;
+	}
+
+	client = E_BOOK_CLIENT(e_client);
 
 	if (!contact->priv) {
 		e_contact = e_contact_new();

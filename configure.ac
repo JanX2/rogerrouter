@@ -298,12 +298,12 @@ AC_ARG_WITH([ebook],
 	[],
 	[with_ebook=check])
 
-AC_MSG_CHECKING(for libebook-1.2 >= 3.2.0)
+AC_MSG_CHECKING(for libebook-1.2 >= 3.10.0)
 AS_IF([test "x$with_ebook" != xno],
 	[if test "x$with_ebook" = xcheck; then
-		$PKG_CONFIG --atleast-version=3.2.0 libebook-1.2 && with_ebook=yes
+		$PKG_CONFIG --atleast-version=3.10.0 libebook-1.2 && with_ebook=yes
 	elif test "x$with_ebook" = xyes; then
-		$PKG_CONFIG --atleast-version=3.2.0 libebook-1.2 || AC_MSG_FAILURE(
+		$PKG_CONFIG --atleast-version=3.10.0 libebook-1.2 || AC_MSG_FAILURE(
 		[--with-ebook=yes was given, but test for ebook failed])
 	fi
 	if test "x$with_ebook" = xyes; then
@@ -318,15 +318,6 @@ AS_IF([test "x$with_ebook" != xno],
 ])
 AC_MSG_RESULT($with_ebook)
 AM_CONDITIONAL(WITH_EBOOK, test "x$with_ebook" != "xno")
-
-AS_IF([test "x$with_ebook" != xno],
-	[$PKG_CONFIG --atleast-version=3.5.4 libebook-1.2 && with_ebook_registry=yes
-	if test "x$with_ebook_registry" = xyes; then
-		AC_DEFINE([HAVE_EBOOK_SOURCE_REGISTRY], 1, [Have libebook >= 3.5.4])
-		PKG_CHECK_MODULES([EVO_SHELL], evolution-shell-3.0 >= 3.5.4,, AC_MSG_ERROR([libebook >= 3.5.4 requires evolution-shell]))
-	fi
-])
-AM_CONDITIONAL(HAVE_EBOOK_SOURCE_REGISTRY, test "x$with_ebook_registry" = "xyes")
 
 dnl ********************************************************************
 dnl gstreamer-1.x is optional
