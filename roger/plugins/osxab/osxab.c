@@ -83,6 +83,7 @@ static int osxab_read_book(void) {
 		CFTypeRef company = ABRecordCopyValue(person, kABOrganizationProperty);
 		CFTypeRef addresses = ABRecordCopyValue(person, kABAddressProperty);
 		CFTypeRef phones = ABRecordCopyValue(person, kABPhoneProperty);
+		CFTypeRef uid = ABRecordCopyUniqueId(person);
 		struct contact *contact;
 
 		if (!firstName && !lastName) {
@@ -94,7 +95,8 @@ static int osxab_read_book(void) {
 		}
 
 		contact = g_slice_new0(struct contact);
-		contact->priv = NULL;
+		contact->priv = (gpointer)uid;
+		g_debug("Uid: %s", cstring(contact->priv));
 
 		contact->name = g_strdup_printf("%s%s%s",
 			firstName ? cstring(firstName) : "",
@@ -181,11 +183,133 @@ gboolean osxab_reload_contacts(void)
 	return TRUE;
 }
 
+static gboolean osxab_remove_contact(struct contact *contact)
+{
+	ABAddressBookRef ab = ABGetSharedAddressBook();
+	ABPersonRef ref;
+	gboolean ret = FALSE;
+
+	g_debug("Uid: %s", cstring(contact->priv));
+	ref = ABCopyRecordForUniqueId(ab, contact->priv);
+	
+	if (ref) {
+		ABRemoveRecord(ab, ref);
+		ABSave(ab);
+		osxab_reload_contacts();
+		ret = TRUE;
+	}
+
+	return ret;
+}
+
+static gboolean osxab_save_contact(struct contact *contact)
+{
+	ABAddressBookRef ab = ABGetSharedAddressBook();
+	ABPersonRef ref;
+	CFStringRef cfstring;
+	gchar *first_name = NULL;
+	gchar *last_name = NULL;
+	gchar **split;
+
+	if (!contact->priv) {
+		ref = ABPersonCreate();
+		contact->priv = (gpointer) ABRecordCopyUniqueId(ref);
+		ABAddRecord(ab, ref);
+	} else {
+		ref = ABCopyRecordForUniqueId(ab, contact->priv);
+	}
+
+	split = g_strsplit(contact->name, " ", 2);
+	first_name = split[0];
+	last_name = split[1];
+
+	cfstring = CFStringCreateWithCString(NULL, first_name, kCFStringEncodingUTF8);
+	ABRecordSetValue(ref, kABFirstNameProperty, cfstring);
+
+	cfstring = CFStringCreateWithCString(NULL, last_name, kCFStringEncodingUTF8);
+	ABRecordSetValue(ref, kABLastNameProperty, cfstring);
+
+	if (contact->numbers) {
+		ABMutableMultiValueRef multi_phone = ABMultiValueCreateMutable();
+    	GSList *list;
+	
+		for (list = contact->numbers; list != NULL; list = list->next) {
+			struct phone_number *number = list->data;
+			CFTypeRef type;
+
+			switch (number->type) {
+			case PHONE_NUMBER_HOME:
+				type = kABPhoneHomeLabel;
+				break;
+			case PHONE_NUMBER_WORK:
+				type = kABPhoneWorkLabel;
+				break;
+			case PHONE_NUMBER_MOBILE:
+				type = kABPhoneMobileLabel;
+				break;
+			case PHONE_NUMBER_FAX_HOME:
+				type = kABPhoneHomeFAXLabel;
+				break;
+			case PHONE_NUMBER_FAX_WORK:
+				type = kABPhoneWorkFAXLabel;
+				break;
+			default:
+				continue;
+			}
+
+			cfstring = CFStringCreateWithCString(NULL, number->number, kCFStringEncodingUTF8);
+			ABMultiValueAdd(multi_phone, cfstring, type, NULL);
+		}
+	
+		ABRecordSetValue(ref, kABPhoneProperty, multi_phone);
+	}
+
+	if (contact->addresses) {
+		ABMutableMultiValueRef multi_addresses = ABMultiValueCreateMutable();
+    	GSList *list;
+	
+		for (list = contact->addresses; list != NULL; list = list->next) {
+			CFMutableDictionaryRef dic;
+			CFTypeRef type;
+			struct contact_address *address = list->data;
+
+			switch (address->type) {
+			case 0:
+				type = kABHomeLabel;
+				break;
+			case 1:
+				type = kABWorkLabel;
+				break;
+			default:
+				continue;
+			}
+
+			dic = CFDictionaryCreateMutable(NULL,  0, NULL, NULL);
+
+			cfstring = CFStringCreateWithCString(NULL, address->street, kCFStringEncodingUTF8);
+			CFDictionaryAddValue(dic, kABAddressStreetKey, cfstring);
+
+			cfstring = CFStringCreateWithCString(NULL, address->city, kCFStringEncodingUTF8);
+			CFDictionaryAddValue(dic, kABAddressCityKey, cfstring);
+
+			cfstring = CFStringCreateWithCString(NULL, address->zip, kCFStringEncodingUTF8);
+			CFDictionaryAddValue(dic, kABAddressZIPKey, cfstring);
+
+			ABMultiValueAdd(multi_addresses, dic, type, NULL);
+		}
+
+		ABRecordSetValue(ref, kABAddressProperty, multi_addresses);
+	}
+
+	ABSave(ab);
+	osxab_reload_contacts();
+}
+
 struct address_book osxab_book = {
 	osxab_get_contacts,
 	osxab_reload_contacts,
-	NULL,//osxab_remove_contact,
-	NULL//osxab_save_contact
+	osxab_remove_contact,
+	osxab_save_contact
 };
 
 void impl_activate(PeasActivatable *plugin)
