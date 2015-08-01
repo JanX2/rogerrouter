@@ -84,6 +84,7 @@ static int osxab_read_book(void) {
 		CFTypeRef addresses = ABRecordCopyValue(person, kABAddressProperty);
 		CFTypeRef phones = ABRecordCopyValue(person, kABPhoneProperty);
 		CFTypeRef uid = ABRecordCopyUniqueId(person);
+		CFStringRef lastname_cstr;
 		struct contact *contact;
 
 		if (!firstName && !lastName) {
@@ -98,10 +99,11 @@ static int osxab_read_book(void) {
 		contact->priv = (gpointer)uid;
 		g_debug("Uid: %s", cstring(contact->priv));
 
+		lastname_cstr = cstring(lastName);
 		contact->name = g_strdup_printf("%s%s%s",
 			firstName ? cstring(firstName) : "",
-			firstName ? " " : "",
-			lastName ? cstring(lastName) : "");
+			lastname_cstr ? " " : "",
+			lastname_cstr ? lastname_cstr : "");
 
 		if (addresses) {
 			for (int j = 0; j < ABMultiValueCount((ABMultiValueRef)addresses); j++) {
