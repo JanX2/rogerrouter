@@ -182,7 +182,7 @@ void ebook_objects_changed_cb(EBookClientView *view, const GSList *ids, gpointer
 	emit_contacts_changed();
 }
 
-void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
+void ebook_read_data(EClient *e_client)
 {
 	EBookClient *client;
 	EBookQuery *query;
@@ -192,14 +192,13 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 	GdkPixbufLoader *loader;
 	GSList *list;
 	GSList *ebook_contacts;
+	GError *error = NULL;
 
 	/* TODO: Free list */
 	contacts = NULL;
 
-	e_client = e_book_client_connect_finish(res, NULL);
-
 	if (!e_client) {
-		g_debug("no callback!!!!");
+		g_debug("no callback!!!! (Error: %s)", error ? error->message : "?");
 		return;
 	}
 
@@ -213,7 +212,6 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 	sexp = e_book_query_to_string(query);
 
 	EBookClientView *view;
-	GError *error = NULL;
 
 	if (!e_book_client_get_view_sync(client, sexp, &view, NULL, &error)) {
 		g_error("get_view_sync");
@@ -388,6 +386,18 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 	g_slist_free(ebook_contacts);
 }
 
+static void ebook_read_cb(GObject *source, GAsyncResult *res, gpointer user_data)
+{
+	GError *error = NULL;
+
+	e_client = e_book_client_connect_finish(res, &error);
+	if (!e_client) {
+		g_warning("Error finishing client connection. Error: %s", error ?  error->message : "?");
+	} else {
+		ebook_read_data(e_client);
+	}
+}
+
 /**
  * \brief Read ebook list (async)
  * \return error code
@@ -401,7 +411,7 @@ gboolean ebook_read_book(void)
 		return NULL;
 	}
 
-	e_book_client_connect(source, 5, NULL, read_callback, NULL);
+	e_book_client_connect(source, 5, NULL, ebook_read_cb, NULL);
 
 	return TRUE;
 }
@@ -422,7 +432,7 @@ gboolean ebook_read_book_sync(void)
 
 	client = e_book_client_connect_sync(source, 5, NULL, NULL);
 	if (client) {
-		read_callback(G_OBJECT(client), NULL, NULL);
+		ebook_read_data(client);
 	}
 
 	return TRUE;
