@@ -223,11 +223,13 @@ static gboolean osxab_save_contact(struct contact *contact)
 	first_name = split[0];
 	last_name = split[1];
 
-	cfstring = CFStringCreateWithCString(NULL, first_name, kCFStringEncodingUTF8);
+	cfstring = CFStringCreateWithCString(NULL, first_name ? first_name : "", kCFStringEncodingUTF8);
 	ABRecordSetValue(ref, kABFirstNameProperty, cfstring);
 
-	cfstring = CFStringCreateWithCString(NULL, last_name, kCFStringEncodingUTF8);
+	cfstring = CFStringCreateWithCString(NULL, last_name ? last_name : "", kCFStringEncodingUTF8);
 	ABRecordSetValue(ref, kABLastNameProperty, cfstring);
+
+	g_strfreev(split);
 
 	if (contact->numbers) {
 		ABMutableMultiValueRef multi_phone = ABMultiValueCreateMutable();
