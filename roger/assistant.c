@@ -954,30 +954,7 @@ GtkWidget *finish_page(struct assistant_priv *priv)
 	gtk_label_set_justify(GTK_LABEL(welcome), GTK_JUSTIFY_CENTER);
 	gtk_grid_attach(GTK_GRID(grid), welcome, 0, 0, 1, 1);
 
-#if 1
 	logo = gtk_image_new_from_icon_name("face-smile-big-symbolic", GTK_ICON_SIZE_DIALOG);
-#else
-	GdkPixbuf *pixbuf;
-	GdkRGBA col;
-
-	col.red = 0.0;
-	col.green = 1.0;
-	col.blue = 0.0;
-	col.alpha = 1.0;
-
-	GtkIconTheme *icons;
-
-	extern GdkPixbuf *
-create_colorized_pixbuf (GdkPixbuf *src,
-                         GdkRGBA   *new_color);
-                
-    
-                icons = gtk_icon_theme_get_default();
-
-	pixbuf = gtk_icon_theme_load_icon(icons, "face-smile-big-symbolic", 128, 0, NULL);
-	pixbuf = create_colorized_pixbuf(pixbuf, &col);
-	logo = gtk_image_new_from_pixbuf(pixbuf);
-#endif
 
 	gtk_image_set_pixel_size(GTK_IMAGE(logo), 128);
 	gtk_grid_attach(GTK_GRID(grid), logo, 0, 1, 1, 1);
