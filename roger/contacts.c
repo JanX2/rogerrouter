@@ -147,7 +147,7 @@ void contacts_update_details(struct contact *contact)
 			gtk_widget_set_halign(number, GTK_ALIGN_START);
 			dial = gtk_button_new();
 			gtk_widget_set_tooltip_text(dial, _("Dial number"));
-			phone_image = get_icon(APP_ICON_CALL, GTK_ICON_SIZE_BUTTON);
+			phone_image = gtk_image_new_from_icon_name(APP_ICON_CALL, GTK_ICON_SIZE_BUTTON);
 			gtk_button_set_image(GTK_BUTTON(dial), phone_image);
 			gtk_button_set_relief(GTK_BUTTON(dial), GTK_RELIEF_NONE);
 			g_signal_connect(dial, "clicked", G_CALLBACK(dial_clicked_cb), phone_number->number);

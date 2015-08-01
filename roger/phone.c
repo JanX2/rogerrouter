@@ -633,6 +633,7 @@ static void phone_search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer
 				GdkPixbuf *buf = image_get_scaled(contact->image, 32, 32);
 
 				image = gtk_image_new_from_pixbuf(buf);
+				g_object_unref(buf);
 			} else {
 				image = gtk_image_new_from_icon_name("avatar-default-symbolic", GTK_ICON_SIZE_DND);
 			}
@@ -858,7 +859,7 @@ GtkWidget *phone_dial_buttons_new(GtkWidget *window, struct phone_state *state)
 	/* Pickup button */
 	state->pickup_button = gtk_button_new();
 	gtk_widget_set_hexpand(state->pickup_button, TRUE);
-	image = get_icon(APP_ICON_CALL, GTK_ICON_SIZE_BUTTON);
+	image = gtk_image_new_from_icon_name(APP_ICON_CALL, GTK_ICON_SIZE_BUTTON);
 	gtk_button_set_image(GTK_BUTTON(state->pickup_button), image);
 	gtk_style_context_add_class(gtk_widget_get_style_context(state->pickup_button), GTK_STYLE_CLASS_SUGGESTED_ACTION);
 
@@ -871,7 +872,7 @@ GtkWidget *phone_dial_buttons_new(GtkWidget *window, struct phone_state *state)
 	/* Hangup button */
 	state->hangup_button = gtk_button_new();
 	gtk_widget_set_hexpand(state->hangup_button, TRUE);
-	image = get_icon(APP_ICON_HANGUP, GTK_ICON_SIZE_BUTTON);
+	image = gtk_image_new_from_icon_name(APP_ICON_HANGUP, GTK_ICON_SIZE_BUTTON);
 	gtk_button_set_image(GTK_BUTTON(state->hangup_button), image);
 	gtk_style_context_add_class(gtk_widget_get_style_context(state->hangup_button), GTK_STYLE_CLASS_DESTRUCTIVE_ACTION);
 

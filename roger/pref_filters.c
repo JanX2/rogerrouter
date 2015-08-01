@@ -224,14 +224,14 @@ static void pref_filters_add_rule(gpointer grid_ptr, struct filter_rule *rule)
 	gtk_grid_attach(GTK_GRID(own_grid), entry, 2, 0, 1, 1);
 
 	add_button = gtk_button_new();
-	image = get_icon(APP_ICON_ADD, GTK_ICON_SIZE_MENU);
+	image = gtk_image_new_from_icon_name(APP_ICON_ADD, GTK_ICON_SIZE_MENU);
 	gtk_button_set_image(GTK_BUTTON(add_button), image);
 
 	g_signal_connect(G_OBJECT(add_button), "clicked", G_CALLBACK(add_button_clicked_cb), grid);
 	gtk_grid_attach(GTK_GRID(own_grid), add_button, 3, 0, 1, 1);
 
 	remove_button = gtk_button_new();
-	image = get_icon(APP_ICON_REMOVE, GTK_ICON_SIZE_MENU);
+	image = gtk_image_new_from_icon_name(APP_ICON_REMOVE, GTK_ICON_SIZE_MENU);
 	gtk_button_set_image(GTK_BUTTON(remove_button), image);
 	g_signal_connect(remove_button, "clicked", G_CALLBACK(remove_button_clicked_cb), own_grid);
 	gtk_grid_attach(GTK_GRID(own_grid), remove_button, 4, 0, 1, 1);

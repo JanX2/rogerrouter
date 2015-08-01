@@ -230,7 +230,7 @@ void refresh_edit_dialog(struct contact *contact)
 		remove = gtk_button_new();
 		gtk_widget_set_tooltip_text(remove, _("Remove number"));
 		//phone_image = gtk_image_new_from_icon_name("user-trash-symbolic", GTK_ICON_SIZE_BUTTON);
-		phone_image = get_icon(APP_ICON_TRASH, GTK_ICON_SIZE_BUTTON);
+		phone_image = gtk_image_new_from_icon_name(APP_ICON_TRASH, GTK_ICON_SIZE_BUTTON); 
 		gtk_button_set_image(GTK_BUTTON(remove), phone_image);
 		g_signal_connect(remove, "clicked", G_CALLBACK(remove_phone_clicked_cb), contact);
 		g_object_set_data(G_OBJECT(remove), "number", phone_number);
@@ -257,7 +257,7 @@ void refresh_edit_dialog(struct contact *contact)
 		remove = gtk_button_new();
 		gtk_widget_set_tooltip_text(remove, _("Remove address"));
 		//phone_image = gtk_image_new_from_icon_name("user-trash-symbolic", GTK_ICON_SIZE_BUTTON);
-		phone_image = get_icon(APP_ICON_TRASH, GTK_ICON_SIZE_BUTTON);
+		phone_image = gtk_image_new_from_icon_name(APP_ICON_TRASH, GTK_ICON_SIZE_BUTTON);
 		gtk_button_set_image(GTK_BUTTON(remove), phone_image);
 		g_signal_connect(remove, "clicked", G_CALLBACK(remove_address_clicked_cb), contact);
 		g_object_set_data(G_OBJECT(remove), "address", address);

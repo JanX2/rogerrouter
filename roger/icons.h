@@ -23,28 +23,12 @@
 
 G_BEGIN_DECLS
 
-enum {
-	APP_ICON_ADD,
-	APP_ICON_EDIT,
-	APP_ICON_REMOVE,
-	APP_ICON_REFRESH,
-	APP_ICON_TRASH,
-	APP_ICON_CALL,
-	APP_ICON_PERSON,
-	APP_ICON_PRINT,
-	APP_ICON_CLEAR,
-	APP_ICON_FIND,
-	APP_ICON_HANGUP
-};
+#define APP_ICON_ADD	"list-add-symbolic"
+#define APP_ICON_REMOVE	"list-remove-symbolic"
+#define APP_ICON_TRASH	"user-trash-symbolic"
+#define APP_ICON_CALL	"call-start-symbolic"
+#define APP_ICON_HANGUP	"call-stop-symbolic"
 
-struct icons {
-	/* Preferred symbolic image */
-	gchar *primary;
-	/* Old icon theme image */
-	gchar *secondary;
-};
-
-GtkWidget *get_icon(gint type, gint size);
 GdkPixbuf *image_get_scaled(GdkPixbuf *image, gint req_width, gint req_height);
 
 G_END_DECLS
