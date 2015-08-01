@@ -52,6 +52,7 @@
 
 //#define JOURNAL_OLD_ICONS 1
 //#define JOURNAL_NEW_ICONS_COL 1
+#define USE_HEADER_BAR 1
 
 GtkWidget *journal_view = NULL;
 GtkWidget *journal_win = NULL;
@@ -432,7 +433,13 @@ void journal_redraw(void)
 
 	status = g_object_get_data(G_OBJECT(journal_win), "headerbar");
 	text = g_strdup_printf(_("%s (%d call(s), %d:%2.2dh)"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
+
+#if USE_HEADER_BAR
 	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(status), text);
+#else
+	GtkWidget *center = gtk_box_get_center_widget(GTK_BOX(status));
+	gtk_label_set_text(GTK_LABEL(center), text);
+#endif
 
 	g_free(text);
 }
@@ -1286,6 +1293,7 @@ void journal_window(GApplication *app)
 	GtkTreeViewColumn *column;
 	GtkTreeSortable *sortable;
 	gint index;
+	gint y = 0;
 	gchar *column_name[10] = {
 		_("Type"),
 		_("Date/Time"),
@@ -1328,7 +1336,7 @@ void journal_window(GApplication *app)
 	/* Set fixed height mode (improves rendering speed) */
 	gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(journal_view), TRUE);
 
-	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 6);
 	gtk_container_add(GTK_CONTAINER(window), grid);
 
 	GtkWidget *header;
@@ -1338,14 +1346,21 @@ void journal_window(GApplication *app)
 	GtkWidget *menu_button;
 	GtkWidget *entry;
 	GMenu *menu;
-	//GMenu *section;
 
 	/* Create header bar and set it to window */
+#if USE_HEADER_BAR
 	header = gtk_header_bar_new();
 	gtk_widget_set_hexpand(header, TRUE);
 	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
 	gtk_header_bar_set_title(GTK_HEADER_BAR (header), "Journal");
-	gtk_window_set_titlebar((GtkWindow *)(window), header);
+	gtk_window_set_titlebar(GTK_WINDOW(window), header);
+#else
+	header = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
+	gtk_widget_set_hexpand(header, TRUE);
+	gtk_grid_attach(GTK_GRID(grid), header, 0, y++, 1, 1);
+	GtkWidget *center = gtk_label_new("Center");
+	gtk_box_set_center_widget(GTK_BOX(header), center);
+#endif
 
 	/* Create button box as raised and linked */
 	box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
@@ -1365,12 +1380,6 @@ void journal_window(GApplication *app)
 	g_menu_append(menu, _("Print journal"), "app.print-journal");
 	g_menu_append(menu, _("Clear journal"), "app.clear-journal");
 	g_menu_append(menu, _("Export journal"), "app.export-journal");
-
-	//section = g_menu_new();
-	//g_menu_append(section, _("Add contact"), "app.add-contact");
-	//g_menu_append(section, _("Delete entry"), "app.delete-entry");
-
-	//g_menu_append_section(menu, NULL, G_MENU_MODEL(section));
 
 	gtk_menu_button_set_use_popover(GTK_MENU_BUTTON(menu_button), TRUE);
 	gtk_menu_button_set_menu_model(GTK_MENU_BUTTON(menu_button), G_MENU_MODEL(menu));
@@ -1398,7 +1407,7 @@ void journal_window(GApplication *app)
 
 	gtk_widget_show_all(search);
 
-	gtk_grid_attach(GTK_GRID(grid), search, 0, 1, 5, 1);
+	gtk_grid_attach(GTK_GRID(grid), search, 0, y++, 5, 1);
 
 	gtk_search_bar_connect_entry(GTK_SEARCH_BAR(search), GTK_ENTRY(entry));
 
@@ -1449,7 +1458,6 @@ void journal_window(GApplication *app)
 	renderer = gtk_cell_renderer_pixbuf_new();
 	column = gtk_tree_view_column_new_with_attributes(column_name[0], renderer, "pixbuf", JOURNAL_COL_TYPE, NULL);
 	gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_FIXED);
-	//gtk_tree_view_column_set_sort_column_id(column, JOURNAL_COL_TYPE);
 	if (g_settings_get_uint(app_settings, "col-0-width")) {
 		gtk_tree_view_column_set_fixed_width(column, g_settings_get_uint(app_settings, "col-0-width"));
 	}
@@ -1519,7 +1527,7 @@ void journal_window(GApplication *app)
 
 	gtk_container_add(GTK_CONTAINER(scrolled), journal_view);
 
-	gtk_grid_attach(GTK_GRID(grid), scrolled, 0, 2, 5, 1);
+	gtk_grid_attach(GTK_GRID(grid), scrolled, 0, y++, 5, 1);
 
 	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(journal_view)), GTK_SELECTION_MULTIPLE);
 
