@@ -741,22 +741,22 @@ static void parse_person(GHashTable *map, gpointer pId) {
 
 		if (!strcmp(column, "HomePhone")) {
 			number = g_slice_new(struct phone_number);
-			number->number = g_strdup(value);
+			number->number = call_full_number(value, FALSE);
 			number->type = PHONE_NUMBER_HOME;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
 		} else if (!strcmp(column, "WorkPhone")) {
 			number = g_slice_new(struct phone_number);
-			number->number = g_strdup(value);
+			number->number = call_full_number(value, FALSE);
 			number->type = PHONE_NUMBER_WORK;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
 		} else if (!strcmp(column, "FaxNumber")) {
 			number = g_slice_new(struct phone_number);
-			number->number = g_strdup(value);
+			number->number = call_full_number(value, FALSE);
 			number->type = PHONE_NUMBER_FAX_HOME;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
 		} else if (!strcmp(column, "CellularNumber")) {
 			number = g_slice_new(struct phone_number);
-			number->number = g_strdup(value);
+			number->number = call_full_number(value, FALSE);
 			number->type = PHONE_NUMBER_MOBILE;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
 		} else if (!strcmp(column, "DisplayName")) {
