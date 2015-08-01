@@ -396,7 +396,7 @@ gboolean fritzbox_present(struct router_info *router_info)
 		if (msg->status_code == 404) {
 			ret = fritzbox_present_plain(router_info);
 		} else {
-			g_warning("Could not read boxinfo file (Error: %d)", msg->status_code);
+			g_warning("Could not read boxinfo file (Error: %d, %s)", msg->status_code, soup_status_get_phrase(msg->status_code));
 		}
 
 		return ret;
