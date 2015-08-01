@@ -4,10 +4,7 @@ AM_CFLAGS = -I$(top_srcdir)
 
 sharedir = $(datadir)/roger
 share_DATA = \
-	images/app.png \
-	images/callin.png \
-	images/callmissed.png \
-	images/callout.png
+	images/app.png
 
 EXTRA_DIST = $(share_DATA) roger_winres.rc roger.gresource.xml
 
