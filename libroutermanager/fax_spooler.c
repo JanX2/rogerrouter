@@ -139,25 +139,13 @@ static gboolean fax_setup_file_monitor(const gchar *dir_name, GError **error)
 {
 	GFileMonitor *file_monitor = NULL;
 	GFile *file = NULL;
-	// GDir *user_spool_dir = NULL;
 	gboolean ret;
 	const gchar *user_name = g_get_user_name();
 	g_assert(user_name != NULL);
-	// const gchar *new_file = NULL;
 
 #ifdef SPOOLER_DEBUG
 	g_debug("Setting file monitor to '%s'", dir_name);
 #endif
-	// user_spool_dir = g_dir_open(dir_name, 0, error);
-	/* fax all pre-existing faxfiles */
-	//while ( (new_file = g_dir_read_name(user_spool_dir)) != NULL ) {
-	//	/* Sort out invalid files */
-	//	if ( (! has_file_extension(new_file, ".tmp")) && (! has_file_extension(new_file, ".tif"))) {
-	//		g_debug("Print job received on spooler");
-	//		emit_fax_process(new_file);
-	//	}
-	//}
-	// g_dir_close(user_spool_dir);
 
 	/* Create GFile for GFileMonitor */
 	file = g_file_new_for_path(dir_name);
