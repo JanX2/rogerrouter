@@ -33,6 +33,8 @@
 #include <roger/phone.h>
 #include <roger/icons.h>
 
+#define USE_HEADER_BAR 1
+
 static GtkWidget *detail_grid = NULL;
 static GtkWidget *contacts_window = NULL;
 static GtkWidget *contacts_window_grid = NULL;
@@ -456,6 +458,7 @@ void contacts(void)
 	GtkWidget *remove_button;
 	GtkWidget *edit_button;
 	GtkWidget *contacts_list_box;
+	gint y = 0;
 
 	/* Only allow one contact window at a time */
 	if (contacts_window) {
@@ -470,11 +473,20 @@ void contacts(void)
 	gtk_widget_set_size_request(contacts_window, 850, 550);
 	g_signal_connect(contacts_window, "delete_event", G_CALLBACK(contacts_window_delete_event_cb), NULL);
 
+	/* Create and add global window grid */
+	contacts_window_grid = gtk_grid_new();
+	gtk_container_add(GTK_CONTAINER(contacts_window), contacts_window_grid);
+
+#if USE_HEADER_BAR
 	/* Create header bar and add it to the window */
 	header_bar = gtk_header_bar_new();
 	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header_bar), TRUE);
 	gtk_header_bar_set_title(GTK_HEADER_BAR(header_bar), _("Contacts"));
 	gtk_window_set_titlebar(GTK_WINDOW(contacts_window), header_bar);
+#else
+	header_bar = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
+	gtk_grid_attach(GTK_GRID(contacts_window_grid), header_bar, 0, y++, 1, 1);
+#endif
 
 	/* Create button box as raised and linked */
 	box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -497,10 +509,6 @@ void contacts(void)
 	gtk_widget_set_tooltip_text(edit_button, _("Edit selected contact"));
 	gtk_box_pack_end(GTK_BOX(box), edit_button, TRUE, TRUE, 0);
 
-	/* Create and add global window grid */
-	contacts_window_grid = gtk_grid_new();
-	gtk_container_add(GTK_CONTAINER(contacts_window), contacts_window_grid);
-
 	/* Set standard spacing */
 	gtk_grid_set_row_spacing(GTK_GRID(contacts_window_grid), 6);
 	gtk_grid_set_column_spacing(GTK_GRID(contacts_window_grid), 6);
@@ -510,14 +518,14 @@ void contacts(void)
 	gtk_entry_set_placeholder_text(GTK_ENTRY(entry), _("Type to search"));
 	gtk_widget_set_vexpand(entry, FALSE);
 	gtk_widget_set_margin(entry, 6, 6, 6, 0);
-	gtk_grid_attach(GTK_GRID(contacts_window_grid), entry, 0, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(contacts_window_grid), entry, 0, y++, 1, 1);
 	contacts_search_entry = entry;
 
 	/* Create scrolled window for contact list */
 	scrolled = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(scrolled), GTK_SHADOW_IN);
 	gtk_widget_set_vexpand(scrolled, TRUE);
-	gtk_grid_attach(GTK_GRID(contacts_window_grid), scrolled, 0, 1, 1, 1);
+	gtk_grid_attach(GTK_GRID(contacts_window_grid), scrolled, 0, y++, 1, 1);
 
 	/* Request a width of 300px */
 	gtk_widget_set_size_request(scrolled, 300, -1);
