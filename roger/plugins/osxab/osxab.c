@@ -113,11 +113,16 @@ static int osxab_read_book(void) {
 				CFStringRef city = CFDictionaryGetValue(an_address, kABAddressCityKey);
 				CFStringRef zip = CFDictionaryGetValue(an_address, kABAddressZIPKey);
 				struct contact_address *address = g_slice_new0(struct contact_address);
+				CFStringRef tmp;
 
 				address->type = CFStringCompare(label, kABHomeLabel, 0);
-				address->street = cstring(street);
-				address->city = cstring(city);
-				address->zip = cstring(zip);
+				
+				tmp = cstring(street);
+				address->street = tmp ? tmp : g_strdup("");
+				tmp = cstring(city);
+				address->city = tmp ? tmp : g_strdup("");
+				tmp = cstring(zip);
+				address->zip = tmp ? tmp : g_strdup("");
 				contact->addresses = g_slist_prepend(contact->addresses, address);
 			}
 		}
