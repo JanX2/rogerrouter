@@ -52,13 +52,11 @@ static ESource *get_selected_ebook_esource(void)
 	ESourceRegistry *registry = get_source_registry();
 	const gchar *id = get_selected_ebook_id();
 
-	g_debug("registry: %p id %s", registry, id);
 	list = get_ebook_list();
-	g_debug("list: %p", list);
 	while (list) {
 		struct ebook_data *ebook_data = list->data;
 
-		g_debug("%s <-> %s", ebook_data->name, id);
+		//g_debug("%s <-> %s", ebook_data->name, id);
 		if (!strcmp(ebook_data->name, id)) {
 			return e_source_registry_ref_source(registry, ebook_data->id);
 		}
@@ -113,12 +111,8 @@ GList *get_ebook_list(void)
 		}
 
 		ebook_data = g_slice_new(struct ebook_data);
-		g_debug("Parent: %s", e_source_get_parent(e_source));
-		g_debug("UID: %s", e_source_get_uid(e_source));
-		g_debug("Display name: %s", e_source_get_display_name(e_source));
 
 		parent_source = e_source_registry_ref_source(get_source_registry(), e_source_get_parent(e_source));
-		g_debug("Parent name: %s", e_source_get_display_name(parent_source));
 
 		ebook_data->name = g_strdup_printf("%s (%s)", e_source_get_display_name(e_source), e_source_get_display_name(parent_source));
 		ebook_data->id = e_source_dup_uid(e_source);

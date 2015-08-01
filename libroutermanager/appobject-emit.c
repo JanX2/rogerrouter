@@ -101,3 +101,11 @@ void emit_message(gint type, gchar *message)
 {
 	g_signal_emit(app_object, app_object_signals[ACB_MESSAGE], 0, type, g_strdup(message));
 }
+
+/**
+ * \brief Emit signal: contacts-changed
+ */
+void emit_contacts_changed(void)
+{
+	g_signal_emit(app_object, app_object_signals[ACB_CONTACTS_CHANGED], 0);
+}

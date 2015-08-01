@@ -445,6 +445,14 @@ static gint contacts_window_delete_event_cb(GtkWidget *widget, GdkEvent event, g
 	return FALSE;
 }
 
+static void contacts_contacts_changed_cb(AppObject *object, gpointer user_data)
+{
+	GtkWidget *list_box = user_data;
+
+	/* Update contact list */
+	contacts_update_list(list_box, NULL);
+}
+
 /**
  * \brief Contacts window
  */
@@ -550,6 +558,8 @@ void contacts(void)
 	g_signal_connect(add_button, "clicked", G_CALLBACK(add_button_clicked_cb), contacts_list_box);
 	g_signal_connect(remove_button, "clicked", G_CALLBACK(remove_button_clicked_cb), contacts_list_box);
 	g_signal_connect(edit_button, "clicked", G_CALLBACK(edit_button_clicked_cb), contacts_list_box);
+
+	g_signal_connect(app_object, "contacts-changed", G_CALLBACK(contacts_contacts_changed_cb), contacts_list_box);
 
 	/* Show window */
 	gtk_widget_show_all(contacts_window);

@@ -25,6 +25,7 @@
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/call.h>
 #include <libroutermanager/appobject.h>
+#include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/address-book.h>
 #include <libroutermanager/router.h>
@@ -57,6 +58,8 @@ GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand,
 static GSList *contacts = NULL;
 static GSettings *ebook_settings = NULL;
 
+gboolean evolution_reload(void);
+
 /**
  * \brief Get selected evolution address book Id
  * \return evolution address book
@@ -84,7 +87,7 @@ void free_ebook_list(GList *ebook_list)
 	g_list_free_full(ebook_list, (GDestroyNotify) free_ebook_data);
 }
 
-void ebook_objects_added_cb(EBookClientView *view, const GSList *ids, gpointer user_data)
+void ebook_objects_changed_cb(EBookClientView *view, const GSList *ids, gpointer user_data)
 {
 	const GSList *l;
 
@@ -92,11 +95,14 @@ void ebook_objects_added_cb(EBookClientView *view, const GSList *ids, gpointer u
 		EContact *contact = l->data;
 		const gchar *name = e_contact_get_const(contact, E_CONTACT_NAME_OR_ORG);
 
-		g_debug("Added contact: %s", name);
+		g_debug("Changed contact: %s", name);
 	}
 
-	//TODO: Send signal to redraw journal and update contacts view
-	g_debug("TODO: reload address book and send signal to redraw journal and update contacts view");
+	/* Reload contacts */
+	evolution_reload();
+
+	/* Send signal to redraw journal and update contacts view */
+	emit_contacts_changed();
 }
 
 void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
@@ -133,7 +139,9 @@ void read_callback(GObject *source, GAsyncResult *res, gpointer user_data)
 		g_error("get_view_sync");
 	}
 
-	g_signal_connect(view, "objects-added", G_CALLBACK(ebook_objects_added_cb), NULL);
+	g_signal_connect(view, "objects-added", G_CALLBACK(ebook_objects_changed_cb), NULL);
+	g_signal_connect(view, "objects-removed", G_CALLBACK(ebook_objects_changed_cb), NULL);
+	g_signal_connect(view, "objects-modified", G_CALLBACK(ebook_objects_changed_cb), NULL);
 	e_book_client_view_set_fields_of_interest(view, NULL, &error);
 	if (error) {
 		g_error("set_fields_of_interest()");

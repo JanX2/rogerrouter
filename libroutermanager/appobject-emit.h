@@ -36,6 +36,8 @@ void emit_connection_status(gint status, struct capi_connection *connection);
 
 void emit_message(gint status, gchar *message);
 
+void emit_contacts_changed(void);
+
 G_END_DECLS
 
 #endif

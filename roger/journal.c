@@ -1082,6 +1082,11 @@ void add_contact_activated(GSimpleAction *action, GVariant *parameter, gpointer 
 	journal_button_add_clicked_cb(NULL, journal_view);
 }
 
+static void journal_contacts_changed_cb(AppObject *app, gpointer user_data)
+{
+	journal_button_refresh_clicked_cb(NULL, NULL);
+}
+
 void journal_window(GApplication *app)
 {
 	GtkWidget *window, *grid, *scrolled;
@@ -1344,6 +1349,8 @@ void journal_window(GApplication *app)
 
 	g_signal_connect(G_OBJECT(journal_win), "configure-event", G_CALLBACK(journal_configure_event_cb), NULL);
 	g_signal_connect(G_OBJECT(journal_win), "window-state-event", G_CALLBACK(journal_window_state_event_cb), NULL);
+
+	g_signal_connect(app_object, "contacts-changed", G_CALLBACK(journal_contacts_changed_cb), NULL);
 
 	gtk_widget_hide_on_delete(journal_win);
 
