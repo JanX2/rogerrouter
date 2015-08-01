@@ -84,7 +84,7 @@ AC_MSG_RESULT([$WIN32])
 AM_CONDITIONAL(WIN32, test "x$WIN32" != "xno")
 AM_CONDITIONAL(MACOSX, test "x$macos" != "xno")
 
-PKG_CHECK_MODULES([EXTRA], [glib-2.0 >= 2.40 gio-2.0 >= 2.40 speex >= 1.0 speexdsp >= 1.0 sndfile >= 1.0.0 libxml-2.0])
+PKG_CHECK_MODULES([EXTRA], [glib-2.0 >= 2.44 gio-2.0 >= 2.44 speex >= 1.0 speexdsp >= 1.0 sndfile >= 1.0.0 libxml-2.0])
 
 # Check for GTK >= 3.14
 PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.14])
