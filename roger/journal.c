@@ -1056,20 +1056,26 @@ void clear_journal_activated(GSimpleAction *action, GVariant *parameter, gpointe
 	journal_button_clear_clicked_cb(NULL, NULL);
 }
 
-void export_journal_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+static void journal_export_cb(GtkWidget *dialog, gint response, gpointer user_data)
 {
-	gint ret;
-
-	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Export journal"), GTK_WINDOW(journal_win), GTK_FILE_CHOOSER_ACTION_SAVE, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Save"), GTK_RESPONSE_ACCEPT, NULL);
-	gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), "journal.csv");
-	ret = gtk_dialog_run(GTK_DIALOG(dialog));
-	if (ret == GTK_RESPONSE_ACCEPT) {
+	if (response == GTK_RESPONSE_ACCEPT) {
 		gchar *file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
 
 		g_debug("file: %s", file);
 		csv_save_journal_as(journal_list, file);
 	}
+
 	gtk_widget_destroy(dialog);
+}
+
+void export_journal_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+{
+	GtkWidget *dialog;
+
+	dialog = gtk_file_chooser_dialog_new(_("Export journal"), GTK_WINDOW(journal_win), GTK_FILE_CHOOSER_ACTION_SAVE, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Save"), GTK_RESPONSE_ACCEPT, NULL);
+	gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), "journal.csv");
+	g_signal_connect(dialog, "response", G_CALLBACK(journal_export_cb), NULL);
+	gtk_widget_show_all(dialog);
 }
 
 void delete_entry_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
