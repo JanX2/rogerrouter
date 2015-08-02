@@ -93,9 +93,8 @@ void plugins_init(void)
 		peas_engine_add_search_path(engine, plugin_dir, plugin_dir);
 	}
 
-	/* In addition to C we want to support python and javascript plugins */
+	/* In addition to C we want to support python plugins */
 	peas_engine_enable_loader(engine, "python");
-	peas_engine_enable_loader(engine, "gjs");
 
 	/* Traverse through detected plugins and loaded builtin plugins now */
 	for (list = peas_engine_get_plugin_list(engine); list != NULL; list = list->next) {

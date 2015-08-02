@@ -527,7 +527,6 @@ AC_CONFIG_FILES([
     libroutermanager/data/Makefile
     libroutermanager/plugins/Makefile
     libroutermanager/plugins/fritzbox/Makefile
-    libroutermanager/plugins/speedport/Makefile
     libroutermanager/plugins/callmonitor/Makefile
     libroutermanager/plugins/areacodes_global/Makefile
     libroutermanager/plugins/pulseaudio/Makefile
