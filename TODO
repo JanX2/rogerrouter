@@ -1,20 +1,13 @@
 TODO
 ----------
-* Allow to disable ringtones within popups
-* GLib:Critical: g_strv_length: assertion `str_array != NULL' failed
-
 * Prepend rm_ to each external routermanager function?
-* Check router structure for different routers (speedport)
 * Areacodes plugin for every country (global list available as csv)
   (90% done, add special handling for countrys not starting with 0 indicator,
   e.g. Russian Federation)
 * Addressbook selection in preferences
-* Better icons in journal/print
-* Secret check
 * Export contacts to router
 * FRITZ!Box: Read upnp xml to retrieve control url instead of hardcoding the value
 * Fix possible race condition between telnet and CAPI plugin
-* Fax report currently a size of 610x879mm -> change to A4
 
 * FRITZ!Fon: label field
 
@@ -28,13 +21,11 @@ TODO
 * Application icon in different sizes
 
 **** OSX ****
-* Add fam in glib
 * Add G_OS_OSX in glib
 * Add consistent directory handling in glib
 
 ** Contacts **
 - Outlook
-- Apple Mail
 
 ** Reverse lookup **
 - Germany: dasörtliche, dastelefonbuch, klicktel, goyellow, gelbeseiten
@@ -44,7 +35,6 @@ TODO
 
 ** Journal **
 - MySQL
-- HTML
 - Text
 
 ** Misc **
@@ -54,7 +44,6 @@ TODO
 ************** UNDECIDED **************
 * Different sound output for notifications
 * Import for JFritz
-* Export contacts to CSV?
 * DSL/Connection information
 
 * Distribution schema: Add default actions
