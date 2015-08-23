@@ -50,8 +50,6 @@
 #include <roger/application.h>
 #include <roger/uitools.h>
 
-#define USE_HEADER_BAR 1
-
 GtkWidget *journal_view = NULL;
 GtkWidget *journal_win = NULL;
 GtkWidget *journal_filter_box = NULL;
@@ -66,6 +64,13 @@ static struct filter *journal_filter = NULL;
 static struct filter *journal_search_filter = NULL;
 static GtkWidget *spinner = NULL;
 static GMutex journal_mutex;
+static gboolean use_header = FALSE;
+
+gboolean roger_uses_headerbar(void)
+{
+	//return TRUE;
+	return use_header;
+}
 
 void journal_clear(void)
 {
@@ -233,12 +238,11 @@ void journal_redraw(void)
 	status = g_object_get_data(G_OBJECT(journal_win), "headerbar");
 	text = g_strdup_printf(_("%s (%d call(s), %d:%2.2dh)"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
 
-#if USE_HEADER_BAR
-	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(status), text);
-#else
-	GtkWidget *center = gtk_box_get_center_widget(GTK_BOX(status));
-	gtk_label_set_text(GTK_LABEL(center), text);
-#endif
+	if (roger_uses_headerbar()) {
+		gtk_header_bar_set_subtitle(GTK_HEADER_BAR(status), text);
+	} else {
+		gtk_label_set_text(GTK_LABEL(status), text);
+	}
 
 	g_free(text);
 }
@@ -373,8 +377,13 @@ void journal_button_print_clicked_cb(GtkWidget *button, GtkWidget *view)
 void journal_button_clear_clicked_cb(GtkWidget *button, GtkWidget *view)
 {
 	GtkWidget *dialog;
+	gint flags = GTK_DIALOG_MODAL;
 
-	dialog = gtk_message_dialog_new(GTK_WINDOW(journal_win), GTK_DIALOG_MODAL | GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE, _("Do you want to delete the router journal?"));
+	if (roger_uses_headerbar()) {
+		flags |= GTK_DIALOG_USE_HEADER_BAR;
+	}
+
+	dialog = gtk_message_dialog_new(GTK_WINDOW(journal_win), flags, GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE, _("Do you want to delete the router journal?"));
 
 	gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
 	gtk_dialog_add_button(GTK_DIALOG(dialog), _("Delete"), GTK_RESPONSE_OK);
@@ -422,8 +431,13 @@ void delete_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, g
 void journal_button_delete_clicked_cb(GtkWidget *button, GtkWidget *view)
 {
 	GtkWidget *dialog;
+	gint flags = GTK_DIALOG_MODAL;
 
-	dialog = gtk_message_dialog_new(GTK_WINDOW(journal_win), GTK_DIALOG_MODAL | GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE, _("Do you really want to delete the selected entry?"));
+	if (roger_uses_headerbar()) {
+		flags |= GTK_DIALOG_USE_HEADER_BAR;
+	}
+
+	dialog = gtk_message_dialog_new(GTK_WINDOW(journal_win), flags, GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE, _("Do you really want to delete the selected entry?"));
 
 	gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
 	gtk_dialog_add_button(GTK_DIALOG(dialog), _("Delete"), GTK_RESPONSE_OK);
@@ -460,7 +474,8 @@ void journal_add_contact(struct call *call)
 	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(journal_win));
 	gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
 	GtkWidget *remove = gtk_dialog_add_button(GTK_DIALOG(dialog), _("Add"), GTK_RESPONSE_OK);
-	gtk_style_context_add_class(gtk_widget_get_style_context(remove), GTK_STYLE_CLASS_SUGGESTED_ACTION);
+
+	ui_set_suggested_style(remove);
 	GtkWidget *content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 
 	grid = gtk_grid_new();
@@ -696,8 +711,14 @@ void journal_play_voice(const gchar *name)
 		return;
 	}
 
+	gint flags = 0;
+
+	if (roger_uses_headerbar()) {
+		flags |= GTK_DIALOG_USE_HEADER_BAR;
+	}
+
 	/* Create dialog */
-	dialog = gtk_dialog_new_with_buttons(_("Voice box"), GTK_WINDOW(journal_win), GTK_DIALOG_USE_HEADER_BAR, NULL/*_("_Close"), GTK_RESPONSE_CLOSE*/, NULL);
+	dialog = gtk_dialog_new_with_buttons(_("Voice box"), GTK_WINDOW(journal_win), flags, NULL/*_("_Close"), GTK_RESPONSE_CLOSE*/, NULL);
 	content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 
 	playback_data = g_slice_new(struct journal_playback);
@@ -1126,6 +1147,13 @@ void journal_window(GApplication *app)
 
 	journal_startup(app);
 
+#if GTK_CHECK_VERSION(3,12,0)
+	use_header = gtk_application_prefers_app_menu(GTK_APPLICATION(app));
+#else
+	g_object_get(gtk_settings_get_default(), "gtk-dialogs-use-header", &use_header, NULL);
+#endif
+	g_debug("use_header: %d", use_header);
+
 	journal_init_call_icon();
 
 	window = gtk_application_window_new(GTK_APPLICATION(app));
@@ -1159,20 +1187,22 @@ void journal_window(GApplication *app)
 	GtkWidget *entry;
 	GMenu *menu;
 
-	/* Create header bar and set it to window */
-#if USE_HEADER_BAR
-	header = gtk_header_bar_new();
-	gtk_widget_set_hexpand(header, TRUE);
-	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
-	gtk_header_bar_set_title(GTK_HEADER_BAR (header), "Journal");
-	gtk_window_set_titlebar(GTK_WINDOW(window), header);
-#else
-	header = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
-	gtk_widget_set_hexpand(header, TRUE);
-	gtk_grid_attach(GTK_GRID(grid), header, 0, y++, 1, 1);
-	GtkWidget *center = gtk_label_new("Center");
-	gtk_box_set_center_widget(GTK_BOX(header), center);
-#endif
+	if (roger_uses_headerbar()) {
+		/* Create header bar and set it to window */
+		header = gtk_header_bar_new();
+		gtk_widget_set_hexpand(header, TRUE);
+		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
+		gtk_header_bar_set_title(GTK_HEADER_BAR (header), "Journal");
+		gtk_window_set_titlebar(GTK_WINDOW(window), header);
+		g_object_set_data(G_OBJECT(window), "headerbar", header);
+	} else {
+		header = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
+		gtk_widget_set_hexpand(header, TRUE);
+		gtk_grid_attach(GTK_GRID(grid), header, 0, y++, 1, 1);
+		GtkWidget *center = gtk_label_new("");
+		gtk_box_pack_end(GTK_BOX(header), center, FALSE, FALSE, 0);
+		g_object_set_data(G_OBJECT(window), "headerbar", center);
+	}
 
 	/* Create button box as raised and linked */
 	box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
@@ -1193,7 +1223,9 @@ void journal_window(GApplication *app)
 	g_menu_append(menu, _("Clear journal"), "app.clear-journal");
 	g_menu_append(menu, _("Export journal"), "app.export-journal");
 
+#if GTK_CHECK_VERSION(3,12,0)
 	gtk_menu_button_set_use_popover(GTK_MENU_BUTTON(menu_button), TRUE);
+#endif
 	gtk_menu_button_set_menu_model(GTK_MENU_BUTTON(menu_button), G_MENU_MODEL(menu));
 
 	gtk_box_pack_start(GTK_BOX(box), menu_button, FALSE, TRUE, 0);
@@ -1234,7 +1266,6 @@ void journal_window(GApplication *app)
 	gtk_widget_set_no_show_all(spinner, TRUE);
 	gtk_container_add(GTK_CONTAINER(header), spinner);
 
-	g_object_set_data(G_OBJECT(window), "headerbar", header);
 	gtk_widget_show_all(header);
 
 	g_signal_connect(window, "key-press-event", G_CALLBACK(window_key_press_event_cb), search);

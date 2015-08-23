@@ -32,8 +32,7 @@
 #include <roger/uitools.h>
 #include <roger/phone.h>
 #include <roger/icons.h>
-
-#define USE_HEADER_BAR 1
+#include <roger/journal.h>
 
 static GtkWidget *detail_grid = NULL;
 static GtkWidget *contacts_window = NULL;
@@ -200,7 +199,11 @@ void contacts_update_details(struct contact *contact)
 	}
 
 	detail_grid = scrolled_window;
-	gtk_grid_attach(GTK_GRID(contacts_window_grid), scrolled_window, 1, 0, 1, 2);
+	if (roger_uses_headerbar()) {
+		gtk_grid_attach(GTK_GRID(contacts_window_grid), scrolled_window, 1, 0, 1, 2);
+	} else {
+		gtk_grid_attach(GTK_GRID(contacts_window_grid), scrolled_window, 1, 0, 1, 3);
+	}
 }
 
 /**
@@ -485,16 +488,16 @@ void contacts(void)
 	contacts_window_grid = gtk_grid_new();
 	gtk_container_add(GTK_CONTAINER(contacts_window), contacts_window_grid);
 
-#if USE_HEADER_BAR
-	/* Create header bar and add it to the window */
-	header_bar = gtk_header_bar_new();
-	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header_bar), TRUE);
-	gtk_header_bar_set_title(GTK_HEADER_BAR(header_bar), _("Contacts"));
-	gtk_window_set_titlebar(GTK_WINDOW(contacts_window), header_bar);
-#else
-	header_bar = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
-	gtk_grid_attach(GTK_GRID(contacts_window_grid), header_bar, 0, y++, 1, 1);
-#endif
+	if (roger_uses_headerbar()) {
+		/* Create header bar and add it to the window */
+		header_bar = gtk_header_bar_new();
+		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header_bar), TRUE);
+		gtk_header_bar_set_title(GTK_HEADER_BAR(header_bar), _("Contacts"));
+		gtk_window_set_titlebar(GTK_WINDOW(contacts_window), header_bar);
+	} else {
+		header_bar = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
+		gtk_grid_attach(GTK_GRID(contacts_window_grid), header_bar, 0, y++, 1, 1);
+	}
 
 	/* Create button box as raised and linked */
 	box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);

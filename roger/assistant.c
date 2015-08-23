@@ -1098,7 +1098,7 @@ void assistant()
 	priv->back = back_button;
 
 	next_button = gtk_button_new_with_label(_("Next"));
-	gtk_style_context_add_class(gtk_widget_get_style_context(next_button), GTK_STYLE_CLASS_SUGGESTED_ACTION);
+	ui_set_suggested_style(next_button);
 	gtk_header_bar_pack_end(GTK_HEADER_BAR(header), next_button);
 
 	stack = gtk_stack_new();

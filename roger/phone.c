@@ -48,6 +48,8 @@
 #include <roger/application.h>
 #include <roger/journal.h>
 
+#define UHB 1
+
 /** Phone window */
 static GtkWidget *phone_window = NULL;
 
@@ -565,17 +567,21 @@ static void phone_search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer
 		gint width, height;
 
 		/* Create popover */
+#if GTK_CHECK_VERSION(3,12,0)
 		state->contact_menu = gtk_popover_new(NULL);
+		gtk_popover_set_modal(GTK_POPOVER(state->contact_menu), FALSE);
+		gtk_popover_set_position(GTK_POPOVER(state->contact_menu), GTK_POS_BOTTOM);
+		gtk_popover_set_relative_to(GTK_POPOVER(state->contact_menu), GTK_WIDGET(entry));
+#else
+		state->contact_menu = gtk_menu_new();
+#endif
 
 		width = gtk_widget_get_allocated_width(state->search_entry) + gtk_widget_get_allocated_width(state->pickup_button) + gtk_widget_get_allocated_width(state->hangup_button);
 		height = gtk_widget_get_allocated_height(state->child_frame) + gtk_widget_get_allocated_height(state->search_entry);
 
 		gtk_widget_set_size_request(state->contact_menu, width, height);
 
-		gtk_popover_set_modal(GTK_POPOVER(state->contact_menu), FALSE);
 		gtk_container_set_border_width(GTK_CONTAINER(state->contact_menu), 6);
-		gtk_popover_set_position(GTK_POPOVER(state->contact_menu), GTK_POS_BOTTOM);
-		gtk_popover_set_relative_to(GTK_POPOVER(state->contact_menu), GTK_WIDGET(entry));
 		g_signal_connect(G_OBJECT(state->contact_menu), "closed", G_CALLBACK(phone_contact_menu_closed_cb), state);
 
 		state->scrolled_win = gtk_scrolled_window_new(NULL, NULL);
@@ -662,6 +668,7 @@ static void phone_search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer
 	}
 }
 
+#if UHB
 /**
  * \brief Helper function which focus the active child within the list box
  * \param scrolled_win scrolled window
@@ -693,6 +700,7 @@ static void phone_list_box_set_focus(GtkWidget *scrolled_win, GtkWidget *box, Gt
 	/* Set value */
 	gtk_adjustment_set_value(vadj, value);
 }
+#endif
 
 /**
  * \brief icon of search entry pressed
@@ -717,6 +725,7 @@ static void phone_search_entry_icon_press_cb(GtkEntry *entry, GtkEntryIconPositi
 	}
 }
 
+#if UHB
 /**
  * \brief Handle cursor up/down in name entry field which controls the open popover menu (listbox) without losing focus
  * \param entry entry widget
@@ -742,7 +751,6 @@ static gboolean phone_search_entry_key_press_event_cb(GtkWidget *entry, GdkEvent
 		gtk_widget_destroy(state->contact_menu);
 		return TRUE;
 	}
-
 	/* Get selected row */
 	row = gtk_list_box_get_selected_row(GTK_LIST_BOX(state->box));
 	if (!row) {
@@ -802,6 +810,7 @@ static gboolean phone_search_entry_key_press_event_cb(GtkWidget *entry, GdkEvent
 
 	return FALSE;
 }
+#endif
 
 /**
  * \brief Create name (number) frame
@@ -831,8 +840,30 @@ GtkWidget *phone_search_entry_new(GtkWidget *window, struct contact *contact, st
 	state->discard = TRUE;
 	phone_search_entry_set_contact(state, contact, TRUE);
 
+#if UHB
 	g_signal_connect(state->search_entry, "search-changed", G_CALLBACK(phone_search_entry_search_changed_cb), state);
 	g_signal_connect(state->search_entry, "key-press-event", G_CALLBACK(phone_search_entry_key_press_event_cb), state);
+#else
+	GSList *l = address_book_get_contacts();
+	GtkTreeIter iter;
+
+	GtkEntryCompletion *completion = gtk_entry_completion_new();
+	gtk_entry_completion_set_text_column(completion, 1);
+	gtk_entry_set_completion(GTK_ENTRY(state->search_entry), completion);
+	//g_signal_connect(G_OBJECT(completion), "match-selected", G_CALLBACK(on_match_select), NULL);
+
+	GtkListStore *model = gtk_list_store_new(2, GDK_TYPE_PIXBUF, G_TYPE_STRING);
+
+	while (l) {
+		struct contact *c = l->data;
+		gtk_list_store_append(model, &iter);
+
+		gtk_list_store_set(model, &iter, 0, c->image, 1, c->name, -1);
+		l = l->next;
+	}
+
+	gtk_entry_completion_set_model(completion, GTK_TREE_MODEL(model));
+#endif
 
 	return state->search_entry;
 }
@@ -861,7 +892,7 @@ GtkWidget *phone_dial_buttons_new(GtkWidget *window, struct phone_state *state)
 	gtk_widget_set_hexpand(state->pickup_button, TRUE);
 	image = gtk_image_new_from_icon_name(APP_ICON_CALL, GTK_ICON_SIZE_BUTTON);
 	gtk_button_set_image(GTK_BUTTON(state->pickup_button), image);
-	gtk_style_context_add_class(gtk_widget_get_style_context(state->pickup_button), GTK_STYLE_CLASS_SUGGESTED_ACTION);
+	ui_set_suggested_style(state->pickup_button);
 
 	gtk_widget_set_tooltip_text(state->pickup_button, _("Pick up"));
 	g_signal_connect(state->pickup_button, "clicked", G_CALLBACK(pickup_button_clicked_cb), state);
@@ -874,7 +905,9 @@ GtkWidget *phone_dial_buttons_new(GtkWidget *window, struct phone_state *state)
 	gtk_widget_set_hexpand(state->hangup_button, TRUE);
 	image = gtk_image_new_from_icon_name(APP_ICON_HANGUP, GTK_ICON_SIZE_BUTTON);
 	gtk_button_set_image(GTK_BUTTON(state->hangup_button), image);
+#if UHN
 	gtk_style_context_add_class(gtk_widget_get_style_context(state->hangup_button), GTK_STYLE_CLASS_DESTRUCTIVE_ACTION);
+#endif
 
 	gtk_widget_set_tooltip_text(state->hangup_button, _("Hang up"));
 	g_signal_connect(state->hangup_button, "clicked", G_CALLBACK(hangup_button_clicked_cb), state);
@@ -1183,16 +1216,25 @@ static gboolean phone_window_delete_event_cb(GtkWidget *window, GdkEvent *event,
  * \param item percieved check menu item
  * \param user_data containing pointer to corresponding phone type
  */
-static void phone_item_toggled_cb(GtkCheckMenuItem *item, gpointer user_data)
+void phone_item_toggled_cb(GtkCheckMenuItem *item, gpointer user_data)
 {
+#if GTK_CHECK_VERSION(3,12,0)
 	/* If item is active, adjust phone port accordingly and set sensitivity of phone buttons */
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(item))) {
-		//struct phone_state *state = g_object_get_data(G_OBJECT(item), "phone_state");
 		gint type = GPOINTER_TO_INT(user_data);
 
 		/* Set active phone port */
 		router_set_phone_port(profile_get_active(), type);
 	}
+#else
+	/* If item is active, adjust phone port accordingly and set sensitivity of phone buttons */
+	if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(item))) {
+		gint type = GPOINTER_TO_INT(user_data);
+
+		/* Set active phone port */
+		router_set_phone_port(profile_get_active(), type);
+	}
+#endif
 }
 
 /**
@@ -1205,11 +1247,13 @@ static GtkWidget *phone_window_create_menu(struct profile *profile, struct phone
 {
 	GtkWidget *menu;
 	GtkWidget *item;
-	GtkWidget *box;
 	GSList *phone_list = NULL;
-	GSList *phone_radio_list = NULL;
 	struct phone *phone = NULL;
 	gint type = 0;
+
+#if GTK_CHECK_VERSION(3,12,0)
+	GtkWidget *box;
+	GSList *phone_radio_list = NULL;
 
 	/* Create vertical box */
 	box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
@@ -1259,6 +1303,55 @@ static GtkWidget *phone_window_create_menu(struct profile *profile, struct phone
 	gtk_box_pack_start(GTK_BOX(box), item, FALSE, FALSE, 0);
 
 	gtk_widget_show_all(box);
+#else
+	gint y = 0;
+
+	menu = gtk_menu_new();
+
+	item = gtk_menu_item_new_with_label(_("Phones"));
+	gtk_widget_set_sensitive(item, FALSE);
+	gtk_menu_attach(GTK_MENU(menu), item, 0, 1, y, y + 1);
+	y++;
+
+	/* Get phone list and active phone port */
+	phone_list = router_get_phone_list(profile);
+	type = router_get_phone_port(profile);
+
+	/* Traverse phone list and add each phone */
+	while (phone_list) {
+		phone = phone_list->data;
+
+		item = gtk_check_menu_item_new_with_label(phone->name);
+		gtk_check_menu_item_set_draw_as_radio(GTK_CHECK_MENU_ITEM(item), TRUE);
+
+		if (type == phone->type) {
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(item), TRUE);
+		}
+
+		g_signal_connect(item, "toggled", G_CALLBACK(phone_item_toggled_cb), GINT_TO_POINTER(phone->type));
+		g_object_set_data(G_OBJECT(item), "phone_state", state);
+
+		gtk_menu_attach(GTK_MENU(menu), item, 0, 1, y, y + 1);
+		y++;
+		phone_list = phone_list->next;
+	}
+
+	/* Free phone list */
+	router_free_phone_list(phone_list);
+
+	/* Add separator */
+	item = gtk_separator_menu_item_new();
+	gtk_menu_attach(GTK_MENU(menu), item, 0, 1, y, y + 1);
+	y++;
+
+	/* Add suppress check item */
+	item = gtk_check_menu_item_new_with_label(_("Suppress number"));
+	g_settings_bind(profile->settings, "suppress", item, "active", G_SETTINGS_BIND_DEFAULT);
+	gtk_menu_attach(GTK_MENU(menu), item, 0, 1, y, y + 1);
+	y++;
+
+	gtk_widget_show_all(menu);
+#endif
 
 	return menu;
 }
@@ -1301,6 +1394,7 @@ GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struc
 	GtkWidget *frame;
 	struct phone_state *state;
 	struct profile *profile = profile_get_active();
+	gint y = 0;
 
 	if (!profile) {
 		return NULL;
@@ -1323,22 +1417,6 @@ GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struc
 	g_object_set_data(G_OBJECT(window), "state", state);
 	g_signal_connect(window, "delete_event", G_CALLBACK(phone_window_delete_event_cb), state);
 
-	/* Create header bar and set it to window */
-	header = gtk_header_bar_new();
-	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
-	gtk_header_bar_set_title(GTK_HEADER_BAR(header), phone_devices[state->type]->get_title());
-	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(header), _("Time: 00:00:00"));
-	gtk_window_set_titlebar(GTK_WINDOW(window), header);
-
-	/* Create and add menu button to header bar */
-	menu_button = gtk_menu_button_new();
-	gtk_menu_button_set_direction(GTK_MENU_BUTTON(menu_button), GTK_ARROW_NONE);
-	gtk_header_bar_pack_end(GTK_HEADER_BAR(header), menu_button);
-
-	/* Create menu and add it to menu button */
-	gtk_menu_button_set_popover(GTK_MENU_BUTTON(menu_button), phone_devices[state->type]->create_menu(profile, state));
-	state->header_bar = header;
-
 	/* Create grid and attach it to the window */
 	grid = gtk_grid_new();
 	gtk_container_add(GTK_CONTAINER(window), grid);
@@ -1350,13 +1428,38 @@ GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struc
 	gtk_grid_set_row_spacing(GTK_GRID(grid), 18);
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 12);
 
+	/* Create header bar and set it to window */
+	header = gtk_header_bar_new();
+	gtk_header_bar_set_title(GTK_HEADER_BAR(header), phone_devices[state->type]->get_title());
+	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(header), _("Time: 00:00:00"));
+
+	if (roger_uses_headerbar()) {
+		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
+		gtk_window_set_titlebar(GTK_WINDOW(window), header);
+	} else {
+		gtk_grid_attach(GTK_GRID(grid), header, 0, y++, 1, 1);
+	}
+
+	/* Create and add menu button to header bar */
+	menu_button = gtk_menu_button_new();
+	gtk_menu_button_set_direction(GTK_MENU_BUTTON(menu_button), GTK_ARROW_NONE);
+	gtk_header_bar_pack_end(GTK_HEADER_BAR(header), menu_button);
+
+	/* Create menu and add it to menu button */
+#if UHB
+	gtk_menu_button_set_popover(GTK_MENU_BUTTON(menu_button), phone_devices[state->type]->create_menu(profile, state));
+#else
+	gtk_menu_button_set_popup(GTK_MENU_BUTTON(menu_button), phone_devices[state->type]->create_menu(profile, state));
+#endif
+	state->header_bar = header;
+
 	/* Add name frame */
 	frame = phone_search_entry_new(window, contact, state);
-	gtk_grid_attach(GTK_GRID(grid), frame, 0, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), frame, 0, y, 1, 1);
 
 	/* Add dial button frame */
 	frame = phone_dial_buttons_new(window, state);
-	gtk_grid_attach(GTK_GRID(grid), frame, 1, 0, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), frame, 1, y++, 1, 1);
 
 	/* Add dial pad */
 	phone_devices[state->type]->create_child(state, grid);

@@ -307,7 +307,7 @@ void filter_edit_cb(GtkWidget *widget, gpointer data)
 	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
 
 	save = gtk_dialog_add_button(GTK_DIALOG(dialog), _("Save"), GTK_RESPONSE_OK);
-	gtk_style_context_add_class(gtk_widget_get_style_context(save), GTK_STYLE_CLASS_SUGGESTED_ACTION);
+	ui_set_suggested_style(save);
 
 	content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 
@@ -405,7 +405,7 @@ void filter_add_cb(GtkWidget *widget, gpointer data)
 	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
 
 	add = gtk_dialog_add_button(GTK_DIALOG(dialog), _("Add"), GTK_RESPONSE_OK);
-	gtk_style_context_add_class(gtk_widget_get_style_context(add), GTK_STYLE_CLASS_SUGGESTED_ACTION);
+	ui_set_suggested_style(add);
 
 	content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 

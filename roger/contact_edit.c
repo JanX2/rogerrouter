@@ -366,14 +366,17 @@ extern GSettings *app_settings;
 
 void contact_editor(struct contact *contact, GtkWidget *parent)
 {
-	GtkWidget *dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", TRUE, NULL);
+	GtkWidget *dialog;
+	gboolean use_header = roger_uses_headerbar();
 
+	dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", use_header, NULL);
 	gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
 	gtk_window_set_title(GTK_WINDOW(dialog), _("Contact"));
 	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(parent));
 	gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
 	GtkWidget *save = gtk_dialog_add_button(GTK_DIALOG(dialog), _("Save"), GTK_RESPONSE_OK);
-	gtk_style_context_add_class(gtk_widget_get_style_context(save), GTK_STYLE_CLASS_SUGGESTED_ACTION);
+
+	ui_set_suggested_style(save);
 
 	edit_dialog = dialog;
 
@@ -392,7 +395,7 @@ void contact_editor(struct contact *contact, GtkWidget *parent)
 		gboolean ok = g_settings_get_boolean(app_settings, "contacts-hide-warning");
 
 		if (!ok) {
-			GtkWidget *info_dialog = gtk_message_dialog_new(GTK_WINDOW(parent), GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_INFO, GTK_BUTTONS_OK_CANCEL, _("Note: Depending on the address book plugin not all information might be saved"));
+			GtkWidget *info_dialog = gtk_message_dialog_new(GTK_WINDOW(parent), use_header ? GTK_DIALOG_USE_HEADER_BAR : 0, GTK_MESSAGE_INFO, GTK_BUTTONS_OK_CANCEL, _("Note: Depending on the address book plugin not all information might be saved"));
 			GtkWidget *content = gtk_dialog_get_content_area(GTK_DIALOG(info_dialog));
 			GtkWidget *check_button = gtk_check_button_new_with_label(_("Do not show again"));
 

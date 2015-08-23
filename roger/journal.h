@@ -50,6 +50,7 @@ void journal_set_hide_on_start(gboolean hide);
 GSList *journal_get_list(void);
 
 GtkWidget *journal_get_window(void);
+gboolean roger_uses_headerbar(void);
 
 G_END_DECLS
 

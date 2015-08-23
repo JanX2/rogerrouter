@@ -1,4 +1,4 @@
-SUBDIRS = fritzfon gtknotify vcard thunderbird gnotification
+SUBDIRS = fritzfon gtknotify vcard thunderbird
 
 plugindir = ${libdir}/roger/
 

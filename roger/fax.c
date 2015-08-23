@@ -133,7 +133,11 @@ GtkWidget *phone_fax_create_menu(struct profile *profile, struct phone_state *st
 	/* Create menu */
 	GtkWidget *box;
 
+#if 0
 	menu = gtk_popover_new(NULL);
+#else
+	menu = gtk_menu_new();
+#endif
 	box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
 	gtk_widget_set_margin(box, 12, 12, 12, 12);
 	gtk_container_add(GTK_CONTAINER(menu), box);
