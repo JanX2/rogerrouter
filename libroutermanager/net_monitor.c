@@ -148,7 +148,13 @@ void net_monitor_reconnect(void)
 	GNetworkMonitor *monitor = g_network_monitor_get_default();
 
 	net_monitor_state_changed(FALSE);
-	net_monitor_state_changed(g_network_monitor_get_connectivity(monitor) == G_NETWORK_CONNECTIVITY_FULL);
+
+#if GLIB_CHECK_VERSION(2,44,0)
+	net_monitor_state_changed(g_network_monitor_get_connectivity(monitor) != G_NETWORK_CONNECTIVITY_LOCAL);
+#else
+	net_monitor_state_changed(g_network_monitor_get_network_available(monitor));
+#endif
+
 #else
 	net_monitor_state_changed(FALSE);
 	net_monitor_state_changed(TRUE);
@@ -180,7 +186,11 @@ gboolean net_monitor_init(void)
 	/* Connect signal handler */
 	g_signal_connect(monitor, "network-changed", G_CALLBACK(net_monitor_changed_cb), NULL);
 
-	net_monitor_state_changed(g_network_monitor_get_connectivity(monitor) == G_NETWORK_CONNECTIVITY_FULL);
+#if GLIB_CHECK_VERSION(2,44,0)
+	net_monitor_state_changed(g_network_monitor_get_connectivity(monitor) != G_NETWORK_CONNECTIVITY_LOCAL);
+#else
+	net_monitor_state_changed(g_network_monitor_get_network_available(monitor));
+#endif
 #else
 	net_monitor_state_changed(TRUE);
 #endif
