@@ -53,7 +53,7 @@ void gtk_widget_set_margin(GtkWidget *widget, gint x1, gint y1, gint x2, gint y2
 
 void ui_set_suggested_style(GtkWidget *widget)
 {
-#if GTK_STYLE_CLASS_SUGGESTED_ACTION
+#ifdef GTK_STYLE_CLASS_SUGGESTED_ACTION
 	gtk_style_context_add_class(gtk_widget_get_style_context(widget), GTK_STYLE_CLASS_SUGGESTED_ACTION);
 #endif
 }
