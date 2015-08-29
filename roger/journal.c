@@ -69,6 +69,7 @@ static gboolean use_header = FALSE;
 gboolean roger_uses_headerbar(void)
 {
 	//return TRUE;
+	//return FALSE;
 	return use_header;
 }
 
@@ -1128,10 +1129,13 @@ static gboolean journal_key_press_event_cb(GtkWidget *widget, GdkEvent *event, g
 {
 	gboolean ret = FALSE;
 
+	g_debug("type: %x/%x", event->type, GDK_KEY_PRESS);
 	if (event->type == GDK_KEY_PRESS) {
 		GdkEventKey *key = (GdkEventKey *) event;
 
+		g_debug("state: %x/%x", key->state, GDK_CONTROL_MASK);
 		if (key->state == GDK_CONTROL_MASK) {
+			g_debug("keyval: %x", key->keyval);
 			switch (key->keyval) {
 			case GDK_KEY_q:
 			case GDK_KEY_w:
