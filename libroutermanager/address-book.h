@@ -31,6 +31,7 @@ struct address_book {
 	gboolean (*save_contact)(struct contact *contact);
 };
 
+gboolean address_book_available(void);
 GSList *address_book_get_contacts(void);
 gboolean address_book_reload_contacts(void);
 gboolean address_book_remove_contact(struct contact *contact);

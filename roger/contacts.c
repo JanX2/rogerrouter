@@ -79,119 +79,133 @@ void contacts_update_details(struct contact *contact)
 
 	scrolled_window = gtk_scrolled_window_new(NULL, NULL);
 
-	if (contact) {
-		grid = gtk_grid_new();
-		gtk_widget_set_margin(grid, 20, 25, 20, 25);
-		gtk_container_add(GTK_CONTAINER(scrolled_window), grid);
+	if (address_book_available()) {
+		if (contact) {
+			grid = gtk_grid_new();
+			gtk_widget_set_margin(grid, 20, 25, 20, 25);
+			gtk_container_add(GTK_CONTAINER(scrolled_window), grid);
 
-		gtk_grid_set_row_spacing(GTK_GRID(grid), 15);
-		gtk_grid_set_column_spacing(GTK_GRID(grid), 15);
+			gtk_grid_set_row_spacing(GTK_GRID(grid), 15);
+			gtk_grid_set_column_spacing(GTK_GRID(grid), 15);
 
-		frame = gtk_frame_new(NULL);
-		gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_ETCHED_IN);
-		gtk_grid_attach(GTK_GRID(grid), frame, 0, 0, 1, 1);
+			frame = gtk_frame_new(NULL);
+			gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_ETCHED_IN);
+			gtk_grid_attach(GTK_GRID(grid), frame, 0, 0, 1, 1);
 
-		detail_photo_image = gtk_image_new();
-		gtk_container_add(GTK_CONTAINER(frame), detail_photo_image);
+			detail_photo_image = gtk_image_new();
+			gtk_container_add(GTK_CONTAINER(frame), detail_photo_image);
 
-		detail_name_label = gtk_label_new("");
-		gtk_label_set_ellipsize(GTK_LABEL(detail_name_label), PANGO_ELLIPSIZE_END);
-		gtk_widget_set_halign(detail_name_label, GTK_ALIGN_START);
-		gtk_widget_set_hexpand(detail_name_label, TRUE);
-		gtk_grid_attach(GTK_GRID(grid), detail_name_label, 1, 0, 1, 1);
+			detail_name_label = gtk_label_new("");
+			gtk_label_set_ellipsize(GTK_LABEL(detail_name_label), PANGO_ELLIPSIZE_END);
+			gtk_widget_set_halign(detail_name_label, GTK_ALIGN_START);
+			gtk_widget_set_hexpand(detail_name_label, TRUE);
+			gtk_grid_attach(GTK_GRID(grid), detail_name_label, 1, 0, 1, 1);
 
-		if (contact->image) {
-			GdkPixbuf *buf = image_get_scaled(contact->image, 96, 96);
-			gtk_image_set_from_pixbuf(GTK_IMAGE(detail_photo_image), buf);
-		} else {
-			gtk_image_set_from_icon_name(GTK_IMAGE(detail_photo_image), AVATAR_DEFAULT, GTK_ICON_SIZE_DIALOG);
-			gtk_image_set_pixel_size(GTK_IMAGE(detail_photo_image), 96);
-		}
-
-		markup = g_markup_printf_escaped("<span size=\"x-large\">%s</span>", contact->name);
-		gtk_label_set_markup(GTK_LABEL(detail_name_label), markup);
-		g_free(markup);
-
-		for (numbers = contact->numbers; numbers != NULL; numbers = numbers->next) {
-			GtkWidget *type;
-			GtkWidget *number;
-			GtkWidget *dial;
-			GtkWidget *phone_image;
-			struct phone_number *phone_number = numbers->data;
-
-			switch (phone_number->type) {
-			case PHONE_NUMBER_HOME:
-				type = ui_label_new(_("Private"));
-				break;
-			case PHONE_NUMBER_WORK:
-				type = ui_label_new(_("Business"));
-				break;
-			case PHONE_NUMBER_MOBILE:
-				type = ui_label_new(_("Mobile"));
-				break;
-			case PHONE_NUMBER_FAX_HOME:
-				type = ui_label_new(_("Private Fax"));
-				break;
-			case PHONE_NUMBER_FAX_WORK:
-				type = ui_label_new(_("Business Fax"));
-				break;
-			case PHONE_NUMBER_PAGER:
-				type = ui_label_new(_("Pager"));
-				break;
-			default:
-				type = ui_label_new(_("Unknown"));
-			}
-			number = gtk_label_new(phone_number->number);
-			gtk_label_set_selectable(GTK_LABEL(number), TRUE);
-			gtk_widget_set_halign(number, GTK_ALIGN_START);
-			dial = gtk_button_new();
-			gtk_widget_set_tooltip_text(dial, _("Dial number"));
-			phone_image = gtk_image_new_from_icon_name(APP_ICON_CALL, GTK_ICON_SIZE_BUTTON);
-			gtk_button_set_image(GTK_BUTTON(dial), phone_image);
-			gtk_button_set_relief(GTK_BUTTON(dial), GTK_RELIEF_NONE);
-			g_signal_connect(dial, "clicked", G_CALLBACK(dial_clicked_cb), phone_number->number);
-			gtk_grid_attach(GTK_GRID(grid), type, 0, detail_row, 1, 1);
-			gtk_grid_attach(GTK_GRID(grid), number, 1, detail_row, 1, 1);
-			gtk_grid_attach(GTK_GRID(grid), dial, 2, detail_row, 1, 1);
-			detail_row++;
-		}
-
-		for (addresses = contact->addresses; addresses != NULL; addresses = addresses->next) {
-			struct contact_address *address = addresses->data;
-			GtkWidget *type;
-			GString *addr_str = g_string_new("");
-			GtkWidget *label;
-
-			switch (address->type) {
-			case 0:
-				type = ui_label_new(_("Private"));
-				break;
-			case 1:
-				type = ui_label_new(_("Business"));
-				break;
-			default:
-				type = ui_label_new(_("Other"));
-			}
-			gtk_widget_set_valign(type, GTK_ALIGN_START);
-			gtk_grid_attach(GTK_GRID(grid), type, 0, detail_row, 1, 1);
-
-			g_string_append_printf(addr_str, "%s", address->street);
-			if (!EMPTY_STRING(address->zip)) {
-				g_string_append_printf(addr_str, "\n%s %s", address->zip, address->city);
-			} else if (!EMPTY_STRING(address->city)) {
-				g_string_append_printf(addr_str, "%s", address->city);
+			if (contact->image) {
+				GdkPixbuf *buf = image_get_scaled(contact->image, 96, 96);
+				gtk_image_set_from_pixbuf(GTK_IMAGE(detail_photo_image), buf);
+			} else {
+				gtk_image_set_from_icon_name(GTK_IMAGE(detail_photo_image), AVATAR_DEFAULT, GTK_ICON_SIZE_DIALOG);
+				gtk_image_set_pixel_size(GTK_IMAGE(detail_photo_image), 96);
 			}
 
-			label = gtk_label_new(addr_str->str);
-			gtk_label_set_selectable(GTK_LABEL(label), TRUE);
-			gtk_widget_set_halign(label, GTK_ALIGN_START);
-			gtk_widget_set_valign(label, GTK_ALIGN_END);
-			gtk_grid_attach(GTK_GRID(grid), label, 1, detail_row, 1, 1);
+			markup = g_markup_printf_escaped("<span size=\"x-large\">%s</span>", contact->name);
+			gtk_label_set_markup(GTK_LABEL(detail_name_label), markup);
+			g_free(markup);
 
-			g_string_free(addr_str, TRUE);
-			detail_row++;
+			for (numbers = contact->numbers; numbers != NULL; numbers = numbers->next) {
+				GtkWidget *type;
+				GtkWidget *number;
+				GtkWidget *dial;
+				GtkWidget *phone_image;
+				struct phone_number *phone_number = numbers->data;
+
+				switch (phone_number->type) {
+				case PHONE_NUMBER_HOME:
+					type = ui_label_new(_("Private"));
+					break;
+				case PHONE_NUMBER_WORK:
+					type = ui_label_new(_("Business"));
+					break;
+				case PHONE_NUMBER_MOBILE:
+					type = ui_label_new(_("Mobile"));
+					break;
+				case PHONE_NUMBER_FAX_HOME:
+					type = ui_label_new(_("Private Fax"));
+					break;
+				case PHONE_NUMBER_FAX_WORK:
+					type = ui_label_new(_("Business Fax"));
+					break;
+				case PHONE_NUMBER_PAGER:
+					type = ui_label_new(_("Pager"));
+					break;
+				default:
+					type = ui_label_new(_("Unknown"));
+				}
+				number = gtk_label_new(phone_number->number);
+				gtk_label_set_selectable(GTK_LABEL(number), TRUE);
+				gtk_widget_set_halign(number, GTK_ALIGN_START);
+				dial = gtk_button_new();
+				gtk_widget_set_tooltip_text(dial, _("Dial number"));
+				phone_image = gtk_image_new_from_icon_name(APP_ICON_CALL, GTK_ICON_SIZE_BUTTON);
+				gtk_button_set_image(GTK_BUTTON(dial), phone_image);
+				gtk_button_set_relief(GTK_BUTTON(dial), GTK_RELIEF_NONE);
+				g_signal_connect(dial, "clicked", G_CALLBACK(dial_clicked_cb), phone_number->number);
+				gtk_grid_attach(GTK_GRID(grid), type, 0, detail_row, 1, 1);
+				gtk_grid_attach(GTK_GRID(grid), number, 1, detail_row, 1, 1);
+				gtk_grid_attach(GTK_GRID(grid), dial, 2, detail_row, 1, 1);
+				detail_row++;
+			}
+
+			for (addresses = contact->addresses; addresses != NULL; addresses = addresses->next) {
+				struct contact_address *address = addresses->data;
+				GtkWidget *type;
+				GString *addr_str = g_string_new("");
+				GtkWidget *label;
+
+				switch (address->type) {
+				case 0:
+					type = ui_label_new(_("Private"));
+					break;
+				case 1:
+					type = ui_label_new(_("Business"));
+					break;
+				default:
+					type = ui_label_new(_("Other"));
+				}
+				gtk_widget_set_valign(type, GTK_ALIGN_START);
+				gtk_grid_attach(GTK_GRID(grid), type, 0, detail_row, 1, 1);
+
+				g_string_append_printf(addr_str, "%s", address->street);
+				if (!EMPTY_STRING(address->zip)) {
+					g_string_append_printf(addr_str, "\n%s %s", address->zip, address->city);
+				} else if (!EMPTY_STRING(address->city)) {
+					g_string_append_printf(addr_str, "%s", address->city);
+				}
+
+				label = gtk_label_new(addr_str->str);
+				gtk_label_set_selectable(GTK_LABEL(label), TRUE);
+				gtk_widget_set_halign(label, GTK_ALIGN_START);
+				gtk_widget_set_valign(label, GTK_ALIGN_END);
+				gtk_grid_attach(GTK_GRID(grid), label, 1, detail_row, 1, 1);
+
+				g_string_free(addr_str, TRUE);
+				detail_row++;
+			}
 		}
+	} else {
+		GtkWidget *placeholder;
+
+		placeholder = gtk_label_new(NULL);
+		gtk_label_set_markup(GTK_LABEL(placeholder), _("<b>No address book plugin selected\nPlease activate one in the settings</b>"));
+		gtk_widget_set_halign(placeholder, GTK_ALIGN_CENTER);
+		gtk_widget_set_hexpand(placeholder, TRUE);
+		gtk_widget_set_valign(placeholder, GTK_ALIGN_CENTER);
+		gtk_widget_set_vexpand(placeholder, TRUE);
+
+		scrolled_window = placeholder;
 	}
+
 	gtk_widget_show_all(scrolled_window);
 
 	if (detail_grid) {
@@ -543,6 +557,11 @@ void contacts(void)
 
 	/* Create contacts list box which holds the contacts */
 	contacts_list_box = gtk_list_box_new();
+	GtkWidget *placeholder;
+	placeholder = gtk_label_new(NULL);
+	gtk_label_set_markup(GTK_LABEL(placeholder), _("<b>No contacts found</b>"));
+	gtk_widget_show(placeholder);
+	gtk_list_box_set_placeholder(GTK_LIST_BOX(contacts_list_box), placeholder);
 	g_signal_connect(contacts_list_box, "row-selected", G_CALLBACK(contacts_list_box_row_selected_cb), NULL);
 	gtk_container_add(GTK_CONTAINER(scrolled), contacts_list_box);
 

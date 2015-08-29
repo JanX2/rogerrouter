@@ -51,6 +51,13 @@ GSList *address_book_get_contacts(void)
 	return list;
 }
 
+/**
+ */
+gboolean address_book_available(void)
+{
+	return internal_book != NULL;
+}
+
 gboolean address_book_remove_contact(struct contact *contact)
 {
 	gboolean ret = FALSE;
