@@ -1114,6 +1114,47 @@ static void journal_contacts_changed_cb(AppObject *app, gpointer user_data)
 	journal_button_refresh_clicked_cb(NULL, NULL);
 }
 
+void journal_quit(void)
+{
+	gtk_widget_destroy(GTK_WIDGET(journal_win));
+}
+
+GtkWidget *journal_get_window(void)
+{
+	return journal_win;
+}
+
+static gboolean journal_key_press_event_cb(GtkWidget *widget, GdkEvent *event, gpointer user_data)
+{
+	gboolean ret = FALSE;
+
+	if (event->type == GDK_KEY_PRESS) {
+		GdkEventKey *key = (GdkEventKey *) event;
+
+		if (key->state == GDK_CONTROL_MASK) {
+			switch (key->keyval) {
+			case GDK_KEY_q:
+			case GDK_KEY_w:
+				ret = TRUE;
+				journal_quit();
+				break;
+			case GDK_KEY_p:
+				ret = TRUE;
+				app_show_phone_window(NULL, NULL);
+				break;
+			case GDK_KEY_c:
+				ret = TRUE;
+				contacts();
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	return ret;
+}
+
 void journal_window(GApplication *app)
 {
 	GtkWidget *window, *grid, *scrolled;
@@ -1387,6 +1428,8 @@ void journal_window(GApplication *app)
 	g_signal_connect(G_OBJECT(journal_win), "configure-event", G_CALLBACK(journal_configure_event_cb), NULL);
 	g_signal_connect(G_OBJECT(journal_win), "window-state-event", G_CALLBACK(journal_window_state_event_cb), NULL);
 
+	g_signal_connect(G_OBJECT(journal_win), "key-press-event", G_CALLBACK(journal_key_press_event_cb), NULL);
+
 	g_signal_connect(app_object, "contacts-changed", G_CALLBACK(journal_contacts_changed_cb), NULL);
 
 	gtk_widget_hide_on_delete(journal_win);
@@ -1403,14 +1446,4 @@ void journal_window(GApplication *app)
 	extern gboolean app_show_fax_window_idle(gpointer data);
 	app_show_fax_window_idle(NULL);
 #endif
-}
-
-void journal_quit(void)
-{
-	gtk_widget_destroy(GTK_WIDGET(journal_win));
-}
-
-GtkWidget *journal_get_window(void)
-{
-	return journal_win;
 }
