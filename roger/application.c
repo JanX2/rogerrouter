@@ -241,9 +241,9 @@ static void app_init(GtkApplication *app)
 	GMenu *menu;
 	GMenu *section;
 	GMenu *sub_section;
-	 const gchar *accels[] = {NULL, NULL, NULL, NULL};
 
-	g_action_map_add_action_entries(G_ACTION_MAP(app), apps_entries, G_N_ELEMENTS(apps_entries), app);
+#if GTK_CHECK_VERSION(3,14,0)
+	const gchar *accels[] = {NULL, NULL, NULL, NULL};
 
 	accels[0] = "<Control>p";
 	gtk_application_set_accels_for_action(app, "app.phone", accels);
@@ -254,6 +254,13 @@ static void app_init(GtkApplication *app)
 	accels[0] = "<Control>q";
 	accels[1] = "<Control>w";
 	gtk_application_set_accels_for_action(app, "app.quit", accels);
+#else
+	gtk_application_add_accelerator(app, "<Control>p", "app.phone", NULL);
+	gtk_application_add_accelerator(app, "<Control>c", "app.addressbook", NULL);
+	gtk_application_add_accelerator(app, "<Control>q", "app.quit", NULL);
+#endif
+
+	g_action_map_add_action_entries(G_ACTION_MAP(app), apps_entries, G_N_ELEMENTS(apps_entries), app);
 
 	menu = g_menu_new();
 

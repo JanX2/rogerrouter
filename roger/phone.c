@@ -48,7 +48,9 @@
 #include <roger/application.h>
 #include <roger/journal.h>
 
+#if GTK_CHECK_VERSION(3,12,0)
 #define UHB 1
+#endif
 
 /** Phone window */
 static GtkWidget *phone_window = NULL;
@@ -586,7 +588,14 @@ static void phone_search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer
 
 		state->scrolled_win = gtk_scrolled_window_new(NULL, NULL);
 		gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(state->scrolled_win), GTK_SHADOW_ETCHED_IN);
+#if GTK_CHECK_VERSION(3,12,0)
 		gtk_container_add(GTK_CONTAINER(state->contact_menu), state->scrolled_win);
+#else
+		GtkWidget *item = gtk_menu_item_new();
+		gtk_container_add(GTK_CONTAINER(item), state->scrolled_win);
+		gtk_widget_show_all(item);
+		gtk_menu_attach(GTK_MENU(state->contact_menu), item, 0, 2, 0, 2);
+#endif
 
 		state->box = gtk_list_box_new();
 		placeholder = gtk_label_new(NULL);
@@ -735,7 +744,7 @@ static void phone_search_entry_icon_press_cb(GtkEntry *entry, GtkEntryIconPositi
  */
 static gboolean phone_search_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event, gpointer user_data)
 {
-	GtkListBoxRow *row;
+	GtkListBoxRow *row = NULL;
 	struct phone_state *state = user_data;
 	GList *childs;
 	guint keyval = ((GdkEventKey *)event)->keyval;
@@ -810,6 +819,26 @@ static gboolean phone_search_entry_key_press_event_cb(GtkWidget *entry, GdkEvent
 
 	return FALSE;
 }
+#else
+static gboolean on_match_selected_cb(GtkEntryCompletion *completion, GtkTreeModel *model, GtkTreeIter *iter, gpointer user_data)
+{
+	GValue value_contact = {0, };
+	GValue value_number = {0, };
+	struct phone_state *state = user_data;
+	struct contact *contact;
+	const gchar *number;
+
+	gtk_tree_model_get_value(model, iter, 2, &value_number);
+	gtk_tree_model_get_value(model, iter, 3, &value_contact);
+	number = g_value_get_string(&value_number);
+	contact = g_value_get_pointer(&value_contact);
+
+	contact->number = g_strdup(number);
+	state->discard = TRUE;
+	phone_search_entry_set_contact(state, contact, FALSE);
+
+	return FALSE;
+}
 #endif
 
 /**
@@ -850,15 +879,23 @@ GtkWidget *phone_search_entry_new(GtkWidget *window, struct contact *contact, st
 	GtkEntryCompletion *completion = gtk_entry_completion_new();
 	gtk_entry_completion_set_text_column(completion, 1);
 	gtk_entry_set_completion(GTK_ENTRY(state->search_entry), completion);
-	//g_signal_connect(G_OBJECT(completion), "match-selected", G_CALLBACK(on_match_select), NULL);
+	g_signal_connect(G_OBJECT(completion), "match-selected", G_CALLBACK(on_match_selected_cb), state);
 
-	GtkListStore *model = gtk_list_store_new(2, GDK_TYPE_PIXBUF, G_TYPE_STRING);
+	GtkListStore *model = gtk_list_store_new(4, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER);
 
 	while (l) {
 		struct contact *c = l->data;
-		gtk_list_store_append(model, &iter);
+		GSList *numbers;
+		gchar *name;
 
-		gtk_list_store_set(model, &iter, 0, c->image, 1, c->name, -1);
+		for (numbers = c->numbers; numbers != NULL; numbers = numbers->next) {
+			struct phone_number *number = numbers->data;
+
+			gtk_list_store_append(model, &iter);
+
+			name = g_strdup_printf("%s (%s: %s)", c->name, phone_number_type_to_string(number->type), number->number);
+			gtk_list_store_set(model, &iter, 0, c->image, 1, name, 2, number->number, 3, c, -1);
+		}
 		l = l->next;
 	}
 
@@ -1304,6 +1341,7 @@ static GtkWidget *phone_window_create_menu(struct profile *profile, struct phone
 
 	gtk_widget_show_all(box);
 #else
+	GSList *group = NULL;
 	gint y = 0;
 
 	menu = gtk_menu_new();
@@ -1321,11 +1359,11 @@ static GtkWidget *phone_window_create_menu(struct profile *profile, struct phone
 	while (phone_list) {
 		phone = phone_list->data;
 
-		item = gtk_check_menu_item_new_with_label(phone->name);
-		gtk_check_menu_item_set_draw_as_radio(GTK_CHECK_MENU_ITEM(item), TRUE);
+		item = gtk_radio_menu_item_new_with_label(group, phone->name);
+		group = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(item));
 
 		if (type == phone->type) {
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(item), TRUE);
+			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), TRUE);
 		}
 
 		g_signal_connect(item, "toggled", G_CALLBACK(phone_item_toggled_cb), GINT_TO_POINTER(phone->type));
@@ -1419,14 +1457,13 @@ GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struc
 
 	/* Create grid and attach it to the window */
 	grid = gtk_grid_new();
-	gtk_container_add(GTK_CONTAINER(window), grid);
-
-	/* Set margin to 12px for all sides */
-	gtk_widget_set_margin(grid, 12, 12, 12, 12);
 
 	/* Set standard spacing */
 	gtk_grid_set_row_spacing(GTK_GRID(grid), 18);
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 12);
+
+	/* Set margin to 12px for all sides */
+	gtk_widget_set_margin(grid, 12, 12, 12, 12);
 
 	/* Create header bar and set it to window */
 	header = gtk_header_bar_new();
@@ -1436,8 +1473,12 @@ GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struc
 	if (roger_uses_headerbar()) {
 		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
 		gtk_window_set_titlebar(GTK_WINDOW(window), header);
+		gtk_container_add(GTK_CONTAINER(window), grid);
 	} else {
-		gtk_grid_attach(GTK_GRID(grid), header, 0, y++, 1, 1);
+		GtkWidget *main_grid = gtk_grid_new();
+		gtk_grid_attach(GTK_GRID(main_grid), header, 0, 0, 1, 1);
+		gtk_grid_attach(GTK_GRID(main_grid), grid, 0, 1, 1, 1);
+		gtk_container_add(GTK_CONTAINER(window), main_grid);
 	}
 
 	/* Create and add menu button to header bar */
@@ -1446,9 +1487,10 @@ GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struc
 	gtk_header_bar_pack_end(GTK_HEADER_BAR(header), menu_button);
 
 	/* Create menu and add it to menu button */
-#if UHB
+#if GTK_CHECK_VERSION(3,12,0)
 	gtk_menu_button_set_popover(GTK_MENU_BUTTON(menu_button), phone_devices[state->type]->create_menu(profile, state));
 #else
+	gtk_container_add(GTK_CONTAINER(menu_button), gtk_image_new_from_icon_name("view-list-symbolic", GTK_ICON_SIZE_MENU));
 	gtk_menu_button_set_popup(GTK_MENU_BUTTON(menu_button), phone_devices[state->type]->create_menu(profile, state));
 #endif
 	state->header_bar = header;
@@ -1459,7 +1501,7 @@ GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struc
 
 	/* Add dial button frame */
 	frame = phone_dial_buttons_new(window, state);
-	gtk_grid_attach(GTK_GRID(grid), frame, 1, y++, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), frame, 1, y, 1, 1);
 
 	/* Add dial pad */
 	phone_devices[state->type]->create_child(state, grid);

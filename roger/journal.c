@@ -1236,6 +1236,8 @@ void journal_window(GApplication *app)
 
 #if GTK_CHECK_VERSION(3,12,0)
 	gtk_menu_button_set_use_popover(GTK_MENU_BUTTON(menu_button), TRUE);
+#else
+	gtk_container_add(GTK_CONTAINER(menu_button), gtk_image_new_from_icon_name("view-list-symbolic", GTK_ICON_SIZE_MENU));
 #endif
 	gtk_menu_button_set_menu_model(GTK_MENU_BUTTON(menu_button), G_MENU_MODEL(menu));
 

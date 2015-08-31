@@ -7568,7 +7568,10 @@ func_mode_link ()
 	case $pass in
 	dlopen) libs=$dlfiles ;;
 	dlpreopen) libs=$dlprefiles ;;
-	link) libs="$deplibs %DEPLIBS% $dependency_libs" ;;
+	link)
+	  libs="$deplibs %DEPLIBS%"
+	  test "X$link_all_deplibs" != Xno && libs="$libs $dependency_libs"
+	  ;;
 	esac
       fi
       if test lib,dlpreopen = "$linkmode,$pass"; then
@@ -8822,6 +8825,9 @@ func_mode_link ()
 	    age=$number_minor
 	    revision=$number_minor
 	    lt_irix_increment=no
+	    ;;
+	  *)
+	    func_fatal_configuration "$modename: unknown library version type \`$version_type'"
 	    ;;
 	  esac
 	  ;;

@@ -27,7 +27,12 @@ G_BEGIN_DECLS
 #define APP_ICON_REMOVE	"list-remove-symbolic"
 #define APP_ICON_TRASH	"user-trash-symbolic"
 #define APP_ICON_CALL	"call-start-symbolic"
+
+#if GTK_CHECK_VERSION(3,12,0)
 #define APP_ICON_HANGUP	"call-stop-symbolic"
+#else
+#define APP_ICON_HANGUP	"call-end-symbolic"
+#endif
 
 GdkPixbuf *image_get_scaled(GdkPixbuf *image, gint req_width, gint req_height);
 
