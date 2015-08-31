@@ -84,10 +84,10 @@ AC_MSG_RESULT([$WIN32])
 AM_CONDITIONAL(WIN32, test "x$WIN32" != "xno")
 AM_CONDITIONAL(MACOSX, test "x$macos" != "xno")
 
-PKG_CHECK_MODULES([EXTRA], [glib-2.0 >= 2.44 gio-2.0 >= 2.44 speex >= 1.0 speexdsp >= 1.0 sndfile >= 1.0.0 libxml-2.0])
+PKG_CHECK_MODULES([EXTRA], [glib-2.0 >= 2.40 gio-2.0 >= 2.40 speex >= 1.0 speexdsp >= 1.0 sndfile >= 1.0.0 libxml-2.0])
 
 # Check for GTK >= 3.14
-PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.14])
+PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.10])
 
 PKG_CHECK_MODULES([GMODULE], [gmodule-2.0])
 
@@ -320,7 +320,7 @@ AC_MSG_RESULT($with_ebook)
 AM_CONDITIONAL(WITH_EBOOK, test "x$with_ebook" != "xno")
 
 dnl ********************************************************************
-dnl gstreamer-1.x is optional
+dnl gstreamer-1.4 is optional
 dnl ********************************************************************
 AC_ARG_WITH([gstreamer1],
 	[AS_HELP_STRING([--with-gstreamer1=@<:@ARG@:>@],
@@ -328,12 +328,12 @@ AC_ARG_WITH([gstreamer1],
 	[],
 	[with_gstreamer1=check])
 
-AC_MSG_CHECKING(for gstreamer-1.0 and gstreamer-app-1.0)
+AC_MSG_CHECKING(for gstreamer-1.4 and gstreamer-app-1.4)
 AS_IF([test "x$with_gstreamer1" != xno],
 	[if test "x$with_gstreamer1" = xcheck; then
-		pkg-config --exists gstreamer-1.0 && pkg-config --exists gstreamer-app-1.0 && with_gstreamer1=yes
+		pkg-config --atleast=1.4.0 gstreamer-1.0 && pkg-config --exists gstreamer-app-1.0 && with_gstreamer1=yes
 	elif test "x$with_gstreamer1" = xyes; then
-		( pkg-config --exists gstreamer-1.0 && pkg-config --exists gstreamer-app-1.0) || AC_MSG_FAILURE(
+		( pkg-config --atleast=1.4.0 gstreamer-1.0 && pkg-config --exists gstreamer-app-1.0) || AC_MSG_FAILURE(
 			[--with-gstreamer-1.0=yes was given, but test for gstreamer-1.0 and gstreamer-app-1.0 failed])
 	fi
 	if test "x$with_gstreamer1" = xyes; then
@@ -559,8 +559,6 @@ AC_CONFIG_FILES([
     roger/plugins/thunderbird/data/Makefile
     roger/plugins/kwallet/Makefile
     roger/plugins/keychain/Makefile
-    roger/plugins/gnotification/Makefile
-    roger/plugins/gnotification/data/Makefile
     roger/plugins/osxab/Makefile
     roger/images/Makefile
     roger/images/16x16/Makefile
