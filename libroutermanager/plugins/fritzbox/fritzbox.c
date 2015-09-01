@@ -153,7 +153,7 @@ gboolean fritzbox_dial_number(struct profile *profile, gint port, const gchar *n
 		return FALSE;
 	}
 
-	if (FIRMWARE_IS(6, 35)) {
+	if (FIRMWARE_IS(6, 30)) {
 		return fritzbox_dial_number_06_35(profile, port, number);
 	}
 
@@ -177,7 +177,7 @@ gboolean fritzbox_hangup(struct profile *profile, gint port, const gchar *number
 		return FALSE;
 	}
 
-	if (FIRMWARE_IS(6, 35)) {
+	if (FIRMWARE_IS(6, 30)) {
 		return fritzbox_hangup_06_35(profile, port, number);
 	}
 
