@@ -184,19 +184,28 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 	}
 
 	if (!found && connection->local_number[0] != '0') {
-		g_debug("type: %d, number '%s' not found", connection->type, call_scramble_number(connection->local_number));
-
+		gchar *scramble_local = call_scramble_number(connection->local_number);
 		gchar *tmp = call_full_number(connection->local_number, FALSE);
+		gchar *scramble_tmp = call_scramble_number(tmp);
+
+		g_debug("type: %d, number '%s' not found", connection->type, scramble_local);
 
 		/* Match numbers against local number and check if we should show a gnotification */
 		for (count = 0; count < g_strv_length(numbers); count++) {
-			g_debug("type: %d, number '%s'/'%s' <-> '%s'", connection->type, call_scramble_number(connection->local_number), call_scramble_number(tmp), call_scramble_number(numbers[count]));
+			gchar *scramble_number = call_scramble_number(numbers[count]);
+
+			g_debug("type: %d, number '%s'/'%s' <-> '%s'", connection->type, scramble_local, scramble_tmp, scramble_number);
+			g_free(scramble_number);
+
 			if (!strcmp(tmp, numbers[count])) {
 				found = TRUE;
 				break;
 			}
 		}
+
 		g_free(tmp);
+		g_free(scramble_local);
+		g_free(scramble_tmp);
 	}
 
 	/* No match found? -> exit */

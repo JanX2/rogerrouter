@@ -315,6 +315,7 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 	struct profile *profile = profile_get_active();
 	struct phone_state *state = user_data;
+	gchar *scramble;
 
 	/* Get selected number (either number format or based on the selected name) */
 	state->number = gtk_entry_get_text(GTK_ENTRY(state->search_entry));
@@ -326,7 +327,9 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 		return;
 	}
 
-	g_debug("%s(): Want to dial '%s'", __FUNCTION__, call_scramble_number(state->number));
+	scramble = call_scramble_number(state->number);
+	g_debug("%s(): Want to dial '%s'", __FUNCTION__, scramble);
+	g_free(scramble);
 
 	switch (state->type) {
 	case PHONE_TYPE_VOICE:
