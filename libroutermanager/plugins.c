@@ -49,6 +49,7 @@ void routermanager_plugins_add_search_path(gchar *path)
 static void plugins_extension_added_cb(PeasExtensionSet *set, PeasPluginInfo *info, PeasExtension *exten, gpointer unused)
 {
 	/* Active plugin now */
+	g_debug(" + %s (%s) activated", peas_plugin_info_get_name(info), peas_plugin_info_get_module_name(info));
 	peas_activatable_activate(PEAS_ACTIVATABLE(exten));
 }
 
@@ -62,6 +63,9 @@ static void plugins_extension_added_cb(PeasExtensionSet *set, PeasPluginInfo *in
 static void plugins_extension_removed_cb(PeasExtensionSet *set, PeasPluginInfo *info, PeasExtension *exten, gpointer unused)
 {
 	/* Remove plugin now */
+	if (!peas_plugin_info_is_builtin(info)) {
+		g_debug(" - %s (%s) deactivated", peas_plugin_info_get_name(info), peas_plugin_info_get_module_name(info));
+	}
 	peas_activatable_deactivate(PEAS_ACTIVATABLE(exten));
 }
 
