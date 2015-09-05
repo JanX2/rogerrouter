@@ -612,6 +612,7 @@ gboolean fritzbox_dial_number_common(struct profile *profile, gint port, const g
 {
 	SoupMessage *msg;
 	gchar *port_str;
+	gchar *scramble;
 
 	/* Login to box */
 	if (fritzbox_login(profile) == FALSE) {
@@ -622,7 +623,9 @@ gboolean fritzbox_dial_number_common(struct profile *profile, gint port, const g
 	gchar *url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
 	port_str = g_strdup_printf("%d", fritzbox_get_dialport(port));
 
-	g_debug("Call number '%s' on port %s...", call_scramble_number(number), port_str);
+	scramble = call_scramble_number(number);
+	g_debug("Call number '%s' on port %s...", scramble, port_str);
+	g_free(scramble);
 
 	msg = soup_form_request_new(SOUP_METHOD_POST, url,
 	                            "telcfg:settings/UseClickToDial", "1",

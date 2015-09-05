@@ -185,16 +185,15 @@ void call_free(gpointer data)
  * call_scramble_number:
  * \brief Scramble number so we can print it to log files
  * \param number input number
- * Returns: (transfer none) scrambled number
+ * Returns: scrambled number
  */
 gchar *call_scramble_number(const gchar *number)
 {
-	static gchar scramble[255];
+	gchar *scramble;
 	gint len;
 
-	memset(scramble, 0, sizeof(scramble));
-	strncpy(scramble, number, sizeof(scramble));
-	len = strlen(scramble);
+	len = strlen(number);
+	scramble = g_strdup(number);
 
 	if (len > 2) {
 		gint index;

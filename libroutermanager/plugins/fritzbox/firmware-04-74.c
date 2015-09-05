@@ -387,7 +387,9 @@ void fritzbox_extract_numbers_04_74(struct profile *profile, const gchar *data)
 
 	numbers = g_malloc(sizeof(gchar *) * (g_slist_length(number_list) + 1));
 	for (list = number_list; list; list = list->next) {
-		g_debug("Adding MSN '%s'", call_scramble_number(list->data));
+		gchar *scramble = call_scramble_number(list->data);
+		g_debug("Adding MSN '%s'", scramble);
+		g_free(scramble);
 		numbers[counter++] = g_strdup(list->data);
 	}
 	numbers[counter] = NULL;
@@ -545,8 +547,10 @@ gboolean fritzbox_get_settings_04_74(struct profile *profile)
 	gchar *fax_msn = xml_extract_input_value(data, "telcfg:settings/FaxMSN0");
 	if (fax_msn) {
 		gchar *formated_number = call_format_number(profile, fax_msn, NUMBER_FORMAT_INTERNATIONAL_PLUS);
+		gchar *scramble = call_scramble_number(fax_msn);
 
-		g_debug("Fax number: '%s'", call_scramble_number(fax_msn));
+		g_debug("Fax number: '%s'", scramble);
+		g_free(scramble);
 		g_settings_set_string(profile->settings, "fax-number", fax_msn);
 
 		g_settings_set_string(profile->settings, "fax-ident", formated_number);

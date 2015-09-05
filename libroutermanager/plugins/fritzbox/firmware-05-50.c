@@ -306,6 +306,7 @@ gboolean fritzbox_get_fax_information_05_50(struct profile *profile)
 	const gchar *data;
 	gsize read;
 	gchar *url;
+	gchar *scramble;
 
 	url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_POST, url,
@@ -332,7 +333,9 @@ gboolean fritzbox_get_fax_information_05_50(struct profile *profile)
 
 	gchar *header = xml_extract_input_value(data, "telcfg:settings/FaxKennung");
 	if (header) {
-		g_debug("Fax-Header: '%s'", call_scramble_number(header));
+		scramble = call_scramble_number(header);
+		g_debug("Fax-Header: '%s'", scramble);
+		g_free(scramble);
 		g_settings_set_string(profile->settings, "fax-header", header);
 		g_free(header);
 	}
@@ -348,7 +351,9 @@ gboolean fritzbox_get_fax_information_05_50(struct profile *profile)
 
 		formated_number = call_format_number(profile, fax_msn, NUMBER_FORMAT_INTERNATIONAL_PLUS);
 
-		g_debug("Fax number: '%s'", call_scramble_number(fax_msn));
+		scramble = call_scramble_number(fax_msn);
+		g_debug("Fax number: '%s'", scramble);
+		g_free(scramble);
 
 		g_settings_set_string(profile->settings, "fax-number", fax_msn);
 
@@ -387,6 +392,7 @@ gboolean fritzbox_get_fax_information_06_00(struct profile *profile)
 	const gchar *data;
 	gsize read;
 	gchar *url;
+	gchar *scramble;
 
 	url = g_strdup_printf("http://%s/fon_devices/fax_send.lua", router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
@@ -409,7 +415,9 @@ gboolean fritzbox_get_fax_information_06_00(struct profile *profile)
 
 	gchar *header = xml_extract_list_value(data, "telcfg:settings/FaxKennung");
 	if (header) {
-		g_debug("Fax-Header: '%s'", call_scramble_number(header));
+		scramble = call_scramble_number(header);
+		g_debug("Fax-Header: '%s'", scramble);
+		g_free(scramble);
 		g_settings_set_string(profile->settings, "fax-header", header);
 		g_free(header);
 	}
@@ -425,7 +433,9 @@ gboolean fritzbox_get_fax_information_06_00(struct profile *profile)
 
 		formated_number = call_format_number(profile, fax_msn, NUMBER_FORMAT_INTERNATIONAL_PLUS);
 
-		g_debug("Fax number: '%s'", call_scramble_number(fax_msn));
+		scramble = call_scramble_number(fax_msn);
+		g_debug("Fax number: '%s'", scramble);
+		g_free(scramble);
 
 		g_settings_set_string(profile->settings, "fax-number", fax_msn);
 
@@ -526,7 +536,9 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 
 		if (g_strv_length(profile_numbers)) {
 			for (idx = 0; idx < g_strv_length(profile_numbers); idx++) {
-				g_debug("Adding MSN '%s'", call_scramble_number(profile_numbers[idx]));
+				gchar *scramble = call_scramble_number(profile_numbers[idx]);
+				g_debug("Adding MSN '%s'", scramble);
+				g_free(scramble);
 			}
 			g_settings_set_strv(profile->settings, "numbers", (const gchar * const *)profile_numbers);
 		}

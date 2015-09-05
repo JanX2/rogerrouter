@@ -33,13 +33,21 @@ static GSList *connection_list = NULL;
 struct connection *connection_add_call(gint id, gint type, const gchar *local_number, const gchar *remote_number)
 {
 	struct connection *connection = g_slice_new0(struct connection);
+	gchar *scramble_local;
+	gchar *scramble_remote;
 
 	connection->id = id;
 	connection->type = type;
 	connection->local_number = g_strdup(local_number);
 	connection->remote_number = g_strdup(remote_number);
 
-	g_debug("Adding connection: type %d, local %s, remote %s", connection->type, call_scramble_number(connection->local_number), call_scramble_number(connection->remote_number));
+	scramble_local = call_scramble_number(connection->local_number);
+	scramble_remote = call_scramble_number(connection->remote_number);
+
+	g_debug("Adding connection: type %d, local %s, remote %s", connection->type, scramble_local, scramble_remote);
+
+	g_free(scramble_local);
+	g_free(scramble_remote);
 
 	connection_list = g_slist_append(connection_list, connection);
 

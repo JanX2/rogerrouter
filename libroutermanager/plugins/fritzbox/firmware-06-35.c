@@ -142,7 +142,9 @@ gboolean fritzbox_get_fax_information_06_35(struct profile *profile)
 		gchar *name = g_match_info_fetch_named(match_info, "name");
 
 		if (name) {
-			g_debug("Fax-Header: '%s'", call_scramble_number(name));
+			gchar *scramble = call_scramble_number(name);
+			g_debug("Fax-Header: '%s'", scramble);
+			g_free(scramble);
 			g_settings_set_string(profile->settings, "fax-header", name);
 			break;
 		}
@@ -267,10 +269,13 @@ gboolean fritzbox_get_fax_information_06_35(struct profile *profile)
 
 		if (msn) {
 			gchar *formated_number;
+			gchar *scramble;
 
 			formated_number = call_format_number(profile, msn, NUMBER_FORMAT_INTERNATIONAL_PLUS);
 
-			g_debug("Fax number: '%s'", call_scramble_number(msn));
+			scramble = call_scramble_number(msn);
+			g_debug("Fax number: '%s'", scramble);
+			g_free(scramble);
 
 			g_settings_set_string(profile->settings, "fax-number", msn);
 
@@ -375,7 +380,9 @@ gboolean fritzbox_get_settings_06_35(struct profile *profile)
 
 		if (g_strv_length(profile_numbers)) {
 			for (idx = 0; idx < g_strv_length(profile_numbers); idx++) {
-				g_debug("Adding MSN '%s'", call_scramble_number(profile_numbers[idx]));
+				gchar *scramble = call_scramble_number(profile_numbers[idx]);
+				g_debug("Adding MSN '%s'", scramble);
+				g_free(scramble);
 			}
 			g_settings_set_strv(profile->settings, "numbers", (const gchar * const *)profile_numbers);
 		}
@@ -491,6 +498,7 @@ gboolean fritzbox_dial_number_06_35(struct profile *profile, gint port, const gc
 	SoupMessage *msg;
 	gchar *port_str;
 	gchar *url;
+	gchar *scramble;
 
 	/* Login to box */
 	if (fritzbox_login(profile) == FALSE) {
@@ -500,7 +508,9 @@ gboolean fritzbox_dial_number_06_35(struct profile *profile, gint port, const gc
 	/* Create GET message */
 	port_str = g_strdup_printf("%d", fritzbox_get_dialport(port));
 
-	g_debug("Call number '%s' on port %s...", call_scramble_number(number), port_str);
+	scramble = call_scramble_number(number);
+	g_debug("Call number '%s' on port %s...", scramble, port_str);
+	g_free(scramble);
 
 	url = g_strdup_printf("http://%s/fon_num/foncalls_list.lua", router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
@@ -529,6 +539,7 @@ gboolean fritzbox_hangup_06_35(struct profile *profile, gint port, const gchar *
 	SoupMessage *msg;
 	gchar *port_str;
 	gchar *url;
+	gchar *scramble;
 
 	/* Login to box */
 	if (fritzbox_login(profile) == FALSE) {
@@ -538,7 +549,9 @@ gboolean fritzbox_hangup_06_35(struct profile *profile, gint port, const gchar *
 	/* Create GET message */
 	port_str = g_strdup_printf("%d", fritzbox_get_dialport(port));
 
-	g_debug("Hangup call '%s' on port %s...", call_scramble_number(number), port_str);
+	scramble = call_scramble_number(number);
+	g_debug("Hangup call '%s' on port %s...", scramble, port_str);
+	g_free(scramble);
 
 	url = g_strdup_printf("http://%s/fon_num/foncalls_list.lua", router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
