@@ -34,12 +34,16 @@
 #include <libroutermanager/xml.h>
 #include <libroutermanager/routermanager.h>
 
+#include <libxml/HTMLparser.h>
+#include <libxml/tree.h>
+#include <libxml/parser.h>
+
 #include "reverselookup.h"
 
 #define ROUTERMANAGER_TYPE_REVERSE_LOOKUP_PLUGIN (routermanager_reverse_lookup_plugin_get_type ())
 #define ROUTERMANAGER_REVERSE_LOOKUP_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_REVERSE_LOOKUP_PLUGIN, RouterManagerReverseLookupPlugin))
 
-//#define RL_DEBUG 1
+#define RL_DEBUG 1
 
 typedef struct {
 	guint signal_id;
@@ -62,6 +66,32 @@ static gchar *replace_number(gchar *url, gchar *full_number)
 	g_regex_unref(number);
 
 	return out;
+}
+
+static gboolean extract_element(gchar **in, xmlNode *a_node, gchar **out)
+{
+	xmlNode *cur_node = NULL;
+	gboolean ret = FALSE;
+
+	for (cur_node = a_node; cur_node && !ret; cur_node = cur_node->next) {
+		if (cur_node->type == XML_ELEMENT_NODE) {
+			if (!strcmp((gchar*)cur_node->name, in[0])) {
+				gchar *type = (gchar*)xmlGetProp(cur_node, (xmlChar*)in[1]);
+
+				if (type && !strcmp(type, in[2])) {
+					xmlChar *name = xmlNodeListGetString(cur_node->doc, cur_node->children, TRUE);
+					*out = g_strdup(g_strstrip((gchar*)name));
+					printf("-> %s\n", *out);
+					xmlFree(name);
+					return TRUE;
+				}
+			}
+		}
+
+		ret = extract_element(in, cur_node->children, out);
+	}
+
+	return ret;
 }
 
 /**
@@ -100,8 +130,12 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 	g_assert(city != NULL);
 
 	gchar *url = replace_number(lookup->url, full_number);
+#ifdef RL_DEBUG
+	g_debug("URL: %s", url);
+#endif
 	SoupURI *uri = soup_uri_new(url);
 	msg = soup_message_new_from_uri(SOUP_METHOD_GET, uri);
+	soup_message_headers_append (msg->request_headers, "User-Agent", "Mozilla/5.0 (Fedora; Linux x86_64) AppleWebKit/602.1 (KHTML, like Gecko) Version/8.0 Safari/602.1 Epiphany/3.17.2");
 
 	soup_session_send_message(soup_session_sync, msg);
 	soup_uri_free(uri);
@@ -120,90 +154,131 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 
 	rdata = g_convert_utf8(data, len);
 
+	if (lookup->pattern) {
 #ifdef RL_DEBUG
-	g_debug("Lookup pattern '%s'", lookup->pattern);
+		g_debug("Lookup pattern '%s'", lookup->pattern);
 #endif
-	reg = g_regex_new(lookup->pattern, G_REGEX_MULTILINE | G_REGEX_DOTALL, 0, NULL);
-	if (!reg) {
-		goto end;
-	}
+		reg = g_regex_new(lookup->pattern, G_REGEX_MULTILINE | G_REGEX_DOTALL, 0, NULL);
+		if (!reg) {
+			goto end;
+		}
 
-	if (!g_regex_match(reg, rdata, 0, &info)) {
+		if (!g_regex_match(reg, rdata, 0, &info)) {
 #ifdef RL_DEBUG
-		gchar *tmp_file = g_strdup_printf("rl-%s-%s.html", lookup->service, number);
+			gchar *tmp_file = g_strdup_printf("rl-%s-%s.html", lookup->service, number);
+			log_save_data(tmp_file, rdata, len);
+			g_free(tmp_file);
+#endif
+			goto end;
+		}
+
+#ifdef RL_DEBUG
+		gchar *tmp_file = g_strdup_printf("rl-found-%s-%s.html", lookup->service, number);
 		log_save_data(tmp_file, rdata, len);
 		g_free(tmp_file);
 #endif
-		goto end;
-	}
 
 #ifdef RL_DEBUG
-	gchar *tmp_file = g_strdup_printf("rl-found-%s-%s.html", lookup->service, number);
-	log_save_data(tmp_file, rdata, len);
-	g_free(tmp_file);
+		g_debug("g_match_info_matches()");
 #endif
+
+		if (!g_match_info_matches(info)) {
+			goto end;
+		}
 
 #ifdef RL_DEBUG
-	g_debug("g_match_info_matches()");
+		g_debug("g_match_info_fetch_named()");
 #endif
-
-	if (!g_match_info_matches(info)) {
-		goto end;
-	}
+		rl_tmp = g_match_info_fetch_named(info, "name");
+		if (rl_tmp != NULL) {
+			*name = strip_html(rl_tmp);
+			g_free(rl_tmp);
+		} else {
+			*name = g_strdup("");
+		}
 
 #ifdef RL_DEBUG
-	g_debug("g_match_info_fetch_named()");
+		g_debug(" --> Name: '%s'", *name);
 #endif
-	rl_tmp = g_match_info_fetch_named(info, "name");
-	if (rl_tmp != NULL) {
-		*name = strip_html(rl_tmp);
-		g_free(rl_tmp);
+
+		rl_tmp = g_match_info_fetch_named(info, "street");
+		if (rl_tmp != NULL) {
+#ifdef RL_DEBUG
+			g_debug(" --> street: '%s'", rl_tmp);
+#endif
+			*street = strip_html(rl_tmp);
+			g_free(rl_tmp);
+		} else {
+			*street = g_strdup("");
+		}
+
+		rl_tmp = g_match_info_fetch_named(info, "zip");
+		if (rl_tmp != NULL) {
+#ifdef RL_DEBUG
+			g_debug(" --> zip: '%s'", rl_tmp);
+#endif
+			*zip = strip_html(rl_tmp);
+			g_free(rl_tmp);
+		} else {
+			*zip = g_strdup("");
+		}
+
+		rl_tmp = g_match_info_fetch_named(info, "city");
+		if (!EMPTY_STRING(rl_tmp)) {
+			gchar **split;
+
+#ifdef RL_DEBUG
+			g_debug(" --> city: '%s'", rl_tmp);
+#endif
+			*city = strip_html(rl_tmp);
+
+			split = g_strsplit(*city, "\n", -1);
+			*city = g_strdup(split[0]);
+			g_strfreev(split);
+
+			g_free(rl_tmp);
+		} else {
+			*city = g_strdup("");
+		}
 	} else {
-		*name = g_strdup("");
-	}
+		htmlDocPtr html;
+		xmlNodePtr node;
 
+		html = htmlReadMemory(data, len, lookup->url, "utf-8", HTML_PARSE_NOBLANKS | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING | HTML_PARSE_NONET);
+
+		node = xmlDocGetRootElement(html);
+
+		if (!extract_element(lookup->name, node, name)) {
 #ifdef RL_DEBUG
-	g_debug("Match found: %s->'%s'", number, *name);
+			gchar *tmp_file = g_strdup_printf("rl-%s-%s.html", lookup->service, number);
+			log_save_data(tmp_file, rdata, len);
+			g_free(tmp_file);
 #endif
+			goto end;
+		}
 
-	rl_tmp = g_match_info_fetch_named(info, "street");
-	if (rl_tmp != NULL) {
+		if (!extract_element(lookup->street, node, street)) {
 #ifdef RL_DEBUG
-		g_debug("street: %s", rl_tmp);
+			gchar *tmp_file = g_strdup_printf("rl-%s-%s.html", lookup->service, number);
+			log_save_data(tmp_file, rdata, len);
+			g_free(tmp_file);
 #endif
-		*street = strip_html(rl_tmp);
-		g_free(rl_tmp);
-	} else {
-		*street = g_strdup("");
-	}
+			goto end;
+		}
 
-	rl_tmp = g_match_info_fetch_named(info, "zip");
-	if (rl_tmp != NULL) {
+		if (!extract_element(lookup->city, node, city)) {
 #ifdef RL_DEBUG
-		g_debug("zip: %s", rl_tmp);
+			gchar *tmp_file = g_strdup_printf("rl-%s-%s.html", lookup->service, number);
+			log_save_data(tmp_file, rdata, len);
+			g_free(tmp_file);
 #endif
-		*zip = strip_html(rl_tmp);
-		g_free(rl_tmp);
-	} else {
-		*zip = g_strdup("");
-	}
+			goto end;
+		}
 
-	rl_tmp = g_match_info_fetch_named(info, "city");
-	if (!EMPTY_STRING(rl_tmp)) {
-		gchar **split;
-
-#ifdef RL_DEBUG
-		g_debug("city: %s", rl_tmp);
-#endif
-		*city = strip_html(rl_tmp);
-
-		split = g_strsplit(*city, "\n", -1);
-		*city = g_strdup(split[0]);
-		g_strfreev(split);
-
-		g_free(rl_tmp);
-	} else {
-		*city = g_strdup("");
+		if (lookup->zip_len) {
+			*zip = g_strndup(*city, lookup->zip_len);
+			strcpy(*city, *city + lookup->zip_len + 1);
+		}
 	}
 
 	rl_contact = g_slice_new0(struct contact);
@@ -225,6 +300,12 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 	file_save(file, rl_tmp, strlen(rl_tmp));
 	g_free(file);
 	g_free(rl_tmp);
+
+#ifdef RL_DEBUG
+	gchar *tmp_file = g_strdup_printf("rl-found-%s-%s.html", lookup->service, number);
+	log_save_data(tmp_file, rdata, len);
+	g_free(tmp_file);
+#endif
 
 end:
 	if (rdata) {
@@ -412,6 +493,10 @@ static void lookup_add(xmlnode *node)
 	gchar *prefix = NULL;
 	gchar *url = NULL;
 	gchar *pattern = NULL;
+	gchar **name = NULL;
+	gchar **street = NULL;
+	gchar **city = NULL;
+	gint zip_len = 0;
 
 	child = xmlnode_get_child(node, "service");
 	g_assert(child != NULL);
@@ -426,15 +511,37 @@ static void lookup_add(xmlnode *node)
 	url = xmlnode_get_data(child);
 
 	child = xmlnode_get_child(node, "pattern");
-	g_assert(child != NULL);
+	if (!child) {
+		gchar *tmp;
 
-	pattern = xmlnode_get_data(child);
-	while ((child = xmlnode_get_next_twin(child)) != NULL) {
-		gchar *entry = xmlnode_get_data(child);
-		gchar *tmp = g_strconcat(pattern, "\\R", entry, NULL);
-		g_free(entry);
-		g_free(pattern);
-		pattern = tmp;
+		child = xmlnode_get_child(node, "name");
+		g_assert(child != NULL);
+		tmp = xmlnode_get_data(child);
+		name = g_strsplit(tmp, " ", -1);
+
+		child = xmlnode_get_child(node, "street");
+		g_assert(child != NULL);
+		tmp = xmlnode_get_data(child);
+		street = g_strsplit(tmp, " ", -1);
+
+		child = xmlnode_get_child(node, "city");
+		g_assert(child != NULL);
+		tmp = xmlnode_get_data(child);
+		city = g_strsplit(tmp, " ", -1);
+
+		tmp = (gchar*)xmlnode_get_attrib(child, "zip");
+		if (tmp) {
+			zip_len = atoi(tmp);
+		}
+	} else {
+		pattern = xmlnode_get_data(child);
+		while ((child = xmlnode_get_next_twin(child)) != NULL) {
+			gchar *entry = xmlnode_get_data(child);
+			gchar *tmp = g_strconcat(pattern, "\\R", entry, NULL);
+			g_free(entry);
+			g_free(pattern);
+			pattern = tmp;
+		}
 	}
 
 	lookup = g_slice_alloc0(sizeof(struct lookup));
@@ -443,6 +550,11 @@ static void lookup_add(xmlnode *node)
 	lookup->prefix = prefix[ 0 ] == '1';
 	lookup->url = url;
 	lookup->pattern = pattern;
+	lookup->name = name;
+	lookup->street = street;
+	lookup->city = city;
+	lookup->zip_len = zip_len;
+
 	lookup_list = g_slist_prepend(lookup_list, lookup);
 }
 

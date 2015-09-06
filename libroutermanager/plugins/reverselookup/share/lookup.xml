@@ -40,15 +40,33 @@
 			<service>11880.com</service>
 			<prefix>0</prefix>
 			<url>http://www.11880.com/rueckwaertssuche/%NUMBER%</url>
-			<pattern>&lt;h3 itemprop=&quot;name&quot;&gt;&lt;a href=[^&gt;]*&gt;\d+.\s(?P&lt;name&gt;[^&lt;]+)&lt;/a&gt;&lt;/h3&gt;.+[^&lt;]&lt;p&gt;\s+(?P&lt;street&gt;.+)\s+[^&lt;]&lt;br&gt;\s+(?P&lt;zip&gt;\d+)\s+(?P&lt;city&gt;.+)\n.*&lt;/p&gt;</pattern>
+			<name mode="parser">h1 itemprop name</name>
+			<street mode="parser">div itemprop streetAddress</street>
+			<city mode="parser" zip="5">div itemprop addressLocality</city>
 		</lookup>
 		<lookup>
+			<service>klicktel.de</service>
+			<prefix>0</prefix>
+			<url>http://www.klicktel.de/rueckwaertssuche/%NUMBER%</url>
+			<name mode="parser">h1 itemprop name</name>
+			<street mode="parser">div itemprop streetAddress</street>
+			<city mode="parser" zip="5">div itemprop addressLocality</city>
+		</lookup>
+		<!--<lookup>
+			<service>gelbeseiten.de</service>
+			<prefix>0</prefix>
+			<url>http://www.gelbeseiten.de/%NUMBER%-</url>
+			<name mode="parser">span itemprop name</name>
+			<street mode="parser">span itemprop streetAddress</street>
+			<city mode="parser" zip="0">span itemprop addressLocality</city>
+		</lookup>-->
+		<!--<lookup>
 		 	<service>Das Oertliche</service>
 			<prefix>1</prefix>
 			<url>http://www.dasoertliche.de/Controller?&amp;form_name=search_inv&amp;ph=%NUMBER%</url>
 			<pattern>&lt;a href=&quot;[^&quot;]*&quot;\s+class=&quot;name &quot;.+&gt;&lt;span class=&quot;&quot;&gt;(?P&lt;name&gt;.+)&lt;/span&gt;</pattern>
 			<pattern>[^&lt;]*&lt;/a&gt;.+</pattern>
 			<pattern>[^&lt;]*&lt;address&gt;\s+(?P&lt;street&gt;.+),&amp;nbsp;(?P&lt;zip&gt;\d+)\s+&lt;span class=&quot;&quot;&gt;(?P&lt;city&gt;.+)&lt;/span&gt;&lt;span id</pattern>
-		</lookup>
+		</lookup>-->
 	</country>
 </lookup>

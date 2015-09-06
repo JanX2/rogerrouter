@@ -25,6 +25,10 @@ struct lookup {
 	gchar *service;
 	gchar *url;
 	gchar *pattern;
+	gchar **name;
+	gchar **street;
+	gchar **city;
+	gint zip_len;
 };
 
 G_BEGIN_DECLS
