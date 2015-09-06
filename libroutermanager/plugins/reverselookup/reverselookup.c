@@ -43,7 +43,7 @@
 #define ROUTERMANAGER_TYPE_REVERSE_LOOKUP_PLUGIN (routermanager_reverse_lookup_plugin_get_type ())
 #define ROUTERMANAGER_REVERSE_LOOKUP_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_REVERSE_LOOKUP_PLUGIN, RouterManagerReverseLookupPlugin))
 
-#define RL_DEBUG 1
+//#define RL_DEBUG 1
 
 typedef struct {
 	guint signal_id;
