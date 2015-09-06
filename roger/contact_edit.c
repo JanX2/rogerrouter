@@ -415,7 +415,7 @@ void contact_editor(struct contact *contact, GtkWidget *parent)
 		if (ok) {
 			address_book_save_contact(contact);
 		}
-	}
 
-	address_book_reload_contacts();
+		address_book_reload_contacts();
+	}
 }
