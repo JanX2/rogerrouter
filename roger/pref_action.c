@@ -61,9 +61,9 @@ void action_refresh_list(GtkListStore *list_store)
 	while (list) {
 		struct action *action = list->data;
 
-		gtk_list_store_append(list_store, &iter);
-		gtk_list_store_set(list_store, &iter, 0, action->name, -1);
-		gtk_list_store_set(list_store, &iter, 1, action, -1);
+		gtk_list_store_insert_with_values(list_store, &iter, -1,
+			0, action->name,
+			1, action, -1);
 		list = list->next;
 	}
 
@@ -267,7 +267,6 @@ gboolean action_edit(struct action *action)
 			selected_action = action;
 		}
 
-		g_debug("Name: '%s'", gtk_entry_get_text(GTK_ENTRY(name_entry)));
 		action = action_modify(action, gtk_entry_get_text(GTK_ENTRY(name_entry)), gtk_entry_get_text(GTK_ENTRY(description_entry)), gtk_entry_get_text(GTK_ENTRY(exec_entry)), selected_numbers);
 		action_commit(profile_get_active());
 
@@ -321,11 +320,11 @@ static void pref_action_remove_button_clicked_cb(GtkWidget *widget, gpointer dat
 
 	selected_action = NULL;
 
+	g_value_unset(&ptr);
+
 	action_remove(profile_get_active(), action);
 	action_commit(profile_get_active());
 	action_free(action);
-
-	g_value_unset(&ptr);
 
 	list_store = GTK_LIST_STORE(model);
 	gtk_list_store_clear(list_store);

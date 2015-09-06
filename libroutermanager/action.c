@@ -217,7 +217,7 @@ void action_commit(struct profile *profile)
 	for (list = profile->action_list; list; list = list->next) {
 		struct action *current_action = list->data;
 
-		actions[counter++] = current_action->name;
+		actions[counter++] = g_strdup(current_action->name);
 	}
 	actions[counter] = NULL;
 
@@ -257,10 +257,23 @@ void action_free(gpointer data)
 	struct action *action = data;
 
 	/* Free action data */
-	g_free(action->name);
-	g_free(action->description);
-	g_free(action->exec);
-	g_strfreev(action->numbers);
+	if (action->name) {
+		g_free(action->name);
+		action->name = NULL;
+	}
+	if (action->description) {
+		g_free(action->description);
+		action->description = NULL;
+	}
+	if (action->exec) {
+		g_free(action->exec);
+		action->exec = NULL;
+	}
+
+	if (action->numbers) {
+		g_strfreev(action->numbers);
+		action->numbers = NULL;
+	}
 
 	g_slice_free(struct action, action);
 }
@@ -337,4 +350,5 @@ void action_shutdown(struct profile *profile)
 
 	/* Clear action list */
 	g_slist_free_full(profile->action_list, action_free);
+	profile->action_list = NULL;
 }
