@@ -524,6 +524,7 @@ void assistant()
 
 #include <roger/main.h>
 #include <roger/journal.h>
+#include <roger/application.h>
 
 struct assistant_priv {
 	gint current_page;
@@ -1086,6 +1087,7 @@ void assistant()
 	gint i;
 
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_application_add_window(roger_app, GTK_WINDOW(window));
 	priv->assistant = window;
 
 	header = gtk_header_bar_new();

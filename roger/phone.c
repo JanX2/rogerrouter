@@ -133,7 +133,10 @@ static gboolean phone_status_timer_cb(gpointer data)
 
 	snprintf(buf, sizeof(buf), _("Time: %s"), time_diff);
 
-	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(state->header_bar), buf);
+	if (roger_uses_headerbar()) {
+		gtk_header_bar_set_subtitle(GTK_HEADER_BAR(state->header_bar), buf);
+	} else {
+	}
 
 	if (state->connection) {
 		/* Flush recording buffer (if needed) */
@@ -1457,7 +1460,8 @@ GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struc
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 	g_object_set_data(G_OBJECT(window), "state", state);
 	g_signal_connect(window, "delete_event", G_CALLBACK(phone_window_delete_event_cb), state);
-
+	gtk_application_add_window(roger_app, GTK_WINDOW(window));
+                                                             
 	/* Create grid and attach it to the window */
 	grid = gtk_grid_new();
 
@@ -1487,9 +1491,10 @@ GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struc
 		gtk_window_set_title(GTK_WINDOW(window), title);
 		GtkWidget *main_grid = gtk_grid_new();
 		gtk_widget_set_hexpand(menu_button, FALSE);
-		gtk_widget_set_halign(menu_button, GTK_ALIGN_END);
-		gtk_grid_attach(GTK_GRID(main_grid), menu_button, 0, 0, 1, 1);
-		gtk_grid_attach(GTK_GRID(main_grid), grid, 0, 1, 1, 1);
+		gtk_widget_set_halign(menu_button, GTK_ALIGN_START);
+		gtk_grid_attach(GTK_GRID(main_grid), grid, 0, 0, 1, 1);
+		gtk_grid_attach(GTK_GRID(main_grid), menu_button, 0, 1, 1, 1);
+		gtk_widget_set_margin(menu_button, 12, 0, 0, 12);
 		gtk_container_add(GTK_CONTAINER(window), main_grid);
 		state->header_bar = window;
 	}

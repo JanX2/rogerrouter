@@ -7,7 +7,7 @@
     <key>CFBundleLocalizations</key>
     <string>nl de</string>
     <key>CFBundleExecutable</key>
-    <string>roger</string>
+    <string>Roger Router</string>
     <key>CFBundleGetInfoString</key>
     <string>@PACKAGE_VERSION@ (C) 2008-2013 Jan-Michael Brummer</string>
     <key>CFBundleIconFile</key>

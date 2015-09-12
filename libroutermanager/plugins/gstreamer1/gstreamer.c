@@ -311,6 +311,8 @@ static void *gstreamer_open(void)
 		g_object_set(G_OBJECT(sink),
 			"drop", 1,
 			"max-buffers", 2,
+			"sync", 1,
+			"qos", 1,
 			NULL);
 
 		filter = gst_element_factory_make("capsfilter", "filter");
@@ -321,14 +323,14 @@ static void *gstreamer_open(void)
 			"rate", G_TYPE_INT, gstreamer_sample_rate,
 			NULL);
 
-		g_object_set(G_OBJECT(filter), "caps", filtercaps, NULL);
+		//g_object_set(G_OBJECT(filter), "caps", filtercaps, NULL);
 		gst_caps_unref(filtercaps);
 
 		convert = gst_element_factory_make("audioconvert", "convert");
 		resample = gst_element_factory_make("audioresample", "resample");
 
-		gst_bin_add_many(GST_BIN(pipe), audio_source, filter, convert, resample, sink, NULL);
-		gst_element_link_many(audio_source, filter, convert, resample, sink, NULL);
+		gst_bin_add_many(GST_BIN(pipe), audio_source, convert, resample, filter, sink, NULL);
+		gst_element_link_many(audio_source, convert, resample, filter, sink, NULL);
 
 		ret = gst_element_set_state(pipe, GST_STATE_PLAYING);
 		if (ret == GST_STATE_CHANGE_FAILURE) {
@@ -407,20 +409,25 @@ int gstreamer_close(void *priv)
 {
 	struct pipes *pipes = priv;
 
+	g_debug("close");
 	if (pipes == NULL) {
 		return 0;
 	}
 
 	GstElement *src = pipes->out_bin;
 	if (src != NULL) {
+		g_debug("src close");
 		GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(pipes->out_pipe));
 		gst_bus_add_watch(bus, pipeline_cleaner, pipes->out_pipe);
 		gst_app_src_end_of_stream(GST_APP_SRC(src));
+		gst_element_set_state(pipes->out_pipe, GST_STATE_NULL);
 		gst_object_unref(bus);
+		gst_object_unref(pipes->out_pipe);
 		pipes->out_pipe = NULL;
 	}
 
 	if (pipes->in_pipe != NULL) {
+		g_debug("in close");
 		gst_element_set_state(pipes->in_pipe, GST_STATE_NULL);
 		gst_object_unref(pipes->in_pipe);
 		pipes->out_pipe = NULL;
@@ -428,6 +435,7 @@ int gstreamer_close(void *priv)
 
 	g_slice_free(struct pipes, pipes);
 	pipes = NULL;
+	g_debug("done");
 
 	return 0;
 }

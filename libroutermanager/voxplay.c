@@ -96,10 +96,10 @@ static gpointer playback_thread(gpointer user_data)
 
 	playback->num_cnt = playback->cnt;
 
-#ifdef VOX_DEBUG
+//#ifdef VOX_DEBUG
 	g_debug("cnt: %d", playback->num_cnt);
 	g_debug("Seconds: %f", (float)(frame_size * playback->cnt) / (float)8000);
-#endif
+//#endif
 
 	max_cnt = playback->cnt;
 	playback->offset = 0;
@@ -151,6 +151,7 @@ static gpointer playback_thread(gpointer user_data)
 
 		playback->fraction = playback->cnt * 100 / max_cnt;
 	}
+	g_debug("End of vox");
 
 	speex_bits_destroy(&bits);
 
@@ -246,6 +247,8 @@ gboolean vox_seek(gpointer vox_data, gdouble pos)
 	gsize offset = 0;
 	guchar bytes = 0;
 
+	g_debug("seek called");
+
 	if (!playback) {
 		return FALSE;
 	}
@@ -253,9 +256,11 @@ gboolean vox_seek(gpointer vox_data, gdouble pos)
 	/* Get frame rate */
 	speex_decoder_ctl(playback->speex, SPEEX_GET_FRAME_SIZE, &frame_size);
 
+	g_debug("num_cnt: %d, pos: %f", playback->num_cnt, pos);
 	cnt = playback->num_cnt * pos;
 
 	/* Loop through data in order to calculate frame counts */
+	g_debug("loop %d < %d; cancel %d", offset, playback->len, g_cancellable_is_cancelled(playback->cancel));
 	while (offset < playback->len && !g_cancellable_is_cancelled(playback->cancel)) {
 		bytes = playback->data[offset];
 		offset++;
@@ -267,14 +272,17 @@ gboolean vox_seek(gpointer vox_data, gdouble pos)
 		offset += bytes;
 		cur_cnt++;
 
+		g_debug("cur_cnt: %d cnt: %d", cur_cnt, cnt);
 		/* If we have the requested count, overwrite playback data */
 		if (cur_cnt == cnt) {
 			playback->offset = offset;
 			playback->cnt = cnt;
 
+			g_debug("true");
 			return TRUE;
 		}
 	}
+	g_debug("false");
 
 	return FALSE;
 }

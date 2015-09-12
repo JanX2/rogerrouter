@@ -220,12 +220,12 @@ static gboolean show_message(gpointer message_ptr)
 {
 	gchar *message = message_ptr;
 
-	GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("Error"));
+	GtkWidget *dialog = gtk_message_dialog_new(roger_app ? gtk_application_get_active_window(roger_app) : NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("Error"));
 	gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), "%s", message ? message : "");
 
 	g_signal_connect(dialog, "response", G_CALLBACK(gtk_widget_destroy), NULL);
 
-	gtk_widget_show(dialog);
+	gtk_window_present(GTK_WINDOW(dialog));
 
 	return FALSE;
 }
