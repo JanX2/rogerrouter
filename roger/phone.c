@@ -1468,26 +1468,31 @@ GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struc
 	/* Set margin to 12px for all sides */
 	gtk_widget_set_margin(grid, 12, 12, 12, 12);
 
-	/* Create header bar and set it to window */
-	header = gtk_header_bar_new();
-	gtk_header_bar_set_title(GTK_HEADER_BAR(header), phone_devices[state->type]->get_title());
-	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(header), _("Time: 00:00:00"));
-
-	if (roger_uses_headerbar()) {
-		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
-		gtk_window_set_titlebar(GTK_WINDOW(window), header);
-		gtk_container_add(GTK_CONTAINER(window), grid);
-	} else {
-		GtkWidget *main_grid = gtk_grid_new();
-		gtk_grid_attach(GTK_GRID(main_grid), header, 0, 0, 1, 1);
-		gtk_grid_attach(GTK_GRID(main_grid), grid, 0, 1, 1, 1);
-		gtk_container_add(GTK_CONTAINER(window), main_grid);
-	}
-
 	/* Create and add menu button to header bar */
 	menu_button = gtk_menu_button_new();
 	gtk_menu_button_set_direction(GTK_MENU_BUTTON(menu_button), GTK_ARROW_NONE);
-	gtk_header_bar_pack_end(GTK_HEADER_BAR(header), menu_button);
+
+	if (roger_uses_headerbar()) {
+		/* Create header bar and set it to window */
+		header = gtk_header_bar_new();
+		gtk_header_bar_set_title(GTK_HEADER_BAR(header), phone_devices[state->type]->get_title());
+		gtk_header_bar_set_subtitle(GTK_HEADER_BAR(header), _("Time: 00:00:00"));
+		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
+		gtk_window_set_titlebar(GTK_WINDOW(window), header);
+		gtk_header_bar_pack_end(GTK_HEADER_BAR(header), menu_button);
+		gtk_container_add(GTK_CONTAINER(window), grid);
+		state->header_bar = header;
+	} else {
+		gchar *title = g_strdup_printf("%s - %s", phone_devices[state->type]->get_title(), _("Time: 00:00:00"));
+		gtk_window_set_title(GTK_WINDOW(window), title);
+		GtkWidget *main_grid = gtk_grid_new();
+		gtk_widget_set_hexpand(menu_button, FALSE);
+		gtk_widget_set_halign(menu_button, GTK_ALIGN_END);
+		gtk_grid_attach(GTK_GRID(main_grid), menu_button, 0, 0, 1, 1);
+		gtk_grid_attach(GTK_GRID(main_grid), grid, 0, 1, 1, 1);
+		gtk_container_add(GTK_CONTAINER(window), main_grid);
+		state->header_bar = window;
+	}
 
 	/* Create menu and add it to menu button */
 #if GTK_CHECK_VERSION(3,12,0)
@@ -1496,7 +1501,6 @@ GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struc
 	gtk_container_add(GTK_CONTAINER(menu_button), gtk_image_new_from_icon_name("view-list-symbolic", GTK_ICON_SIZE_MENU));
 	gtk_menu_button_set_popup(GTK_MENU_BUTTON(menu_button), phone_devices[state->type]->create_menu(profile, state));
 #endif
-	state->header_bar = header;
 
 	/* Add name frame */
 	frame = phone_search_entry_new(window, contact, state);

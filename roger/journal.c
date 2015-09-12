@@ -237,12 +237,13 @@ void journal_redraw(void)
 	profile = profile_get_active();
 
 	status = g_object_get_data(G_OBJECT(journal_win), "headerbar");
-	text = g_strdup_printf(_("%s (%d call(s), %d:%2.2dh)"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
 
 	if (roger_uses_headerbar()) {
+		text = g_strdup_printf(_("%s (%d call(s), %d:%2.2dh)"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
 		gtk_header_bar_set_subtitle(GTK_HEADER_BAR(status), text);
 	} else {
-		gtk_label_set_text(GTK_LABEL(status), text);
+		text = g_strdup_printf(_("Journal - %s (%d call(s), %d:%2.2dh)"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
+		gtk_window_set_title(GTK_WINDOW(journal_win), text);
 	}
 
 	g_free(text);
@@ -1387,7 +1388,7 @@ void journal_window(GApplication *app)
 
 	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(journal_view)), GTK_SELECTION_MULTIPLE);
 
-	gtk_window_set_title(GTK_WINDOW(window), "Journal");
+	gtk_window_set_title(GTK_WINDOW(window), _("Journal"));
 
 	g_signal_connect(G_OBJECT(journal_view), "row-activated", G_CALLBACK(journal_row_activated_cb), list_store);
 	g_signal_connect(G_OBJECT(journal_view), "button-press-event", G_CALLBACK(journal_button_press_event_cb), list_store);
