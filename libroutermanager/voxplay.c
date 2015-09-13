@@ -260,7 +260,7 @@ gboolean vox_seek(gpointer vox_data, gdouble pos)
 	cnt = playback->num_cnt * pos;
 
 	/* Loop through data in order to calculate frame counts */
-	g_debug("loop %d < %d; cancel %d", offset, playback->len, g_cancellable_is_cancelled(playback->cancel));
+	//g_debug("loop %d < %d; cancel %d", offset, playback->len, g_cancellable_is_cancelled(playback->cancel));
 	while (offset < playback->len && !g_cancellable_is_cancelled(playback->cancel)) {
 		bytes = playback->data[offset];
 		offset++;
