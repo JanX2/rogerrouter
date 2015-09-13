@@ -136,6 +136,9 @@ static gboolean phone_status_timer_cb(gpointer data)
 	if (roger_uses_headerbar()) {
 		gtk_header_bar_set_subtitle(GTK_HEADER_BAR(state->header_bar), buf);
 	} else {
+		gchar *title = g_strdup_printf("%s - %s", phone_devices[state->type]->get_title(), buf);
+		gtk_window_set_title(GTK_WINDOW(phone_window), title);
+		g_free(title);
 	}
 
 	if (state->connection) {
@@ -1461,7 +1464,7 @@ GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struc
 	g_object_set_data(G_OBJECT(window), "state", state);
 	g_signal_connect(window, "delete_event", G_CALLBACK(phone_window_delete_event_cb), state);
 	gtk_application_add_window(roger_app, GTK_WINDOW(window));
-                                                             
+
 	/* Create grid and attach it to the window */
 	grid = gtk_grid_new();
 

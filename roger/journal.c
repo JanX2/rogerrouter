@@ -1211,9 +1211,6 @@ void journal_window(GApplication *app)
 		header = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
 		gtk_widget_set_hexpand(header, TRUE);
 		gtk_grid_attach(GTK_GRID(grid), header, 0, y++, 1, 1);
-		GtkWidget *center = gtk_label_new("");
-		gtk_box_pack_end(GTK_BOX(header), center, FALSE, FALSE, 0);
-		g_object_set_data(G_OBJECT(window), "headerbar", center);
 	}
 
 	/* Create button box as raised and linked */
