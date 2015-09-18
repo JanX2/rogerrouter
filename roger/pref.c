@@ -108,6 +108,14 @@ void preferences(void)
 	gtk_application_add_window(roger_app, GTK_WINDOW(dialog));
 	g_signal_connect(G_OBJECT(dialog), "destroy", G_CALLBACK(dialog_destroy_cb), NULL);
 
+	if (roger_uses_headerbar()) {
+		/* Create header bar and add it to the window */
+		GtkWidget *header_bar = gtk_header_bar_new();
+		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header_bar), TRUE);
+		gtk_header_bar_set_title(GTK_HEADER_BAR(header_bar), _("Preferences"));
+		gtk_window_set_titlebar(GTK_WINDOW(dialog), header_bar);
+	}
+
 	page = pref_page_router();
 	pref_notebook_add_page(notebook, page, _("Router"));
 
