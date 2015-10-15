@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce configure.
 
 m4_define([roger_major], [1])
 m4_define([roger_minor], [8])
-m4_define([roger_micro], [12])
+m4_define([roger_micro], [13])
 
 m4_define([roger_version],[roger_major.roger_minor.roger_micro])
 
@@ -164,6 +164,38 @@ AC_CACHE_CHECK([for sigset()],[ac_cv_sigset],[
 if test x"ac_cv_sigset" = xyes; then
 	AC_DEFINE([HAVE_SIGSET],1,[Define to 1 if you have the `sigset' function.])
 fi
+
+dnl ********************************************************************
+dnl libnotify is optional
+dnl ********************************************************************
+AC_ARG_WITH([libnotify],
+        [AS_HELP_STRING([--with-libnotify=@<:@ARG@:>@],
+        [Use libnotify (possible values: no, yes, check, or the path to libnotify) @<:@default=check@:>@])],
+        [],
+        [with_libnotify=check])
+
+AC_MSG_CHECKING(for libnotify)
+AS_IF([test "x$with_libnotify" != xsuper],
+        [if test "x$with_libnotify" = xcheck; then
+                $PKG_CONFIG --exists libnotify && with_libnotify=yes
+        elif test "x$with_libnotify" = xyes; then
+                ( $PKG_CONFIG --exists libnotify ) || AC_MSG_FAILURE(
+                        [--with-libnotify=yes was given, but test for libnotify failed])
+        fi
+        if test "x$with_libnotify" = xyes; then
+                AC_SUBST([LIBNOTIFY_CFLAGS], ["`$PKG_CONFIG --cflags libnotify`"])
+                AC_SUBST([LIBNOTIFY_LIBS], ["`$PKG_CONFIG --libs libnotify`"])
+                AC_DEFINE([HAVE_LIBNOTIFY], 1, [Have libnotify])
+                ROGER_FEATURES_YES="\tlibnotify\n$ROGER_FEATURES_YES"
+        else
+                with_libnotify=no
+                ROGER_FEATURES_NO="\tlibnotify\n$ROGER_FEATURES_NO"
+        fi
+])
+
+AC_MSG_RESULT($with_libnotify)
+
+AM_CONDITIONAL(WITH_LIBNOTIFY, test "x$with_libnotify" != "xno")
 
 dnl ********************************************************************
 dnl secret is optional
@@ -331,9 +363,9 @@ AC_ARG_WITH([gstreamer1],
 AC_MSG_CHECKING(for gstreamer-1.4 and gstreamer-app-1.4)
 AS_IF([test "x$with_gstreamer1" != xno],
 	[if test "x$with_gstreamer1" = xcheck; then
-		pkg-config --atleast=1.4.0 gstreamer-1.0 && pkg-config --exists gstreamer-app-1.0 && with_gstreamer1=yes
+		pkg-config --atleast-version=1.4.0 gstreamer-1.0 && pkg-config --exists gstreamer-app-1.0 && with_gstreamer1=yes
 	elif test "x$with_gstreamer1" = xyes; then
-		( pkg-config --atleast=1.4.0 gstreamer-1.0 && pkg-config --exists gstreamer-app-1.0) || AC_MSG_FAILURE(
+		( pkg-config --atleast-version=1.4.0 gstreamer-1.0 && pkg-config --exists gstreamer-app-1.0) || AC_MSG_FAILURE(
 			[--with-gstreamer-1.0=yes was given, but test for gstreamer-1.0 and gstreamer-app-1.0 failed])
 	fi
 	if test "x$with_gstreamer1" = xyes; then
@@ -502,6 +534,36 @@ AC_MSG_RESULT($with_appindicator3)
 
 AM_CONDITIONAL(WITH_APPINDICATOR3, test "x$with_appindicator3" != "xno")
 
+dnl ********************************************************************
+dnl gnotification is optional
+dnl ********************************************************************
+AC_ARG_WITH([gnotification],
+	[AS_HELP_STRING([--with-gnotifcation=@<:@ARG@:>@],
+	[Use gnotification (possible values: no, yes, check, or the path to gnotification) @<:@default=check@:>@])],
+	[],
+	[with_gnotification=check])
+
+AC_MSG_CHECKING(for gnotification)
+AS_IF([test "x$with_gnotification" != xno],
+	[if test "x$with_gnotification" = xcheck; then
+		pkg-config --atleast-version=3.12.0 gtk+-3.0 && with_gnotification=yes
+	elif test "x$with_gnotification" = xyes; then
+		( pkg-config --atleast-version=3.12.0 gtk+-3.12.0) || AC_MSG_FAILURE(
+			[--with-gnotificaion=yes was given, but test for gnotificaion failed])
+	fi
+	if test "x$with_gnotification" = xyes; then
+		AC_DEFINE([HAVE_GNOTIFICATION], 1, [Have gnotification])
+		ROGER_FEATURES_YES="\tgnotification\n$ROGER_FEATURES_YES"
+	else
+		with_gnotification=no
+		ROGER_FEATURES_NO="\tgnotification\n$ROGER_FEATURES_NO"
+	fi
+])
+
+AC_MSG_RESULT($with_gnotification)
+
+AM_CONDITIONAL(WITH_GNOTIFICATION, test "x$with_gnotification" != "xno")
+
 AC_ARG_ENABLE(werror,
 	AS_HELP_STRING([--disable-werror], [don't use gcc's -Werror option when building]))
 
@@ -560,6 +622,10 @@ AC_CONFIG_FILES([
     roger/plugins/kwallet/Makefile
     roger/plugins/keychain/Makefile
     roger/plugins/osxab/Makefile
+    roger/plugins/notification/Makefile
+    roger/plugins/notification/data/Makefile
+    roger/plugins/gnotification/Makefile
+    roger/plugins/gnotification/data/Makefile
     roger/images/Makefile
     roger/images/16x16/Makefile
     roger/images/22x22/Makefile

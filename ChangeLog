@@ -1,3 +1,23 @@
+roger - 1.8.13
+------------------------------------------------------------------------------------------------------------------
+* Add OSX address book plugin
+* New assistant ui
+* GStreamer as default audio plugin
+* Remove simple password plugin
+* GLIB notifcation plugin replaces notification plugin
+* Add OSX address book plugin
+* Improved automatic configuration within assistant
+* Support for firmware > 6.30
+* Address book support for live updates
+* Improved network state detection
+* Add hotkeys to journal window CTRL+q/w to quit application, CTRL+p for phone dialog, CTRL+c for contacts dialog, CTRL+s for settings
+* Fix: evolution address book selection
+* Fix: Thunderbird phone number handling
+* Fix: Set contact number when pressing dial button
+* Fix: Fax report resolution changed from A4 to A1
+* Fix: scramble number
+
+
 roger - 1.8.12
 ------------------------------------------------------------------------------------------------------------------
 * UI redesign #1 using header bar and respecting human interface guidelines

@@ -29,3 +29,12 @@ endif
 if WITH_OSX_AB
 SUBDIRS += osxab
 endif
+
+if WITH_LIBNOTIFY
+SUBDIRS += notification
+endif
+
+if WITH_GNOTIFICATION
+SUBDIRS += gnotification
+endif
+

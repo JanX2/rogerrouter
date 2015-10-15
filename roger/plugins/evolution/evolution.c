@@ -401,10 +401,14 @@ gboolean ebook_read_book(void)
 
 	if (!source) {
 		g_debug("Book could not be found....");
-		return NULL;
+		return FALSE;
 	}
 
-	e_book_client_connect(source, 5, NULL, ebook_read_cb, NULL);
+	e_book_client_connect(source,
+#if EDS_CHECK_VERSION(3,16,0)
+		5,
+#endif
+		NULL, ebook_read_cb, NULL);
 
 	return TRUE;
 }
@@ -420,10 +424,14 @@ gboolean ebook_read_book_sync(void)
 
 	if (!source) {
 		g_debug("Book could not be found....");
-		return NULL;
+		return FALSE;
 	}
 
-	client = e_book_client_connect_sync(source, 5, NULL, NULL);
+	client = e_book_client_connect_sync(source,
+#if EDS_CHECK_VERSION(3,16,0)
+		5,
+#endif
+		NULL, NULL);
 	if (client) {
 		ebook_read_data(client);
 	}

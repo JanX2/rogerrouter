@@ -39,6 +39,8 @@ roger/plugins/thunderbird/thunderbird.c
 [type: gettext/ini]roger/plugins/thunderbird/thunderbird.plugin.in
 roger/plugins/gnotification/gnotification.c
 [type: gettext/ini]roger/plugins/gnotification/gnotification.plugin.in
+roger/plugins/notification/notification.c
+[type: gettext/ini]roger/plugins/notification/notification.plugin.in
 roger-cli/main_cli.c
 libroutermanager/filter.c
 [type: gettext/ini]libroutermanager/plugins/areacodes_global/areacodes_global.plugin.in
