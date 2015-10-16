@@ -4,7 +4,7 @@ plugin_in_files = notification.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/roger/plugins/notification
+plugindir = $(libdir)/roger/notification
 
 plugin_LTLIBRARIES = libnotification.la
 
