@@ -60,6 +60,7 @@ static GdkPixbuf *icon_call_missed = NULL;
 static GdkPixbuf *icon_call_out = NULL;
 static GdkPixbuf *icon_fax = NULL;
 static GdkPixbuf *icon_voice = NULL;
+static GdkPixbuf *icon_blocked = NULL;
 static struct filter *journal_filter = NULL;
 static struct filter *journal_search_filter = NULL;
 static GtkWidget *spinner = NULL;
@@ -153,6 +154,8 @@ void journal_init_call_icon(void)
 	icon_fax = gtk_icon_theme_load_icon(icons, "folder-documents-symbolic", 18, 0, NULL);
 
 	icon_voice = gtk_icon_theme_load_icon(icons, "folder-music-symbolic", 18, 0, NULL);
+
+	icon_blocked = gtk_icon_theme_load_icon(icons, "process-stop-symbolic", 18, 0, NULL);
 }
 
 GdkPixbuf *journal_get_call_icon(gint type)
@@ -170,6 +173,8 @@ GdkPixbuf *journal_get_call_icon(gint type)
 	case CALL_TYPE_VOICE:
 	case CALL_TYPE_RECORD:
 		return icon_voice;
+	case CALL_TYPE_BLOCKED:
+		return icon_blocked;
 	default:
 		g_debug("Unknown icon type: %d", type);
 		break;

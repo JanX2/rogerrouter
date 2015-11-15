@@ -213,11 +213,17 @@ static void phone_control_buttons_set_sensitive(struct phone_state *state, gbool
  */
 void phone_dial_buttons_set_dial(struct phone_state *state, gboolean allow_dial)
 {
+	struct profile *profile = profile_get_active();
+
 	gtk_widget_set_sensitive(state->pickup_button, allow_dial);
 	gtk_widget_set_sensitive(state->hangup_button, !allow_dial);
 
 	/* Toggle control buttons sensitive value */
-	phone_control_buttons_set_sensitive(state, !allow_dial);
+	if (router_get_phone_port(profile) == PORT_SOFTPHONE) {
+		phone_control_buttons_set_sensitive(state, !allow_dial);
+	} else {
+		phone_control_buttons_set_sensitive(state, FALSE);
+	}
 }
 
 /**
@@ -355,7 +361,9 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 			gchar *number;
 
 			number = g_strdup_printf("%s%s", router_get_suppress_state(profile) ? "*31#" : "", state->number);
-			router_dial_number(profile, router_get_phone_port(profile), number);
+			if (router_dial_number(profile, router_get_phone_port(profile), number)) {
+				phone_dial_buttons_set_dial(state, FALSE);
+			}
 			g_free(number);
 		}
 		break;
@@ -398,7 +406,9 @@ static void hangup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 		phone_hangup(state->connection);
 		phone_dial_buttons_set_dial(state, TRUE);
 	} else {
-		router_hangup(profile, router_get_phone_port(profile), number);
+		if (router_hangup(profile, router_get_phone_port(profile), number)) {
+			phone_dial_buttons_set_dial(state, TRUE);
+		}
 	}
 }
 

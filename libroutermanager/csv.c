@@ -119,7 +119,7 @@ gboolean csv_save_journal_as(GSList *journal, gchar *file_name)
 	for (list = journal; list; list = list->next) {
 		call = list->data;
 
-		if (call->type != CALL_TYPE_INCOMING && call->type != CALL_TYPE_OUTGOING && call->type != CALL_TYPE_MISSED) {
+		if (call->type != CALL_TYPE_INCOMING && call->type != CALL_TYPE_OUTGOING && call->type != CALL_TYPE_MISSED && call->type != CALL_TYPE_BLOCKED) {
 			continue;
 		}
 

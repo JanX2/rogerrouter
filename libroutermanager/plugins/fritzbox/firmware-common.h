@@ -82,8 +82,6 @@ gboolean fritzbox_present(struct router_info *router_info);
 gboolean fritzbox_logout(struct profile *profile, gboolean force);
 void fritzbox_read_msn(struct profile *profile, const gchar *data);
 gint fritzbox_get_dialport(gint type);
-gboolean fritzbox_dial_number_common(struct profile *profile, gint port, const gchar *number);
-gboolean fritzbox_hangup_common(struct profile *profile, gint port, const gchar *number);
 gchar *fritzbox_load_fax(struct profile *profile, const gchar *filename, gsize *len);
 gchar *fritzbox_load_voice(struct profile *profile, const gchar *filename, gsize *len);
 GSList *fritzbox_load_voicebox(GSList *journal);

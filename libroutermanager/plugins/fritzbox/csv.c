@@ -51,7 +51,15 @@ static inline gpointer csv_parse_fritzbox(gpointer ptr, gchar **split)
 		case 2:
 			call_type = CALL_TYPE_MISSED;
 			break;
-		case 3:
+		case 3: {
+			struct profile *profile = profile_get_active();
+
+			if (FIRMWARE_IS(4, 74)) {
+				call_type = CALL_TYPE_BLOCKED;
+			} else {
+				call_type = CALL_TYPE_OUTGOING;
+			}
+		}
 		case 4:
 			call_type = CALL_TYPE_OUTGOING;
 			break;

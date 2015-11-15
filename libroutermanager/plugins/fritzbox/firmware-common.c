@@ -35,7 +35,7 @@
 
 #include "fritzbox.h"
 #include "firmware-common.h"
-#include "firmware-plain.h"
+#include "firmware-04-00.h"
 
 /** phone port names */
 struct phone_port fritzbox_phone_ports[PORT_MAX] = {
@@ -394,7 +394,7 @@ gboolean fritzbox_present(struct router_info *router_info)
 		g_free(url);
 
 		if (msg->status_code == 404) {
-			ret = fritzbox_present_plain(router_info);
+			ret = fritzbox_present_04_00(router_info);
 		} else {
 			g_warning("Could not read boxinfo file (Error: %d, %s)", msg->status_code, soup_status_get_phrase(msg->status_code));
 		}
@@ -478,8 +478,10 @@ gboolean fritzbox_logout(struct profile *profile, gboolean force)
 		return FALSE;
 	}
 
-	g_timer_destroy(profile->router_info->session_timer);
-	profile->router_info->session_timer = NULL;
+	if (profile->router_info->session_timer != NULL) {
+		g_timer_destroy(profile->router_info->session_timer);
+		profile->router_info->session_timer = NULL;
+	}
 
 	g_object_unref(msg);
 	g_debug("Logout successful");
@@ -599,88 +601,6 @@ gint fritzbox_get_dialport(gint type)
 	}
 
 	return -1;
-}
-
-/**
- * \brief Dial number using ClickToDial
- * \param profile profile information structure
- * \param port dial port
- * \param number remote number
- * \return TRUE on success, otherwise FALSE
- */
-gboolean fritzbox_dial_number_common(struct profile *profile, gint port, const gchar *number)
-{
-	SoupMessage *msg;
-	gchar *port_str;
-	gchar *scramble;
-
-	/* Login to box */
-	if (fritzbox_login(profile) == FALSE) {
-		return FALSE;
-	}
-
-	/* Create POST message */
-	gchar *url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
-	port_str = g_strdup_printf("%d", fritzbox_get_dialport(port));
-
-	scramble = call_scramble_number(number);
-	g_debug("Call number '%s' on port %s...", scramble, port_str);
-	g_free(scramble);
-
-	msg = soup_form_request_new(SOUP_METHOD_POST, url,
-	                            "telcfg:settings/UseClickToDial", "1",
-	                            "telcfg:settings/DialPort", port_str,
-	                            "telcfg:command/Dial", number,
-	                            "sid", profile->router_info->session_id,
-	                            NULL);
-	g_free(port_str);
-	g_free(url);
-
-	/* Send message */
-	soup_session_send_message(soup_session_async, msg);
-	fritzbox_logout(profile, FALSE);
-
-	return TRUE;
-}
-
-
-/**
- * \brief Hangup call - common
- * \param profile profile information structure
- * \param port dial port
- * \param number remote number
- * \return TRUE on success, otherwise FALSE
- */
-gboolean fritzbox_hangup_common(struct profile *profile, gint port, const gchar *number)
-{
-	SoupMessage *msg;
-	gchar *port_str;
-
-	/* Login to box */
-	if (fritzbox_login(profile) == FALSE) {
-		return FALSE;
-	}
-
-	/* Create POST message */
-	gchar *url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
-	port_str = g_strdup_printf("%d", fritzbox_get_dialport(port));
-
-	g_debug("Hangup on port %s...", port_str);
-
-	msg = soup_form_request_new(SOUP_METHOD_POST, url,
-	                            "telcfg:settings/UseClickToDial", "1",
-	                            "telcfg:settings/DialPort", port_str,
-	                            "telcfg:command/Hangup", number,
-	                            "sid", profile->router_info->session_id,
-	                            NULL);
-	g_free(port_str);
-	g_free(url);
-
-	/* Send message */
-	soup_session_send_message(soup_session_async, msg);
-	fritzbox_logout(profile, FALSE);
-
-	return TRUE;
 }
 
 /**

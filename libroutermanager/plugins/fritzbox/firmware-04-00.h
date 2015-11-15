@@ -17,14 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef FIRMWARE_PLAIN_H
-#define FIRMWARE_PLAIN_H
+#ifndef FIRMWARE_04_00_H
+#define FIRMWARE_04_00_H
 
 G_BEGIN_DECLS
 
-gboolean fritzbox_present_plain(struct router_info *router_info);
-gboolean fritzbox_login_plain(struct profile *profile);
-gboolean fritzbox_get_settings_plain(struct profile *profile);
+gboolean fritzbox_present_04_00(struct router_info *router_info);
+gboolean fritzbox_login_04_00(struct profile *profile);
+gboolean fritzbox_dial_number_04_00(struct profile *profile, gint port, const gchar *number);
+gboolean fritzbox_hangup_04_00(struct profile *profile, gint port, const gchar *number);
 
 G_END_DECLS
 

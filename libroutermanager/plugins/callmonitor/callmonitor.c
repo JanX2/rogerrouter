@@ -114,7 +114,8 @@ gboolean callmonitor_io_cb(GIOChannel *source, GIOCondition condition, gpointer 
 	case G_IO_PRI:
 		ret = g_io_channel_read_line(source, &msg, &len, NULL, &error);
 		if (ret != G_IO_STATUS_NORMAL) {
-			g_error("Error reading: %s", error->message);
+			g_error("Error reading: %s", error ? error->message : "?");
+			break;
 		}
 
 		gchar **lines = g_strsplit(msg, "\n", -1);
@@ -231,6 +232,7 @@ again:
 
 		if (retry) {
 			router_dial_number(profile, PORT_ISDN1, "#96*5*");
+			g_usleep(G_USEC_PER_SEC * 2);
 			retry = FALSE;
 			error = NULL;
 			goto again;
