@@ -52,9 +52,6 @@
 #define UHB 1
 #endif
 
-/** Phone window */
-static GtkWidget *phone_window = NULL;
-
 gchar *phone_voice_get_title(void);
 gboolean phone_voice_init(struct contact *contact, struct connection *connection);
 void phone_voice_terminated(struct phone_state *state, struct capi_connection *connection);
@@ -137,7 +134,7 @@ static gboolean phone_status_timer_cb(gpointer data)
 		gtk_header_bar_set_subtitle(GTK_HEADER_BAR(state->header_bar), buf);
 	} else {
 		gchar *title = g_strdup_printf("%s - %s", phone_devices[state->type]->get_title(), buf);
-		gtk_window_set_title(GTK_WINDOW(phone_window), title);
+		gtk_window_set_title(GTK_WINDOW(state->window), title);
 		g_free(title);
 	}
 
@@ -278,9 +275,9 @@ void capi_connection_status_cb(AppObject *object, gint status, struct capi_conne
 /**
  * \brief Phone connection failed - Show error dialog including user support text
  */
-static void phone_connection_failed(void)
+static void phone_connection_failed(struct phone_state *state)
 {
-	GtkWidget *error_dialog = gtk_message_dialog_new(GTK_WINDOW(phone_window), GTK_DIALOG_MODAL | GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, _("Connection problem"));
+	GtkWidget *error_dialog = gtk_message_dialog_new(GTK_WINDOW(state->window), GTK_DIALOG_MODAL | GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, _("Connection problem"));
 	gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(error_dialog), _("This is most likely due to a closed CAPI port or an invalid phone number.\n\nSolution: Dial #96*3* with your phone and check your numbers within the settings"));
 
 	gtk_dialog_run(GTK_DIALOG(error_dialog));
@@ -347,13 +344,13 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	case PHONE_TYPE_VOICE:
 		if (router_get_phone_port(profile) == PORT_SOFTPHONE) {
 			if (state->connection) {
-				phone_active_call_dialog(phone_window);
+				phone_active_call_dialog(state->window);
 				return;
 			}
 			state->connection = phone_dial(state->number, router_get_suppress_state(profile));
 
 			if (!state->connection) {
-				phone_connection_failed();
+				phone_connection_failed(state);
 			} else {
 				phone_dial_buttons_set_dial(state, FALSE);
 			}
@@ -375,7 +372,7 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 			fax_window_clear(fax_ui);
 			phone_dial_buttons_set_dial(state, FALSE);
 		} else {
-			phone_connection_failed();
+			phone_connection_failed(state);
 		}
 		break;
 	}
@@ -1262,7 +1259,7 @@ static gboolean phone_window_delete_event_cb(GtkWidget *window, GdkEvent *event,
 	g_slice_free(struct phone_state, state);
 
 	phone_devices[state->type]->delete(state);
-	//phone_window = NULL;
+	state->window = NULL;
 
 	return FALSE;
 }
@@ -1467,7 +1464,7 @@ GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struc
 	state->priv = priv;
 
 	/* Create window */
-	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	state->window = window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window), phone_devices[state->type]->get_title());
 	gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
@@ -1544,7 +1541,7 @@ GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struc
 		phone_dial_buttons_set_dial(state, TRUE);
 	}
 
-	/* Show window and set phone_window */
+	/* Show window */
 	gtk_widget_show_all(window);
 
 	return window;
@@ -1557,6 +1554,7 @@ gchar *phone_voice_get_title(void)
 
 gboolean phone_voice_init(struct contact *contact, struct connection *connection)
 {
+#if 0
 	/* If there is already an open phone window, present it to the user and return */
 	if (phone_window) {
 		struct phone_state *state;
@@ -1574,6 +1572,7 @@ gboolean phone_voice_init(struct contact *contact, struct connection *connection
 		gtk_window_present(GTK_WINDOW(phone_window));
 		return FALSE;
 	}
+#endif
 
 	return TRUE;
 }
@@ -1596,7 +1595,7 @@ void phone_voice_terminated(struct phone_state *state, struct capi_connection *c
 
 void phone_voice_delete(struct phone_state *state)
 {
-	phone_window = NULL;
+	state->window = NULL;
 }
 
 void app_show_phone_window(struct contact *contact, struct connection *connection)
@@ -1604,7 +1603,12 @@ void app_show_phone_window(struct contact *contact, struct connection *connectio
 	GtkWidget *window;
 
 	window = phone_window_new(PHONE_TYPE_VOICE, contact, connection, NULL);
+
+#if 0
 	if (!phone_window) {
 		phone_window = window;
 	}
+#else
+	window = window;
+#endif
 }

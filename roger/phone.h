@@ -32,6 +32,8 @@ enum phone_type {
 };
 
 struct phone_state {
+	GtkWidget *window;
+
 	GtkWidget *child_frame;
 	GtkWidget *control_frame;
 	GtkWidget *call_frame;
