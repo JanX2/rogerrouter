@@ -52,6 +52,7 @@
 #define UHB 1
 #endif
 
+static GtkWidget *phone_window = NULL;
 gchar *phone_voice_get_title(void);
 gboolean phone_voice_init(struct contact *contact, struct connection *connection);
 void phone_voice_terminated(struct phone_state *state, struct capi_connection *connection);
@@ -1255,11 +1256,15 @@ static gboolean phone_window_delete_event_cb(GtkWidget *window, GdkEvent *event,
 	/* Disconnect all signal handlers */
 	g_signal_handlers_disconnect_by_data(app_object, state);
 
+	phone_devices[state->type]->delete(state);
+
+	if (state->window == phone_window) {
+		phone_window = NULL;
+	}
+	state->window = NULL;
+
 	/* Free phone state structure and release phone window */
 	g_slice_free(struct phone_state, state);
-
-	phone_devices[state->type]->delete(state);
-	state->window = NULL;
 
 	return FALSE;
 }
@@ -1554,7 +1559,6 @@ gchar *phone_voice_get_title(void)
 
 gboolean phone_voice_init(struct contact *contact, struct connection *connection)
 {
-#if 0
 	/* If there is already an open phone window, present it to the user and return */
 	if (phone_window) {
 		struct phone_state *state;
@@ -1572,7 +1576,6 @@ gboolean phone_voice_init(struct contact *contact, struct connection *connection
 		gtk_window_present(GTK_WINDOW(phone_window));
 		return FALSE;
 	}
-#endif
 
 	return TRUE;
 }
@@ -1595,7 +1598,6 @@ void phone_voice_terminated(struct phone_state *state, struct capi_connection *c
 
 void phone_voice_delete(struct phone_state *state)
 {
-	state->window = NULL;
 }
 
 void app_show_phone_window(struct contact *contact, struct connection *connection)
@@ -1604,11 +1606,7 @@ void app_show_phone_window(struct contact *contact, struct connection *connectio
 
 	window = phone_window_new(PHONE_TYPE_VOICE, contact, connection, NULL);
 
-#if 0
 	if (!phone_window) {
 		phone_window = window;
 	}
-#else
-	window = window;
-#endif
 }
