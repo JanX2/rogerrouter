@@ -545,7 +545,7 @@ static void lookup_add(xmlnode *node)
 	}
 
 	lookup = g_slice_alloc0(sizeof(struct lookup));
-	g_debug(" - Service: '%s', prefix: %s", service, prefix);
+	g_debug(" o Service: '%s', prefix: %s", service, prefix);
 	lookup->service = service;
 	lookup->prefix = prefix[ 0 ] == '1';
 	lookup->url = url;
