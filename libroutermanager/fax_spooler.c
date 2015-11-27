@@ -105,6 +105,7 @@ gboolean has_file_extension(const char *file, const char *ext)
  */
 static void fax_spooler_new_file_cb(GFileMonitor *monitor, GFile *file, GFile *other_file, GFileMonitorEvent event_type, gpointer user_data)
 {
+	GFileType type;
 	gchar *file_name = NULL;
 
 	g_debug("fax_spooler_new_file_cb(): event type: %d", event_type);
@@ -117,6 +118,12 @@ static void fax_spooler_new_file_cb(GFileMonitor *monitor, GFile *file, GFile *o
 
 	file_name = g_file_get_path(file);
 	g_assert(file_name != NULL);
+
+	type = g_file_query_file_type(file, G_FILE_QUERY_INFO_NONE, NULL);
+	g_debug("%s(): type: %d", __FUNCTION__, type);
+	if (type != G_FILE_TYPE_REGULAR) {
+		return;
+	}
 
 	/* Sort out invalid files */
 	if (has_file_extension(file_name, ".tmp") || has_file_extension(file_name, ".tif") || has_file_extension(file_name, ".sff")) {
