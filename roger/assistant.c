@@ -93,8 +93,6 @@ GtkWidget *welcome_page(struct assistant_priv *priv)
 
 gboolean welcome_pre(struct assistant_priv *priv)
 {
-	g_debug("%s(): called", __FUNCTION__);
-	gtk_widget_set_sensitive(priv->back, FALSE);
 	gtk_widget_grab_focus(priv->next);
 
 	return FALSE;
@@ -127,7 +125,7 @@ static void profile_entry_changed(GtkEditable *entry, struct assistant_priv *pri
 gboolean profile_pre(struct assistant_priv *priv)
 {
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(priv->profile_name));
-	g_debug("%s(): called", __FUNCTION__);
+
 	gtk_widget_set_sensitive(priv->next, !EMPTY_STRING(text));
 	gtk_widget_grab_focus(priv->profile_name);
 
@@ -277,7 +275,6 @@ GtkWidget *router_page(struct assistant_priv *priv)
 
 gboolean router_pre(struct assistant_priv *priv)
 {
-	g_debug("%s(): called", __FUNCTION__);
 	gtk_widget_set_sensitive(priv->next, FALSE);
 	g_idle_add(scan, router_listbox);
 
@@ -288,8 +285,6 @@ gboolean router_post(struct assistant_priv *priv)
 {
 	struct router_info router_info;
 	const gchar *server;
-
-	g_debug("%s(): called", __FUNCTION__);
 
 	if (!strcmp(gtk_stack_get_visible_child_name(GTK_STACK(priv->router_stack)), "Manual")) {
 		server = gtk_entry_get_text(GTK_ENTRY(priv->server));
@@ -509,11 +504,8 @@ gboolean finish_pre(struct assistant_priv *priv)
 		g_settings_set_string(priv->profile->settings, "phone-number", numbers[0]);
 	}
 
-	g_debug("Adding profile");
 	profile_add(priv->profile);
-	g_debug("Commit profile");
 	profile_commit();
-	g_debug("Reconnect monitor");
 	net_monitor_reconnect();
 
 	return FALSE;
@@ -535,12 +527,17 @@ void back_button_clicked_cb(GtkWidget *next, gpointer user_data)
 	struct assistant_priv *priv = g_object_get_data(G_OBJECT(stack), "priv");
 
 	if (priv->current_page <= 0) {
+		gtk_widget_destroy(priv->assistant);
 		return;
 	}
 
 	priv->current_page--;
 	if (priv->current_page == priv->max_page - 2) {
 		gtk_button_set_label(GTK_BUTTON(priv->next), _("Next"));
+	}
+
+	if (priv->current_page == 0) {
+		gtk_button_set_label(GTK_BUTTON(priv->back), _("Quit"));
 	}
 
 	gtk_widget_set_sensitive(priv->next, TRUE);
@@ -558,6 +555,8 @@ void next_button_clicked_cb(GtkWidget *next, gpointer user_data)
 {
 	GtkWidget *stack = user_data;
 	struct assistant_priv *priv = g_object_get_data(G_OBJECT(stack), "priv");
+
+	gtk_button_set_label(GTK_BUTTON(priv->back), _("Back"));
 
 	if (assistant_pages[priv->current_page].post) {
 		if (!assistant_pages[priv->current_page].post(priv)) {
@@ -607,8 +606,7 @@ void assistant()
 	gtk_header_bar_set_title(GTK_HEADER_BAR(header), _("Setup Wizard"));
 	gtk_window_set_titlebar(GTK_WINDOW(window), header);
 
-	back_button = gtk_button_new_with_label(_("Back"));
-	gtk_widget_set_sensitive(back_button, FALSE);
+	back_button = gtk_button_new_with_label(_("Quit"));
 	gtk_header_bar_pack_start(GTK_HEADER_BAR(header), back_button);
 	priv->back = back_button;
 
@@ -628,7 +626,6 @@ void assistant()
 	for (i = 0; assistant_pages[i].create_child != NULL; i++) {
 		GtkWidget *child = assistant_pages[i].create_child(priv);
 
-		g_debug("Adding %s", assistant_pages[i].name);
 		gtk_stack_add_named(GTK_STACK(stack), child, assistant_pages[i].name);
 	}
 
@@ -638,7 +635,6 @@ void assistant()
 	g_signal_connect(back_button, "clicked", G_CALLBACK(back_button_clicked_cb), stack);
 	g_signal_connect(next_button, "clicked", G_CALLBACK(next_button_clicked_cb), stack);
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
-	//gtk_window_set_default_size(GTK_WINDOW(window), 300, 300);
 
 	gtk_window_set_modal(GTK_WINDOW(window), TRUE);
 	gtk_widget_show_all(window);

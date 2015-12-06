@@ -30,6 +30,8 @@ GtkWidget *ui_label_new(gchar *text);
 gchar *ui_bold_text(gchar *text);
 void gtk_widget_set_margin(GtkWidget *widget, gint x1, gint y1, gint x2, gint y2);
 void ui_set_suggested_style(GtkWidget *widget);
+void ui_set_destructive_style(GtkWidget *widget);
+void ui_set_button_style(GtkWidget *widget);
 
 G_END_DECLS
 

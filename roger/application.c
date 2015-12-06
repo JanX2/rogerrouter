@@ -50,6 +50,7 @@ struct cmd_line_option_state {
 	gboolean start_hidden;
 	gboolean quit;
 	gchar *number;
+	gboolean assistant;
 };
 
 static struct cmd_line_option_state option_state;
@@ -350,6 +351,7 @@ const GOptionEntry all_options[] = {
 	{"quit", 'q', 0, G_OPTION_ARG_NONE, &option_state.quit, "Quit", NULL},
 	{"call", 'c', 0, G_OPTION_ARG_STRING, &option_state.number, "Remote phone number", NULL},
 	{"version", 0, G_OPTION_FLAG_NO_ARG | G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_CALLBACK, option_version_cb, NULL, NULL},
+	{"assistant", 'a', 0, G_OPTION_ARG_NONE, &option_state.assistant, "Start assistant", NULL},
 	{NULL}
 };
 
@@ -419,6 +421,10 @@ static gint application_command_line_cb(GtkApplication *app, GApplicationCommand
 
 		app_show_phone_window(contact, NULL);
 		g_free(full_number);
+	}
+
+	if (option_state.assistant) {
+		assistant();
 	}
 
 	g_strfreev(argv);

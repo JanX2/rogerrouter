@@ -57,3 +57,16 @@ void ui_set_suggested_style(GtkWidget *widget)
 	gtk_style_context_add_class(gtk_widget_get_style_context(widget), GTK_STYLE_CLASS_SUGGESTED_ACTION);
 #endif
 }
+
+void ui_set_destructive_style(GtkWidget *widget)
+{
+#ifdef GTK_STYLE_CLASS_DESTRUCTIVE_ACTION
+	gtk_style_context_add_class(gtk_widget_get_style_context(widget), GTK_STYLE_CLASS_DESTRUCTIVE_ACTION);
+#endif
+}
+void ui_set_button_style(GtkWidget *widget)
+{
+#ifdef GTK_STYLE_CLASS_BUTTON_ACTION
+	gtk_style_context_add_class(gtk_widget_get_style_context(widget), GTK_STYLE_CLASS_BUTTON_ACTION);
+#endif
+}
