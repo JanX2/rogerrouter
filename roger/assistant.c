@@ -197,10 +197,14 @@ static GtkWidget *router_listbox;
 void router_row_selected_cb(GtkListBox *box, GtkListBoxRow *row, gpointer user_data)
 {
 	struct assistant_priv *priv = user_data;
-	GtkWidget *child = gtk_container_get_children(GTK_CONTAINER(row))->data;
-	gchar *host = g_object_get_data(G_OBJECT(child), "host");
+	GtkWidget *child;
 
-	g_object_set_data(G_OBJECT(priv->router_stack), "server", host);
+	if (row != NULL) {
+		child = gtk_container_get_children(GTK_CONTAINER(row))->data;
+		gchar *host = g_object_get_data(G_OBJECT(child), "host");
+		g_object_set_data(G_OBJECT(priv->router_stack), "server", host);
+	}
+
 	gtk_widget_set_sensitive(priv->next, TRUE);
 }
 
