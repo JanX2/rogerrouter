@@ -32,11 +32,8 @@ static void device_proxy_available_cb(GUPnPControlPoint *cp, GUPnPDeviceProxy *p
 	GUPnPDeviceInfo *info = GUPNP_DEVICE_INFO(proxy);
 	const SoupURI *uri;
 
-	 g_debug("%s(): %s", __FUNCTION__, gupnp_device_info_get_model_name(info));
-
 	uri = gupnp_device_info_get_url_base(info);
 	router_info->host = g_strdup(soup_uri_get_host((SoupURI*)uri));
-	g_debug("%s(): %s", __FUNCTION__, router_info->host);
 
 	/* Scan for router and add detected devices */
 	if (router_present(router_info) == TRUE) {
@@ -46,7 +43,7 @@ static void device_proxy_available_cb(GUPnPControlPoint *cp, GUPnPDeviceProxy *p
 
 static void device_proxy_unavailable_cb(GUPnPControlPoint *cp, GUPnPDeviceProxy *proxy)
 {
-	 g_debug("%s(): %s", __FUNCTION__, gupnp_device_info_get_model_name(GUPNP_DEVICE_INFO(proxy)));
+	g_debug("%s(): %s", __FUNCTION__, gupnp_device_info_get_model_name(GUPNP_DEVICE_INFO(proxy)));
 }
 
 GList *ssdp_get_routers(void)
@@ -56,7 +53,6 @@ GList *ssdp_get_routers(void)
 
 		/* Fallback - In case no routers have been detected, try at least fritz.box manually */
 		router_info->host = g_strdup("fritz.box");
-		g_debug("%s(): %s", __FUNCTION__, router_info->host);
 
 		/* Scan for router and add detected devices */
 		if (router_present(router_info) == TRUE) {
