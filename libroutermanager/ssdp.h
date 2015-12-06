@@ -17,38 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_ROUTERMANAGER_H
-#define LIBROUTERMANAGER_ROUTERMANAGER_H
+#ifndef LIBROUTERMANAGER_SSDP_H
+#define LIBROUTERMANAGER_SSDP_H
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#include <glib.h>
-
-G_BEGIN_DECLS
-
-#define _(text) gettext(text)
-
-#define ROUTERMANAGER_SCHEME "org.tabos.routermanager"
-#define ROUTERMANAGER_SCHEME_PROFILE "org.tabos.routermanager.profile"
-#define ROUTERMANAGER_SCHEME_PROFILE_ACTION "org.tabos.routermanager.profile.action"
-
-#define ROUTERMANAGER_PATH "/org/tabos/routermanager/"
-
-#define RM_ERROR rm_print_error_quark()
-
-typedef enum {
-	RM_ERROR_FAX,
-	RM_ERROR_ROUTER,
-	RM_ERROR_AUDIO,
-} rm_error;
-
-GQuark rm_print_error_quark(void);
-gboolean routermanager_init(gboolean debug, GError **error);
-void routermanager_shutdown(void);
-gchar *get_directory(gchar *type);
-
-G_END_DECLS
+void ssdp_init(void);
+GList *ssdp_get_routers(void);
 
 #endif

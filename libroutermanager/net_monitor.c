@@ -20,6 +20,7 @@
 #include <gio/gio.h>
 #include <libroutermanager/net_monitor.h>
 #include <libroutermanager/profile.h>
+#include <libroutermanager/ssdp.h>
 
 /** Internal network event list */
 static GSList *net_event_list = NULL;
@@ -185,6 +186,8 @@ gboolean net_monitor_init(void)
 
 	/* Connect signal handler */
 	g_signal_connect(monitor, "network-changed", G_CALLBACK(net_monitor_changed_cb), NULL);
+
+	ssdp_init();
 
 #if GLIB_CHECK_VERSION(2,44,0)
 	net_monitor_state_changed(g_network_monitor_get_connectivity(monitor) != G_NETWORK_CONNECTIVITY_LOCAL);

@@ -74,6 +74,8 @@ libroutermanager_la_SOURCES = \
 	router.h\
 	settings.c\
 	settings.h\
+	ssdp.c\
+	ssdp.h\
 	voxplay.c\
 	voxplay.h\
 	xml.c\
