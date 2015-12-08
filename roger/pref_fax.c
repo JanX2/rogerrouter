@@ -158,7 +158,7 @@ GtkWidget *pref_page_fax(void)
 	gtk_grid_attach(GTK_GRID(report_grid), report_dir_label, 0, 1, 1, 1);
 
 	/* Currently the file chooser button implementation is buggy and therefore we will use a workaround (entry + button) */
-#if 0
+#if 1
 	GtkWidget *report_dir;
 	report_dir = gtk_file_chooser_button_new(_("Select report directory"), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
 	gtk_widget_set_hexpand(report_dir, TRUE);

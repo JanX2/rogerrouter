@@ -60,7 +60,11 @@ static void type_box_changed_cb(GtkWidget *widget, gpointer next)
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Outgoing"));
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Voice box"));
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Fax box"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Fax Report"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Record"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Blocked"));
 		gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 0);
+
 		if (entry != NULL) {
 			gtk_widget_set_sensitive(entry, FALSE);
 		}

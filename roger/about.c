@@ -62,7 +62,7 @@ void app_show_about(void)
 
 	gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(dialog), PACKAGE_NAME);
 	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog), PACKAGE_VERSION);
-	gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog), "(C) 2012-2014, Jan-Michael Brummer <jan.brummer@tabos.org>");
+	gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog), "(C) 2012-2015, Jan-Michael Brummer <jan.brummer@tabos.org>");
 	gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog), _("FRITZ!Box Journal, Soft/phone, and Fax\nDedicated to my father"));
 	gtk_about_dialog_set_license_type(GTK_ABOUT_DIALOG(dialog), GTK_LICENSE_GPL_2_0);
 	gtk_about_dialog_set_wrap_license(GTK_ABOUT_DIALOG(dialog), TRUE);
