@@ -59,6 +59,7 @@ static inline gpointer csv_parse_fritzbox(gpointer ptr, gchar **split)
 			} else {
 				call_type = CALL_TYPE_OUTGOING;
 			}
+			break;
 		}
 		case 4:
 			call_type = CALL_TYPE_OUTGOING;
