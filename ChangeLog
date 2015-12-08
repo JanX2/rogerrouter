@@ -1,3 +1,14 @@
+roger - 1.8.14
+------------------------------------------------------------------------------------------------------------------
+* Support for old FRITZ!Box routers <= xx.04.74
+* Add international journal support
+* SSDP: Automatic router detection
+* Enable fax report directory selection
+* Add blocking call support
+* Add missing filters to preferences view
+* Fixes hard-coded fritz.box references to allow to configure more than one router in a net
+* Fix dial state button handling
+
 roger - 1.8.13
 ------------------------------------------------------------------------------------------------------------------
 * Add OSX address book plugin
