@@ -208,7 +208,7 @@ gboolean fritzbox_get_fax_information_06_35(struct profile *profile)
 
 		/* <td id="/var/media/ftp/PatriotMemory-01"> */
 
-		regex_str = g_strdup_printf("<td id=\"/var/media/ftp/(?P<volume>(\\w|\\d|-)+)\">");
+		regex_str = g_strdup_printf("<td id=\"/var/media/ftp/(?P<volume>(\\w|\\s|\\d|-)+)\"");
 		error = NULL;
 
 		regex = g_regex_new(regex_str, 0, 0, &error);
