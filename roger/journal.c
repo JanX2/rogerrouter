@@ -473,8 +473,9 @@ void journal_add_contact(struct call *call)
 	gboolean new_entry = FALSE;
 
 	GtkWidget *dialog;
+	gboolean use_header = roger_uses_headerbar();
 
-	dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", TRUE, NULL);
+	dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", use_header, NULL);
 
 	gtk_window_set_title(GTK_WINDOW(dialog), _("Contact"));
 	gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);

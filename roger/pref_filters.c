@@ -290,6 +290,7 @@ void filter_edit_cb(GtkWidget *widget, gpointer data)
 	GValue ptr = {0};
 	GtkListStore *list_store;
 	gint result;
+	gboolean use_header = roger_uses_headerbar();
 
 	if (!gtk_tree_selection_get_selected(selection, &model, &selected_iter)) {
 		return;
@@ -302,7 +303,7 @@ void filter_edit_cb(GtkWidget *widget, gpointer data)
 
 	//dialog = gtk_dialog_new_with_buttons(_("Edit filter"), pref_get_window(), GTK_DIALOG_DESTROY_WITH_PARENT, _("_Close"), GTK_RESPONSE_CLOSE, NULL);
 
-	dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", TRUE, NULL);
+	dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", use_header, NULL);
 
 	gtk_window_set_title(GTK_WINDOW(dialog), _("Edit filter"));
 	gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
@@ -396,11 +397,12 @@ void filter_add_cb(GtkWidget *widget, gpointer data)
 	GtkTreeModel *model;
 	struct filter *filter;
 	gint result;
+	gboolean use_header = roger_uses_headerbar();
 
 	pref_filters_current_rules = NULL;
 	//dialog = gtk_dialog_new_with_buttons(_("Add new filter"), pref_get_window(), GTK_DIALOG_DESTROY_WITH_PARENT, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_OK"), GTK_RESPONSE_OK, NULL);
 
-	dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", TRUE, NULL);
+	dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", use_header, NULL);
 
 	gtk_window_set_title(GTK_WINDOW(dialog), _("New filter"));
 	gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
