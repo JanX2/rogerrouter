@@ -28,7 +28,6 @@ roger - 1.8.13
 * Fix: Fax report resolution changed from A4 to A1
 * Fix: scramble number
 
-
 roger - 1.8.12
 ------------------------------------------------------------------------------------------------------------------
 * UI redesign #1 using header bar and respecting human interface guidelines
