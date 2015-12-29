@@ -23,6 +23,7 @@
 #include <ctype.h>
 
 #include <glib.h>
+#include <json-glib/json-glib.h>
 
 #include <libroutermanager/profile.h>
 #include <libroutermanager/file.h>
@@ -486,6 +487,52 @@ gboolean fritzbox_get_settings_06_35(struct profile *profile)
 	return TRUE;
 }
 
+static gint fritzbox_get_dial_port(struct profile *profile)
+{
+	JsonParser *parser;
+	JsonReader *reader;
+	SoupMessage *msg;
+	gchar *url;
+	const gchar *data;
+	const gchar *port_str;
+	gsize read;
+	gint port;
+
+	url = g_strdup_printf("http://%s/query.lua", router_get_host(profile));
+	msg = soup_form_request_new(SOUP_METHOD_GET, url,
+	                            "sid", profile->router_info->session_id,
+	                             "DialPort", "telcfg:settings/DialPort",
+	                            NULL);
+	/* Send message */
+	soup_session_send_message(soup_session_async, msg);
+	if (msg->status_code != 200) {
+		g_debug("Received status code: %d", msg->status_code);
+		g_object_unref(msg);
+		return -1;
+	}
+
+	data = msg->response_body->data;
+	read = msg->response_body->length;
+
+	log_save_data("fritzbox-06_35-get-dial-port.html", data, read);
+
+	parser = json_parser_new();
+	json_parser_load_from_data(parser, data, read, NULL);
+
+	reader = json_reader_new(json_parser_get_root(parser));
+
+	json_reader_read_member(reader, "DialPort");
+	port_str = json_reader_get_string_value(reader);
+
+	port = atoi(port_str);
+
+	g_object_unref(reader);
+	g_object_unref(parser);
+
+	return port;
+}
+
+
 /**
  * \brief Dial number using new ui format
  * \param profile profile information structure
@@ -499,17 +546,43 @@ gboolean fritzbox_dial_number_06_35(struct profile *profile, gint port, const gc
 	gchar *port_str;
 	gchar *url;
 	gchar *scramble;
+	gint current_port;
+	gint router_port;
 
 	/* Login to box */
 	if (fritzbox_login(profile) == FALSE) {
 		return FALSE;
 	}
 
-	/* Create GET message */
-	port_str = g_strdup_printf("%d", fritzbox_get_dialport(port));
+	current_port = fritzbox_get_dial_port(profile);
+	g_debug("Current dial port: %d", current_port);
 
+	router_port = fritzbox_get_dialport(port);
+
+	if (current_port != router_port) {
+		g_debug("Setting dial port %d", router_port);
+
+		port_str = g_strdup_printf("%d", fritzbox_get_dialport(port));
+		url = g_strdup_printf("http://%s/fon_num/dial_fonbook.lua", router_get_host(profile));
+		msg = soup_form_request_new(SOUP_METHOD_POST, url,
+		                            "sid", profile->router_info->session_id,
+		                            "clicktodial", "on",
+		                            "port", port_str,
+		                            "btn_apply", "",
+		                            NULL);
+		soup_session_send_message(soup_session_async, msg);
+		g_free(port_str);
+
+		current_port = fritzbox_get_dial_port(profile);
+		if (current_port != router_port) {
+			g_debug("Could not set dial port");
+			return FALSE;
+		}
+	}
+
+	/* Create GET message */
 	scramble = call_scramble_number(number);
-	g_debug("Call number '%s' on port %s...", scramble, port_str);
+	g_debug("Call number '%s' on port %d...", scramble, current_port);
 	g_free(scramble);
 
 	url = g_strdup_printf("http://%s/fon_num/foncalls_list.lua", router_get_host(profile));
@@ -518,10 +591,9 @@ gboolean fritzbox_dial_number_06_35(struct profile *profile, gint port, const gc
 	                            "dial", number,
 	                            NULL);
 	g_free(url);
-	g_free(port_str);
 
 	/* Send message */
-	soup_session_send_message(soup_session_async, msg);
+	//soup_session_send_message(soup_session_async, msg);
 	fritzbox_logout(profile, FALSE);
 
 	return TRUE;

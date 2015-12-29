@@ -22,6 +22,6 @@ libfritzbox_la_SOURCES = \
 	csv.c \
 	csv.h
 
-libfritzbox_la_CFLAGS = $(plugin_cflags) $(SOUP_CFLAGS)
+libfritzbox_la_CFLAGS = $(plugin_cflags) $(SOUP_CFLAGS) $(EXTRA_CFLAGS)
 libfritzbox_la_LDFLAGS = $(plugin_ldflags)
-libfritzbox_la_LIBADD  = $(plugin_libadd) $(SOUP_LIBS)
+libfritzbox_la_LIBADD  = $(plugin_libadd) $(SOUP_LIBS) $(EXTRA_LIBS)
