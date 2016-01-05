@@ -135,7 +135,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 #endif
 	SoupURI *uri = soup_uri_new(url);
 	msg = soup_message_new_from_uri(SOUP_METHOD_GET, uri);
-	soup_message_headers_append (msg->request_headers, "User-Agent", "Mozilla/5.0 (Fedora; Linux x86_64)");
+	soup_message_headers_append (msg->request_headers, "User-Agent", "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)");
 
 	soup_session_send_message(soup_session_sync, msg);
 	soup_uri_free(uri);
