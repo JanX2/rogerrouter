@@ -104,6 +104,7 @@ int _stdcall WinMain(struct HINSTANCE__ *hInstance, struct HINSTANCE__ *hPrevIns
 	HMODULE hmod;
 	BOOL debug = FALSE, help = FALSE;
 	int i;
+	int result;
 
 	/* If debug or help or version flag used, create console for output */
 	for (i = 1; i < __argc; i++) {
@@ -181,5 +182,10 @@ int _stdcall WinMain(struct HINSTANCE__ *hInstance, struct HINSTANCE__ *hPrevIns
 	roger_argv = __argv;
 
 	/* Call main application function */
-	return roger_main(hInstance, roger_argc, roger_argv);
+	result = roger_main(hInstance, roger_argc, roger_argv);
+
+	/* Force exit */
+	ExitProcess(result);
+
+	return result;
 }
