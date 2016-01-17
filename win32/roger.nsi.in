@@ -67,8 +67,8 @@ FunctionEnd
 Section -Prerequisites
 	SetOutPath $INSTDIR\3rdparty
 	MessageBox MB_YESNO "Ghostscript is needed for the fax transfer. Do you want to install it?" /SD IDYES IDNO endGhostscript
-		File "packages\gs915w32.exe"
-		ExecWait "$INSTDIR\3rdparty\gs915w32.exe"
+		File "packages\gs916w32.exe"
+		ExecWait "$INSTDIR\3rdparty\gs916w32.exe"
 	endGhostscript:
 SectionEnd
 
@@ -109,7 +109,7 @@ Section RogerRouter
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libsndfile-1.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libspeex-1.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libxml2-2.dll"
-	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/pango-querymodules.exe"
+	;File "/usr/i686-w64-mingw32/sys-root/mingw/bin/pango-querymodules.exe"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/gdk-pixbuf-query-loaders.exe"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/zlib1.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libjasper-1.dll"
@@ -132,10 +132,31 @@ Section RogerRouter
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgirepository-1.0-1.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libsoup-2.4-1.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libsqlite3-0.dll"
-	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgstreamer-1.0-0.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libcroco-0.6-3.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/librsvg-2-2.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libwinpthread-1.dll"
+
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgssdp-1.0-3.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgupnp-1.0-4.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libjson-glib-1.0-0.dll"
+
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgstreamer-1.0-0.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgstallocators-1.0-0.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgstaudio-1.0-0.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgstcontroller-1.0-0.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgstnet-1.0-0.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgstreamer-1.0-0.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgstrtp-1.0-0.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgstsdp-1.0-0.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgstvideo-1.0-0.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgstapp-1.0-0.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgstbase-1.0-0.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgstfft-1.0-0.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgstpbutils-1.0-0.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgstriff-1.0-0.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgstrtsp-1.0-0.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libgsttag-1.0-0.dll"
+
 
 	; Install data files
 	SetOutPath "$INSTDIR\etc"
@@ -148,21 +169,17 @@ Section RogerRouter
 
 	SetOutPath "$INSTDIR\lib"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/gtk-3.0"
-	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/pango"
+	;File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/pango"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/gdk-pixbuf-2.0"
 
 	SetOutPath "$INSTDIR\lib\capi"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/capi/*fritz*.dll"
 
 	SetOutPath "$INSTDIR\lib\roger"
-	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/roger/plugins/*.dll"
-	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/roger/plugins/*.plugin"
+	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/roger/"
 
 	SetOutPath "$INSTDIR\lib\routermanager"
-	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/routermanager/plugins/*.dll"
-	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/routermanager/plugins/*.plugin"
-	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/routermanager/plugins/*.csv"
-	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/routermanager/plugins/*.xml"
+	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/routermanager/"
 
 	SetOutPath "$INSTDIR\share\"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/share/roger"
@@ -188,7 +205,7 @@ Section RogerRouter
 
 	SetOutPath "$INSTDIR"
 	DetailPrint "Creating loaders.cache"
-	nsExec::ExecToLog '"$0" /C .\pango-querymodules.exe > etc\pango\pango.modules'
+	;nsExec::ExecToLog '"$0" /C .\pango-querymodules.exe > etc\pango\pango.modules'
 	nsExec::ExecToLog '"$0" /C .\gdk-pixbuf-query-loaders.exe > lib\gdk-pixbuf-2.0\2.10.0\loaders.cache'
 
 	WriteUninstaller "$INSTDIR\uninstall.exe"
