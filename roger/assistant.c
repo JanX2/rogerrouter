@@ -286,7 +286,7 @@ gboolean router_post(struct assistant_priv *priv)
 	struct router_info router_info;
 	const gchar *server;
 
-	if (!strcmp(gtk_stack_get_visible_child_name(GTK_STACK(priv->router_stack)), "Manual")) {
+	if (!strcmp(gtk_stack_get_visible_child_name(GTK_STACK(priv->router_stack)), _("Manual"))) {
 		server = gtk_entry_get_text(GTK_ENTRY(priv->server));
 		g_object_set_data(G_OBJECT(priv->router_stack), "server", (gchar*)server);
 	} else {
