@@ -34,7 +34,9 @@ if WITH_LIBNOTIFY
 SUBDIRS += notification
 endif
 
+if !WIN32
 if WITH_GNOTIFICATION
 SUBDIRS += gnotification
+endif
 endif
 
