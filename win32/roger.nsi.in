@@ -4,10 +4,22 @@
 !define PACKAGE_PUBLISHER "The Tabos Team"
 !define PACKAGE_WEB_SITE "http://www.tabos.org"
 
-XPStyle on
-
 ; Include Modern UI
 !include "MUI2.nsh"
+
+; MUI Settings / Icons
+!define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\orange-install.ico"
+!define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\orange-uninstall.ico"
+ 
+; MUI Settings / Header
+!define MUI_HEADERIMAGE
+!define MUI_HEADERIMAGE_RIGHT
+!define MUI_HEADERIMAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Header\orange-r.bmp"
+!define MUI_HEADERIMAGE_UNBITMAP "${NSISDIR}\Contrib\Graphics\Header\orange-uninstall-r.bmp"
+ 
+; MUI Settings / Wizard
+!define MUI_WELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\orange.bmp"
+!define MUI_UNWELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\orange-uninstall.bmp"
 
 Name "${PACKAGE_NAME} ${PACKAGE_VERSION}"
 OutFile "${PACKAGE_NAME}-${PACKAGE_VERSION}.exe"
@@ -18,15 +30,11 @@ SetCompressor /SOLID lzma
 RequestExecutionLevel admin
 
 !define MUI_ABORTWARNING
-!define MUI_ICON	"roger.ico"
-!define MUI_UNICON	"roger.ico"
 
 !define MUI_LANGDLL_ALLLANGUAGES
 
 ; Set default installation directory
 InstallDir "$PROGRAMFILES\${PACKAGE_NAME}"
-
-BrandingText "The Tabos Team"
 
 ; Pages
 ; Welcome page
@@ -50,9 +58,8 @@ BrandingText "The Tabos Team"
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
 
-!insertmacro MUI_LANGUAGE "English" ;first language is the default language
-!insertmacro MUI_LANGUAGE "German"
-!insertmacro MUI_LANGUAGE "Dutch"
+!insertmacro MUI_LANGUAGE "German" ;first language is the default language
+!insertmacro MUI_LANGUAGE "English"
 
 !insertmacro MUI_RESERVEFILE_LANGDLL
 
@@ -181,6 +188,9 @@ Section RogerRouter
 	SetOutPath "$INSTDIR\lib\routermanager"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/routermanager/"
 
+	SetOutPath "$INSTDIR\lib\gstreamer-1.0"
+	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/gstreamer-1.0/"
+
 	SetOutPath "$INSTDIR\share\"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/share/roger"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/share/glib-2.0"
@@ -219,9 +229,7 @@ Section RogerRouter
 SectionEnd
 
 Section "Start Menu Shortcuts"
-	CreateDirectory "$SMPROGRAMS\RogerRouter"
-	CreateShortCut "$SMPROGRAMS\RogerRouter\Uninstall.lnk" "$INSTDIR\uninstall.exe"
-	CreateShortCut "$SMPROGRAMS\RogerRouter\RogerRouter.lnk" "$INSTDIR\roger.exe"
+	CreateShortCut "$SMPROGRAMS\RogerRouter.lnk" "$INSTDIR\roger.exe"
 SectionEnd
 
 Section "Desktop Icons"
