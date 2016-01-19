@@ -119,7 +119,7 @@ static void preferences_activated(GSimpleAction *action, GVariant *parameter, gp
 
 static void donate_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
-	os_execute("http://www.tabos.org/roger");
+	os_execute("http://www.tabos.org/");
 }
 
 static void forum_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
