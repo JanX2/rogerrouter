@@ -910,8 +910,6 @@ gchar *fritzbox_get_ip(struct profile *profile)
 		return NULL;
 	}
 
-	g_debug("buffer: %s\n\n", msg->response_body->data);
-
 	ip = xml_extract_tag(msg->response_body->data, "NewExternalIPAddress");
 
 	g_object_unref(msg);
