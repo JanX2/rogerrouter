@@ -62,24 +62,12 @@
 
 <!-- libroutermanager plugins -->
   <binary>
-    ${prefix}/lib/routermanager/plugins/areacodes_global/*
-  </binary>
-  <binary>
-    ${prefix}/lib/routermanager/plugins/callmonitor/*
-  </binary>
-  <binary>
-    ${prefix}/lib/routermanager/plugins/fritzbox/*
-  </binary>
-  <binary>
-    ${prefix}/lib/routermanager/plugins/portaudio/*
-  </binary>
-  <binary>
-    ${prefix}/lib/routermanager/plugins/reverselookup/*
+    ${prefix}/lib/routermanager/*
   </binary>
 
 <!-- roger plugins -->
   <binary>
-    ${prefix}/lib/roger/plugins/*
+    ${prefix}/lib/roger/*
   </binary>
 
 <!-- capi20  plugins -->
