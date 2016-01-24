@@ -246,17 +246,17 @@ static void app_init(GtkApplication *app)
 #if GTK_CHECK_VERSION(3,14,0)
 	const gchar *accels[] = {NULL, NULL, NULL, NULL};
 
-	accels[0] = "<Control>p";
+	accels[0] = "<Primary>p";
 	gtk_application_set_accels_for_action(app, "app.phone", accels);
 
-	accels[0] = "<Control>c";
+	accels[0] = "<Primary>c";
 	gtk_application_set_accels_for_action(app, "app.addressbook", accels);
 
-	accels[0] = "<Control>q";
-	accels[1] = "<Control>w";
+	accels[0] = "<Primary>q";
+	accels[1] = "<Primary>w";
 	gtk_application_set_accels_for_action(app, "app.quit", accels);
 
-	accels[0] = "<Control>s";
+	accels[0] = "<Primary>s";
 	gtk_application_set_accels_for_action(app, "app.preferences", accels);
 #else
 	gtk_application_add_accelerator(app, "<Control>p", "app.phone", NULL);
