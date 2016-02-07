@@ -19,6 +19,7 @@
 
 #ifndef LIBROUTERMANAGER_OSDEP_H
 #define LIBROUTERMANAGER_OSDEP_H
+
 #ifdef G_OS_WIN32
 #define OS_OPEN "start"
 #define APP_USER_DIR APP_NAME

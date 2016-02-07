@@ -593,7 +593,7 @@ gboolean fritzbox_dial_number_06_35(struct profile *profile, gint port, const gc
 	g_free(url);
 
 	/* Send message */
-	//soup_session_send_message(soup_session_async, msg);
+	soup_session_send_message(soup_session_async, msg);
 	fritzbox_logout(profile, FALSE);
 
 	return TRUE;
