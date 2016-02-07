@@ -245,13 +245,19 @@ static void *gstreamer_open(void)
 			}
 		}
 
-		if (!output_device || !input_device) {
-			g_warning("Audio device not found!");
-			return NULL;
+		if (output_device) {
+			audio_sink = gst_device_create_element(output_device, NULL);
+		} else {
+			g_warning("Could not get requested audio output device, falling back to default");
+			audio_sink = gst_element_factory_make("autoaudiosink", NULL);
 		}
 
-		audio_sink = gst_device_create_element(output_device, NULL);
-		audio_source = gst_device_create_element(input_device, NULL);
+		if (input_device) {
+			audio_source = gst_device_create_element(input_device, NULL);
+		} else {
+			g_warning("Could not get requested audio input device, falling back to default");
+			audio_source = gst_element_factory_make("autoaudiosrc", NULL);
+		}
 	} else {
 		g_debug("%s(): Using auto audio src/sink", __FUNCTION__);
 		audio_sink = gst_element_factory_make("autoaudiosink", NULL);
