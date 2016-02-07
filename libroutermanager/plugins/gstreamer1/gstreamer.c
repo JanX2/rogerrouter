@@ -246,7 +246,8 @@ static void *gstreamer_open(void)
 		}
 
 		if (!output_device || !input_device) {
-			g_error("Audio device not found!");
+			g_warning("Audio device not found!");
+			return NULL;
 		}
 
 		audio_sink = gst_device_create_element(output_device, NULL);
