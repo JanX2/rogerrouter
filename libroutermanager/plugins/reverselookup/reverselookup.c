@@ -277,7 +277,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 
 		if (lookup->zip_len) {
 			*zip = g_strndup(*city, lookup->zip_len);
-			strcpy(*city, *city + lookup->zip_len + 1);
+			memmove(*city, *city + lookup->zip_len + 1, strlen(*city) - lookup->zip_len + 1);
 		}
 	}
 
