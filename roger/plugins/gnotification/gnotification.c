@@ -66,6 +66,7 @@ static gboolean gnotification_close(gpointer notification)
 gboolean gnotification_show(struct connection *connection, struct contact *contact)
 {
 	GNotification *notify = NULL;
+	GIcon *icon;
 	gchar *title;
 	gchar *text = NULL;
 	gchar *map = NULL;
@@ -90,7 +91,7 @@ gboolean gnotification_show(struct connection *connection, struct contact *conta
 	}
 
 	/* Create notification message */
-	text = g_markup_printf_escaped(_("Name:\t\t%s\nNumber:\t\t%s\nCompany:\t%s\nStreet:\t\t%s\nCity:\t\t%s%s%s\nMap:\t\t%s"),
+	text = g_markup_printf_escaped(_("Name:\t\t%s\nNumber:\t\t%s\nCompany:\t%s\nStreet:\t\t%s\nCity:\t\t\t%s%s%s\nMap:\t\t\t%s"),
 	                               contact->name ? contact->name : "",
 	                               contact->number ? contact->number : "",
 	                               contact->company ? contact->company : "",
@@ -122,6 +123,11 @@ gboolean gnotification_show(struct connection *connection, struct contact *conta
 		gint duration = g_settings_get_int(gnotification_settings, "duration");
 
 		g_timeout_add_seconds(duration, gnotification_close, connection->notification);
+	}
+
+	if (contact->image) {
+		icon = G_ICON(contact->image);
+		g_notification_set_icon(notify, icon);
 	}
 
 	g_notification_set_priority(notify, G_NOTIFICATION_PRIORITY_URGENT);
