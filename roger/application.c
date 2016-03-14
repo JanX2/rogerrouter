@@ -51,6 +51,7 @@ struct cmd_line_option_state {
 	gboolean quit;
 	gchar *number;
 	gboolean assistant;
+  	gchar *profile;
 };
 
 static struct cmd_line_option_state option_state;
@@ -305,6 +306,10 @@ static void app_init(GtkApplication *app)
 	routermanager_plugins_add_search_path(get_directory(APP_PLUGINS));
 	g_free(path);
 
+	if (option_state.profile) {
+		routermanager_set_requested_profile(option_state.profile);
+	}
+
 	if (routermanager_init(option_state.debug, &error) == FALSE) {
 		printf("routermanager() failed: %s\n", error ? error->message : "");
 
@@ -333,7 +338,7 @@ static void app_init(GtkApplication *app)
 	}
 
 #if 0
-	struct connection *connection = connection_add_call(2, CONNECTION_TYPE_INCOMING, "6173097", "08001888444");
+	struct connection *connection = connection_add_call(2, CONNECTION_TYPE_INCOMING, "6173097", "022896172992");
 
 	emit_connection_notify(connection);
 #endif
@@ -350,8 +355,9 @@ const GOptionEntry all_options[] = {
 	{"hidden", 'i', 0, G_OPTION_ARG_NONE, &option_state.start_hidden, "Start with hidden window", NULL},
 	{"quit", 'q', 0, G_OPTION_ARG_NONE, &option_state.quit, "Quit", NULL},
 	{"call", 'c', 0, G_OPTION_ARG_STRING, &option_state.number, "Remote phone number", NULL},
-	{"version", 0, G_OPTION_FLAG_NO_ARG | G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_CALLBACK, option_version_cb, NULL, NULL},
+	{"version", 'v', G_OPTION_FLAG_NO_ARG | G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_CALLBACK, option_version_cb, NULL, NULL},
 	{"assistant", 'a', 0, G_OPTION_ARG_NONE, &option_state.assistant, "Start assistant", NULL},
+	{"profile", 'p', 0, G_OPTION_ARG_STRING, &option_state.profile, "Profile name", NULL},
 	{NULL}
 };
 

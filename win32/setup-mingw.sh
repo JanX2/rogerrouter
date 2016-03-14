@@ -110,7 +110,7 @@ if [ $# -eq 1 ]; then
 			mingw32-icu mingw32-expat mingw32-jasper mingw32-filesystem mingw32-libffi mingw32-fontconfig mingw32-libjpeg-turbo \
 			mingw32-freetype mingw32-libpng mingw-binutils-generic mingw32-gcc-c++ mingw32-libxml2 mingw-filesystem-base \
 			mingw32-gcc mingw32-pango mingw32-gdk-pixbuf mingw32-pixman mingw32-libsoup mingw32-dlfcn mingw32-libtiff mingw32-pthreads \
-			mingw32-libogg mingw32-libspeex mingw32-librsvg2 mingw32-nsis \
+			mingw32-libogg mingw32-speex mingw32-librsvg2 mingw32-nsis \
 			flex bison python-devel wget gcc patch autoconf automake intltool libtool glib2-devel
 		sudo dnf install wine
 	fi
@@ -126,7 +126,7 @@ cd packages
 make_pkg "http://www.mega-nerd.com/libsndfile/files/" "libsndfile-1.0.25.tar.gz" "libsndfile-1.0.25"
 
 # Download and compile libcapi20
-make_pkg "http://tabos.org/download/" "libcapi20-3.0.7.tar.bz2" "capi20"
+make_pkg "http://tabos.org/downloads/" "libcapi20-3.0.7.tar.bz2" "capi20"
 
 # ************ PATCHED PACKAGES ********************
 

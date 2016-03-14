@@ -217,10 +217,17 @@ gboolean profile_detect_active(void)
 	GSList *list = profile_get_list();
 	struct profile *profile;
 	struct router_info *router_info;
+	gchar *requested_profile = routermanager_get_requested_profile();
 
 	/* Compare our profile list against available routers */
 	while (list) {
 		profile = list->data;
+
+		/* Check whether user specified a profile */
+		if (requested_profile && strcmp(profile->name, requested_profile)) {
+			list = list->next;
+			continue;
+		}
 
 		router_info = g_slice_new0(struct router_info);
 		router_info->host = g_settings_get_string(profile->settings, "host");

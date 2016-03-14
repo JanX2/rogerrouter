@@ -49,3 +49,6 @@ TODO
 * Distribution schema: Add default actions
 
 * wincred faults with empty password?
+
+
+* VCard crashes on file changes

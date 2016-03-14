@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-08 10:11+0100\n"
+"POT-Creation-Date: 2016-03-09 20:47+0100\n"
 "PO-Revision-Date: 2015-01-28 20:28+0100\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <jan.brummer@tabos.org>\n"
@@ -122,7 +122,7 @@ msgstr "Automatisch"
 msgid "Router IP:"
 msgstr "Router IP:"
 
-#: ../roger/assistant.c:261
+#: ../roger/assistant.c:261 ../roger/assistant.c:289
 msgid "Manual"
 msgstr "Manuell"
 
@@ -258,8 +258,8 @@ msgstr "Wollen Sie den Eintrag '%s' löschen?"
 
 #. Add cancel button
 #: ../roger/contacts.c:437 ../roger/contact_edit.c:376 ../roger/journal.c:395
-#: ../roger/journal.c:449 ../roger/journal.c:482 ../roger/pref_filters.c:310
-#: ../roger/pref_filters.c:408
+#: ../roger/journal.c:449 ../roger/journal.c:483 ../roger/pref_filters.c:311
+#: ../roger/pref_filters.c:410
 msgid "Cancel"
 msgstr "A_bbrechen"
 
@@ -297,7 +297,7 @@ msgstr "<b>Keine Kontakte gefunden</b>"
 msgid "Open image"
 msgstr "Bild öffnen"
 
-#: ../roger/contact_edit.c:129 ../roger/journal.c:1103
+#: ../roger/contact_edit.c:129 ../roger/journal.c:1104
 #: ../roger/pref_action.c:163 ../roger/pref_fax.c:53 ../roger/pref_misc.c:50
 #: ../roger/plugins/vcard/vcard.c:1186
 #: ../roger/plugins/thunderbird/thunderbird.c:1013
@@ -315,13 +315,13 @@ msgid "_No image"
 msgstr "_Kein Bild"
 
 #. Name
-#: ../roger/contact_edit.c:192 ../roger/journal.c:1148
+#: ../roger/contact_edit.c:192 ../roger/journal.c:1149
 #: ../roger/pref_action.c:192 ../roger/pref_action.c:505
-#: ../roger/pref_filters.c:205 ../roger/pref_filters.c:565 ../roger/print.c:384
+#: ../roger/pref_filters.c:205 ../roger/pref_filters.c:567 ../roger/print.c:384
 msgid "Name"
 msgstr "Name"
 
-#: ../roger/contact_edit.c:225 ../roger/journal.c:1150
+#: ../roger/contact_edit.c:225 ../roger/journal.c:1151
 #: ../roger/pref_action.c:255 ../roger/pref_filters.c:206 ../roger/print.c:388
 #: ../roger/plugins/gtknotify/gtknotify.c:620
 #: ../roger/plugins/gnotification/gnotification.c:446
@@ -345,7 +345,7 @@ msgstr "Straße"
 msgid "ZIP"
 msgstr "PLZ"
 
-#: ../roger/contact_edit.c:268 ../roger/journal.c:1151
+#: ../roger/contact_edit.c:268 ../roger/journal.c:1152
 msgid "City"
 msgstr "Stadt"
 
@@ -357,11 +357,11 @@ msgstr "Detail hinzufügen"
 msgid "Address"
 msgstr "Adresse"
 
-#: ../roger/contact_edit.c:374 ../roger/journal.c:479
+#: ../roger/contact_edit.c:374 ../roger/journal.c:480
 msgid "Contact"
 msgstr "Kontakt"
 
-#: ../roger/contact_edit.c:377 ../roger/pref_filters.c:313
+#: ../roger/contact_edit.c:377 ../roger/pref_filters.c:314
 msgid "Save"
 msgstr "Speichern"
 
@@ -438,89 +438,89 @@ msgstr "Wollen Sie das Journal auf dem Router löschen?"
 msgid "Do you really want to delete the selected entry?"
 msgstr "Wollen Sie den ausgewählten Eintrag wirklich löschen?"
 
-#: ../roger/journal.c:483 ../roger/pref_filters.c:411
+#: ../roger/journal.c:484 ../roger/pref_filters.c:413
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: ../roger/journal.c:495
+#: ../roger/journal.c:496
 msgid "Existing contact"
 msgstr "Existierender Kontakt"
 
-#: ../roger/journal.c:496
+#: ../roger/journal.c:497
 msgid "New contact"
 msgstr "Neuer Kontakt"
 
 #. Create dialog
-#: ../roger/journal.c:728 ../roger/pref_filters.c:61
+#: ../roger/journal.c:729 ../roger/pref_filters.c:61
 msgid "Voice box"
 msgstr "Anrufbeantworter"
 
 #. Copy phone number
-#: ../roger/journal.c:991
+#: ../roger/journal.c:992
 msgid "Copy number"
 msgstr "Nummer kopieren"
 
 #. Call phone number
-#: ../roger/journal.c:996
+#: ../roger/journal.c:997
 msgid "Call number"
 msgstr "Nummer wählen"
 
 #. Add contact
-#: ../roger/journal.c:1005
+#: ../roger/journal.c:1006
 msgid "Add contact"
 msgstr "Kontakt hinzufügen"
 
 #. Delete entry
-#: ../roger/journal.c:1014
+#: ../roger/journal.c:1015
 msgid "Delete entry"
 msgstr "Eintrag löschen"
 
-#: ../roger/journal.c:1103 ../roger/journal.c:1238
+#: ../roger/journal.c:1104 ../roger/journal.c:1239
 msgid "Export journal"
 msgstr "Journal exportieren"
 
-#: ../roger/journal.c:1103
+#: ../roger/journal.c:1104
 msgid "_Save"
 msgstr "_Speichern"
 
-#: ../roger/journal.c:1146 ../roger/pref_filters.c:203 ../roger/print.c:376
+#: ../roger/journal.c:1147 ../roger/pref_filters.c:203 ../roger/print.c:376
 msgid "Type"
 msgstr "Typ"
 
-#: ../roger/journal.c:1147 ../roger/pref_filters.c:204 ../roger/print.c:380
+#: ../roger/journal.c:1148 ../roger/pref_filters.c:204 ../roger/print.c:380
 msgid "Date/Time"
 msgstr "Datum/Zeit"
 
-#: ../roger/journal.c:1149
+#: ../roger/journal.c:1150
 msgid "Company"
 msgstr "Firma"
 
-#: ../roger/journal.c:1152 ../roger/pref_filters.c:207
+#: ../roger/journal.c:1153 ../roger/pref_filters.c:207
 msgid "Extension"
 msgstr "Nebenstelle"
 
-#: ../roger/journal.c:1153 ../roger/pref_filters.c:208
+#: ../roger/journal.c:1154 ../roger/pref_filters.c:208
 msgid "Line"
 msgstr "Leitung"
 
-#: ../roger/journal.c:1154 ../roger/print.c:400
+#: ../roger/journal.c:1155 ../roger/print.c:400
 msgid "Duration"
 msgstr "Dauer"
 
-#: ../roger/journal.c:1235
+#: ../roger/journal.c:1236
 msgid "Refresh journal"
 msgstr "Journal laden"
 
-#: ../roger/journal.c:1236
+#: ../roger/journal.c:1237
 msgid "Print journal"
 msgstr "Journal drucken"
 
-#: ../roger/journal.c:1237
+#: ../roger/journal.c:1238
 msgid "Clear journal"
 msgstr "Journal löschen"
 
 #. Journal
-#: ../roger/journal.c:1394 ../roger/plugins/statusicon/gtk.c:199
+#: ../roger/journal.c:1395 ../roger/plugins/statusicon/gtk.c:199
 #: ../roger/plugins/indicator/indicator.c:219
 msgid "Journal"
 msgstr "Journal"
@@ -642,7 +642,7 @@ msgstr "Audio"
 msgid "Actions"
 msgstr "Aktionen"
 
-#: ../roger/pref.c:148 ../roger/pref_misc.c:94
+#: ../roger/pref.c:148 ../roger/pref_misc.c:101
 msgid "Misc"
 msgstr "Verschiedenes"
 
@@ -745,15 +745,15 @@ msgid "Call dial"
 msgstr "Anruf wählen"
 
 #. Buttons
-#: ../roger/pref_action.c:559 ../roger/pref_filters.c:569
+#: ../roger/pref_action.c:559 ../roger/pref_filters.c:571
 msgid "_Add"
 msgstr "_Hinzufügen"
 
-#: ../roger/pref_action.c:563 ../roger/pref_filters.c:573
+#: ../roger/pref_action.c:563 ../roger/pref_filters.c:575
 msgid "_Remove"
 msgstr "_Entfernen"
 
-#: ../roger/pref_action.c:567 ../roger/pref_filters.c:577
+#: ../roger/pref_action.c:567 ../roger/pref_filters.c:579
 msgid "_Edit"
 msgstr "_Bearbeiten"
 
@@ -940,33 +940,33 @@ msgstr "Beginnt mit"
 msgid "Contains"
 msgstr "Enthält"
 
-#: ../roger/pref_filters.c:307
+#: ../roger/pref_filters.c:308
 msgid "Edit filter"
 msgstr "Filter bearbeiten"
 
-#: ../roger/pref_filters.c:325 ../roger/pref_filters.c:423
+#: ../roger/pref_filters.c:326 ../roger/pref_filters.c:425
 #: ../roger/plugins/gtknotify/gtknotify.c:276
 msgid "Name:"
 msgstr "Name:"
 
-#: ../roger/pref_filters.c:340 ../roger/pref_filters.c:437
+#: ../roger/pref_filters.c:341 ../roger/pref_filters.c:439
 msgid "Rules"
 msgstr "Regeln"
 
-#: ../roger/pref_filters.c:405
+#: ../roger/pref_filters.c:407
 msgid "New filter"
 msgstr "Neuer Filter"
 
-#: ../roger/pref_filters.c:490
+#: ../roger/pref_filters.c:492
 #, c-format
 msgid "Do you want to delete the filter '%s'?"
 msgstr "Wollen Sie den Filter '%s' löschen?"
 
-#: ../roger/pref_filters.c:491
+#: ../roger/pref_filters.c:493
 msgid "Delete filter"
 msgstr "Filter löschen"
 
-#: ../roger/pref_filters.c:581
+#: ../roger/pref_filters.c:583
 msgid "Manage filters"
 msgstr "Filter verwalten"
 
@@ -1141,11 +1141,11 @@ msgstr "Wähle das Ghostscript-Programm aus"
 #. Ghostscript executable:
 #. * <FILE-CHOOSER>
 #.
-#: ../roger/pref_misc.c:82
+#: ../roger/pref_misc.c:89
 msgid "Ghostscript executable"
 msgstr "Ghostscript-Programm"
 
-#: ../roger/pref_misc.c:90 ../roger/plugins/vcard/vcard.c:1221
+#: ../roger/pref_misc.c:97 ../roger/plugins/vcard/vcard.c:1221
 #: ../roger/plugins/thunderbird/thunderbird.c:1064
 msgid "Select"
 msgstr "Auswählen"
@@ -1466,21 +1466,20 @@ msgstr "Thunderbird Adressbuch-Support"
 
 #. Create notification message
 #: ../roger/plugins/gnotification/gnotification.c:93
-#, c-format
 msgid ""
 "Name:\t\t%s\n"
 "Number:\t\t%s\n"
 "Company:\t%s\n"
 "Street:\t\t%s\n"
-"City:\t\t%s%s%s\n"
-"Map:\t\t%s"
+"City:\t\t\t%s%s%s\n"
+"Map:\t\t\t%s"
 msgstr ""
 "Name:\t%s\n"
 "Nummer:\t%s\n"
 "Firma:\t%s\n"
 "Straße:\t%s\n"
 "Stadt:\t%s%s%s\n"
-"Map:\t%s"
+"Map:\t\t%s"
 
 #: ../roger/plugins/gnotification/gnotification.c:105
 #: ../roger/plugins/notification/notification.c:258

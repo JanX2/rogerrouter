@@ -412,7 +412,7 @@ static void draw_page_cb(GtkPrintOperation *operation, GtkPrintContext *context,
 		cairo_stroke(cairo);
 
 		gtk_tree_model_get(model, &sIter, JOURNAL_COL_TYPE, &pix, JOURNAL_COL_DATETIME, &date_time, JOURNAL_COL_NAME, &name, JOURNAL_COL_NUMBER, &number, JOURNAL_COL_EXTENSION, &local_name, JOURNAL_COL_LINE, &local_number, JOURNAL_COL_DURATION, &duration, -1);
-		dst_pix = gdk_pixbuf_scale_simple(pix, 10, 10, GDK_INTERP_BILINEAR);
+		dst_pix = gdk_pixbuf_scale_simple(pix, 8, 8, GDK_INTERP_BILINEAR);
 
 		cairo_save(cairo);
 		gdk_cairo_set_source_pixbuf(cairo, dst_pix, print_data->logo_pos, (3 + i) * print_data->line_height + 2);

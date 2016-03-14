@@ -39,6 +39,7 @@
 #include <roger/phone.h>
 #include <roger/pref.h>
 #include <roger/uitools.h>
+#include <roger/icons.h>
 
 #define ROUTERMANAGER_TYPE_NOTIFICATION_GTK_PLUGIN (routermanager_notification_gtk_plugin_get_type ())
 #define ROUTERMANAGER_NOTIFICATION_GTK_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_NOTIFICATION_GTK_PLUGIN, RouterManagerNotificationGtkPlugin))
@@ -343,7 +344,8 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 	g_object_set_data(G_OBJECT(notify), "city", contact_city_label);
 
 	if (contact->image) {
-		gtk_image_set_from_pixbuf(GTK_IMAGE(image), contact->image);
+		GdkPixbuf *buf = image_get_scaled(contact->image, 96, 96);
+		gtk_image_set_from_pixbuf(GTK_IMAGE(image), buf);
 	}
 
 	if (connection->type == CONNECTION_TYPE_INCOMING) {

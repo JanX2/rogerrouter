@@ -42,6 +42,8 @@
 
 /** Private data pointing to the plugin directory */
 static gchar *plugin_dir = NULL;
+/** Requested user profile */
+static gchar *requested_profile = NULL;
 
 /**
  * \brief Print error quark
@@ -106,6 +108,28 @@ void init_directory_paths(void)
 static gchar *get_plugin_dir(void)
 {
 	return plugin_dir;
+}
+
+/**
+ * \brief Set requested profile
+ * \param profile requested profile name
+ */
+void routermanager_set_requested_profile(gchar *name)
+{
+	if (requested_profile) {
+		g_free(requested_profile);
+	}
+
+	requested_profile = g_strdup(name);
+}
+
+/**
+ * \brief Get requested profile
+ * \return requested profile name
+ */
+gchar *routermanager_get_requested_profile(void)
+{
+	return requested_profile;
 }
 
 /**

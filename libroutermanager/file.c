@@ -42,6 +42,10 @@ void file_save(gchar *name, const gchar *data, gsize len)
 	if (g_file_query_exists(file, NULL)) {
 		stream = g_file_replace(file, NULL, FALSE, G_FILE_CREATE_PRIVATE, NULL, &error);
 	} else {
+		gchar *dirname = g_path_get_dirname(name);
+		g_mkdir_with_parents(dirname, 0700);
+		g_free(dirname);
+
 		stream = g_file_create(file, G_FILE_CREATE_PRIVATE, NULL, &error);
 	}
 

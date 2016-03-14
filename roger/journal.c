@@ -141,21 +141,22 @@ GdkPixbuf *pixbuf_copy_mirror(GdkPixbuf *src)
 void journal_init_call_icon(void)
 {
 	GtkIconTheme *icons;
+	gint width = 16;
 
 	icons = gtk_icon_theme_get_default();
 
-	icon_call_in = gtk_icon_theme_load_icon(icons, "call-start-symbolic", 18, 0, NULL);
+	icon_call_in = gtk_icon_theme_load_icon(icons, "call-start-symbolic", width, 0, NULL);
 
-	icon_call_missed = gtk_icon_theme_load_icon(icons, "call-missed-symbolic", 18, 0, NULL);
+	icon_call_missed = gtk_icon_theme_load_icon(icons, "call-missed-symbolic", width, 0, NULL);
 
-	icon_call_out = gtk_icon_theme_load_icon(icons, "call-start-symbolic", 18, 0, NULL);
+	icon_call_out = gtk_icon_theme_load_icon(icons, "call-start-symbolic", width, 0, NULL);
 	icon_call_out = pixbuf_copy_mirror(icon_call_out);
 
-	icon_fax = gtk_icon_theme_load_icon(icons, "folder-documents-symbolic", 18, 0, NULL);
+	icon_fax = gtk_icon_theme_load_icon(icons, "folder-documents-symbolic", width, 0, NULL);
 
-	icon_voice = gtk_icon_theme_load_icon(icons, "folder-music-symbolic", 18, 0, NULL);
+	icon_voice = gtk_icon_theme_load_icon(icons, "folder-music-symbolic", width, 0, NULL);
 
-	icon_blocked = gtk_icon_theme_load_icon(icons, "process-stop-symbolic", 18, 0, NULL);
+	icon_blocked = gtk_icon_theme_load_icon(icons, "process-stop-symbolic", width, 0, NULL);
 }
 
 GdkPixbuf *journal_get_call_icon(gint type)
@@ -887,9 +888,11 @@ void name_column_cell_data_func(GtkTreeViewColumn *column, GtkCellRenderer *rend
 static gboolean journal_configure_event_cb(GtkWidget *window, GdkEvent *event, gpointer user_data)
 {
 	if (!g_settings_get_boolean(app_settings, "maximized")) {
-		GdkEventConfigure *ev = (GdkEventConfigure *) event;
-		g_settings_set_uint(app_settings, "width", ev->width);
-		g_settings_set_uint(app_settings, "height", ev->height);
+		gint width, height;
+
+		gtk_window_get_size(GTK_WINDOW(window), &width, &height);
+		g_settings_set_uint(app_settings, "width", width);
+		g_settings_set_uint(app_settings, "height", height);
 	}
 
 	return FALSE;
@@ -1326,7 +1329,7 @@ void journal_window(GApplication *app)
 	gtk_tree_view_column_set_visible(column, g_settings_get_boolean(app_settings, "col-0-visible"));
 	g_signal_connect(column, "notify::fixed-width", G_CALLBACK(journal_column_fixed_width_cb), NULL);
 	g_signal_connect(column, "notify::visible", G_CALLBACK(journal_column_fixed_width_cb), NULL);
-	//gtk_tree_view_column_set_resizable(column, TRUE);
+	gtk_tree_view_column_set_resizable(column, TRUE);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(journal_view), column);
 
 	title = column_name[0];

@@ -24,28 +24,33 @@ GdkPixbuf *image_get_scaled(GdkPixbuf *image, gint req_width, gint req_height)
 {
 	GdkPixbuf *scaled = NULL;
 	gint width, height;
-	gint orig_width, orig_height;
-	gfloat factor;
 
 	g_assert(image != NULL);
 
 	if (req_width != -1 && req_height != -1) {
-		orig_width = req_width;
-		orig_height = req_height;
+		width = req_width;
+		height = req_height;
 	} else {
-		gtk_icon_size_lookup(GTK_ICON_SIZE_DIALOG, &orig_width, &orig_height);
-	}
+		gint orig_width, orig_height;
+		gfloat factor;
 
-	width = gdk_pixbuf_get_width(image);
-	height = gdk_pixbuf_get_height(image);
-	if (width > height) {
-		factor = (float)width / (float)height;
-		width = orig_width;
-		height = orig_height / factor;
-	} else {
-		factor = (float)height / (float)width;
-		height = orig_height;
-		width = orig_width / (float)factor;
+		gtk_icon_size_lookup(GTK_ICON_SIZE_DIALOG, &orig_width, &orig_height);
+
+		width = gdk_pixbuf_get_width(image);
+		height = gdk_pixbuf_get_height(image);
+
+		if (req_width != -1) {
+			factor = (float) req_width / orig_width;
+			width = orig_width / factor;
+			height = orig_height / height;
+		} else if (req_height != -1) {
+			factor = (float) req_height / orig_height;
+			width = orig_width / factor;
+			height = orig_height / height;
+		} else {
+			width = orig_width;
+			height = orig_height;
+		}
 	}
 
 	scaled = gdk_pixbuf_scale_simple(image, width, height, GDK_INTERP_BILINEAR);

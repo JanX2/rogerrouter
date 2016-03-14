@@ -48,6 +48,8 @@ GQuark rm_print_error_quark(void);
 gboolean routermanager_init(gboolean debug, GError **error);
 void routermanager_shutdown(void);
 gchar *get_directory(gchar *type);
+void routermanager_set_requested_profile(gchar *name);
+gchar *routermanager_get_requested_profile(void);
 
 G_END_DECLS
 
