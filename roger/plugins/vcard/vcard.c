@@ -406,7 +406,7 @@ static void process_telephone(struct vcard_data *card_data, struct contact *cont
 		tmp++;
 	}
 
-	number->number = number_str->str;
+	number->number = call_full_number(number_str->str, FALSE);
 	g_string_free(number_str, FALSE);
 
 	contact->numbers = g_slist_prepend(contact->numbers, number);
