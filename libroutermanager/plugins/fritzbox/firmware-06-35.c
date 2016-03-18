@@ -335,6 +335,191 @@ void fritzbox_extract_phone_names_06_35(struct profile *profile, const gchar *da
 	g_free(regex_str);
 }
 
+static gboolean fritzbox_query(struct profile *profile)
+{
+	JsonParser *parser;
+	JsonReader *reader;
+	SoupMessage *msg;
+	const gchar *data;
+	gsize read;
+	gchar *url;
+
+	g_test_timer_start();
+	/* Extract phone numbers */
+	url = g_strdup_printf("http://%s/query.lua", router_get_host(profile));
+	msg = soup_form_request_new(SOUP_METHOD_GET, url,
+								"LKZPrefix", "telcfg:settings/Location/LKZPrefix",
+								"LKZ", "telcfg:settings/Location/LKZ",
+								"OKZPrefix", "telcfg:settings/Location/OKZPrefix",
+								"OKZ", "telcfg:settings/Location/OKZ",
+								"Port0", "telcfg:settings/MSN/Port0/Name",
+								"Port1", "telcfg:settings/MSN/Port1/Name",
+								"Port2", "telcfg:settings/MSN/Port2/Name",
+								"TAM", "tam:settings/TAM/list(Name)",
+								"IPP", "telcfg:settings/VoipExtension/list(Name)",
+								"S0", "telcfg:settings/NTHotDialList/list(Name)",
+								"DECT", "telcfg:settings/Foncontrol/User/list(Name,Type,Intern,Id)",
+								"MSN", "telcfg:settings/SIP/list(MSN,Name)",
+								"FaxMailActive", "telcfg:settings/FaxMailActive",
+								"storage", "ctlusb:settings/storage-part0",
+								"FaxMSN0", "telcfg:settings/FaxMSN0",
+								"FaxKennung", "telcfg:settings/FaxKennung",
+	                            "sid", profile->router_info->session_id,
+	                            NULL);
+	g_free(url);
+
+	soup_session_send_message(soup_session_sync, msg);
+	if (msg->status_code != 200) {
+		g_debug("Received status code: %d", msg->status_code);
+		g_object_unref(msg);
+		return FALSE;
+	}
+	data = msg->response_body->data;
+	read = msg->response_body->length;
+
+	log_save_data("fritzbox-06_35-query.html", data, read);
+	g_assert(data != NULL);
+
+	parser = json_parser_new();
+	json_parser_load_from_data(parser, data, read, NULL);
+
+	reader = json_reader_new(json_parser_get_root(parser));
+
+	json_reader_read_member(reader, "LKZ");
+	const gchar *lkz = json_reader_get_string_value(reader);
+	g_debug("LKZ: %s", lkz);
+	g_settings_set_string(profile->settings, "country-code", lkz);
+	json_reader_end_member(reader);
+
+	json_reader_read_member(reader, "LKZPrefix");
+	const gchar *lkz_prefix = json_reader_get_string_value(reader);
+	g_debug("LKZPrefix: %s", lkz_prefix);
+	g_settings_set_string(profile->settings, "international-call-prefix", lkz_prefix);
+	json_reader_end_member(reader);
+
+	json_reader_read_member(reader, "OKZ");
+	const gchar *okz = json_reader_get_string_value(reader);
+	g_debug("OKZ: %s", okz);
+	g_settings_set_string(profile->settings, "area-code", okz);
+	json_reader_end_member(reader);
+
+	json_reader_read_member(reader, "OKZPrefix");
+	const gchar *okz_prefix = json_reader_get_string_value(reader);
+	g_debug("OKZPrefix: %s", okz_prefix);
+	g_settings_set_string(profile->settings, "national-call-prefix", okz_prefix);
+	json_reader_end_member(reader);
+
+	json_reader_read_member(reader, "FaxMailActive");
+	const gchar *port_str = json_reader_get_string_value(reader);
+	gint port = atoi(port_str);
+	g_debug("FaxMailActive: %d", port);
+	json_reader_end_member(reader);
+
+	json_reader_read_member(reader, "FaxKennung");
+	const gchar *fax_ident = json_reader_get_string_value(reader);
+	g_debug("FaxKennung: %s", fax_ident);
+	g_settings_set_string(profile->settings, "fax-ident", fax_ident);
+	json_reader_end_member(reader);
+
+	json_reader_read_member(reader, "storage");
+	const gchar *storage = json_reader_get_string_value(reader);
+	g_debug("Fax Storage: %s", storage);
+	g_settings_set_string(profile->settings, "fax-volume", storage);
+	json_reader_end_member(reader);
+
+	json_reader_read_member(reader, "FaxMSN0");
+	const gchar *fax_msn = json_reader_get_string_value(reader);
+	g_debug("FaxMSN0: %s", fax_msn);
+	g_settings_set_string(profile->settings, "fax-number", fax_msn);
+	json_reader_end_member(reader);
+
+	gchar *formated_number = call_format_number(profile, fax_msn, NUMBER_FORMAT_INTERNATIONAL_PLUS);
+	g_settings_set_string(profile->settings, "fax-ident", formated_number);
+	g_free(formated_number);
+
+	/* Parse phones */
+	g_debug("DECTs:");
+	json_reader_read_member(reader, "DECT");
+	gint count = json_reader_count_elements(reader);
+	gint i;
+
+	for (i = 0; i < count; i++) {
+		const gchar *tmp;
+		const gchar *intern;
+		gint index;
+		gint val;
+
+		json_reader_read_element(reader, i);
+		json_reader_read_member(reader, "Name");
+		tmp = json_reader_get_string_value(reader);
+		g_debug(" Name: %s", tmp);
+		json_reader_end_member(reader);
+
+		json_reader_read_member(reader, "Intern");
+		intern = json_reader_get_string_value(reader);
+		g_debug(" Intern: %s", intern);
+		json_reader_end_member(reader);
+
+		if (!EMPTY_STRING(intern)) {
+			val = atoi(intern);
+			for (index = 0; index < PORT_MAX; index++) {
+				g_debug("%d <-> %d", fritzbox_phone_ports[index].number, val);
+				if (fritzbox_phone_ports[index].number == val) {
+					g_debug("Port %d: '%s'", index, tmp);
+					g_settings_set_string(profile->settings, router_phone_ports[index].name, tmp);
+				}
+			}
+		}
+
+		json_reader_end_element(reader);
+	}
+
+	json_reader_end_member(reader);
+
+	/* Parse msns */
+	g_debug("MSNs:");
+	json_reader_read_member(reader, "MSN");
+	count = json_reader_count_elements(reader);
+
+	gchar **numbers = NULL;
+	gint phones = 0;
+
+	for (i = 0; i < count; i++) {
+		const gchar *tmp;
+
+		json_reader_read_element(reader, i);
+		json_reader_read_member(reader, "MSN");
+		tmp = json_reader_get_string_value(reader);
+		g_debug(" MSN: %s", tmp);
+		json_reader_end_member(reader);
+
+		if (!EMPTY_STRING(tmp)) {
+			phones++;
+			numbers = g_realloc(numbers, (phones + 1) * sizeof(char*));
+			numbers[phones - 1] = g_strdup(tmp);
+			numbers[phones] = NULL;
+		}
+
+		json_reader_read_member(reader, "Name");
+		tmp = json_reader_get_string_value(reader);
+		g_debug(" Name: %s", tmp);
+		json_reader_end_member(reader);
+
+		json_reader_end_element(reader);
+	}
+	g_settings_set_strv(profile->settings, "numbers", (const gchar * const *)numbers);
+
+	json_reader_end_member(reader);
+
+	g_object_unref(reader);
+	g_object_unref(parser);
+
+	g_object_unref(msg);
+	g_debug("Result: %f", g_test_timer_elapsed());
+
+ 	return TRUE;
+}
+
 /**
  * \brief Get settings via lua-scripts (phone numbers/names, default controller, tam setting, fax volume/settings, prefixes, default dial port)
  * \param profile profile information structure
@@ -354,6 +539,14 @@ gboolean fritzbox_get_settings_06_35(struct profile *profile)
 		return FALSE;
 	}
 
+	if (fritzbox_query(profile)) {
+		/* The end - exit */
+		fritzbox_logout(profile, FALSE);
+
+		return TRUE;
+	}
+
+	g_test_timer_start();
 	/* Extract phone numbers */
 	url = g_strdup_printf("http://%s/fon_num/fon_num_list.lua", router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
@@ -477,6 +670,7 @@ gboolean fritzbox_get_settings_06_35(struct profile *profile)
 	g_free(value);
 
 	g_object_unref(msg);
+	g_debug("Result: %f", g_test_timer_elapsed());
 
 	/* Extract Fax information */
 	fritzbox_get_fax_information_06_35(profile);
