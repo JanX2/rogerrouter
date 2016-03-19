@@ -343,9 +343,11 @@ static gboolean fritzbox_query(struct profile *profile)
 	const gchar *data;
 	gsize read;
 	gchar *url;
+	gint i;
 
 	g_test_timer_start();
-	/* Extract phone numbers */
+
+	/* Extract data */
 	url = g_strdup_printf("http://%s/query.lua", router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
 								"LKZPrefix", "telcfg:settings/Location/LKZPrefix",
@@ -356,9 +358,9 @@ static gboolean fritzbox_query(struct profile *profile)
 								"Port1", "telcfg:settings/MSN/Port1/Name",
 								"Port2", "telcfg:settings/MSN/Port2/Name",
 								"TAM", "tam:settings/TAM/list(Name)",
-								"IPP", "telcfg:settings/VoipExtension/list(Name)",
+								// "IPP", "telcfg:settings/VoipExtension/list(Name)",
 								"S0", "telcfg:settings/NTHotDialList/list(Name)",
-								"DECT", "telcfg:settings/Foncontrol/User/list(Name,Type,Intern,Id)",
+								"DECT", "telcfg:settings/Foncontrol/User/list(Name,Type,Intern)",
 								"MSN", "telcfg:settings/SIP/list(MSN,Name)",
 								"FaxMailActive", "telcfg:settings/FaxMailActive",
 								"storage", "ctlusb:settings/storage-part0",
@@ -438,16 +440,33 @@ static gboolean fritzbox_query(struct profile *profile)
 	g_free(formated_number);
 
 	/* Parse phones */
+	g_debug("POTS");
+	for (i = 0; i < 3; i++) {
+		gchar name_in[11];
+		gchar name_analog[13];
+		const gchar *name;
+
+		memset(name_in, 0, sizeof(name_in));
+		g_snprintf(name_in, sizeof(name_in), "Port%d", i);
+
+		json_reader_read_member(reader, name_in);
+		name = json_reader_get_string_value(reader);
+		g_debug("%s = %s", name_in, name);
+
+		memset(name_analog, 0, sizeof(name_analog));
+		g_snprintf(name_analog, sizeof(name_analog), "name-analog%d", i + 1);
+		g_settings_set_string(profile->settings, name_analog, name);
+		json_reader_end_member(reader);
+	}
+
 	g_debug("DECTs:");
 	json_reader_read_member(reader, "DECT");
 	gint count = json_reader_count_elements(reader);
-	gint i;
 
 	for (i = 0; i < count; i++) {
 		const gchar *tmp;
 		const gchar *intern;
-		gint index;
-		gint val;
+		gchar name_dect[11];
 
 		json_reader_read_element(reader, i);
 		json_reader_read_member(reader, "Name");
@@ -460,16 +479,9 @@ static gboolean fritzbox_query(struct profile *profile)
 		g_debug(" Intern: %s", intern);
 		json_reader_end_member(reader);
 
-		if (!EMPTY_STRING(intern)) {
-			val = atoi(intern);
-			for (index = 0; index < PORT_MAX; index++) {
-				g_debug("%d <-> %d", fritzbox_phone_ports[index].number, val);
-				if (fritzbox_phone_ports[index].number == val) {
-					g_debug("Port %d: '%s'", index, tmp);
-					g_settings_set_string(profile->settings, router_phone_ports[index].name, tmp);
-				}
-			}
-		}
+		memset(name_dect, 0, sizeof(name_dect));
+		g_snprintf(name_dect, sizeof(name_dect), "name-dect%d", i + 1);
+		g_settings_set_string(profile->settings, name_dect, tmp);
 
 		json_reader_end_element(reader);
 	}
@@ -490,20 +502,20 @@ static gboolean fritzbox_query(struct profile *profile)
 		json_reader_read_element(reader, i);
 		json_reader_read_member(reader, "MSN");
 		tmp = json_reader_get_string_value(reader);
-		g_debug(" MSN: %s", tmp);
 		json_reader_end_member(reader);
 
 		if (!EMPTY_STRING(tmp)) {
+			g_debug(" MSN: %s", tmp);
 			phones++;
 			numbers = g_realloc(numbers, (phones + 1) * sizeof(char*));
 			numbers[phones - 1] = g_strdup(tmp);
 			numbers[phones] = NULL;
-		}
 
-		json_reader_read_member(reader, "Name");
-		tmp = json_reader_get_string_value(reader);
-		g_debug(" Name: %s", tmp);
-		json_reader_end_member(reader);
+			json_reader_read_member(reader, "Name");
+			tmp = json_reader_get_string_value(reader);
+			g_debug(" Name: %s", tmp);
+			json_reader_end_member(reader);
+		}
 
 		json_reader_end_element(reader);
 	}
