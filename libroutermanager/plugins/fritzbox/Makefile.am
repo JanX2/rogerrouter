@@ -19,6 +19,8 @@ libfritzbox_la_SOURCES = \
 	firmware-05-50.h \
 	firmware-06-35.c \
 	firmware-06-35.h \
+	firmware-query.c \
+	firmware-query.h \
 	csv.c \
 	csv.h
 

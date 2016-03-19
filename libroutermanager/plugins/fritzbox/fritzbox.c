@@ -37,6 +37,7 @@
 #include "firmware-05-50.h"
 #include "firmware-06-35.h"
 #include "firmware-04-00.h"
+#include "firmware-query.h"
 #include "csv.h"
 
 #define ROUTERMANAGER_TYPE_FRITZBOX_PLUGIN        (routermanager_fritzbox_plugin_get_type ())
@@ -80,6 +81,10 @@ gboolean fritzbox_login(struct profile *profile)
  */
 gboolean fritzbox_get_settings(struct profile *profile)
 {
+	if (fritzbox_get_settings_query(profile)) {
+		return TRUE;
+	}
+
 	if (FIRMWARE_IS(6, 35)) {
 		return fritzbox_get_settings_06_35(profile);
 	}
