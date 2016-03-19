@@ -366,6 +366,8 @@ static gboolean fritzbox_query(struct profile *profile)
 								"storage", "ctlusb:settings/storage-part0",
 								"FaxMSN0", "telcfg:settings/FaxMSN0",
 								"FaxKennung", "telcfg:settings/FaxKennung",
+								"DialPort", "telcfg:settings/DialPort",
+								"TamStick", "tam:settings/UseStick",
 	                            "sid", profile->router_info->session_id,
 	                            NULL);
 	g_free(url);
@@ -451,7 +453,7 @@ static gboolean fritzbox_query(struct profile *profile)
 
 		json_reader_read_member(reader, name_in);
 		name = json_reader_get_string_value(reader);
-		g_debug("%s = %s", name_in, name);
+		g_debug(" %s = %s", name_in, name);
 
 		memset(name_analog, 0, sizeof(name_analog));
 		g_snprintf(name_analog, sizeof(name_analog), "name-analog%d", i + 1);
@@ -522,6 +524,26 @@ static gboolean fritzbox_query(struct profile *profile)
 	g_settings_set_strv(profile->settings, "numbers", (const gchar * const *)numbers);
 
 	json_reader_end_member(reader);
+
+	json_reader_read_member(reader, "DialPort");
+	const gchar *dialport = json_reader_get_string_value(reader);
+	g_debug("DialPort: %s", fax_msn);
+
+	gint phone_port = fritzbox_find_phone_port(port);
+	g_debug("Dial port: %s, phone_port: %d", dialport, phone_port);
+	router_set_phone_port(profile, phone_port);
+	json_reader_end_member(reader);
+
+	json_reader_read_member(reader, "TamStick");
+	const gchar *tam_stick = json_reader_get_string_value(reader);
+	g_debug("TamStick: %s", tam_stick);
+	if (tam_stick && atoi(&tam_stick[0])) {
+		g_settings_set_int(profile->settings, "tam-stick", atoi(tam_stick));
+	} else {
+		g_settings_set_int(profile->settings, "tam-stick", 0);
+	}
+	json_reader_end_member(reader);
+
 
 	g_object_unref(reader);
 	g_object_unref(parser);
