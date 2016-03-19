@@ -527,8 +527,7 @@ static gboolean fritzbox_query(struct profile *profile)
 
 	json_reader_read_member(reader, "DialPort");
 	const gchar *dialport = json_reader_get_string_value(reader);
-	g_debug("DialPort: %s", fax_msn);
-
+	port = atoi(dialport);
 	gint phone_port = fritzbox_find_phone_port(port);
 	g_debug("Dial port: %s, phone_port: %d", dialport, phone_port);
 	router_set_phone_port(profile, phone_port);
