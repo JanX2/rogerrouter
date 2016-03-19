@@ -145,12 +145,13 @@ void journal_init_call_icon(void)
 
 	icons = gtk_icon_theme_get_default();
 
-	icon_call_in = gtk_icon_theme_load_icon(icons, "call-start-symbolic", width, 0, NULL);
+	icon_call_in = gtk_icon_theme_load_icon(icons, "call-stop-symbolic", width, 0, NULL);
 
 	icon_call_missed = gtk_icon_theme_load_icon(icons, "call-missed-symbolic", width, 0, NULL);
 
+	//icon_call_out = gtk_icon_theme_load_icon(icons, "call-start-symbolic", width, 0, NULL);
+	//icon_call_out = pixbuf_copy_mirror(icon_call_out);
 	icon_call_out = gtk_icon_theme_load_icon(icons, "call-start-symbolic", width, 0, NULL);
-	icon_call_out = pixbuf_copy_mirror(icon_call_out);
 
 	icon_fax = gtk_icon_theme_load_icon(icons, "folder-documents-symbolic", width, 0, NULL);
 
