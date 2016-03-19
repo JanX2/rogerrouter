@@ -68,8 +68,14 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 								"Port1", "telcfg:settings/MSN/Port1/Name",
 								"Port2", "telcfg:settings/MSN/Port2/Name",
 								"TAM", "tam:settings/TAM/list(Name)",
-								// "IPP", "telcfg:settings/VoipExtension/list(Name)",
-								"S0", "telcfg:settings/NTHotDialList/list(Name)",
+								"ISDNName0", "telcfg:settings/NTHotDialList/Name0",
+								"ISDNName1", "telcfg:settings/NTHotDialList/Name1",
+								"ISDNName2", "telcfg:settings/NTHotDialList/Name2",
+								"ISDNName3", "telcfg:settings/NTHotDialList/Name3",
+								"ISDNName4", "telcfg:settings/NTHotDialList/Name4",
+								"ISDNName5", "telcfg:settings/NTHotDialList/Name5",
+								"ISDNName6", "telcfg:settings/NTHotDialList/Name6",
+								"ISDNName7", "telcfg:settings/NTHotDialList/Name7",
 								"DECT", "telcfg:settings/Foncontrol/User/list(Name,Type,Intern)",
 								"MSN", "telcfg:settings/SIP/list(MSN,Name)",
 								"FaxMailActive", "telcfg:settings/FaxMailActive",
@@ -170,6 +176,25 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 		memset(name_analog, 0, sizeof(name_analog));
 		g_snprintf(name_analog, sizeof(name_analog), "name-analog%d", i + 1);
 		g_settings_set_string(profile->settings, name_analog, name);
+		json_reader_end_member(reader);
+	}
+
+	g_debug("ISDN");
+	for (i = 0; i < 8; i++) {
+		gchar name_in[11];
+		gchar name_isdn[13];
+		const gchar *name;
+
+		memset(name_in, 0, sizeof(name_in));
+		g_snprintf(name_in, sizeof(name_in), "ISDNName%d", i);
+
+		json_reader_read_member(reader, name_in);
+		name = json_reader_get_string_value(reader);
+		g_debug(" %s = %s", name_in, name);
+
+		memset(name_isdn, 0, sizeof(name_isdn));
+		g_snprintf(name_isdn, sizeof(name_isdn), "name-isdn%d", i + 1);
+		g_settings_set_string(profile->settings, name_isdn, name);
 		json_reader_end_member(reader);
 	}
 
