@@ -561,7 +561,7 @@ gboolean fritzbox_dial_number_06_35(struct profile *profile, gint port, const gc
 
 	router_port = fritzbox_get_dialport(port);
 
-	if (current_port != router_port) {
+	if (port != ROUTER_DIAL_PORT_AUTO && current_port != router_port) {
 		g_debug("Setting dial port %d", router_port);
 
 		port_str = g_strdup_printf("%d", fritzbox_get_dialport(port));

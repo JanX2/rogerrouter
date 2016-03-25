@@ -22,7 +22,7 @@
 
 G_BEGIN_DECLS
 
-void assistant();
+void app_assistant();
 
 G_END_DECLS
 

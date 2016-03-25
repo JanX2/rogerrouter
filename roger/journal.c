@@ -1136,6 +1136,11 @@ GtkWidget *journal_get_window(void)
 	return journal_win;
 }
 
+void journal_set_visible(gboolean state)
+{
+	gtk_widget_set_visible(journal_win, state);
+}
+
 void journal_window(GApplication *app)
 {
 	GtkWidget *window, *grid, *scrolled;

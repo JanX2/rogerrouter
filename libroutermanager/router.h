@@ -26,6 +26,9 @@
 
 G_BEGIN_DECLS
 
+#define ROUTER_ENABLE_TELNET	"#96*5*"
+#define ROUTER_ENABLE_CAPI		"#96*3*"
+
 enum phone_ports {
 	PORT_SOFTPHONE,
 	PORT_ANALOG1,
@@ -66,6 +69,10 @@ enum phone_number_type {
 	PHONE_NUMBER_FAX_HOME,
 	PHONE_NUMBER_FAX_WORK,
 	PHONE_NUMBER_PAGER,
+};
+
+enum router_dial_port {
+	ROUTER_DIAL_PORT_AUTO = -1,
 };
 
 struct phone {

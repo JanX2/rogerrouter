@@ -225,6 +225,8 @@ static gboolean show_message(gpointer message_ptr)
 	GtkWidget *dialog = gtk_message_dialog_new(roger_app ? gtk_application_get_active_window(roger_app) : NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("Error"));
 	gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), "%s", message ? message : "");
 
+	g_free(message);
+
 	g_signal_connect(dialog, "response", G_CALLBACK(gtk_widget_destroy), NULL);
 
 	gtk_window_present(GTK_WINDOW(dialog));
@@ -331,11 +333,12 @@ static void app_init(GtkApplication *app)
 		journal_set_hide_on_quit(TRUE);
 	}
 
-	journal_window(G_APPLICATION(app));
-
 	if (net_is_online() && !profile_get_active()) {
-		assistant();
+		journal_set_hide_on_start(TRUE);
+		app_assistant();
 	}
+
+	journal_window(G_APPLICATION(app));
 
 #if 0
 	struct connection *connection = connection_add_call(2, CONNECTION_TYPE_INCOMING, "6173097", "022896172992");
@@ -430,7 +433,7 @@ static gint application_command_line_cb(GtkApplication *app, GApplicationCommand
 	}
 
 	if (option_state.assistant) {
-		assistant();
+		app_assistant();
 	}
 
 	g_strfreev(argv);
