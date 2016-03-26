@@ -148,4 +148,9 @@ void audio_init(struct profile *profile)
 	gchar *name = g_settings_get_string(profile->settings, "audio-plugin");
 
 	audio_set_default(name);
+
+	/* In case no internal audio is set yet, set it to the first one */
+	if (!internal_audio && audio_list) {
+		internal_audio = audio_list->data;
+	}
 }
