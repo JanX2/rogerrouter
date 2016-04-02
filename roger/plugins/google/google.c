@@ -30,6 +30,7 @@
 #include <libroutermanager/settings.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/osdep.h>
+#include <libroutermanager/appobject-emit.h>
 
 #include <roger/main.h>
 
@@ -192,27 +193,6 @@ static void google_interactive_auth(void)
 	g_free(authorization_code);
 }
 
-static void google_refresh_ready(GDataOAuth2Authorizer *auth, GAsyncResult *res, gpointer data)
-{
-	GError *error = NULL;
-
-	if (gdata_authorizer_refresh_authorization_finish(GDATA_AUTHORIZER(auth), res, &error) == FALSE) {
-		/* Notify the user of all errors except cancellation errors */
-
-		if (!g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
-			g_debug("%s(): Authorization refresh error: %s", __FUNCTION__, error->message);
-		}
-
-		g_error_free(error);
-
-		google_interactive_auth();
-
-		return;
-	}
-
-	g_debug("%s(): Authorization refresh successful", __FUNCTION__);
-}
-
 /**
  * \brief Initialize gdata and authenticate user
  * \return error code, 0 on success otherwise error
@@ -261,10 +241,22 @@ static int google_init(void)
 		gchar *token = g_settings_get_string(google_settings, "token");
 
 		if (!EMPTY_STRING(token)) {
+			GError *error = NULL;
 			g_debug("%s(): Trying to refresh authorization", __FUNCTION__);
 
 			gdata_oauth2_authorizer_set_refresh_token(authorizer, token);
-			gdata_authorizer_refresh_authorization_async(GDATA_AUTHORIZER(authorizer), NULL, (GAsyncReadyCallback)google_refresh_ready, NULL);
+			if (!gdata_authorizer_refresh_authorization(GDATA_AUTHORIZER(authorizer), NULL, &error)) {
+				if (!g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
+					g_debug("%s(): Authorization refresh error: %s", __FUNCTION__, error->message);
+					emit_message("Google Plugin", _("Authorization refresh error"));
+				}
+
+				g_error_free(error);
+
+				google_interactive_auth();
+			} else {
+				g_debug("%s(): Authorization refresh successful", __FUNCTION__);
+			}
 		} else {
 			google_interactive_auth();
 		}
