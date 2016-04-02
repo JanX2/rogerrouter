@@ -70,9 +70,9 @@ gboolean fritzbox_login_04_74(struct profile *profile)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 	if (msg->status_code != 200 || !msg->response_body->length) {
-		g_debug("Received status code: %d", msg->status_code);
+		g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
 		g_debug("Message length: %" G_GOFFSET_FORMAT, msg->response_body->length);
 		g_object_unref(msg);
 
@@ -134,9 +134,9 @@ gboolean fritzbox_login_04_74(struct profile *profile)
 		                            NULL);
 		g_free(url);
 
-		soup_session_send_message(soup_session_sync, msg);
+		soup_session_send_message(soup_session, msg);
 		if (msg->status_code != 200) {
-			g_debug("Received status code: %d", msg->status_code);
+			g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
 			g_object_unref(msg);
 
 			g_timer_destroy(profile->router_info->session_timer);
@@ -417,7 +417,7 @@ gboolean fritzbox_get_settings_04_74(struct profile *profile)
 	gchar *url;
 	gchar *volume = NULL;
 
-	if (fritzbox_login(profile) == FALSE) {
+	if (!router_login(profile)) {
 		return FALSE;
 	}
 
@@ -436,7 +436,7 @@ gboolean fritzbox_get_settings_04_74(struct profile *profile)
 	g_free(url);
 	g_free(request);
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("Received status code: %d", msg->status_code);
 		g_object_unref(msg);
@@ -472,7 +472,7 @@ gboolean fritzbox_get_settings_04_74(struct profile *profile)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("Received status code: %d", msg->status_code);
 		g_object_unref(msg);
@@ -527,7 +527,7 @@ gboolean fritzbox_get_settings_04_74(struct profile *profile)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("Received status code: %d", msg->status_code);
 		g_object_unref(msg);
@@ -588,7 +588,7 @@ gboolean fritzbox_get_settings_04_74(struct profile *profile)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("Received status code: %d", msg->status_code);
 		g_object_unref(msg);
@@ -663,7 +663,7 @@ gboolean fritzbox_load_journal_04_74(struct profile *profile, gchar **data_ptr)
 	gchar *url;
 
 	/* Login to box */
-	if (fritzbox_login(profile) == FALSE) {
+	if (!router_login(profile)) {
 		g_debug("Login failed");
 		return FALSE;
 	}
@@ -679,7 +679,7 @@ gboolean fritzbox_load_journal_04_74(struct profile *profile, gchar **data_ptr)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("Received status code: %d", msg->status_code);
 		g_object_unref(msg);
@@ -696,7 +696,7 @@ gboolean fritzbox_load_journal_04_74(struct profile *profile, gchar **data_ptr)
 	g_free(url);
 
 	/* Queue message to session */
-	soup_session_queue_message(soup_session_async, msg, fritzbox_journal_04_74_cb, profile);
+	soup_session_queue_message(soup_session, msg, fritzbox_journal_04_74_cb, profile);
 
 	return TRUE;
 }
@@ -712,7 +712,7 @@ gboolean fritzbox_clear_journal_04_74(struct profile *profile)
 	gchar *url;
 
 	/* Login to box */
-	if (fritzbox_login(profile) == FALSE) {
+	if (!router_login(profile)) {
 		return FALSE;
 	}
 
@@ -726,7 +726,7 @@ gboolean fritzbox_clear_journal_04_74(struct profile *profile)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("Received status code: %d", msg->status_code);
 		g_object_unref(msg);

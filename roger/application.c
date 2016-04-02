@@ -29,6 +29,7 @@
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/net_monitor.h>
 #include <libroutermanager/settings.h>
+#include <libroutermanager/gstring.h>
 
 #include <roger/journal.h>
 #include <roger/assistant.h>
@@ -96,6 +97,66 @@ void app_reconnect(void)
 	struct profile *profile = profile_get_active();
 
 	router_reconnect(profile);
+}
+
+static void auth_response_callback(GtkDialog *dialog, gint response_id, gpointer user_data)
+{
+	struct auth_data* auth_data = user_data;
+
+	if (response_id == 1) {
+		GtkWidget *user_entry = g_object_get_data(G_OBJECT(dialog), "user");
+		GtkWidget *password_entry = g_object_get_data(G_OBJECT(dialog), "password");
+
+		auth_data->username = g_strdup(gtk_entry_get_text(GTK_ENTRY(user_entry)));
+		auth_data->password = g_strdup(gtk_entry_get_text(GTK_ENTRY(password_entry)));
+	}
+
+	network_authenticate(response_id == 1, auth_data);
+
+	gtk_widget_destroy(GTK_WIDGET(dialog));
+}
+
+void app_authenticate_cb(AppObject *app, struct auth_data *auth_data)
+{
+	GtkBuilder *builder;
+	GtkWidget *dialog;
+	GtkWidget *description_label;
+	GtkWidget *realm_label;
+	GtkWidget *tmp;
+	gchar *description;
+	SoupURI* uri;
+
+	g_debug("%s(): app_authenticate", __FUNCTION__);
+	builder = gtk_builder_new_from_resource("/org/tabos/roger/authenticate.glade");
+	if (!builder) {
+		g_warning("Could not load authentication ui");
+		return;
+	}
+
+	/* Connect to builder objects */
+	dialog = GTK_WIDGET(gtk_builder_get_object(builder, "authentication"));
+
+	description_label = GTK_WIDGET(gtk_builder_get_object(builder, "description"));
+	uri = soup_message_get_uri(auth_data->msg);
+	description = g_strdup_printf(_("A username and password are being requested by the site %s"), uri->host);
+	gtk_label_set_text(GTK_LABEL(description_label), description);
+	g_free(description);
+
+	realm_label = GTK_WIDGET(gtk_builder_get_object(builder, "realm"));
+	gtk_label_set_text(GTK_LABEL(realm_label), soup_auth_get_realm(auth_data->auth));
+
+	tmp = GTK_WIDGET(gtk_builder_get_object(builder, "username_entry"));
+	gtk_entry_set_text(GTK_ENTRY(tmp), auth_data->username);
+	g_object_set_data(G_OBJECT(dialog), "user", tmp);
+	tmp = GTK_WIDGET(gtk_builder_get_object(builder, "password_entry"));
+	gtk_entry_set_text(GTK_ENTRY(tmp), auth_data->password);
+	g_object_set_data(G_OBJECT(dialog), "password", tmp);
+
+	gtk_builder_connect_signals(builder, NULL);
+	g_object_unref(G_OBJECT(builder));
+
+	g_signal_connect(dialog, "response", G_CALLBACK(auth_response_callback), auth_data);
+	gtk_widget_show_all(dialog);
 }
 
 static void application_shutdown(GObject *object)
@@ -218,11 +279,9 @@ static void application_startup(GtkApplication *application)
 	startup_called = TRUE;
 }
 
-static gboolean show_message(gpointer message_ptr)
+static void app_object_message_cb(AppObject *object, gchar *title, gchar *message)
 {
-	gchar *message = message_ptr;
-
-	GtkWidget *dialog = gtk_message_dialog_new(roger_app ? gtk_application_get_active_window(roger_app) : NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("Error"));
+	GtkWidget *dialog = gtk_message_dialog_new(roger_app ? gtk_application_get_active_window(roger_app) : NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, title);
 	gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), "%s", message ? message : "");
 
 	g_free(message);
@@ -230,13 +289,6 @@ static gboolean show_message(gpointer message_ptr)
 	g_signal_connect(dialog, "response", G_CALLBACK(gtk_widget_destroy), NULL);
 
 	gtk_window_present(GTK_WINDOW(dialog));
-
-	return FALSE;
-}
-
-static void app_object_message_cb(AppObject *object, gint type, gchar *message)
-{
-	g_idle_add(show_message, message);
 }
 
 static void app_init(GtkApplication *app)
@@ -312,7 +364,11 @@ static void app_init(GtkApplication *app)
 		routermanager_set_requested_profile(option_state.profile);
 	}
 
-	if (routermanager_init(option_state.debug, &error) == FALSE) {
+	routermanager_new(option_state.debug, &error);
+	g_signal_connect(app_object, "authenticate", G_CALLBACK(app_authenticate_cb), NULL);
+	g_signal_connect(app_object, "message", G_CALLBACK(app_object_message_cb), NULL);
+
+	if (routermanager_init(&error) == FALSE) {
 		printf("routermanager() failed: %s\n", error ? error->message : "");
 
 		GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "RouterManager failed");
@@ -323,8 +379,6 @@ static void app_init(GtkApplication *app)
 		g_clear_error(&error);
 		return;
 	}
-
-	g_signal_connect(app_object, "message", G_CALLBACK(app_object_message_cb), NULL);
 
 	fax_process_init();
 
@@ -339,12 +393,6 @@ static void app_init(GtkApplication *app)
 	}
 
 	journal_window(G_APPLICATION(app));
-
-#if 0
-	struct connection *connection = connection_add_call(2, CONNECTION_TYPE_INCOMING, "6173097", "022896172992");
-
-	emit_connection_notify(connection);
-#endif
 }
 
 G_GNUC_NORETURN static gboolean option_version_cb(const gchar *option_name, const gchar *value, gpointer data, GError **error)

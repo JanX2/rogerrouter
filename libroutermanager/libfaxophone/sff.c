@@ -64,7 +64,9 @@ static inline void sff_transfer(struct capi_connection *connection, _cmsg capi_m
 	status->bytes_sent = sff_pos;
 
 	status->progress_status = 1;
-	session->handlers->status(connection, 1);
+	if (session->handlers && session->handlers->status) {
+		session->handlers->status(connection, 1);
+	}
 
 	if (sff_pos == sff_len) {
 		g_debug("EOF");
@@ -133,7 +135,7 @@ struct capi_connection *sff_send(gchar *sff_file, gint modem, gint ecm, gint con
 
 	/* Length */
 	b3[i++] = 1 + 2 + 2 + 1 + strlen(ident) + 1 + strlen(header);
-	/* Resolution: Standard */
+	/* Resolution: Standard = 0x00, High = 0x01 */
 	b3[i++] = 0;
 	b3[i++] = 0;
 	/* Format: SFF */
@@ -156,7 +158,7 @@ struct capi_connection *sff_send(gchar *sff_file, gint modem, gint ecm, gint con
 	sff_data = file_load(sff_file, &sff_len);
 	sff_pos = 0;
 
-	connection = capi_call(controller, src_no, trg_no, (guint) call_anonymous, SESSION_SFF, SFF_CIP, 4, 4, 5, b1, b2, b3);
+	connection = capi_call(controller, src_no, trg_no, (guint) call_anonymous, SESSION_SFF, SFF_CIP, 4, 4, 4, b1, b2, b3);
 	if (connection) {
 		struct fax_status *status = NULL;
 

@@ -54,7 +54,7 @@ gboolean fritzbox_present_04_00(struct router_info *router_info)
 	url = g_strdup_printf("http://%s/cgi-bin/webcm", router_info->host);
 	msg = soup_message_new(SOUP_METHOD_GET, url);
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 	if (msg->status_code != 200) {
 		g_warning("Could not load 04_00 present page (Error: %d)", msg->status_code);
 		g_object_unref(msg);
@@ -109,7 +109,7 @@ gboolean fritzbox_login_04_00(struct profile *profile)
 				    "var:loginDone", "1",
 				    NULL);
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 	if (msg->status_code != 200) {
 		g_warning("Could not load 04_00 login page (Error: %d)", msg->status_code);
 		g_object_unref(msg);
@@ -147,7 +147,7 @@ gboolean fritzbox_dial_number_04_00(struct profile *profile, gint port, const gc
 	gboolean ret = FALSE;
 
 	/* Login to box */
-	if (fritzbox_login(profile) == FALSE) {
+	if (!router_login(profile)) {
 		return FALSE;
 	}
 
@@ -169,7 +169,7 @@ gboolean fritzbox_dial_number_04_00(struct profile *profile, gint port, const gc
 	g_free(url);
 
 	/* Send message */
-	soup_session_send_message(soup_session_async, msg);
+	soup_session_send_message(soup_session, msg);
 	if (msg->status_code == 200) {
 		ret = TRUE;
 	}
@@ -192,7 +192,7 @@ gboolean fritzbox_hangup_04_00(struct profile *profile, gint port, const gchar *
 	gchar *port_str;
 
 	/* Login to box */
-	if (fritzbox_login(profile) == FALSE) {
+	if (!router_login(profile)) {
 		return FALSE;
 	}
 
@@ -212,7 +212,7 @@ gboolean fritzbox_hangup_04_00(struct profile *profile, gint port, const gchar *
 	g_free(url);
 
 	/* Send message */
-	soup_session_send_message(soup_session_async, msg);
+	soup_session_send_message(soup_session, msg);
 	fritzbox_logout(profile, FALSE);
 
 	return TRUE;

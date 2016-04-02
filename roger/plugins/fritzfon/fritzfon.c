@@ -227,7 +227,7 @@ static gint fritzfon_read_book(void)
 	soup_multipart_append_form_string(multipart, "PhonebookExport", "1");
 	SoupMessage *msg = soup_form_request_new_from_multipart(uri, multipart);
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 
 	g_free(owner);
 	g_free(name);
@@ -291,7 +291,7 @@ static gint fritzfon_get_books(void)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 	if (msg->status_code != 200) {
 		g_warning("Could not get fonbook file");
 		g_object_unref(msg);
@@ -570,7 +570,7 @@ gboolean fritzfon_save(void)
 	soup_multipart_append_form_file(multipart, "PhonebookImportFile", "dummy", "text/xml", buffer);
 	SoupMessage *msg = soup_form_request_new_from_multipart(url, multipart);
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 	soup_buffer_free(buffer);
 	g_free(url);
 

@@ -1,4 +1,4 @@
-SUBDIRS = fritzbox callmonitor areacodes_global reverselookup webjournal
+SUBDIRS = fritzbox callmonitor areacodes_global reverselookup
 
 if WITH_PULSEAUDIO
 SUBDIRS += pulseaudio

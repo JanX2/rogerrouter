@@ -24,6 +24,8 @@
 #include <libroutermanager/router.h>
 #include <libroutermanager/ftp.h>
 #include <libroutermanager/password.h>
+#include <libroutermanager/network.h>
+#include <libroutermanager/net_monitor.h>
 
 #include <roger/main.h>
 #include <roger/phone.h>
@@ -52,17 +54,27 @@ static void verify_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
 	GtkWidget *dialog;
 	struct profile *profile = profile_get_active();
+	gboolean locked = router_is_locked();
+	gboolean log_in = FALSE;
 
 	router_logout(profile);
 
-	if (router_login(profile) == TRUE) {
+	router_release_lock();
+	log_in = router_login(profile);
+	if (log_in == TRUE) {
 		dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE, _("Login password is valid"));
+
+		gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+
+		if (locked) {
+			net_monitor_reconnect();
+		}
 	} else {
-		dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("Login password is invalid"));
+		//dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("Login password is invalid"));
+		// This case is handled by libroutermanager emitting a new message
 	}
 
-	gtk_dialog_run(GTK_DIALOG(dialog));
-	gtk_widget_destroy(dialog);
 }
 
 /**

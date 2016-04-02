@@ -28,6 +28,8 @@
 #include <libroutermanager/call.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/settings.h>
+#include <libroutermanager/gstring.h>
+#include <libroutermanager/osdep.h>
 
 #include <roger/main.h>
 
@@ -52,34 +54,163 @@ static GHashTable *table = NULL;
 
 static GDataContactsService *service = NULL;
 
-#ifdef OAUTH2
-#define CLIENT_ID	"943191323673-f8sm9idvulv05eib5c2aq5a181s7a10f.apps.googleusercontent.com"
-#define CLIENT_KEY	"WDvD1ghMuNq8yph6UAedN0Oo"
-#define CLIENT_RURI	"urn:ietf:wg:oauth:2.0:oob"
+#define CLIENT_1 "OTQzMTkxMzIzNjczLWY4c205aWR2dWx2MDVlaWI1YzJhcTVhMTgxczdhMTBmLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29t"
+#define CLIENT_2 "V0R2RDFnaE11TnE4eXBoNlVBZWROME9v"
+#define CLIENT_3 "dXJuOmlldGY6d2c6b2F1dGg6Mi4wOm9vYg=="
 
 static GDataOAuth2Authorizer *authorizer = NULL;
-#else
 
-static GDataOAuth1Authorizer *authorizer = NULL;
-#endif
+struct auth_code_data {
+	const gchar *auth_uri;
+	GtkWidget *entry;
+};
 
-gchar *ask_user_for_code(gchar *uri)
+static void auth_uri_link_button_clicked_cb(GtkButton *button, gpointer data)
 {
-	gchar *code = g_malloc(100);
+	struct auth_code_data *auth_code_data = data;
 
-	g_print("Please navigate to the following URI and grant access:\n%s\n", uri);
-	g_print("Enter verifier (EOF to abort): ");
+	os_execute(auth_code_data->auth_uri);
 
-	g_free (uri);
+	gtk_widget_grab_focus(auth_code_data->entry);
+}
 
-	if (scanf ("%100s", code) != 1) {
-		/* User chose to abort. */
-		g_print ("\n");
-		g_clear_object (&authorizer);
-		return NULL;
+static void auth_code_entry_changed_cb(GtkEditable *entry, gpointer data)
+{
+	gtk_widget_set_sensitive(GTK_WIDGET(data), gtk_entry_get_text_length(GTK_ENTRY(entry)) > 0);
+}
+
+gchar *ask_user_for_auth_code(const gchar *auth_uri)
+{
+	GtkWidget *dialog;
+	GtkWidget *grid;
+	GtkWidget *link_button;
+	GtkWidget *label;
+	GtkWidget *entry;
+	gchar *str;
+	gchar *retval = NULL;
+	gint dlg_res;
+	GtkWidget *btn_ok;
+	struct auth_code_data *auth_code_data;
+
+	dialog = gtk_message_dialog_new_with_markup(NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_NONE, "<span weight=\"bold\" size=\"larger\">%s</span>", _("Google plugin: Authorization required"));
+	gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog),
+		_("You need to authorize Roger Router to access your Google contact list."
+		"\n\nVisit Google's authorization page by pressing the button below. After you "
+		"confirmed the authorization, you will get an authorization code. Enter that code "
+		"in the field below to grant Roger Router access to your Google contact list."));
+
+	gtk_dialog_add_button(GTK_DIALOG(dialog), _("_Cancel"), GTK_RESPONSE_CANCEL);
+	btn_ok = gtk_dialog_add_button(GTK_DIALOG(dialog), _("_OK"), GTK_RESPONSE_OK);
+	gtk_window_set_resizable(GTK_WINDOW(dialog), TRUE);
+	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
+
+	gtk_widget_set_sensitive(btn_ok, FALSE);
+
+	grid = gtk_grid_new();
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 8);
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 8);
+
+	str = g_strconcat("<b>", _("Step 1:"), "</b>", NULL);
+	label = gtk_label_new(str);
+	g_free(str);
+	gtk_label_set_use_markup(GTK_LABEL(label), TRUE);
+	gtk_grid_attach(GTK_GRID(grid), label, 0, 0, 1, 1);
+
+	link_button = gtk_button_new_with_label(_("Click here to open the Google authorization page in a browser"));
+	auth_code_data = g_new0(struct auth_code_data, 1);
+	gtk_grid_attach(GTK_GRID(grid), link_button, 1, 0, 2, 1);
+
+	str = g_strconcat("<b>", _("Step 2:"), "</b>", NULL);
+	label = gtk_label_new(str);
+	g_free(str);
+	gtk_label_set_use_markup(GTK_LABEL(label), TRUE);
+	gtk_grid_attach(GTK_GRID(grid), label, 0, 1, 1, 1);
+
+	gtk_grid_attach(GTK_GRID(grid), gtk_label_new(_("Enter code:")), 1, 1, 1, 1);
+
+	entry = gtk_entry_new();
+	g_signal_connect(G_OBJECT(entry), "changed", (GCallback)auth_code_entry_changed_cb, (gpointer)btn_ok);
+	gtk_widget_set_hexpand(entry, TRUE);
+	gtk_grid_attach(GTK_GRID(grid), entry, 2, 1, 1, 1);
+
+	auth_code_data->auth_uri = auth_uri;
+	auth_code_data->entry = entry;
+	g_signal_connect(G_OBJECT(link_button), "clicked", (GCallback)auth_uri_link_button_clicked_cb, (gpointer)auth_code_data);
+
+	gtk_box_pack_start(GTK_BOX(gtk_message_dialog_get_message_area(GTK_MESSAGE_DIALOG(dialog))), grid, FALSE, FALSE, 0);
+
+	gtk_widget_show_all(dialog);
+
+	dlg_res = gtk_dialog_run(GTK_DIALOG(dialog));
+
+	switch (dlg_res) {
+	case GTK_RESPONSE_DELETE_EVENT:
+	case GTK_RESPONSE_CANCEL:
+		break;
+	case GTK_RESPONSE_OK:
+		retval = g_strdup(gtk_entry_get_text(GTK_ENTRY(entry)));
+		break;
 	}
 
-	return code;
+	g_free(auth_code_data);
+	gtk_widget_destroy(dialog);
+
+	return retval;
+}
+
+/* returns allocated string which must be freed */
+static guchar* decode(const gchar *in)
+{
+	guchar *tmp;
+	gsize len;
+
+	tmp = g_base64_decode(in, &len);
+
+	return tmp;
+}
+
+static void google_interactive_auth(void)
+{
+	gchar *authentication_uri, *authorization_code;
+
+	authentication_uri = gdata_oauth2_authorizer_build_authentication_uri(authorizer, NULL, FALSE);
+
+	/* (Present the page at the authentication URI to the user, either in an embedded or stand-alone web browser, and
+	 * ask them to grant access to the application and return the code Google gives them.)
+	 */
+	authorization_code = ask_user_for_auth_code(authentication_uri);
+
+	gdata_oauth2_authorizer_request_authorization(authorizer, authorization_code, NULL, NULL);
+
+	g_free(authentication_uri);
+
+	/* Zero out the code before freeing. */
+	if (authorization_code != NULL) {
+		memset(authorization_code, 0, strlen (authorization_code));
+	}
+
+	g_free(authorization_code);
+}
+
+static void google_refresh_ready(GDataOAuth2Authorizer *auth, GAsyncResult *res, gpointer data)
+{
+	GError *error = NULL;
+
+	if (gdata_authorizer_refresh_authorization_finish(GDATA_AUTHORIZER(auth), res, &error) == FALSE) {
+		/* Notify the user of all errors except cancellation errors */
+
+		if (!g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
+			g_debug("%s(): Authorization refresh error: %s", __FUNCTION__, error->message);
+		}
+
+		g_error_free(error);
+
+		google_interactive_auth();
+
+		return;
+	}
+
+	g_debug("%s(): Authorization refresh successful", __FUNCTION__);
 }
 
 /**
@@ -88,70 +219,56 @@ gchar *ask_user_for_code(gchar *uri)
  */
 static int google_init(void)
 {
-	gchar *authentication_uri, *authorization_code;
+	gchar *user;
+	gchar *pwd;
+	gchar *c1;
+	gchar *c2;
+	gchar *c3;
 
-#ifdef OAUTH2
-	authorizer = gdata_oauth2_authorizer_new(CLIENT_ID, CLIENT_KEY, CLIENT_RURI, GDATA_TYPE_CONTACTS_SERVICE);
-	if (authorizer == NULL) {
-		g_debug("Could not create authorizer");
-		return -1;
-	}
+	if (!authorizer) {
+		user = g_settings_get_string(google_settings, "user");
+		pwd = g_settings_get_string(google_settings, "password");
 
-	authentication_uri = gdata_oauth2_authorizer_build_authentication_uri(authorizer, NULL, FALSE);
-
-	/* (Present the page at the authentication URI to the user, either in an embedded or stand-alone web browser, and
-	 * ask them to grant access to the application and return the code Google gives them.)
-	 */
-	authorization_code = ask_user_for_code(authentication_uri);
-
-	gdata_oauth2_authorizer_request_authorization(authorizer, authorization_code, NULL, NULL);
-
-	g_free (authentication_uri);
-
-	/* Zero out the code before freeing. */
-	if (authorization_code != NULL) {
-		memset(authorization_code, 0, strlen (authorization_code));
-	}
-
-	g_free (authorization_code);
-#else
-	gchar *token, *token_secret;
-
-	authorizer = gdata_oauth1_authorizer_new(_("Roger Router"), GDATA_TYPE_CONTACTS_SERVICE);
-
-	authentication_uri = gdata_oauth1_authorizer_request_authentication_uri(authorizer, &token, &token_secret, NULL, NULL);
-
-	authorization_code = ask_user_for_code(authentication_uri);
-
-	gdata_oauth1_authorizer_request_authorization(authorizer, token, token_secret, authorization_code, NULL, NULL);
-
-	if (token_secret != NULL) {
-		memset(token_secret, 0, strlen(token_secret));
-		g_free(token_secret);
-	}
-
-	g_free(token);
-#endif
-
-	service = gdata_contacts_service_new(GDATA_AUTHORIZER(authorizer));
-	if (service == NULL) {
-		g_debug("Could not contacts service");
-		g_object_unref(authorizer);
-		return -2;
-	}
-
-	/*user = g_settings_get_string(google_settings, "user");
-	pwd = g_settings_get_string(google_settings, "password");
-	result = gdata_client_login_authorizer_authenticate(authorizer, user, pwd, NULL, &error);
-	if (result == FALSE) {
-		g_debug("Could not authenticate: Wrong user data?");
-		if (error != NULL) {
-			g_debug("Error: %s", error->message);
+		if (EMPTY_STRING(user) || EMPTY_STRING(pwd)) {
+			return 0;
 		}
-		g_object_unref(service);
-		g_object_unref(authorizer);
-		return -3;
-	}*/
+
+		c1 = (gchar*)decode(CLIENT_1);
+		c2 = (gchar*)decode(CLIENT_2);
+		c3 = (gchar*)decode(CLIENT_3);
+		authorizer = gdata_oauth2_authorizer_new(c1, c2, c3, GDATA_TYPE_CONTACTS_SERVICE);
+		g_free(c3);
+		g_free(c2);
+		g_free(c1);
+
+		if (authorizer == NULL) {
+			g_debug("Could not create authorizer");
+			return -1;
+		}
+	}
+
+	if (!service) {
+		service = gdata_contacts_service_new(GDATA_AUTHORIZER(authorizer));
+		if (service == NULL) {
+			g_debug("Could not contacts service");
+			g_object_unref(authorizer);
+	  		return -2;
+		}
+	}
+
+	if (!gdata_service_is_authorized(GDATA_SERVICE(service))) {
+		/* Try to use refresh token */
+		gchar *token = g_settings_get_string(google_settings, "token");
+
+		if (!EMPTY_STRING(token)) {
+			g_debug("%s(): Trying to refresh authorization", __FUNCTION__);
+
+			gdata_oauth2_authorizer_set_refresh_token(authorizer, token);
+			gdata_authorizer_refresh_authorization_async(GDATA_AUTHORIZER(authorizer), NULL, (GAsyncReadyCallback)google_refresh_ready, NULL);
+		} else {
+			google_interactive_auth();
+		}
+	}
 
 	return 0;
 }
@@ -165,6 +282,9 @@ static int google_shutdown(void) {
 		g_object_unref(service);
 		service = NULL;
 	}
+
+	g_settings_set_string(google_settings, "token", gdata_oauth2_authorizer_dup_refresh_token(authorizer));
+
 	if (authorizer != NULL) {
 		g_object_unref(authorizer);
 		authorizer = NULL;
@@ -763,6 +883,8 @@ void impl_deactivate(PeasActivatable *plugin)
 	if (g_signal_handler_is_connected(G_OBJECT(app_object), google_plugin->priv->signal_id)) {
 		g_signal_handler_disconnect(G_OBJECT(app_object), google_plugin->priv->signal_id);
 	}
+
+	google_shutdown();
 
 	g_object_unref(google_settings);
 

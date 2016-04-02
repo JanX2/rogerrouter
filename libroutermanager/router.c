@@ -26,11 +26,14 @@
 #include <libroutermanager/file.h>
 #include <libroutermanager/csv.h>
 #include <libroutermanager/password.h>
+#include <libroutermanager/routermanager.h>
 
 /** Active router structure */
 static struct router *active_router = NULL;
 /** Global router plugin list */
 static GSList *router_list = NULL;
+/** Router login blocked shield */
+static gboolean router_login_blocked = FALSE;
 
 /** Mapping between config value and port type */
 struct phone_port router_phone_ports[PORT_MAX] = {
@@ -140,6 +143,7 @@ gboolean router_present(struct router_info *router_info)
 {
 	GSList *list;
 
+	g_debug("%s(): called", __FUNCTION__);
 	if (!router_list) {
 		return FALSE;
 	}
@@ -163,7 +167,43 @@ gboolean router_present(struct router_info *router_info)
  */
 gboolean router_login(struct profile *profile)
 {
-	return active_router ? active_router->login(profile) : FALSE;
+	gboolean result;
+
+	if (!active_router) {
+		return FALSE;
+	}
+
+	if (router_login_blocked) {
+		g_debug("%s(): called, but blocked", __FUNCTION__);
+		return FALSE;
+	}
+
+	result = active_router->login(profile);
+	if (!result) {
+		g_warning(_("Login failed. Login data are wrong or permissions are missing.\nPlease check your login data."));
+		emit_message(_("Login failed"), _("Login failed. Login data are wrong or permissions are missing.\nPlease check your login data."));
+		router_login_blocked = TRUE;
+	}
+
+	return result;
+}
+
+/**
+ * \brief Release router login blocked
+ */
+void router_release_lock(void)
+{
+	g_debug("%s(): called", __FUNCTION__);
+	router_login_blocked = FALSE;
+}
+
+/**
+ * \brief Check whether router login is blocked
+ */
+gboolean router_is_locked(void)
+{
+	g_debug("%s(): called", __FUNCTION__);
+	return router_login_blocked;
 }
 
 /**

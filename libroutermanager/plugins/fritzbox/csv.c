@@ -93,7 +93,7 @@ GSList *csv_parse_fritzbox_journal_data(GSList *list, const gchar *data)
 	}
 
 	if (!new_list) {
-		log_save_data("journal.csv", data, strlen(data));
+		log_save_data("fritzbox-journal.csv", data, strlen(data));
 	}
 
 	/* Return call list */

@@ -1,6 +1,6 @@
 /**
  * Roger Router
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This file is part of Roger Router.
  *
@@ -85,7 +85,7 @@ static struct assistant *assistant = NULL;
  * \brief Pre welcome page
  * \param assistant assistant structure
  */
-void welcome_pre(struct assistant *assistant)
+static void welcome_pre(struct assistant *assistant)
 {
 	/* Update title */
 	gtk_header_bar_set_title(GTK_HEADER_BAR(assistant->header), _("Welcome"));
@@ -126,7 +126,7 @@ void profile_entry_changed(GtkEditable *entry, gpointer user_data)
  * \brief Pre profile page
  * \param assistant assistant structure
  */
-void profile_pre(struct assistant *assistant)
+static void profile_pre(struct assistant *assistant)
 {
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(assistant->profile_name));
 
@@ -138,6 +138,21 @@ void profile_pre(struct assistant *assistant)
 
 	/* Update title */
 	gtk_header_bar_set_title(GTK_HEADER_BAR(assistant->header), _("Create a profile"));
+}
+
+/**
+ * \brief Post profile page
+ * \param assistant assistant structure
+ * \return TRUE to continue, FALSE on error
+ */
+static gboolean profile_post(struct assistant *assistant)
+{
+	const gchar *name = gtk_entry_get_text(GTK_ENTRY(assistant->profile_name));
+
+	/* Create new profile based on user input */
+	assistant->profile = profile_new(name);
+
+	return TRUE;
 }
 
 /**
@@ -275,7 +290,6 @@ static void router_pre(struct assistant *assistant)
  */
 static gboolean router_post(struct assistant *assistant)
 {
-	struct router_info *router_info;
 	const gchar *server;
 	gboolean present;
 
@@ -287,12 +301,10 @@ static gboolean router_post(struct assistant *assistant)
 		server = g_object_get_data(G_OBJECT(assistant->router_stack), "server");
 	}
 
-	router_info = g_slice_new0(struct router_info);
-	router_info->host = g_strdup(server);
+	profile_set_host(assistant->profile, server);
 
 	/* Check if router is present */
-	present = router_present(router_info);
-	router_info_free(router_info);
+	present = router_present(assistant->profile->router_info);
 	if (!present) {
 		emit_message(0, _("Could not load router configuration. Please change the router ip and try again"));
 	}
@@ -317,30 +329,19 @@ static void password_pre(struct assistant *assistant)
  */
 static gboolean password_post(struct assistant *assistant)
 {
-	const gchar *name = gtk_entry_get_text(GTK_ENTRY(assistant->profile_name));
-	const gchar *host = g_object_get_data(G_OBJECT(assistant->router_stack), "server");
 	const gchar *user = gtk_entry_get_text(GTK_ENTRY(assistant->user));
 	const gchar *password = gtk_entry_get_text(GTK_ENTRY(assistant->password));
 	gchar **numbers;
 
 	/* Create new profile based on user input */
-	assistant->profile = profile_new(name, host, user, password);
+	profile_set_login_user(assistant->profile, user);
+	profile_set_login_password(assistant->profile, password);
 
-	/* Check for router */
-	if (!router_present(assistant->profile->router_info)) {
-		gchar *message = g_strdup(_("Could not detect box on this host name\nPlease check the host name"));
-
-		emit_message(0, message);
-
-		return FALSE;
-	}
+	/* Release any previous lock */
+	router_release_lock();
 
 	/* Get settings */
 	if (!router_login(assistant->profile) || !router_get_settings(assistant->profile)) {
-		gchar *message = g_strdup(_("Login failed. Login data are wrong or permissions are missing.\nPlease check your login data."));
-
-		emit_message(0, message);
-
 		return FALSE;
 	}
 
@@ -448,7 +449,7 @@ static gboolean finish_post(struct assistant *assistant)
 /** Assistant pages: Name, Pre/Post functions */
 struct assistant_page assistant_pages[] = {
 	{"welcome", welcome_pre, NULL},
-	{"profile", profile_pre, NULL},
+	{"profile", profile_pre, profile_post},
 	{"router", router_pre, router_post},
 	{"password", password_pre, password_post},
 	{"ftp_password", ftp_password_pre, ftp_password_post},

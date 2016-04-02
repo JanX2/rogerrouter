@@ -21,6 +21,7 @@
 #define LIBROUTERMANAGER_APPOBJECT_EMIT_H
 
 #include <libroutermanager/connection.h>
+#include <libroutermanager/network.h>
 #include <libroutermanager/libfaxophone/faxophone.h>
 
 G_BEGIN_DECLS
@@ -34,9 +35,11 @@ void emit_connection_established(struct capi_connection *connection);
 void emit_connection_terminated(struct capi_connection *connection);
 void emit_connection_status(gint status, struct capi_connection *connection);
 
-void emit_message(gint status, gchar *message);
+void emit_message(gchar *title, gchar *message);
 
 void emit_contacts_changed(void);
+
+void emit_authenticate(struct auth_data *auth_data);
 
 G_END_DECLS
 

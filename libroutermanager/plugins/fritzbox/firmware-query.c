@@ -51,7 +51,7 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 	g_debug("Get settings");
 
 	/* Login */
-	if (fritzbox_login(profile) == FALSE) {
+	if (!router_login(profile)) {
 		return FALSE;
 	}
 
@@ -88,7 +88,7 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("Received status code: %d", msg->status_code);
 		g_object_unref(msg);
@@ -202,7 +202,7 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 	json_reader_read_member(reader, "DECT");
 	gint count = json_reader_count_elements(reader);
 
-	for (i = 0; i < count; i++) {
+	for (i = 1; i < count; i++) {
 		const gchar *tmp;
 		const gchar *intern;
 		gchar name_dect[11];
@@ -219,7 +219,7 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 		json_reader_end_member(reader);
 
 		memset(name_dect, 0, sizeof(name_dect));
-		g_snprintf(name_dect, sizeof(name_dect), "name-dect%d", i + 1);
+		g_snprintf(name_dect, sizeof(name_dect), "name-dect%d", i);
 		g_settings_set_string(profile->settings, name_dect, tmp);
 
 		json_reader_end_element(reader);

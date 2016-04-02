@@ -24,11 +24,20 @@ G_BEGIN_DECLS
 
 #include <libsoup/soup.h>
 
-extern SoupSession *soup_session_sync;
-extern SoupSession *soup_session_async;
+struct auth_data {
+	SoupMessage *msg;
+	SoupAuth *auth;
+	SoupSession *session;
+	gboolean retry;
+	gchar *username;
+	gchar *password;
+};
+
+extern SoupSession *soup_session;
 
 gboolean net_init(void);
 void net_shutdown(void);
+void network_authenticate(gboolean auth, struct auth_data *auth_data);
 
 G_END_DECLS
 

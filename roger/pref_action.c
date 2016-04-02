@@ -384,6 +384,14 @@ static gboolean view_cursor_changed_cb(GtkTreeView *view, gpointer user_data)
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(incoming_call_rings_toggle), flags & ACTION_INCOMING_RING);
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(incoming_call_begins_toggle), flags & ACTION_INCOMING_BEGIN);
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(incoming_call_ends_toggle), flags & ACTION_INCOMING_END);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(incoming_call_rings_toggle), flags & ACTION_INCOMING_RING);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(incoming_call_begins_toggle), flags & ACTION_INCOMING_BEGIN);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(incoming_call_ends_toggle), flags & ACTION_INCOMING_END);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(incoming_call_missed_toggle), flags & ACTION_INCOMING_MISSED);
+
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(outgoing_call_begins_toggle), flags & ACTION_OUTGOING_BEGIN);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(outgoing_call_ends_toggle), flags & ACTION_OUTGOING_END);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(outgoing_call_dial_toggle), flags & ACTION_OUTGOING_DIAL);
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(outgoing_call_begins_toggle), flags & ACTION_OUTGOING_BEGIN);
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(outgoing_call_ends_toggle), flags & ACTION_OUTGOING_END);
 

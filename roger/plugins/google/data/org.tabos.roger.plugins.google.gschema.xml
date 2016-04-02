@@ -6,5 +6,8 @@
 		<key name="password" type="s">
 			<default>''</default>
 		</key>
+		<key name="token" type="s">
+			<default>''</default>
+		</key>
 	</schema>
 </schemalist>

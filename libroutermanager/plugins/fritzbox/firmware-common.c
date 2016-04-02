@@ -388,7 +388,7 @@ gboolean fritzbox_present(struct router_info *router_info)
 	url = g_strdup_printf("http://%s/jason_boxinfo.xml", router_info->host);
 	msg = soup_message_new(SOUP_METHOD_GET, url);
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 	if (msg->status_code != 200) {
 		g_object_unref(msg);
 		g_free(url);
@@ -463,17 +463,22 @@ gboolean fritzbox_logout(struct profile *profile, gboolean force)
 		return TRUE;
 	}
 
-	url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
+	//url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
+	//msg = soup_form_request_new(SOUP_METHOD_POST, url,
+	//                            "sid", profile->router_info->session_id,
+	//                            "security:command/logout", "",
+	//                            "getpage", "../html/confirm_logout.html",
+	//                            NULL);
+	url = g_strdup_printf("http://%s/home/home.lua", router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_POST, url,
 	                            "sid", profile->router_info->session_id,
-	                            "security:command/logout", "",
-	                            "getpage", "../html/confirm_logout.html",
+	                            "logout", "1",
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 	if (msg->status_code != 200) {
-		g_debug("Received status code: %d", msg->status_code);
+		g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
 		g_object_unref(msg);
 		return FALSE;
 	}
@@ -902,10 +907,10 @@ gchar *fritzbox_get_ip(struct profile *profile)
 	headers = msg->request_headers;
 	soup_message_headers_append(headers, "SoapAction", "urn:schemas-upnp-org:service:WANIPConnection:1#GetExternalIPAddress");
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 
 	if (msg->status_code != 200) {
-		g_debug("Received status code: %d", msg->status_code);
+		g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
 		g_object_unref(msg);
 		return NULL;
 	}
@@ -956,10 +961,10 @@ gboolean fritzbox_reconnect(struct profile *profile)
 	headers = msg->request_headers;
 	soup_message_headers_append(headers, "SoapAction", "urn:schemas-upnp-org:service:WANIPConnection:1#ForceTermination");
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 
 	if (msg->status_code != 200) {
-		g_debug("Received status code: %d", msg->status_code);
+		g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
 		g_object_unref(msg);
 		return FALSE;
 	}

@@ -353,6 +353,8 @@ void fax_process_cb(GtkWidget *widget, gchar *file_name, gpointer user_data)
 void fax_process_init(void)
 {
 	g_signal_connect(app_object, "fax-process", G_CALLBACK(fax_process_cb), NULL);
+	//g_settings_set_boolean(profile_get_active()->settings, "fax-sff", TRUE);
+	//fax_process_cb(NULL, "/home/jbrummer/t.ps", NULL);
 }
 
 gchar *phone_fax_get_title(void)

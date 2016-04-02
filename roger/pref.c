@@ -104,7 +104,7 @@ void preferences(void)
 	dialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(dialog), _("Preferences"));
 	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(parent));
-	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
+	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
 	gtk_application_add_window(roger_app, GTK_WINDOW(dialog));
 	g_signal_connect(G_OBJECT(dialog), "destroy", G_CALLBACK(dialog_destroy_cb), NULL);
 

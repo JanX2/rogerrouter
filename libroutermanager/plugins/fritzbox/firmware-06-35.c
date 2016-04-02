@@ -115,7 +115,7 @@ gboolean fritzbox_get_fax_information_06_35(struct profile *profile)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("Received status code: %d", msg->status_code);
 		g_object_unref(msg);
@@ -196,7 +196,7 @@ gboolean fritzbox_get_fax_information_06_35(struct profile *profile)
 		                            NULL);
 		g_free(url);
 
-		soup_session_send_message(soup_session_sync, msg);
+		soup_session_send_message(soup_session, msg);
 		if (msg->status_code != 200) {
 			g_debug("Received status code: %d", msg->status_code);
 			g_object_unref(msg);
@@ -243,7 +243,7 @@ gboolean fritzbox_get_fax_information_06_35(struct profile *profile)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("Received status code: %d", msg->status_code);
 		g_object_unref(msg);
@@ -350,7 +350,7 @@ gboolean fritzbox_get_settings_06_35(struct profile *profile)
 	g_debug("Get settings");
 
 	/* Login */
-	if (fritzbox_login(profile) == FALSE) {
+	if (!router_login(profile)) {
 		return FALSE;
 	}
 
@@ -362,7 +362,7 @@ gboolean fritzbox_get_settings_06_35(struct profile *profile)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("Received status code: %d", msg->status_code);
 		g_object_unref(msg);
@@ -400,7 +400,7 @@ gboolean fritzbox_get_settings_06_35(struct profile *profile)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("Received status code: %d", msg->status_code);
 		g_object_unref(msg);
@@ -435,7 +435,7 @@ gboolean fritzbox_get_settings_06_35(struct profile *profile)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session_sync, msg);
+	soup_session_send_message(soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("Received status code: %d", msg->status_code);
 		g_object_unref(msg);
@@ -506,7 +506,7 @@ static gint fritzbox_get_dial_port(struct profile *profile)
 	                             "DialPort", "telcfg:settings/DialPort",
 	                            NULL);
 	/* Send message */
-	soup_session_send_message(soup_session_async, msg);
+	soup_session_send_message(soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("Received status code: %d", msg->status_code);
 		g_object_unref(msg);
@@ -552,7 +552,7 @@ gboolean fritzbox_dial_number_06_35(struct profile *profile, gint port, const gc
 	gint router_port;
 
 	/* Login to box */
-	if (fritzbox_login(profile) == FALSE) {
+	if (!router_login(profile)) {
 		return FALSE;
 	}
 
@@ -572,7 +572,7 @@ gboolean fritzbox_dial_number_06_35(struct profile *profile, gint port, const gc
 		                            "port", port_str,
 		                            "btn_apply", "",
 		                            NULL);
-		soup_session_send_message(soup_session_async, msg);
+		soup_session_send_message(soup_session, msg);
 		g_free(port_str);
 
 		current_port = fritzbox_get_dial_port(profile);
@@ -595,7 +595,7 @@ gboolean fritzbox_dial_number_06_35(struct profile *profile, gint port, const gc
 	g_free(url);
 
 	/* Send message */
-	soup_session_send_message(soup_session_async, msg);
+	soup_session_send_message(soup_session, msg);
 	fritzbox_logout(profile, FALSE);
 
 	return TRUE;
@@ -616,7 +616,7 @@ gboolean fritzbox_hangup_06_35(struct profile *profile, gint port, const gchar *
 	gchar *scramble;
 
 	/* Login to box */
-	if (fritzbox_login(profile) == FALSE) {
+	if (!router_login(profile)) {
 		return FALSE;
 	}
 
@@ -636,7 +636,7 @@ gboolean fritzbox_hangup_06_35(struct profile *profile, gint port, const gchar *
 	g_free(port_str);
 
 	/* Send message */
-	soup_session_send_message(soup_session_async, msg);
+	soup_session_send_message(soup_session, msg);
 	fritzbox_logout(profile, FALSE);
 
 	return TRUE;

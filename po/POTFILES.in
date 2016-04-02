@@ -4,6 +4,7 @@ roger/about.c
 roger/application.c
 roger/assistant.c
 roger/assistant.glade
+roger/authenticate.glade
 roger/contacts.c
 roger/contact_edit.c
 roger/fax.c
@@ -42,8 +43,11 @@ roger/plugins/gnotification/gnotification.c
 [type: gettext/ini]roger/plugins/gnotification/gnotification.plugin.in
 roger/plugins/notification/notification.c
 [type: gettext/ini]roger/plugins/notification/notification.plugin.in
+roger/plugins/webjournal/webjournal.c
+[type: gettext/ini]roger/plugins/webjournal/webjournal.plugin.in
 roger-cli/main_cli.c
 libroutermanager/filter.c
+libroutermanager/router.c
 [type: gettext/ini]libroutermanager/plugins/areacodes_global/areacodes_global.plugin.in
 [type: gettext/ini]libroutermanager/plugins/callmonitor/callmonitor.plugin.in
 [type: gettext/ini]libroutermanager/plugins/fritzbox/fritzbox.plugin.in

@@ -2,8 +2,7 @@
 <gresources>
 	<gresource prefix="/org/tabos/roger">
 		<file preprocess="xml-stripblanks">assistant.glade</file>
+		<file preprocess="xml-stripblanks">authenticate.glade</file>
 		<file preprocess="to-pixdata">images/app.png</file>
-		<!--<file alias="call-start-symbolic.svg" compressed="true" preprocess="xml-stripblanks">images/call-start-symbolic.svg</file>
-		<file alias="call-end-symbolic.svg" compressed="true" preprocess="xml-stripblanks">images/call-end-symbolic.svg</file>-->
 	</gresource>
 </gresources>

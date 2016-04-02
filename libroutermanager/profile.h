@@ -36,7 +36,7 @@ struct profile {
 gboolean profile_init(void);
 void profile_shutdown(void);
 
-struct profile *profile_new(const gchar *name, const gchar *host, const gchar *user, const gchar *password);
+struct profile *profile_new(const gchar *name);
 struct profile *profile_get_active(void);
 GSList *profile_get_list(void);
 void profile_add(struct profile *profile);
@@ -44,6 +44,9 @@ void profile_remove(struct profile *profile);
 void profile_set_active(struct profile *profile);
 void profile_commit(void);
 gboolean profile_detect_active(void);
+void profile_set_host(struct profile *profile, const gchar *host);
+void profile_set_login_user(struct profile *profile, const gchar *user);
+void profile_set_login_password(struct profile *profile, const gchar *password);
 
 G_END_DECLS
 

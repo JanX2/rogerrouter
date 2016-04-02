@@ -270,8 +270,10 @@ int main(int argc, char **argv)
 		exit(-3);
 	}
 
+	routermanager_new(debug, NULL);
 	/* Initialize routermanager */
-	routermanager_init(debug, NULL);
+
+	routermanager_init(NULL);
 	if (!profile_get_active()) {
 		return 0;
 	}

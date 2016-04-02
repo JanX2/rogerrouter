@@ -180,6 +180,9 @@ void router_set_phone_port(struct profile *profile, gint port);
 
 gboolean router_get_suppress_state(struct profile *profile);
 
+void router_release_lock(void);
+gboolean router_is_locked(void);
+
 
 G_END_DECLS
 

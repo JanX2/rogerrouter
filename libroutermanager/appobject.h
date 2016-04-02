@@ -24,10 +24,12 @@
 #include <glib-object.h>
 
 #include <libroutermanager/connection.h>
+#include <libroutermanager/network.h>
 #include <libroutermanager/libfaxophone/faxophone.h>
 
 G_BEGIN_DECLS
 
+/** App Callbacks Signals */
 typedef enum {
 	ACB_JOURNAL_LOADED,
 	ACB_CONNECTION_NOTIFY,
@@ -38,6 +40,7 @@ typedef enum {
 	ACB_CONNECTION_STATUS,
 	ACB_MESSAGE,
 	ACB_CONTACTS_CHANGED,
+	ACB_AUTHENTICATE,
 	ACB_MAX
 } AppCallbackId;
 
@@ -63,8 +66,9 @@ struct _AppObjectClass {
 	void (*connection_established)(struct capi_connection *connection);
 	void (*connection_terminated)(struct capi_connection *connection);
 	void (*connection_status)(gint status, struct capi_connection *connection);
-	void (*message)(gint type, gchar *message);
+	void (*message)(gchar *title, gchar *message);
 	void (*contacts_changed)(void);
+	void (*authenticate)(struct auth_data *auth_data);
 };
 
 GType app_object_get_type(void);

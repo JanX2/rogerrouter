@@ -80,11 +80,9 @@ GSList *profile_get_list(void)
 /**
  * \brief Create new profile structure
  * \param name profile name
- * \param host router host
- * \param password router password
  * \return new profile structure poiner
  */
-struct profile *profile_new(const gchar *name, const gchar *host, const gchar *user, const gchar *password)
+struct profile *profile_new(const gchar *name)
 {
 	struct profile *profile;
 	gchar *settings_path;
@@ -96,19 +94,12 @@ struct profile *profile_new(const gchar *name, const gchar *host, const gchar *u
 	/* Add entries */
 	profile->name = g_strdup(name);
 	profile->router_info = g_slice_new0(struct router_info);
-	profile->router_info->host = g_strdup(host);
-	profile->router_info->user = g_strdup(user);
-	profile->router_info->password = g_strdup(password);
 
 	/* Setup profiles settings */
 	filename = g_build_filename(name, "profile.conf", NULL);
 	settings_path = g_strconcat("/org/tabos/routermanager/profile/", name, "/", NULL);
 	profile->settings = rm_settings_new_with_path(ROUTERMANAGER_SCHEME_PROFILE, settings_path, filename);
 	g_free(filename);
-
-	g_settings_set_string(profile->settings, "host", host);
-	g_settings_set_string(profile->settings, "login-user", user);
-	password_manager_set_password(profile, "login-password", password);
 
 	g_free(settings_path);
 
@@ -315,4 +306,38 @@ void profile_shutdown(void)
 	if (settings) {
 		g_clear_object(&settings);
 	}
+}
+
+/**
+ * \brief Set host name used in profile
+ * \param profile profile structure
+ * \param host new hostname
+ */
+void profile_set_host(struct profile *profile, const gchar *host)
+{
+	if (profile->router_info->host) {
+		g_free(profile->router_info->host);
+	}
+	profile->router_info->host = g_strdup(host);
+	g_settings_set_string(profile->settings, "host", host);
+}
+
+/**
+ * \brief Set login user used in profile
+ * \param profile profile structure
+ * \param user username
+ */
+void profile_set_login_user(struct profile *profile, const gchar *user)
+{
+	g_settings_set_string(profile->settings, "login-user", user);
+}
+
+/**
+ * \brief Set login password used in profile
+ * \param profile profile structure
+ * \param password new password
+ */
+void profile_set_login_password(struct profile *profile, const gchar *password)
+{
+	password_manager_set_password(profile, "login-password", password);
 }

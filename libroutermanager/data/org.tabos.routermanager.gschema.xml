@@ -12,6 +12,12 @@
 		<key name="host" type="s">
 			<default>''</default>
 		</key>
+		<key name="auth-user" type="s">
+			<default>''</default>
+		</key>
+		<key name="auth-password" type="s">
+			<default>''</default>
+		</key>
 		<key name="login-user" type="s">
 			<default>''</default>
 		</key>

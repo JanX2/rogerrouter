@@ -593,7 +593,6 @@ AC_CONFIG_FILES([
     libroutermanager/plugins/areacodes_global/Makefile
     libroutermanager/plugins/pulseaudio/Makefile
     libroutermanager/plugins/reverselookup/Makefile
-    libroutermanager/plugins/webjournal/Makefile
     libroutermanager/plugins/wincred/Makefile
     libroutermanager/plugins/portaudio/Makefile
     libroutermanager/plugins/gstreamer1/Makefile
@@ -626,6 +625,8 @@ AC_CONFIG_FILES([
     roger/plugins/notification/data/Makefile
     roger/plugins/gnotification/Makefile
     roger/plugins/gnotification/data/Makefile
+    roger/plugins/webjournal/Makefile
+    roger/plugins/webjournal/data/Makefile
     roger/images/Makefile
     roger/images/16x16/Makefile
     roger/images/22x22/Makefile

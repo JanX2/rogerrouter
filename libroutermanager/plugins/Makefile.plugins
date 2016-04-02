@@ -10,11 +10,13 @@ EXTRA_DIST = $(plugin_in_files).in
 AM_CFLAGS = \
 	$(PEAS_CFLAGS)		\
 	$(OS_CFLAGS) \
+	$(SOUP_CFLAGS) \
 	-I$(top_srcdir)/
 
 plugin_cflags =			\
 	$(PEAS_CFLAGS)		\
 	$(OS_CFLAGS) \
+	$(SOUP_CFLAGS) \
 	-I$(top_srcdir)/
 
 plugin_ldflags = \

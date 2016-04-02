@@ -95,7 +95,7 @@ libroutermanager_la_SOURCES = \
 
 libroutermanager_la_LDFLAGS = -rdynamic
 libroutermanager_la_LIBADD = -lc $(EXTRA_LIBS) $(PEAS_LIBS) $(SOUP_LIBS) $(CAPI_LIBS) $(SPANDSP_LIBS) $(DBUS_LIBS) $(OS_LIBS)
-libroutermanager_la_CFLAGS = -fno-strict-aliasing $(EXTRA_CFLAGS) $(APP_CFLAGS) $(PEAS_CFLAGS) -Wall $(SOUP_CFLAGS) $(CAPI_CFLAGS) $(SPANDSP_CFLAGS) $(AM_CFLAGS) $(DBUS_CFLAGS) $(OS_CFLAGS) $(GTK_CFLAGS)
+libroutermanager_la_CFLAGS = -fno-strict-aliasing -I.. $(EXTRA_CFLAGS) $(APP_CFLAGS) $(PEAS_CFLAGS) -Wall $(SOUP_CFLAGS) $(CAPI_CFLAGS) $(SPANDSP_CFLAGS) $(AM_CFLAGS) $(DBUS_CFLAGS) $(OS_CFLAGS) $(GTK_CFLAGS)
 
 if WIN32
 libroutermanager_la_LDFLAGS += -no-undefined -avoid-version

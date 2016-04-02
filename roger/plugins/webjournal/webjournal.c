@@ -21,14 +21,19 @@
 #include <stdio.h>
 
 #include <glib.h>
+#include <gtk/gtk.h>
 
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/file.h>
 #include <libroutermanager/routermanager.h>
+#include <libroutermanager/settings.h>
+#include <libroutermanager/gstring.h>
 
-#include "webjournal.h"
+#include <roger/pref.h>
+
+#include <webjournal.h>
 
 #define ROUTERMANAGER_TYPE_WEBJOURNAL_PLUGIN (routermanager_webjournal_plugin_get_type ())
 #define ROUTERMANAGER_WEBJOURNAL_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_WEBJOURNAL_PLUGIN, RouterManagerWebJournalPlugin))
@@ -40,7 +45,9 @@ typedef struct {
 	gchar *footer;
 } RouterManagerWebJournalPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_WEBJOURNAL_PLUGIN, RouterManagerWebJournalPlugin, routermanager_webjournal_plugin)
+ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_WEBJOURNAL_PLUGIN, RouterManagerWebJournalPlugin, routermanager_webjournal_plugin)
+
+static GSettings *webjournal_settings = NULL;
 
 gchar *get_call_type_string(gint type)
 {
@@ -52,11 +59,13 @@ gchar *get_call_type_string(gint type)
 	case CALL_TYPE_MISSED:
 		return "missed";
 	case CALL_TYPE_FAX:
+	case CALL_TYPE_FAX_REPORT:
 		return "fax";
 	case CALL_TYPE_VOICE:
+	case CALL_TYPE_RECORD:
 		return "voice";
-	case CALL_TYPE_FAX_REPORT:
-		return "fax-report";
+	case CALL_TYPE_BLOCKED:
+		return "blocked";
 	}
 
 	return "unknown";
@@ -70,7 +79,7 @@ void webjournal_journal_loaded_cb(AppObject *obj, GSList *journal, gpointer user
 	GSList *list;
 	gchar *out;
 
-	file = g_strconcat(g_get_home_dir(), G_DIR_SEPARATOR_S, "journal.html", NULL);
+	file = g_settings_get_string(webjournal_settings, "filename");
 
 	string = g_string_new(webjournal_plugin->priv->header);
 
@@ -151,6 +160,14 @@ static void impl_activate(PeasActivatable *plugin)
 	webjournal_plugin->priv->footer = file_load(file, NULL);
 	g_free(file);
 
+	webjournal_settings = rm_settings_plugin_new("org.tabos.roger.plugins.webjournal", "webjournal");
+
+	file = g_settings_get_string(webjournal_settings, "filename");
+	if (EMPTY_STRING(file)) {
+		file = g_build_filename(g_get_user_data_dir(), "roger", "journal.html", NULL);
+		g_settings_set_string(webjournal_settings, "filename", file);
+	}
+
 	webjournal_plugin->priv->signal_id = g_signal_connect_after(G_OBJECT(app_object), "journal-loaded", G_CALLBACK(webjournal_journal_loaded_cb), webjournal_plugin);
 
 }
@@ -168,3 +185,54 @@ static void impl_deactivate(PeasActivatable *plugin)
 		g_signal_handler_disconnect(G_OBJECT(app_object), webjournal_plugin->priv->signal_id);
 	}
 }
+
+void filename_button_clicked_cb(GtkButton *button, gpointer user_data)
+{
+	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Set HTML file"), pref_get_window(), GTK_FILE_CHOOSER_ACTION_SAVE, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Save"), GTK_RESPONSE_ACCEPT, NULL);
+	GtkFileFilter *filter;
+
+	filter = gtk_file_filter_new();
+
+	gtk_file_filter_add_mime_type(filter, "text/html");
+	gtk_file_chooser_set_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+		gchar *folder = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+
+		gtk_entry_set_text(GTK_ENTRY(user_data), folder);
+
+		g_free(folder);
+	}
+
+	gtk_widget_destroy(dialog);
+}
+
+GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
+{
+	GtkWidget *grid = gtk_grid_new();
+	GtkWidget *group;
+	GtkWidget *report_dir_label;
+
+	/* Set standard spacing to 5 */
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 15);
+
+	report_dir_label = ui_label_new(_("Web Journal output file"));
+	gtk_grid_attach(GTK_GRID(grid), report_dir_label, 0, 1, 1, 1);
+
+	GtkWidget *report_dir_entry = gtk_entry_new();
+	GtkWidget *report_dir_button = gtk_button_new_with_label(_("Select"));
+
+	gtk_widget_set_hexpand(report_dir_entry, TRUE);
+	g_settings_bind(webjournal_settings, "filename", report_dir_entry, "text", G_SETTINGS_BIND_DEFAULT);
+
+	g_signal_connect(report_dir_button, "clicked", G_CALLBACK(filename_button_clicked_cb), report_dir_entry);
+
+	gtk_grid_attach(GTK_GRID(grid), report_dir_entry, 1, 1, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), report_dir_button, 2, 1, 1, 1);
+
+	group = pref_group_create(grid, _("Web Journal"), TRUE, FALSE);
+
+	return group;
+}
+

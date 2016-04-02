@@ -25,6 +25,7 @@
 #endif
 
 #include <glib.h>
+#include <libintl.h>
 
 G_BEGIN_DECLS
 
@@ -45,7 +46,8 @@ typedef enum {
 } rm_error;
 
 GQuark rm_print_error_quark(void);
-gboolean routermanager_init(gboolean debug, GError **error);
+gboolean routermanager_new(gboolean debug, GError **error);
+gboolean routermanager_init(GError **error);
 void routermanager_shutdown(void);
 gchar *get_directory(gchar *type);
 void routermanager_set_requested_profile(gchar *name);

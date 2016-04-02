@@ -1,4 +1,4 @@
-SUBDIRS = fritzfon gtknotify vcard thunderbird
+SUBDIRS = fritzfon gtknotify vcard thunderbird webjournal
 
 plugindir = ${libdir}/roger/
 

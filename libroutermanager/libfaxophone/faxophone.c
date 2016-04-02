@@ -35,7 +35,7 @@
 #include <libfaxophone/isdn-convert.h>
 #include <config.h>
 
-//#define FAXOPHONE_DEBUG 1
+#define FAXOPHONE_DEBUG 1
 
 /** The current active session */
 static struct session *session = NULL;
@@ -906,6 +906,7 @@ static int capi_indication(_cmsg capi_message)
 		g_debug("IND: CAPI_CONNECT_B3_ACTIVE");
 		ncci = CONNECT_B3_ACTIVE_IND_NCCI(&capi_message);
 		plci = ncci & 0x0000ffff;
+		_cstruct ncpi = capi_message.NCPI;
 
 		connection = capi_find_plci(plci);
 		if (connection == NULL) {
@@ -914,6 +915,16 @@ static int capi_indication(_cmsg capi_message)
 		}
 
 		connection->ncci = ncci;
+		if (1) {
+			int len = ncpi[0] + 1;
+			int tmp;
+			g_debug("NCPI len: %d", len);
+			connection->ncpi = g_malloc0(len);
+			memcpy(connection->ncpi, ncpi, len);
+			for (tmp = 0; tmp < len; tmp++) {
+				g_debug("%2.2x <-> %c", connection->ncpi[tmp], connection->ncpi[tmp]);
+			}
+		}
 
 		isdn_lock();
 		CONNECT_B3_ACTIVE_RESP(&cmsg1, session->appl_id, session->message_number++, ncci);
@@ -1241,6 +1252,7 @@ static int capi_indication(_cmsg capi_message)
 		g_debug("IND: DISCONNECT_B3");
 		ncci = DISCONNECT_B3_IND_NCCI(&capi_message);
 		plci = ncci & 0x0000ffff;
+		ncpi = capi_message.NCPI;
 
 		isdn_lock();
 		DISCONNECT_B3_RESP(&cmsg1, session->appl_id, session->message_number++, ncci);
@@ -1249,6 +1261,17 @@ static int capi_indication(_cmsg capi_message)
 		connection = capi_find_ncci(ncci);
 		if (connection == NULL) {
 			break;
+		}
+
+		if (1) {
+			int len = ncpi[0] + 1;
+			int tmp;
+			g_debug("NCPI len: %d", len);
+			connection->ncpi = g_malloc0(len);
+			memcpy(connection->ncpi, ncpi, len);
+			for (tmp = 0; tmp < len; tmp++) {
+				g_debug("%2.2x <-> %c", connection->ncpi[tmp], connection->ncpi[tmp]);
+			}
 		}
 
 		connection->reason_b3 = DISCONNECT_B3_IND_REASON_B3(&capi_message);
@@ -1559,6 +1582,53 @@ static int capi_init(int controller)
 	}
 
 #ifdef FAXOPHONE_DEBUG
+	for (index = 1; index <= num_controllers; index++) {
+		get_capi_profile(index, &profile);
+
+		g_debug("CAPI 2.0: Controller: %d, Options: 0x%x", index, profile.goptions);
+
+		int channels = profile.nbchannel;
+		int dtmf = profile.goptions & 0x08 ? 1 : 0;
+		int supp_serv = profile.goptions & 0x10;
+		int echo = profile.goptions & 0x200;
+		int intern = profile.goptions & 0x01;
+		int extrn = profile.goptions & 0x02;
+		int transp;
+		int fax;
+		int fax_ext;
+
+		if (profile.support1 & 0x02 && profile.support2 & 0x02 && profile.support3 & 0x01) {
+			transp = 1;
+		} else {
+			transp = 0;
+		}
+
+		if (profile.support1 & 0x10 && profile.support2 & 0x10 && profile.support3 & 0x10) {
+			fax = 1;
+		} else {
+			fax = 0;
+		}
+
+		if (profile.support1 & 0x10 && profile.support2 & 0x10 && profile.support3 & 0x20) {
+			fax_ext = 1;
+		} else {
+			fax_ext = 0;
+		}
+
+		g_debug("CAPI 2.0: B-Channels %d, DTMF %d, FAX %d/%d, Transp %d, SuppServ %d",
+            channels, dtmf, fax, fax_ext, transp, supp_serv);
+		g_debug("CAPI 2.0: Echo: %d, Intern: %d, extrn: %d", echo, intern, extrn);
+
+		//pnManu = ( unsigned char * ) profile.manu;
+
+		//opDebug( FOP_DEBUG, "manufactor profile: 0x%x, 0x%x, 0x%x, 0x%x\n", pnManu[0], pnManu[1], pnManu[2], pnManu[3]);
+		//FopDebug( FOP_DEBUG, "Found nController #%d with %d B-channel(s)\n", nIndex, profile.nbchannel );
+
+		g_debug("CAPI 2.0: B1 support = 0x%x", profile.support1);
+		g_debug("CAPI 2.0: B2 support = 0x%x", profile.support2);
+		g_debug("CAPI 2.0: B3 support = 0x%x", profile.support3);
+	}
+
 	/* Read manufacturer and version from device (entry 0) */
 	g_debug("CAPI 2.0: Controllers found: %d", num_controllers);
 	if (capi20_get_manufacturer(0, buffer)) {

@@ -47,6 +47,7 @@
 #include <roger/icons.h>
 #include <roger/application.h>
 #include <roger/journal.h>
+#include <roger/contacts.h>
 
 #if GTK_CHECK_VERSION(3,12,0)
 #define UHB 1
@@ -583,6 +584,8 @@ static void phone_search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer
 	/* if needed, create contact menu */
 	if (!state->contact_menu) {
 		GtkWidget *placeholder;
+		GtkWidget *image;
+		GtkWidget *text;
 		gint width, height;
 
 		/* Create popover */
@@ -615,9 +618,20 @@ static void phone_search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer
 #endif
 
 		state->box = gtk_list_box_new();
-		placeholder = gtk_label_new(NULL);
-		gtk_label_set_markup(GTK_LABEL(placeholder), _("<b>No contacts found</b>"));
-		gtk_widget_set_visible(placeholder, TRUE);
+
+		placeholder = gtk_grid_new();
+		gtk_widget_set_sensitive(placeholder, FALSE);
+		gtk_widget_set_halign(placeholder, GTK_ALIGN_CENTER);
+		gtk_widget_set_valign(placeholder, GTK_ALIGN_CENTER);
+
+		image = gtk_image_new_from_icon_name(AVATAR_DEFAULT, GTK_ICON_SIZE_DIALOG);
+		gtk_grid_attach(GTK_GRID(placeholder), image, 0, 0, 1, 1);
+
+		text = gtk_label_new(NULL);
+		gtk_label_set_markup(GTK_LABEL(text), _("<b>No contact found</b>"));
+		gtk_grid_attach(GTK_GRID(placeholder), text, 0, 1, 1, 1);
+
+		gtk_widget_show_all(placeholder);
 		gtk_list_box_set_placeholder(GTK_LIST_BOX(state->box), placeholder);
 		gtk_list_box_set_filter_func(GTK_LIST_BOX(state->box), phone_search_entry_filter_cb, state, NULL);
 		gtk_container_add(GTK_CONTAINER(state->scrolled_win), state->box);
@@ -1337,6 +1351,7 @@ static GtkWidget *phone_window_create_menu(struct profile *profile, struct phone
 		item = gtk_radio_button_new_with_label(phone_radio_list, phone->name);
 
 		phone_radio_list = gtk_radio_button_get_group(GTK_RADIO_BUTTON(item));
+		g_debug("phone %d <-> %d", type, phone->type);
 		if (type == phone->type) {
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(item), TRUE);
 		}

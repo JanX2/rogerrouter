@@ -133,11 +133,11 @@ gchar *routermanager_get_requested_profile(void)
 }
 
 /**
- * \brief Initialize routermanager
+ * \brief Create routermanager
  * \param debug enable debug output
  * \return TRUE on success, FALSE on error
  */
-gboolean routermanager_init(gboolean debug, GError **error)
+gboolean routermanager_new(gboolean debug, GError **error)
 {
 	gchar *dir;
 
@@ -168,6 +168,15 @@ gboolean routermanager_init(gboolean debug, GError **error)
 	app_object = app_object_new();
 	g_assert(app_object != NULL);
 
+	return TRUE;
+}
+
+/**
+ * \brief Initialize routermanager
+ * \return TRUE on success, FALSE on error
+ */
+gboolean routermanager_init(GError **error)
+{
 	/* Init filter */
 	filter_init();
 

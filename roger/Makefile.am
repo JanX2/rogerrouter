@@ -6,7 +6,7 @@ sharedir = $(datadir)/roger
 share_DATA = \
 	images/app.png
 
-EXTRA_DIST = $(share_DATA) roger_winres.rc roger.gresource.xml
+EXTRA_DIST = $(share_DATA) roger_winres.rc roger.gresource.xml assistant.glade authenticate.glade
 
 bin_PROGRAMS = roger
 
