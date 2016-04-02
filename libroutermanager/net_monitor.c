@@ -212,7 +212,4 @@ void net_monitor_shutdown(void)
 	/* Disconnect signal handler */
 	g_signal_handlers_disconnect_by_func(monitor, G_CALLBACK(net_monitor_changed_cb), NULL);
 #endif
-
-	/* Send offline state */
-	net_monitor_state_changed(FALSE);
 }
