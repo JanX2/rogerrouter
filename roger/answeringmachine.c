@@ -181,4 +181,6 @@ void answeringmachine_play(const gchar *name)
 
 	g_free(data);
 	g_slice_free(struct journal_playback, playback_data);
+
+	playback_data = NULL;
 }
