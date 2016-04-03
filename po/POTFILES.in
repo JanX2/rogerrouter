@@ -1,6 +1,8 @@
 # List of files that (could) contain strings for translation
 [encoding: UTF-8]
 roger/about.c
+roger/answeringmachine.c
+roger/answeringmachine.glade
 roger/application.c
 roger/assistant.c
 roger/assistant.glade

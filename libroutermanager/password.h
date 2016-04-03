@@ -39,6 +39,8 @@ gboolean password_manager_remove_password(struct profile *profile, const gchar *
 void password_manager_register(struct password_manager *manager);
 GSList *password_manager_get_plugins(void);
 void password_manager_init(void);
+gchar *password_encode(const gchar *in);
+guchar *password_decode(const gchar *in);
 
 G_END_DECLS
 

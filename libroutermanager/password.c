@@ -17,12 +17,146 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#define _XOPEN_SOURCE 600
+
+#include <unistd.h>
+#include <stdlib.h>
+#include <crypt.h>
+
 #include <string.h>
 
 #include <libroutermanager/password.h>
 
+#define PASSWORD_KEY ")!$cvjh)"
+
 /** Internal password manager list */
 static GSList *pm_plugins = NULL;
+guchar crypt_cfb_iv[64];
+gint crypt_cfb_blocksize = 8;
+
+/*
+* Shift len bytes from end of to buffer to beginning, then put len
+* bytes from from at the end.  Caution: the to buffer is unpacked,
+* but the from buffer is not.
+*/
+static void crypt_cfb_shift(unsigned char *to, const unsigned char *from, unsigned len)
+{
+	unsigned i;
+	unsigned j;
+	unsigned k;
+
+	if (len < crypt_cfb_blocksize) {
+		i = len * 8;
+		j = crypt_cfb_blocksize * 8;
+		for (k = i; k < j; k++) {
+			to[0] = to[i];
+			++to;
+		}
+	}
+
+	for (i = 0; i < len; i++) {
+		j = *from++;
+		for (k = 0x80; k; k >>= 1)
+			*to++ = ((j & k) != 0);
+	}
+}
+
+/*
+* XOR len bytes from from into the data at to.  Caution: the from buffer
+* is unpacked, but the to buffer is not.
+*/
+static void crypt_cfb_xor(unsigned char *to, const unsigned char *from, unsigned len)
+{
+	unsigned i;
+	unsigned j;
+	unsigned char c;
+
+	for (i = 0; i < len; i++) {
+		c = 0;
+		for (j = 0; j < 8; j++)
+			c = (c << 1) | *from++;
+		*to++ ^= c;
+	}
+}
+
+/*
+* Take the 8-byte array at *a (must be able to hold 64 bytes!) and unpack
+* each bit into its own byte.
+*/
+static void crypt_unpack(unsigned char *a)
+{
+	int i, j;
+
+	for (i = 7; i >= 0; --i)
+		for (j = 7; j >= 0; --j)
+			a[(i << 3) + j] = (a[i] & (0x80 >> j)) != 0;
+}
+
+static void crypt_cfb_buf(const char key[8], unsigned char *buf, unsigned len, unsigned chunksize, int decrypt)
+{
+	unsigned char temp[64];
+
+	memcpy(temp, key, 8);
+	crypt_unpack(temp);
+	setkey((const char *) temp);
+	memset(temp, 0, sizeof(temp));
+
+	memset(crypt_cfb_iv, 0, sizeof(crypt_cfb_iv));
+
+	if (chunksize > crypt_cfb_blocksize)
+		chunksize = crypt_cfb_blocksize;
+
+	while (len) {
+		memcpy(temp, crypt_cfb_iv, sizeof(temp));
+		encrypt((char *) temp, 0);
+		if (chunksize > len)
+			chunksize = len;
+		if (decrypt)
+			crypt_cfb_shift(crypt_cfb_iv, buf, chunksize);
+		crypt_cfb_xor((unsigned char *) buf, temp, chunksize);
+		if (!decrypt)
+			crypt_cfb_shift(crypt_cfb_iv, buf, chunksize);
+		len -= chunksize;
+		buf += chunksize;
+	}
+}
+
+static void password_encrypt(gchar *password, guint len)
+{
+	crypt_cfb_buf(PASSWORD_KEY, (guchar*)password, len, 1, 0);
+}
+
+static void password_decrypt(gchar *password, guint len)
+{
+	crypt_cfb_buf(PASSWORD_KEY, (guchar*)password, len, 1, 1);
+}
+
+gchar *password_encode(const gchar *in)
+{
+	gchar *tmp;
+	gchar *b64;
+	gsize len;
+
+	tmp = g_strdup(in);
+	len = strlen(tmp);
+	password_encrypt(tmp, len);
+	b64 = g_base64_encode((guchar*)tmp, len);
+	memset(tmp, 0, len);
+	g_free(tmp);
+
+	return b64;
+}
+
+guchar *password_decode(const gchar *in)
+{
+	guchar *tmp;
+	gsize len;
+
+	tmp = g_base64_decode(in, &len);
+	password_decrypt((gchar*)tmp, len);
+
+	return tmp;
+}
 
 /**
  * \brief Find password manager as requested by profile

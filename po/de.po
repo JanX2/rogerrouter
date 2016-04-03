@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-02 23:54+0200\n"
+"POT-Creation-Date: 2016-04-03 14:50+0200\n"
 "PO-Revision-Date: 2015-01-28 20:28+0100\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <jan.brummer@tabos.org>\n"
@@ -25,6 +25,16 @@ msgid ""
 msgstr ""
 "FRITZ!Box Journal, Soft/phone und Fax\n"
 "Gewidmet meinem Vater"
+
+#: ../roger/answeringmachine.c:56
+#, c-format
+msgid "Time: %2.2d:%2.2d:%2.2d"
+msgstr "Zeit: %2.2d:%2.2d:%2.2d"
+
+#: ../roger/answeringmachine.glade.h:1 ../roger/phone.c:1513
+#: ../roger/phone.c:1520
+msgid "Time: 00:00:00"
+msgstr "Zeit: 00:00:00"
 
 #: ../roger/application.c:141
 #, c-format
@@ -255,7 +265,7 @@ msgstr "Ein Benutzer sowie Password werden von der Seite benötigt"
 msgid "Username:"
 msgstr "Benutzername:"
 
-#: ../roger/authenticate.glade.h:4 ../roger/plugins/google/google.c:917
+#: ../roger/authenticate.glade.h:4 ../roger/plugins/google/google.c:899
 msgid "Password:"
 msgstr "Passwort:"
 
@@ -352,9 +362,9 @@ msgstr "<b>Keine Kontakte gefunden</b>"
 msgid "Open image"
 msgstr "Bild öffnen"
 
-#: ../roger/contact_edit.c:129 ../roger/journal.c:1108
+#: ../roger/contact_edit.c:129 ../roger/journal.c:946
 #: ../roger/pref_action.c:163 ../roger/pref_fax.c:53 ../roger/pref_misc.c:50
-#: ../roger/plugins/vcard/vcard.c:1186 ../roger/plugins/google/google.c:102
+#: ../roger/plugins/vcard/vcard.c:1186 ../roger/plugins/google/google.c:104
 #: ../roger/plugins/thunderbird/thunderbird.c:1013
 #: ../roger/plugins/webjournal/webjournal.c:191
 msgid "_Cancel"
@@ -371,13 +381,13 @@ msgid "_No image"
 msgstr "_Kein Bild"
 
 #. Name
-#: ../roger/contact_edit.c:192 ../roger/journal.c:1158
+#: ../roger/contact_edit.c:192 ../roger/journal.c:996
 #: ../roger/pref_action.c:192 ../roger/pref_action.c:513
 #: ../roger/pref_filters.c:205 ../roger/pref_filters.c:567 ../roger/print.c:384
 msgid "Name"
 msgstr "Name"
 
-#: ../roger/contact_edit.c:225 ../roger/journal.c:1160
+#: ../roger/contact_edit.c:225 ../roger/journal.c:998
 #: ../roger/pref_action.c:255 ../roger/pref_filters.c:206 ../roger/print.c:388
 #: ../roger/plugins/gtknotify/gtknotify.c:622
 #: ../roger/plugins/gnotification/gnotification.c:452
@@ -401,7 +411,7 @@ msgstr "Straße"
 msgid "ZIP"
 msgstr "PLZ"
 
-#: ../roger/contact_edit.c:268 ../roger/journal.c:1161
+#: ../roger/contact_edit.c:268 ../roger/journal.c:999
 msgid "City"
 msgstr "Stadt"
 
@@ -506,77 +516,72 @@ msgstr "Existierender Kontakt"
 msgid "New contact"
 msgstr "Neuer Kontakt"
 
-#. Create dialog
-#: ../roger/journal.c:731 ../roger/pref_filters.c:61
-msgid "Voice box"
-msgstr "Anrufbeantworter"
-
 #. Copy phone number
-#: ../roger/journal.c:996
+#: ../roger/journal.c:834
 msgid "Copy number"
 msgstr "Nummer kopieren"
 
 #. Call phone number
-#: ../roger/journal.c:1001
+#: ../roger/journal.c:839
 msgid "Call number"
 msgstr "Nummer wählen"
 
 #. Add contact
-#: ../roger/journal.c:1010
+#: ../roger/journal.c:848
 msgid "Add contact"
 msgstr "Kontakt hinzufügen"
 
 #. Delete entry
-#: ../roger/journal.c:1019
+#: ../roger/journal.c:857
 msgid "Delete entry"
 msgstr "Eintrag löschen"
 
-#: ../roger/journal.c:1108 ../roger/journal.c:1248
+#: ../roger/journal.c:946 ../roger/journal.c:1086
 msgid "Export journal"
 msgstr "Journal exportieren"
 
-#: ../roger/journal.c:1108 ../roger/plugins/webjournal/webjournal.c:191
+#: ../roger/journal.c:946 ../roger/plugins/webjournal/webjournal.c:191
 msgid "_Save"
 msgstr "_Speichern"
 
-#: ../roger/journal.c:1156 ../roger/pref_filters.c:203 ../roger/print.c:376
+#: ../roger/journal.c:994 ../roger/pref_filters.c:203 ../roger/print.c:376
 msgid "Type"
 msgstr "Typ"
 
-#: ../roger/journal.c:1157 ../roger/pref_filters.c:204 ../roger/print.c:380
+#: ../roger/journal.c:995 ../roger/pref_filters.c:204 ../roger/print.c:380
 msgid "Date/Time"
 msgstr "Datum/Zeit"
 
-#: ../roger/journal.c:1159
+#: ../roger/journal.c:997
 msgid "Company"
 msgstr "Firma"
 
-#: ../roger/journal.c:1162 ../roger/pref_filters.c:207
+#: ../roger/journal.c:1000 ../roger/pref_filters.c:207
 msgid "Extension"
 msgstr "Nebenstelle"
 
-#: ../roger/journal.c:1163 ../roger/pref_filters.c:208
+#: ../roger/journal.c:1001 ../roger/pref_filters.c:208
 msgid "Line"
 msgstr "Leitung"
 
-#: ../roger/journal.c:1164 ../roger/print.c:400
+#: ../roger/journal.c:1002 ../roger/print.c:400
 msgid "Duration"
 msgstr "Dauer"
 
-#: ../roger/journal.c:1245
+#: ../roger/journal.c:1083
 msgid "Refresh journal"
 msgstr "Journal laden"
 
-#: ../roger/journal.c:1246
+#: ../roger/journal.c:1084
 msgid "Print journal"
 msgstr "Journal drucken"
 
-#: ../roger/journal.c:1247
+#: ../roger/journal.c:1085
 msgid "Clear journal"
 msgstr "Journal löschen"
 
 #. Journal
-#: ../roger/journal.c:1404 ../roger/plugins/statusicon/gtk.c:199
+#: ../roger/journal.c:1242 ../roger/plugins/statusicon/gtk.c:199
 #: ../roger/plugins/indicator/indicator.c:219
 msgid "Journal"
 msgstr "Journal"
@@ -665,10 +670,6 @@ msgstr "<small>Aufnehmen</small>"
 #: ../roger/phone.c:1339 ../roger/phone.c:1385
 msgid "Phones"
 msgstr "Telefone"
-
-#: ../roger/phone.c:1513 ../roger/phone.c:1520
-msgid "Time: 00:00:00"
-msgstr "Zeit: 00:00:00"
 
 #: ../roger/pref.c:120
 msgid "Router"
@@ -954,6 +955,10 @@ msgstr "Verpasst"
 #: ../roger/plugins/notification/notification.c:507
 msgid "Outgoing"
 msgstr "Ausgehend"
+
+#: ../roger/pref_filters.c:61
+msgid "Voice box"
+msgstr "Anrufbeantworter"
 
 #: ../roger/pref_filters.c:62
 msgid "Fax box"
@@ -1480,11 +1485,11 @@ msgstr "VCard"
 msgid "VCard address book support"
 msgstr "VCard Adressbuch-Support"
 
-#: ../roger/plugins/google/google.c:95
+#: ../roger/plugins/google/google.c:97
 msgid "Google plugin: Authorization required"
 msgstr "Google Plugin: Autorisierung benötigt"
 
-#: ../roger/plugins/google/google.c:97
+#: ../roger/plugins/google/google.c:99
 msgid ""
 "You need to authorize Roger Router to access your Google contact list.\n"
 "\n"
@@ -1500,31 +1505,35 @@ msgstr ""
 "Autorisierungscode. Diesen gibst du im unteren Feld ein und erlaubst so "
 "Roger Router den Zugriff auf deine Google Kontakte."
 
-#: ../roger/plugins/google/google.c:103
+#: ../roger/plugins/google/google.c:105
 msgid "_OK"
 msgstr "_OK"
 
-#: ../roger/plugins/google/google.c:113
+#: ../roger/plugins/google/google.c:115
 msgid "Step 1:"
 msgstr "Schritt 1:"
 
-#: ../roger/plugins/google/google.c:119
+#: ../roger/plugins/google/google.c:121
 msgid "Click here to open the Google authorization page in a browser"
 msgstr "Hier klicken um die Google Autorisierungsseite im Browser zu öffnen"
 
-#: ../roger/plugins/google/google.c:123
+#: ../roger/plugins/google/google.c:125
 msgid "Step 2:"
 msgstr "Schritt 2:"
 
-#: ../roger/plugins/google/google.c:129
+#: ../roger/plugins/google/google.c:131
 msgid "Enter code:"
 msgstr "Code eingeben:"
 
-#: ../roger/plugins/google/google.c:910
+#: ../roger/plugins/google/google.c:241
+msgid "Authorization refresh error"
+msgstr "Fehler bei der Autorisierungserneuerung"
+
+#: ../roger/plugins/google/google.c:892
 msgid "User:"
 msgstr "Benutzer:"
 
-#: ../roger/plugins/google/google.c:923
+#: ../roger/plugins/google/google.c:905
 msgid "Access data"
 msgstr "Zugangsdaten"
 

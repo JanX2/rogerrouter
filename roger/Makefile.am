@@ -6,7 +6,7 @@ sharedir = $(datadir)/roger
 share_DATA = \
 	images/app.png
 
-EXTRA_DIST = $(share_DATA) roger_winres.rc roger.gresource.xml assistant.glade authenticate.glade
+EXTRA_DIST = $(share_DATA) roger_winres.rc roger.gresource.xml assistant.glade authenticate.glade answeringmachine.glade
 
 bin_PROGRAMS = roger
 
@@ -24,6 +24,8 @@ roger_gresource.h: roger.gresource.xml $(shell $(GLIB_COMPILE_RESOURCES) --sourc
 roger_core_SOURCES =\
 	about.c\
 	about.h\
+	answeringmachine.c\
+	answeringmachine.h\
 	application.c\
 	application.h\
 	assistant.c\

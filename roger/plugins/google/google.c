@@ -31,6 +31,7 @@
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/osdep.h>
 #include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/password.h>
 
 #include <roger/main.h>
 
@@ -55,9 +56,9 @@ static GHashTable *table = NULL;
 
 static GDataContactsService *service = NULL;
 
-#define CLIENT_1 "OTQzMTkxMzIzNjczLWY4c205aWR2dWx2MDVlaWI1YzJhcTVhMTgxczdhMTBmLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29t"
-#define CLIENT_2 "V0R2RDFnaE11TnE4eXBoNlVBZWROME9v"
-#define CLIENT_3 "dXJuOmlldGY6d2c6b2F1dGg6Mi4wOm9vYg=="
+#define CLIENT_1 "INvhaCyy2yjRRlm8qA4AAzj+3sKQBup+kAPCVpet6GqnZ42aR9W64a0ZzTGjghMX2MCIWKUxmLF0jsgNL6xPjJx5jYraNaMl"
+#define CLIENT_2 "TkrQbFBaKMvdX//D/SIjQNdo4ayrfhy7"
+#define CLIENT_3 "bEH2rKXuGLrrZq3usMeC4dVwSdIywc8n8g=="
 
 static GDataOAuth2Authorizer *authorizer = NULL;
 
@@ -159,17 +160,6 @@ gchar *ask_user_for_auth_code(const gchar *auth_uri)
 	return retval;
 }
 
-/* returns allocated string which must be freed */
-static guchar* decode(const gchar *in)
-{
-	guchar *tmp;
-	gsize len;
-
-	tmp = g_base64_decode(in, &len);
-
-	return tmp;
-}
-
 static void google_interactive_auth(void)
 {
 	gchar *authentication_uri, *authorization_code;
@@ -213,9 +203,9 @@ static int google_init(void)
 			return 0;
 		}
 
-		c1 = (gchar*)decode(CLIENT_1);
-		c2 = (gchar*)decode(CLIENT_2);
-		c3 = (gchar*)decode(CLIENT_3);
+		c1 = (gchar*)password_decode(CLIENT_1);
+		c2 = (gchar*)password_decode(CLIENT_2);
+		c3 = (gchar*)password_decode(CLIENT_3);
 		authorizer = gdata_oauth2_authorizer_new(c1, c2, c3, GDATA_TYPE_CONTACTS_SERVICE);
 		g_free(c3);
 		g_free(c2);

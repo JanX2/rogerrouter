@@ -3,6 +3,7 @@
 	<gresource prefix="/org/tabos/roger">
 		<file preprocess="xml-stripblanks">assistant.glade</file>
 		<file preprocess="xml-stripblanks">authenticate.glade</file>
+		<file preprocess="xml-stripblanks">answeringmachine.glade</file>
 		<file preprocess="to-pixdata">images/app.png</file>
 	</gresource>
 </gresources>

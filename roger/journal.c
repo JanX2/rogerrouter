@@ -34,7 +34,6 @@
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/file.h>
 #include <libroutermanager/osdep.h>
-#include <libroutermanager/voxplay.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/lookup.h>
 #include <libroutermanager/csv.h>
@@ -49,6 +48,7 @@
 #include <roger/icons.h>
 #include <roger/application.h>
 #include <roger/uitools.h>
+#include <roger/answeringmachine.h>
 
 GtkWidget *journal_view = NULL;
 GtkWidget *journal_win = NULL;
@@ -628,168 +628,6 @@ void journal_update_filter(void)
 	gtk_combo_box_set_active(GTK_COMBO_BOX(journal_filter_box), 0);
 }
 
-struct journal_playback
-{
-	gchar *data;
-	gsize len;
-	gpointer vox_data;
-	gint fraction;
-
-	GtkWidget *media_button;
-	GtkWidget *scale;
-};
-
-gboolean vox_update_ui(gpointer data)
-{
-	struct journal_playback *playback_data = data;
-	gint fraction;
-
-	fraction = vox_get_fraction(playback_data->vox_data);
-
-	if (playback_data->fraction != fraction) {
-		playback_data->fraction = fraction;
-
-		gtk_range_set_value(GTK_RANGE(playback_data->scale), (float)playback_data->fraction / (float)100);
-
-		if (playback_data->fraction == 100) {
-			GtkWidget *media_image = gtk_image_new_from_icon_name("media-playback-start-symbolic", GTK_ICON_SIZE_BUTTON);
-			gtk_button_set_image(GTK_BUTTON(playback_data->media_button), media_image);
-		}
-	}
-
-	return TRUE;
-}
-
-void vox_media_button_clicked_cb(GtkWidget *button, gpointer user_data)
-{
-	struct journal_playback *playback_data = user_data;
-
-	if (playback_data->vox_data && playback_data->fraction != 100) {
-		GtkWidget *media_image;
-
-		if (vox_playpause(playback_data->vox_data)) {
-			media_image = gtk_image_new_from_icon_name("media-playback-pause-symbolic", GTK_ICON_SIZE_BUTTON);
-		} else {
-			media_image = gtk_image_new_from_icon_name("media-playback-start-symbolic", GTK_ICON_SIZE_BUTTON);
-		}
-
-		gtk_button_set_image(GTK_BUTTON(playback_data->media_button), media_image);
-	} else {
-		vox_play(playback_data->vox_data);
-
-		GtkWidget *media_image = gtk_image_new_from_icon_name("media-playback-pause-symbolic", GTK_ICON_SIZE_BUTTON);
-		gtk_button_set_image(GTK_BUTTON(playback_data->media_button), media_image);
-	}
-}
-
-gboolean vox_scale_change_value_cb(GtkRange *range, GtkScrollType scroll, gdouble value, gpointer user_data)
-{
-	struct journal_playback *playback_data = user_data;
-	value = ABS(value);
-
-	if (playback_data->vox_data && playback_data->fraction != 100) {
-		vox_seek(playback_data->vox_data, value);
-	}
-
-	return FALSE;
-}
-
-void journal_play_voice(const gchar *name)
-{
-	GtkWidget *dialog;
-	GtkWidget *content_area;
-	GtkWidget *grid;
-	GtkWidget *media_button;
-	GtkWidget *scale;
-	gsize len = 0;
-	gchar *data = router_load_voice(profile_get_active(), name, &len);
-	struct journal_playback *playback_data;
-	guint update_id;
-	GError *error = NULL;
-	gpointer vox;
-
-	if (!data || !len) {
-		g_debug("could not load file!");
-		g_free(data);
-		return;
-	}
-
-	vox = vox_init(data, len, &error);
-	if (!vox) {
-		g_debug("Could not init vox!");
-		g_free(data);
-		return;
-	}
-
-	gint flags = 0;
-
-	if (roger_uses_headerbar()) {
-		flags |= GTK_DIALOG_USE_HEADER_BAR;
-	}
-
-	/* Create dialog */
-	dialog = gtk_dialog_new_with_buttons(_("Voice box"), GTK_WINDOW(journal_win), flags, NULL/*_("_Close"), GTK_RESPONSE_CLOSE*/, NULL);
-	content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
-
-	playback_data = g_slice_new(struct journal_playback);
-	playback_data->data = data;
-	playback_data->len = len;
-	playback_data->vox_data = vox;
-
-	grid = gtk_grid_new();
-	gtk_widget_set_margin(grid, 12, 12, 12, 12);
-	gtk_grid_set_column_spacing(GTK_GRID(grid), 6);
-	gtk_grid_set_row_spacing(GTK_GRID(grid), 12);
-
-	media_button = gtk_button_new();
-
-	playback_data->media_button = media_button;
-	g_signal_connect(media_button, "clicked", G_CALLBACK(vox_media_button_clicked_cb), playback_data);
-	GtkWidget *media_image = gtk_image_new_from_icon_name("media-playback-pause-symbolic", GTK_ICON_SIZE_BUTTON);
-	gtk_button_set_image(GTK_BUTTON(media_button), media_image);
-
-	gchar *css_data = g_strdup_printf(".circular-button { border-radius: 20px; outline-radius: 20px; }");
-	GtkCssProvider *css_provider = gtk_css_provider_get_default();
-	gtk_css_provider_load_from_data(css_provider, css_data, -1, NULL);
-	g_free(css_data);
-
-	GtkStyleContext *style_context =  gtk_widget_get_style_context(media_button);
-	gtk_style_context_add_provider(style_context, GTK_STYLE_PROVIDER(css_provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
-	gtk_style_context_add_class(style_context, "circular-button");
-
-	gtk_grid_attach(GTK_GRID(grid), media_button, 0, 1, 1, 1);
-
-	scale = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL, 0.0f, 1.0f, 0.1f);
-	gtk_scale_set_draw_value(GTK_SCALE(scale), FALSE);
-	gtk_widget_set_valign(scale, GTK_ALIGN_CENTER);
-	playback_data->scale = scale;
-	g_signal_connect(scale, "change-value", G_CALLBACK(vox_scale_change_value_cb), playback_data);
-	gtk_widget_set_hexpand(scale, TRUE);
-	gtk_grid_attach(GTK_GRID(grid), scale, 1, 1, 1, 1);
-
-	gtk_container_add(GTK_CONTAINER(content_area), grid);
-	gtk_widget_set_size_request(dialog, 300, 150);
-	gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
-
-	update_id = g_timeout_add(250, vox_update_ui, playback_data);
-	vox_play(playback_data->vox_data);
-
-	gtk_widget_show_all(content_area);
-	gtk_dialog_run(GTK_DIALOG(dialog));
-
-	g_source_remove(update_id);
-
-	if (playback_data->vox_data) {
-		vox_stop(playback_data->vox_data);
-	}
-
-	gtk_widget_destroy(dialog);
-	playback_data->scale = NULL;
-
-	g_free(data);
-	g_slice_free(struct journal_playback, playback_data);
-}
-
 void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
 {
 	struct call *call;
@@ -816,7 +654,7 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 		os_execute(call->priv);
 		break;
 	case CALL_TYPE_VOICE:
-		journal_play_voice(call->priv);
+		answeringmachine_play(call->priv);
 		break;
 	default:
 		app_show_phone_window(call->remote, NULL);

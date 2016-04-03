@@ -28,6 +28,7 @@ gboolean vox_stop(gpointer vox_data);
 gboolean vox_playpause(gpointer vox_data);
 gboolean vox_seek(gpointer vox_data, gdouble pos);
 gint vox_get_fraction(gpointer vox_data);
+gfloat vox_get_seconds(gpointer vox_data);
 
 G_END_DECLS
 
