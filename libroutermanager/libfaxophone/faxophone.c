@@ -35,7 +35,7 @@
 #include <libfaxophone/isdn-convert.h>
 #include <config.h>
 
-#define FAXOPHONE_DEBUG 1
+//#define FAXOPHONE_DEBUG 1
 
 /** The current active session */
 static struct session *session = NULL;
