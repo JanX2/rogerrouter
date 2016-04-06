@@ -290,12 +290,12 @@ gchar *convert_to_fax(gchar *file_name)
 #ifdef FAX_SFF
 	if (g_settings_get_boolean(profile->settings, "fax-sff")) {
 		args[5] = "-sDEVICE=cfax";
-		out_file = g_strdup_printf("%s.sff", file_name);
+		out_file = g_strdup_printf("%s/%s.sff", g_get_user_cache_dir(), g_path_get_basename(file_name));
 	} else
 #endif
 	{
 		args[5] = "-sDEVICE=tiffg4";
-		out_file = g_strdup_printf("%s.tif", file_name);
+		out_file = g_strdup_printf("%s/%s.tif", g_get_user_cache_dir(), g_path_get_basename(file_name));
 	}
 
 	args[6] = "-dPDFFitPage";
