@@ -1,5 +1,3 @@
-SUBDIRS = data
-
 plugin_in_files = vcard.plugin
 
 include ../Makefile.plugins
@@ -15,3 +13,13 @@ libvcard_la_SOURCES = \
 libvcard_la_CFLAGS = $(plugin_cflags) $(EXTRA_CFLAGS)
 libvcard_la_LDFLAGS = $(plugin_ldflags) $(EXTRA_LIBS)
 libvcard_la_LIBADD  = $(plugin_libadd) $(EXTRA_LIBS)
+
+#This has to be defined, because GSETTINGS_CHECK_RULE adds to it
+MOSTLYCLEANFILES =
+
+@INTLTOOL_SCHEMAS_RULE@
+
+gsettings_SCHEMAS = org.tabos.roger.plugins.vcard.gschema.xml
+@GSETTINGS_RULES@
+
+EXTRA_DIST += $(gsettings_SCHEMAS)

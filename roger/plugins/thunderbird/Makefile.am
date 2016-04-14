@@ -1,5 +1,3 @@
-SUBDIRS = data
-
 plugin_in_files = thunderbird.plugin
 
 include ../Makefile.plugins
@@ -14,3 +12,13 @@ libthunderbird_la_SOURCES = \
 libthunderbird_la_CFLAGS = $(plugin_cflags) $(EXTRA_CFLAGS) $(SOUP_CFLAGS)
 libthunderbird_la_LDFLAGS = $(plugin_ldflags) $(EXTRA_LIBS) $(SOUP_LIBS)
 libthunderbird_la_LIBADD  = $(plugin_libadd) $(EXTRA_LIBS) $(SOUP_LIBS)
+
+#This has to be defined, because GSETTINGS_CHECK_RULE adds to it
+MOSTLYCLEANFILES =
+
+@INTLTOOL_SCHEMAS_RULE@
+
+gsettings_SCHEMAS = org.tabos.roger.plugins.thunderbird.gschema.xml
+@GSETTINGS_RULES@
+
+EXTRA_DIST += $(gsettings_SCHEMAS)

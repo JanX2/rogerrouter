@@ -276,7 +276,7 @@ static void *gstreamer_open(void)
 			"is-live", 1,
 			"format", 3,
 			"block", 1,
-			"max-bytes", 320,
+			"max-bytes", 160,
 			NULL);
 
 		filter = gst_element_factory_make("capsfilter", "filter");

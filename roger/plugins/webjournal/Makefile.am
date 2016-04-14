@@ -1,5 +1,3 @@
-SUBDIRS = data
-
 plugin_in_files = webjournal.plugin
 
 include ../Makefile.plugins
@@ -22,3 +20,13 @@ libwebjournal_la_SOURCES = \
 libwebjournal_la_CFLAGS = $(plugin_cflags) -DPLUGIN_DIR=\"$(plugindir)\" $(SOUP_CFLAGS)
 libwebjournal_la_LDFLAGS = $(plugin_ldflags)
 libwebjournal_la_LIBADD  = $(plugin_libadd) $(SOUP_LIBADD)
+
+#This has to be defined, because GSETTINGS_CHECK_RULE adds to it
+MOSTLYCLEANFILES =
+
+@INTLTOOL_SCHEMAS_RULE@
+
+gsettings_SCHEMAS = org.tabos.roger.plugins.webjournal.gschema.xml
+@GSETTINGS_RULES@
+
+EXTRA_DIST += $(gsettings_SCHEMAS)

@@ -1,5 +1,3 @@
-SUBDIRS = data
-
 plugin_in_files = indicator.plugin
 
 include ../Makefile.plugins
@@ -14,3 +12,13 @@ libindicator_la_SOURCES = \
 libindicator_la_CFLAGS = $(plugin_cflags) $(APPINDICATOR_CFLAGS) $(EXTRA_CFLAGS)
 libindicator_la_LDFLAGS = $(plugin_ldflags)
 libindicator_la_LIBADD  = $(plugin_libadd) $(APPINDICATOR_LIBS)
+
+#This has to be defined, because GSETTINGS_CHECK_RULE adds to it
+MOSTLYCLEANFILES =
+
+@INTLTOOL_SCHEMAS_RULE@
+
+gsettings_SCHEMAS = org.tabos.roger.plugins.indicator.gschema.xml
+@GSETTINGS_RULES@
+
+EXTRA_DIST += $(gsettings_SCHEMAS)

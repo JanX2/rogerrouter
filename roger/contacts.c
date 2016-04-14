@@ -42,6 +42,11 @@ static GtkWidget *contacts_search_entry = NULL;
 static GtkWidget *contacts_list_box = NULL;
 static GtkWidget *view_port = NULL;
 static GtkWidget *contacts_header_bar_label = NULL;
+static GtkWidget *contacts_edit_button = NULL;
+static GtkWidget *contacts_add_button = NULL;
+static GtkWidget *contacts_remove_button = NULL;
+
+static gchar *contacts_number = NULL;
 
 /**
  * \brief Phone/dial button clicked
@@ -82,12 +87,14 @@ void contacts_update_details(struct contact *contact)
 
 	grid = gtk_grid_new();
 
+	gtk_label_set_text(GTK_LABEL(contacts_header_bar_label), "");
+
 	if (address_book_available()) {
 		if (contact) {
 			gtk_widget_set_margin(grid, 20, 25, 20, 25);
 
-			gtk_grid_set_row_spacing(GTK_GRID(grid), 15);
-			gtk_grid_set_column_spacing(GTK_GRID(grid), 15);
+			gtk_grid_set_row_spacing(GTK_GRID(grid), 6);
+			gtk_grid_set_column_spacing(GTK_GRID(grid), 16);
 
 			frame = gtk_frame_new(NULL);
 			gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_ETCHED_IN);
@@ -144,6 +151,7 @@ void contacts_update_details(struct contact *contact)
 				default:
 					type = ui_label_new(_("Unknown"));
 				}
+
 				number = gtk_label_new(phone_number->number);
 				gtk_label_set_selectable(GTK_LABEL(number), TRUE);
 				gtk_widget_set_halign(number, GTK_ALIGN_START);
@@ -193,17 +201,53 @@ void contacts_update_details(struct contact *contact)
 
 				g_string_free(addr_str, TRUE);
 				detail_row++;
+
 			}
+			gtk_widget_set_visible(contacts_edit_button, TRUE);
+		} else {
+			GtkWidget *box;
+			GtkWidget *placeholder;
+			GtkWidget *img;
+
+			box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
+			gtk_widget_set_halign(box, GTK_ALIGN_CENTER);
+			gtk_widget_set_hexpand(box, TRUE);
+			gtk_widget_set_valign(box, GTK_ALIGN_CENTER);
+			gtk_widget_set_vexpand(box, TRUE);
+			gtk_grid_attach(GTK_GRID(grid), box, 0, 0, 1, 1);
+
+			img = gtk_image_new_from_icon_name(AVATAR_DEFAULT, GTK_ICON_SIZE_DIALOG);
+			gtk_image_set_pixel_size(GTK_IMAGE(img), 128);
+			gtk_box_pack_start(GTK_BOX(box), img, TRUE, TRUE, 6);
+
+			placeholder = gtk_label_new(NULL);
+			gtk_label_set_markup(GTK_LABEL(placeholder), _("<b>Choose a contact</b>"));
+			gtk_box_pack_start(GTK_BOX(box), placeholder, TRUE, TRUE, 6);
+			gtk_widget_set_sensitive(box, FALSE);
+
+			gtk_widget_set_visible(contacts_edit_button, FALSE);
 		}
 	} else {
+		GtkWidget *box;
 		GtkWidget *placeholder;
+		GtkWidget *img;
+
+		box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
+		gtk_widget_set_halign(box, GTK_ALIGN_CENTER);
+		gtk_widget_set_hexpand(box, TRUE);
+		gtk_widget_set_valign(box, GTK_ALIGN_CENTER);
+		gtk_widget_set_vexpand(box, TRUE);
+		gtk_grid_attach(GTK_GRID(grid), box, 0, 0, 1, 1);
+
+		img = gtk_image_new_from_icon_name("x-office-address-book-symbolic", GTK_ICON_SIZE_DIALOG);
+		gtk_image_set_pixel_size(GTK_IMAGE(img), 128);
+		gtk_box_pack_start(GTK_BOX(box), img, TRUE, TRUE, 6);
 
 		placeholder = gtk_label_new(NULL);
-		gtk_label_set_markup(GTK_LABEL(placeholder), _("<b>No address book plugin selected\nPlease activate one in the settings</b>"));
-		gtk_widget_set_halign(placeholder, GTK_ALIGN_CENTER);
-		gtk_widget_set_hexpand(placeholder, TRUE);
-		gtk_widget_set_valign(placeholder, GTK_ALIGN_CENTER);
-		gtk_widget_set_vexpand(placeholder, TRUE);
+		gtk_label_set_markup(GTK_LABEL(placeholder), _("<b>No address book plugin selected</b>"));
+		gtk_box_pack_start(GTK_BOX(box), placeholder, TRUE, TRUE, 6);
+
+		gtk_widget_set_visible(contacts_edit_button, FALSE);
 	}
 
 	gtk_widget_show_all(grid);
@@ -341,6 +385,15 @@ void add_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	contact = g_slice_new0(struct contact);
 	contact->name = g_strdup("");
 
+	if (contacts_number) {
+		struct phone_number *phone_number = g_malloc0(sizeof(struct phone_number));
+
+		phone_number->number = g_strdup(contacts_number);
+		phone_number->type = PHONE_NUMBER_MOBILE;
+
+		contact->numbers = g_slist_append(contact->numbers, phone_number);
+	}
+
 	/* Open contact editor with new contact */
 	contact_editor(contact, contacts_window);
 
@@ -380,11 +433,20 @@ void edit_button_clicked_cb(GtkWidget *button, gpointer user_data)
 		return;
 	}
 
+	if (contacts_number) {
+		struct phone_number *phone_number = g_malloc0(sizeof(struct phone_number));
+
+		phone_number->number = g_strdup(contacts_number);
+		phone_number->type = PHONE_NUMBER_MOBILE;
+
+		contact->numbers = g_slist_append(contact->numbers, phone_number);
+	}
+
 	/* Open contact editor */
 	contact_editor(contact, contacts_window);
 
 	/* Update contact list */
-	contacts_update_list(user_data, contact);
+	contacts_update_list(contacts_list_box, contact);
 
 	/* Update contact details */
 	//contacts_update_details(contact);
@@ -453,15 +515,28 @@ gint contacts_window_delete_event_cb(GtkWidget *widget, GdkEvent event, gpointer
 	contacts_window_grid = NULL;
 	detail_grid = NULL;
 
+	if (contacts_number) {
+		g_free(contacts_number);
+		contacts_number = NULL;
+	}
+
 	return FALSE;
 }
 
 static void contacts_contacts_changed_cb(AppObject *object, gpointer user_data)
 {
-	GtkWidget *list_box = user_data;
-
 	/* Update contact list */
-	contacts_update_list(list_box, NULL);
+	contacts_update_list(contacts_list_box, NULL);
+}
+
+void contacts_set_number(gchar *number)
+{
+	if (contacts_number) {
+		g_free(contacts_number);
+		contacts_number = NULL;
+	}
+
+	contacts_number = g_strdup(number);
 }
 
 /**
@@ -480,6 +555,7 @@ void contacts(void)
 
 #if 1
 	GtkBuilder *builder;
+	GtkWidget *contacts_header_bar_left;
 
 	/* Only allow one contact window at a time */
 	if (contacts_window) {
@@ -494,21 +570,38 @@ void contacts(void)
 	}
 
 	contacts_window = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_window"));
+	gtk_window_set_transient_for(GTK_WINDOW(contacts_window), journal_get_window());
+	//gtk_window_set_modal(GTK_WINDOW(contacts_window), TRUE);
+
 	header_bar = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_header_bar"));
 	contacts_list_box = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_list_box"));
 	contacts_search_entry = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_search_entry"));
+	contacts_edit_button = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_edit_button"));
+	contacts_add_button = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_add_button"));
+	contacts_remove_button = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_remove_button"));
 	//contacts_window_grid = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_window_grid"));
 	scrolled = GTK_WIDGET(gtk_builder_get_object(builder, "scrolled_window"));
 	view_port = GTK_WIDGET(gtk_builder_get_object(builder, "view_port"));
+	contacts_header_bar_left = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_header_bar_left"));
+	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(contacts_header_bar_left), address_book_get_name());
 
 	contacts_header_bar_label = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_header_bar_label"));
 
 	gtk_window_set_titlebar(GTK_WINDOW(contacts_window), header_bar);
 
+	/* Only set buttons to sensitive if we can write to the selected book */
+	if (!address_book_can_save()) {
+		gtk_widget_set_sensitive(contacts_add_button, FALSE);
+		gtk_widget_set_sensitive(contacts_remove_button, FALSE);
+		gtk_widget_set_sensitive(contacts_edit_button, FALSE);
+	}
+
 	/* Update contact list */
 	contacts_update_list(contacts_list_box, NULL);
 
 	gtk_builder_connect_signals(builder, NULL);
+
+	g_signal_connect(app_object, "contacts-changed", G_CALLBACK(contacts_contacts_changed_cb), contacts_list_box);
 
 	/* Show window */
 	gtk_widget_show_all(contacts_window);

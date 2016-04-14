@@ -1,5 +1,3 @@
-SUBDIRS = data
-
 plugin_in_files = statusicon.plugin
 
 include ../Makefile.plugins
@@ -14,3 +12,13 @@ libstatusicon_la_SOURCES = \
 libstatusicon_la_CFLAGS = $(plugin_cflags)
 libstatusicon_la_LDFLAGS = $(plugin_ldflags)
 libstatusicon_la_LIBADD  = $(plugin_libadd)
+
+#This has to be defined, because GSETTINGS_CHECK_RULE adds to it
+MOSTLYCLEANFILES =
+
+@INTLTOOL_SCHEMAS_RULE@
+
+gsettings_SCHEMAS = org.tabos.roger.plugins.statusicon.gschema.xml
+@GSETTINGS_RULES@
+
+EXTRA_DIST += $(gsettings_SCHEMAS)

@@ -32,6 +32,8 @@
 #include <libroutermanager/call.h>
 #include <libroutermanager/ftp.h>
 #include <libroutermanager/gstring.h>
+#include <libroutermanager/routermanager.h>
+#include <libroutermanager/appobject-emit.h>
 
 #include "fritzbox.h"
 #include "firmware-common.h"
@@ -629,6 +631,7 @@ GSList *fritzbox_load_faxbox(GSList *journal)
 
 	if (!ftp_login(client, user, router_get_ftp_password(profile))) {
 		g_warning("Could not login to router ftp");
+		emit_message(_("FTP Login failed"), _("Please check your ftp credentials"));
 		ftp_shutdown(client);
 		return journal;
 	}
@@ -755,6 +758,7 @@ GSList *fritzbox_load_voicebox(GSList *journal)
 
 	if (!ftp_login(client, user, router_get_ftp_password(profile))) {
 		g_warning("Could not login to router ftp");
+		emit_message(_("FTP Login failed"), _("Please check your ftp credentials"));
 		ftp_shutdown(client);
 		return journal;
 	}

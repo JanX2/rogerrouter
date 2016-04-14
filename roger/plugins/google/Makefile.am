@@ -1,5 +1,3 @@
-SUBDIRS = data
-
 plugin_in_files = google.plugin
 
 include ../Makefile.plugins
@@ -14,3 +12,13 @@ libgoogle_la_SOURCES = \
 libgoogle_la_CFLAGS = $(plugin_cflags) $(EXTRA_CFLAGS) $(SOUP_CFLAGS) $(GDATA_CFLAGS)
 libgoogle_la_LDFLAGS = $(plugin_ldflags) $(EXTRA_LIBS) $(SOUP_LIBS) $(GDATA_LIBS)
 libgoogle_la_LIBADD  = $(plugin_libadd) $(EXTRA_LIBS) $(SOUP_LIBS) $(GDATA_LIBS)
+
+#This has to be defined, because GSETTINGS_CHECK_RULE adds to it
+MOSTLYCLEANFILES =
+
+@INTLTOOL_SCHEMAS_RULE@
+
+gsettings_SCHEMAS = org.tabos.roger.plugins.google.gschema.xml
+@GSETTINGS_RULES@
+
+EXTRA_DIST += $(gsettings_SCHEMAS)

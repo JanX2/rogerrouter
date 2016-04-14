@@ -339,5 +339,5 @@ void profile_set_login_user(struct profile *profile, const gchar *user)
  */
 void profile_set_login_password(struct profile *profile, const gchar *password)
 {
-	password_manager_set_password(profile, "login-password", password);
+	password_manager_set_password(profile, profile->settings, "login-password", password);
 }

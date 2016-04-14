@@ -33,7 +33,7 @@ struct password_manager {
 	gboolean (*remove_password)(struct profile *profile, const gchar *name);
 };
 
-void password_manager_set_password(struct profile *profile, const gchar *name, const gchar *password);
+void password_manager_set_password(struct profile *profile, GSettings *settings, const gchar *name, const gchar *password);
 gchar *password_manager_get_password(struct profile *profile, const gchar *name);
 gboolean password_manager_remove_password(struct profile *profile, const gchar *name);
 void password_manager_register(struct password_manager *manager);

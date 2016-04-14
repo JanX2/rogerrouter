@@ -231,7 +231,7 @@ again:
 		g_resolver_free_addresses(list);
 
 		if (retry) {
-			router_dial_number(profile, PORT_ISDN1, "#96*5*");
+			router_dial_number(profile, ROUTER_DIAL_PORT_AUTO, "#96*5*");
 			g_usleep(G_USEC_PER_SEC * 2);
 			retry = FALSE;
 			error = NULL;

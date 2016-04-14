@@ -168,7 +168,7 @@ gboolean ftp_read_control_response(struct ftp *client)
 				multiline_end = TRUE;
 			}
 		}
-	} while ((g_timer_elapsed(client->timer, NULL) < 10) && (!client->response || (multiline_start && !multiline_end)));
+	} while ((g_timer_elapsed(client->timer, NULL) < 5) && (!client->response || (multiline_start && !multiline_end)));
 
 	g_timer_stop(client->timer);
 

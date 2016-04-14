@@ -1,5 +1,3 @@
-SUBDIRS = data
-
 plugin_in_files = notification.plugin
 
 include ../Makefile.plugins
@@ -14,3 +12,13 @@ libnotification_la_SOURCES = \
 libnotification_la_CFLAGS = $(plugin_cflags) $(LIBNOTIFY_CFLAGS)
 libnotification_la_LDFLAGS = $(plugin_ldflags)
 libnotification_la_LIBADD  = $(plugin_libadd) $(LIBNOTIFY_LIBS)
+
+#This has to be defined, because GSETTINGS_CHECK_RULE adds to it
+MOSTLYCLEANFILES =
+
+@INTLTOOL_SCHEMAS_RULE@
+
+gsettings_SCHEMAS = org.tabos.roger.plugins.notify.gschema.xml
+@GSETTINGS_RULES@
+
+EXTRA_DIST += $(gsettings_SCHEMAS)

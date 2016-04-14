@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce configure.
 
 m4_define([roger_major], [1])
 m4_define([roger_minor], [8])
-m4_define([roger_micro], [14])
+m4_define([roger_micro], [15-pre1])
 
 m4_define([roger_version],[roger_major.roger_minor.roger_micro])
 
@@ -290,6 +290,25 @@ AC_MSG_RESULT($with_kwallet)
 
 AM_CONDITIONAL(WITH_KWALLET, test "x$with_kwallet" != "xno")
 
+dnl ********************************************************************
+dnl kwallet5 is optional
+dnl ********************************************************************
+AC_ARG_WITH([kwallet5],
+	[AS_HELP_STRING([--with-kwallet5=@<:@ARG@:>@],
+	[Use kwallet5 (possible values: no, yes or the path to kwallet) @<:@default=no@:>@])],
+	[],
+	[with_kwallet5=no])
+
+AC_MSG_CHECKING(for kwallet5)
+AS_IF([test "x$with_kwallet5" != xno],
+	[AC_SUBST([KWALLET5_CFLAGS], ["`pkg-config --cflags-only-I Qt5Core Qt5DBus Qt5Gui` -I/usr/include/KF5/KWallet"])
+	AC_SUBST([KWALLET5_LIBS], ["-lQt5Gui"])
+	AC_DEFINE([HAVE_KWALLET5], 1, [Have kwallet5])
+	ROGER_FEATURES_YES="\tkwallet5\n$ROGER_FEATURES_YES"
+])
+AC_MSG_RESULT($with_kwallet5)
+
+AM_CONDITIONAL(WITH_KWALLET5, test "x$with_kwallet5" != "xno")
 
 dnl ********************************************************************
 dnl gdata is optional
@@ -603,30 +622,20 @@ AC_CONFIG_FILES([
     roger-cli/Makefile
     roger/plugins/Makefile
     roger/plugins/statusicon/Makefile
-    roger/plugins/statusicon/data/Makefile
     roger/plugins/fritzfon/Makefile
-    roger/plugins/fritzfon/data/Makefile
     roger/plugins/evolution/Makefile
-    roger/plugins/evolution/data/Makefile
     roger/plugins/gtknotify/Makefile
-    roger/plugins/gtknotify/data/Makefile
     roger/plugins/indicator/Makefile
-    roger/plugins/indicator/data/Makefile
     roger/plugins/vcard/Makefile
-    roger/plugins/vcard/data/Makefile
     roger/plugins/google/Makefile
-    roger/plugins/google/data/Makefile
     roger/plugins/thunderbird/Makefile
-    roger/plugins/thunderbird/data/Makefile
     roger/plugins/kwallet/Makefile
+    roger/plugins/kwallet5/Makefile
     roger/plugins/keychain/Makefile
     roger/plugins/osxab/Makefile
     roger/plugins/notification/Makefile
-    roger/plugins/notification/data/Makefile
     roger/plugins/gnotification/Makefile
-    roger/plugins/gnotification/data/Makefile
     roger/plugins/webjournal/Makefile
-    roger/plugins/webjournal/data/Makefile
     roger/images/Makefile
     roger/images/16x16/Makefile
     roger/images/22x22/Makefile

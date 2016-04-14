@@ -192,6 +192,7 @@ void refresh_edit_dialog(struct contact *contact)
 	gtk_entry_set_placeholder_text(GTK_ENTRY(detail_name_label), _("Name"));
 	g_signal_connect(G_OBJECT(detail_name_label), "changed", G_CALLBACK(name_entry_changed_cb), contact);
 	gtk_widget_set_hexpand(detail_name_label, TRUE);
+	gtk_widget_set_valign(detail_name_label, GTK_ALIGN_CENTER);
 	gtk_grid_attach(GTK_GRID(grid), detail_name_label, 1, 0, 1, 1);
 
 	if (contact && contact->image) {
@@ -416,6 +417,7 @@ void contact_editor(struct contact *contact, GtkWidget *parent)
 			address_book_save_contact(contact);
 		}
 
-		address_book_reload_contacts();
 	}
+
+	address_book_reload_contacts();
 }

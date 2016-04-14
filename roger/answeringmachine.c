@@ -145,9 +145,10 @@ void answeringmachine_play(const gchar *name)
 
 	/* Connect to builder objects */
 	window = GTK_WIDGET(gtk_builder_get_object(builder, "voicebox"));
+	gtk_window_set_transient_for(GTK_WINDOW(window), GTK_WINDOW(journal_get_window()));
 	playback_data->media_button = GTK_WIDGET(gtk_builder_get_object(builder, "play_button"));
 
-	gchar *css_data = g_strdup_printf(".circular-button { border-radius: 20px; outline-radius: 20px; }");
+	gchar *css_data = g_strdup_printf(".circular-button { border-radius: 20px; -gtk-outline-radius: 20px; }");
 	GtkCssProvider *css_provider = gtk_css_provider_get_default();
 	gtk_css_provider_load_from_data(css_provider, css_data, -1, NULL);
 	g_free(css_data);

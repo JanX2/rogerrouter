@@ -131,6 +131,7 @@ void address_book_contact_process_cb(AppObject *obj, struct contact *contact, gp
 	}
 
 	contacts = address_book_get_contacts();
+	g_debug("%s(): contacts %p", __FUNCTION__, contacts);
 	if (!contacts) {
 		return;
 	}
@@ -176,4 +177,9 @@ void routermanager_address_book_register(struct address_book *book)
 		table = g_hash_table_new(g_str_hash, g_str_equal);
 		address_book_signal_id = g_signal_connect(G_OBJECT(app_object), "contact-process", G_CALLBACK(address_book_contact_process_cb), NULL);
 	}
+}
+
+gchar *address_book_get_name(void)
+{
+	return internal_book ? internal_book->get_name() : g_strdup("");
 }

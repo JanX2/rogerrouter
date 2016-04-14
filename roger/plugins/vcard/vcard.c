@@ -1152,7 +1152,13 @@ gboolean vcard_save_contact(struct contact *contact)
 	return TRUE;
 }
 
+gchar *vcard_get_name(void)
+{
+	return g_strdup("VCard");
+}
+
 struct address_book vcard_book = {
+	vcard_get_name,
 	vcard_get_contacts,
 	vcard_reload_contacts,
 	vcard_remove_contact,

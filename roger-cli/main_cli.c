@@ -71,19 +71,29 @@ void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
 {
 	GSList *list;
 
+	g_printf("|----------------------------------------------------------------------------------------------------------------------------------|\n");
+	g_printf("| Date/Time     | Remote Name        | Remote Number      | Remote City        | Local aName        | Local Number       | Duration|\n");
+
 	/* Just dump journal to cli */
 	for (list = journal; list != NULL; list = list->next) {
 		struct call *call = list->data;
+		gchar *local_name = g_convert_utf8(call->local->name, -1);
+		gchar *remote_name = g_convert_utf8(call->remote->name, -1);
 
-		g_printf("%15s %20s %20s %20s %20s %20s %5s\n",
+		g_printf("|----------------------------------------------------------------------------------------------------------------------------------|\n");
+		g_printf("|%-15.15s|%-20.20s|%-20.20s|%-20.20s|%-20.20s|%-20.20s|%-9.9s|\n",
 		         call->date_time,
-		         call->remote->name,
+		         remote_name,
 		         call->remote->number,
 		         call->remote->city,
-		         call->local->name,
+		         local_name,
 		         call->local->number,
 		         call->duration);
+
+		g_free(local_name);
+		g_free(remote_name);
 	}
+	g_printf("|----------------------------------------------------------------------------------------------------------------------------------|\n");
 
 	/* Exit main loop */
 	g_main_loop_quit(main_loop);

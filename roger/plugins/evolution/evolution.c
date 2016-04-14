@@ -609,7 +609,13 @@ gboolean evolution_save_contact(struct contact *contact)
 	return ret;
 }
 
+gchar *evolution_get_name(void)
+{
+	return g_strdup("Evolution");
+}
+
 struct address_book evolution_book = {
+	evolution_get_name,
 	evolution_get_contacts,
 	evolution_reload,
 	evolution_remove_contact,

@@ -95,6 +95,8 @@ static void verify_ftp_button_clicked_cb(GtkButton *button, gpointer user_data)
 		if (ftp_login(client, router_get_ftp_user(profile), router_get_ftp_password(profile)) == TRUE) {
 			dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE, _("FTP password is valid"));
 		} else {
+			emit_message(_("FTP password is invalid"), _("Please check your FTP credentials"));
+
 			dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("FTP password is invalid"));
 		}
 		ftp_shutdown(client);
@@ -134,7 +136,7 @@ static void router_login_password_changed_cb(GtkEntry *entry, gpointer user_data
 {
 	struct profile *profile = user_data;
 
-	password_manager_set_password(profile, "login-password", gtk_entry_get_text(GTK_ENTRY(entry)));
+	password_manager_set_password(profile, profile->settings, "login-password", gtk_entry_get_text(GTK_ENTRY(entry)));
 }
 
 /**
@@ -146,7 +148,7 @@ static void router_ftp_password_changed_cb(GtkEntry *entry, gpointer user_data)
 {
 	struct profile *profile = user_data;
 
-	password_manager_set_password(profile, "ftp-password", gtk_entry_get_text(GTK_ENTRY(entry)));
+	password_manager_set_password(profile, profile->settings, "ftp-password", gtk_entry_get_text(GTK_ENTRY(entry)));
 }
 
 /**

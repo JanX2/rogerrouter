@@ -1,5 +1,3 @@
-SUBDIRS = data
-
 plugin_in_files = evolution.plugin
 
 include ../Makefile.plugins
@@ -15,3 +13,13 @@ libevolution_la_SOURCES = \
 libevolution_la_CFLAGS = $(plugin_cflags) $(EBOOK_CFLAGS)
 libevolution_la_LDFLAGS = $(plugin_ldflags)  $(EBOOK_FLAGS)
 libevolution_la_LIBADD  = $(plugin_libadd) $(EBOOK_LIBS)
+
+#This has to be defined, because GSETTINGS_CHECK_RULE adds to it
+MOSTLYCLEANFILES =
+
+@INTLTOOL_SCHEMAS_RULE@
+
+gsettings_SCHEMAS = org.tabos.roger.plugins.evolution.gschema.xml
+@GSETTINGS_RULES@
+
+EXTRA_DIST += $(gsettings_SCHEMAS)

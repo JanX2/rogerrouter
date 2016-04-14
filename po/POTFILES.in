@@ -8,6 +8,7 @@ roger/assistant.c
 roger/assistant.glade
 roger/authenticate.glade
 roger/contacts.c
+roger/contacts.glade
 roger/contact_edit.c
 roger/fax.c
 roger/journal.c
@@ -48,8 +49,10 @@ roger/plugins/notification/notification.c
 roger/plugins/webjournal/webjournal.c
 [type: gettext/ini]roger/plugins/webjournal/webjournal.plugin.in
 roger-cli/main_cli.c
+libroutermanager/fax_spooler.c
 libroutermanager/filter.c
 libroutermanager/router.c
+libroutermanager/plugins/fritzbox/firmware-common.c
 [type: gettext/ini]libroutermanager/plugins/areacodes_global/areacodes_global.plugin.in
 [type: gettext/ini]libroutermanager/plugins/callmonitor/callmonitor.plugin.in
 [type: gettext/ini]libroutermanager/plugins/fritzbox/fritzbox.plugin.in

@@ -402,7 +402,7 @@ static gboolean ftp_password_post(struct assistant *assistant)
 
 		/* Store FTP credentials */
 		g_settings_set_string(assistant->profile->settings, "ftp-user", ftp_user);
-		password_manager_set_password(assistant->profile, "ftp-password", ftp_password);
+		password_manager_set_password(assistant->profile, assistant->profile->settings, "ftp-password", ftp_password);
 	}
 
 	return TRUE;

@@ -246,8 +246,37 @@ void journal_redraw(void)
 	status = g_object_get_data(G_OBJECT(journal_win), "headerbar");
 
 	if (roger_uses_headerbar()) {
-		text = g_strdup_printf(_("%s (%d call(s), %d:%2.2dh)"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
-		gtk_header_bar_set_subtitle(GTK_HEADER_BAR(status), text);
+		GtkWidget *grid = gtk_grid_new();
+		GtkWidget *title;
+		GtkWidget *subtitle;
+		GtkWidget *image;
+		gchar *markup;
+		PangoAttrList *attributes;
+		GSList *list = profile_get_list();
+		gboolean selection = g_slist_length(list) > 1;
+
+		gtk_widget_set_hexpand(grid, TRUE);
+		markup = g_strdup_printf("<b>%s</b>", profile ? profile->name : _("<No profile>"));
+		pango_parse_markup(markup, -1, 0, &attributes, &text, NULL, NULL);
+		title = gtk_label_new(text);
+		gtk_label_set_attributes(GTK_LABEL(title), attributes);
+		gtk_widget_set_hexpand(title, TRUE);
+		gtk_grid_attach(GTK_GRID(grid), title, 0, 0, selection ? 1 : 2, 1);
+
+		if (selection) {
+			image = gtk_image_new_from_icon_name("pan-down-symbolic", GTK_ICON_SIZE_BUTTON);
+			gtk_grid_attach(GTK_GRID(grid), image, 1, 0, 1, 1);
+		}
+
+		markup = g_strdup_printf(_("<small>%d call(s), %d:%2.2dh</small>"), count, duration / 60, duration % 60);
+		pango_parse_markup(markup, -1, 0, &attributes, &text, NULL, NULL);
+		subtitle = gtk_label_new(text);
+		gtk_label_set_attributes(GTK_LABEL(subtitle), attributes);
+		gtk_widget_set_sensitive(subtitle, FALSE);
+		gtk_grid_attach(GTK_GRID(grid), subtitle, 0, 1, 2, 1);
+
+		gtk_widget_show_all(grid);
+		gtk_header_bar_set_custom_title(GTK_HEADER_BAR(status), grid);
 	} else {
 		text = g_strdup_printf(_("Journal - %s (%d call(s), %d:%2.2dh)"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
 		gtk_window_set_title(GTK_WINDOW(journal_win), text);
@@ -476,6 +505,12 @@ void journal_add_contact(struct call *call)
 
 	GtkWidget *dialog;
 	gboolean use_header = roger_uses_headerbar();
+
+		//gtk_clipboard_set_text(gtk_clipboard_get(GDK_NONE), call->remote->number, -1);
+		contacts_set_number(call->remote->number);
+		contacts();
+		return;
+
 
 	dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", use_header, NULL);
 
@@ -823,6 +858,16 @@ void journal_popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer use
 	if (gtk_tree_selection_count_selected_rows(selection) != 1) {
 		return;
 	}
+#if 0
+	GMenu *popover_menu = g_menu_new();
+	GtkWidget *popover;
+
+	g_menu_append(popover_menu, _("Copy number"), "app.copy-number");
+	g_menu_append(popover_menu, _("Call number"), "app.call-number");
+
+	popover = gtk_popover_new_from_model(treeview, popover_menu);
+	gtk_widget_show(popover);
+#else
 
 	list = gtk_tree_selection_get_selected_rows(selection, &model);
 	gtk_tree_model_get_iter(model, &iter, (GtkTreePath*)list->data);
@@ -861,6 +906,7 @@ void journal_popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer use
 	gtk_widget_show_all(menu);
 
 	gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, (event != NULL) ? event->button : 0, gdk_event_get_time((GdkEvent*)event));
+#endif
 }
 
 gboolean journal_button_press_event_cb(GtkWidget *treeview, GdkEventButton *event, gpointer user_data)
@@ -1029,7 +1075,7 @@ void journal_window(GApplication *app)
 		gtk_window_maximize((GtkWindow *)(window));
 	}
 
-	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
+	//gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 
 	grid = gtk_grid_new();
 

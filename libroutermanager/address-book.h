@@ -25,6 +25,7 @@
 G_BEGIN_DECLS
 
 struct address_book {
+	gchar *(*get_name)(void);
 	GSList *(*get_contacts)(void);
 	gboolean (*reload_contacts)(void);
 	gboolean (*remove_contact)(struct contact *contact);
@@ -38,6 +39,7 @@ gboolean address_book_remove_contact(struct contact *contact);
 gboolean address_book_save_contact(struct contact *contact);
 gboolean address_book_can_save(void);
 void routermanager_address_book_register(struct address_book *book);
+gchar *address_book_get_name(void);
 
 G_END_DECLS
 
