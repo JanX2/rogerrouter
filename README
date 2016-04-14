@@ -14,7 +14,7 @@ Fedora packages
 # Req: libcapi20
 
 # Base
-sudo dnf install autoconf automake gtk3-devel intltool libtool speex-devel speexdsp-devel libsndfile-devel libxml2-devel libsoup-devel libpeas-devel spandsp-devel
+sudo dnf install autoconf automake gtk3-devel intltool libtool speex-devel speexdsp-devel libsndfile-devel libxml2-devel libsoup-devel libpeas-devel spandsp-devel gupnp-devel gssdp-devel json-glib-devel
 
 # Plugins
 gstreamer1-devel gstreamer1-plugins-base-devel
