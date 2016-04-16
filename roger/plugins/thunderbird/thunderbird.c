@@ -1007,6 +1007,7 @@ void impl_deactivate(PeasActivatable *plugin)
 		g_signal_handler_disconnect(G_OBJECT(app_object), thunderbird_plugin->priv->signal_id);
 	}
 
+	routermanager_address_book_unregister(&thunderbird_book);
 	g_object_unref(thunderbird_settings);
 
 	if (table) {

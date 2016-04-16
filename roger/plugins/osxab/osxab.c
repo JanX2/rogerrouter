@@ -332,6 +332,8 @@ void impl_deactivate(PeasActivatable *plugin)
 {
 	RouterManagerOSXAbPlugin *osxab_plugin = ROUTERMANAGER_OSXAB_PLUGIN(plugin);
 
+	routermanager_address_book_unregister(&osxab_book);
+
 	if (g_signal_handler_is_connected(G_OBJECT(app_object), osxab_plugin->priv->signal_id)) {
 		g_signal_handler_disconnect(G_OBJECT(app_object), osxab_plugin->priv->signal_id);
 	}

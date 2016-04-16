@@ -868,6 +868,8 @@ void impl_deactivate(PeasActivatable *plugin)
 {
 	RouterManagerGooglePlugin *google_plugin = ROUTERMANAGER_GOOGLE_PLUGIN(plugin);
 
+	routermanager_address_book_unregister(&google_book);
+
 	if (g_signal_handler_is_connected(G_OBJECT(app_object), google_plugin->priv->signal_id)) {
 		g_signal_handler_disconnect(G_OBJECT(app_object), google_plugin->priv->signal_id);
 	}

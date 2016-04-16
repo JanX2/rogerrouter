@@ -1187,6 +1187,7 @@ void impl_activate(PeasActivatable *plugin)
 
 void impl_deactivate(PeasActivatable *plugin)
 {
+	routermanager_address_book_unregister(&vcard_book);
 	g_object_unref(vcard_settings);
 }
 

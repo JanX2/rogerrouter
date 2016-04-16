@@ -59,7 +59,7 @@ static struct cmd_line_option_state option_state;
 
 void app_show_contacts(void)
 {
-	contacts();
+	app_contacts(NULL);
 }
 
 void app_show_preferences(void)

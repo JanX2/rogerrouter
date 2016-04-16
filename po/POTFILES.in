@@ -2,13 +2,13 @@
 [encoding: UTF-8]
 roger/about.c
 roger/answeringmachine.c
-roger/answeringmachine.glade
+[type: gettext/glade]roger/answeringmachine.glade
 roger/application.c
 roger/assistant.c
-roger/assistant.glade
-roger/authenticate.glade
+[type: gettext/glade]roger/assistant.glade
+[type: gettext/glade]roger/authenticate.glade
 roger/contacts.c
-roger/contacts.glade
+[type: gettext/glade]roger/contacts.glade
 roger/fax.c
 roger/journal.c
 roger/main_ui.c
@@ -26,7 +26,7 @@ roger/pref_softphone.c
 roger/pref_misc.c
 roger/print.c
 roger/plugins/evolution/evolution.c
-[type: gettext/ini]roger/plugins/evolution/roger-plugins-evolution.metainfo.xml.in
+roger/plugins/evolution/roger-plugins-evolution.metainfo.xml.in
 [type: gettext/ini]roger/plugins/evolution/evolution.plugin.in
 roger/plugins/fritzfon/fritzfon.c
 [type: gettext/ini]roger/plugins/fritzfon/fritzfon.plugin.in

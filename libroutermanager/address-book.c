@@ -178,6 +178,15 @@ void routermanager_address_book_register(struct address_book *book)
 	}
 }
 
+/**
+ * \brief Unregister a new address book
+ * \param book address book pointer
+ */
+void routermanager_address_book_unregister(struct address_book *book)
+{
+	internal_book = NULL;
+}
+
 gchar *address_book_get_name(void)
 {
 	return internal_book ? internal_book->get_name() : g_strdup("");

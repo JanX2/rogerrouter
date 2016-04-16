@@ -633,6 +633,7 @@ void impl_activate(PeasActivatable *plugin)
 
 void impl_deactivate(PeasActivatable *plugin)
 {
+	routermanager_address_book_unregister(&evolution_book);
 	g_object_unref(ebook_settings);
 }
 
