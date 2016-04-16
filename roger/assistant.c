@@ -454,7 +454,7 @@ struct assistant_page assistant_pages[] = {
 	{"password", password_pre, password_post},
 	{"ftp_password", ftp_password_pre, ftp_password_post},
 	{"finish", finish_pre, finish_post},
-	{NULL, NULL, NULL, NULL}
+	{NULL, NULL, NULL}
 };
 
 /**

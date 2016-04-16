@@ -27,7 +27,6 @@
 #include <libroutermanager/call.h>
 #include <libroutermanager/appobject-emit.h>
 #include <roger/contacts.h>
-#include <roger/contact_edit.h>
 #include <roger/main.h>
 #include <roger/uitools.h>
 #include <roger/phone.h>
@@ -42,9 +41,12 @@ static GtkWidget *contacts_search_entry = NULL;
 static GtkWidget *contacts_list_box = NULL;
 static GtkWidget *view_port = NULL;
 static GtkWidget *contacts_header_bar_label = NULL;
+static GtkWidget *contacts_cancel_button = NULL;
 static GtkWidget *contacts_edit_button = NULL;
+static GtkWidget *contacts_save_button = NULL;
 static GtkWidget *contacts_add_button = NULL;
 static GtkWidget *contacts_remove_button = NULL;
+static struct contact *tmp_contact = NULL;
 
 static gchar *contacts_number = NULL;
 
@@ -159,7 +161,16 @@ void contacts_update_details(struct contact *contact)
 				gtk_widget_set_tooltip_text(dial, _("Dial number"));
 				phone_image = gtk_image_new_from_icon_name(APP_ICON_CALL, GTK_ICON_SIZE_BUTTON);
 				gtk_button_set_image(GTK_BUTTON(dial), phone_image);
-				gtk_button_set_relief(GTK_BUTTON(dial), GTK_RELIEF_NONE);
+				//gtk_button_set_relief(GTK_BUTTON(dial), GTK_RELIEF_NONE);
+				   gchar *css_data = g_strdup_printf(".circular-button { border-radius: 20px; -gtk-outline-radius: 20px; }");
+    GtkCssProvider *css_provider = gtk_css_provider_get_default();
+    gtk_css_provider_load_from_data(css_provider, css_data, -1, NULL);
+    g_free(css_data);
+    
+    GtkStyleContext *style_context =  gtk_widget_get_style_context(dial);
+    gtk_style_context_add_provider(style_context, GTK_STYLE_PROVIDER(css_provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
+    gtk_style_context_add_class(style_context, "circular-button");
+
 				g_signal_connect(dial, "clicked", G_CALLBACK(dial_clicked_cb), phone_number->number);
 				gtk_grid_attach(GTK_GRID(grid), type, 0, detail_row, 1, 1);
 				gtk_grid_attach(GTK_GRID(grid), number, 1, detail_row, 1, 1);
@@ -271,6 +282,31 @@ static void contacts_destroy_child(GtkWidget *widget, gpointer user_data)
 	gtk_widget_destroy(widget);
 }
 
+static struct contact *contacts_get_selected_contact(void)
+{
+	GtkListBoxRow *row = gtk_list_box_get_selected_row(GTK_LIST_BOX(contacts_list_box));
+	GtkWidget *child;
+	struct contact *contact;
+
+	/* Sanity check #1 */
+	if (!row) {
+		return NULL;
+	}
+
+	/* Get first child */
+	child = gtk_container_get_children(GTK_CONTAINER(row))->data;
+
+	/* Sanity check #2 */
+	if (!child) {
+		return NULL;
+	}
+
+	/* Get contact */
+	contact = g_object_get_data(G_OBJECT(child), "contact");
+
+	return contact;
+}
+
 /**
  * \brief Update contact list (clears previous and add all matching contacts)
  * \param box listbox widget
@@ -282,6 +318,12 @@ static void contacts_update_list(gpointer box, struct contact *selected_contact)
 	GSList *contact_list = address_book_get_contacts();
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(contacts_search_entry));
 	gint pos = 0;
+	struct contact *contact = selected_contact;
+
+
+	if (!contact) {
+		contact = contacts_get_selected_contact();
+	}
 
 	/* For all children of list box, call contacts_destory_child() */
 	gtk_container_foreach(GTK_CONTAINER(box), contacts_destroy_child, NULL);
@@ -326,7 +368,7 @@ static void contacts_update_list(gpointer box, struct contact *selected_contact)
 	}
 
 	/* Update contact details */
-	contacts_update_details(NULL);
+	contacts_update_details(selected_contact);
 }
 
 /**
@@ -350,6 +392,11 @@ void contacts_list_box_row_selected_cb(GtkListBox *box, GtkListBoxRow *row, gpoi
 {
 	GList *childrens;
 	struct contact *contact = NULL;
+
+	gtk_widget_set_visible(contacts_cancel_button, FALSE);
+	gtk_widget_set_visible(contacts_save_button, FALSE);
+	gtk_widget_set_visible(contacts_edit_button, TRUE);
+
 	/* Sanity check */
 	if (!row) {
 		return;
@@ -371,6 +418,502 @@ void contacts_list_box_row_selected_cb(GtkListBox *box, GtkListBoxRow *row, gpoi
 	contacts_update_details(contact);
 }
 
+void add_detail_button_clicked_cb(GtkComboBox *box, gpointer user_data);
+void refresh_edit_dialog(struct contact *contact);
+
+void remove_phone_clicked_cb(GtkWidget *button, gpointer user_data)
+{
+	struct contact *contact = user_data;
+	struct phone_number *number = (struct phone_number *) g_object_get_data(G_OBJECT(button), "number");
+
+	contact->numbers = g_slist_remove(contact->numbers, number);
+	refresh_edit_dialog(contact);
+}
+
+void remove_address_clicked_cb(GtkWidget *button, gpointer user_data)
+{
+	struct contact *contact = user_data;
+	struct contact_address *address = (struct contact_address *) g_object_get_data(G_OBJECT(button), "address");
+
+	contact->addresses = g_slist_remove(contact->addresses, address);
+	refresh_edit_dialog(contact);
+}
+
+void name_entry_changed_cb(GtkWidget *entry, gpointer user_data)
+{
+	struct contact *contact = user_data;
+	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
+
+	gtk_widget_set_sensitive(contacts_save_button, strlen(text) > 0);
+
+	g_free(contact->name);
+	contact->name = g_strdup(text);
+}
+
+void number_entry_changed_cb(GtkWidget *entry, gpointer user_data)
+{
+	struct phone_number *number = user_data;
+	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
+
+	g_free(number->number);
+	number->number = g_strdup(text);
+}
+
+void street_entry_changed_cb(GtkWidget *entry, gpointer user_data)
+{
+	struct contact_address *address = user_data;
+	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
+
+	g_free(address->street);
+	address->street = g_strdup(text);
+}
+
+void zip_entry_changed_cb(GtkWidget *entry, gpointer user_data)
+{
+	struct contact_address *address = user_data;
+	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
+
+	g_free(address->zip);
+	address->zip = g_strdup(text);
+}
+
+void city_entry_changed_cb(GtkWidget *entry, gpointer user_data)
+{
+	struct contact_address *address = user_data;
+	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
+
+	g_free(address->city);
+	address->city = g_strdup(text);
+}
+
+void number_type_changed_cb(GtkWidget *combobox, gpointer user_data)
+{
+	struct phone_number *number = user_data;
+
+	number->type = gtk_combo_box_get_active(GTK_COMBO_BOX(combobox));
+}
+
+void address_type_changed_cb(GtkWidget *combobox, gpointer user_data)
+{
+	struct contact_address *address = user_data;
+
+	address->type = gtk_combo_box_get_active(GTK_COMBO_BOX(combobox));
+}
+
+void photo_button_clicked_cb(GtkWidget *button, gpointer user_data)
+{
+	GtkWidget *file_chooser;
+	GtkFileFilter *filter;
+	gint result;
+	struct contact *contact = user_data;
+
+	file_chooser = gtk_file_chooser_dialog_new(_("Open image"), (GtkWindow *) gtk_widget_get_ancestor(button, GTK_TYPE_WINDOW),
+	               GTK_FILE_CHOOSER_ACTION_OPEN, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Open"), GTK_RESPONSE_ACCEPT, _("_No image"), 1, NULL);
+
+	filter = gtk_file_filter_new();
+
+	gtk_file_filter_add_mime_type(filter, "image/gif");
+	gtk_file_filter_add_mime_type(filter, "image/jpeg");
+	gtk_file_filter_add_mime_type(filter, "image/png");
+	gtk_file_filter_add_mime_type(filter, "image/tiff");
+	gtk_file_filter_add_mime_type(filter, "image/ief");
+	gtk_file_filter_add_mime_type(filter, "image/cgm");
+	gtk_file_chooser_set_filter(GTK_FILE_CHOOSER(file_chooser), filter);
+
+	result = gtk_dialog_run(GTK_DIALOG(file_chooser));
+
+	if (result == GTK_RESPONSE_ACCEPT) {
+		if (contact->image_uri != NULL) {
+			g_free(contact->image_uri);
+			contact->image_uri = NULL;
+		}
+		contact->image_uri = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(file_chooser));
+		if (contact->image_uri != NULL) {
+			contact->image = gdk_pixbuf_new_from_file(contact->image_uri, NULL);
+		}
+	} else if (result == 1) {
+		if (contact->image != NULL) {
+			contact->image = NULL;
+		}
+	}
+	refresh_edit_dialog(contact);
+
+	gtk_widget_destroy(file_chooser);
+}
+
+void contact_add_number(struct contact *contact, gchar *number)
+{
+	/* Add phone number */
+	struct phone_number *phone_number;
+
+	phone_number = g_slice_new(struct phone_number);
+	phone_number->type = PHONE_NUMBER_HOME;
+	phone_number->number = g_strdup(number);
+
+	contact->numbers = g_slist_prepend(contact->numbers, phone_number);
+}
+
+void contact_add_address(struct contact *contact, gchar *street, gchar *zip, gchar *city)
+{
+	/* Add address */
+	struct contact_address *address;
+
+	address = g_slice_new(struct contact_address);
+	address->type = 0;
+	address->street = g_strdup(street);
+	address->zip = g_strdup(zip);
+	address->city = g_strdup(city);
+
+	contact->addresses = g_slist_prepend(contact->addresses, address);
+}
+
+void add_detail_button_clicked_cb(GtkComboBox *box, gpointer user_data)
+{
+	gint active = gtk_combo_box_get_active(box);
+	struct contact *contact = user_data;
+
+	if (active == 1) {
+		/* Add phone number */
+		struct phone_number *phone_number;
+
+		phone_number = g_slice_new(struct phone_number);
+		phone_number->type = PHONE_NUMBER_HOME;
+		phone_number->number = g_strdup("");
+
+		contact->numbers = g_slist_prepend(contact->numbers, phone_number);
+
+		refresh_edit_dialog(contact);
+	} else if (active == 2) {
+		/* Add address */
+		struct contact_address *address;
+
+		address = g_slice_new(struct contact_address);
+		address->type = 0;
+		address->street = g_strdup("");
+		address->zip = g_strdup("");
+		address->city = g_strdup("");
+
+		contact->addresses = g_slist_prepend(contact->addresses, address);
+
+		refresh_edit_dialog(contact);
+	} else {
+		refresh_edit_dialog(contact);
+	}
+}
+
+void contacts_add_detail(gchar *detail)
+{
+	g_debug("%s(): detail '%s'", __FUNCTION__, detail);
+
+	if (!strncmp(detail, "phone-", 6)) {
+		/* Add phone number */
+		struct phone_number *phone_number;
+
+		phone_number = g_slice_new(struct phone_number);
+
+		if (!strcmp(detail, "phone-home")) {
+			phone_number->type = PHONE_NUMBER_HOME;
+		} else if (!strcmp(detail, "phone-work")) {
+			phone_number->type = PHONE_NUMBER_WORK;
+		} else if (!strcmp(detail, "phone-mobile")) {
+			phone_number->type = PHONE_NUMBER_MOBILE;
+		} else if (!strcmp(detail, "phone-home-fax")) {
+			phone_number->type = PHONE_NUMBER_FAX_HOME;
+		} else if (!strcmp(detail, "phone-work-fax")) {
+			phone_number->type = PHONE_NUMBER_FAX_WORK;
+		} else if (!strcmp(detail, "phone-pager")) {
+			phone_number->type = PHONE_NUMBER_PAGER;
+		}
+
+		phone_number->number = g_strdup("");
+
+		tmp_contact->numbers = g_slist_prepend(tmp_contact->numbers, phone_number);
+	} if (!strncmp(detail, "address-", 8)) {
+		/* Add address */
+		struct contact_address *address;
+
+		address = g_slice_new(struct contact_address);
+
+		if (!strcmp(detail, "address-home")) {
+			address->type = 0;
+		} else {
+			address->type = 1;
+		}
+		address->street = g_strdup("");
+		address->zip = g_strdup("");
+		address->city = g_strdup("");
+
+		tmp_contact->addresses = g_slist_prepend(tmp_contact->addresses, address);
+	}
+
+	refresh_edit_dialog(tmp_contact);
+}
+
+extern GSettings *app_settings;
+
+
+void refresh_edit_dialog(struct contact *contact)
+{
+	GSList *numbers;
+	GSList *addresses;
+	GtkWidget *photo_button;
+	GtkWidget *grid = gtk_grid_new();
+	GtkWidget *scrolled;
+	gint detail_row = 1;
+	GtkWidget *detail_photo_image = NULL;
+	GtkWidget *detail_name_label = NULL;
+	GtkWidget *box;
+	GtkWidget *separator;
+
+	box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
+	gtk_widget_set_margin(box, 6, 6, 6, 6);
+
+	scrolled = gtk_scrolled_window_new(NULL, NULL);
+	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(scrolled), GTK_SHADOW_NONE);
+	gtk_box_pack_start(GTK_BOX(box), scrolled, TRUE, TRUE, 6);
+
+	gtk_widget_set_vexpand(scrolled, TRUE);
+	gtk_widget_set_hexpand(scrolled, TRUE);
+
+	gtk_widget_set_margin(grid, 12, 12, 12, 12);
+
+	gtk_container_add(GTK_CONTAINER(scrolled), grid);
+
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 6);
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 12);
+	photo_button = gtk_button_new();
+	detail_photo_image = gtk_image_new();
+	gtk_button_set_image(GTK_BUTTON(photo_button), detail_photo_image);
+	//g_signal_connect(photo_button, "clicked", G_CALLBACK(photo_button_clicked_cb), contact);
+	gtk_grid_attach(GTK_GRID(grid), photo_button, 0, 0, 1, 1);
+
+	detail_name_label = gtk_entry_new();
+	gtk_entry_set_text(GTK_ENTRY(detail_name_label), contact ? contact->name : "");
+	gtk_entry_set_placeholder_text(GTK_ENTRY(detail_name_label), _("Name"));
+	g_signal_connect(G_OBJECT(detail_name_label), "changed", G_CALLBACK(name_entry_changed_cb), contact);
+	gtk_widget_set_hexpand(detail_name_label, TRUE);
+	gtk_widget_set_valign(detail_name_label, GTK_ALIGN_CENTER);
+	gtk_grid_attach(GTK_GRID(grid), detail_name_label, 1, 0, 1, 1);
+
+	if (contact && contact->image) {
+		GdkPixbuf *buf = image_get_scaled(contact->image, 96, 96);
+		gtk_image_set_from_pixbuf(GTK_IMAGE(detail_photo_image), buf);
+	} else {
+		gtk_image_set_from_icon_name(GTK_IMAGE(detail_photo_image), AVATAR_DEFAULT, GTK_ICON_SIZE_DIALOG);
+		gtk_image_set_pixel_size(GTK_IMAGE(detail_photo_image), 96);
+	}
+
+	for (numbers = contact ? contact->numbers : NULL; numbers != NULL; numbers = numbers->next) {
+		GtkWidget *number;
+		GtkWidget *remove;
+		GtkWidget *phone_image;
+		struct phone_number *phone_number = numbers->data;
+		GtkWidget *type_box;
+
+		type_box = gtk_combo_box_text_new();
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Home"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Work"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Mobile"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Home Fax"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Work Fax"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Pager"));
+
+		g_signal_connect(G_OBJECT(type_box), "changed", G_CALLBACK(number_type_changed_cb), phone_number);
+		gtk_combo_box_set_active(GTK_COMBO_BOX(type_box), phone_number->type);
+		gtk_grid_attach(GTK_GRID(grid), type_box, 0, detail_row, 1, 1);
+
+		number = gtk_entry_new();
+		gtk_entry_set_placeholder_text(GTK_ENTRY(number), _("Number"));
+		gtk_grid_attach(GTK_GRID(grid), number, 1, detail_row, 1, 1);
+		gtk_entry_set_text(GTK_ENTRY(number), phone_number->number);
+		g_signal_connect(G_OBJECT(number), "changed", G_CALLBACK(number_entry_changed_cb), phone_number);
+
+		remove = gtk_button_new();
+		gtk_widget_set_tooltip_text(remove, _("Remove number"));
+		//phone_image = gtk_image_new_from_icon_name("user-trash-symbolic", GTK_ICON_SIZE_BUTTON);
+		phone_image = gtk_image_new_from_icon_name(APP_ICON_TRASH, GTK_ICON_SIZE_BUTTON); 
+		gtk_button_set_image(GTK_BUTTON(remove), phone_image);
+		g_signal_connect(remove, "clicked", G_CALLBACK(remove_phone_clicked_cb), contact);
+		g_object_set_data(G_OBJECT(remove), "number", phone_number);
+		gtk_grid_attach(GTK_GRID(grid), remove, 2, detail_row, 1, 1);
+		detail_row++;
+	}
+
+	for (addresses = contact ? contact->addresses : NULL; addresses != NULL; addresses = addresses->next) {
+		struct contact_address *address = addresses->data;
+		GtkWidget *street = gtk_entry_new();
+		GtkWidget *zip = gtk_entry_new();
+		GtkWidget *city = gtk_entry_new();
+		GtkWidget *remove;
+		GtkWidget *phone_image;
+		GtkWidget *type_box;
+
+		type_box = gtk_combo_box_text_new();
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Home"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(type_box), _("Work"));
+		gtk_combo_box_set_active(GTK_COMBO_BOX(type_box), address->type);
+		g_signal_connect(G_OBJECT(type_box), "changed", G_CALLBACK(address_type_changed_cb), address);
+		gtk_grid_attach(GTK_GRID(grid), type_box, 0, detail_row, 1, 1);
+
+		remove = gtk_button_new();
+		gtk_widget_set_tooltip_text(remove, _("Remove address"));
+		phone_image = gtk_image_new_from_icon_name("user-trash-symbolic", GTK_ICON_SIZE_BUTTON);
+		phone_image = gtk_image_new_from_icon_name(APP_ICON_TRASH, GTK_ICON_SIZE_BUTTON);
+		gtk_button_set_image(GTK_BUTTON(remove), phone_image);
+		g_signal_connect(remove, "clicked", G_CALLBACK(remove_address_clicked_cb), contact);
+		g_object_set_data(G_OBJECT(remove), "address", address);
+		gtk_grid_attach(GTK_GRID(grid), remove, 2, detail_row, 1, 1);
+
+		gtk_entry_set_placeholder_text(GTK_ENTRY(street), _("Street"));
+		gtk_entry_set_placeholder_text(GTK_ENTRY(zip), _("ZIP"));
+		gtk_entry_set_placeholder_text(GTK_ENTRY(city), _("City"));
+
+		gtk_grid_attach(GTK_GRID(grid), street, 1, detail_row, 1, 1);
+		detail_row++;
+		gtk_grid_attach(GTK_GRID(grid), zip, 1, detail_row, 1, 1);
+		detail_row++;
+		gtk_grid_attach(GTK_GRID(grid), city, 1, detail_row, 1, 1);
+		detail_row++;
+
+		gtk_entry_set_text(GTK_ENTRY(street), address->street);
+		gtk_entry_set_text(GTK_ENTRY(zip), address->zip);
+		gtk_entry_set_text(GTK_ENTRY(city), address->city);
+
+		g_signal_connect(street, "changed", G_CALLBACK(street_entry_changed_cb), address);
+		g_signal_connect(zip, "changed", G_CALLBACK(zip_entry_changed_cb), address);
+		g_signal_connect(city, "changed", G_CALLBACK(city_entry_changed_cb), address);
+	}
+
+	separator = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
+	gtk_box_pack_start(GTK_BOX(box), separator, FALSE, FALSE, 0);
+
+	GtkWidget *add_detail_button = gtk_menu_button_new ();
+
+	/*gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(add_detail_button), _("Add detail"));
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(add_detail_button), _("Phone"));
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(add_detail_button), _("Address"));
+	gtk_combo_box_set_active(GTK_COMBO_BOX(add_detail_button), 0);*/
+	GMenu *menu = g_menu_new();
+
+	g_menu_append(menu, _("Home phone"), "app.contacts-edit-phone-home");
+	g_menu_append(menu, _("Work phone"), "app.contacts-edit-phone-work");
+	g_menu_append(menu, _("Mobile phone"), "app.contacts-edit-phone-mobile");
+	g_menu_append(menu, _("Home Fax"), "app.contacts-edit-phone-home-fax");
+	g_menu_append(menu, _("Work Fax"), "app.contacts-edit-phone-work-fax");
+	g_menu_append(menu, _("Pager"), "app.contacts-edit-phone-pager");
+	g_menu_append(menu, _("Home address"), "app.contacts-edit-address-home");
+	g_menu_append(menu, _("Work address"), "app.contacts-edit-address-work");
+	g_menu_freeze(menu);
+
+#if GTK_CHECK_VERSION(3,12,0)
+	gtk_menu_button_set_use_popover(GTK_MENU_BUTTON(add_detail_button), TRUE);
+#endif
+	gtk_container_add(GTK_CONTAINER(add_detail_button), gtk_label_new(_("Add detail")));
+	gtk_menu_button_set_menu_model(GTK_MENU_BUTTON(add_detail_button), G_MENU_MODEL(menu));
+ 
+	gtk_widget_set_halign(add_detail_button, GTK_ALIGN_START);
+	//g_signal_connect(add_detail_button, "changed", G_CALLBACK(add_detail_button_clicked_cb), contact);
+
+	gtk_box_pack_end(GTK_BOX(box), add_detail_button, FALSE, FALSE, 0);
+
+	if (detail_grid) {
+		gtk_container_remove(GTK_CONTAINER(view_port), detail_grid);
+	}
+
+	detail_grid = box;
+	gtk_widget_show_all(detail_grid);
+
+	gtk_container_add(GTK_CONTAINER(view_port), detail_grid);
+}
+
+void contacts_cancel_button_clicked_cb(GtkComboBox *box, gpointer user_data)
+{
+	struct contact *contact;
+
+	contact = contacts_get_selected_contact();
+
+	gtk_widget_set_visible(contacts_cancel_button, FALSE);
+	gtk_widget_set_visible(contacts_save_button, FALSE);
+	gtk_widget_set_visible(contacts_edit_button, TRUE);
+
+	if (tmp_contact) {
+		contact_free(tmp_contact);
+		tmp_contact = NULL;
+	}
+
+	/* Update contact details */
+	contacts_update_details(contact);
+}
+
+void contacts_save_button_clicked_cb(GtkComboBox *box, gpointer user_data)
+{
+	struct contact *contact;
+	gboolean ok = g_settings_get_boolean(app_settings, "contacts-hide-warning");
+
+	contact = contacts_get_selected_contact();
+
+	gtk_widget_set_visible(contacts_cancel_button, FALSE);
+	gtk_widget_set_visible(contacts_save_button, FALSE);
+	gtk_widget_set_visible(contacts_edit_button, TRUE);
+
+	if (!ok) {
+		gboolean use_header = roger_uses_headerbar();
+		gint response;
+
+		GtkWidget *info_dialog = gtk_message_dialog_new(GTK_WINDOW(contacts_window), use_header ? GTK_DIALOG_USE_HEADER_BAR : 0, GTK_MESSAGE_INFO, GTK_BUTTONS_OK_CANCEL, _("Note: Depending on the address book plugin not all information might be saved"));
+		GtkWidget *content = gtk_dialog_get_content_area(GTK_DIALOG(info_dialog));
+		GtkWidget *check_button = gtk_check_button_new_with_label(_("Do not show again"));
+
+		g_settings_bind(app_settings, "contacts-hide-warning", check_button, "active", G_SETTINGS_BIND_DEFAULT);
+		gtk_widget_set_halign(check_button, GTK_ALIGN_CENTER);
+		gtk_widget_show(check_button);
+		gtk_container_add(GTK_CONTAINER(content), check_button);
+
+		response = gtk_dialog_run(GTK_DIALOG(info_dialog));
+		gtk_widget_destroy(info_dialog);
+
+		if (response == GTK_RESPONSE_OK) {
+			ok = TRUE;
+		}
+	}
+
+	if (ok) {
+		contact_copy(tmp_contact, contact);
+		address_book_save_contact(contact);
+
+		address_book_reload_contacts();
+	}
+
+	if (tmp_contact) {
+		contact_free(tmp_contact);
+		tmp_contact = NULL;
+	}
+
+	/* Update contact list */
+	contacts_update_list(contacts_list_box, contact);
+}
+
+void contact_editor(struct contact *contact)
+{
+	gchar *new_number = contacts_number;
+
+	tmp_contact = contact_dup(contact);
+
+	gtk_widget_set_visible(contacts_cancel_button, TRUE);
+	gtk_widget_set_visible(contacts_save_button, TRUE);
+	gtk_widget_set_visible(contacts_edit_button, FALSE);
+
+	if (new_number) {
+		struct phone_number *phone_number = g_malloc0(sizeof(struct phone_number));
+
+		phone_number->number = g_strdup(new_number);
+
+		tmp_contact->numbers = g_slist_append(tmp_contact->numbers, phone_number);
+	}
+
+	refresh_edit_dialog(tmp_contact);
+}
+
 /**
  * \brief Add button clicked callback
  * \param button add button widget
@@ -378,27 +921,16 @@ void contacts_list_box_row_selected_cb(GtkListBox *box, GtkListBoxRow *row, gpoi
  */
 void add_button_clicked_cb(GtkWidget *button, gpointer user_data)
 {
-	GtkWidget *list_box = contacts_list_box;
 	struct contact *contact;
 
 	/* Create a new contact */
 	contact = g_slice_new0(struct contact);
 	contact->name = g_strdup("");
 
-	if (contacts_number) {
-		struct phone_number *phone_number = g_malloc0(sizeof(struct phone_number));
-
-		phone_number->number = g_strdup(contacts_number);
-		phone_number->type = PHONE_NUMBER_MOBILE;
-
-		contact->numbers = g_slist_append(contact->numbers, phone_number);
-	}
+	gtk_label_set_text(GTK_LABEL(contacts_header_bar_label), _("New contact"));
 
 	/* Open contact editor with new contact */
-	contact_editor(contact, contacts_window);
-
-	/* Update contact list */
-	contacts_update_list(list_box, contact);
+	contact_editor(contact);
 }
 
 /**
@@ -408,48 +940,15 @@ void add_button_clicked_cb(GtkWidget *button, gpointer user_data)
  */
 void edit_button_clicked_cb(GtkWidget *button, gpointer user_data)
 {
-	GtkListBoxRow *row = gtk_list_box_get_selected_row(GTK_LIST_BOX(contacts_list_box));
-	GtkWidget *child;
 	struct contact *contact;
 
-	/* Sanity check #1 */
-	if (!row) {
-		return;
-	}
-
-	/* Get first child */
-	child = gtk_container_get_children(GTK_CONTAINER(row))->data;
-
-	/* Sanity check #2 */
-	if (!child) {
-		return;
-	}
-
-	/* Get contact */
-	contact = g_object_get_data(G_OBJECT(child), "contact");
-
-	/* Sanity check #3 */
+	contact = contacts_get_selected_contact();
 	if (!contact) {
 		return;
 	}
 
-	if (contacts_number) {
-		struct phone_number *phone_number = g_malloc0(sizeof(struct phone_number));
-
-		phone_number->number = g_strdup(contacts_number);
-		phone_number->type = PHONE_NUMBER_MOBILE;
-
-		contact->numbers = g_slist_append(contact->numbers, phone_number);
-	}
-
 	/* Open contact editor */
-	contact_editor(contact, contacts_window);
-
-	/* Update contact list */
-	contacts_update_list(contacts_list_box, contact);
-
-	/* Update contact details */
-	//contacts_update_details(contact);
+	contact_editor(contact);
 }
 
 /**
@@ -459,27 +958,12 @@ void edit_button_clicked_cb(GtkWidget *button, gpointer user_data)
  */
 void remove_button_clicked_cb(GtkWidget *button, gpointer user_data)
 {
-	GtkListBoxRow *row = gtk_list_box_get_selected_row(GTK_LIST_BOX(contacts_list_box));
-	GtkWidget *child;
 	GtkWidget *dialog;
+	GtkWidget *remove_button;
 	struct contact *contact;
 	gint result;
 
-	/* Sanity check #1 */
-	if (!row) {
-		return;
-	}
-
-	/* Get first child */
-	child = gtk_container_get_children(GTK_CONTAINER(row))->data;
-
-	/* Sanity check #2 */
-	if (!child) {
-		return;
-	}
-
-	/* Get contact */
-	contact = g_object_get_data(G_OBJECT(child), "contact");
+	contact = contacts_get_selected_contact();
 
 	/* Sanity check #3 */
 	if (!contact) {
@@ -487,26 +971,25 @@ void remove_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	}
 
 	/* Create dialog */
-	dialog = gtk_message_dialog_new(GTK_WINDOW(contacts_window), GTK_DIALOG_USE_HEADER_BAR | GTK_DIALOG_MODAL, GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE, _("Do you want to delete the entry '%s'?"), contact->name);
+	dialog = gtk_message_dialog_new(GTK_WINDOW(contacts_window), GTK_DIALOG_USE_HEADER_BAR | GTK_DIALOG_MODAL, GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE, _("Do you want to delete contact '%s'?"), contact->name);
 
 	/* Add cancel button */
 	gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
 
 	/* Add remove button */
-	gtk_dialog_add_button(GTK_DIALOG(dialog), _("Delete"), GTK_RESPONSE_OK);
+	remove_button = gtk_dialog_add_button(GTK_DIALOG(dialog), _("Delete"), GTK_RESPONSE_OK);
+	ui_set_destructive_style(remove_button);
 
 	result = gtk_dialog_run(GTK_DIALOG(dialog));
 	gtk_widget_destroy(dialog);
 
-	if (result != GTK_RESPONSE_OK) {
-		return;
+	if (result == GTK_RESPONSE_OK) {
+		/* Remove selected contact */
+		address_book_remove_contact(contact);
+
+		/* Update contact list */
+		contacts_update_list(user_data, NULL);
 	}
-
-	/* Remove selected contact */
-	address_book_remove_contact(contact);
-
-	/* Update contact list */
-	contacts_update_list(user_data, NULL);
 }
 
 gint contacts_window_delete_event_cb(GtkWidget *widget, GdkEvent event, gpointer data)
@@ -545,17 +1028,9 @@ void contacts_set_number(gchar *number)
 void contacts(void)
 {
 	GtkWidget *header_bar;
-	GtkWidget *box;
-	GtkWidget *entry;
-	GtkWidget *scrolled;
-	GtkWidget *add_button;
-	GtkWidget *remove_button;
-	GtkWidget *edit_button;
-	gint y = 0;
-
-#if 1
 	GtkBuilder *builder;
 	GtkWidget *contacts_header_bar_left;
+	GtkWidget *parent;
 
 	/* Only allow one contact window at a time */
 	if (contacts_window) {
@@ -569,18 +1044,20 @@ void contacts(void)
 		return;
 	}
 
+	parent = journal_get_window();
+
 	contacts_window = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_window"));
-	gtk_window_set_transient_for(GTK_WINDOW(contacts_window), journal_get_window());
-	//gtk_window_set_modal(GTK_WINDOW(contacts_window), TRUE);
+	gtk_window_set_transient_for(GTK_WINDOW(contacts_window), parent ? GTK_WINDOW(parent) : NULL);
 
 	header_bar = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_header_bar"));
 	contacts_list_box = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_list_box"));
 	contacts_search_entry = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_search_entry"));
 	contacts_edit_button = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_edit_button"));
+	contacts_cancel_button = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_cancel_button"));
+	contacts_save_button = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_save_button"));
+	ui_set_suggested_style(contacts_save_button);
 	contacts_add_button = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_add_button"));
 	contacts_remove_button = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_remove_button"));
-	//contacts_window_grid = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_window_grid"));
-	scrolled = GTK_WIDGET(gtk_builder_get_object(builder, "scrolled_window"));
 	view_port = GTK_WIDGET(gtk_builder_get_object(builder, "view_port"));
 	contacts_header_bar_left = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_header_bar_left"));
 	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(contacts_header_bar_left), address_book_get_name());
@@ -606,103 +1083,8 @@ void contacts(void)
 	/* Show window */
 	gtk_widget_show_all(contacts_window);
 
+	extern GtkApplication *roger_app;
+	gtk_application_add_window(roger_app, GTK_WINDOW(contacts_window));
+
 	g_object_unref(G_OBJECT(builder));
-
-#else
-
-	/* Create window */
-	contacts_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_position(GTK_WINDOW(contacts_window), GTK_WIN_POS_CENTER);
-	gtk_window_set_title(GTK_WINDOW(contacts_window), _("Contacts"));
-	gtk_widget_set_size_request(contacts_window, 850, 550);
-	g_signal_connect(contacts_window, "delete_event", G_CALLBACK(contacts_window_delete_event_cb), NULL);
-
-	/* Create and add global window grid */
-	contacts_window_grid = gtk_grid_new();
-	gtk_container_add(GTK_CONTAINER(contacts_window), contacts_window_grid);
-
-	if (roger_uses_headerbar()) {
-		/* Create header bar and add it to the window */
-		header_bar = gtk_header_bar_new();
-		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header_bar), TRUE);
-		gtk_header_bar_set_title(GTK_HEADER_BAR(header_bar), _("Contacts"));
-		gtk_window_set_titlebar(GTK_WINDOW(contacts_window), header_bar);
-	} else {
-		header_bar = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
-		gtk_grid_attach(GTK_GRID(contacts_window_grid), header_bar, 0, y++, 1, 1);
-	}
-
-	/* Create button box as raised and linked */
-	box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_container_add(GTK_CONTAINER(header_bar), box);
-	gtk_style_context_add_class(gtk_widget_get_style_context(box), GTK_STYLE_CLASS_RAISED);
-	gtk_style_context_add_class(gtk_widget_get_style_context(box), GTK_STYLE_CLASS_LINKED);
-
-	/* Add button */
-	add_button = gtk_button_new_from_icon_name("list-add-symbolic", GTK_ICON_SIZE_BUTTON);
-	gtk_widget_set_tooltip_text(add_button, _("Add new contact"));
-	gtk_box_pack_start(GTK_BOX(box), add_button, FALSE, FALSE, 0);
-
-	/* Remove button */
-	remove_button = gtk_button_new_from_icon_name("list-remove-symbolic", GTK_ICON_SIZE_BUTTON);
-	gtk_widget_set_tooltip_text(remove_button, _("Remove selected contact"));
-	gtk_box_pack_start(GTK_BOX(box), remove_button, FALSE, FALSE, 0);
-
-	/* Edit button */
-	edit_button = gtk_button_new_with_label(_("Edit"));
-	gtk_widget_set_tooltip_text(edit_button, _("Edit selected contact"));
-	gtk_box_pack_end(GTK_BOX(box), edit_button, TRUE, TRUE, 0);
-
-	/* Set standard spacing */
-	gtk_grid_set_row_spacing(GTK_GRID(contacts_window_grid), 6);
-	gtk_grid_set_column_spacing(GTK_GRID(contacts_window_grid), 6);
-
-	/* Create search entry */
-	entry = gtk_search_entry_new();
-	gtk_entry_set_placeholder_text(GTK_ENTRY(entry), _("Type to search"));
-	gtk_widget_set_vexpand(entry, FALSE);
-	gtk_widget_set_margin(entry, 6, 6, 6, 0);
-	gtk_grid_attach(GTK_GRID(contacts_window_grid), entry, 0, y++, 1, 1);
-	contacts_search_entry = entry;
-
-	/* Create scrolled window for contact list */
-	scrolled = gtk_scrolled_window_new(NULL, NULL);
-	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(scrolled), GTK_SHADOW_IN);
-	gtk_widget_set_vexpand(scrolled, TRUE);
-	gtk_grid_attach(GTK_GRID(contacts_window_grid), scrolled, 0, y++, 1, 1);
-
-	/* Request a width of 300px */
-	gtk_widget_set_size_request(scrolled, 300, -1);
-
-	/* Create contacts list box which holds the contacts */
-	contacts_list_box = gtk_list_box_new();
-	GtkWidget *placeholder;
-	placeholder = gtk_label_new(NULL);
-	gtk_label_set_markup(GTK_LABEL(placeholder), _("<b>No contacts found</b>"));
-	gtk_widget_show(placeholder);
-	gtk_list_box_set_placeholder(GTK_LIST_BOX(contacts_list_box), placeholder);
-	g_signal_connect(contacts_list_box, "row-selected", G_CALLBACK(contacts_list_box_row_selected_cb), NULL);
-	gtk_container_add(GTK_CONTAINER(scrolled), contacts_list_box);
-
-	/* Update contact list */
-	contacts_update_list(contacts_list_box, NULL);
-
-	/* Only set buttons to sensitive if we can write to the selected book */
-	if (!address_book_can_save()) {
-		gtk_widget_set_sensitive(add_button, FALSE);
-		gtk_widget_set_sensitive(remove_button, FALSE);
-		gtk_widget_set_sensitive(edit_button, FALSE);
-	}
-
-	/* Connect signals */
-	g_signal_connect(entry, "search-changed", G_CALLBACK(search_entry_search_changed_cb), contacts_list_box);
-	g_signal_connect(add_button, "clicked", G_CALLBACK(add_button_clicked_cb), contacts_list_box);
-	g_signal_connect(remove_button, "clicked", G_CALLBACK(remove_button_clicked_cb), contacts_list_box);
-	g_signal_connect(edit_button, "clicked", G_CALLBACK(edit_button_clicked_cb), contacts_list_box);
-
-	g_signal_connect(app_object, "contacts-changed", G_CALLBACK(contacts_contacts_changed_cb), contacts_list_box);
-
-	/* Show window */
-	gtk_widget_show_all(contacts_window);
-#endif
 }

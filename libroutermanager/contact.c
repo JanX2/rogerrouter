@@ -80,7 +80,7 @@ void contact_copy(struct contact *src, struct contact *dst)
 
 struct contact *contact_dup(struct contact *src)
 {
-	struct contact *dst = g_slice_new(struct contact);
+	struct contact *dst = g_slice_new0(struct contact);
 
 	contact_copy(src, dst);
 
@@ -147,3 +147,13 @@ struct contact *contact_find_by_number(gchar *number)
 
 	return contact;
 }
+
+void contact_free(struct contact *contact)
+{
+	if (contact->name) {
+		g_free(contact->name);
+		contact->name = NULL;
+	}
+	g_slice_free(struct contact, contact);
+}
+

@@ -971,7 +971,13 @@ gboolean thunderbird_reload_contacts(void)
 	return TRUE;
 }
 
+gchar *thunderbird_get_name(void)
+{
+	return g_strdup("Thunderbird");
+}
+
 struct address_book thunderbird_book = {
+	thunderbird_get_name,
 	thunderbird_get_contacts,
 	thunderbird_reload_contacts,
 	NULL,//thunderbird_remove_contact,

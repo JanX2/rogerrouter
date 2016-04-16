@@ -4,7 +4,23 @@ AM_CFLAGS = -I$(top_srcdir)
 
 sharedir = $(datadir)/roger
 share_DATA = \
-	images/app.png
+	images/app.png \
+	images/roger-call-blocked.svg \
+	images/roger-call-blocked-symbolic.svg \
+	images/roger-call-in.svg \
+	images/roger-call-in-symbolic.svg \
+	images/roger-call-missed.svg \
+	images/roger-call-missed-symbolic.svg \
+	images/roger-call-out.svg \
+	images/roger-call-out-symbolic.svg \
+	images/roger-call-voice.svg \
+	images/roger-call-voice-symbolic.svg \
+	images/roger-fax.svg \
+	images/roger-fax-symbolic.svg \
+	images/roger-fax-report.svg \
+	images/roger-fax-report-symbolic.svg \
+	images/roger-record.svg \
+	images/roger-record-symbolic.svg
 
 EXTRA_DIST = $(share_DATA) roger_winres.rc roger.gresource.xml assistant.glade authenticate.glade answeringmachine.glade contacts.glade
 
@@ -32,8 +48,6 @@ roger_core_SOURCES =\
 	assistant.h\
 	contacts.c\
 	contacts.h\
-	contact_edit.c\
-	contact_edit.h\
 	fax.c\
 	fax.h\
 	icons.c\

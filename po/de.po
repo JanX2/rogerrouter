@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-13 22:54+0200\n"
+"POT-Creation-Date: 2016-04-16 17:39+0200\n"
 "PO-Revision-Date: 2015-01-28 20:28+0100\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <jan.brummer@tabos.org>\n"
@@ -46,14 +46,13 @@ msgid "A username and password are being requested by the site %s"
 msgstr "Ein Benutzername sowie Passwort werden von der Seite %s benötigt"
 
 #. Contacts
-#: ../roger/application.c:328 ../roger/contacts.c:615 ../roger/contacts.c:627
-#: ../roger/plugins/statusicon/gtk.c:204
+#: ../roger/application.c:328 ../roger/plugins/statusicon/gtk.c:204
 #: ../roger/plugins/indicator/indicator.c:224
 msgid "Contacts"
 msgstr "Kontakte"
 
 #. Phone
-#: ../roger/application.c:329 ../roger/contact_edit.c:289 ../roger/phone.c:1572
+#: ../roger/application.c:329 ../roger/phone.c:1572
 #: ../roger/plugins/statusicon/gtk.c:209
 #: ../roger/plugins/indicator/indicator.c:229
 msgid "Phone"
@@ -269,183 +268,190 @@ msgstr "Ein Benutzer sowie Password werden von der Seite benötigt"
 msgid "Username"
 msgstr "Benutzername"
 
-#: ../roger/contacts.c:134 ../roger/contacts.c:178 ../roger/contact_edit.c:214
-#: ../roger/contact_edit.c:252
+#: ../roger/contacts.c:136 ../roger/contacts.c:189
 msgid "Private"
 msgstr "Privat"
 
-#: ../roger/contacts.c:137 ../roger/contacts.c:181 ../roger/contact_edit.c:215
-#: ../roger/contact_edit.c:253
+#: ../roger/contacts.c:139 ../roger/contacts.c:192
 msgid "Business"
 msgstr "Geschäftlich"
 
-#: ../roger/contacts.c:140 ../roger/contact_edit.c:216
+#: ../roger/contacts.c:142 ../roger/contacts.c:716
 msgid "Mobile"
 msgstr "Mobil"
 
-#: ../roger/contacts.c:143 ../roger/contact_edit.c:217
+#: ../roger/contacts.c:145
 msgid "Private Fax"
 msgstr "Privates Fax"
 
-#: ../roger/contacts.c:146 ../roger/contact_edit.c:218
+#: ../roger/contacts.c:148
 msgid "Business Fax"
 msgstr "Geschäftliches Fax"
 
-#: ../roger/contacts.c:149 ../roger/contact_edit.c:219
+#: ../roger/contacts.c:151 ../roger/contacts.c:719 ../roger/contacts.c:803
 msgid "Pager"
 msgstr "Pager"
 
-#: ../roger/contacts.c:152 ../roger/phone.c:440
+#: ../roger/contacts.c:154 ../roger/phone.c:440
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: ../roger/contacts.c:159
+#: ../roger/contacts.c:161
 msgid "Dial number"
 msgstr "Nummer wählen"
 
-#: ../roger/contacts.c:184
+#: ../roger/contacts.c:195
 msgid "Other"
 msgstr "Andere"
 
-#: ../roger/contacts.c:224
+#: ../roger/contacts.c:235
 msgid "<b>Choose a contact</b>"
 msgstr "<b>Einen Kontakt auswählen</b>"
 
-#: ../roger/contacts.c:246
+#: ../roger/contacts.c:258
 msgid "<b>No address book plugin selected</b>"
 msgstr "<b>Kein Adressbuch-Plugin ausgewählt</b>"
 
-#. Create dialog
-#: ../roger/contacts.c:489
-#, c-format
-msgid "Do you want to delete the entry '%s'?"
-msgstr "Wollen Sie den Eintrag '%s' löschen?"
-
-#. Add cancel button
-#: ../roger/contacts.c:492 ../roger/contact_edit.c:377 ../roger/journal.c:397
-#: ../roger/journal.c:451 ../roger/journal.c:491 ../roger/pref_filters.c:311
-#: ../roger/pref_filters.c:410
-msgid "Cancel"
-msgstr "A_bbrechen"
-
-#. Add remove button
-#: ../roger/contacts.c:495 ../roger/journal.c:398 ../roger/journal.c:452
-msgid "Delete"
-msgstr "Löschen"
-
-#: ../roger/contacts.c:642
-msgid "Add new contact"
-msgstr "Neuen Kontakt hinzufügen"
-
-#: ../roger/contacts.c:647
-msgid "Remove selected contact"
-msgstr "Ausgewählten Kontakt löschen"
-
-#. Edit button
-#: ../roger/contacts.c:651 ../roger/contacts.glade.h:4
-msgid "Edit"
-msgstr "Bearbeiten"
-
-#: ../roger/contacts.c:652
-msgid "Edit selected contact"
-msgstr "Ausgewählten Kontakt editieren"
-
-#: ../roger/contacts.c:661 ../roger/contacts.glade.h:1
-msgid "Type to search"
-msgstr "Tippen zum Suchen"
-
-#: ../roger/contacts.c:680
-msgid "<b>No contacts found</b>"
-msgstr "<b>Keine Kontakte gefunden</b>"
-
-#: ../roger/contacts.glade.h:2
-msgid "All contacts"
-msgstr "Alle Kontakte"
-
-#: ../roger/contacts.glade.h:3 ../roger/contact_edit.c:375
-#: ../roger/journal.c:488
-msgid "Contact"
-msgstr "Kontakt"
-
-#: ../roger/contact_edit.c:128
+#: ../roger/contacts.c:510
 msgid "Open image"
 msgstr "Bild öffnen"
 
-#: ../roger/contact_edit.c:129 ../roger/journal.c:952
-#: ../roger/pref_action.c:163 ../roger/pref_fax.c:53 ../roger/pref_misc.c:50
-#: ../roger/plugins/vcard/vcard.c:1192 ../roger/plugins/google/google.c:104
+#: ../roger/contacts.c:511 ../roger/journal.c:964 ../roger/pref_action.c:163
+#: ../roger/pref_fax.c:53 ../roger/pref_misc.c:50
+#: ../roger/plugins/vcard/vcard.c:1195 ../roger/plugins/google/google.c:104
 #: ../roger/plugins/thunderbird/thunderbird.c:1013
 #: ../roger/plugins/webjournal/webjournal.c:191
 msgid "_Cancel"
 msgstr "A_bbrechen"
 
-#: ../roger/contact_edit.c:129 ../roger/pref_fax.c:53 ../roger/pref_misc.c:50
-#: ../roger/plugins/vcard/vcard.c:1192
+#: ../roger/contacts.c:511 ../roger/pref_fax.c:53 ../roger/pref_misc.c:50
+#: ../roger/plugins/vcard/vcard.c:1195
 #: ../roger/plugins/thunderbird/thunderbird.c:1013
 msgid "_Open"
 msgstr "_Öffnen"
 
-#: ../roger/contact_edit.c:129
+#: ../roger/contacts.c:511
 msgid "_No image"
 msgstr "_Kein Bild"
 
 #. Name
-#: ../roger/contact_edit.c:192 ../roger/journal.c:1002
-#: ../roger/pref_action.c:192 ../roger/pref_action.c:513
-#: ../roger/pref_filters.c:205 ../roger/pref_filters.c:567 ../roger/print.c:384
+#: ../roger/contacts.c:692 ../roger/journal.c:1023 ../roger/pref_action.c:192
+#: ../roger/pref_action.c:513 ../roger/pref_filters.c:205
+#: ../roger/pref_filters.c:567 ../roger/print.c:384
 msgid "Name"
 msgstr "Name"
 
-#: ../roger/contact_edit.c:226 ../roger/journal.c:1004
-#: ../roger/pref_action.c:255 ../roger/pref_filters.c:206 ../roger/print.c:388
+#: ../roger/contacts.c:714 ../roger/contacts.c:752 ../roger/phone.c:425
+msgid "Home"
+msgstr "Zuhause"
+
+#: ../roger/contacts.c:715 ../roger/contacts.c:753 ../roger/phone.c:428
+msgid "Work"
+msgstr "Arbeit"
+
+#: ../roger/contacts.c:717 ../roger/contacts.c:801
+msgid "Home Fax"
+msgstr "Zuhause Fax"
+
+#: ../roger/contacts.c:718 ../roger/contacts.c:802
+msgid "Work Fax"
+msgstr "Arbeit Fax"
+
+#: ../roger/contacts.c:726 ../roger/journal.c:1025 ../roger/pref_action.c:255
+#: ../roger/pref_filters.c:206 ../roger/print.c:388
 #: ../roger/plugins/gtknotify/gtknotify.c:622
 #: ../roger/plugins/gnotification/gnotification.c:452
 #: ../roger/plugins/notification/notification.c:503
 msgid "Number"
 msgstr "Nummer"
 
-#: ../roger/contact_edit.c:232
+#: ../roger/contacts.c:732
 msgid "Remove number"
 msgstr "Entferne Nummer"
 
-#: ../roger/contact_edit.c:259
+#: ../roger/contacts.c:759
 msgid "Remove address"
 msgstr "Adresse entfernen"
 
-#: ../roger/contact_edit.c:267
+#: ../roger/contacts.c:767
 msgid "Street"
 msgstr "Straße"
 
-#: ../roger/contact_edit.c:268
+#: ../roger/contacts.c:768
 msgid "ZIP"
 msgstr "PLZ"
 
-#: ../roger/contact_edit.c:269 ../roger/journal.c:1005
+#: ../roger/contacts.c:769 ../roger/journal.c:1026
 msgid "City"
 msgstr "Stadt"
 
-#: ../roger/contact_edit.c:288
+#: ../roger/contacts.c:798
+msgid "Home phone"
+msgstr "Zuhause Telefon"
+
+#: ../roger/contacts.c:799
+msgid "Work phone"
+msgstr "Arbeit Telefon"
+
+#: ../roger/contacts.c:800
+msgid "Mobile phone"
+msgstr "Mobiltelefon"
+
+#: ../roger/contacts.c:804
+msgid "Home address"
+msgstr "Adresse zuhause"
+
+#: ../roger/contacts.c:805
+msgid "Work address"
+msgstr "Adresse geschäftlich"
+
+#: ../roger/contacts.c:811
 msgid "Add detail"
 msgstr "Detail hinzufügen"
 
-#: ../roger/contact_edit.c:290
-msgid "Address"
-msgstr "Adresse"
-
-#: ../roger/contact_edit.c:378 ../roger/pref_filters.c:314
-msgid "Save"
-msgstr "Speichern"
-
-#: ../roger/contact_edit.c:399
+#: ../roger/contacts.c:863
 msgid ""
 "Note: Depending on the address book plugin not all information might be saved"
 msgstr ""
 "Hinweis: Je nach Adressbuchplugin können nicht alle Informationen "
 "gespeichert werden"
 
-#: ../roger/contact_edit.c:401
+#: ../roger/contacts.c:865
 msgid "Do not show again"
 msgstr "Nicht noch einmal anzeigen"
+
+#: ../roger/contacts.c:930
+msgid "New contact"
+msgstr "Neuer Kontakt"
+
+#. Create dialog
+#: ../roger/contacts.c:974
+#, c-format
+msgid "Do you want to delete contact '%s'?"
+msgstr "Wollen Sie den Kontakt '%s' löschen?"
+
+#. Add cancel button
+#: ../roger/contacts.c:977 ../roger/journal.c:460 ../roger/journal.c:514
+#: ../roger/pref_filters.c:311 ../roger/pref_filters.c:410
+msgid "Cancel"
+msgstr "A_bbrechen"
+
+#. Add remove button
+#: ../roger/contacts.c:980 ../roger/journal.c:461 ../roger/journal.c:515
+msgid "Delete"
+msgstr "Löschen"
+
+#: ../roger/contacts.glade.h:1
+msgid "Type to search"
+msgstr "Tippen zum Suchen"
+
+#: ../roger/contacts.glade.h:2
+msgid "Contact"
+msgstr "Kontakt"
+
+#: ../roger/contacts.glade.h:3
+msgid "Edit"
+msgstr "Bearbeiten"
 
 #: ../roger/fax.c:74 ../roger/fax.c:80
 #, c-format
@@ -487,106 +493,94 @@ msgstr "Status:"
 msgid "Fax"
 msgstr "Fax"
 
-#: ../roger/journal.c:249
-#, c-format
-msgid "%s (%d call(s), %d:%2.2dh)"
-msgstr "%s (%d Anruf(e), %d:%2.2dh)"
-
-#: ../roger/journal.c:249 ../roger/journal.c:252
+#: ../roger/journal.c:293 ../roger/journal.c:315
 msgid "<No profile>"
 msgstr "<Kein Profil>"
 
-#: ../roger/journal.c:252
+#: ../roger/journal.c:305
+#, c-format
+msgid "<small>%d call(s), %d:%2.2dh</small>"
+msgstr "<small>(%d Anruf(e), %d:%2.2dh)</small>"
+
+#: ../roger/journal.c:315
 #, c-format
 msgid "Journal - %s (%d call(s), %d:%2.2dh)"
 msgstr "Journal - %s (%d Anruf(e), %d:%2.2dh)"
 
-#: ../roger/journal.c:395
+#: ../roger/journal.c:458
 msgid "Do you want to delete the router journal?"
 msgstr "Wollen Sie das Journal auf dem Router löschen?"
 
-#: ../roger/journal.c:449
+#: ../roger/journal.c:512
 msgid "Do you really want to delete the selected entry?"
 msgstr "Wollen Sie den ausgewählten Eintrag wirklich löschen?"
 
-#: ../roger/journal.c:492 ../roger/pref_filters.c:413
-msgid "Add"
-msgstr "Hinzufügen"
-
-#: ../roger/journal.c:504
-msgid "Existing contact"
-msgstr "Existierender Kontakt"
-
-#: ../roger/journal.c:505
-msgid "New contact"
-msgstr "Neuer Kontakt"
-
 #. Copy phone number
-#: ../roger/journal.c:840
+#: ../roger/journal.c:837 ../roger/journal.c:851
 msgid "Copy number"
 msgstr "Nummer kopieren"
 
 #. Call phone number
-#: ../roger/journal.c:845
+#: ../roger/journal.c:838 ../roger/journal.c:856
 msgid "Call number"
 msgstr "Nummer wählen"
 
 #. Add contact
-#: ../roger/journal.c:854
+#: ../roger/journal.c:865
 msgid "Add contact"
 msgstr "Kontakt hinzufügen"
 
 #. Delete entry
-#: ../roger/journal.c:863
+#: ../roger/journal.c:874
 msgid "Delete entry"
 msgstr "Eintrag löschen"
 
-#: ../roger/journal.c:952 ../roger/journal.c:1092
+#: ../roger/journal.c:964 ../roger/journal.c:1121
 msgid "Export journal"
 msgstr "Journal exportieren"
 
-#: ../roger/journal.c:952 ../roger/plugins/webjournal/webjournal.c:191
+#: ../roger/journal.c:964 ../roger/plugins/webjournal/webjournal.c:191
 msgid "_Save"
 msgstr "_Speichern"
 
-#: ../roger/journal.c:1000 ../roger/pref_filters.c:203 ../roger/print.c:376
+#: ../roger/journal.c:1021 ../roger/pref_filters.c:203 ../roger/print.c:376
 msgid "Type"
 msgstr "Typ"
 
-#: ../roger/journal.c:1001 ../roger/pref_filters.c:204 ../roger/print.c:380
+#: ../roger/journal.c:1022 ../roger/pref_filters.c:204 ../roger/print.c:380
 msgid "Date/Time"
 msgstr "Datum/Zeit"
 
-#: ../roger/journal.c:1003
+#: ../roger/journal.c:1024
 msgid "Company"
 msgstr "Firma"
 
-#: ../roger/journal.c:1006 ../roger/pref_filters.c:207
+#: ../roger/journal.c:1027 ../roger/pref_filters.c:207
 msgid "Extension"
 msgstr "Nebenstelle"
 
-#: ../roger/journal.c:1007 ../roger/pref_filters.c:208
+#: ../roger/journal.c:1028 ../roger/pref_filters.c:208
 msgid "Line"
 msgstr "Leitung"
 
-#: ../roger/journal.c:1008 ../roger/print.c:400
+#: ../roger/journal.c:1029 ../roger/print.c:400
 msgid "Duration"
 msgstr "Dauer"
 
-#: ../roger/journal.c:1089
+#: ../roger/journal.c:1118
 msgid "Refresh journal"
 msgstr "Journal laden"
 
-#: ../roger/journal.c:1090
+#: ../roger/journal.c:1119
 msgid "Print journal"
 msgstr "Journal drucken"
 
-#: ../roger/journal.c:1091
+#: ../roger/journal.c:1120
 msgid "Clear journal"
 msgstr "Journal löschen"
 
 #. Journal
-#: ../roger/journal.c:1248 ../roger/plugins/statusicon/gtk.c:199
+#: ../roger/journal.c:1279 ../roger/plugins/statusicon/gtk.c:199
 #: ../roger/plugins/indicator/indicator.c:219
 msgid "Journal"
 msgstr "Journal"
@@ -617,14 +611,6 @@ msgstr ""
 #: ../roger/phone.c:298
 msgid "A call is in progress, hangup first"
 msgstr "Ein Anruf wird gerade geführt, bitte erst auflegen"
-
-#: ../roger/phone.c:425
-msgid "Home"
-msgstr "Zuhause"
-
-#: ../roger/phone.c:428
-msgid "Work"
-msgstr "Arbeit"
 
 #: ../roger/phone.c:431
 msgid "Cell"
@@ -1014,6 +1000,10 @@ msgstr "Enthält"
 msgid "Edit filter"
 msgstr "Filter bearbeiten"
 
+#: ../roger/pref_filters.c:314
+msgid "Save"
+msgstr "Speichern"
+
 #: ../roger/pref_filters.c:326 ../roger/pref_filters.c:425
 #: ../roger/plugins/gtknotify/gtknotify.c:277
 msgid "Name:"
@@ -1026,6 +1016,10 @@ msgstr "Regeln"
 #: ../roger/pref_filters.c:407
 msgid "New filter"
 msgstr "Neuer Filter"
+
+#: ../roger/pref_filters.c:413
+msgid "Add"
+msgstr "Hinzufügen"
 
 #: ../roger/pref_filters.c:492
 #, c-format
@@ -1211,7 +1205,7 @@ msgstr "Wähle das Ghostscript-Programm aus"
 msgid "Ghostscript executable"
 msgstr "Ghostscript-Programm"
 
-#: ../roger/pref_misc.c:97 ../roger/plugins/vcard/vcard.c:1227
+#: ../roger/pref_misc.c:97 ../roger/plugins/vcard/vcard.c:1230
 #: ../roger/plugins/thunderbird/thunderbird.c:1064
 #: ../roger/plugins/webjournal/webjournal.c:224
 msgid "Select"
@@ -1298,7 +1292,7 @@ msgid "Book:"
 msgstr "Buch:"
 
 #: ../roger/plugins/evolution/evolution.c:666
-#: ../roger/plugins/fritzfon/fritzfon.c:686 ../roger/plugins/vcard/vcard.c:1237
+#: ../roger/plugins/fritzfon/fritzfon.c:686 ../roger/plugins/vcard/vcard.c:1240
 #: ../roger/plugins/thunderbird/thunderbird.c:1074
 msgid "Contact book"
 msgstr "Kontaktbuch"
@@ -1478,11 +1472,11 @@ msgstr "Application Indicator"
 msgid "Status icon plugin using AppIndicator support"
 msgstr "Statusicon-Plugin mit AppIndicator-Unterstützung"
 
-#: ../roger/plugins/vcard/vcard.c:1192
+#: ../roger/plugins/vcard/vcard.c:1195
 msgid "Select vcard file"
 msgstr "VCard-Datei auswählen"
 
-#: ../roger/plugins/vcard/vcard.c:1223
+#: ../roger/plugins/vcard/vcard.c:1226
 msgid "VCard file"
 msgstr "VCard-Datei"
 
@@ -1691,6 +1685,21 @@ msgstr "Übertragung beginnt:"
 msgid "Transferring page"
 msgstr "Übertrage Seite"
 
+#: ../libroutermanager/fax_spooler.c:186
+#, c-format
+msgid "Spooler directory %s does not exists!"
+msgstr "Spooler Verzeichnis %s existiert nicht!"
+
+#: ../libroutermanager/fax_spooler.c:193
+#, c-format
+msgid ""
+"Could not access spooler directory. Is user in group fax?\n"
+"%s"
+msgstr ""
+"Konnte auf das Spooler-Verzeichnis nicht zugreifen. Ist der Benutzer in der "
+"Gruppe fax?\n"
+"%s"
+
 #. No self-made filters available, create standard filters
 #. All calls
 #: ../libroutermanager/filter.c:431
@@ -1729,6 +1738,16 @@ msgstr ""
 #: ../libroutermanager/router.c:184
 msgid "Login failed"
 msgstr "Anmeldung fehlgeschlagen"
+
+#: ../libroutermanager/plugins/fritzbox/firmware-common.c:634
+#: ../libroutermanager/plugins/fritzbox/firmware-common.c:761
+msgid "FTP Login failed"
+msgstr "FTP-Anmeldung fehlgeschlagen"
+
+#: ../libroutermanager/plugins/fritzbox/firmware-common.c:634
+#: ../libroutermanager/plugins/fritzbox/firmware-common.c:761
+msgid "Please check your ftp credentials"
+msgstr "Bitte überprüfe deine FTP-Zugangsdaten"
 
 #: ../libroutermanager/plugins/areacodes_global/areacodes_global.plugin.in.h:1
 msgid "Areacodes (Global)"
@@ -1804,6 +1823,30 @@ msgstr ""
 #: ../roger.appdata.xml.in.h:3
 msgid "Journal view of all calls"
 msgstr "Journalansicht aller Anrufe"
+
+#~ msgid "Do you want to delete the entry '%s'?"
+#~ msgstr "Wollen Sie den Eintrag '%s' löschen?"
+
+#~ msgid "Add new contact"
+#~ msgstr "Neuen Kontakt hinzufügen"
+
+#~ msgid "Remove selected contact"
+#~ msgstr "Ausgewählten Kontakt löschen"
+
+#~ msgid "Edit selected contact"
+#~ msgstr "Ausgewählten Kontakt editieren"
+
+#~ msgid "<b>No contacts found</b>"
+#~ msgstr "<b>Keine Kontakte gefunden</b>"
+
+#~ msgid "All contacts"
+#~ msgstr "Alle Kontakte"
+
+#~ msgid "Address"
+#~ msgstr "Adresse"
+
+#~ msgid "Existing contact"
+#~ msgstr "Existierender Kontakt"
 
 #~ msgid "Error"
 #~ msgstr "Fehler"

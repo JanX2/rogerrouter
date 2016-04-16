@@ -131,7 +131,6 @@ void address_book_contact_process_cb(AppObject *obj, struct contact *contact, gp
 	}
 
 	contacts = address_book_get_contacts();
-	g_debug("%s(): contacts %p", __FUNCTION__, contacts);
 	if (!contacts) {
 		return;
 	}

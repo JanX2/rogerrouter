@@ -22,10 +22,6 @@ if WITH_KWALLET
 SUBDIRS += kwallet
 endif
 
-if WITH_KWALLET5
-SUBDIRS += kwallet5
-endif
-
 if WITH_MACOS_KEYCHAIN
 SUBDIRS += keychain
 endif

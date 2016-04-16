@@ -26,6 +26,7 @@
 #include <libroutermanager/password.h>
 #include <libroutermanager/network.h>
 #include <libroutermanager/net_monitor.h>
+#include <libroutermanager/appobject-emit.h>
 
 #include <roger/main.h>
 #include <roger/phone.h>

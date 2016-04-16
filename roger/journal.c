@@ -43,7 +43,6 @@
 #include <roger/phone.h>
 #include <roger/journal.h>
 #include <roger/print.h>
-#include <roger/contact_edit.h>
 #include <roger/contacts.h>
 #include <roger/icons.h>
 #include <roger/application.h>
@@ -59,7 +58,9 @@ static GdkPixbuf *icon_call_in = NULL;
 static GdkPixbuf *icon_call_missed = NULL;
 static GdkPixbuf *icon_call_out = NULL;
 static GdkPixbuf *icon_fax = NULL;
+static GdkPixbuf *icon_fax_report = NULL;
 static GdkPixbuf *icon_voice = NULL;
+static GdkPixbuf *icon_record = NULL;
 static GdkPixbuf *icon_blocked = NULL;
 static struct filter *journal_filter = NULL;
 static struct filter *journal_search_filter = NULL;
@@ -142,22 +143,53 @@ void journal_init_call_icon(void)
 {
 	GtkIconTheme *icons;
 	gint width = 16;
+	gint icon_type = 0; //g_settings_get_int(app_settings, "icons-symbolic")
 
 	icons = gtk_icon_theme_get_default();
 
-	icon_call_in = gtk_icon_theme_load_icon(icons, "call-stop-symbolic", width, 0, NULL);
+	gtk_icon_theme_append_search_path(icons, get_directory(APP_DATA));
 
-	icon_call_missed = gtk_icon_theme_load_icon(icons, "call-missed-symbolic", width, 0, NULL);
+	switch (icon_type) {
+	case 0:
+		icon_call_in = gtk_icon_theme_load_icon(icons, "call-stop-symbolic", width, 0, NULL);
+		icon_call_missed = gtk_icon_theme_load_icon(icons, "call-missed-symbolic", width, 0, NULL);
+		icon_call_out = gtk_icon_theme_load_icon(icons, "call-start-symbolic", width, 0, NULL);
+		icon_fax = gtk_icon_theme_load_icon(icons, "folder-documents-symbolic", width, 0, NULL);
+		icon_fax_report = gtk_icon_theme_load_icon(icons, "roger-fax-report-symbolic", width, 0, NULL);
+		icon_voice = gtk_icon_theme_load_icon(icons, "folder-music-symbolic", width, 0, NULL);
+		icon_record = gtk_icon_theme_load_icon(icons, "roger-record-symbolic", width, 0, NULL);
+		icon_blocked = gtk_icon_theme_load_icon(icons, "process-stop-symbolic", width, 0, NULL);
+		break;
+	case 1:
+		icon_call_in = gtk_icon_theme_load_icon(icons, "roger-call-in", width, 0, NULL);
+		icon_call_missed = gtk_icon_theme_load_icon(icons, "roger-call-missed", width, 0, NULL);
+		icon_call_out = gtk_icon_theme_load_icon(icons, "roger-call-out", width, 0, NULL);
+		icon_fax = gtk_icon_theme_load_icon(icons, "roger-fax", width, 0, NULL);
+		icon_fax_report = gtk_icon_theme_load_icon(icons, "roger-fax-report", width, 0, NULL);
+		icon_voice = gtk_icon_theme_load_icon(icons, "roger-call-voice", width, 0, NULL);
+		icon_record = gtk_icon_theme_load_icon(icons, "roger-record", width, 0, NULL);
+		icon_blocked = gtk_icon_theme_load_icon(icons, "roger-call-blocked", width, 0, NULL);
+		break;
+	case 2:
+		icon_call_in = gtk_icon_theme_load_icon(icons, "roger-call-in-symbolic", width, 0, NULL);
+		icon_call_missed = gtk_icon_theme_load_icon(icons, "roger-call-missed-symbolic", width, 0, NULL);
+		icon_call_out = gtk_icon_theme_load_icon(icons, "roger-call-out-symbolic", width, 0, NULL);
+		icon_fax = gtk_icon_theme_load_icon(icons, "roger-fax-report-symbolic", width, 0, NULL);
+		icon_fax_report = gtk_icon_theme_load_icon(icons, "roger-fax-report-symbolic", width, 0, NULL);
+		icon_voice = gtk_icon_theme_load_icon(icons, "roger-call-voice-symbolic", width, 0, NULL);
+		icon_record = gtk_icon_theme_load_icon(icons, "roger-record-symbolic", width, 0, NULL);
+		icon_blocked = gtk_icon_theme_load_icon(icons, "roger-call-blocked-symbolic", width, 0, NULL);
+		break;
+	}
 
-	//icon_call_out = gtk_icon_theme_load_icon(icons, "call-start-symbolic", width, 0, NULL);
-	//icon_call_out = pixbuf_copy_mirror(icon_call_out);
-	icon_call_out = gtk_icon_theme_load_icon(icons, "call-start-symbolic", width, 0, NULL);
-
-	icon_fax = gtk_icon_theme_load_icon(icons, "folder-documents-symbolic", width, 0, NULL);
-
-	icon_voice = gtk_icon_theme_load_icon(icons, "folder-music-symbolic", width, 0, NULL);
-
-	icon_blocked = gtk_icon_theme_load_icon(icons, "process-stop-symbolic", width, 0, NULL);
+	g_assert(icon_call_in != NULL);
+	g_assert(icon_call_missed != NULL);
+	g_assert(icon_call_out != NULL);
+	g_assert(icon_fax != NULL);
+	g_assert(icon_fax_report != NULL);
+	g_assert(icon_voice != NULL);
+	g_assert(icon_record != NULL);
+	g_assert(icon_blocked != NULL);
 }
 
 GdkPixbuf *journal_get_call_icon(gint type)
@@ -170,11 +202,13 @@ GdkPixbuf *journal_get_call_icon(gint type)
 	case CALL_TYPE_OUTGOING:
 		return icon_call_out;
 	case CALL_TYPE_FAX:
-	case CALL_TYPE_FAX_REPORT:
 		return icon_fax;
+	case CALL_TYPE_FAX_REPORT:
+		return icon_fax_report;
 	case CALL_TYPE_VOICE:
-	case CALL_TYPE_RECORD:
 		return icon_voice;
+	case CALL_TYPE_RECORD:
+		return icon_record;
 	case CALL_TYPE_BLOCKED:
 		return icon_blocked;
 	default:
@@ -496,70 +530,8 @@ void journal_button_delete_clicked_cb(GtkWidget *button, GtkWidget *view)
 
 void journal_add_contact(struct call *call)
 {
-	//GtkWidget *add_dialog = gtk_message_dialog_new(GTK_WINDOW(journal_win), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Where shall i add the number?"));
-	//GtkWidget *content;
-	GtkWidget *grid;
-	GtkWidget *radio1;
-	GtkWidget *radio2;
-	gboolean new_entry = FALSE;
-
-	GtkWidget *dialog;
-	gboolean use_header = roger_uses_headerbar();
-
-		//gtk_clipboard_set_text(gtk_clipboard_get(GDK_NONE), call->remote->number, -1);
-		contacts_set_number(call->remote->number);
-		contacts();
-		return;
-
-
-	dialog = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", use_header, NULL);
-
-	gtk_window_set_title(GTK_WINDOW(dialog), _("Contact"));
-	gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
-	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(journal_win));
-	gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), GTK_RESPONSE_CANCEL);
-	GtkWidget *remove = gtk_dialog_add_button(GTK_DIALOG(dialog), _("Add"), GTK_RESPONSE_OK);
-
-	ui_set_suggested_style(remove);
-	GtkWidget *content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
-
-	grid = gtk_grid_new();
-
-	/* Set standard spacing */
-	gtk_widget_set_margin(grid, 18, 18, 18, 18);
-	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(grid), 15);
-
-	radio1 = gtk_radio_button_new_with_label(NULL, _("Existing contact"));
-	radio2 = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(radio1), _("New contact"));
-
-	gtk_grid_attach(GTK_GRID(grid), radio1, 0, 0, 1, 1);
-	gtk_grid_attach(GTK_GRID(grid), radio2, 0, 1, 1, 1);
-
-	gtk_container_add(GTK_CONTAINER(content), grid);
-
-	gtk_widget_show_all(grid);
-
-	gint result = gtk_dialog_run(GTK_DIALOG(dialog));
-	new_entry = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radio2));
-	gtk_widget_destroy(dialog);
-
-	if (result != GTK_RESPONSE_OK) {
-		return;
-	}
-
-	if (new_entry) {
-		contact_add_number(call->remote, call->remote->number);
-		if (call->remote->lookup) {
-			contact_add_address(call->remote, call->remote->street, call->remote->zip, call->remote->city);
-		} else {
-			contact_add_address(call->remote, "", "", call->remote->city);
-		}
-		contact_editor(call->remote, journal_win);
-	} else {
-		gtk_clipboard_set_text(gtk_clipboard_get(GDK_NONE), call->remote->number, -1);
-		contacts();
-	}
+	contacts_set_number(call->remote->number);
+	contacts();
 }
 
 void add_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
@@ -1025,6 +997,15 @@ void journal_set_visible(gboolean state)
 	gtk_widget_set_visible(journal_win, state);
 }
 
+void contacts_add_detail_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+{
+	gchar *name;
+
+	g_object_get(action, "name", &name, NULL);
+	g_debug("%s(): action %s", __FUNCTION__, name);
+	contacts_add_detail(name + 14);
+}
+
 void journal_window(GApplication *app)
 {
 	GtkWidget *window, *grid, *scrolled;
@@ -1054,6 +1035,14 @@ void journal_window(GApplication *app)
 		{"export-journal", export_journal_activated},
 		{"add-contact", add_contact_activated},
 		{"delete-entry", delete_entry_activated},
+		{"contacts-edit-phone-home", contacts_add_detail_activated},
+		{"contacts-edit-phone-work", contacts_add_detail_activated},
+		{"contacts-edit-phone-mobile", contacts_add_detail_activated},
+		{"contacts-edit-phone-home-fax", contacts_add_detail_activated},
+		{"contacts-edit-phone-work-fax", contacts_add_detail_activated},
+		{"contacts-edit-phone-pager", contacts_add_detail_activated},
+		{"contacts-edit-address-home", contacts_add_detail_activated},
+		{"contacts-edit-address-work", contacts_add_detail_activated},
 	};
 
 	journal_startup(app);
@@ -1136,6 +1125,8 @@ void journal_window(GApplication *app)
 #else
 	gtk_container_add(GTK_CONTAINER(menu_button), gtk_image_new_from_icon_name("view-list-symbolic", GTK_ICON_SIZE_MENU));
 #endif
+
+	g_menu_freeze(menu);
 	gtk_menu_button_set_menu_model(GTK_MENU_BUTTON(menu_button), G_MENU_MODEL(menu));
 
 	gtk_box_pack_start(GTK_BOX(box), menu_button, FALSE, TRUE, 0);

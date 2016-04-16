@@ -636,7 +636,13 @@ gboolean fritzfon_save_contact(struct contact *contact)
 	return fritzfon_save();
 }
 
+gchar *fritzfon_get_name(void)
+{
+	return g_strdup("FritzFon");
+}
+
 struct address_book fritzfon_book = {
+	fritzfon_get_name,
 	fritzfon_get_contacts,
 	fritzfon_reload_contacts,
 	fritzfon_remove_contact,

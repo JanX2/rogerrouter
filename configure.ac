@@ -630,7 +630,6 @@ AC_CONFIG_FILES([
     roger/plugins/google/Makefile
     roger/plugins/thunderbird/Makefile
     roger/plugins/kwallet/Makefile
-    roger/plugins/kwallet5/Makefile
     roger/plugins/keychain/Makefile
     roger/plugins/osxab/Makefile
     roger/plugins/notification/Makefile

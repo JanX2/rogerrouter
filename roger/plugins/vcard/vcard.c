@@ -500,7 +500,10 @@ static void process_card_end(struct contact *contact)
 
 	if (!contact->name && first_name != NULL && last_name != NULL) {
 		contact->name = g_strdup_printf("%s %s", first_name->str, last_name->str);
+	} else if (!contact->name) {
+		contact->name = g_strdup("");
 	}
+
 	contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
 
 	/* Free firstname */

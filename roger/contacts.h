@@ -25,6 +25,8 @@ G_BEGIN_DECLS
 #define AVATAR_DEFAULT "avatar-default-symbolic"
 
 void contacts(void);
+void contacts_set_number(gchar *number);
+void contacts_add_detail(gchar *detail);
 
 G_END_DECLS
 

@@ -9,7 +9,6 @@ roger/assistant.glade
 roger/authenticate.glade
 roger/contacts.c
 roger/contacts.glade
-roger/contact_edit.c
 roger/fax.c
 roger/journal.c
 roger/main_ui.c
