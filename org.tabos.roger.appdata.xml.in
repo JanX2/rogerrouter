@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2016 Jan-Michael Brummer <jan.brummer@tabos.org
+-->
+<component type="desktop">
+  <id>org.tabos.roger.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0</project_license>
+  <_name>Roger Router</_name>
+  <_summary>Journal, Fax-Software and Call-Monitor for AVM FRITZ!Box or compatible</_summary>
+  <_description>
+    <p>Roger Router is a clean solution for controlling the FRITZ!Box or compatible router with Linux. It offers a rich feature list, including call monitor, journal, fax support and also has a great integration into Evolution and FritzFon address books.</p>
+    <p>Some plugins for Roger Router are packaged separately.</p>
+  </_description>
+  <screenshots>
+    <screenshot height="576" type="default" width="1024">
+      <image>https://www.tabos.org/downloads/roger-router-1.png</image>
+      <_caption>Journal view of all calls</_caption>
+    </screenshot>
+  </screenshots>
+  <keywords>
+    <keyword xml:lang="de">box</keyword>
+    <keyword xml:lang="de">fax</keyword>
+    <keyword xml:lang="de">fritz</keyword>
+    <keyword xml:lang="de">fritzbox</keyword>
+    <keyword xml:lang="de">router</keyword>
+    <keyword xml:lang="de">softphone</keyword>
+    <keyword xml:lang="de">verwaltung</keyword>
+  </keywords>
+  <kudos>
+    <kudo>Notifications</kudo>
+  </kudos>
+  <url type="homepage">https://www.tabos.org</url>
+  <update_contact>jan.brummer@tabos.org</update_contact>
+  <developer_name>Jan-Michael Brummer</developer_name>
+  <url type="bugtracker">https://www.tabos.org/forum/</url>
+  <url type="donation">https://www.tabos.org/</url>
+  <url type="help">https://www.tabos.org/forum/</url>
+  <url type="faq">https://www.tabos.org/haeufig-gestellte-fragen-faq/</url>
+  <developer_name>Jan-Michael Brummer</developer_name>
+  <update_contact>jan.brummer_AT_tabos.org</update_contact>
+  <translation type="gettext">roger</translation>
+</component>

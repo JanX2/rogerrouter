@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-16 17:39+0200\n"
+"POT-Creation-Date: 2016-04-16 20:20+0200\n"
 "PO-Revision-Date: 2015-01-28 20:28+0100\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <jan.brummer@tabos.org>\n"
@@ -141,7 +141,7 @@ msgstr "Router Passwort"
 
 #. Update title
 #: ../roger/assistant.c:375 ../roger/assistant.glade.h:19
-#: ../roger/pref_router.c:245
+#: ../roger/pref_router.c:246
 msgid "FTP password"
 msgstr "FTP-Passwort"
 
@@ -319,14 +319,14 @@ msgstr "Bild öffnen"
 #: ../roger/contacts.c:511 ../roger/journal.c:964 ../roger/pref_action.c:163
 #: ../roger/pref_fax.c:53 ../roger/pref_misc.c:50
 #: ../roger/plugins/vcard/vcard.c:1195 ../roger/plugins/google/google.c:104
-#: ../roger/plugins/thunderbird/thunderbird.c:1013
+#: ../roger/plugins/thunderbird/thunderbird.c:1019
 #: ../roger/plugins/webjournal/webjournal.c:191
 msgid "_Cancel"
 msgstr "A_bbrechen"
 
 #: ../roger/contacts.c:511 ../roger/pref_fax.c:53 ../roger/pref_misc.c:50
 #: ../roger/plugins/vcard/vcard.c:1195
-#: ../roger/plugins/thunderbird/thunderbird.c:1013
+#: ../roger/plugins/thunderbird/thunderbird.c:1019
 msgid "_Open"
 msgstr "_Öffnen"
 
@@ -1091,56 +1091,56 @@ msgstr "Ortsvorwahl ohne führende Null"
 msgid "Prefixes"
 msgstr "Vorwahlen"
 
-#: ../roger/pref_router.c:65
+#: ../roger/pref_router.c:66
 msgid "Login password is valid"
 msgstr "Anmeldepasswort ist gültig"
 
-#: ../roger/pref_router.c:93
+#: ../roger/pref_router.c:94
 msgid "Could not connect to FTP. Missing USB storage?"
 msgstr "Konnte nicht mit dem FTP verbinden. Fehlt der USB-Speicher?"
 
-#: ../roger/pref_router.c:96
+#: ../roger/pref_router.c:97
 msgid "FTP password is valid"
 msgstr "FTP-Password ist gültig"
 
-#: ../roger/pref_router.c:98 ../roger/pref_router.c:100
+#: ../roger/pref_router.c:99 ../roger/pref_router.c:101
 msgid "FTP password is invalid"
 msgstr "FTP-Password ist ungültig"
 
-#: ../roger/pref_router.c:98
+#: ../roger/pref_router.c:99
 msgid "Please check your FTP credentials"
 msgstr "Bitte überprüfe deine FTP-Zugangsdaten"
 
-#: ../roger/pref_router.c:116
+#: ../roger/pref_router.c:117
 msgid "Do you want to reload the router settings and replace your preferences?"
 msgstr "Wollen Sie die Einstellungen vom Router laden und damit ihre ersetzen?"
 
-#: ../roger/pref_router.c:117
+#: ../roger/pref_router.c:118
 msgid "Update settings"
 msgstr "Einstellungen aktualisieren"
 
 #. Host
-#: ../roger/pref_router.c:191
+#: ../roger/pref_router.c:192
 msgid "Host"
 msgstr "Host"
 
-#: ../roger/pref_router.c:195
+#: ../roger/pref_router.c:196
 msgid "Host name, e.g. fritz.box or speedport.ip"
 msgstr "Hostname, z.B. fritz.box"
 
-#: ../roger/pref_router.c:202
+#: ../roger/pref_router.c:203
 msgid "Login user"
 msgstr "Anmeldebenutzer"
 
-#: ../roger/pref_router.c:206
+#: ../roger/pref_router.c:207
 msgid "Router login user"
 msgstr "Anmeldebenutzer des Routers"
 
-#: ../roger/pref_router.c:213
+#: ../roger/pref_router.c:214
 msgid "Login password"
 msgstr "Anmeldepasswort"
 
-#: ../roger/pref_router.c:217
+#: ../roger/pref_router.c:218
 msgid "Router login password"
 msgstr "Anmeldepasswort des Routers"
 
@@ -1148,44 +1148,44 @@ msgstr "Anmeldepasswort des Routers"
 #. Verify button
 #. g_settings_bind(profile_get_active()->settings, "ftp-password", ftp_password_entry, "text", G_SETTINGS_BIND_DEFAULT);
 #. Verify button
-#: ../roger/pref_router.c:227 ../roger/pref_router.c:259
+#: ../roger/pref_router.c:228 ../roger/pref_router.c:260
 msgid "Verify"
 msgstr "Überprüfen"
 
-#: ../roger/pref_router.c:228 ../roger/pref_router.c:260
+#: ../roger/pref_router.c:229 ../roger/pref_router.c:261
 msgid "Check if password is valid"
 msgstr "Überprüfe ob Passwort gültig ist"
 
-#: ../roger/pref_router.c:234 ../roger/pref_router.c:238
+#: ../roger/pref_router.c:235 ../roger/pref_router.c:239
 msgid "FTP user"
 msgstr "FTP-Benutzer"
 
-#: ../roger/pref_router.c:250
+#: ../roger/pref_router.c:251
 msgid "Router FTP password"
 msgstr "Router FTP Passwort"
 
-#: ../roger/pref_router.c:266
+#: ../roger/pref_router.c:267
 msgid "Show passwords"
 msgstr "Passwörter anzeigen"
 
-#: ../roger/pref_router.c:268
+#: ../roger/pref_router.c:269
 msgid "Toggle passwords visibility"
 msgstr "Sichtbarkeit der Passwörter umstellen"
 
-#: ../roger/pref_router.c:275
+#: ../roger/pref_router.c:276
 msgid "Settings"
 msgstr "Einstellungen"
 
 #. Update button
-#: ../roger/pref_router.c:307
+#: ../roger/pref_router.c:308
 msgid "_Refresh"
 msgstr "_Aktualisieren"
 
-#: ../roger/pref_router.c:308
+#: ../roger/pref_router.c:309
 msgid "Refresh settings"
 msgstr "Einstellungen erneuern"
 
-#: ../roger/pref_router.c:315
+#: ../roger/pref_router.c:316
 #, c-format
 msgid "%s (Firmware: %s)"
 msgstr "%s (Firmware: %s)"
@@ -1206,7 +1206,7 @@ msgid "Ghostscript executable"
 msgstr "Ghostscript-Programm"
 
 #: ../roger/pref_misc.c:97 ../roger/plugins/vcard/vcard.c:1230
-#: ../roger/plugins/thunderbird/thunderbird.c:1064
+#: ../roger/plugins/thunderbird/thunderbird.c:1070
 #: ../roger/plugins/webjournal/webjournal.c:224
 msgid "Select"
 msgstr "Auswählen"
@@ -1287,13 +1287,13 @@ msgid "Message:"
 msgstr "Nachricht:"
 
 #: ../roger/plugins/evolution/evolution.c:653
-#: ../roger/plugins/fritzfon/fritzfon.c:673
+#: ../roger/plugins/fritzfon/fritzfon.c:679
 msgid "Book:"
 msgstr "Buch:"
 
 #: ../roger/plugins/evolution/evolution.c:666
-#: ../roger/plugins/fritzfon/fritzfon.c:686 ../roger/plugins/vcard/vcard.c:1240
-#: ../roger/plugins/thunderbird/thunderbird.c:1074
+#: ../roger/plugins/fritzfon/fritzfon.c:692 ../roger/plugins/vcard/vcard.c:1240
+#: ../roger/plugins/thunderbird/thunderbird.c:1080
 msgid "Contact book"
 msgstr "Kontaktbuch"
 
@@ -1409,6 +1409,7 @@ msgid "Last calls"
 msgstr "Letzte Anrufe"
 
 #: ../roger/plugins/statusicon/gtk.c:325 ../org.tabos.roger.desktop.in.h:1
+#: ../org.tabos.roger.appdata.xml.in.h:1
 msgid "Roger Router"
 msgstr "Roger Router"
 
@@ -1532,15 +1533,15 @@ msgstr "Code eingeben:"
 msgid "Authorization refresh error"
 msgstr "Fehler bei der Autorisierungserneuerung"
 
-#: ../roger/plugins/google/google.c:892
+#: ../roger/plugins/google/google.c:898
 msgid "User:"
 msgstr "Benutzer:"
 
-#: ../roger/plugins/google/google.c:899
+#: ../roger/plugins/google/google.c:905
 msgid "Password:"
 msgstr "Passwort:"
 
-#: ../roger/plugins/google/google.c:905
+#: ../roger/plugins/google/google.c:911
 msgid "Access data"
 msgstr "Zugangsdaten"
 
@@ -1552,11 +1553,11 @@ msgstr "Google"
 msgid "Google address book support"
 msgstr "Google Adressbuch-Support"
 
-#: ../roger/plugins/thunderbird/thunderbird.c:1013
+#: ../roger/plugins/thunderbird/thunderbird.c:1019
 msgid "Select mab file"
 msgstr "VCard-Datei auswählen"
 
-#: ../roger/plugins/thunderbird/thunderbird.c:1060
+#: ../roger/plugins/thunderbird/thunderbird.c:1066
 msgid "Thunderbird file"
 msgstr "Thunderbird-Datei"
 
@@ -1793,7 +1794,7 @@ msgstr "Rückwärtssuche"
 msgid "Reverse lookup through 3rd-party"
 msgstr "Rückwärtssuche durch andere Anbieter"
 
-#: ../org.tabos.roger.desktop.in.h:2
+#: ../org.tabos.roger.desktop.in.h:2 ../org.tabos.roger.appdata.xml.in.h:2
 msgid "Journal, Fax-Software and Call-Monitor for AVM FRITZ!Box or compatible"
 msgstr ""
 "Journal, Fax-Software und Anrufmonitor für AVM FRITZ!Box oder kompatibel"
@@ -1802,11 +1803,7 @@ msgstr ""
 msgid "fritz;box;fritzbox;router;manager;fax;softphone;"
 msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
 
-#: ../roger.appdata.xml.in.h:1
-msgid "Router Manager"
-msgstr "Routerverwaltung"
-
-#: ../roger.appdata.xml.in.h:2
+#: ../org.tabos.roger.appdata.xml.in.h:3
 msgid ""
 "<p>Roger Router is a clean solution for controlling the FRITZ!Box or "
 "compatible router with Linux. It offers a rich feature list, including call "
@@ -1815,14 +1812,17 @@ msgid ""
 "are packaged separately.</p>"
 msgstr ""
 "<p>Roger Router ist eine saubere Lösung um die FRITZ!Box unter Linux zu "
-"kontrollieren. Es biete einen reichhaltigen Funktionsumfang, darunter einen "
-"Anrufmonitor, Journal, Faxunterstützung und haben ebenso eine großartige "
-"Integration in Evolution und FritzFon Addressbücher.</p> <p>Einige Plugins "
+"kontrollieren. Es bietet einen reichhaltigen Funktionsumfang, darunter einen "
+"Anrufmonitor, Journal, Faxunterstützung und ebenso eine großartige "
+"Integration in verschiedene Addressbücher.</p> <p>Einige Plugins "
 "für Roger Router sind separat als Paket erhältlich.</p>"
 
-#: ../roger.appdata.xml.in.h:3
+#: ../org.tabos.roger.appdata.xml.in.h:4
 msgid "Journal view of all calls"
 msgstr "Journalansicht aller Anrufe"
+
+#~ msgid "Router Manager"
+#~ msgstr "Routerverwaltung"
 
 #~ msgid "Do you want to delete the entry '%s'?"
 #~ msgstr "Wollen Sie den Eintrag '%s' löschen?"

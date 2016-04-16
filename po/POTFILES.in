@@ -26,6 +26,7 @@ roger/pref_softphone.c
 roger/pref_misc.c
 roger/print.c
 roger/plugins/evolution/evolution.c
+[type: gettext/ini]roger/plugins/evolution/roger-plugins-evolution.metainfo.xml.in
 [type: gettext/ini]roger/plugins/evolution/evolution.plugin.in
 roger/plugins/fritzfon/fritzfon.c
 [type: gettext/ini]roger/plugins/fritzfon/fritzfon.plugin.in
@@ -58,4 +59,4 @@ libroutermanager/plugins/fritzbox/firmware-common.c
 [type: gettext/ini]libroutermanager/plugins/pulseaudio/pulseaudio.plugin.in
 [type: gettext/ini]libroutermanager/plugins/reverselookup/reverselookup.plugin.in
 [type: gettext/ini]org.tabos.roger.desktop.in
-roger.appdata.xml.in
+org.tabos.roger.appdata.xml.in
