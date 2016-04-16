@@ -26,8 +26,8 @@ EXTRA_DIST = $(share_DATA) roger_winres.rc roger.gresource.xml assistant.glade a
 
 bin_PROGRAMS = roger
 
-roger_CFLAGS = $(EXTRA_CFLAGS) $(GTK_CFLAGS) $(GMODULE_CFLAGS) -Wall -O2 -g $(PEAS_GTK_CFLAGS) $(SNDFILE_CFLAGS) $(AM_CFLAGS) $(OS_CFLAGS) $(TIFF_CFLAGS)
-roger_LDFLAGS = $(EXTRA_LIBS) $(GTK_LIBS) $(GMODULE_LIBS) -export-dynamic $(top_builddir)/libroutermanager/libroutermanager.la $(PEAS_GTK_LIBS) $(SNDFILE_LIBS) $(SPANDSP_LIBS) $(OS_LIBS) $(TIFF_LIBS)
+roger_CFLAGS = $(EXTRA_CFLAGS) $(GTK_CFLAGS) $(GMODULE_CFLAGS) -Wall -O2 -g $(PEAS_GTK_CFLAGS) $(SNDFILE_CFLAGS) $(AM_CFLAGS) $(OS_CFLAGS) $(TIFF_CFLAGS) $(SOUP_CFLAGS)
+roger_LDFLAGS = $(EXTRA_LIBS) $(GTK_LIBS) $(GMODULE_LIBS) -export-dynamic $(top_builddir)/libroutermanager/libroutermanager.la $(PEAS_GTK_LIBS) $(SNDFILE_LIBS) $(SPANDSP_LIBS) $(OS_LIBS) $(TIFF_LIBS) $(SOUP_LIBS)
 
 GLIB_COMPILE_RESOURCES = $(shell $(PKG_CONFIG) --variable=glib_compile_resources gio-2.0)
 
