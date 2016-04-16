@@ -322,9 +322,9 @@ AC_ARG_WITH([gdata],
 AC_MSG_CHECKING(for libgdata)
 AS_IF([test "x$with_gdata" != xno],
 	[if test "x$with_gdata" = xcheck; then
-		$PKG_CONFIG libgdata && with_gdata=yes
+		$PKG_CONFIG --atleast-version=0.17 libgdata && with_gdata=yes
 	elif test "x$with_gdata" = xyes; then
-		$PKG_CONFIG libgdata || AC_MSG_FAILURE(
+		$PKG_CONFIG --atleast-version=0.17 libgdata || AC_MSG_FAILURE(
 		[--with-gdata=yes was given, but test for gdata failed])
 	fi
 	if test "x$with_gdata" = xyes; then
