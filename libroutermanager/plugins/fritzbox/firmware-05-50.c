@@ -52,10 +52,12 @@ static gboolean fritzbox_check_login_blocked(const gchar *data, struct profile *
 			g_debug("%s(): Block Time = %s", __FUNCTION__, blocktime);
 			g_debug("%s(): Block Time = %d", __FUNCTION__, atoi(blocktime));
 			g_usleep(atoi(blocktime) * G_USEC_PER_SEC);
-		}
 
-		g_timer_destroy(profile->router_info->session_timer);
-		profile->router_info->session_timer = NULL;
+			if (atoi(blocktime)) {
+				g_timer_destroy(profile->router_info->session_timer);
+				profile->router_info->session_timer = NULL;
+			}
+		}
 	}
 
 	return result;
@@ -749,7 +751,7 @@ void fritzbox_journal_05_50_cb(SoupSession *session, SoupMessage *msg, gpointer 
 	router_process_journal(journal);
 
 	/* Logout */
-	fritzbox_logout(profile, FALSE);
+	router_logout(profile);
 }
 
 /**
@@ -817,7 +819,7 @@ gboolean fritzbox_clear_journal_05_50(struct profile *profile)
 
 	g_object_unref(msg);
 
-	fritzbox_logout(profile, FALSE);
+	router_logout(profile);
 
 	return TRUE;
 }

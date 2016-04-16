@@ -213,7 +213,7 @@ gboolean router_is_locked(void)
  */
 gboolean router_logout(struct profile *profile)
 {
-	return active_router ? active_router->logout(profile, TRUE) : FALSE;
+	return active_router ? active_router->logout(profile, FALSE) : FALSE;
 }
 
 /**

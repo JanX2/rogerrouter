@@ -491,7 +491,7 @@ gboolean fritzbox_logout(struct profile *profile, gboolean force)
 	}
 
 	g_object_unref(msg);
-	g_debug("Logout successful");
+	g_debug("%s(): Successful", __FUNCTION__);
 
 	return TRUE;
 }
