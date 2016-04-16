@@ -23,6 +23,9 @@ share_DATA = \
 	images/roger-record-symbolic.svg
 
 EXTRA_DIST = $(share_DATA) roger_winres.rc roger.gresource.xml assistant.glade authenticate.glade answeringmachine.glade contacts.glade
+DISTCLEANFILES = \
+	roger_gresource.c \
+	roger_gresource.h
 
 bin_PROGRAMS = roger
 
