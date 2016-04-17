@@ -121,6 +121,31 @@ static gchar *timediff_str(struct phone_state *state)
 	return buf;
 }
 
+
+static gchar *phone_get_active_name(void)
+{
+	GSList *phone_list;
+	struct profile *profile = profile_get_active();
+	gchar *name = NULL;
+	gint type;
+
+	/* Get phone list and active phone port */
+	phone_list = router_get_phone_list(profile);
+	type = router_get_phone_port(profile);
+
+	/* Traverse phone list and add each phone */
+	for (phone_list; phone_list != NULL; phone_list = phone_list->next) {
+		struct phone *phone = phone_list->data;
+
+		if (type == phone->type) {
+			name = g_strdup(phone->name);
+		}
+	}
+
+	return name ? name : g_strdup(_("Phone"));
+}
+
+
 /**
  * \brief Phone status timer
  * \param state pointer to phone state structure
@@ -1296,9 +1321,13 @@ void phone_item_toggled_cb(GtkCheckMenuItem *item, gpointer user_data)
 	/* If item is active, adjust phone port accordingly and set sensitivity of phone buttons */
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(item))) {
 		gint type = GPOINTER_TO_INT(user_data);
+		gchar *name;
 
 		/* Set active phone port */
 		router_set_phone_port(profile_get_active(), type);
+		name = phone_get_active_name();
+		gtk_window_set_title(GTK_WINDOW(phone_window), name);
+		g_free(name);
 	}
 #else
 	/* If item is active, adjust phone port accordingly and set sensitivity of phone buttons */
@@ -1353,7 +1382,6 @@ static GtkWidget *phone_window_create_menu(struct profile *profile, struct phone
 		item = gtk_radio_button_new_with_label(phone_radio_list, phone->name);
 
 		phone_radio_list = gtk_radio_button_get_group(GTK_RADIO_BUTTON(item));
-		g_debug("phone %d <-> %d", type, phone->type);
 		if (type == phone->type) {
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(item), TRUE);
 		}
@@ -1571,7 +1599,7 @@ GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struc
 
 gchar *phone_voice_get_title(void)
 {
-	return _("Phone");
+	return phone_get_active_name();
 }
 
 gboolean phone_voice_init(struct contact *contact, struct connection *connection)
