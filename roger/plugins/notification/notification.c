@@ -304,7 +304,7 @@ void impl_activate(PeasActivatable *plugin)
 {
 	RouterManagerNotificationPlugin *notify_plugin = ROUTERMANAGER_NOTIFICATION_PLUGIN(plugin);
 
-	notification_settings = rm_settings_plugin_new("org.tabos.roger.plugins.notify", "notification");
+	notification_settings = rm_settings_plugin_new("org.tabos.roger.plugins.notification", "notification");
 
 	gchar **incoming_numbers = g_settings_get_strv(notification_settings, "incoming-numbers");
 	gchar **outgoing_numbers = g_settings_get_strv(notification_settings, "outgoing-numbers");
