@@ -35,6 +35,10 @@ AC_SUBST(ROGER_VERSION_MINOR)
 ROGER_VERSION_MICRO=roger_micro()
 AC_SUBST(ROGER_VERSION_MICRO)
 
+GTK_REQUIRED=3.9.4
+AC_DEFINE(GDK_VERSION_MIN_REQUIRED, GDK_VERSION_3_8, [Ignore post 3.8 deprecations])
+AC_DEFINE(GDK_VERSION_MAX_ALLOWED, GDK_VERSION_3_10, [Prevent post 3.10 APIs])
+
 AC_CHECK_LIB(m, pow)
 AC_CHECK_LIB(gthread-2.0, g_thread_init)
 AC_PATH_PROG(INTLTOOL_MSGMERGE, msgmerge, msgmerge)
@@ -86,8 +90,8 @@ AM_CONDITIONAL(MACOSX, test "x$macos" != "xno")
 
 PKG_CHECK_MODULES([EXTRA], [glib-2.0 >= 2.40 gio-2.0 >= 2.40 speex >= 1.0 speexdsp >= 1.0 sndfile >= 1.0.0 libxml-2.0 gupnp-1.0 gssdp-1.0 json-glib-1.0])
 
-# Check for GTK >= 3.14
-PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.10])
+# Check for GTK
+PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= $GTK_REQUIRED])
 
 PKG_CHECK_MODULES([GMODULE], [gmodule-2.0])
 
