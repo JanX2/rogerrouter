@@ -78,7 +78,7 @@ msgstr "Funktionen"
 
 #: ../roger/application.c:356
 msgid "Assistant"
-msgstr " Assistent"
+msgstr "Assistent"
 
 #. Preferences
 #: ../roger/application.c:359 ../roger/pref.c:105 ../roger/pref.c:115
