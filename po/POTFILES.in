@@ -27,10 +27,11 @@ roger/pref_misc.c
 roger/print.c
 [type: gettext/glade]roger/shortcuts.glade
 roger/plugins/evolution/evolution.c
-roger/plugins/evolution/roger-plugins-evolution.metainfo.xml.in
+[type: gettext/xml]roger/plugins/evolution/roger-plugins-evolution.metainfo.xml.in
 [type: gettext/ini]roger/plugins/evolution/evolution.plugin.in
 roger/plugins/fritzfon/fritzfon.c
 [type: gettext/ini]roger/plugins/fritzfon/fritzfon.plugin.in
+[type: gettext/xml]roger/plugins/fritzfon/roger-plugins-fritzfon.metainfo.xml.in
 roger/plugins/gtknotify/gtknotify.c
 [type: gettext/ini]roger/plugins/gtknotify/gtknotify.plugin.in
 roger/plugins/statusicon/gtk.c
@@ -45,6 +46,7 @@ roger/plugins/thunderbird/thunderbird.c
 [type: gettext/ini]roger/plugins/thunderbird/thunderbird.plugin.in
 roger/plugins/gnotification/gnotification.c
 [type: gettext/ini]roger/plugins/gnotification/gnotification.plugin.in
+[type: gettext/xml]roger/plugins/gnotification/roger-plugins-gnotify.metainfo.xml.in
 roger/plugins/notification/notification.c
 [type: gettext/ini]roger/plugins/notification/notification.plugin.in
 roger/plugins/webjournal/webjournal.c
