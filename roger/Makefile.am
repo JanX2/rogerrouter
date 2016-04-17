@@ -85,6 +85,8 @@ roger_core_SOURCES =\
 	pref_misc.h\
 	print.c \
 	print.h \
+	shortcuts.c \
+	shortcuts.h \
 	uitools.c \
 	uitools.h \
 	roger_gresource.c \

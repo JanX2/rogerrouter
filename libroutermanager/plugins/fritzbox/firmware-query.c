@@ -46,6 +46,7 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 	const gchar *data;
 	gsize read;
 	gchar *url;
+	gchar *scramble;
 	gint i;
 
 	g_debug("Get settings");
@@ -139,7 +140,9 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 
 	json_reader_read_member(reader, "FaxKennung");
 	const gchar *fax_ident = json_reader_get_string_value(reader);
-	g_debug("FaxKennung: %s", fax_ident);
+	scramble = call_scramble_number(fax_ident);
+	g_debug("FaxKennung: %s", scramble);
+	g_free(scramble);
 	g_settings_set_string(profile->settings, "fax-ident", fax_ident);
 	json_reader_end_member(reader);
 
@@ -151,7 +154,9 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 
 	json_reader_read_member(reader, "FaxMSN0");
 	const gchar *fax_msn = json_reader_get_string_value(reader);
-	g_debug("FaxMSN0: %s", fax_msn);
+	scramble = call_scramble_number(fax_msn);
+	g_debug("FaxMSN0: %s", scramble);
+	g_free(scramble);
 	g_settings_set_string(profile->settings, "fax-number", fax_msn);
 	json_reader_end_member(reader);
 
@@ -244,7 +249,9 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 		json_reader_end_member(reader);
 
 		if (!EMPTY_STRING(tmp)) {
-			g_debug(" MSN: %s", tmp);
+			scramble = call_scramble_number(tmp);
+			g_debug(" MSN: %s", scramble);
+			g_free(scramble);
 			phones++;
 			numbers = g_realloc(numbers, (phones + 1) * sizeof(char*));
 			numbers[phones - 1] = g_strdup(tmp);

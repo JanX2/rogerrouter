@@ -39,6 +39,7 @@
 #include <roger/about.h>
 #include <roger/fax.h>
 #include <roger/contacts.h>
+#include <roger/shortcuts.h>
 
 #include <config.h>
 
@@ -169,6 +170,11 @@ static void addressbook_activated(GSimpleAction *action, GVariant *parameter, gp
 	app_show_contacts();
 }
 
+static void assistant_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+{
+	app_assistant();
+}
+
 static void dialnumber_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
 	app_show_phone_window(NULL, NULL);
@@ -207,6 +213,11 @@ static void copy_ip_activated(GSimpleAction *action, GVariant *parameter, gpoint
 static void reconnect_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
 	app_reconnect();
+}
+
+static void shortcuts_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+{
+	app_shortcuts();
 }
 
 #include <libroutermanager/libfaxophone/phone.h>
@@ -261,6 +272,7 @@ static void journal_activated(GSimpleAction *action, GVariant *parameter, gpoint
 
 static GActionEntry apps_entries[] = {
 	{"addressbook", addressbook_activated, NULL, NULL, NULL},
+	{"assistant", assistant_activated, NULL, NULL, NULL},
 	{"preferences", preferences_activated, NULL, NULL, NULL},
 	{"phone", dialnumber_activated, NULL, NULL, NULL},
 	{"copy_ip", copy_ip_activated, NULL, NULL, NULL},
@@ -272,6 +284,7 @@ static GActionEntry apps_entries[] = {
 	{"pickup", pickup_activated, "i", NULL, NULL},
 	{"hangup", hangup_activated, "i", NULL, NULL},
 	{"journal", journal_activated, NULL, NULL, NULL},
+	{"shortcuts", shortcuts_activated, NULL, NULL, NULL},
 };
 
 static void application_startup(GtkApplication *application)
@@ -308,6 +321,12 @@ static void app_init(GtkApplication *app)
 	accels[0] = "<Primary>c";
 	gtk_application_set_accels_for_action(app, "app.addressbook", accels);
 
+	accels[0] = "<Primary>a";
+	gtk_application_set_accels_for_action(app, "app.assistant", accels);
+
+	accels[0] = "<Primary>?";
+	gtk_application_set_accels_for_action(app, "app.shortcuts", accels);
+
 	accels[0] = "<Primary>q";
 	accels[1] = "<Primary>w";
 	gtk_application_set_accels_for_action(app, "app.quit", accels);
@@ -317,6 +336,7 @@ static void app_init(GtkApplication *app)
 #else
 	gtk_application_add_accelerator(app, "<Control>p", "app.phone", NULL);
 	gtk_application_add_accelerator(app, "<Control>c", "app.addressbook", NULL);
+	gtk_application_add_accelerator(app, "<Control>a", "app.assistant", NULL);
 	gtk_application_add_accelerator(app, "<Control>q", "app.quit", NULL);
 	gtk_application_add_accelerator(app, "<Control>s", "app.preferences", NULL);
 #endif
@@ -333,11 +353,17 @@ static void app_init(GtkApplication *app)
 	g_menu_append(section, _("Reconnect"), "app.reconnect");
 	g_menu_append_submenu(menu, _("Functions"), G_MENU_MODEL(section));
 
+	g_menu_append(menu, _("Assistant"), "app.assistant");
+
 	section = g_menu_new();
 	g_menu_append(section, _("Preferences"), "app.preferences");
 	g_menu_append_section(menu, NULL, G_MENU_MODEL(section));
 
 	section = g_menu_new();
+
+#if GTK_CHECK_VERSION(3,20,0)
+	g_menu_append(section, _("Keyboard Shortcuts"), "app.shortcuts");
+#endif
 
 	sub_section = g_menu_new();
 	g_menu_append(sub_section, _("Donate"), "app.donate");
@@ -345,9 +371,6 @@ static void app_init(GtkApplication *app)
 	g_menu_append_submenu(section, _("Help"), G_MENU_MODEL(sub_section));
 
 	g_menu_append(section, _("About"), "app.about");
-	g_menu_append_section(menu, NULL, G_MENU_MODEL(section));
-
-	section = g_menu_new();
 	g_menu_append(section, _("Quit"), "app.quit");
 
 	g_menu_append_section(menu, NULL, G_MENU_MODEL(section));

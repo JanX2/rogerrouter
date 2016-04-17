@@ -25,6 +25,7 @@ roger/pref_security.c
 roger/pref_softphone.c
 roger/pref_misc.c
 roger/print.c
+[type: gettext/glade]roger/shortcuts.glade
 roger/plugins/evolution/evolution.c
 roger/plugins/evolution/roger-plugins-evolution.metainfo.xml.in
 [type: gettext/ini]roger/plugins/evolution/evolution.plugin.in

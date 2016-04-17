@@ -46,7 +46,6 @@ void app_show_about(void)
 	GtkWidget *dialog = NULL;
 	const gchar *authors[] = {
 		"Jan-Michael Brummer <jan.brummer@tabos.org>",
-		"Louis Lagendijk <louis@fazant.net>",
 		NULL
 	};
 	const gchar *documenters[] = {
@@ -64,7 +63,7 @@ void app_show_about(void)
 	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog), PACKAGE_VERSION);
 	gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog), "(C) 2012-2016, Jan-Michael Brummer <jan.brummer@tabos.org>");
 	gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog), _("FRITZ!Box Journal, Soft/phone, and Fax\nDedicated to my father"));
-	gtk_about_dialog_set_license_type(GTK_ABOUT_DIALOG(dialog), GTK_LICENSE_GPL_2_0);
+	gtk_about_dialog_set_license_type(GTK_ABOUT_DIALOG(dialog), GTK_LICENSE_GPL_2_0_ONLY);
 	gtk_about_dialog_set_wrap_license(GTK_ABOUT_DIALOG(dialog), TRUE);
 	gtk_about_dialog_set_authors(GTK_ABOUT_DIALOG(dialog), authors);
 	gtk_about_dialog_set_documenters(GTK_ABOUT_DIALOG(dialog), documenters);

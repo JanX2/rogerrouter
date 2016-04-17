@@ -72,5 +72,9 @@
 		<key name="contacts-hide-warning" type="b">
 			<default>false</default>
 		</key>
+
+		<key name="icon-type" type="u">
+			<default>0</default>
+		</key>
 	</schema>
 </schemalist>

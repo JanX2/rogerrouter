@@ -527,6 +527,8 @@ void next_button_clicked_cb(GtkWidget *next, gpointer user_data)
 	/* Check if we have reached the end */
 	if (assistant->current_page >= assistant->max_page - 1) {
 		gtk_widget_destroy(assistant->window);
+		g_slice_free(struct assistant, assistant);
+		assistant = NULL;
 		return;
 	}
 

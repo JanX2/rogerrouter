@@ -142,8 +142,8 @@ GdkPixbuf *pixbuf_copy_mirror(GdkPixbuf *src)
 void journal_init_call_icon(void)
 {
 	GtkIconTheme *icons;
-	gint width = 16;
-	gint icon_type = 0; //g_settings_get_int(app_settings, "icons-symbolic")
+	gint width = 18;
+	gint icon_type = g_settings_get_uint(app_settings, "icon-type");
 
 	icons = gtk_icon_theme_get_default();
 
@@ -291,9 +291,14 @@ void journal_redraw(void)
 
 		gtk_widget_set_hexpand(grid, TRUE);
 		markup = g_strdup_printf("<b>%s</b>", profile ? profile->name : _("<No profile>"));
-		pango_parse_markup(markup, -1, 0, &attributes, &text, NULL, NULL);
-		title = gtk_label_new(text);
-		gtk_label_set_attributes(GTK_LABEL(title), attributes);
+		
+		if (pango_parse_markup(markup, -1, 0, &attributes, &text, NULL, NULL)) {
+			title = gtk_label_new(text);
+			gtk_label_set_attributes(GTK_LABEL(title), attributes);
+		} else {
+			title = gtk_label_new(_("<No profile>"));
+		}
+
 		gtk_widget_set_hexpand(title, TRUE);
 		gtk_grid_attach(GTK_GRID(grid), title, 0, 0, selection ? 1 : 2, 1);
 
@@ -1201,7 +1206,7 @@ void journal_window(GApplication *app)
 	renderer = gtk_cell_renderer_pixbuf_new();
 	column = gtk_tree_view_column_new_with_attributes(column_name[0], renderer, "pixbuf", JOURNAL_COL_TYPE, NULL);
 	gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_FIXED);
-	gtk_tree_view_column_set_sort_column_id(column, 0);
+	//gtk_tree_view_column_set_sort_column_id(column, 0);
 	if (g_settings_get_uint(app_settings, "col-0-width")) {
 		gtk_tree_view_column_set_fixed_width(column, g_settings_get_uint(app_settings, "col-0-width"));
 	}
