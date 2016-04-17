@@ -50,7 +50,7 @@
      bordercolor="#666666"
      borderopacity="1"
      inkscape:current-layer="layer13"
-     inkscape:cx="10.899991"
+     inkscape:cx="11.166657"
      inkscape:cy="10.020173"
      gridtolerance="10000"
      inkscape:guide-bbox="true"
@@ -173,23 +173,18 @@
            width="3" />
       </g>
     </g>
-    <g
-       id="g3158"
-       style="opacity:0.50000000000000000;fill:#1e90ff"
-       transform="translate(0,1.5000005)">
-      <path
-         inkscape:connector-curvature="0"
-         d="m 484,205.50012 c -0.5,0 -1,-0.5 -1,-1 l 0,-4 c 0,-0.5 0.5,-1 1,-1 l 1,0 0,2 10,0 0,-2 1,0 c 0.5,0 1,0.5 1,1 l 0,4 c 0,0.5 -0.5,1 -1,1 l -12,0 z"
-         id="path3520"
-         sodipodi:nodetypes="ccccccccccccc"
-         style="fill:#1e90ff;fill-opacity:1;stroke:none" />
-      <path
-         inkscape:connector-curvature="0"
-         d="m 486,208.50012 0,-2 8,0 0,2 -8,0 z"
-         id="path4804"
-         sodipodi:nodetypes="ccccc"
-         style="fill:#1e90ff;fill-opacity:1;stroke:none" />
-    </g>
+    <path
+       style="fill:#1e90ff;fill-opacity:1;stroke:none"
+       sodipodi:nodetypes="ccccccccccccc"
+       id="path3520"
+       d="m 484,207.00012 c -0.5,0 -1,-0.5 -1,-1 l 0,-4 c 0,-0.5 0.5,-1 1,-1 l 1,0 0,2 10,0 0,-2 1,0 c 0.5,0 1,0.5 1,1 l 0,4 c 0,0.5 -0.5,1 -1,1 l -12,0 z"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#1e90ff;fill-opacity:1;stroke:none"
+       sodipodi:nodetypes="ccccc"
+       id="path4804"
+       d="m 486,210.00012 0,-2 8,0 0,2 -8,0 z"
+       inkscape:connector-curvature="0" />
   </g>
   <g
      inkscape:groupmode="layer"

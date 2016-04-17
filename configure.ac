@@ -9,7 +9,7 @@ m4_define([roger_version],[roger_major.roger_minor.roger_micro])
 AC_INIT([Roger Router],[roger_version],[http://www.tabos.org])
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
-AC_PREFIX_DEFAULT(/usr)
+AC_PREFIX_PROGRAM(glib-compile-schemas)
 AM_INIT_AUTOMAKE([1.11 no-dist-gzip dist-xz foreign subdir-objects])
 AC_CONFIG_HEADERS(config.h)
 
@@ -38,6 +38,8 @@ AC_SUBST(ROGER_VERSION_MICRO)
 GTK_REQUIRED=3.9.4
 AC_DEFINE(GDK_VERSION_MIN_REQUIRED, GDK_VERSION_3_8, [Ignore post 3.8 deprecations])
 AC_DEFINE(GDK_VERSION_MAX_ALLOWED, GDK_VERSION_3_10, [Prevent post 3.10 APIs])
+
+RRA_SET_LIBDIR([$prefix])
 
 AC_CHECK_LIB(m, pow)
 AC_CHECK_LIB(gthread-2.0, g_thread_init)

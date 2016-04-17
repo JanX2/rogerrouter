@@ -326,7 +326,7 @@ static void app_init(GtkApplication *app)
 	accels[0] = "<Primary>a";
 	gtk_application_set_accels_for_action(app, "app.assistant", accels);
 
-	accels[0] = "<Primary>?";
+	accels[0] = "<Primary>F1";
 	gtk_application_set_accels_for_action(app, "app.shortcuts", accels);
 
 	accels[0] = "<Primary>q";
