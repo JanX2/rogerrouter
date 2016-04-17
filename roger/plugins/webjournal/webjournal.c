@@ -73,6 +73,19 @@ gchar *get_call_type_string(gint type)
 	return "unknown";
 }
 
+static gchar *convert_date_time(gchar *date_time)
+{
+	gint year;
+	gint month;
+	gint day;
+	gint hour;
+	gint min;
+
+	sscanf(date_time, "%d.%d.%d %d:%d", &day, &month, &year, &hour, &min );
+
+	return g_strdup_printf("%4.4d%2.2d%2.2d%2.2d%2.2d00", 2000 + year, month, day, hour, min);
+}
+
 void webjournal_journal_loaded_cb(AppObject *obj, GSList *journal, gpointer user_data)
 {
 	RouterManagerWebJournalPlugin *webjournal_plugin = user_data;
@@ -96,8 +109,10 @@ void webjournal_journal_loaded_cb(AppObject *obj, GSList *journal, gpointer user
 		GRegex *extension = g_regex_new("%EXTENSION%", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
 		GRegex *line = g_regex_new("%LINE%", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
 		GRegex *duration = g_regex_new("%DURATION%", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
+		GRegex *sortable_customkey = g_regex_new("%CUSTOMKEY%", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
 		gchar *out1;
 		gchar *out2;
+		gchar *customkey = convert_date_time(call->date_time);
 
 		out1 = g_regex_replace_literal(type, webjournal_plugin->priv->entry, -1, 0, get_call_type_string(call->type), 0, NULL);
 
@@ -117,10 +132,12 @@ void webjournal_journal_loaded_cb(AppObject *obj, GSList *journal, gpointer user
 		g_free(out1);
 		out1 = g_regex_replace_literal(duration, out2, -1, 0, call->duration, 0, NULL);
 		g_free(out2);
-
-		string = g_string_append(string, out1);
-
+		out2 = g_regex_replace_literal(sortable_customkey, out1, -1, 0, customkey, 0, NULL);
 		g_free(out1);
+
+		string = g_string_append(string, out2);
+
+		g_free(out2);
 		g_regex_unref(duration);
 		g_regex_unref(line);
 		g_regex_unref(extension);
