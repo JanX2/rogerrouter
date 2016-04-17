@@ -45,6 +45,9 @@ typedef struct {
 	gchar *header;
 	gchar *entry;
 	gchar *footer;
+	gchar *dragtable;
+	gchar *sortable;
+	gchar *styling;
 } RouterManagerWebJournalPluginPrivate;
 
 ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_WEBJOURNAL_PLUGIN, RouterManagerWebJournalPlugin, routermanager_webjournal_plugin)
@@ -93,6 +96,7 @@ void webjournal_journal_loaded_cb(AppObject *obj, GSList *journal, gpointer user
 	GString *string;
 	GSList *list;
 	gchar *out;
+	gchar *dirname;
 
 	file = g_settings_get_string(webjournal_settings, "filename");
 
@@ -155,6 +159,22 @@ void webjournal_journal_loaded_cb(AppObject *obj, GSList *journal, gpointer user
 
 	file_save(file, out, -1);
 
+	dirname = g_path_get_dirname(file);
+
+	file = g_strdup_printf("%s/dragtable.js", dirname);
+	file_save(file, webjournal_plugin->priv->dragtable, -1);
+	g_free(file);
+
+	file = g_strdup_printf("%s/sortable.js", dirname);
+	file_save(file, webjournal_plugin->priv->sortable, -1);
+	g_free(file);
+
+	file = g_strdup_printf("%s/styling.css", dirname);
+	file_save(file, webjournal_plugin->priv->styling, -1);
+	g_free(file);
+
+	g_free(dirname);
+
 	g_free(out);
 }
 
@@ -177,6 +197,18 @@ static void impl_activate(PeasActivatable *plugin)
 
 	file = g_strconcat(get_directory(ROUTERMANAGER_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "footer.html", NULL);
 	webjournal_plugin->priv->footer = file_load(file, NULL);
+	g_free(file);
+
+	file = g_strconcat(get_directory(ROUTERMANAGER_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "dragtable.js", NULL);
+	webjournal_plugin->priv->dragtable = file_load(file, NULL);
+	g_free(file);
+
+	file = g_strconcat(get_directory(ROUTERMANAGER_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "sortable.js", NULL);
+	webjournal_plugin->priv->sortable = file_load(file, NULL);
+	g_free(file);
+
+	file = g_strconcat(get_directory(ROUTERMANAGER_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "styling.css", NULL);
+	webjournal_plugin->priv->styling = file_load(file, NULL);
 	g_free(file);
 
 	webjournal_settings = rm_settings_plugin_new("org.tabos.roger.plugins.webjournal", "webjournal");
