@@ -17,14 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ANSWERINGMACHINE_H
-#define ANSWERINGMACHINE_H
-
-#include <glib.h>
+#ifndef SETTINGS_H
+#define SETTINGS_H
 
 G_BEGIN_DECLS
 
-void answeringmachine_play(const gchar *name);
+void app_show_settings(void);
 
 G_END_DECLS
 

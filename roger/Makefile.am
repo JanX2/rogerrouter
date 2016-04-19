@@ -22,7 +22,7 @@ share_DATA = \
 	images/roger-record.svg \
 	images/roger-record-symbolic.svg
 
-EXTRA_DIST = $(share_DATA) roger_winres.rc roger.gresource.xml assistant.glade authenticate.glade answeringmachine.glade contacts.glade shortcuts.glade
+EXTRA_DIST = $(share_DATA) roger_winres.rc roger.gresource.xml assistant.glade authenticate.glade answeringmachine.glade contacts.glade settings.glade shortcuts.glade
 DISTCLEANFILES = \
 	roger_gresource.c \
 	roger_gresource.h
@@ -61,30 +61,10 @@ roger_core_SOURCES =\
 	main_ui.c \
 	phone.c\
 	phone.h\
-	pref.c\
-	pref.h\
-	pref_action.c\
-	pref_action.h\
-	pref_audio.c\
-	pref_audio.h\
-	pref_fax.c \
-	pref_fax.h \
-	pref_filters.c\
-	pref_filters.h\
-	pref_plugins.c\
-	pref_plugins.h\
-	pref_prefix.c\
-	pref_prefix.h\
-	pref_router.c\
-	pref_router.h\
-	pref_security.c\
-	pref_security.h\
-	pref_softphone.c\
-	pref_softphone.h\
-	pref_misc.c\
-	pref_misc.h\
 	print.c \
 	print.h \
+	settings.c \
+	settings.h \
 	shortcuts.c \
 	shortcuts.h \
 	uitools.c \

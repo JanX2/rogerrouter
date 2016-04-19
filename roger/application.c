@@ -67,7 +67,7 @@ void app_show_contacts(void)
 
 void app_show_preferences(void)
 {
-	preferences();
+	app_show_settings();
 }
 
 void app_show_help(void)
@@ -184,7 +184,9 @@ static void dialnumber_activated(GSimpleAction *action, GVariant *parameter, gpo
 
 static void preferences_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
-	app_show_preferences();
+	//app_show_preferences();
+	extern void app_show_settings(void);
+	app_show_settings();
 }
 
 static void donate_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
