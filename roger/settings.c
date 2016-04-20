@@ -19,6 +19,8 @@
 
 #include <config.h>
 
+#include <string.h>
+
 #include <gtk/gtk.h>
 
 #include <libroutermanager/profile.h>
@@ -34,6 +36,7 @@
 #include <roger/settings.h>
 #include <roger/journal.h>
 #include <roger/main.h>
+#include <roger/uitools.h>
 
 struct settings {
 	GtkWidget *window;
@@ -598,7 +601,7 @@ void filter_remove_button_clicked_cb(GtkWidget *widget, gpointer data)
 	gtk_tree_model_get_value(model, &selected_iter, 1, &ptr);
 
 	filter = g_value_get_pointer(&ptr);
-	GtkWidget *remove_dialog = gtk_message_dialog_new(settings->window, GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL | GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Do you want to delete the filter '%s'?"), filter->name);
+	GtkWidget *remove_dialog = gtk_message_dialog_new(GTK_WINDOW(settings->window), GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL | GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Do you want to delete the filter '%s'?"), filter->name);
 	gtk_window_set_title(GTK_WINDOW(remove_dialog), _("Delete filter"));
 	gtk_window_set_position(GTK_WINDOW(remove_dialog), GTK_WIN_POS_CENTER_ON_PARENT);
 
@@ -776,9 +779,9 @@ void settings_refresh_list(GtkListStore *list_store)
 	}
 }
 
-static void action_enable_toggle_cb(GtkCellRendererToggle *toggle, gchar *path_str, gpointer user_data)
+void action_enable_renderer_toggled_cb(GtkCellRendererToggle *toggle, gchar *path_str, gpointer user_data)
 {
-	GtkTreeModel *model = user_data;
+	GtkTreeModel *model = gtk_tree_view_get_model(user_data);
 	GtkTreePath *path = gtk_tree_path_new_from_string(path_str);
 	GtkTreeIter iter;
 	GValue iter_value = {0};
@@ -819,6 +822,55 @@ static void action_enable_toggle_cb(GtkCellRendererToggle *toggle, gchar *path_s
 
 gboolean action_edit(struct action *action)
 {
+
+#if 0
+	GtkWidget *dialog;
+	GtkWidget *name_entry;
+	GtkWidget *exec_entry;
+	GtkListStore *list_store;
+	GtkBuilder *builder;
+	gint result;
+	gboolean changed = FALSE;
+
+	builder = gtk_builder_new_from_resource("/org/tabos/roger/settings.glade");
+	if (!builder) {
+		g_warning("Could not load settings ui");
+		return changed;
+	}
+
+	dialog = GTK_WIDGET(gtk_builder_get_object(builder, "action_edit_dialog"));
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(settings->window));
+
+
+	name_entry = GTK_WIDGET(gtk_builder_get_object(builder, "action_name_entry"));
+	exec_entry = GTK_WIDGET(gtk_builder_get_object(builder, "action_execute_entry"));
+	list_store = GTK_LIST_STORE(gtk_builder_get_object(builder, "edit_action_liststore"));
+
+	if (action) {
+		gtk_entry_set_text(GTK_ENTRY(name_entry), action->name);
+		gtk_entry_set_text(GTK_ENTRY(exec_entry), action->exec);
+	}
+	settings_refresh_list(list_store);
+
+	result = gtk_dialog_run(GTK_DIALOG(dialog));
+
+	if (result == GTK_RESPONSE_APPLY) {
+		if (!action) {
+			action = action_create();
+			action_add(profile_get_active(), action);
+			selected_action = action;
+		}
+
+		action = action_modify(action, gtk_entry_get_text(GTK_ENTRY(name_entry)), "", gtk_entry_get_text(GTK_ENTRY(exec_entry)), selected_numbers);
+		action_commit(profile_get_active());
+
+		changed = TRUE;
+	}
+
+	gtk_widget_destroy(dialog);
+
+	return changed;
+#else
 	GtkWidget *dialog;
 	GtkWidget *content_area;
 	GtkWidget *grid;
@@ -826,8 +878,6 @@ gboolean action_edit(struct action *action)
 	GtkWidget *settings_grid;
 	GtkWidget *name_label;
 	GtkWidget *name_entry;
-	GtkWidget *description_label;
-	GtkWidget *description_entry;
 	GtkWidget *exec_label;
 	GtkWidget *exec_entry;
 	GtkWidget *scroll_window;
@@ -840,7 +890,7 @@ gboolean action_edit(struct action *action)
 	gint result;
 	gboolean changed = FALSE;
 
-	dialog = gtk_dialog_new_with_buttons(_("Action"), settings->window, GTK_DIALOG_MODAL | GTK_DIALOG_USE_HEADER_BAR, _("_Apply"), GTK_RESPONSE_APPLY, _("_Cancel"), GTK_RESPONSE_CANCEL, NULL);
+	dialog = gtk_dialog_new_with_buttons(_("Action"), GTK_WINDOW(settings->window), GTK_DIALOG_MODAL | GTK_DIALOG_USE_HEADER_BAR, _("_Apply"), GTK_RESPONSE_APPLY, _("_Cancel"), GTK_RESPONSE_CANCEL, NULL);
 
 	/**
 	 * General:
@@ -875,14 +925,6 @@ gboolean action_edit(struct action *action)
 	name_entry = gtk_entry_new();
 	gtk_grid_attach(GTK_GRID(general_grid), name_entry, 1, 0, 1, 1);
 
-	/* Description */
-	description_label = ui_label_new(_("Description"));
-	gtk_grid_attach(GTK_GRID(general_grid), description_label, 0, 1, 1, 1);
-
-	description_entry = gtk_entry_new();
-	gtk_widget_set_hexpand(description_entry, TRUE);
-	gtk_grid_attach(GTK_GRID(general_grid), description_entry, 1, 1, 1, 1);
-
 	/* Exec */
 	exec_label = ui_label_new(_("Execute"));
 	gtk_grid_attach(GTK_GRID(general_grid), exec_label, 0, 2, 1, 1);
@@ -893,7 +935,6 @@ gboolean action_edit(struct action *action)
 
 	if (action) {
 		gtk_entry_set_text(GTK_ENTRY(name_entry), action->name);
-		gtk_entry_set_text(GTK_ENTRY(description_entry), action->description);
 		gtk_entry_set_text(GTK_ENTRY(exec_entry), action->exec);
 	}
 
@@ -929,7 +970,7 @@ gboolean action_edit(struct action *action)
 	renderer = gtk_cell_renderer_toggle_new();
 	enable_column = gtk_tree_view_column_new_with_attributes(_("Enable"), renderer, "active", 0, NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(view), enable_column);
-	g_signal_connect(G_OBJECT(renderer), "toggled", G_CALLBACK(action_enable_toggle_cb), tree_model);
+	g_signal_connect(G_OBJECT(renderer), "toggled", G_CALLBACK(action_enable_renderer_toggled_cb), tree_model);
 
 	renderer = gtk_cell_renderer_text_new();
 	number_column = gtk_tree_view_column_new_with_attributes(_("Number"), renderer, "text", 1, NULL);
@@ -947,7 +988,7 @@ gboolean action_edit(struct action *action)
 			selected_action = action;
 		}
 
-		action = action_modify(action, gtk_entry_get_text(GTK_ENTRY(name_entry)), gtk_entry_get_text(GTK_ENTRY(description_entry)), gtk_entry_get_text(GTK_ENTRY(exec_entry)), selected_numbers);
+		action = action_modify(action, gtk_entry_get_text(GTK_ENTRY(name_entry)), "", gtk_entry_get_text(GTK_ENTRY(exec_entry)), selected_numbers);
 		action_commit(profile_get_active());
 
 		changed = TRUE;
@@ -956,6 +997,7 @@ gboolean action_edit(struct action *action)
 	gtk_widget_destroy(dialog);
 
 	return changed;
+#endif
 }
 
 void actions_add_button_clicked_cb(GtkWidget *widget, gpointer data)
@@ -986,7 +1028,7 @@ void actions_remove_button_clicked_cb(GtkWidget *widget, gpointer data)
 	gtk_tree_model_get_value(model, &selected_iter, 1, &ptr);
 
 	action = g_value_get_pointer(&ptr);
-	GtkWidget *remove_dialog = gtk_message_dialog_new(settings->window, GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Do you want to delete the action '%s'?"), action->name);
+	GtkWidget *remove_dialog = gtk_message_dialog_new(GTK_WINDOW(settings->window), GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Do you want to delete the action '%s'?"), action->name);
 	gtk_window_set_title(GTK_WINDOW(remove_dialog), _("Delete action"));
 	gtk_window_set_position(GTK_WINDOW(remove_dialog), GTK_WIN_POS_CENTER_ON_PARENT);
 
@@ -1055,9 +1097,6 @@ gboolean actions_treeview_cursor_changed_cb(GtkTreeView *view, gpointer user_dat
 
 		selected_action = action;
 		if (action) {
-			gtk_label_set_text(GTK_LABEL(user_data), action->description);
-
-
 			/* Store flags as otherwise we would mix up the settings */
 			flags = selected_action->flags;
 
@@ -1093,7 +1132,7 @@ gboolean actions_treeview_button_press_event_cb(GtkTreeView *view, GdkEventButto
 	return actions_treeview_cursor_changed_cb(view, user_data);
 }
 
-void action_checkbutton_cb(GtkToggleButton *button, gpointer user_data)
+void action_checkbutton_toggled_cb(GtkToggleButton *button, gpointer user_data)
 {
 	guint flags = 0;
 

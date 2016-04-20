@@ -150,6 +150,30 @@ void journal_init_call_icon(void)
 	icons = gtk_icon_theme_get_default();
 
 	gtk_icon_theme_append_search_path(icons, get_directory(APP_DATA));
+	if (icon_call_in) {
+		g_object_unref(icon_call_in);
+	}
+	if (icon_call_missed) {
+		g_object_unref(icon_call_missed);
+	}
+	if (icon_call_out) {
+		g_object_unref(icon_call_out);
+	}
+	if (icon_fax) {
+		g_object_unref(icon_fax);
+	}
+	if (icon_fax_report) {
+		g_object_unref(icon_fax_report);
+	}
+	if (icon_voice) {
+		g_object_unref(icon_voice);
+	}
+	if (icon_record) {
+		g_object_unref(icon_record);
+	}
+	if (icon_blocked) {
+		g_object_unref(icon_blocked);
+	}
 
 	switch (icon_type) {
 	case 0:

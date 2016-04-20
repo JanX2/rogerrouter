@@ -59,6 +59,7 @@ struct cmd_line_option_state {
 };
 
 static struct cmd_line_option_state option_state;
+extern void app_show_settings(void);
 
 void app_show_contacts(void)
 {
@@ -185,7 +186,6 @@ static void dialnumber_activated(GSimpleAction *action, GVariant *parameter, gpo
 static void preferences_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
 	//app_show_preferences();
-	extern void app_show_settings(void);
 	app_show_settings();
 }
 
@@ -494,22 +494,24 @@ static gint application_command_line_cb(GtkApplication *app, GApplicationCommand
 		gtk_widget_set_visible(GTK_WIDGET(journal_win), TRUE);
 	}
 
-	if (option_state.number) {
-		struct contact *contact;
-		gchar *full_number;
+	if (!option_state.start_hidden) {
+		if (option_state.number) {
+			struct contact *contact;
+			gchar *full_number;
 
-		g_debug("number: %s", option_state.number);
-		full_number = call_full_number(option_state.number, FALSE);
+			g_debug("number: %s", option_state.number);
+			full_number = call_full_number(option_state.number, FALSE);
 
-		/** Ask for contact information */
-		contact = contact_find_by_number(full_number);
+			/** Ask for contact information */
+			contact = contact_find_by_number(full_number);
 
-		app_show_phone_window(contact, NULL);
-		g_free(full_number);
-	}
+			app_show_phone_window(contact, NULL);
+			g_free(full_number);
+		}
 
-	if (option_state.assistant) {
-		app_assistant();
+		if (option_state.assistant) {
+			app_assistant();
+		}
 	}
 
 	g_strfreev(argv);
