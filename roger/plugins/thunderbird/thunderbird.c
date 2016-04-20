@@ -35,7 +35,6 @@
 #include <libroutermanager/settings.h>
 
 #include <roger/main.h>
-#include <roger/pref.h>
 
 #define ROUTERMANAGER_TYPE_THUNDERBIRD_PLUGIN        (routermanager_thunderbird_plugin_get_type ())
 #define ROUTERMANAGER_THUNDERBIRD_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_THUNDERBIRD_PLUGIN, RouterManagerThunderbirdPlugin))

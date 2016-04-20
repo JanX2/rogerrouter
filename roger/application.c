@@ -37,7 +37,7 @@
 #include <roger/assistant.h>
 #include <roger/main.h>
 #include <roger/phone.h>
-#include <roger/pref.h>
+#include <roger/settings.h>
 #include <roger/about.h>
 #include <roger/fax.h>
 #include <roger/contacts.h>
@@ -59,7 +59,6 @@ struct cmd_line_option_state {
 };
 
 static struct cmd_line_option_state option_state;
-extern void app_show_settings(void);
 
 void app_show_contacts(void)
 {

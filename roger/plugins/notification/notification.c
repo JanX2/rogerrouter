@@ -41,7 +41,6 @@
 #include <roger/main.h>
 #include <roger/application.h>
 #include <roger/phone.h>
-#include <roger/pref.h>
 
 #define ROUTERMANAGER_TYPE_NOTIFICATION_PLUGIN (routermanager_notification_plugin_get_type ())
 #define ROUTERMANAGER_NOTIFICATION_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_NOTIFICATION_PLUGIN, RouterManagerNotificationPlugin))

@@ -33,7 +33,6 @@
 #include <libroutermanager/settings.h>
 #include <libroutermanager/gstring.h>
 
-#include <roger/pref.h>
 
 #include <webjournal.h>
 

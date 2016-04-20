@@ -38,7 +38,6 @@
 #include <libroutermanager/settings.h>
 
 #include <roger/main.h>
-#include <roger/pref.h>
 
 #include <vcard.h>
 

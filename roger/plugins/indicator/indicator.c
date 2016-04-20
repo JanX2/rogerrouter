@@ -38,7 +38,6 @@
 #include <roger/journal.h>
 #include <roger/main.h>
 #include <roger/phone.h>
-#include <roger/pref.h>
 #include <roger/uitools.h>
 
 #define MAX_LASTCALLS 5

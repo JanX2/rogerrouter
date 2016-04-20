@@ -39,7 +39,6 @@
 #include <roger/main.h>
 #include <roger/application.h>
 #include <roger/phone.h>
-#include <roger/pref.h>
 #include <roger/uitools.h>
 #include <roger/icons.h>
 

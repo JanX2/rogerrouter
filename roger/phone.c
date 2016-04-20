@@ -41,7 +41,6 @@
 #include <libroutermanager/libfaxophone/isdn-convert.h>
 
 #include <roger/journal.h>
-#include <roger/pref.h>
 #include <roger/phone.h>
 #include <roger/fax.h>
 #include <roger/main.h>
