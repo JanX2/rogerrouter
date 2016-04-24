@@ -57,6 +57,7 @@ struct settings {
 	GtkWidget *fax_ident_entry;
 	GtkWidget *fax_msn_combobox;
 	GtkWidget *fax_controller_combobox;
+	GtkWidget *fax_service_combobox;
 	GtkWidget *fax_resolution_combobox;
 	GtkWidget *fax_report_switch;
 	GtkWidget *fax_report_directory_chooser;
@@ -1344,6 +1345,9 @@ void app_show_settings(void)
 
 	settings->fax_controller_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "fax_controller_combobox"));
 	g_settings_bind(profile->settings, "fax-controller", settings->fax_controller_combobox, "active", G_SETTINGS_BIND_DEFAULT);
+
+	settings->fax_service_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "fax_service_combobox"));
+	g_settings_bind(profile->settings, "fax-cip", settings->fax_service_combobox, "active", G_SETTINGS_BIND_DEFAULT);
 
 	settings->fax_resolution_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "fax_resolution_combobox"));
 	g_settings_bind(profile->settings, "fax-resolution", settings->fax_resolution_combobox, "active", G_SETTINGS_BIND_DEFAULT);

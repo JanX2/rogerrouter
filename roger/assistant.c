@@ -209,12 +209,12 @@ static gboolean scan(gpointer user_data)
 }
 
 /**
- * \brief Router row selected callback
+ * \brief Router row activated callback
  * \param box listbox entry containing detected routers
  * \param row selected row
  * \param user_data UNUSED
  */
-void router_row_selected_cb(GtkListBox *box, GtkListBoxRow *row, gpointer user_data)
+void router_listbox_row_activated_cb(GtkListBox *box, GtkListBoxRow *row, gpointer user_data)
 {
 	if (row != NULL) {
 		/* We have a selected row, get child and set host internally */
@@ -225,6 +225,17 @@ void router_row_selected_cb(GtkListBox *box, GtkListBoxRow *row, gpointer user_d
 	}
 
 	gtk_widget_set_sensitive(assistant->next_button, row != NULL);
+}
+
+/**
+ * \brief Router row selected callback
+ * \param box listbox entry containing detected routers
+ * \param row selected row
+ * \param user_data UNUSED
+ */
+void router_row_selected_cb(GtkListBox *box, GtkListBoxRow *row, gpointer user_data)
+{
+	router_listbox_row_activated_cb(box, row, user_data);
 }
 
 /**
@@ -296,12 +307,14 @@ static gboolean router_post(struct assistant *assistant)
 	gboolean present;
 
 	/* Get user selected server */
+	g_debug("%s(): child %s", __FUNCTION__, gtk_stack_get_visible_child_name(GTK_STACK(assistant->router_stack)));
 	if (!strcmp(gtk_stack_get_visible_child_name(GTK_STACK(assistant->router_stack)), "manual")) {
 		server = gtk_entry_get_text(GTK_ENTRY(assistant->server));
 		g_object_set_data(G_OBJECT(assistant->router_stack), "server", (gchar*) server);
 	} else {
 		server = g_object_get_data(G_OBJECT(assistant->router_stack), "server");
 	}
+	g_debug("%s(): server %s", __FUNCTION__, server);
 
 	profile_set_host(assistant->profile, server);
 
@@ -467,6 +480,7 @@ struct assistant_page assistant_pages[] = {
  */
 void back_button_clicked_cb(GtkWidget *next, gpointer user_data)
 {
+	g_debug("%s(): current page %d", __FUNCTION__, assistant->current_page);
 	/* In case we are on the first page, exit assistant */
 	if (assistant->current_page <= 0) {
 		struct profile *profile = profile_get_active();
@@ -519,6 +533,7 @@ void back_button_clicked_cb(GtkWidget *next, gpointer user_data)
  */
 void next_button_clicked_cb(GtkWidget *next, gpointer user_data)
 {
+	g_debug("%s(): current page %d", __FUNCTION__, assistant->current_page);
 	gtk_button_set_label(GTK_BUTTON(assistant->back_button), _("Back"));
 
 	/* In case we have a post page function and it returns FALSE, exit immediately */
