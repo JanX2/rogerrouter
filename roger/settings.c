@@ -971,7 +971,7 @@ gboolean action_edit(struct action *action)
 	renderer = gtk_cell_renderer_toggle_new();
 	enable_column = gtk_tree_view_column_new_with_attributes(_("Enable"), renderer, "active", 0, NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(view), enable_column);
-	g_signal_connect(G_OBJECT(renderer), "toggled", G_CALLBACK(action_enable_renderer_toggled_cb), tree_model);
+	g_signal_connect(G_OBJECT(renderer), "toggled", G_CALLBACK(action_enable_renderer_toggled_cb), view);
 
 	renderer = gtk_cell_renderer_text_new();
 	number_column = gtk_tree_view_column_new_with_attributes(_("Number"), renderer, "text", 1, NULL);
