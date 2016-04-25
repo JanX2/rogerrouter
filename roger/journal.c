@@ -1095,7 +1095,7 @@ void journal_window(GApplication *app)
 		gtk_window_maximize((GtkWindow *)(window));
 	}
 
-	//gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
+	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 
 	grid = gtk_grid_new();
 
