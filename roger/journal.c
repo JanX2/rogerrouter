@@ -175,7 +175,6 @@ void journal_init_call_icon(void)
 		g_object_unref(icon_blocked);
 	}
 
-	g_debug("%s(): icon_type %d", __FUNCTION__, icon_type);
 	switch (icon_type) {
 	default:
 	case 0:
