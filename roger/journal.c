@@ -175,7 +175,9 @@ void journal_init_call_icon(void)
 		g_object_unref(icon_blocked);
 	}
 
+	g_debug("%s(): icon_type %d", __FUNCTION__, icon_type);
 	switch (icon_type) {
+	default:
 	case 0:
 		icon_call_in = gtk_icon_theme_load_icon(icons, "call-stop-symbolic", width, 0, NULL);
 		icon_call_missed = gtk_icon_theme_load_icon(icons, "call-missed-symbolic", width, 0, NULL);
@@ -464,7 +466,7 @@ gboolean journal_button_refresh_idle(gpointer data)
 	return FALSE;
 }
 
-static void journal_button_refresh_clicked_cb(GtkWidget *button, GtkWidget *window)
+void journal_button_refresh_clicked_cb(GtkWidget *button, GtkWidget *window)
 {
 	gtk_spinner_start(GTK_SPINNER(spinner));
 	gtk_widget_show(spinner);

@@ -1244,6 +1244,15 @@ void audio_plugin_combobox_changed_cb(GtkComboBox *box, gpointer user_data) {
 	audio_set_default(active);
 }
 
+void view_call_type_icons_combobox_changed_cb(GtkComboBox *widget, gpointer user_data)
+{
+	g_debug("%s(): active %d", __FUNCTION__, gtk_combo_box_get_active(widget));
+	g_settings_set_uint(app_settings, "icon-type", gtk_combo_box_get_active(widget));
+	journal_init_call_icon();
+	journal_clear();
+	journal_redraw();
+	//journal_button_refresh_clicked_cb(NULL, NULL);
+}
 
 void app_show_settings(void)
 {

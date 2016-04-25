@@ -1064,6 +1064,7 @@ Caller company</property>
                       <item id="1" translatable="yes">Colored</item>
                       <item id="2" translatable="yes">Monochrome</item>
                     </items>
+                    <signal name="changed" handler="view_call_type_icons_combobox_changed_cb" after="yes" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
