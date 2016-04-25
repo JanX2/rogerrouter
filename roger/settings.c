@@ -1406,7 +1406,7 @@ void app_show_settings(void)
 		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->audio_plugin_combobox), audio->name, audio->name);
 	}
 
-	//g_signal_connect(plugin_combobox, "changed", G_CALLBACK(plugin_combobox_changed_cb), NULL);
+	g_signal_connect(settings->audio_plugin_combobox, "changed", G_CALLBACK(audio_plugin_combobox_changed_cb), NULL);
 
 	g_settings_bind(profile_get_active()->settings, "audio-output", settings->audio_output_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 	g_settings_bind(profile_get_active()->settings, "audio-input", settings->audio_input_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
