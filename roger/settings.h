@@ -23,6 +23,8 @@
 G_BEGIN_DECLS
 
 void app_show_settings(void);
+GtkWindow *settings_get_window();
+GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand, gboolean vexpand);
 
 G_END_DECLS
 

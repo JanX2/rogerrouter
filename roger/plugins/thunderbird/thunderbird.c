@@ -35,6 +35,8 @@
 #include <libroutermanager/settings.h>
 
 #include <roger/main.h>
+#include <roger/settings.h>
+#include <roger/uitools.h>
 
 #define ROUTERMANAGER_TYPE_THUNDERBIRD_PLUGIN        (routermanager_thunderbird_plugin_get_type ())
 #define ROUTERMANAGER_THUNDERBIRD_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_THUNDERBIRD_PLUGIN, RouterManagerThunderbirdPlugin))
@@ -1018,7 +1020,7 @@ void impl_deactivate(PeasActivatable *plugin)
 
 void filename_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
-	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Select mab file"), pref_get_window(), GTK_FILE_CHOOSER_ACTION_OPEN, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Open"), GTK_RESPONSE_ACCEPT, NULL);
+	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Select mab file"), settings_get_window(), GTK_FILE_CHOOSER_ACTION_OPEN, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Open"), GTK_RESPONSE_ACCEPT, NULL);
 	GtkFileFilter *filter;
 	const gchar *book;
 	gchar *dir;

@@ -38,6 +38,8 @@
 #include <libroutermanager/settings.h>
 
 #include <roger/main.h>
+#include <roger/settings.h>
+#include <roger/uitools.h>
 
 #include <vcard.h>
 
@@ -1194,7 +1196,7 @@ void impl_deactivate(PeasActivatable *plugin)
 
 void filename_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
-	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Select vcard file"), pref_get_window(), GTK_FILE_CHOOSER_ACTION_OPEN, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Open"), GTK_RESPONSE_ACCEPT, NULL);
+	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Select vcard file"), settings_get_window(), GTK_FILE_CHOOSER_ACTION_OPEN, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Open"), GTK_RESPONSE_ACCEPT, NULL);
 	GtkFileFilter *filter;
 
 	filter = gtk_file_filter_new();

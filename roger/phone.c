@@ -133,7 +133,7 @@ static gchar *phone_get_active_name(void)
 	type = router_get_phone_port(profile);
 
 	/* Traverse phone list and add each phone */
-	for (phone_list; phone_list != NULL; phone_list = phone_list->next) {
+	for (; phone_list != NULL; phone_list = phone_list->next) {
 		struct phone *phone = phone_list->data;
 
 		if (type == phone->type) {

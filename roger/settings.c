@@ -1253,6 +1253,11 @@ void view_call_type_icons_combobox_changed_cb(GtkComboBox *widget, gpointer user
 	//journal_button_refresh_clicked_cb(NULL, NULL);
 }
 
+GtkWindow *settings_get_window(void)
+{
+	return settings ? GTK_WINDOW(settings->window) : NULL;
+}
+
 void app_show_settings(void)
 {
 	GtkBuilder *builder;

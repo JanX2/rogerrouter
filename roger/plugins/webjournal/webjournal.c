@@ -33,6 +33,8 @@
 #include <libroutermanager/settings.h>
 #include <libroutermanager/gstring.h>
 
+#include <roger/settings.h>
+#include <roger/uitools.h>
 
 #include <webjournal.h>
 
@@ -238,7 +240,7 @@ static void impl_deactivate(PeasActivatable *plugin)
 
 void filename_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
-	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Set HTML file"), pref_get_window(), GTK_FILE_CHOOSER_ACTION_SAVE, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Save"), GTK_RESPONSE_ACCEPT, NULL);
+	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Set HTML file"), settings_get_window(), GTK_FILE_CHOOSER_ACTION_SAVE, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Save"), GTK_RESPONSE_ACCEPT, NULL);
 	GtkFileFilter *filter;
 
 	filter = gtk_file_filter_new();
