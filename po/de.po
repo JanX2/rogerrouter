@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-26 21:04+0200\n"
+"POT-Creation-Date: 2016-04-26 21:33+0200\n"
 "PO-Revision-Date: 2016-04-25 22:41+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <>\n"
@@ -317,7 +317,7 @@ msgstr "Bild öffnen"
 #: ../roger/plugins/thunderbird/thunderbird.c:1023
 #: ../roger/plugins/webjournal/webjournal.c:243
 msgid "_Cancel"
-msgstr "A_bbrechen"
+msgstr "Abbrechen"
 
 #: ../roger/contacts.c:501 ../roger/plugins/vcard/vcard.c:1199
 #: ../roger/plugins/thunderbird/thunderbird.c:1023
@@ -1577,8 +1577,8 @@ msgid "Choose for which MSNs you want gnotifications"
 msgstr "Wähle für welche MSNs Benachrichtigungen angezeigt werden"
 
 #: ../roger/plugins/gnotification/gnotification.plugin.in.h:1
-msgid "Notifications"
-msgstr "Benachrichtigungen"
+msgid "Notifications (using GNotification)"
+msgstr "Benachrichtigungen (mittels GNotification)"
 
 #: ../roger/plugins/gnotification/gnotification.plugin.in.h:2
 #: ../roger/plugins/notification/notification.plugin.in.h:2
@@ -1618,8 +1618,8 @@ msgid "Number:\t%s"
 msgstr "Nummer:\t%s"
 
 #: ../roger/plugins/notification/notification.plugin.in.h:1
-msgid "Notification"
-msgstr "Benachrichtigung"
+msgid "Notification (using libnotify)"
+msgstr "Benachrichtigungen (mittels libnotify)"
 
 #: ../roger/plugins/webjournal/webjournal.c:243
 msgid "Set HTML file"
@@ -1784,6 +1784,12 @@ msgstr ""
 #: ../org.tabos.roger.appdata.xml.in.h:4
 msgid "Journal view of all calls"
 msgstr "Journalansicht aller Anrufe"
+
+#~ msgid "Notifications"
+#~ msgstr "Benachrichtigungen"
+
+#~ msgid "Notification"
+#~ msgstr "Benachrichtigung"
 
 #~ msgid ""
 #~ "Error: Could not login to box ftp server\n"
