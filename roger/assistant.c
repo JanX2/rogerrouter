@@ -321,7 +321,7 @@ static gboolean router_post(struct assistant *assistant)
 	/* Check if router is present */
 	present = router_present(assistant->profile->router_info);
 	if (!present) {
-		emit_message(0, _("Could not load router configuration. Please change the router ip and try again"));
+		emit_message(_("Login failed"), _("Please change the router ip and try again"));
 	}
 
 	return present;
@@ -408,8 +408,8 @@ static gboolean ftp_password_post(struct assistant *assistant)
 	if (ftp) {
 		if (!ftp_login(ftp, ftp_user, ftp_password)) {
 			/* Error: Could not login to ftp */
-			message = g_strdup(_("Error: Could not login to box ftp server\nPlease check your ftp user/password."));
-			emit_message(0, message);
+			message = g_strdup(_("Please check your ftp user/password."));
+			emit_message(_("Login failed"), message);
 			ftp_shutdown(ftp);
 			return FALSE;
 		}

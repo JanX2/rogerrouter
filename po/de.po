@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-25 22:37+0200\n"
+"POT-Creation-Date: 2016-04-26 21:02+0200\n"
 "PO-Revision-Date: 2016-04-25 22:41+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <>\n"
@@ -129,13 +129,14 @@ msgstr "Erstelle ein Profil"
 msgid "Select router"
 msgstr "Router auswählen"
 
+#: ../roger/assistant.c:324 ../roger/assistant.c:412
+#: ../libroutermanager/router.c:184
+msgid "Login failed"
+msgstr "Anmeldung fehlgeschlagen"
+
 #: ../roger/assistant.c:324
-msgid ""
-"Could not load router configuration. Please change the router ip and try "
-"again"
-msgstr ""
-"Konnte die Routerkonfiguration nicht laden. Bitte ändere die Router IP und "
-"probiere es erneut"
+msgid "Please change the router ip and try again"
+msgstr "Bitte ändere die Router IP und probiere es erneut"
 
 #. Update title
 #: ../roger/assistant.c:337 ../roger/assistant.glade.h:14
@@ -150,12 +151,8 @@ msgstr "FTP-Passwort"
 
 #. Error: Could not login to ftp
 #: ../roger/assistant.c:411
-msgid ""
-"Error: Could not login to box ftp server\n"
-"Please check your ftp user/password."
-msgstr ""
-"Fehler: Konnte mich nicht an den FTP-Server der Box anmelden\n"
-"Bitte überprüfen Sie FTP-Benutzer/Passwort"
+msgid "Please check your ftp user/password."
+msgstr "Bitte überprüfe deine FTP-Zugangsdaten"
 
 #. Set title
 #: ../roger/assistant.c:432
@@ -316,14 +313,14 @@ msgid "Open image"
 msgstr "Bild öffnen"
 
 #: ../roger/contacts.c:501 ../roger/journal.c:995 ../roger/settings.c:894
-#: ../roger/plugins/vcard/vcard.c:1197 ../roger/plugins/google/google.c:106
-#: ../roger/plugins/thunderbird/thunderbird.c:1021
-#: ../roger/plugins/webjournal/webjournal.c:241
+#: ../roger/plugins/vcard/vcard.c:1199 ../roger/plugins/google/google.c:106
+#: ../roger/plugins/thunderbird/thunderbird.c:1023
+#: ../roger/plugins/webjournal/webjournal.c:243
 msgid "_Cancel"
 msgstr "A_bbrechen"
 
-#: ../roger/contacts.c:501 ../roger/plugins/vcard/vcard.c:1197
-#: ../roger/plugins/thunderbird/thunderbird.c:1021
+#: ../roger/contacts.c:501 ../roger/plugins/vcard/vcard.c:1199
+#: ../roger/plugins/thunderbird/thunderbird.c:1023
 msgid "_Open"
 msgstr "_Öffnen"
 
@@ -540,7 +537,7 @@ msgstr "Eintrag löschen"
 msgid "Export journal"
 msgstr "Journal exportieren"
 
-#: ../roger/journal.c:995 ../roger/plugins/webjournal/webjournal.c:241
+#: ../roger/journal.c:995 ../roger/plugins/webjournal/webjournal.c:243
 msgid "_Save"
 msgstr "_Speichern"
 
@@ -927,7 +924,7 @@ msgstr "Wollen Sie die Aktion '%s' löschen?"
 msgid "Delete action"
 msgstr "Aktion löschen"
 
-#: ../roger/settings.c:1443
+#: ../roger/settings.c:1448
 #, c-format
 msgid "%s (Firmware: %s)"
 msgstr "%s (Firmware: %s)"
@@ -1218,14 +1215,14 @@ msgctxt "shortcut window"
 msgid "Open settings"
 msgstr "Einstellungen öffnen"
 
-#: ../roger/plugins/evolution/evolution.c:656
+#: ../roger/plugins/evolution/evolution.c:660
 #: ../roger/plugins/fritzfon/fritzfon.c:682
 msgid "Book:"
 msgstr "Buch:"
 
-#: ../roger/plugins/evolution/evolution.c:669
-#: ../roger/plugins/fritzfon/fritzfon.c:695 ../roger/plugins/vcard/vcard.c:1242
-#: ../roger/plugins/thunderbird/thunderbird.c:1082
+#: ../roger/plugins/evolution/evolution.c:673
+#: ../roger/plugins/fritzfon/fritzfon.c:695 ../roger/plugins/vcard/vcard.c:1244
+#: ../roger/plugins/thunderbird/thunderbird.c:1084
 msgid "Contact book"
 msgstr "Kontaktbuch"
 
@@ -1426,17 +1423,17 @@ msgstr "Application Indicator"
 msgid "Status icon plugin using AppIndicator support"
 msgstr "Statusicon-Plugin mit AppIndicator-Unterstützung"
 
-#: ../roger/plugins/vcard/vcard.c:1197
+#: ../roger/plugins/vcard/vcard.c:1199
 msgid "Select vcard file"
 msgstr "VCard-Datei auswählen"
 
-#: ../roger/plugins/vcard/vcard.c:1228
+#: ../roger/plugins/vcard/vcard.c:1230
 msgid "VCard file"
 msgstr "VCard-Datei"
 
-#: ../roger/plugins/vcard/vcard.c:1232
-#: ../roger/plugins/thunderbird/thunderbird.c:1072
-#: ../roger/plugins/webjournal/webjournal.c:274
+#: ../roger/plugins/vcard/vcard.c:1234
+#: ../roger/plugins/thunderbird/thunderbird.c:1074
+#: ../roger/plugins/webjournal/webjournal.c:276
 msgid "Select"
 msgstr "Auswählen"
 
@@ -1512,11 +1509,11 @@ msgstr "Google"
 msgid "Google address book support"
 msgstr "Google Adressbuch-Support"
 
-#: ../roger/plugins/thunderbird/thunderbird.c:1021
+#: ../roger/plugins/thunderbird/thunderbird.c:1023
 msgid "Select mab file"
 msgstr "VCard-Datei auswählen"
 
-#: ../roger/plugins/thunderbird/thunderbird.c:1068
+#: ../roger/plugins/thunderbird/thunderbird.c:1070
 msgid "Thunderbird file"
 msgstr "Thunderbird-Datei"
 
@@ -1620,15 +1617,15 @@ msgstr "Nummer:\t%s"
 msgid "Notification"
 msgstr "Benachrichtigung"
 
-#: ../roger/plugins/webjournal/webjournal.c:241
+#: ../roger/plugins/webjournal/webjournal.c:243
 msgid "Set HTML file"
 msgstr "HTML-Datei auswählen"
 
-#: ../roger/plugins/webjournal/webjournal.c:270
+#: ../roger/plugins/webjournal/webjournal.c:272
 msgid "Web Journal output file"
 msgstr "Web Journal Ausgabedatei"
 
-#: ../roger/plugins/webjournal/webjournal.c:284
+#: ../roger/plugins/webjournal/webjournal.c:286
 #: ../roger/plugins/webjournal/webjournal.plugin.in.h:1
 msgid "Web Journal"
 msgstr "Web Journal"
@@ -1702,10 +1699,6 @@ msgstr ""
 "Anmeldung fehlgeschlagen. Anmeldedaten sind fehlerhaft oder es fehlen "
 "Berechtigungen.\n"
 "Bitte überprüfen sie ihre Anmeldedaten."
-
-#: ../libroutermanager/router.c:184
-msgid "Login failed"
-msgstr "Anmeldung fehlgeschlagen"
 
 #: ../libroutermanager/plugins/fritzbox/firmware-common.c:634
 #: ../libroutermanager/plugins/fritzbox/firmware-common.c:761
@@ -1787,6 +1780,13 @@ msgstr ""
 #: ../org.tabos.roger.appdata.xml.in.h:4
 msgid "Journal view of all calls"
 msgstr "Journalansicht aller Anrufe"
+
+#~ msgid ""
+#~ "Error: Could not login to box ftp server\n"
+#~ "Please check your ftp user/password."
+#~ msgstr ""
+#~ "Fehler: Konnte mich nicht an den FTP-Server der Box anmelden\n"
+#~ "Bitte überprüfen Sie FTP-Benutzer/Passwort"
 
 #~ msgid "Prefix"
 #~ msgstr "Vorwahlen"
