@@ -790,6 +790,7 @@ void action_enable_renderer_toggled_cb(GtkCellRendererToggle *toggle, gchar *pat
 	gboolean dial;
 	gint count = 0;
 
+	g_debug("%s(): Called", __FUNCTION__);
 	gtk_tree_model_get_iter(model, &iter, path);
 	gtk_tree_model_get(model, &iter, 0, &dial, -1);
 
@@ -821,10 +822,14 @@ void action_enable_renderer_toggled_cb(GtkCellRendererToggle *toggle, gchar *pat
 	gtk_tree_path_free(path);
 }
 
+void action_apply_button_clicked_cb(GtkWidget *button, gpointer user_data)
+{
+}
+
 gboolean action_edit(struct action *action)
 {
 
-#if 0
+#if 1
 	GtkWidget *dialog;
 	GtkWidget *name_entry;
 	GtkWidget *exec_entry;
@@ -842,10 +847,13 @@ gboolean action_edit(struct action *action)
 	dialog = GTK_WIDGET(gtk_builder_get_object(builder, "action_edit_dialog"));
 	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(settings->window));
 
-
 	name_entry = GTK_WIDGET(gtk_builder_get_object(builder, "action_name_entry"));
 	exec_entry = GTK_WIDGET(gtk_builder_get_object(builder, "action_execute_entry"));
 	list_store = GTK_LIST_STORE(gtk_builder_get_object(builder, "edit_action_liststore"));
+
+	gtk_builder_connect_signals(builder, NULL);
+
+	g_object_unref(G_OBJECT(builder));
 
 	if (action) {
 		gtk_entry_set_text(GTK_ENTRY(name_entry), action->name);
@@ -855,7 +863,7 @@ gboolean action_edit(struct action *action)
 
 	result = gtk_dialog_run(GTK_DIALOG(dialog));
 
-	if (result == GTK_RESPONSE_APPLY) {
+	if (result == 1) {
 		if (!action) {
 			action = action_create();
 			action_add(profile_get_active(), action);
