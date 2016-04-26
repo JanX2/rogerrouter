@@ -113,13 +113,17 @@ static ESource *get_selected_ebook_esource(void)
 	GList *list;
 	ESourceRegistry *registry = get_source_registry();
 	const gchar *id = get_selected_ebook_id();
+	gboolean none_selected = EMPTY_STRING(id);
 
 	list = get_ebook_list();
 	while (list) {
 		struct ebook_data *ebook_data = list->data;
 
 		//g_debug("%s <-> %s", ebook_data->name, id);
-		if (!strcmp(ebook_data->name, id)) {
+		if (none_selected || !strcmp(ebook_data->name, id)) {
+			if (none_selected) {
+				g_settings_set_string(ebook_settings, "book", ebook_data->name);
+			}
 			return e_source_registry_ref_source(registry, ebook_data->id);
 		}
 		list = list->next;
