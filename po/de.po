@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-26 21:02+0200\n"
+"POT-Creation-Date: 2016-04-26 21:04+0200\n"
 "PO-Revision-Date: 2016-04-25 22:41+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <>\n"
@@ -443,10 +443,14 @@ msgid "No address book plugin selected"
 msgstr "Kein Adressbuch-Plugin ausgewählt"
 
 #: ../roger/contacts.glade.h:3
+msgid "All contacts"
+msgstr "Alle Kontakte"
+
+#: ../roger/contacts.glade.h:4
 msgid "Contact"
 msgstr "Kontakt"
 
-#: ../roger/contacts.glade.h:4
+#: ../roger/contacts.glade.h:5
 msgid "Edit"
 msgstr "Bearbeiten"
 
@@ -1912,9 +1916,6 @@ msgstr "Journalansicht aller Anrufe"
 
 #~ msgid "<b>No contacts found</b>"
 #~ msgstr "<b>Keine Kontakte gefunden</b>"
-
-#~ msgid "All contacts"
-#~ msgstr "Alle Kontakte"
 
 #~ msgid "Address"
 #~ msgstr "Adresse"
