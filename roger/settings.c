@@ -31,6 +31,7 @@
 #include <libroutermanager/password.h>
 #include <libroutermanager/action.h>
 #include <libroutermanager/audio.h>
+#include <libroutermanager/address-book.h>
 
 #include <roger/application.h>
 #include <roger/settings.h>
@@ -76,6 +77,7 @@ struct settings {
 	GtkWidget *audio_output_combobox;
 	GtkWidget *audio_input_combobox;
 	GtkWidget *security_plugin_combobox;
+	GtkWidget *address_book_plugin_combobox;
 };
 
 static struct settings *settings = NULL;
@@ -1448,6 +1450,22 @@ void app_show_settings(void)
 	}
 
 	g_settings_bind(profile->settings, "password-manager", settings->security_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+
+	/* Address book group */
+	plugins = address_book_get_plugins();
+	settings->address_book_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "address_book_plugin_combobox"));
+
+	for (list = plugins; list; list = list->next) {
+		struct address_book *ab = list->data;
+
+		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->address_book_plugin_combobox), ab->get_name(), ab->get_name());
+	}
+
+	if (!gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(settings->address_book_plugin_combobox))) {
+		gtk_combo_box_set_active(GTK_COMBO_BOX(settings->address_book_plugin_combobox), 0);
+	}
+
+	g_settings_bind(profile->settings, "address-book", settings->address_book_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 
 
 	/* Header bar information */

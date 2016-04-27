@@ -239,6 +239,11 @@
 		<key name="password-manager" type="s">
 			<default>''</default>
 		</key>
+
+		<!-- Address book -->
+		<key name="address-book" type="s">
+			<default>''</default>
+		</key>
 	</schema>
 
 	<schema id="org.tabos.routermanager.profile.action">

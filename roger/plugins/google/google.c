@@ -36,6 +36,7 @@
 #include <libroutermanager/password.h>
 
 #include <roger/main.h>
+#include <roger/uitools.h>
 
 #include <gdata/gdata.h>
 #include <gdata/gdata-oauth1-authorizer.h>
@@ -262,12 +263,15 @@ static int google_init(void)
  * \return error code
  */
 static int google_shutdown(void) {
+	gchar *token;
+
 	if (service != NULL) {
 		g_object_unref(service);
 		service = NULL;
 	}
 
-	g_settings_set_string(google_settings, "token", gdata_oauth2_authorizer_dup_refresh_token(authorizer));
+	token = gdata_oauth2_authorizer_dup_refresh_token(authorizer);
+	g_settings_set_string(google_settings, "token", token ? token : "");
 
 	if (authorizer != NULL) {
 		g_object_unref(authorizer);
@@ -890,29 +894,32 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	GtkWidget *user_entry;
 	GtkWidget *password_entry;
 	GtkWidget *label;
-	GtkWidget *box;
+	GtkWidget *grid;
 	GtkWidget *group;
 
-	box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+	grid = gtk_grid_new();
+	gtk_widget_set_margin(grid, 18, 18, 18, 18);
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 6);
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 12);
+
+	label = gtk_label_new(_("User"));
+	gtk_widget_set_sensitive(label, FALSE);
+	gtk_grid_attach(GTK_GRID(grid), label, 0, 0, 1, 1);
+
 	user_entry = gtk_entry_new();
-	password_entry = gtk_entry_new();
-	gtk_entry_set_visibility(GTK_ENTRY(password_entry), FALSE);
-	label = gtk_label_new("");
-
-	gtk_label_set_markup(GTK_LABEL(label), _("User:"));
-	gtk_box_pack_start(GTK_BOX(box), label, FALSE, TRUE, 10);
-
-	gtk_box_pack_start(GTK_BOX(box), user_entry, FALSE, TRUE, 5);
+	gtk_grid_attach(GTK_GRID(grid), user_entry, 1, 0, 1, 1);
 	g_settings_bind(google_settings, "user", user_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
-	label = gtk_label_new("");
-	gtk_label_set_markup(GTK_LABEL(label), _("Password:"));
-	gtk_box_pack_start(GTK_BOX(box), label, FALSE, TRUE, 10);
+	label = gtk_label_new(_("Password"));
+	gtk_widget_set_sensitive(label, FALSE);
+	gtk_grid_attach(GTK_GRID(grid), label, 0, 1, 1, 1);
 
-	gtk_box_pack_start(GTK_BOX(box), password_entry, FALSE, TRUE, 5);
+	password_entry = gtk_entry_new();
+	gtk_entry_set_visibility(GTK_ENTRY(password_entry), FALSE);
+	gtk_grid_attach(GTK_GRID(grid), password_entry, 1, 1, 1, 1);
 	g_settings_bind(google_settings, "password", password_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
-	group = pref_group_create(box, _("Access data"), TRUE, FALSE);
+	group = pref_group_create(grid, _("Access data"), TRUE, FALSE);
 
 	return group;
 }

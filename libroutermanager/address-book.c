@@ -31,10 +31,32 @@
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/gstring.h>
 
-/** Holds the main internal address book */
-static struct address_book *internal_book = NULL;
 static guint address_book_signal_id = 0;
 static GHashTable *table = NULL;
+
+/** Internal address book list */
+static GSList *ab_plugins = NULL;
+
+/**
+ * \brief Find address book as requested by profile
+ * \param profile profile structure
+ * \return address book pointer or NULL on error
+ */
+struct address_book *address_book_find(struct profile *profile)
+{
+	gchar *name = g_settings_get_string(profile->settings, "address-book");
+	GSList *list;
+
+	for (list = ab_plugins; list != NULL; list = list->next) {
+		struct address_book *ab = list->data;
+
+		if (ab && ab->get_name && name && !strcmp(ab->get_name(), name)) {
+			return ab;
+		}
+	}
+
+	return ab_plugins ? ab_plugins->data : NULL;
+}
 
 /**
  * \brief Get whole contacts within the main internal address book
@@ -43,9 +65,10 @@ static GHashTable *table = NULL;
 GSList *address_book_get_contacts(void)
 {
 	GSList *list = NULL;
+	struct address_book *ab = address_book_find(profile_get_active());
 
-	if (internal_book) {
-		list = internal_book->get_contacts();
+	if (ab) {
+		list = ab->get_contacts();
 	}
 
 	return list;
@@ -55,15 +78,18 @@ GSList *address_book_get_contacts(void)
  */
 gboolean address_book_available(void)
 {
-	return internal_book != NULL;
+	struct address_book *ab = address_book_find(profile_get_active());
+
+	return ab != NULL;
 }
 
 gboolean address_book_remove_contact(struct contact *contact)
 {
+	struct address_book *ab = address_book_find(profile_get_active());
 	gboolean ret = FALSE;
 
-	if (internal_book && internal_book->remove_contact) {
-		ret = internal_book->remove_contact(contact);
+	if (ab && ab->remove_contact) {
+		ret = ab->remove_contact(contact);
 	}
 
 	return ret;
@@ -71,10 +97,11 @@ gboolean address_book_remove_contact(struct contact *contact)
 
 gboolean address_book_save_contact(struct contact *contact)
 {
+	struct address_book *ab = address_book_find(profile_get_active());
 	gboolean ret = FALSE;
 
-	if (internal_book && internal_book->save_contact) {
-		ret = internal_book->save_contact(contact);
+	if (ab && ab->save_contact) {
+		ret = ab->save_contact(contact);
 	}
 
 	return ret;
@@ -82,10 +109,11 @@ gboolean address_book_save_contact(struct contact *contact)
 
 gboolean address_book_reload_contacts(void)
 {
+	struct address_book *ab = address_book_find(profile_get_active());
 	gboolean ret = FALSE;
 
-	if (internal_book && internal_book->reload_contacts) {
-		ret = internal_book->reload_contacts();
+	if (ab && ab->reload_contacts) {
+		ret = ab->reload_contacts();
 	}
 
 	return ret;
@@ -93,9 +121,10 @@ gboolean address_book_reload_contacts(void)
 
 gboolean address_book_can_save(void)
 {
+	struct address_book *ab = address_book_find(profile_get_active());
 	gboolean ret = FALSE;
 
-	if (internal_book && internal_book->save_contact && internal_book->remove_contact) {
+	if (ab && ab->save_contact && ab->remove_contact) {
 		ret = TRUE;
 	}
 
@@ -170,7 +199,7 @@ void address_book_contact_process_cb(AppObject *obj, struct contact *contact, gp
  */
 void routermanager_address_book_register(struct address_book *book)
 {
-	internal_book = book;
+	ab_plugins = g_slist_prepend(ab_plugins, book);
 
 	if (!address_book_signal_id) {
 		table = g_hash_table_new(g_str_hash, g_str_equal);
@@ -184,10 +213,21 @@ void routermanager_address_book_register(struct address_book *book)
  */
 void routermanager_address_book_unregister(struct address_book *book)
 {
-	internal_book = NULL;
+	ab_plugins = g_slist_remove(ab_plugins, book);
 }
 
 gchar *address_book_get_name(void)
 {
-	return internal_book ? internal_book->get_name() : g_strdup("");
+	struct address_book *ab = address_book_find(profile_get_active());
+
+	return ab ? ab->get_name() : g_strdup("");
+}
+
+/**
+ * \brief Get a list of all address book plugins
+ * \return list of address book plugins
+ */
+GSList *address_book_get_plugins(void)
+{
+	return ab_plugins;
 }

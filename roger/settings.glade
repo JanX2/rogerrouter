@@ -1259,7 +1259,7 @@ Caller company</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="halign">start</property>
-                    <property name="label" translatable="yes">Execute actions</property>
+                    <property name="label" translatable="yes">Execute actions when</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>
@@ -1276,7 +1276,6 @@ Caller company</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <property name="margin_left">12</property>
                     <property name="margin_top">6</property>
                     <property name="xalign">0</property>
                     <property name="draw_indicator">True</property>
@@ -1294,7 +1293,6 @@ Caller company</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <property name="margin_left">12</property>
                     <property name="xalign">0</property>
                     <property name="draw_indicator">True</property>
                     <signal name="toggled" handler="action_checkbutton_toggled_cb" swapped="no"/>
@@ -1311,7 +1309,6 @@ Caller company</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <property name="margin_left">12</property>
                     <property name="xalign">0</property>
                     <property name="draw_indicator">True</property>
                     <signal name="toggled" handler="action_checkbutton_toggled_cb" swapped="no"/>
@@ -1328,7 +1325,6 @@ Caller company</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <property name="margin_left">12</property>
                     <property name="margin_top">12</property>
                     <property name="xalign">0</property>
                     <property name="draw_indicator">True</property>
@@ -1346,7 +1342,6 @@ Caller company</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <property name="margin_left">12</property>
                     <property name="margin_top">12</property>
                     <property name="xalign">0</property>
                     <property name="draw_indicator">True</property>
@@ -1364,7 +1359,6 @@ Caller company</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <property name="margin_left">12</property>
                     <property name="xalign">0</property>
                     <property name="draw_indicator">True</property>
                     <signal name="toggled" handler="action_checkbutton_toggled_cb" swapped="no"/>
@@ -1381,7 +1375,6 @@ Caller company</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <property name="margin_left">12</property>
                     <property name="xalign">0</property>
                     <property name="draw_indicator">True</property>
                     <signal name="toggled" handler="action_checkbutton_toggled_cb" swapped="no"/>
@@ -1724,7 +1717,7 @@ Caller company</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">6</property>
+                <property name="top_attach">8</property>
                 <property name="width">2</property>
               </packing>
             </child>
@@ -1738,7 +1731,7 @@ Caller company</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">7</property>
+                <property name="top_attach">9</property>
               </packing>
             </child>
             <child>
@@ -1746,6 +1739,46 @@ Caller company</property>
                 <property name="can_focus">False</property>
                 <property name="no_show_all">True</property>
                 <property name="hexpand">True</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">9</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="halign">start</property>
+                <property name="margin_top">12</property>
+                <property name="label" translatable="yes">Address book</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">6</property>
+                <property name="width">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="sensitive">False</property>
+                <property name="can_focus">False</property>
+                <property name="halign">end</property>
+                <property name="label" translatable="yes">Plugin</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">7</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkComboBoxText" id="address_book_plugin_combobox">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
