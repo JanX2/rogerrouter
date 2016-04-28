@@ -25,7 +25,8 @@
 G_BEGIN_DECLS
 
 struct address_book {
-	gchar *(*get_name)(void);
+	gchar *name;
+	gchar *(*get_active_book_name)(void);
 	GSList *(*get_contacts)(void);
 	gboolean (*reload_contacts)(void);
 	gboolean (*remove_contact)(struct contact *contact);

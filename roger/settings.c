@@ -1458,7 +1458,7 @@ void app_show_settings(void)
 	for (list = plugins; list; list = list->next) {
 		struct address_book *ab = list->data;
 
-		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->address_book_plugin_combobox), ab->get_name(), ab->get_name());
+		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->address_book_plugin_combobox), ab->name, ab->name);
 	}
 
 	if (!gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(settings->address_book_plugin_combobox))) {

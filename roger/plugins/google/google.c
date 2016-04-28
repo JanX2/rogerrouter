@@ -842,13 +842,14 @@ GSList *google_get_contacts(void)
 	return list;
 }
 
-gchar *google_get_name(void)
+gchar *google_get_active_book_name(void)
 {
 	return g_strdup("Google");
 }
 
 struct address_book google_book = {
-	google_get_name,
+	"Google",
+	google_get_active_book_name,
 	google_get_contacts,
 	NULL,//google_reload_contacts,
 	NULL,//google_remove_contact,

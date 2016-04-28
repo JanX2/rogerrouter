@@ -974,13 +974,14 @@ gboolean thunderbird_reload_contacts(void)
 	return TRUE;
 }
 
-gchar *thunderbird_get_name(void)
+gchar *thunderbird_get_active_book_name(void)
 {
 	return g_strdup("Thunderbird");
 }
 
 struct address_book thunderbird_book = {
-	thunderbird_get_name,
+	"Thunderbird",
+	thunderbird_get_active_book_name,
 	thunderbird_get_contacts,
 	thunderbird_reload_contacts,
 	NULL,//thunderbird_remove_contact,
@@ -1085,4 +1086,3 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 
 	return group;
 }
-

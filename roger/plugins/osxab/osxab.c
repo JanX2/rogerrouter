@@ -314,7 +314,14 @@ static gboolean osxab_save_contact(struct contact *contact)
 	osxab_reload_contacts();
 }
 
+gchar *osxab_get_active_book_name(void)
+{
+	return g_strdup("osxab");
+}
+
 struct address_book osxab_book = {
+	"OS X AB",
+	osxab_get_active_book_name,
 	osxab_get_contacts,
 	osxab_reload_contacts,
 	osxab_remove_contact,

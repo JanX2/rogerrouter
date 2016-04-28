@@ -50,7 +50,7 @@ struct address_book *address_book_find(struct profile *profile)
 	for (list = ab_plugins; list != NULL; list = list->next) {
 		struct address_book *ab = list->data;
 
-		if (ab && ab->get_name && name && !strcmp(ab->get_name(), name)) {
+		if (ab && ab->name && name && !strcmp(ab->name, name)) {
 			return ab;
 		}
 	}
@@ -220,7 +220,7 @@ gchar *address_book_get_name(void)
 {
 	struct address_book *ab = address_book_find(profile_get_active());
 
-	return ab ? ab->get_name() : g_strdup("");
+	return ab ? ab->name : g_strdup("");
 }
 
 /**
