@@ -313,10 +313,11 @@ Caller company</property>
     <property name="type_hint">dialog</property>
     <signal name="destroy" handler="settings_destroy_cb" swapped="no"/>
     <child>
-      <object class="GtkNotebook">
+      <object class="GtkNotebook" id="settings_notebook">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="show_border">False</property>
+        <signal name="switch-page" handler="settings_notebook_switch_page_cb" swapped="no"/>
         <child>
           <object class="GtkGrid">
             <property name="visible">True</property>

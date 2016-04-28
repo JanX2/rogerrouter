@@ -1268,6 +1268,39 @@ GtkWindow *settings_get_window(void)
 	return settings ? GTK_WINDOW(settings->window) : NULL;
 }
 
+void settings_fill_address_book_plugin_combobox(struct settings *settings)
+{
+	GSList *plugins;
+	GSList *list;
+
+	plugins = address_book_get_plugins();
+	for (list = plugins; list; list = list->next) {
+		struct address_book *ab = list->data;
+
+		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->address_book_plugin_combobox), ab->name, ab->name);
+	}
+}
+
+void settings_notebook_switch_page_cb(GtkNotebook *notebook, GtkWidget *page, guint page_num, gpointer user_data)
+{
+	struct profile *profile;
+
+	if (page_num != 5) {
+		return;
+	}
+
+	profile = profile_get_active();
+	g_settings_unbind(profile->settings, "address-book");
+
+	gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(settings->address_book_plugin_combobox));
+	settings_fill_address_book_plugin_combobox(settings);
+	g_settings_bind(profile->settings, "address-book", settings->address_book_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+
+	if (!gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(settings->address_book_plugin_combobox))) {
+		gtk_combo_box_set_active(GTK_COMBO_BOX(settings->address_book_plugin_combobox), 0);
+	}
+}
+
 void app_show_settings(void)
 {
 	GtkBuilder *builder;
@@ -1452,21 +1485,9 @@ void app_show_settings(void)
 	g_settings_bind(profile->settings, "password-manager", settings->security_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 
 	/* Address book group */
-	plugins = address_book_get_plugins();
 	settings->address_book_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "address_book_plugin_combobox"));
-
-	for (list = plugins; list; list = list->next) {
-		struct address_book *ab = list->data;
-
-		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->address_book_plugin_combobox), ab->name, ab->name);
-	}
-
-	if (!gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(settings->address_book_plugin_combobox))) {
-		gtk_combo_box_set_active(GTK_COMBO_BOX(settings->address_book_plugin_combobox), 0);
-	}
-
-	g_settings_bind(profile->settings, "address-book", settings->address_book_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
-
+	//settings_fill_address_book_plugin_combobox(settings);
+	//g_settings_bind(profile->settings, "address-book", settings->address_book_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 
 	/* Header bar information */
 	box_name = router_get_name(profile);
