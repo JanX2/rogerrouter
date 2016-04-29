@@ -114,7 +114,7 @@ gboolean callmonitor_io_cb(GIOChannel *source, GIOCondition condition, gpointer 
 	case G_IO_PRI:
 		ret = g_io_channel_read_line(source, &msg, &len, NULL, &error);
 		if (ret != G_IO_STATUS_NORMAL) {
-			g_error("Error reading: %s", error ? error->message : "?");
+			g_warning("Error reading: %s, ret = %d", error ? error->message : "?", ret);
 			break;
 		}
 
