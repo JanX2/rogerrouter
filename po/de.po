@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-27 21:12+0200\n"
+"POT-Creation-Date: 2016-04-29 21:39+0200\n"
 "PO-Revision-Date: 2016-04-25 22:41+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <>\n"
@@ -226,7 +226,7 @@ msgstr "Manuell"
 msgid "Enter credentials you are using to login to routers webpage"
 msgstr "Gib die Zugangsdaten ein, die du auf der Router Webseite verwendest"
 
-#: ../roger/assistant.glade.h:16
+#: ../roger/assistant.glade.h:16 ../roger/plugins/google/google.c:906
 msgid "User"
 msgstr "Benutzer"
 
@@ -235,6 +235,7 @@ msgid "Optional"
 msgstr "Optional"
 
 #: ../roger/assistant.glade.h:18 ../roger/authenticate.glade.h:4
+#: ../roger/plugins/google/google.c:914
 msgid "Password"
 msgstr "Passwort"
 
@@ -312,15 +313,15 @@ msgstr "<b>Einen Kontakt auswählen</b>"
 msgid "Open image"
 msgstr "Bild öffnen"
 
-#: ../roger/contacts.c:501 ../roger/journal.c:995 ../roger/settings.c:902
-#: ../roger/plugins/vcard/vcard.c:1199 ../roger/plugins/google/google.c:106
-#: ../roger/plugins/thunderbird/thunderbird.c:1023
+#: ../roger/contacts.c:501 ../roger/journal.c:995 ../roger/settings.c:904
+#: ../roger/plugins/vcard/vcard.c:1200 ../roger/plugins/google/google.c:107
+#: ../roger/plugins/thunderbird/thunderbird.c:1024
 #: ../roger/plugins/webjournal/webjournal.c:243
 msgid "_Cancel"
 msgstr "Abbrechen"
 
-#: ../roger/contacts.c:501 ../roger/plugins/vcard/vcard.c:1199
-#: ../roger/plugins/thunderbird/thunderbird.c:1023
+#: ../roger/contacts.c:501 ../roger/plugins/vcard/vcard.c:1200
+#: ../roger/plugins/thunderbird/thunderbird.c:1024
 msgid "_Open"
 msgstr "_Öffnen"
 
@@ -330,7 +331,7 @@ msgstr "_Kein Bild"
 
 #. Name
 #: ../roger/contacts.c:645 ../roger/journal.c:1054 ../roger/print.c:386
-#: ../roger/settings.c:425 ../roger/settings.c:931 ../roger/settings.glade.h:3
+#: ../roger/settings.c:427 ../roger/settings.c:933 ../roger/settings.glade.h:3
 msgid "Name"
 msgstr "Name"
 
@@ -351,7 +352,7 @@ msgid "Work Fax"
 msgstr "Arbeit Fax"
 
 #: ../roger/contacts.c:679 ../roger/journal.c:1056 ../roger/print.c:390
-#: ../roger/settings.c:426 ../roger/settings.c:985 ../roger/settings.glade.h:7
+#: ../roger/settings.c:428 ../roger/settings.c:987 ../roger/settings.glade.h:7
 #: ../roger/plugins/gtknotify/gtknotify.c:623
 #: ../roger/plugins/gnotification/gnotification.c:453
 #: ../roger/plugins/notification/notification.c:504
@@ -425,7 +426,7 @@ msgstr "Wollen Sie den Kontakt '%s' löschen?"
 
 #. Add cancel button
 #: ../roger/contacts.c:929 ../roger/journal.c:492 ../roger/journal.c:546
-#: ../roger/settings.c:512 ../roger/settings.c:657
+#: ../roger/settings.c:514 ../roger/settings.c:659
 msgid "Cancel"
 msgstr "A_bbrechen"
 
@@ -545,11 +546,11 @@ msgstr "Journal exportieren"
 msgid "_Save"
 msgstr "_Speichern"
 
-#: ../roger/journal.c:1052 ../roger/print.c:378 ../roger/settings.c:423
+#: ../roger/journal.c:1052 ../roger/print.c:378 ../roger/settings.c:425
 msgid "Type"
 msgstr "Typ"
 
-#: ../roger/journal.c:1053 ../roger/print.c:382 ../roger/settings.c:424
+#: ../roger/journal.c:1053 ../roger/print.c:382 ../roger/settings.c:426
 msgid "Date/Time"
 msgstr "Datum/Zeit"
 
@@ -557,11 +558,11 @@ msgstr "Datum/Zeit"
 msgid "Company"
 msgstr "Firma"
 
-#: ../roger/journal.c:1058 ../roger/settings.c:427
+#: ../roger/journal.c:1058 ../roger/settings.c:429
 msgid "Extension"
 msgstr "Nebenstelle"
 
-#: ../roger/journal.c:1059 ../roger/settings.c:428
+#: ../roger/journal.c:1059 ../roger/settings.c:430
 msgid "Line"
 msgstr "Leitung"
 
@@ -740,41 +741,41 @@ msgstr "Bitrate:"
 msgid "Message:"
 msgstr "Nachricht:"
 
-#: ../roger/settings.c:101
+#: ../roger/settings.c:103
 msgid "Login password is valid"
 msgstr "Anmeldepasswort ist gültig"
 
-#: ../roger/settings.c:129
+#: ../roger/settings.c:131
 msgid "Could not connect to FTP. Missing USB storage?"
 msgstr "Konnte nicht mit dem FTP verbinden. Fehlt der USB-Speicher?"
 
-#: ../roger/settings.c:132
+#: ../roger/settings.c:134
 msgid "FTP password is valid"
 msgstr "FTP-Password ist gültig"
 
-#: ../roger/settings.c:134
+#: ../roger/settings.c:136
 msgid "FTP password is invalid"
 msgstr "FTP-Password ist ungültig"
 
-#: ../roger/settings.c:134
+#: ../roger/settings.c:136
 msgid "Please check your FTP credentials"
 msgstr "Bitte überprüfe deine FTP-Zugangsdaten"
 
-#: ../roger/settings.c:152
+#: ../roger/settings.c:154
 msgid "Do you want to reload the router settings and replace your preferences?"
 msgstr "Wollen Sie die Einstellungen vom Router laden und damit ihre ersetzen?"
 
-#: ../roger/settings.c:153
+#: ../roger/settings.c:155
 msgid "Update settings"
 msgstr "Einstellungen aktualisieren"
 
 #. Type
-#: ../roger/settings.c:277
+#: ../roger/settings.c:279
 msgid "All"
 msgstr "Alle"
 
 #. Last calls - Incomming
-#: ../roger/settings.c:278 ../roger/plugins/gtknotify/gtknotify.c:632
+#: ../roger/settings.c:280 ../roger/plugins/gtknotify/gtknotify.c:632
 #: ../roger/plugins/statusicon/gtk.c:147
 #: ../roger/plugins/indicator/indicator.c:151
 #: ../roger/plugins/gnotification/gnotification.c:462
@@ -783,13 +784,13 @@ msgid "Incoming"
 msgstr "Eingehend"
 
 #. Last calls - Missed
-#: ../roger/settings.c:279 ../roger/plugins/statusicon/gtk.c:161
+#: ../roger/settings.c:281 ../roger/plugins/statusicon/gtk.c:161
 #: ../roger/plugins/indicator/indicator.c:165
 msgid "Missed"
 msgstr "Verpasst"
 
 #. Last calls - Outgoing
-#: ../roger/settings.c:280 ../roger/plugins/gtknotify/gtknotify.c:627
+#: ../roger/settings.c:282 ../roger/plugins/gtknotify/gtknotify.c:627
 #: ../roger/plugins/statusicon/gtk.c:154
 #: ../roger/plugins/indicator/indicator.c:158
 #: ../roger/plugins/gnotification/gnotification.c:457
@@ -797,103 +798,103 @@ msgstr "Verpasst"
 msgid "Outgoing"
 msgstr "Ausgehend"
 
-#: ../roger/settings.c:281
+#: ../roger/settings.c:283
 msgid "Voice box"
 msgstr "Anrufbeantworter"
 
-#: ../roger/settings.c:282
+#: ../roger/settings.c:284
 msgid "Fax box"
 msgstr "Fax-Box"
 
 #. Fax Report
-#: ../roger/settings.c:283 ../libroutermanager/filter.c:461
+#: ../roger/settings.c:285 ../libroutermanager/filter.c:461
 msgid "Fax Report"
 msgstr "Faxbericht"
 
 #. Voice Record
-#: ../roger/settings.c:284 ../libroutermanager/filter.c:466
+#: ../roger/settings.c:286 ../libroutermanager/filter.c:466
 msgid "Record"
 msgstr "Aufnahme"
 
 #. Blocked calls
-#: ../roger/settings.c:285 ../libroutermanager/filter.c:471
+#: ../roger/settings.c:287 ../libroutermanager/filter.c:471
 msgid "Blocked"
 msgstr "Blockiert"
 
 #. Date/Time
 #. Line
-#: ../roger/settings.c:294 ../roger/settings.c:308
+#: ../roger/settings.c:296 ../roger/settings.c:310
 msgid "Is"
 msgstr "Ist"
 
-#: ../roger/settings.c:295 ../roger/settings.c:309
+#: ../roger/settings.c:297 ../roger/settings.c:311
 msgid "Is not"
 msgstr "Ist nicht"
 
-#: ../roger/settings.c:296
+#: ../roger/settings.c:298
 msgid "Is after"
 msgstr "Ist nach"
 
-#: ../roger/settings.c:297
+#: ../roger/settings.c:299
 msgid "Is before"
 msgstr "Ist vor"
 
-#: ../roger/settings.c:310
+#: ../roger/settings.c:312
 msgid "Starts with"
 msgstr "Beginnt mit"
 
-#: ../roger/settings.c:311
+#: ../roger/settings.c:313
 msgid "Contains"
 msgstr "Enthält"
 
-#: ../roger/settings.c:509
+#: ../roger/settings.c:511
 msgid "Edit filter"
 msgstr "Filter bearbeiten"
 
-#: ../roger/settings.c:515
+#: ../roger/settings.c:517
 msgid "Save"
 msgstr "Speichern"
 
-#: ../roger/settings.c:527 ../roger/settings.c:672
+#: ../roger/settings.c:529 ../roger/settings.c:674
 #: ../roger/plugins/gtknotify/gtknotify.c:278
 msgid "Name:"
 msgstr "Name:"
 
-#: ../roger/settings.c:542 ../roger/settings.c:686
+#: ../roger/settings.c:544 ../roger/settings.c:688
 msgid "Rules"
 msgstr "Regeln"
 
-#: ../roger/settings.c:605
+#: ../roger/settings.c:607
 #, c-format
 msgid "Do you want to delete the filter '%s'?"
 msgstr "Wollen Sie den Filter '%s' löschen?"
 
-#: ../roger/settings.c:606
+#: ../roger/settings.c:608
 msgid "Delete filter"
 msgstr "Filter löschen"
 
-#: ../roger/settings.c:654
+#: ../roger/settings.c:656
 msgid "New filter"
 msgstr "Neuer Filter"
 
-#: ../roger/settings.c:660
+#: ../roger/settings.c:662
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: ../roger/settings.c:902
+#: ../roger/settings.c:904
 msgid "Action"
 msgstr "Aktion"
 
-#: ../roger/settings.c:902
+#: ../roger/settings.c:904
 msgid "_Apply"
 msgstr "_Anwenden"
 
 #. Exec
-#: ../roger/settings.c:938 ../roger/settings.glade.h:4
+#: ../roger/settings.c:940 ../roger/settings.glade.h:4
 msgid "Execute"
 msgstr "Ausführen"
 
-#: ../roger/settings.c:942
+#: ../roger/settings.c:944
 msgid ""
 "Regex:\n"
 "%LINE% - Local line\n"
@@ -907,28 +908,28 @@ msgstr ""
 "%NAME% - Anrufername\n"
 "%COMPANY% - Anruferfirma"
 
-#: ../roger/settings.c:950 ../roger/settings.glade.h:2
+#: ../roger/settings.c:952 ../roger/settings.glade.h:2
 msgid "General"
 msgstr "Allgemein"
 
-#: ../roger/settings.c:980
+#: ../roger/settings.c:982
 msgid "Enable"
 msgstr "Aktivieren"
 
-#: ../roger/settings.c:988 ../roger/settings.glade.h:5
+#: ../roger/settings.c:990 ../roger/settings.glade.h:5
 msgid "MSN Settings"
 msgstr "MSN Einstellungen"
 
-#: ../roger/settings.c:1040
+#: ../roger/settings.c:1042
 #, c-format
 msgid "Do you want to delete the action '%s'?"
 msgstr "Wollen Sie die Aktion '%s' löschen?"
 
-#: ../roger/settings.c:1041
+#: ../roger/settings.c:1043
 msgid "Delete action"
 msgstr "Aktion löschen"
 
-#: ../roger/settings.c:1456
+#: ../roger/settings.c:1495
 #, c-format
 msgid "%s (Firmware: %s)"
 msgstr "%s (Firmware: %s)"
@@ -1182,10 +1183,14 @@ msgid "Ghostscript"
 msgstr "Ghostscript"
 
 #: ../roger/settings.glade.h:72
+msgid "Address book"
+msgstr "Adressbuch"
+
+#: ../roger/settings.glade.h:73
 msgid "Extended"
 msgstr "Erweitert"
 
-#: ../roger/settings.glade.h:73
+#: ../roger/settings.glade.h:74
 msgid "Refresh settings"
 msgstr "Einstellungen erneuern"
 
@@ -1219,14 +1224,14 @@ msgctxt "shortcut window"
 msgid "Open settings"
 msgstr "Einstellungen öffnen"
 
-#: ../roger/plugins/evolution/evolution.c:660
-#: ../roger/plugins/fritzfon/fritzfon.c:682
+#: ../roger/plugins/evolution/evolution.c:661
+#: ../roger/plugins/fritzfon/fritzfon.c:683
 msgid "Book:"
 msgstr "Buch:"
 
-#: ../roger/plugins/evolution/evolution.c:673
-#: ../roger/plugins/fritzfon/fritzfon.c:695 ../roger/plugins/vcard/vcard.c:1244
-#: ../roger/plugins/thunderbird/thunderbird.c:1084
+#: ../roger/plugins/evolution/evolution.c:674
+#: ../roger/plugins/fritzfon/fritzfon.c:696 ../roger/plugins/vcard/vcard.c:1245
+#: ../roger/plugins/thunderbird/thunderbird.c:1085
 msgid "Contact book"
 msgstr "Kontaktbuch"
 
@@ -1427,16 +1432,16 @@ msgstr "Application Indicator"
 msgid "Status icon plugin using AppIndicator support"
 msgstr "Statusicon-Plugin mit AppIndicator-Unterstützung"
 
-#: ../roger/plugins/vcard/vcard.c:1199
+#: ../roger/plugins/vcard/vcard.c:1200
 msgid "Select vcard file"
 msgstr "VCard-Datei auswählen"
 
-#: ../roger/plugins/vcard/vcard.c:1230
+#: ../roger/plugins/vcard/vcard.c:1231
 msgid "VCard file"
 msgstr "VCard-Datei"
 
-#: ../roger/plugins/vcard/vcard.c:1234
-#: ../roger/plugins/thunderbird/thunderbird.c:1074
+#: ../roger/plugins/vcard/vcard.c:1235
+#: ../roger/plugins/thunderbird/thunderbird.c:1075
 #: ../roger/plugins/webjournal/webjournal.c:276
 msgid "Select"
 msgstr "Auswählen"
@@ -1449,11 +1454,11 @@ msgstr "VCard"
 msgid "VCard address book support"
 msgstr "VCard Adressbuch-Support"
 
-#: ../roger/plugins/google/google.c:99
+#: ../roger/plugins/google/google.c:100
 msgid "Google plugin: Authorization required"
 msgstr "Google Plugin: Autorisierung benötigt"
 
-#: ../roger/plugins/google/google.c:101
+#: ../roger/plugins/google/google.c:102
 msgid ""
 "You need to authorize Roger Router to access your Google contact list.\n"
 "\n"
@@ -1469,39 +1474,31 @@ msgstr ""
 "Autorisierungscode. Diesen gibst du im unteren Feld ein und erlaubst so "
 "Roger Router den Zugriff auf deine Google Kontakte."
 
-#: ../roger/plugins/google/google.c:107
+#: ../roger/plugins/google/google.c:108
 msgid "_OK"
 msgstr "_OK"
 
-#: ../roger/plugins/google/google.c:117
+#: ../roger/plugins/google/google.c:118
 msgid "Step 1:"
 msgstr "Schritt 1:"
 
-#: ../roger/plugins/google/google.c:123
+#: ../roger/plugins/google/google.c:124
 msgid "Click here to open the Google authorization page in a browser"
 msgstr "Hier klicken um die Google Autorisierungsseite im Browser zu öffnen"
 
-#: ../roger/plugins/google/google.c:127
+#: ../roger/plugins/google/google.c:128
 msgid "Step 2:"
 msgstr "Schritt 2:"
 
-#: ../roger/plugins/google/google.c:133
+#: ../roger/plugins/google/google.c:134
 msgid "Enter code:"
 msgstr "Code eingeben:"
 
-#: ../roger/plugins/google/google.c:243
+#: ../roger/plugins/google/google.c:244
 msgid "Authorization refresh error"
 msgstr "Fehler bei der Autorisierungserneuerung"
 
-#: ../roger/plugins/google/google.c:902
-msgid "User:"
-msgstr "Benutzer:"
-
-#: ../roger/plugins/google/google.c:909
-msgid "Password:"
-msgstr "Passwort:"
-
-#: ../roger/plugins/google/google.c:915
+#: ../roger/plugins/google/google.c:923
 msgid "Access data"
 msgstr "Zugangsdaten"
 
@@ -1513,11 +1510,11 @@ msgstr "Google"
 msgid "Google address book support"
 msgstr "Google Adressbuch-Support"
 
-#: ../roger/plugins/thunderbird/thunderbird.c:1023
+#: ../roger/plugins/thunderbird/thunderbird.c:1024
 msgid "Select mab file"
 msgstr "VCard-Datei auswählen"
 
-#: ../roger/plugins/thunderbird/thunderbird.c:1070
+#: ../roger/plugins/thunderbird/thunderbird.c:1071
 msgid "Thunderbird file"
 msgstr "Thunderbird-Datei"
 
@@ -1697,11 +1694,10 @@ msgstr "Anrufbeantworter"
 
 #: ../libroutermanager/router.c:183 ../libroutermanager/router.c:184
 msgid ""
-"Login failed. Login data are wrong or permissions are missing.\n"
+"Login data are wrong or permissions are missing.\n"
 "Please check your login data."
 msgstr ""
-"Anmeldung fehlgeschlagen. Anmeldedaten sind fehlerhaft oder es fehlen "
-"Berechtigungen.\n"
+"Anmeldedaten sind fehlerhaft oder es fehlen Berechtigungen.\n"
 "Bitte überprüfen sie ihre Anmeldedaten."
 
 #: ../libroutermanager/plugins/fritzbox/firmware-common.c:634
@@ -1784,6 +1780,12 @@ msgstr ""
 #: ../org.tabos.roger.appdata.xml.in.h:4
 msgid "Journal view of all calls"
 msgstr "Journalansicht aller Anrufe"
+
+#~ msgid "User:"
+#~ msgstr "Benutzer:"
+
+#~ msgid "Password:"
+#~ msgstr "Passwort:"
 
 #~ msgid "Apply"
 #~ msgstr "Anwenden"
@@ -1925,9 +1927,6 @@ msgstr "Journalansicht aller Anrufe"
 
 #~ msgid "<b>No contacts found</b>"
 #~ msgstr "<b>Keine Kontakte gefunden</b>"
-
-#~ msgid "Address"
-#~ msgstr "Adresse"
 
 #~ msgid "Existing contact"
 #~ msgstr "Existierender Kontakt"

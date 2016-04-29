@@ -180,8 +180,8 @@ gboolean router_login(struct profile *profile)
 
 	result = active_router->login(profile);
 	if (!result) {
-		g_warning(_("Login failed. Login data are wrong or permissions are missing.\nPlease check your login data."));
-		emit_message(_("Login failed"), _("Login failed. Login data are wrong or permissions are missing.\nPlease check your login data."));
+		g_warning(_("Login data are wrong or permissions are missing.\nPlease check your login data."));
+		emit_message(_("Login failed"), _("Login data are wrong or permissions are missing.\nPlease check your login data."));
 		router_login_blocked = TRUE;
 	}
 
