@@ -480,7 +480,9 @@ static gint application_command_line_cb(GtkApplication *app, GApplicationCommand
 	}
 
 	if (argc > 1) {
-		g_debug("%s(); %s", __FUNCTION__, argv[1]);
+		/* Guess it is a number to call */
+		gchar *number = argv[1];
+		option_state.number = number;
 	}
 
 	g_option_context_free(context);

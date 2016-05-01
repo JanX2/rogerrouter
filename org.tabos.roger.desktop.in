@@ -2,7 +2,7 @@
 _Name=Roger Router
 _GenericName=Roger Router
 _Comment=Journal, Fax-Software and Call-Monitor for AVM FRITZ!Box or compatible
-Exec=roger --call %u
+Exec=roger %u
 Icon=roger
 StartupNotify=true
 Terminal=false
