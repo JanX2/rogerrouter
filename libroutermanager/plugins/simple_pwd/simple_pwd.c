@@ -110,9 +110,14 @@ struct password_manager simple_pwd = {
 void impl_activate(PeasActivatable *plugin)
 {
 	GError *error = NULL;
+	gchar *dir;
 
 	simple_pwd_keyfile = g_key_file_new();
-	simple_pwd_file = g_strdup("/home/jbrummer/routermanager.keys");
+	dir = g_build_filename(g_get_user_config_dir(), "routermanager", NULL);
+	g_mkdir_with_parents(dir, 0700);
+
+	simple_pwd_file = g_build_filename(dir, "rogermanager.keys", NULL);
+	g_free(dir);
 	simple_pwd_group = g_strdup("passwords");
 
 	if (!g_key_file_load_from_file(simple_pwd_keyfile, simple_pwd_file, G_KEY_FILE_NONE, &error)) {
