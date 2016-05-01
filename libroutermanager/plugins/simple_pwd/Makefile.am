@@ -7,8 +7,7 @@ plugindir = $(libdir)/routermanager/simple_pwd
 plugin_LTLIBRARIES = libsimple_pwd.la
 
 libsimple_pwd_la_SOURCES = \
-	simple_pwd.c \
-	simple_pwd.h
+	simple_pwd.c
 
 libsimple_pwd_la_CFLAGS = $(plugin_cflags)
 libsimple_pwd_la_LDFLAGS = $(plugin_ldflags)

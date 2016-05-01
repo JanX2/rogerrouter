@@ -132,7 +132,8 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(plugindir)" "$(DESTDIR)$(plugindir)"
+am__installdirs = "$(DESTDIR)$(plugindir)" "$(DESTDIR)$(appstreamdir)" \
+	"$(DESTDIR)$(plugindir)"
 LTLIBRARIES = $(plugin_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
@@ -190,7 +191,7 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
-DATA = $(plugin_DATA)
+DATA = $(appstream_DATA) $(plugin_DATA)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
 # and print each of them once, without duplicates.  Input order is
@@ -420,8 +421,9 @@ top_srcdir = @top_srcdir@
 plugin_in_files = notification.plugin
 plugin_DATA = $(plugin_in_files:.plugin.in=.plugin)
 CLEANFILES = $(plugin_DATA)
-DISTCLEANFILES = $(plugin_DATA)
-EXTRA_DIST = $(plugin_in_files).in $(gsettings_SCHEMAS)
+DISTCLEANFILES = $(plugin_DATA) $(appstream_DATA)
+EXTRA_DIST = $(plugin_in_files).in $(gsettings_SCHEMAS) \
+	$(appstream_in_files)
 AM_CFLAGS = \
 	$(GTK_CFLAGS) \
 	$(PEAS_CFLAGS)		\
@@ -456,6 +458,9 @@ libnotification_la_LIBADD = $(plugin_libadd) $(LIBNOTIFY_LIBS)
 #This has to be defined, because GSETTINGS_CHECK_RULE adds to it
 MOSTLYCLEANFILES = 
 gsettings_SCHEMAS = org.tabos.roger.plugins.notify.gschema.xml
+appstreamdir = $(datadir)/appdata
+appstream_in_files = roger-plugins-notification.metainfo.xml.in
+appstream_DATA = $(appstream_in_files:.xml.in=.xml)
 all: all-am
 
 .SUFFIXES:
@@ -573,6 +578,27 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
+install-appstreamDATA: $(appstream_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(appstream_DATA)'; test -n "$(appstreamdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(appstreamdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(appstreamdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(appstreamdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(appstreamdir)" || exit $$?; \
+	done
+
+uninstall-appstreamDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(appstream_DATA)'; test -n "$(appstreamdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(appstreamdir)'; $(am__uninstall_files_from_dir)
 install-pluginDATA: $(plugin_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(plugin_DATA)'; test -n "$(plugindir)" || list=; \
@@ -681,7 +707,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(LTLIBRARIES) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(plugindir)" "$(DESTDIR)$(plugindir)"; do \
+	for dir in "$(DESTDIR)$(plugindir)" "$(DESTDIR)$(appstreamdir)" "$(DESTDIR)$(plugindir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -740,7 +766,8 @@ info: info-am
 
 info-am:
 
-install-data-am: install-pluginDATA install-pluginLTLIBRARIES
+install-data-am: install-appstreamDATA install-pluginDATA \
+	install-pluginLTLIBRARIES
 
 install-dvi: install-dvi-am
 
@@ -786,7 +813,8 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-pluginDATA uninstall-pluginLTLIBRARIES
+uninstall-am: uninstall-appstreamDATA uninstall-pluginDATA \
+	uninstall-pluginLTLIBRARIES
 
 .MAKE: install-am install-strip
 
@@ -794,16 +822,17 @@ uninstall-am: uninstall-pluginDATA uninstall-pluginLTLIBRARIES
 	clean-libtool clean-pluginLTLIBRARIES cscopelist-am ctags \
 	ctags-am distclean distclean-compile distclean-generic \
 	distclean-libtool distclean-tags distdir dvi dvi-am html \
-	html-am info info-am install install-am install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-pluginDATA install-pluginLTLIBRARIES install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
-	uninstall-am uninstall-pluginDATA uninstall-pluginLTLIBRARIES
+	html-am info info-am install install-am install-appstreamDATA \
+	install-data install-data-am install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am install-man install-pdf \
+	install-pdf-am install-pluginDATA install-pluginLTLIBRARIES \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags tags-am uninstall uninstall-am uninstall-appstreamDATA \
+	uninstall-pluginDATA uninstall-pluginLTLIBRARIES
 
 .PRECIOUS: Makefile
 
@@ -812,6 +841,7 @@ uninstall-am: uninstall-pluginDATA uninstall-pluginLTLIBRARIES
 
 @INTLTOOL_SCHEMAS_RULE@
 @GSETTINGS_RULES@
+@INTLTOOL_XML_RULE@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
