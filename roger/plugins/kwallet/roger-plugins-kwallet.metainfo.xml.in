@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="addon">
-  <id>roger-plugins-evolution</id>
+  <id>roger-plugins-kwallet</id>
   <extends>org.tabos.roger.desktop</extends>
-  <_name>Evolution</_name>
-  <_summary>Support for Evolution address book</_summary>
+  <_name>GNotifications</_name>
+  <_summary>Support for KDE4 Wallet</_summary>
   <url type="homepage">https://www.tabos.org</url>
   <metadata_license>GPL-2.0</metadata_license>
   <project_license>GPL-2.0</project_license>

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-29 21:39+0200\n"
+"POT-Creation-Date: 2016-05-01 22:24+0200\n"
 "PO-Revision-Date: 2016-04-25 22:41+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <>\n"
@@ -1241,8 +1241,8 @@ msgid "Evolution"
 msgstr "Evolution"
 
 #: ../roger/plugins/evolution/roger-plugins-evolution.metainfo.xml.in.h:2
-msgid "Adds support for Evolution address book"
-msgstr "Fügt Unterstützung für das Evolution Adressbuch hinzu"
+msgid "Support for Evolution address book"
+msgstr "Unterstützung für das Evolution Adressbuch"
 
 #: ../roger/plugins/evolution/evolution.plugin.in.h:2
 msgid "Evolution address book support"
@@ -1258,8 +1258,8 @@ msgid "FRITZ!Box address book support"
 msgstr "FRITZ!Box Adressbuch-Support"
 
 #: ../roger/plugins/fritzfon/roger-plugins-fritzfon.metainfo.xml.in.h:2
-msgid "Adds support for FRITZ!Box address book"
-msgstr "Fügt Unterstützung für das FRITZ!Box Adressbuch hinzu"
+msgid "Support for FRITZ!Box address book"
+msgstr "Unterstützung für das FRITZ!Box Adressbuch"
 
 #: ../roger/plugins/gtknotify/gtknotify.c:288
 msgid "Number:"
@@ -1352,6 +1352,14 @@ msgstr "Spiele Klingeltöne"
 msgid "Popup"
 msgstr "Popup"
 
+#: ../roger/plugins/gtknotify/roger-plugins-gtknotify.metainfo.xml.in.h:1
+msgid "GTK Notifications"
+msgstr "GTK Benachrichtigung"
+
+#: ../roger/plugins/gtknotify/roger-plugins-gtknotify.metainfo.xml.in.h:2
+msgid "Support for notifications using GTK"
+msgstr "Unterstützung für Benachrichtigungen mittels GTK"
+
 #: ../roger/plugins/gtknotify/gtknotify.plugin.in.h:1
 msgid "Notifications (Fallback)"
 msgstr "Benachrichtigungen (Fallback)"
@@ -1412,6 +1420,14 @@ msgstr "Benachrichtigungs-Symbol"
 msgid "Settings for Status icon GTK"
 msgstr "Einstellungen für Statusicon GTK"
 
+#: ../roger/plugins/statusicon/roger-plugins-statusicon.metainfo.xml.in.h:1
+msgid "Statusicon"
+msgstr "Statusicon"
+
+#: ../roger/plugins/statusicon/roger-plugins-statusicon.metainfo.xml.in.h:2
+msgid "Support for status icon"
+msgstr "Unterstützung für ein Statusicon"
+
 #: ../roger/plugins/statusicon/statusicon.plugin.in.h:1
 msgid "Status icon GTK"
 msgstr "Statusicon GTK"
@@ -1423,6 +1439,14 @@ msgstr "Statusicon-Plugin in GTK nach den FreeDesktop-Standard"
 #: ../roger/plugins/indicator/indicator.c:438
 msgid "Settings for Application Indicator"
 msgstr "Einstellungen für Application Indicator"
+
+#: ../roger/plugins/indicator/roger-plugins-indicator.metainfo.xml.in.h:1
+msgid "Indicator"
+msgstr "Indicator"
+
+#: ../roger/plugins/indicator/roger-plugins-indicator.metainfo.xml.in.h:2
+msgid "Support for Unity indicator"
+msgstr "Unterstützung für den Unity Indicator"
 
 #: ../roger/plugins/indicator/indicator.plugin.in.h:1
 msgid "Application Indicator"
@@ -1446,9 +1470,14 @@ msgstr "VCard-Datei"
 msgid "Select"
 msgstr "Auswählen"
 
+#: ../roger/plugins/vcard/roger-plugins-vcard.metainfo.xml.in.h:1
 #: ../roger/plugins/vcard/vcard.plugin.in.h:1
 msgid "VCard"
 msgstr "VCard"
+
+#: ../roger/plugins/vcard/roger-plugins-vcard.metainfo.xml.in.h:2
+msgid "Support for VCard address books"
+msgstr "Unterstützung für VCard Adressbücher"
 
 #: ../roger/plugins/vcard/vcard.plugin.in.h:2
 msgid "VCard address book support"
@@ -1502,9 +1531,14 @@ msgstr "Fehler bei der Autorisierungserneuerung"
 msgid "Access data"
 msgstr "Zugangsdaten"
 
+#: ../roger/plugins/google/roger-plugins-google.metainfo.xml.in.h:1
 #: ../roger/plugins/google/google.plugin.in.h:1
 msgid "Google"
 msgstr "Google"
+
+#: ../roger/plugins/google/roger-plugins-google.metainfo.xml.in.h:2
+msgid "Support for Google address book"
+msgstr "Unterstützung für das Google Adressbuch"
 
 #: ../roger/plugins/google/google.plugin.in.h:2
 msgid "Google address book support"
@@ -1518,9 +1552,14 @@ msgstr "VCard-Datei auswählen"
 msgid "Thunderbird file"
 msgstr "Thunderbird-Datei"
 
+#: ../roger/plugins/thunderbird/roger-plugins-thunderbird.metainfo.xml.in.h:1
 #: ../roger/plugins/thunderbird/thunderbird.plugin.in.h:1
 msgid "Thunderbird"
 msgstr "Thunderbird"
+
+#: ../roger/plugins/thunderbird/roger-plugins-thunderbird.metainfo.xml.in.h:2
+msgid "Support for Thunderbird address book"
+msgstr "Unterstützung für das Thunderbird Adressbuch"
 
 #: ../roger/plugins/thunderbird/thunderbird.plugin.in.h:2
 msgid "Thunderbird address book support"
@@ -1614,6 +1653,14 @@ msgstr ""
 msgid "Number:\t%s"
 msgstr "Nummer:\t%s"
 
+#: ../roger/plugins/notification/roger-plugins-notification.metainfo.xml.in.h:1
+msgid "Notifications using libnotify"
+msgstr "Benachrichtigungen mittels libnotify"
+
+#: ../roger/plugins/notification/roger-plugins-notification.metainfo.xml.in.h:2
+msgid "Support for notifications using libnotify"
+msgstr "Benachrichtigungen mittels libnotify"
+
 #: ../roger/plugins/notification/notification.plugin.in.h:1
 msgid "Notification (using libnotify)"
 msgstr "Benachrichtigungen (mittels libnotify)"
@@ -1627,9 +1674,14 @@ msgid "Web Journal output file"
 msgstr "Web Journal Ausgabedatei"
 
 #: ../roger/plugins/webjournal/webjournal.c:286
+#: ../roger/plugins/webjournal/roger-plugins-webjournal.metainfo.xml.in.h:1
 #: ../roger/plugins/webjournal/webjournal.plugin.in.h:1
 msgid "Web Journal"
 msgstr "Web Journal"
+
+#: ../roger/plugins/webjournal/roger-plugins-webjournal.metainfo.xml.in.h:2
+msgid "Support for exporting journal as HTML file"
+msgstr "Unterstützung um das Journal als HTML-Datei zu exportieren"
 
 #: ../roger/plugins/webjournal/webjournal.plugin.in.h:2
 msgid "Store journal as html file on a server"

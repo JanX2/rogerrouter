@@ -3,7 +3,7 @@
   <id>roger-plugins-fritzfon</id>
   <extends>org.tabos.roger.desktop</extends>
   <_name>FritzFon</_name>
-  <_summary>Adds support for FRITZ!Box address book</_summary>
+  <_summary>Support for FRITZ!Box address book</_summary>
   <url type="homepage">https://www.tabos.org</url>
   <metadata_license>GPL-2.0</metadata_license>
   <project_license>GPL-2.0</project_license>
