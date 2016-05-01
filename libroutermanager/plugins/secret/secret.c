@@ -140,7 +140,6 @@ struct password_manager secret = {
  */
 void impl_activate(PeasActivatable *plugin)
 {
-	g_debug("Register libsecret password manager plugin");
 	password_manager_register(&secret);
 
 #ifdef SECRET_TEST

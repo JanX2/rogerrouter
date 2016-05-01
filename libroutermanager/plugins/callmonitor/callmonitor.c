@@ -320,6 +320,7 @@ static void impl_deactivate(PeasActivatable *plugin)
 {
 	RouterManagerCallMonitorPlugin *callmonitor_plugin = ROUTERMANAGER_CALLMONITOR_PLUGIN(plugin);
 
+	g_debug("%s(): callmonitor", __FUNCTION__);
 	/* Remove network event */
 	net_remove_event(callmonitor_plugin->priv->net_event_id);
 }

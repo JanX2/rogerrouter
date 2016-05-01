@@ -1,4 +1,4 @@
-SUBDIRS = fritzbox callmonitor areacodes_global reverselookup
+SUBDIRS = fritzbox callmonitor areacodes_global reverselookup simple_pwd
 
 if WITH_PULSEAUDIO
 SUBDIRS += pulseaudio

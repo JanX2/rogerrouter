@@ -174,7 +174,7 @@ void login_password_entry_changed_cb(GtkEntry *entry, gpointer user_data)
 {
 	struct profile *profile = profile_get_active();
 
-	password_manager_set_password(profile, profile->settings, "login-password", gtk_entry_get_text(GTK_ENTRY(entry)));
+	password_manager_set_password(profile, "login-password", gtk_entry_get_text(GTK_ENTRY(entry)));
 }
 
 /**
@@ -186,7 +186,7 @@ void ftp_password_entry_changed_cb(GtkEntry *entry, gpointer user_data)
 {
 	struct profile *profile = profile_get_active();
 
-	password_manager_set_password(profile, profile->settings, "ftp-password", gtk_entry_get_text(GTK_ENTRY(entry)));
+	password_manager_set_password(profile, "ftp-password", gtk_entry_get_text(GTK_ENTRY(entry)));
 }
 
 /**

@@ -622,6 +622,7 @@ AC_CONFIG_FILES([
     libroutermanager/plugins/portaudio/Makefile
     libroutermanager/plugins/gstreamer1/Makefile
     libroutermanager/plugins/secret/Makefile
+    libroutermanager/plugins/simple_pwd/Makefile
     roger/Makefile
     roger/roger_winres.rc
     roger/data/Makefile

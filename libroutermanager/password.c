@@ -185,7 +185,7 @@ struct password_manager *password_manager_find(struct profile *profile)
  * \param name description of password
  * \param password password string
  */
-void password_manager_set_password(struct profile *profile, GSettings *settings, const gchar *name, const gchar *password)
+void password_manager_set_password(struct profile *profile, const gchar *name, const gchar *password)
 {
 	struct password_manager *pm = password_manager_find(profile);
 
