@@ -128,7 +128,7 @@ static gboolean secret_remove_password(struct profile *profile, const gchar *nam
 }
 
 struct password_manager secret = {
-	"libsecret",
+	"GNOME Keyring (libsecret)",
 	secret_store_password,
 	secret_get_password,
 	secret_remove_password,
