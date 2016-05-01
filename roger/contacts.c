@@ -171,7 +171,7 @@ static void contacts_update_details(struct contact *contact)
 				phone_image = gtk_image_new_from_icon_name(APP_ICON_CALL, GTK_ICON_SIZE_BUTTON);
 				gtk_button_set_image(GTK_BUTTON(dial), phone_image);
 
-				gchar *css_data = g_strdup_printf(".circular-button { border-radius: 20px; -gtk-outline-radius: 20px; }");
+				gchar *css_data = g_strdup_printf(".circular-button { border-radius: 20px; -gtk-outline-radius: 20px; outline-radius: 20px; }");
 				GtkCssProvider *css_provider = gtk_css_provider_get_default();
 				gtk_css_provider_load_from_data(css_provider, css_data, -1, NULL);
 				g_free(css_data);

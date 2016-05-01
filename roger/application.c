@@ -479,6 +479,10 @@ static gint application_command_line_cb(GtkApplication *app, GApplicationCommand
 		return 1;
 	}
 
+	if (argc > 1) {
+		g_debug("%s(); %s", __FUNCTION__, argv[1]);
+	}
+
 	g_option_context_free(context);
 
 	application_options_process(app, &option_state);
