@@ -143,7 +143,7 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 	scramble = call_scramble_number(fax_ident);
 	g_debug("FaxKennung: %s", scramble);
 	g_free(scramble);
-	g_settings_set_string(profile->settings, "fax-ident", fax_ident);
+	g_settings_set_string(profile->settings, "fax-header", fax_ident);
 	json_reader_end_member(reader);
 
 	json_reader_read_member(reader, "storage");
