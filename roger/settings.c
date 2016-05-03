@@ -1440,6 +1440,10 @@ void app_show_settings(void)
 	settings->outgoing_call_ends_checkbutton = GTK_WIDGET(gtk_builder_get_object(builder, "outgoing_call_ends_checkbutton"));
 	action_refresh_list(settings->actions_liststore);
 
+	/* Plugins group - Workaround for Ubuntu 16.04 */
+	GtkWidget *tmp = GTK_WIDGET(gtk_builder_get_object(builder, "plugins_box"));
+	gtk_box_pack_start(GTK_BOX(tmp), peas_gtk_plugin_manager_new(peas_engine_get_default()), TRUE, TRUE, 6);
+
 	/* Extended group */
 	settings->audio_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "audio_plugin_combobox"));
 	settings->audio_output_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "audio_output_combobox"));
