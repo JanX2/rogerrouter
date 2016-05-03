@@ -208,7 +208,7 @@ msgid ""
 msgstr ""
 "Wähle den zu konfigurierenden Router aus.\n"
 "Verwende entweder den unten automatisch erkannten Router oder wechsel auf "
-"Manuellund gib die IP Adresse ein"
+"Manuell und gib die IP Adresse ein"
 
 #: ../roger/assistant.glade.h:11
 msgid "Automatic"
@@ -249,9 +249,7 @@ msgstr "Fertig!"
 
 #: ../roger/assistant.glade.h:22
 msgid "Thank you for using Roger Router and please consider a donation."
-msgstr ""
-"Vielen Dank für die Verwendung von Roger Router und bitte denken Sie daran "
-"zu spenden."
+msgstr "Vielen Dank für die Verwendung von Roger Router und bitte denke daran zu spenden."
 
 #: ../roger/assistant.glade.h:23
 msgid "page5"

@@ -164,7 +164,7 @@ static gboolean fax_setup_file_monitor(const gchar *dir_name, GError **error)
 		g_signal_connect(file_monitor, "changed", G_CALLBACK(fax_spooler_new_file_cb), NULL);
 		ret = TRUE;
 	} else {
-		g_debug("Error occured creating new file monitor\n");
+		g_debug("Error occurred creating new file monitor\n");
 		g_debug("Message: %s\n", (*error)->message);
 		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Spooler directory %s does not exists!", dir_name);
 		ret = FALSE;

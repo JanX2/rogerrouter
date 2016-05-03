@@ -3,9 +3,9 @@
   <id>roger-plugins-indicator</id>
   <extends>org.tabos.roger.desktop</extends>
   <_name>Indicator</_name>
-  <_summary>Support for Unity indicator</_summary>
+  <_summary>Support for AppIndicator</_summary>
   <url type="homepage">https://www.tabos.org</url>
   <metadata_license>GPL-2.0</metadata_license>
   <project_license>GPL-2.0</project_license>
-  <updatecontact>jan.brummer_AT_tabos.org</updatecontact>
+  <updatecontact>ds_AT_dschaerf.de</updatecontact>
 </component>

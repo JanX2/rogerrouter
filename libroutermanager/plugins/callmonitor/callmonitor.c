@@ -103,7 +103,7 @@ gboolean callmonitor_io_cb(GIOChannel *source, GIOCondition condition, gpointer 
 	gchar *msg;
 
 	if (condition & (G_IO_HUP | G_IO_ERR | G_IO_NVAL)) {
-		/* A big problem occured and we've lost the connection */
+		/* A big problem occurred and we've lost the connection */
 		//callmonitor_reconnect(data);
 		g_warning("Error in callmonitor io cb, abort");
 		return FALSE;

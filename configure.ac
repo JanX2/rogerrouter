@@ -563,7 +563,7 @@ dnl ********************************************************************
 dnl gnotification is optional
 dnl ********************************************************************
 AC_ARG_WITH([gnotification],
-	[AS_HELP_STRING([--with-gnotifcation=@<:@ARG@:>@],
+	[AS_HELP_STRING([--with-gnotification=@<:@ARG@:>@],
 	[Use gnotification (possible values: no, yes, check, or the path to gnotification) @<:@default=check@:>@])],
 	[],
 	[with_gnotification=check])
@@ -573,8 +573,8 @@ AS_IF([test "x$with_gnotification" != xno],
 	[if test "x$with_gnotification" = xcheck; then
 		pkg-config --atleast-version=3.12.0 gtk+-3.0 && with_gnotification=yes
 	elif test "x$with_gnotification" = xyes; then
-		( pkg-config --atleast-version=3.12.0 gtk+-3.12.0) || AC_MSG_FAILURE(
-			[--with-gnotificaion=yes was given, but test for gnotificaion failed])
+		( pkg-config --atleast-version=3.12.0 gtk+-3.0) || AC_MSG_FAILURE(
+			[--with-gnotification=yes was given, but test for gnotification failed])
 	fi
 	if test "x$with_gnotification" = xyes; then
 		AC_DEFINE([HAVE_GNOTIFICATION], 1, [Have gnotification])
