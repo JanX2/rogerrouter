@@ -209,14 +209,14 @@ void journal_init_call_icon(void)
 		break;
 	}
 
-	g_assert(icon_call_in != NULL);
+	/*g_assert(icon_call_in != NULL);
 	g_assert(icon_call_missed != NULL);
 	g_assert(icon_call_out != NULL);
 	g_assert(icon_fax != NULL);
 	g_assert(icon_fax_report != NULL);
 	g_assert(icon_voice != NULL);
 	g_assert(icon_record != NULL);
-	g_assert(icon_blocked != NULL);
+	g_assert(icon_blocked != NULL);*/
 }
 
 GdkPixbuf *journal_get_call_icon(gint type)

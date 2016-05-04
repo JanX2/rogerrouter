@@ -23,11 +23,6 @@ Author: Jan-Michael Brummer
 -->
 <interface>
   <requires lib="gtk+" version="3.10"/>
-  <!-- interface-license-type gplv2 -->
-  <!-- interface-name Roger Router -->
-  <!-- interface-description All-in-one-solution for FRITZ!Box -->
-  <!-- interface-copyright Jan-Michael Brummer -->
-  <!-- interface-authors Jan-Michael Brummer -->
   <object class="GtkWindow" id="assistant">
     <property name="can_focus">False</property>
     <property name="resizable">False</property>
@@ -252,14 +247,14 @@ Either select auto discovered router below or switch to manual mode and enter it
                 <property name="can_focus">False</property>
                 <signal name="set-focus-child" handler="router_entry_changed" swapped="no"/>
                 <child>
-                  <object class="GtkScrolledWindow">
+                  <object class="GtkScrolledWindow" id="scrolled_window">
                     <property name="height_request">50</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="margin_top">12</property>
                     <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkViewport">
+                      <object class="GtkViewport" id="viewport">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>

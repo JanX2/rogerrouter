@@ -123,12 +123,6 @@ void answeringmachine_play(const gchar *name)
 		return;
 	}
 
-	gint flags = 0;
-
-	if (roger_uses_headerbar()) {
-		flags |= GTK_DIALOG_USE_HEADER_BAR;
-	}
-
 	/* Only open once at a time */
 	if (playback_data) {
 		return;
