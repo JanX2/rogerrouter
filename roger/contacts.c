@@ -1025,6 +1025,9 @@ void app_contacts(gchar *number)
 
 	contacts->header_bar_title = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_header_bar_label"));
 
+	GtkWidget *contacts_header_bar_right = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_header_bar_right"));
+	gtk_header_bar_set_decoration_layout(GTK_HEADER_BAR(contacts_header_bar_right), ":close");
+
 	contacts->details_placeholder_box = GTK_WIDGET(gtk_builder_get_object(builder, "details_placeholder_box"));
 
 	gtk_window_set_titlebar(GTK_WINDOW(contacts->window), header_bar);
