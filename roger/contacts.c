@@ -1029,12 +1029,18 @@ void app_contacts(gchar *number)
 
 	gtk_image_set_from_pixbuf(GTK_IMAGE(placeholder_image), gdk_pixbuf_new_from_resource_at_scale("/org/tabos/roger/images/address-book.svg", 128, 128, TRUE, NULL));
 
-	GtkWidget *contacts_header_bar_right = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_header_bar_right"));
-	gtk_header_bar_set_decoration_layout(GTK_HEADER_BAR(contacts_header_bar_right), ":close");
-
 	contacts->details_placeholder_box = GTK_WIDGET(gtk_builder_get_object(builder, "details_placeholder_box"));
 
-	gtk_window_set_titlebar(GTK_WINDOW(contacts->window), header_bar);
+	if (roger_uses_headerbar()) {
+		GtkWidget *contacts_header_bar_right = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_header_bar_right"));
+		gtk_window_set_titlebar(GTK_WINDOW(contacts->window), header_bar);
+		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(contacts_header_bar_right), TRUE);
+	} else {
+		GtkWidget *grid = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_window_grid"));
+
+		gtk_window_set_title(GTK_WINDOW(contacts->window), _("Contacts"));
+		gtk_grid_attach(GTK_GRID(grid), header_bar, 0, 0, 3, 1);
+	}
 
 	/* Only set buttons to sensitive if we can write to the selected book */
 	if (!address_book_can_save()) {
