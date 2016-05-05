@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-05 13:42+0200\n"
+"POT-Creation-Date: 2016-05-05 18:43+0200\n"
 "PO-Revision-Date: 2016-04-25 22:41+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <>\n"
@@ -313,7 +313,7 @@ msgstr "<b>Einen Kontakt auswählen</b>"
 msgid "Open image"
 msgstr "Bild öffnen"
 
-#: ../roger/contacts.c:501 ../roger/journal.c:995 ../roger/settings.c:904
+#: ../roger/contacts.c:501 ../roger/journal.c:995 ../roger/settings.c:906
 #: ../roger/plugins/vcard/vcard.c:1200 ../roger/plugins/google/google.c:107
 #: ../roger/plugins/thunderbird/thunderbird.c:1024
 #: ../roger/plugins/webjournal/webjournal.c:243
@@ -331,7 +331,7 @@ msgstr "_Kein Bild"
 
 #. Name
 #: ../roger/contacts.c:645 ../roger/journal.c:1054 ../roger/print.c:386
-#: ../roger/settings.c:427 ../roger/settings.c:933 ../roger/settings.glade.h:3
+#: ../roger/settings.c:429 ../roger/settings.c:935 ../roger/settings.glade.h:3
 msgid "Name"
 msgstr "Name"
 
@@ -352,7 +352,7 @@ msgid "Work Fax"
 msgstr "Arbeit Fax"
 
 #: ../roger/contacts.c:679 ../roger/journal.c:1056 ../roger/print.c:390
-#: ../roger/settings.c:428 ../roger/settings.c:987 ../roger/settings.glade.h:7
+#: ../roger/settings.c:430 ../roger/settings.c:989 ../roger/settings.glade.h:7
 #: ../roger/plugins/gtknotify/gtknotify.c:623
 #: ../roger/plugins/gnotification/gnotification.c:453
 #: ../roger/plugins/notification/notification.c:504
@@ -426,7 +426,7 @@ msgstr "Wollen Sie den Kontakt '%s' löschen?"
 
 #. Add cancel button
 #: ../roger/contacts.c:929 ../roger/journal.c:492 ../roger/journal.c:546
-#: ../roger/settings.c:514 ../roger/settings.c:659
+#: ../roger/settings.c:516 ../roger/settings.c:661
 msgid "Cancel"
 msgstr "A_bbrechen"
 
@@ -546,11 +546,11 @@ msgstr "Journal exportieren"
 msgid "_Save"
 msgstr "_Speichern"
 
-#: ../roger/journal.c:1052 ../roger/print.c:378 ../roger/settings.c:425
+#: ../roger/journal.c:1052 ../roger/print.c:378 ../roger/settings.c:427
 msgid "Type"
 msgstr "Typ"
 
-#: ../roger/journal.c:1053 ../roger/print.c:382 ../roger/settings.c:426
+#: ../roger/journal.c:1053 ../roger/print.c:382 ../roger/settings.c:428
 msgid "Date/Time"
 msgstr "Datum/Zeit"
 
@@ -558,11 +558,11 @@ msgstr "Datum/Zeit"
 msgid "Company"
 msgstr "Firma"
 
-#: ../roger/journal.c:1058 ../roger/settings.c:429
+#: ../roger/journal.c:1058 ../roger/settings.c:431
 msgid "Extension"
 msgstr "Nebenstelle"
 
-#: ../roger/journal.c:1059 ../roger/settings.c:430
+#: ../roger/journal.c:1059 ../roger/settings.c:432
 msgid "Line"
 msgstr "Leitung"
 
@@ -741,41 +741,41 @@ msgstr "Bitrate:"
 msgid "Message:"
 msgstr "Nachricht:"
 
-#: ../roger/settings.c:103
+#: ../roger/settings.c:105
 msgid "Login password is valid"
 msgstr "Anmeldepasswort ist gültig"
 
-#: ../roger/settings.c:131
+#: ../roger/settings.c:133
 msgid "Could not connect to FTP. Missing USB storage?"
 msgstr "Konnte nicht mit dem FTP verbinden. Fehlt der USB-Speicher?"
 
-#: ../roger/settings.c:134
+#: ../roger/settings.c:136
 msgid "FTP password is valid"
 msgstr "FTP-Password ist gültig"
 
-#: ../roger/settings.c:136
+#: ../roger/settings.c:138
 msgid "FTP password is invalid"
 msgstr "FTP-Password ist ungültig"
 
-#: ../roger/settings.c:136
+#: ../roger/settings.c:138
 msgid "Please check your FTP credentials"
 msgstr "Bitte überprüfe deine FTP-Zugangsdaten"
 
-#: ../roger/settings.c:154
+#: ../roger/settings.c:156
 msgid "Do you want to reload the router settings and replace your preferences?"
 msgstr "Wollen Sie die Einstellungen vom Router laden und damit ihre ersetzen?"
 
-#: ../roger/settings.c:155
+#: ../roger/settings.c:157
 msgid "Update settings"
 msgstr "Einstellungen aktualisieren"
 
 #. Type
-#: ../roger/settings.c:279
+#: ../roger/settings.c:281
 msgid "All"
 msgstr "Alle"
 
 #. Last calls - Incomming
-#: ../roger/settings.c:280 ../roger/plugins/gtknotify/gtknotify.c:632
+#: ../roger/settings.c:282 ../roger/plugins/gtknotify/gtknotify.c:632
 #: ../roger/plugins/statusicon/gtk.c:147
 #: ../roger/plugins/indicator/indicator.c:151
 #: ../roger/plugins/gnotification/gnotification.c:462
@@ -784,13 +784,13 @@ msgid "Incoming"
 msgstr "Eingehend"
 
 #. Last calls - Missed
-#: ../roger/settings.c:281 ../roger/plugins/statusicon/gtk.c:161
+#: ../roger/settings.c:283 ../roger/plugins/statusicon/gtk.c:161
 #: ../roger/plugins/indicator/indicator.c:165
 msgid "Missed"
 msgstr "Verpasst"
 
 #. Last calls - Outgoing
-#: ../roger/settings.c:282 ../roger/plugins/gtknotify/gtknotify.c:627
+#: ../roger/settings.c:284 ../roger/plugins/gtknotify/gtknotify.c:627
 #: ../roger/plugins/statusicon/gtk.c:154
 #: ../roger/plugins/indicator/indicator.c:158
 #: ../roger/plugins/gnotification/gnotification.c:457
@@ -798,103 +798,103 @@ msgstr "Verpasst"
 msgid "Outgoing"
 msgstr "Ausgehend"
 
-#: ../roger/settings.c:283
+#: ../roger/settings.c:285
 msgid "Voice box"
 msgstr "Anrufbeantworter"
 
-#: ../roger/settings.c:284
+#: ../roger/settings.c:286
 msgid "Fax box"
 msgstr "Fax-Box"
 
 #. Fax Report
-#: ../roger/settings.c:285 ../libroutermanager/filter.c:461
+#: ../roger/settings.c:287 ../libroutermanager/filter.c:461
 msgid "Fax Report"
 msgstr "Faxbericht"
 
 #. Voice Record
-#: ../roger/settings.c:286 ../libroutermanager/filter.c:466
+#: ../roger/settings.c:288 ../libroutermanager/filter.c:466
 msgid "Record"
 msgstr "Aufnahme"
 
 #. Blocked calls
-#: ../roger/settings.c:287 ../libroutermanager/filter.c:471
+#: ../roger/settings.c:289 ../libroutermanager/filter.c:471
 msgid "Blocked"
 msgstr "Blockiert"
 
 #. Date/Time
 #. Line
-#: ../roger/settings.c:296 ../roger/settings.c:310
+#: ../roger/settings.c:298 ../roger/settings.c:312
 msgid "Is"
 msgstr "Ist"
 
-#: ../roger/settings.c:297 ../roger/settings.c:311
+#: ../roger/settings.c:299 ../roger/settings.c:313
 msgid "Is not"
 msgstr "Ist nicht"
 
-#: ../roger/settings.c:298
+#: ../roger/settings.c:300
 msgid "Is after"
 msgstr "Ist nach"
 
-#: ../roger/settings.c:299
+#: ../roger/settings.c:301
 msgid "Is before"
 msgstr "Ist vor"
 
-#: ../roger/settings.c:312
+#: ../roger/settings.c:314
 msgid "Starts with"
 msgstr "Beginnt mit"
 
-#: ../roger/settings.c:313
+#: ../roger/settings.c:315
 msgid "Contains"
 msgstr "Enthält"
 
-#: ../roger/settings.c:511
+#: ../roger/settings.c:513
 msgid "Edit filter"
 msgstr "Filter bearbeiten"
 
-#: ../roger/settings.c:517
+#: ../roger/settings.c:519
 msgid "Save"
 msgstr "Speichern"
 
-#: ../roger/settings.c:529 ../roger/settings.c:674
+#: ../roger/settings.c:531 ../roger/settings.c:676
 #: ../roger/plugins/gtknotify/gtknotify.c:278
 msgid "Name:"
 msgstr "Name:"
 
-#: ../roger/settings.c:544 ../roger/settings.c:688
+#: ../roger/settings.c:546 ../roger/settings.c:690
 msgid "Rules"
 msgstr "Regeln"
 
-#: ../roger/settings.c:607
+#: ../roger/settings.c:609
 #, c-format
 msgid "Do you want to delete the filter '%s'?"
 msgstr "Wollen Sie den Filter '%s' löschen?"
 
-#: ../roger/settings.c:608
+#: ../roger/settings.c:610
 msgid "Delete filter"
 msgstr "Filter löschen"
 
-#: ../roger/settings.c:656
+#: ../roger/settings.c:658
 msgid "New filter"
 msgstr "Neuer Filter"
 
-#: ../roger/settings.c:662
+#: ../roger/settings.c:664
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: ../roger/settings.c:904
+#: ../roger/settings.c:906
 msgid "Action"
 msgstr "Aktion"
 
-#: ../roger/settings.c:904
+#: ../roger/settings.c:906
 msgid "_Apply"
 msgstr "_Anwenden"
 
 #. Exec
-#: ../roger/settings.c:940 ../roger/settings.glade.h:4
+#: ../roger/settings.c:942 ../roger/settings.glade.h:4
 msgid "Execute"
 msgstr "Ausführen"
 
-#: ../roger/settings.c:944
+#: ../roger/settings.c:946
 msgid ""
 "Regex:\n"
 "%LINE% - Local line\n"
@@ -908,28 +908,28 @@ msgstr ""
 "%NAME% - Anrufername\n"
 "%COMPANY% - Anruferfirma"
 
-#: ../roger/settings.c:952 ../roger/settings.glade.h:2
+#: ../roger/settings.c:954 ../roger/settings.glade.h:2
 msgid "General"
 msgstr "Allgemein"
 
-#: ../roger/settings.c:982
+#: ../roger/settings.c:984
 msgid "Enable"
 msgstr "Aktivieren"
 
-#: ../roger/settings.c:990 ../roger/settings.glade.h:5
+#: ../roger/settings.c:992 ../roger/settings.glade.h:5
 msgid "MSN Settings"
 msgstr "MSN Einstellungen"
 
-#: ../roger/settings.c:1042
+#: ../roger/settings.c:1044
 #, c-format
 msgid "Do you want to delete the action '%s'?"
 msgstr "Wollen Sie die Aktion '%s' löschen?"
 
-#: ../roger/settings.c:1043
+#: ../roger/settings.c:1045
 msgid "Delete action"
 msgstr "Aktion löschen"
 
-#: ../roger/settings.c:1499
+#: ../roger/settings.c:1505
 #, c-format
 msgid "%s (Firmware: %s)"
 msgstr "%s (Firmware: %s)"
@@ -1111,86 +1111,90 @@ msgid "Define actions"
 msgstr "Aktionen definieren"
 
 #: ../roger/settings.glade.h:54
-msgid "Execute actions when"
-msgstr "Aktionen ausführen bei"
+msgid "Execute when"
+msgstr "Ausführen bei"
 
 #: ../roger/settings.glade.h:55
-msgid "Call rings (incoming)"
-msgstr "Anruf klingelt (eingehend)"
+msgid "Incoming call rings"
+msgstr "Eingehender Anruf klingelt"
 
 #: ../roger/settings.glade.h:56
-msgid "Call begins (incoming)"
-msgstr "Anruf beginnt (eingehend)"
+msgid "Incoming call begins"
+msgstr "Eingehender Anruf beginnt"
 
 #: ../roger/settings.glade.h:57
-msgid "Call ends (incoming)"
-msgstr "Anruf beendet (eingehend)"
+msgid "Incoming call ends"
+msgstr "Eingehender Anruf beendet"
 
 #: ../roger/settings.glade.h:58
-msgid "Call missed (incoming)"
-msgstr "Anruf verpasst (eingehend)"
+msgid "Incoming call missed"
+msgstr "Eingehender Anruf verpasst"
 
 #: ../roger/settings.glade.h:59
-msgid "Call dial (outgoing)"
-msgstr "Anruf wählen (ausgehend)"
+msgid "Outgoing call dial"
+msgstr "Ausgehender Anruf wählen"
 
 #: ../roger/settings.glade.h:60
-msgid "Call begins (outgoing)"
-msgstr "Anruf beginnt (ausgehend)"
+msgid "Outgoing call begins"
+msgstr "Ausgehender Anruf beginnt"
 
 #: ../roger/settings.glade.h:61
-msgid "Call ends (outgoing)"
-msgstr "Anruf beendet (ausgehend)"
+msgid "Outgoing call ends"
+msgstr "Ausgehender Anruf beendet"
 
 #: ../roger/settings.glade.h:62
+msgid "Examples"
+msgstr "Beispiele"
+
+#: ../roger/settings.glade.h:63
 msgid "Actions"
 msgstr "Aktionen"
 
-#: ../roger/settings.glade.h:63
+#: ../roger/settings.glade.h:64
 msgid "Choose which plugins should be loaded at startup"
 msgstr "Wähle welche Plugins beim Starten geladen werden"
 
-#: ../roger/settings.glade.h:64
+#: ../roger/settings.glade.h:65
 msgid "Plugins"
 msgstr "Plugins"
 
-#: ../roger/settings.glade.h:65
+#: ../roger/settings.glade.h:66
 msgid "Audio"
 msgstr "Audio"
 
-#: ../roger/settings.glade.h:66
+#: ../roger/settings.glade.h:67
 msgid "Plugin"
 msgstr "Plugin"
 
-#: ../roger/settings.glade.h:67
+#: ../roger/settings.glade.h:68
 msgid "Security"
 msgstr "Sicherheit"
 
-#: ../roger/settings.glade.h:68
+#: ../roger/settings.glade.h:69
 msgid "Output"
 msgstr "Ausgabe"
 
-#: ../roger/settings.glade.h:69
+#: ../roger/settings.glade.h:70
 msgid "Input"
 msgstr "Eingabe"
 
-#: ../roger/settings.glade.h:70
+#: ../roger/settings.glade.h:71
 msgid "Helper applications"
 msgstr "Hilfsanwendungen"
 
-#: ../roger/settings.glade.h:71
+#: ../roger/settings.glade.h:72
 msgid "Ghostscript"
 msgstr "Ghostscript"
 
-#: ../roger/settings.glade.h:72
+#: ../roger/settings.glade.h:73
 msgid "Address book"
 msgstr "Adressbuch"
 
-#: ../roger/settings.glade.h:73
+#: ../roger/settings.glade.h:74
 msgid "Extended"
 msgstr "Erweitert"
 
-#: ../roger/settings.glade.h:74
+#: ../roger/settings.glade.h:75
 msgid "Refresh settings"
 msgstr "Einstellungen erneuern"
 
@@ -1837,6 +1841,27 @@ msgstr ""
 #: ../org.tabos.roger.appdata.xml.in.h:4
 msgid "Journal view of all calls"
 msgstr "Journalansicht aller Anrufe"
+
+#~ msgid "Call rings (incoming)"
+#~ msgstr "Anruf klingelt (eingehend)"
+
+#~ msgid "Call begins (incoming)"
+#~ msgstr "Anruf beginnt (eingehend)"
+
+#~ msgid "Call ends (incoming)"
+#~ msgstr "Anruf beendet (eingehend)"
+
+#~ msgid "Call missed (incoming)"
+#~ msgstr "Anruf verpasst (eingehend)"
+
+#~ msgid "Call dial (outgoing)"
+#~ msgstr "Anruf wählen (ausgehend)"
+
+#~ msgid "Call begins (outgoing)"
+#~ msgstr "Anruf beginnt (ausgehend)"
+
+#~ msgid "Call ends (outgoing)"
+#~ msgstr "Anruf beendet (ausgehend)"
 
 #~ msgid "User:"
 #~ msgstr "Benutzer:"
