@@ -1251,9 +1251,9 @@ void journal_window(GApplication *app)
 	button = gtk_tree_view_column_get_button(column);
 	g_signal_connect(button, "button-press-event", G_CALLBACK(journal_column_header_button_pressed_cb), header_menu);
 
-	column_item = gtk_check_menu_item_new_with_label(title);
-	g_object_bind_property(column, "visible", column_item, "active", G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
-	gtk_menu_shell_append(GTK_MENU_SHELL(header_menu), column_item);
+	//column_item = gtk_check_menu_item_new_with_label(title);
+	//g_object_bind_property(column, "visible", column_item, "active", G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
+	//gtk_menu_shell_append(GTK_MENU_SHELL(header_menu), column_item);
 
 	/* Add all the other columns renderer */
 	for (index = JOURNAL_COL_DATETIME; index <= JOURNAL_COL_DURATION; index++) {
@@ -1302,6 +1302,7 @@ void journal_window(GApplication *app)
 		g_object_bind_property(column, "visible", column_item, "active", G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
 		gtk_menu_shell_append(GTK_MENU_SHELL(header_menu), column_item);
 	}
+
 	gtk_widget_show_all(header_menu);
 
 	gtk_container_add(GTK_CONTAINER(scrolled), journal_view);
