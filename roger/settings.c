@@ -1445,9 +1445,7 @@ void app_show_settings(void)
 	/* Plugins group - Workaround for Ubuntu 16.04 */
 	GtkWidget *tmp = GTK_WIDGET(gtk_builder_get_object(builder, "plugins_box"));
 	PeasEngine *peas = peas_engine_get_default();
-	g_debug("%s(): peas = %p", __FUNCTION__, peas);
 	GtkWidget *manager = peas_gtk_plugin_manager_new(peas);
-	g_debug("%s(): manager = %p", __FUNCTION__, manager);
 	gtk_box_pack_start(GTK_BOX(tmp), manager, TRUE, TRUE, 6);
 
 	/* Extended group */

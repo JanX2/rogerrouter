@@ -72,7 +72,7 @@ static gboolean use_header = FALSE;
 
 gboolean roger_uses_headerbar(void)
 {
-	return TRUE;
+	//return TRUE;
 	//return FALSE;
 	return use_header;
 }
@@ -739,6 +739,17 @@ gint journal_sort_by_date(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, g
 	return call_sort_by_date(call_a, call_b);
 }
 
+gint journal_sort_by_type(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer data)
+{
+	GdkPixbuf *call_a;
+	GdkPixbuf *call_b;
+
+	gtk_tree_model_get(model, a, JOURNAL_COL_TYPE, &call_a, -1);
+	gtk_tree_model_get(model, b, JOURNAL_COL_TYPE, &call_b, -1);
+
+	return call_a > call_b ? -1 : call_a < call_b ? 1 : 0;
+}
+
 void name_column_cell_data_func(GtkTreeViewColumn *column, GtkCellRenderer *renderer, GtkTreeModel *model, GtkTreeIter *iter, gpointer user_data)
 {
 	struct call *call;
@@ -1223,7 +1234,9 @@ void journal_window(GApplication *app)
 	renderer = gtk_cell_renderer_pixbuf_new();
 	column = gtk_tree_view_column_new_with_attributes(column_name[0], renderer, "pixbuf", JOURNAL_COL_TYPE, NULL);
 	gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_FIXED);
-	//gtk_tree_view_column_set_sort_column_id(column, 0);
+	gtk_tree_view_column_set_sort_column_id(column, 0);
+	gtk_tree_sortable_set_sort_func(sortable, JOURNAL_COL_TYPE, journal_sort_by_type, 0, NULL);
+
 	if (g_settings_get_uint(app_settings, "col-0-width")) {
 		gtk_tree_view_column_set_fixed_width(column, g_settings_get_uint(app_settings, "col-0-width"));
 	}
