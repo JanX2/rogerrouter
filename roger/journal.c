@@ -73,7 +73,7 @@ static gboolean use_header = FALSE;
 gboolean roger_uses_headerbar(void)
 {
 	//return TRUE;
-	return FALSE;
+	//return FALSE;
 	return use_header;
 }
 
