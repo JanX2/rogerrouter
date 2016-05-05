@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-01 22:24+0200\n"
+"POT-Creation-Date: 2016-05-05 13:40+0200\n"
 "PO-Revision-Date: 2016-04-25 22:41+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <>\n"
@@ -31,8 +31,8 @@ msgstr ""
 msgid "Time: %2.2d:%2.2d:%2.2d"
 msgstr "Zeit: %2.2d:%2.2d:%2.2d"
 
-#: ../roger/answeringmachine.glade.h:1 ../roger/phone.c:1542
-#: ../roger/phone.c:1549
+#: ../roger/answeringmachine.glade.h:1 ../roger/phone.c:1546
+#: ../roger/phone.c:1553
 msgid "Time: 00:00:00"
 msgstr "Zeit: 00:00:00"
 
@@ -107,14 +107,14 @@ msgid "About"
 msgstr "Info"
 
 #. Quit
-#: ../roger/application.c:377 ../roger/assistant.c:511 ../roger/assistant.c:638
+#: ../roger/application.c:377 ../roger/assistant.c:517 ../roger/assistant.c:644
 #: ../roger/plugins/statusicon/gtk.c:252
 #: ../roger/plugins/indicator/indicator.c:273
 msgid "Quit"
 msgstr "Beenden"
 
 #. Update title
-#: ../roger/assistant.c:93 ../roger/assistant.c:637
+#: ../roger/assistant.c:93 ../roger/assistant.c:643
 #: ../roger/assistant.glade.h:1
 msgid "Welcome"
 msgstr "Willkommen"
@@ -125,53 +125,53 @@ msgid "Create a profile"
 msgstr "Erstelle ein Profil"
 
 #. Update title
-#: ../roger/assistant.c:296 ../roger/assistant.glade.h:8
+#: ../roger/assistant.c:302 ../roger/assistant.glade.h:8
 msgid "Select router"
 msgstr "Router auswählen"
 
-#: ../roger/assistant.c:324 ../roger/assistant.c:412
+#: ../roger/assistant.c:330 ../roger/assistant.c:418
 #: ../libroutermanager/router.c:184
 msgid "Login failed"
 msgstr "Anmeldung fehlgeschlagen"
 
-#: ../roger/assistant.c:324
+#: ../roger/assistant.c:330
 msgid "Please change the router ip and try again"
 msgstr "Bitte ändere die Router IP und probiere es erneut"
 
 #. Update title
-#: ../roger/assistant.c:337 ../roger/assistant.glade.h:14
+#: ../roger/assistant.c:343 ../roger/assistant.glade.h:14
 msgid "Router password"
 msgstr "Router Passwort"
 
 #. Update title
-#: ../roger/assistant.c:390 ../roger/assistant.glade.h:19
+#: ../roger/assistant.c:396 ../roger/assistant.glade.h:19
 #: ../roger/settings.glade.h:18
 msgid "FTP password"
 msgstr "FTP-Passwort"
 
 #. Error: Could not login to ftp
-#: ../roger/assistant.c:411
+#: ../roger/assistant.c:417
 msgid "Please check your ftp user/password."
 msgstr "Bitte überprüfe deine FTP-Zugangsdaten"
 
 #. Set title
-#: ../roger/assistant.c:432
+#: ../roger/assistant.c:438
 msgid "Ready to go"
 msgstr "Es kann losgehen"
 
-#: ../roger/assistant.c:506 ../roger/assistant.glade.h:25
+#: ../roger/assistant.c:512 ../roger/assistant.glade.h:25
 msgid "Next"
 msgstr "Weiter"
 
-#: ../roger/assistant.c:537 ../roger/assistant.glade.h:24
+#: ../roger/assistant.c:543 ../roger/assistant.glade.h:24
 msgid "Back"
 msgstr "Zurück"
 
-#: ../roger/assistant.c:570
+#: ../roger/assistant.c:576
 msgid "Done"
 msgstr "Fertig"
 
-#: ../roger/assistant.c:612
+#: ../roger/assistant.c:618
 msgid "No router detected"
 msgstr "Kein Router erkannt"
 
@@ -249,7 +249,9 @@ msgstr "Fertig!"
 
 #: ../roger/assistant.glade.h:22
 msgid "Thank you for using Roger Router and please consider a donation."
-msgstr "Vielen Dank für die Verwendung von Roger Router und bitte denke daran zu spenden."
+msgstr ""
+"Vielen Dank für die Verwendung von Roger Router und bitte denke daran zu "
+"spenden."
 
 #: ../roger/assistant.glade.h:23
 msgid "page5"
@@ -472,7 +474,7 @@ msgid "Fax devices"
 msgstr "Faxgeräte"
 
 #. Add suppress check item
-#: ../roger/fax.c:163 ../roger/phone.c:1403 ../roger/phone.c:1451
+#: ../roger/fax.c:163 ../roger/phone.c:1407 ../roger/phone.c:1455
 msgid "Suppress number"
 msgstr "Nummer unterdrücken"
 
@@ -505,8 +507,8 @@ msgstr "<small>%d Anruf(e), %d:%2.2dh</small>"
 
 #: ../roger/journal.c:347
 #, c-format
-msgid "Journal - %s (%d call(s), %d:%2.2dh)"
-msgstr "Journal - %s (%d Anruf(e), %d:%2.2dh)"
+msgid "%s - %d call(s), %d:%2.2dh"
+msgstr "%s - %d Anruf(e), %d:%2.2dh"
 
 #: ../roger/journal.c:490
 msgid "Do you want to delete the router journal?"
@@ -660,7 +662,7 @@ msgid "<small>Record</small>"
 msgstr "<small>Aufnehmen</small>"
 
 #. Fill menu
-#: ../roger/phone.c:1369 ../roger/phone.c:1414
+#: ../roger/phone.c:1373 ../roger/phone.c:1418
 msgid "Phones"
 msgstr "Telefone"
 
@@ -927,7 +929,7 @@ msgstr "Wollen Sie die Aktion '%s' löschen?"
 msgid "Delete action"
 msgstr "Aktion löschen"
 
-#: ../roger/settings.c:1495
+#: ../roger/settings.c:1499
 #, c-format
 msgid "%s (Firmware: %s)"
 msgstr "%s (Firmware: %s)"
@@ -1443,8 +1445,8 @@ msgid "Indicator"
 msgstr "Indicator"
 
 #: ../roger/plugins/indicator/roger-plugins-indicator.metainfo.xml.in.h:2
-msgid "Support for Unity indicator"
-msgstr "Unterstützung für den Unity Indicator"
+msgid "Support for AppIndicator"
+msgstr "Unterstützung für den AppIndicator"
 
 #: ../roger/plugins/indicator/indicator.plugin.in.h:1
 msgid "Application Indicator"
@@ -1623,6 +1625,7 @@ msgstr ""
 "spielt Klänge"
 
 #: ../roger/plugins/gnotification/roger-plugins-gnotify.metainfo.xml.in.h:1
+#: ../roger/plugins/kwallet/roger-plugins-kwallet.metainfo.xml.in.h:1
 msgid "GNotifications"
 msgstr "GNotification"
 
@@ -1684,6 +1687,10 @@ msgstr "Unterstützung um das Journal als HTML-Datei zu exportieren"
 #: ../roger/plugins/webjournal/webjournal.plugin.in.h:2
 msgid "Store journal as html file on a server"
 msgstr "Speicher das Journal als HTML-Datei auf einem Server"
+
+#: ../roger/plugins/kwallet/roger-plugins-kwallet.metainfo.xml.in.h:2
+msgid "Support for KDE4 Wallet"
+msgstr "Unterstützung für die KDE4 Brieftasche"
 
 #: ../roger-cli/main_cli.c:167
 msgid "Connected"
