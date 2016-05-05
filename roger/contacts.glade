@@ -147,14 +147,14 @@
     <property name="orientation">vertical</property>
     <property name="spacing">6</property>
     <child>
-      <object class="GtkImage">
+      <object class="GtkImage" id="placeholder_image">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="valign">end</property>
         <property name="hexpand">True</property>
         <property name="vexpand">True</property>
         <property name="pixel_size">128</property>
-        <property name="icon_name">x-office-address-book-symbolic</property>
+        <property name="resource">/org/tabos/roger/images/address-book.svg</property>
         <property name="icon_size">6</property>
       </object>
       <packing>
@@ -167,6 +167,7 @@
     <child>
       <object class="GtkLabel">
         <property name="visible">True</property>
+        <property name="sensitive">False</property>
         <property name="can_focus">False</property>
         <property name="valign">start</property>
         <property name="label" translatable="yes">No address book plugin selected</property>
@@ -201,7 +202,7 @@
         <property name="width_request">300</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="title" translatable="yes">All contacts</property>
+        <property name="title">All contacts</property>
         <child>
           <object class="GtkButton" id="contacts_add_button">
             <property name="visible">True</property>

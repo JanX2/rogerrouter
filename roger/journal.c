@@ -178,16 +178,6 @@ void journal_init_call_icon(void)
 	switch (icon_type) {
 	default:
 	case 0:
-		icon_call_in = gtk_icon_theme_load_icon(icons, "call-stop-symbolic", width, 0, NULL);
-		icon_call_missed = gtk_icon_theme_load_icon(icons, "call-missed-symbolic", width, 0, NULL);
-		icon_call_out = gtk_icon_theme_load_icon(icons, "call-start-symbolic", width, 0, NULL);
-		icon_fax = gtk_icon_theme_load_icon(icons, "folder-documents-symbolic", width, 0, NULL);
-		icon_fax_report = gtk_icon_theme_load_icon(icons, "roger-fax-report-symbolic", width, 0, NULL);
-		icon_voice = gtk_icon_theme_load_icon(icons, "folder-music-symbolic", width, 0, NULL);
-		icon_record = gtk_icon_theme_load_icon(icons, "roger-record-symbolic", width, 0, NULL);
-		icon_blocked = gtk_icon_theme_load_icon(icons, "process-stop-symbolic", width, 0, NULL);
-		break;
-	case 1:
 		icon_call_in = gtk_icon_theme_load_icon(icons, "roger-call-in", width, 0, NULL);
 		icon_call_missed = gtk_icon_theme_load_icon(icons, "roger-call-missed", width, 0, NULL);
 		icon_call_out = gtk_icon_theme_load_icon(icons, "roger-call-out", width, 0, NULL);
@@ -197,7 +187,7 @@ void journal_init_call_icon(void)
 		icon_record = gtk_icon_theme_load_icon(icons, "roger-record", width, 0, NULL);
 		icon_blocked = gtk_icon_theme_load_icon(icons, "roger-call-blocked", width, 0, NULL);
 		break;
-	case 2:
+	case 1:
 		icon_call_in = gtk_icon_theme_load_icon(icons, "roger-call-in-symbolic", width, 0, NULL);
 		icon_call_missed = gtk_icon_theme_load_icon(icons, "roger-call-missed-symbolic", width, 0, NULL);
 		icon_call_out = gtk_icon_theme_load_icon(icons, "roger-call-out-symbolic", width, 0, NULL);
@@ -209,14 +199,14 @@ void journal_init_call_icon(void)
 		break;
 	}
 
-	/*g_assert(icon_call_in != NULL);
+	g_assert(icon_call_in != NULL);
 	g_assert(icon_call_missed != NULL);
 	g_assert(icon_call_out != NULL);
 	g_assert(icon_fax != NULL);
 	g_assert(icon_fax_report != NULL);
 	g_assert(icon_voice != NULL);
 	g_assert(icon_record != NULL);
-	g_assert(icon_blocked != NULL);*/
+	g_assert(icon_blocked != NULL);
 }
 
 GdkPixbuf *journal_get_call_icon(gint type)

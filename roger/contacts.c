@@ -989,6 +989,7 @@ void app_contacts(gchar *number)
 	GtkBuilder *builder;
 	GtkWidget *contacts_header_bar_left;
 	GtkWidget *parent;
+	GtkWidget *placeholder_image;
 
 	/* Only allow one contact window at a time */
 	if (contacts) {
@@ -1024,6 +1025,9 @@ void app_contacts(gchar *number)
 	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(contacts_header_bar_left), address_book_get_name());
 
 	contacts->header_bar_title = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_header_bar_label"));
+	placeholder_image = GTK_WIDGET(gtk_builder_get_object(builder, "placeholder_image"));
+
+	gtk_image_set_from_pixbuf(GTK_IMAGE(placeholder_image), gdk_pixbuf_new_from_resource_at_scale("/org/tabos/roger/images/address-book.svg", 128, 128, TRUE, NULL));
 
 	GtkWidget *contacts_header_bar_right = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_header_bar_right"));
 	gtk_header_bar_set_decoration_layout(GTK_HEADER_BAR(contacts_header_bar_right), ":close");

@@ -1068,9 +1068,8 @@ Caller company</property>
                     <property name="active">0</property>
                     <property name="active_id">0</property>
                     <items>
-                      <item id="0" translatable="yes">Standard</item>
-                      <item id="1" translatable="yes">Colored</item>
-                      <item id="2" translatable="yes">Monochrome</item>
+                      <item id="0" translatable="yes">Colored</item>
+                      <item id="1" translatable="yes">Monochrome</item>
                     </items>
                     <signal name="changed" handler="view_call_type_icons_combobox_changed_cb" after="yes" swapped="no"/>
                   </object>
