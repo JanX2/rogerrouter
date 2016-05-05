@@ -589,13 +589,13 @@ AC_MSG_RESULT($with_gnotification)
 
 AM_CONDITIONAL(WITH_GNOTIFICATION, test "x$with_gnotification" != "xno")
 
-AC_ARG_ENABLE(werror,
-	AS_HELP_STRING([--disable-werror], [don't use gcc's -Werror option when building]))
+#AC_ARG_ENABLE(werror,
+#	AS_HELP_STRING([--disable-werror], [don't use gcc's -Werror option when building]))
 
-if test x"$enable_werror" != xno
-then
-	EXTRA_CFLAGS+="-Werror"
-fi
+#if test x"$enable_werror" != xno
+#then
+#	EXTRA_CFLAGS+="-Werror"
+#fi
 
 dnl ********************************************************************
 dnl Check for coverage tool gcov
