@@ -2,7 +2,6 @@
 <!-- Generated with glade 3.20.0 -->
 <interface>
   <requires lib="gtk+" version="3.10"/>
-  <requires lib="libpeas-gtk" version="1.0"/>
   <object class="GtkListStore" id="actions_liststore">
     <columns>
       <!-- column-name Name -->
@@ -921,6 +920,7 @@ Caller company</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="halign">start</property>
+                <property name="vexpand">True</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -951,7 +951,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="fill">True</property>
+                    <property name="fill">False</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
@@ -1260,7 +1260,7 @@ Caller company</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="halign">start</property>
-                    <property name="label" translatable="yes">Execute actions when</property>
+                    <property name="label" translatable="yes">Execute when</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>
@@ -1273,7 +1273,7 @@ Caller company</property>
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="incoming_call_rings_checkbutton">
-                    <property name="label" translatable="yes">Call rings (incoming)</property>
+                    <property name="label" translatable="yes">Incoming call rings</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
@@ -1290,7 +1290,7 @@ Caller company</property>
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="incoming_call_begins_checkbutton">
-                    <property name="label" translatable="yes">Call begins (incoming)</property>
+                    <property name="label" translatable="yes">Incoming call begins</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
@@ -1306,7 +1306,7 @@ Caller company</property>
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="incoming_call_ends_checkbutton">
-                    <property name="label" translatable="yes">Call ends (incoming)</property>
+                    <property name="label" translatable="yes">Incoming call ends</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
@@ -1322,11 +1322,10 @@ Caller company</property>
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="incoming_call_missed_checkbutton">
-                    <property name="label" translatable="yes">Call missed (incoming)</property>
+                    <property name="label" translatable="yes">Incoming call missed</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <property name="margin_top">12</property>
                     <property name="xalign">0</property>
                     <property name="draw_indicator">True</property>
                     <signal name="toggled" handler="action_checkbutton_toggled_cb" swapped="no"/>
@@ -1339,11 +1338,10 @@ Caller company</property>
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="outgoing_call_dial_checkbutton">
-                    <property name="label" translatable="yes">Call dial (outgoing)</property>
+                    <property name="label" translatable="yes">Outgoing call dial</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <property name="margin_top">12</property>
                     <property name="xalign">0</property>
                     <property name="draw_indicator">True</property>
                     <signal name="toggled" handler="action_checkbutton_toggled_cb" swapped="no"/>
@@ -1356,7 +1354,7 @@ Caller company</property>
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="outgoing_call_begins_checkbutton">
-                    <property name="label" translatable="yes">Call begins (outgoing)</property>
+                    <property name="label" translatable="yes">Outgoing call begins</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
@@ -1372,7 +1370,7 @@ Caller company</property>
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="outgoing_call_ends_checkbutton">
-                    <property name="label" translatable="yes">Call ends (outgoing)</property>
+                    <property name="label" translatable="yes">Outgoing call ends</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
@@ -1384,6 +1382,22 @@ Caller company</property>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">7</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLinkButton">
+                    <property name="label" translatable="yes">Examples</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="relief">none</property>
+                    <property name="uri">https://www.tabos.org/aktionen/</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="pack_type">end</property>
+                    <property name="position">8</property>
                   </packing>
                 </child>
               </object>
@@ -1537,18 +1551,6 @@ Caller company</property>
                 <property name="position">0</property>
               </packing>
             </child>
-            <!--<child>
-              <object class="PeasGtkPluginManager" id="pluginmanager1">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="orientation">vertical</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>-->
           </object>
           <packing>
             <property name="position">4</property>
