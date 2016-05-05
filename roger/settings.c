@@ -1336,6 +1336,13 @@ void app_show_settings(void)
 
 	settings->headerbar = GTK_WIDGET(gtk_builder_get_object(builder, "headerbar"));
 
+	if (roger_uses_headerbar()) {
+		gtk_window_set_titlebar(GTK_WINDOW(settings->window), settings->headerbar);
+		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(settings->headerbar), TRUE);
+	} else {
+		gtk_window_set_title(GTK_WINDOW(settings->window), _("Settings"));
+	}
+
 	/* Router group */
 	settings->host_entry = GTK_WIDGET(gtk_builder_get_object(builder, "host_entry"));
 	g_settings_bind(profile->settings, "host", settings->host_entry, "text", G_SETTINGS_BIND_DEFAULT);
