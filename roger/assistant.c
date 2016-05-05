@@ -264,6 +264,10 @@ static void router_stack_changed_cb(GtkEditable *entry, gpointer user_data)
 {
 	const gchar *name = gtk_stack_get_visible_child_name(GTK_STACK(assistant->router_stack));
 
+	if (!name) {
+		return;
+	}
+
 	/* Check active page */
 	if (!strcmp(name, "manual")) {
 		/* Call router ip entry changed callback to check for a valid ip */
