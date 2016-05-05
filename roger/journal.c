@@ -72,7 +72,7 @@ static gboolean use_header = FALSE;
 
 gboolean roger_uses_headerbar(void)
 {
-	return TRUE;
+	//return TRUE;
 	//return FALSE;
 	return use_header;
 }
@@ -344,7 +344,7 @@ void journal_redraw(void)
 		gtk_widget_show_all(grid);
 		gtk_header_bar_set_custom_title(GTK_HEADER_BAR(status), grid);
 	} else {
-		text = g_strdup_printf(_("Journal - %s (%d call(s), %d:%2.2dh)"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
+		text = g_strdup_printf(_("%s - %d call(s), %d:%2.2dh"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
 		gtk_window_set_title(GTK_WINDOW(journal_win), text);
 	}
 

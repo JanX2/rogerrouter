@@ -1332,9 +1332,13 @@ void phone_item_toggled_cb(GtkCheckMenuItem *item, gpointer user_data)
 	/* If item is active, adjust phone port accordingly and set sensitivity of phone buttons */
 	if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(item))) {
 		gint type = GPOINTER_TO_INT(user_data);
+		gchar *name;
 
 		/* Set active phone port */
 		router_set_phone_port(profile_get_active(), type);
+		name = phone_get_active_name();
+		gtk_window_set_title(GTK_WINDOW(phone_window), name);
+		g_free(name);
 	}
 #endif
 }
