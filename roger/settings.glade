@@ -477,16 +477,6 @@ Caller company</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="label26">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">2</property>
-                    <property name="top_attach">1</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkLabel" id="label27">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -663,6 +653,20 @@ Caller company</property>
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="top_attach">5</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="reload_button_ssd">
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="no_show_all">True</property>
+                    <property name="tooltip_text" translatable="yes">Refresh settings</property>
+                    <property name="image">image2</property>
+                    <signal name="clicked" handler="reload_button_clicked_cb" object="settings" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="top_attach">1</property>
                   </packing>
                 </child>
               </object>
@@ -1837,5 +1841,10 @@ Caller company</property>
         <property name="pack_type">end</property>
       </packing>
     </child>
+  </object>
+  <object class="GtkImage" id="image2">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">view-refresh-symbolic</property>
   </object>
 </interface>

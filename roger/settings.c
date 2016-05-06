@@ -1344,6 +1344,11 @@ void app_show_settings(void)
 	}
 
 	/* Router group */
+	if (!roger_uses_headerbar()) {
+		GtkWidget *reload_button_ssd = GTK_WIDGET(gtk_builder_get_object(builder, "reload_button_ssd"));
+		gtk_widget_show(reload_button_ssd);
+	}
+
 	settings->host_entry = GTK_WIDGET(gtk_builder_get_object(builder, "host_entry"));
 	g_settings_bind(profile->settings, "host", settings->host_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
