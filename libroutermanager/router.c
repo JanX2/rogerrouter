@@ -411,7 +411,6 @@ gboolean router_hangup(struct profile *profile, gint port, const gchar *number)
  */
 gboolean routermanager_router_register(struct router *router)
 {
-	g_debug("Registering router plugin: '%s'", router->name);
 	router_list = g_slist_prepend(router_list, router);
 
 	return TRUE;

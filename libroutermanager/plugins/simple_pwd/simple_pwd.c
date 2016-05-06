@@ -134,6 +134,5 @@ void impl_activate(PeasActivatable *plugin)
  */
 void impl_deactivate(PeasActivatable *plugin)
 {
-	g_debug("%s(): called", __FUNCTION__);
 	//g_key_file_free(simple_pwd_keyfile);
 }

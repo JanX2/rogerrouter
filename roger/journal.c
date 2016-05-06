@@ -1084,7 +1084,7 @@ void journal_window(GApplication *app)
 #else
 	g_object_get(gtk_settings_get_default(), "gtk-dialogs-use-header", &use_header, NULL);
 #endif
-	g_debug("use_header: %d", use_header);
+	g_debug("Use headerbar: %d", use_header);
 
 	journal_init_call_icon();
 
