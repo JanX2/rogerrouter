@@ -171,7 +171,11 @@ static void contacts_update_details(struct contact *contact)
 				phone_image = gtk_image_new_from_icon_name(APP_ICON_CALL, GTK_ICON_SIZE_BUTTON);
 				gtk_button_set_image(GTK_BUTTON(dial), phone_image);
 
-				gchar *css_data = g_strdup_printf(".circular-button { border-radius: 20px; -gtk-outline-radius: 20px; outline-radius: 20px; }");
+#if GTK_CHECK_VERSION(3,20,0)
+				gchar *css_data = g_strdup_printf(".circular-button { border-radius: 20px; -gtk-outline-radius: 20px;}");
+#else
+				gchar *css_data = g_strdup_printf(".circular-button { border-radius: 20px; outline-radius: 20px; }");
+#endif
 				GtkCssProvider *css_provider = gtk_css_provider_get_default();
 				gtk_css_provider_load_from_data(css_provider, css_data, -1, NULL);
 				g_free(css_data);
@@ -1035,6 +1039,16 @@ void app_contacts(gchar *number)
 		GtkWidget *contacts_header_bar_right = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_header_bar_right"));
 		gtk_window_set_titlebar(GTK_WINDOW(contacts->window), header_bar);
 		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(contacts_header_bar_right), TRUE);
+
+		gchar *css_data = g_strdup_printf(".round-corner { border-top-right-radius: 7px; }");
+		GtkCssProvider *css_provider = gtk_css_provider_get_default();
+		gtk_css_provider_load_from_data(css_provider, css_data, -1, NULL);
+		g_free(css_data);
+
+		GtkStyleContext *style_context =  gtk_widget_get_style_context(contacts_header_bar_right);
+		gtk_style_context_add_provider(style_context, GTK_STYLE_PROVIDER(css_provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
+		gtk_style_context_add_class(style_context, "round-corner");
+
 	} else {
 		GtkWidget *grid = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_window_grid"));
 
