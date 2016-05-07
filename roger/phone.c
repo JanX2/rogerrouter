@@ -454,7 +454,7 @@ static gchar *phone_number_type_to_string(enum phone_number_type type)
 		tmp = g_strdup(_("Work"));
 		break;
 	case PHONE_NUMBER_MOBILE:
-		tmp = g_strdup(_("Cell"));
+		tmp = g_strdup(_("Mobile"));
 		break;
 	case PHONE_NUMBER_FAX_HOME:
 		tmp = g_strdup(_("Fax Home"));

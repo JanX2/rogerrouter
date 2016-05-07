@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-06 10:04+0200\n"
+"POT-Creation-Date: 2016-05-06 10:34+0200\n"
 "PO-Revision-Date: 2016-04-25 22:41+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <>\n"
@@ -153,7 +153,7 @@ msgstr "FTP-Passwort"
 #. Error: Could not login to ftp
 #: ../roger/assistant.c:417
 msgid "Please check your ftp user/password."
-msgstr "Bitte überprüfe deine FTP-Zugangsdaten"
+msgstr "Bitte überprüfe Deine FTP-Zugangsdaten"
 
 #. Set title
 #: ../roger/assistant.c:438
@@ -184,13 +184,13 @@ msgid ""
 msgstr ""
 "Zur Verwendung von Roger Router muss ein Router mit der Anwendung verbunden "
 "werden.\n"
-"Der folgende Assistent wird Ihnen dabei helfen diesen Router hinzuzufügen."
+"Der folgende Assistent wird Dir dabei helfen einen Router hinzuzufügen."
 
 #: ../roger/assistant.glade.h:5
 msgid ""
 "A profile is linked to your router and helps you to identify it, e.g. home"
 msgstr ""
-"Ein Profil ist mit deinem Router verbunden und hilft ihn zu identifizieren, "
+"Ein Profil ist mit Deinem Router verbunden und hilft ihn zu identifizieren, "
 "z.B. Zuhause"
 
 #: ../roger/assistant.glade.h:6
@@ -199,7 +199,7 @@ msgstr "Profilname"
 
 #: ../roger/assistant.glade.h:7
 msgid "Create profile"
-msgstr "Profile erstellen"
+msgstr "Profil erstellen"
 
 #: ../roger/assistant.glade.h:9
 msgid ""
@@ -225,7 +225,7 @@ msgstr "Manuell"
 
 #: ../roger/assistant.glade.h:15
 msgid "Enter credentials you are using to login to routers webpage"
-msgstr "Gib die Zugangsdaten ein, die du auf der Router Webseite verwendest"
+msgstr "Gib die Zugangsdaten ein, die Du auf der Router Webseite verwendest"
 
 #: ../roger/assistant.glade.h:16 ../roger/plugins/google/google.c:906
 msgid "User"
@@ -242,7 +242,7 @@ msgstr "Passwort"
 
 #: ../roger/assistant.glade.h:20
 msgid "Enter credentials you are using to login to access FTP of router"
-msgstr "Gib die Zugangsdaten ein, die du für den Router FTP-Zugang verwendest"
+msgstr "Gib die Zugangsdaten ein, die Du für den Router FTP-Zugang verwendest"
 
 #: ../roger/assistant.glade.h:21
 msgid "Finish!"
@@ -264,7 +264,7 @@ msgstr "Anmeldung"
 
 #: ../roger/authenticate.glade.h:2
 msgid "A username and password are being requested by the site"
-msgstr "Ein Benutzer sowie Password werden von der Seite benötigt"
+msgstr "Ein Benutzername und Password werden von der Seite benötigt"
 
 #: ../roger/authenticate.glade.h:3
 msgid "Username"
@@ -278,7 +278,7 @@ msgstr "Privat"
 msgid "Business"
 msgstr "Geschäftlich"
 
-#: ../roger/contacts.c:151 ../roger/contacts.c:673
+#: ../roger/contacts.c:151 ../roger/contacts.c:673 ../roger/phone.c:457
 msgid "Mobile"
 msgstr "Mobil"
 
@@ -319,7 +319,7 @@ msgstr "Bild öffnen"
 #: ../roger/plugins/thunderbird/thunderbird.c:1024
 #: ../roger/plugins/webjournal/webjournal.c:243
 msgid "_Cancel"
-msgstr "Abbrechen"
+msgstr "_Abbrechen"
 
 #: ../roger/contacts.c:505 ../roger/plugins/vcard/vcard.c:1200
 #: ../roger/plugins/thunderbird/thunderbird.c:1024
@@ -362,7 +362,7 @@ msgstr "Nummer"
 
 #: ../roger/contacts.c:689
 msgid "Remove number"
-msgstr "Entferne Nummer"
+msgstr "Nummer entfernen"
 
 #: ../roger/contacts.c:716
 msgid "Remove address"
@@ -382,11 +382,11 @@ msgstr "Stadt"
 
 #: ../roger/contacts.c:751
 msgid "Home phone"
-msgstr "Zuhause Telefon"
+msgstr "Telefon Zuhause"
 
 #: ../roger/contacts.c:752
 msgid "Work phone"
-msgstr "Arbeit Telefon"
+msgstr "Telefon Arbeit"
 
 #: ../roger/contacts.c:753
 msgid "Mobile phone"
@@ -394,11 +394,11 @@ msgstr "Mobiltelefon"
 
 #: ../roger/contacts.c:757
 msgid "Home address"
-msgstr "Adresse zuhause"
+msgstr "Adresse Zuhause"
 
 #: ../roger/contacts.c:758
 msgid "Work address"
-msgstr "Adresse geschäftlich"
+msgstr "Adresse Arbeit"
 
 #: ../roger/contacts.c:765
 msgid "Add detail"
@@ -408,7 +408,7 @@ msgstr "Detail hinzufügen"
 msgid ""
 "Note: Depending on the address book plugin not all information might be saved"
 msgstr ""
-"Hinweis: Je nach Adressbuchplugin können nicht alle Informationen "
+"Hinweis: Je nach Adressbuch-Plugin können nicht alle Informationen "
 "gespeichert werden"
 
 #: ../roger/contacts.c:821
@@ -445,10 +445,14 @@ msgid "No address book plugin selected"
 msgstr "Kein Adressbuch-Plugin ausgewählt"
 
 #: ../roger/contacts.glade.h:3
+msgid "All contacts"
+msgstr "Alle Kontakte"
+
+#: ../roger/contacts.glade.h:4
 msgid "Contact"
 msgstr "Kontakt"
 
-#: ../roger/contacts.glade.h:4
+#: ../roger/contacts.glade.h:5
 msgid "Edit"
 msgstr "Bearbeiten"
 
@@ -509,11 +513,11 @@ msgstr "%s - %d Anrufe, %d:%2.2dh"
 
 #: ../roger/journal.c:480
 msgid "Do you want to delete the router journal?"
-msgstr "Wollen Sie das Journal auf dem Router löschen?"
+msgstr "Willst Du das Journal auf dem Router wirklich löschen?"
 
 #: ../roger/journal.c:534
 msgid "Do you really want to delete the selected entry?"
-msgstr "Wollen Sie den ausgewählten Eintrag wirklich löschen?"
+msgstr "Willst Du den ausgewählten Eintrag wirklich löschen?"
 
 #. Copy phone number
 #: ../roger/journal.c:869 ../roger/journal.c:883
@@ -613,10 +617,6 @@ msgstr ""
 msgid "A call is in progress, hangup first"
 msgstr "Ein Anruf wird gerade geführt, bitte erst auflegen"
 
-#: ../roger/phone.c:457
-msgid "Cell"
-msgstr "Mobil"
-
 #: ../roger/phone.c:460
 msgid "Fax Home"
 msgstr "Fax Zuhause"
@@ -665,7 +665,7 @@ msgstr "Telefone"
 
 #. Title
 #: ../roger/print.c:322
-msgid "Anruferliste"
+msgid "Caller list"
 msgstr "Anruferliste"
 
 #. Page
@@ -696,7 +696,7 @@ msgstr "FEHLGESCHLAGEN"
 
 #: ../roger/print.c:618
 msgid "Fax Transfer Protocol"
-msgstr "Faxübertragungprotokoll"
+msgstr "Faxübertragung-Protokoll"
 
 #: ../roger/print.c:626
 msgid "Date/Time:"
@@ -744,7 +744,7 @@ msgstr "Anmeldepasswort ist gültig"
 
 #: ../roger/settings.c:133
 msgid "Could not connect to FTP. Missing USB storage?"
-msgstr "Konnte nicht mit dem FTP verbinden. Fehlt der USB-Speicher?"
+msgstr "Konnte mich nicht per FTP verbinden. Fehlt der USB-Speicher?"
 
 #: ../roger/settings.c:136
 msgid "FTP password is valid"
@@ -756,11 +756,11 @@ msgstr "FTP-Password ist ungültig"
 
 #: ../roger/settings.c:138
 msgid "Please check your FTP credentials"
-msgstr "Bitte überprüfe deine FTP-Zugangsdaten"
+msgstr "Bitte überprüfe Deine FTP-Zugangsdaten"
 
 #: ../roger/settings.c:156
 msgid "Do you want to reload the router settings and replace your preferences?"
-msgstr "Wollen Sie die Einstellungen vom Router laden und damit ihre ersetzen?"
+msgstr "Willst Du die Einstellungen vom Router laden und damit Deine ersetzen?"
 
 #: ../roger/settings.c:157
 msgid "Update settings"
@@ -864,7 +864,7 @@ msgstr "Regeln"
 #: ../roger/settings.c:609
 #, c-format
 msgid "Do you want to delete the filter '%s'?"
-msgstr "Wollen Sie den Filter '%s' löschen?"
+msgstr "Willst Du den Filter '%s' löschen?"
 
 #: ../roger/settings.c:610
 msgid "Delete filter"
@@ -920,7 +920,7 @@ msgstr "MSN Einstellungen"
 #: ../roger/settings.c:1044
 #, c-format
 msgid "Do you want to delete the action '%s'?"
-msgstr "Wollen Sie die Aktion '%s' löschen?"
+msgstr "Willst Du die Aktion '%s' löschen?"
 
 #: ../roger/settings.c:1045
 msgid "Delete action"
@@ -1153,7 +1153,7 @@ msgstr "Aktionen"
 
 #: ../roger/settings.glade.h:64
 msgid "Choose which plugins should be loaded at startup"
-msgstr "Wähle welche Plugins beim Starten geladen werden"
+msgstr "Wähle welche Plugins beim Starten geladen werden sollen"
 
 #: ../roger/settings.glade.h:65
 msgid "Plugins"
@@ -1447,7 +1447,7 @@ msgstr "Indicator"
 
 #: ../roger/plugins/indicator/roger-plugins-indicator.metainfo.xml.in.h:2
 msgid "Support for AppIndicator"
-msgstr "Unterstützung für den AppIndicator"
+msgstr "Unterstützung für AppIndicator"
 
 #: ../roger/plugins/indicator/indicator.plugin.in.h:1
 msgid "Application Indicator"
@@ -1497,12 +1497,12 @@ msgid ""
 "code in the field below to grant Roger Router access to your Google contact "
 "list."
 msgstr ""
-"Du musst Roger Router den Zugriff auf deine Google Kontakte erlauben.\n"
+"Du musst Roger Router den Zugriff auf Deine Google Kontakte erlauben.\n"
 "\n"
 "Besuche die Google Autorisierungsseite in dem du den unteren Knopf drückst. "
 "Nachdem du den Zugriff bestätigst hast, bekommst du einen "
 "Autorisierungscode. Diesen gibst du im unteren Feld ein und erlaubst so "
-"Roger Router den Zugriff auf deine Google Kontakte."
+"Roger Router den Zugriff auf Deine Google Kontakte."
 
 #: ../roger/plugins/google/google.c:108
 msgid "_OK"
@@ -1687,7 +1687,7 @@ msgstr "Unterstützung um das Journal als HTML-Datei zu exportieren"
 
 #: ../roger/plugins/webjournal/webjournal.plugin.in.h:2
 msgid "Store journal as html file on a server"
-msgstr "Speicher das Journal als HTML-Datei auf einem Server"
+msgstr "Speichert das Journal als HTML-Datei auf einem Server"
 
 #: ../roger/plugins/kwallet/roger-plugins-kwallet.metainfo.xml.in.h:2
 msgid "Support for KDE4 Wallet"
@@ -1766,7 +1766,7 @@ msgstr "FTP-Anmeldung fehlgeschlagen"
 #: ../libroutermanager/plugins/fritzbox/firmware-common.c:634
 #: ../libroutermanager/plugins/fritzbox/firmware-common.c:761
 msgid "Please check your ftp credentials"
-msgstr "Bitte überprüfe deine FTP-Zugangsdaten"
+msgstr "Bitte überprüfe Deine FTP-Zugangsdaten"
 
 #: ../libroutermanager/plugins/areacodes_global/areacodes_global.plugin.in.h:1
 msgid "Areacodes (Global)"
@@ -1786,7 +1786,7 @@ msgid ""
 "DIAL)"
 msgstr ""
 "Anrufmonitor überwacht den Telnetport 1012 für Anrufstatusmeldungen (RING/"
-"CALLDIAL)"
+"CALL/DIAL)"
 
 #: ../libroutermanager/plugins/fritzbox/fritzbox.plugin.in.h:1
 msgid "AVM FRITZ!Box"
@@ -1838,9 +1838,6 @@ msgstr ""
 #: ../org.tabos.roger.appdata.xml.in.h:4
 msgid "Journal view of all calls"
 msgstr "Journalansicht aller Anrufe"
-
-#~ msgid "All contacts"
-#~ msgstr "Alle Kontakte"
 
 #~ msgid "Standard"
 #~ msgstr "Standard"
