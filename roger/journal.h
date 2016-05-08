@@ -52,6 +52,10 @@ GSList *journal_get_list(void);
 GtkWidget *journal_get_window(void);
 gboolean roger_uses_headerbar(void);
 
+void journal_clear(void);
+void journal_init_call_icon(void);
+void journal_redraw(void);
+
 G_END_DECLS
 
 #endif
