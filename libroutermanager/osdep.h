@@ -26,7 +26,7 @@
 #endif
 
 #ifdef G_OS_UNIX
-#ifdef __MACOSX__
+#ifdef __APPLE__
 #define OS_OPEN "open"
 #define APP_USER_DIR "." APP_NAME
 /* work around for warnings where gtk-mac-integration expects a label to have an accel closure */
