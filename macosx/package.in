@@ -10,6 +10,6 @@ echo SVN version: $svn
 #exit
 VERSION=$package_version
 gtk-mac-bundler roger.bundle
-pkgbuild --install-location /Applications --component roger.app --version $VERSION --scripts scripts Roger\ Router\ -\ ${VERSION}.pkg
-rm -rf roger.app
+pkgbuild --install-location /Applications --component RogerRouter.app --version $VERSION --scripts scripts Roger\ Router\ -\ ${VERSION}.pkg
+rm -rf RogerRouter.app
 

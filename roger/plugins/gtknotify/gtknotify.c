@@ -174,6 +174,7 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 	gint line = 0;
 	gint position = 0;
 
+	g_debug("%s(): type = %d", __FUNCTION__, connection->type);
 	/* Get notification numbers */
 	if (connection->type & CONNECTION_TYPE_OUTGOING) {
 		numbers = g_settings_get_strv(notification_gtk_settings, "outgoing-numbers");
@@ -228,7 +229,9 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 	/* If its a disconnect or a connect, close previous notification window */
 	if ((connection->type & CONNECTION_TYPE_DISCONNECT) || (connection->type & CONNECTION_TYPE_CONNECT)) {
 		ringtone_stop();
+		g_debug("%s(): notification = %p", __FUNCTION__, connection->notification);
 		if (connection->notification) {
+			g_debug("%s(): destroy notification = %p", __FUNCTION__, connection->notification);
 			gtk_widget_destroy(connection->notification);
 			connection->notification = NULL;
 		}

@@ -29,17 +29,18 @@ export GTK_DATA_PREFIX="$bundle_res"
 export GTK_EXE_PREFIX="$bundle_res"
 export GTK_PATH="$bundle_res"
 
-export GTK3_INI_FILES="$bundle_etc/gtk-3.0/settings.ini"
-export GTK_IM_MODULE_FILE="$bundle_etc/gtk-3.0/gtk.immodules"
-export GDK_PIXBUF_MODULE_FILE="$bundle_etc/gtk-3.0/gdk-pixbuf.loaders"
+# PANGO_* is no longer needed for pango >= 1.38
 export PANGO_RC_FILE="$bundle_etc/pango/pangorc"
-export PANGO_LIBDIR="$bundle_lib"
 export PANGO_SYSCONFDIR="$bundle_etc"
+export PANGO_LIBDIR="$bundle_lib"
 
-# Add own bin path to path
-export PATH=$PATH:$bundle_bin
+export GDK_PIXBUF_MODULE_FILE="$bundle_lib/gdk-pixbuf-2.0/2.10.0/loaders.cache"
+if [ `uname -r | cut -d . -f 1` -ge 10 ]; then
+    export GTK_IM_MODULE_FILE="$bundle_etc/gtk-3.0/gtk.immodules"
+fi
 
-APP=roger
+
+APP=RogerRouter
 I18NDIR="$bundle_data/locale"
 # Set the locale-related variables appropriately:
 unset LANG LC_MESSAGES LC_MONETARY LC_COLLATE

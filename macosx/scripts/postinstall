@@ -3,7 +3,7 @@
 # redirect all output to stdout and stderr to /tmp/roger.log
 exec >/tmp/roger.log 2>&1
 
-install_path=$2/roger.app
+install_path=$2/RogerRouter.app
 
 echo roger postinstall script, trying to install printer
 echo install_path = ${install_path}
