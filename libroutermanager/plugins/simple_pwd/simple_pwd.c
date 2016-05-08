@@ -46,7 +46,7 @@ static void simple_pwd_store_password(struct profile *profile, const gchar *name
 	gchar *enc_password = password_encode(password);
 
 	if (!simple_pwd_keyfile) {
-		return NULL;
+		return;
 	}
 
 	g_key_file_set_string(simple_pwd_keyfile, simple_pwd_group, name, enc_password);

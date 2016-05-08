@@ -81,7 +81,7 @@ case "$host" in
 		WIN32=no
 		macos=no
 		OS_CFLAGS="-DROUTERMANAGER_PLUGINS='\"\$(libdir)/routermanager/\"' -DAPP_PLUGINS='\"\$(libdir)/roger/\"' -DAPP_DATA='\"\$(datadir)/roger/\"' -DAPP_LOCALE='\"\$(localedir)\"' -Wall"
-		OS_LIBS="-rdynamic"
+		OS_LIBS="-rdynamic -lcrypt"
 	;;
 esac
 AC_SUBST(OS_CFLAGS)

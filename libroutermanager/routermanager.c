@@ -37,7 +37,7 @@
 #include <libroutermanager/password.h>
 
 #ifdef __APPLE__
-#include <gtkmacintegration-gtk3/gtkosxapplication.h>
+#include <gtkmacintegration/gtkosxapplication.h>
 #endif
 
 /** Private data pointing to the plugin directory */

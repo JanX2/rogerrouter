@@ -21,7 +21,10 @@
 
 #include <unistd.h>
 #include <stdlib.h>
+
+#ifndef __MAXOSX__
 #include <crypt.h>
+#endif
 
 #include <string.h>
 

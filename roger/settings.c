@@ -24,6 +24,7 @@
 #include <gtk/gtk.h>
 
 #include <libpeas/peas.h>
+#include <libpeas-gtk/peas-gtk.h>
 
 #include <libroutermanager/profile.h>
 #include <libroutermanager/router.h>
@@ -1458,7 +1459,7 @@ void app_show_settings(void)
 	GtkWidget *tmp = GTK_WIDGET(gtk_builder_get_object(builder, "plugins_box"));
 	PeasEngine *peas = peas_engine_get_default();
 	GtkWidget *manager = peas_gtk_plugin_manager_new(peas);
-	gtk_box_pack_start(GTK_BOX(tmp), manager, TRUE, TRUE, 6);
+	gtk_box_pack_start(GTK_BOX(tmp), GTK_WIDGET(manager), TRUE, TRUE, 0);
 
 	/* Extended group */
 	settings->audio_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "audio_plugin_combobox"));
