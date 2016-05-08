@@ -84,7 +84,7 @@ static int osxab_read_book(void) {
 		CFTypeRef addresses = ABRecordCopyValue(person, kABAddressProperty);
 		CFTypeRef phones = ABRecordCopyValue(person, kABPhoneProperty);
 		CFTypeRef uid = ABRecordCopyUniqueId(person);
-		CFStringRef lastname_cstr;
+		gchar *lastname_cstr;
 		struct contact *contact;
 
 		if (!firstName && !lastName) {
@@ -113,7 +113,7 @@ static int osxab_read_book(void) {
 				CFStringRef city = CFDictionaryGetValue(an_address, kABAddressCityKey);
 				CFStringRef zip = CFDictionaryGetValue(an_address, kABAddressZIPKey);
 				struct contact_address *address = g_slice_new0(struct contact_address);
-				CFStringRef tmp;
+				gchar *tmp;
 
 				address->type = CFStringCompare(label, kABHomeLabel, 0);
 				
@@ -312,6 +312,8 @@ static gboolean osxab_save_contact(struct contact *contact)
 
 	ABSave(ab);
 	osxab_reload_contacts();
+
+	return TRUE;
 }
 
 gchar *osxab_get_active_book_name(void)

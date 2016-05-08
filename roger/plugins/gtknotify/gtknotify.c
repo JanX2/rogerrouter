@@ -41,6 +41,7 @@
 #include <roger/phone.h>
 #include <roger/uitools.h>
 #include <roger/icons.h>
+#include <roger/settings.h>
 
 #define ROUTERMANAGER_TYPE_NOTIFICATION_GTK_PLUGIN (routermanager_notification_gtk_plugin_get_type ())
 #define ROUTERMANAGER_NOTIFICATION_GTK_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_NOTIFICATION_GTK_PLUGIN, RouterManagerNotificationGtkPlugin))

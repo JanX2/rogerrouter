@@ -40,6 +40,8 @@
 #include <roger/main.h>
 #include <roger/application.h>
 #include <roger/phone.h>
+#include <roger/settings.h>
+#include <roger/uitools.h>
 
 #define ROUTERMANAGER_TYPE_GNOTIFICATION_PLUGIN (routermanager_gnotification_plugin_get_type ())
 #define ROUTERMANAGER_GNOTIFICATION_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_GNOTIFICATION_PLUGIN, RouterManagerGNotificationPlugin))
