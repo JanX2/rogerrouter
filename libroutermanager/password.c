@@ -19,10 +19,13 @@
 
 #define _XOPEN_SOURCE 600
 
+#include <config.h>
+#include <glib.h>
+
 #include <unistd.h>
 #include <stdlib.h>
 
-#ifndef __MAXOSX__
+#ifndef	__APPLE__
 #include <crypt.h>
 #endif
 
