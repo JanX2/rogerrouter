@@ -1632,7 +1632,7 @@ msgstr "GNotification"
 
 #: ../roger/plugins/gnotification/roger-plugins-gnotify.metainfo.xml.in.h:2
 msgid "Adds support for GLIB Notifications"
-msgstr "Fügt Unterstützung für die GLIB Benachrichtigungen hinzu"
+msgstr "Unterstützung für die GLIB Benachrichtigungen"
 
 #: ../roger/plugins/notification/notification.c:121
 #: ../roger/plugins/notification/notification.c:245
