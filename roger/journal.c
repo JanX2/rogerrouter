@@ -1038,6 +1038,31 @@ void contacts_add_detail_activated(GSimpleAction *action, GVariant *parameter, g
 	contacts_add_detail(name + 14);
 }
 
+void journal_column_restore_default(GtkMenuItem *item, gpointer user_data)
+{
+	gint index;
+
+	for (index = JOURNAL_COL_DATETIME; index <= JOURNAL_COL_DURATION; index++) {
+		GtkTreeViewColumn *column;
+		gchar *key;
+
+		key = g_strdup_printf("col-%d-width", index);
+		g_settings_set_uint(app_settings, key, 0);
+		g_free(key);
+
+		key = g_strdup_printf("col-%d-visible", index);
+		g_settings_set_boolean(app_settings, key, TRUE);
+		g_free(key);
+
+		column = gtk_tree_view_get_column(GTK_TREE_VIEW(user_data), index);
+		gtk_tree_view_column_set_visible(column, TRUE);
+		gtk_tree_view_column_set_fixed_width(column, -1);
+	}
+
+	journal_clear();
+	journal_redraw();
+}
+
 void journal_window(GApplication *app)
 {
 	GtkWidget *window, *grid, *scrolled;
@@ -1251,9 +1276,10 @@ void journal_window(GApplication *app)
 	button = gtk_tree_view_column_get_button(column);
 	g_signal_connect(button, "button-press-event", G_CALLBACK(journal_column_header_button_pressed_cb), header_menu);
 
-	//column_item = gtk_check_menu_item_new_with_label(title);
-	//g_object_bind_property(column, "visible", column_item, "active", G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
-	//gtk_menu_shell_append(GTK_MENU_SHELL(header_menu), column_item);
+	column_item = gtk_check_menu_item_new_with_label(title);
+	gtk_widget_set_sensitive(column_item, FALSE);
+	g_object_bind_property(column, "visible", column_item, "active", G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
+	gtk_menu_shell_append(GTK_MENU_SHELL(header_menu), column_item);
 
 	/* Add all the other columns renderer */
 	for (index = JOURNAL_COL_DATETIME; index <= JOURNAL_COL_DURATION; index++) {
@@ -1302,6 +1328,13 @@ void journal_window(GApplication *app)
 		g_object_bind_property(column, "visible", column_item, "active", G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
 		gtk_menu_shell_append(GTK_MENU_SHELL(header_menu), column_item);
 	}
+
+	column_item = gtk_separator_menu_item_new();
+	gtk_menu_shell_append(GTK_MENU_SHELL(header_menu), column_item);
+
+	column_item = gtk_menu_item_new_with_label(_("Restore default"));
+	g_signal_connect(G_OBJECT(column_item), "activate", G_CALLBACK(journal_column_restore_default), journal_view);
+	gtk_menu_shell_append(GTK_MENU_SHELL(header_menu), column_item);
 
 	gtk_widget_show_all(header_menu);
 

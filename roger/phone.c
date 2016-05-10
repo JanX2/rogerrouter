@@ -1550,7 +1550,7 @@ GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struc
 		gtk_container_add(GTK_CONTAINER(window), grid);
 		state->header_bar = header;
 	} else {
-		gchar *title = g_strdup_printf("%s - %s", phone_devices[state->type]->get_title(), _("Time: 00:00:00"));
+		gchar *title = g_strdup_printf("%s", phone_devices[state->type]->get_title());
 		gtk_window_set_title(GTK_WINDOW(window), title);
 		GtkWidget *main_grid = gtk_grid_new();
 		gtk_widget_set_hexpand(menu_button, FALSE);
