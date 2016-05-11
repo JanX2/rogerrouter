@@ -1058,9 +1058,6 @@ void journal_column_restore_default(GtkMenuItem *item, gpointer user_data)
 		gtk_tree_view_column_set_visible(column, TRUE);
 		gtk_tree_view_column_set_fixed_width(column, -1);
 	}
-
-	journal_clear();
-	journal_redraw();
 }
 
 void journal_window(GApplication *app)
