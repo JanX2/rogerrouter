@@ -552,7 +552,7 @@ void journal_button_delete_clicked_cb(GtkWidget *button, GtkWidget *view)
 
 void journal_add_contact(struct call *call)
 {
-	app_contacts(call->remote->number);
+	app_contacts(call->remote);
 }
 
 void add_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)

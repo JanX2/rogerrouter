@@ -48,7 +48,7 @@ struct contacts {
 	GtkWidget *details_placeholder_box;
 
 	struct contact *tmp_contact;
-	gchar *new_number;
+	struct contact *new_contact;
 };
 
 static struct contacts *contacts = NULL;
@@ -851,20 +851,32 @@ void contacts_save_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 
 void contact_editor(struct contact *contact)
 {
-	gchar *new_number = contacts->new_number;
-
 	contacts->tmp_contact = contact_dup(contact);
 
 	gtk_widget_set_visible(contacts->cancel_button, TRUE);
 	gtk_widget_set_visible(contacts->save_button, TRUE);
 	gtk_widget_set_visible(contacts->edit_button, FALSE);
 
-	if (new_number) {
+	if (contacts->new_contact) {
 		struct phone_number *phone_number = g_malloc0(sizeof(struct phone_number));
 
-		phone_number->number = g_strdup(new_number);
+		phone_number->number = g_strdup(contacts->new_contact->number);
 
 		contacts->tmp_contact->numbers = g_slist_append(contacts->tmp_contact->numbers, phone_number);
+
+		if (EMPTY_STRING(contacts->tmp_contact->name) && !EMPTY_STRING(contacts->new_contact->name)) {
+			contacts->tmp_contact->name = g_strdup(contacts->new_contact->name);
+		}
+		if (!contacts->tmp_contact->addresses && !EMPTY_STRING(contacts->new_contact->street)) {
+			struct contact_address *address = g_malloc(sizeof(struct contact_address));
+
+			address->type = 0;
+			address->street = g_strdup(contacts->new_contact->street);
+			address->city = g_strdup(contacts->new_contact->city);
+			address->zip = g_strdup(contacts->new_contact->zip);
+
+			contacts->tmp_contact->addresses = g_slist_append(contacts->tmp_contact->addresses, address);
+		}
 	}
 
 	refresh_edit_dialog(contacts->tmp_contact);
@@ -953,9 +965,9 @@ gboolean contacts_window_delete_event_cb(GtkWidget *widget, GdkEvent event, gpoi
 	contacts->window = NULL;
 	contacts->active_user_widget = NULL;
 
-	if (contacts->new_number) {
-		g_free(contacts->new_number);
-		contacts->new_number = NULL;
+	if (contacts->new_contact) {
+		contact_free(contacts->new_contact);
+		contacts->new_contact = NULL;
 	}
 
 	g_free(contacts);
@@ -970,24 +982,24 @@ static void contacts_contacts_changed_cb(AppObject *object, gpointer user_data)
 	contacts_update_list();
 }
 
-void contacts_set_number(struct contacts *contacts, gchar *number)
+void contacts_set_contact(struct contacts *contacts, struct contact *contact)
 {
-	if (contacts->new_number) {
-		g_free(contacts->new_number);
-		contacts->new_number = NULL;
+	if (contacts->new_contact) {
+		contact_free(contacts->new_contact);
+		contacts->new_contact = NULL;
 	}
 
-	if (!number) {
+	if (!contact) {
 		return;
 	}
 
-	contacts->new_number = g_strdup(number);
+	contacts->new_contact = contact_dup(contact);
 }
 
 /**
  * \brief Contacts window
  */
-void app_contacts(gchar *number)
+void app_contacts(struct contact *contact)
 {
 	GtkWidget *header_bar;
 	GtkBuilder *builder;
@@ -1008,7 +1020,7 @@ void app_contacts(gchar *number)
 	}
 
 	contacts = g_malloc0(sizeof(struct contacts));
-	contacts_set_number(contacts, number);
+	contacts_set_contact(contacts, contact);
 
 	parent = journal_get_window();
 
