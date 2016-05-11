@@ -41,8 +41,8 @@
 			<prefix>0</prefix>
 			<url>http://www.11880.com/rueckwaertssuche/%NUMBER%</url>
 			<name mode="parser">h1 itemprop name</name>
-			<street mode="parser">div itemprop streetAddress</street>
-			<city mode="parser" zip="5">div itemprop addressLocality</city>
+			<street mode="parser">span itemprop streetAddress</street>
+			<city mode="parser" zip="5">span itemprop addressLocality</city>
 		</lookup>
 		<lookup>
 			<service>klicktel.de</service>

@@ -79,9 +79,18 @@ static gboolean extract_element(gchar **in, xmlNode *a_node, gchar **out)
 				gchar *type = (gchar*)xmlGetProp(cur_node, (xmlChar*)in[1]);
 
 				if (type && !strcmp(type, in[2])) {
+					gchar *tmp;
 					xmlChar *name = xmlNodeListGetString(cur_node->doc, cur_node->children, TRUE);
-					*out = g_strdup(g_strstrip((gchar*)name));
-					printf("-> %s\n", *out);
+					GRegex *whitespace = g_regex_new("[ ]{2,}", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
+
+					//g_debug("%s(): name = '%s'", __FUNCTION__, name);
+					tmp = g_regex_replace_literal(whitespace, (gchar*) name, -1, 0, " ", 0, NULL);
+					//g_debug("%s(): tmp = '%s'", __FUNCTION__, tmp);
+
+					*out = g_strdup(g_strstrip(tmp));
+					g_free(tmp);
+
+					//printf("%s(): %s\n", __FUNCTION__, *out);
 					xmlFree(name);
 					return TRUE;
 				}
@@ -253,6 +262,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 			gchar *tmp_file = g_strdup_printf("rl-%s-%s.html", lookup->service, number);
 			log_save_data(tmp_file, rdata, len);
 			g_free(tmp_file);
+			g_debug("%s(): Could not extract name", __FUNCTION__);
 #endif
 			goto end;
 		}
@@ -262,6 +272,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 			gchar *tmp_file = g_strdup_printf("rl-%s-%s.html", lookup->service, number);
 			log_save_data(tmp_file, rdata, len);
 			g_free(tmp_file);
+			g_debug("%s(): Could not extract street", __FUNCTION__);
 #endif
 			goto end;
 		}
@@ -271,6 +282,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 			gchar *tmp_file = g_strdup_printf("rl-%s-%s.html", lookup->service, number);
 			log_save_data(tmp_file, rdata, len);
 			g_free(tmp_file);
+			g_debug("%s(): Could not extract city", __FUNCTION__);
 #endif
 			goto end;
 		}
