@@ -327,8 +327,10 @@ static void app_init(GtkApplication *app)
 	accels[0] = "<Primary>a";
 	gtk_application_set_accels_for_action(app, "app.assistant", accels);
 
+#if GTK_CHECK_VERSION(3,20,0)
 	accels[0] = "<Primary>F1";
 	gtk_application_set_accels_for_action(app, "app.shortcuts", accels);
+#endif
 
 	accels[0] = "<Primary>q";
 	accels[1] = "<Primary>w";
