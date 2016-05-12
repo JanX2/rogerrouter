@@ -25,6 +25,7 @@
 
 /** Internal minium log level, starting with DEBUG */
 static GLogLevelFlags log_level = G_LOG_LEVEL_DEBUG;
+static GFileOutputStream *stream = NULL;
 
 /**
  * \brief Save log data to temp directory (if log level is set to DEBUG)
@@ -56,34 +57,40 @@ void log_save_data(gchar *name, const gchar *data, gsize len)
 static void log_func(const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data)
 {
 	GDateTime *datetime = g_date_time_new_now_local();
+	GString *output;
 	gchar *time = g_date_time_format(datetime, "%H:%M:%S");
+	gsize len;
 
-	g_print("%s ", time);
+	output = g_string_new(time);
 	g_free(time);
 	g_date_time_unref(datetime);
 
 	if (log_domain) {
-		g_print("%s:", log_domain);
+		g_string_append_printf(output, " %s:", log_domain);
 	}
 
 	switch (log_level) {
 	case G_LOG_LEVEL_ERROR:
-		g_print("Error: ");
+		g_string_append(output, " Error: ");
 		break;
 	case G_LOG_LEVEL_CRITICAL:
-		g_print("Critical: ");
+		g_string_append(output, " Critical: ");
 		break;
 	case G_LOG_LEVEL_WARNING:
-		g_print("Warning: ");
+		g_string_append(output, " Warning: ");
 		break;
 	case G_LOG_LEVEL_DEBUG:
-		g_print("Debug: ");
+		g_string_append(output, " Debug: ");
 		break;
 	default:
 		break;
 	}
 
-	g_print("%s\n", message);
+	g_string_append_printf(output, "%s\n", message);
+
+	g_print("%s", output->str);
+	g_output_stream_printf(G_OUTPUT_STREAM(stream), &len, NULL, NULL, "%s", output->str);
+	g_string_free(output, TRUE);
 }
 
 /**
@@ -91,9 +98,23 @@ static void log_func(const gchar *log_domain, GLogLevelFlags log_level, const gc
  */
 void log_init(gboolean debug)
 {
+	GFile *file;
+	gchar *filename;
+
 	if (!debug) {
 		return;
 	}
+
+	filename = g_build_filename(g_get_user_cache_dir(), "routermanager", "debug.log", NULL);
+
+	gchar *dirname = g_path_get_dirname(filename);
+	g_mkdir_with_parents(dirname, 0700);
+	g_free(dirname);
+
+	file = g_file_new_for_path(filename);
+	g_free(filename);
+
+	stream = g_file_replace(file, NULL, TRUE, G_FILE_CREATE_NONE, NULL, NULL);
 
 	g_log_set_default_handler(log_func, NULL);
 }
@@ -104,6 +125,7 @@ void log_init(gboolean debug)
 void log_shutdown(void)
 {
 	g_debug("Shutdown logging");
+	g_output_stream_close(G_OUTPUT_STREAM(stream), NULL, NULL);
 	g_log_set_default_handler(NULL, NULL);
 }
 
