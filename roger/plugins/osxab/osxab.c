@@ -73,8 +73,19 @@ static char *cstring(CFStringRef s)
  */
 static int osxab_read_book(void) {
 	ABAddressBookRef ab = ABGetSharedAddressBook();
-	CFArrayRef entries = ABCopyArrayOfAllPeople(ab);
-	CFIndex len = CFArrayGetCount(entries);
+	CFArrayRef entries;
+	CFIndex len;
+
+	if (!ab) {
+		return -1;
+	}
+
+	entries = ABCopyArrayOfAllPeople(ab);
+	if (!entries) {
+		return -1;
+	}
+
+	len = CFArrayGetCount(entries);
 
 	for (int i = 0; i < len; i++) {
 		ABPersonRef person = (ABPersonRef) CFArrayGetValueAtIndex(entries, i);
@@ -126,7 +137,6 @@ static int osxab_read_book(void) {
 				contact->addresses = g_slist_prepend(contact->addresses, address);
 			}
 		}
-            
 
 		if (phones) {
 			for (int j = 0; j < ABMultiValueCount((ABMultiValueRef)phones); j++) {
