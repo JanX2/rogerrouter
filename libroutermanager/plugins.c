@@ -98,7 +98,7 @@ void plugins_init(void)
 	}
 
 	/* In addition to C we want to support python plugins */
-	peas_engine_enable_loader(engine, "python");
+	peas_engine_enable_loader(engine, "python3");
 
 	/* Traverse through detected plugins and loaded builtin plugins now */
 	for (list = peas_engine_get_plugin_list(engine); list != NULL; list = list->next) {
