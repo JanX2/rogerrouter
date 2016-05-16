@@ -55,7 +55,8 @@ struct cmd_line_option_state {
 	gboolean quit;
 	gchar *number;
 	gboolean assistant;
-  	gchar *profile;
+	gchar *profile;
+	gchar *crash;
 };
 
 static struct cmd_line_option_state option_state;
@@ -438,6 +439,7 @@ const GOptionEntry all_options[] = {
 	{"version", 'v', G_OPTION_FLAG_NO_ARG | G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_CALLBACK, option_version_cb, NULL, NULL},
 	{"assistant", 'a', 0, G_OPTION_ARG_NONE, &option_state.assistant, "Start assistant", NULL},
 	{"profile", 'p', 0, G_OPTION_ARG_STRING, &option_state.profile, "Profile name", NULL},
+	{"crash", 0, 0, G_OPTION_ARG_STRING, &option_state.crash, "Crash parameters", NULL},
 	{NULL}
 };
 
@@ -493,6 +495,8 @@ static gint application_command_line_cb(GtkApplication *app, GApplicationCommand
 
 	g_debug("startup_called: %d", startup_called);
 	if (startup_called != FALSE) {
+		crash_install_handlers();
+
 		app_init(app);
 		gdk_notify_startup_complete();
 		startup_called = FALSE;

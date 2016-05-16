@@ -51,6 +51,7 @@ roger_core_SOURCES =\
 	assistant.h\
 	contacts.c\
 	contacts.h\
+	crash.c\
 	fax.c\
 	fax.h\
 	icons.c\

@@ -28,6 +28,7 @@
 
 #include <roger/application.h>
 #include <roger/main.h>
+#include <roger/crash.h>
 
 #include <config.h>
 
@@ -56,11 +57,27 @@ int main(int argc, char **argv)
 {
 #endif
 	int status;
+	int idx;
 
 	/* Set local bindings */
 	bindtextdomain(GETTEXT_PACKAGE, get_directory(APP_LOCALE));
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);
+
+	/* Checking for crash parameter here is very important */
+	for (idx = 0; idx < argc; idx++) {
+		gchar *crash_param = NULL;
+		if (!strcmp(argv[idx], "--crash")) {
+			if (idx + 1 < argc) {
+				crash_param = argv[idx + 1];
+			}
+
+			gtk_init(&argc, &argv);
+			crash_main(crash_param);
+			gtk_main();
+			exit(0);
+		}
+	}
 
 	roger_app = application_new();
 

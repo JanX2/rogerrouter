@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-13 17:49+0200\n"
+"POT-Creation-Date: 2016-05-16 21:02+0200\n"
 "PO-Revision-Date: 2016-04-25 22:41+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <>\n"
@@ -35,79 +35,79 @@ msgstr "Zeit: %2.2d:%2.2d:%2.2d"
 msgid "Time: 00:00:00"
 msgstr "Zeit: 00:00:00"
 
-#: ../roger/application.c:144
+#: ../roger/application.c:145
 #, c-format
 msgid "A username and password are being requested by the site %s"
 msgstr "Ein Benutzername sowie Passwort werden von der Seite %s benötigt"
 
 #. Contacts
-#: ../roger/application.c:353 ../roger/contacts.c:1067
+#: ../roger/application.c:354 ../roger/contacts.c:1067
 #: ../roger/plugins/statusicon/gtk.c:203
 #: ../roger/plugins/indicator/indicator.c:223
 msgid "Contacts"
 msgstr "Kontakte"
 
 #. Phone
-#: ../roger/application.c:354 ../roger/phone.c:144
+#: ../roger/application.c:355 ../roger/phone.c:144
 #: ../roger/plugins/statusicon/gtk.c:208
 #: ../roger/plugins/indicator/indicator.c:228
 msgid "Phone"
 msgstr "Telefon"
 
 #. Functions - Copy IP adress
-#: ../roger/application.c:357 ../roger/plugins/statusicon/gtk.c:69
+#: ../roger/application.c:358 ../roger/plugins/statusicon/gtk.c:69
 #: ../roger/plugins/indicator/indicator.c:73
 msgid "Copy IP address"
 msgstr "IP-Adresse kopieren"
 
 #. Functions - Reconnect
-#: ../roger/application.c:358 ../roger/plugins/statusicon/gtk.c:74
+#: ../roger/application.c:359 ../roger/plugins/statusicon/gtk.c:74
 #: ../roger/plugins/indicator/indicator.c:78
 msgid "Reconnect"
 msgstr "Neu verbinden"
 
 #. Functions
-#: ../roger/application.c:359 ../roger/plugins/statusicon/gtk.c:219
+#: ../roger/application.c:360 ../roger/plugins/statusicon/gtk.c:219
 #: ../roger/plugins/indicator/indicator.c:240
 msgid "Functions"
 msgstr "Funktionen"
 
-#: ../roger/application.c:361
+#: ../roger/application.c:362
 msgid "Assistant"
 msgstr "Assistent"
 
 #. Preferences
-#: ../roger/application.c:364 ../roger/plugins/statusicon/gtk.c:229
+#: ../roger/application.c:365 ../roger/plugins/statusicon/gtk.c:229
 #: ../roger/plugins/indicator/indicator.c:250
 msgid "Preferences"
 msgstr "Einstellungen"
 
-#: ../roger/application.c:370
+#: ../roger/application.c:371
 msgid "Keyboard Shortcuts"
 msgstr "Tastenkürzel"
 
-#: ../roger/application.c:374
+#: ../roger/application.c:375
 msgid "Donate"
 msgstr "Spenden"
 
-#: ../roger/application.c:375
+#: ../roger/application.c:376
 msgid "Forum"
 msgstr "Forum"
 
 #. Help
-#: ../roger/application.c:376 ../roger/plugins/statusicon/gtk.c:238
+#: ../roger/application.c:377 ../roger/plugins/statusicon/gtk.c:238
 #: ../roger/plugins/indicator/indicator.c:259
 msgid "Help"
 msgstr "Hilfe"
 
 #. About
-#: ../roger/application.c:378 ../roger/plugins/statusicon/gtk.c:243
+#: ../roger/application.c:379 ../roger/plugins/statusicon/gtk.c:243
 #: ../roger/plugins/indicator/indicator.c:264
 msgid "About"
 msgstr "Info"
 
 #. Quit
-#: ../roger/application.c:379 ../roger/assistant.c:517 ../roger/assistant.c:644
+#: ../roger/application.c:380 ../roger/assistant.c:517 ../roger/assistant.c:644
 #: ../roger/plugins/statusicon/gtk.c:252
 #: ../roger/plugins/indicator/indicator.c:273
 msgid "Quit"
@@ -293,7 +293,8 @@ msgstr "Geschäftliches Fax"
 msgid "Pager"
 msgstr "Pager"
 
-#: ../roger/contacts.c:163 ../roger/phone.c:466
+#: ../roger/contacts.c:163 ../roger/crash.c:254 ../roger/crash.c:271
+#: ../roger/phone.c:466
 msgid "Unknown"
 msgstr "Unbekannt"
 
@@ -496,6 +497,36 @@ msgstr "Status:"
 msgid "Fax"
 msgstr "Fax"
 
+#: ../roger/crash.c:319
+msgid "Roger Router has crashed"
+msgstr "Roger Router ist abgestürzt"
+
+#: ../roger/crash.c:334
+#, c-format
+msgid ""
+"%s.\n"
+"Please file a bug report and include the information below."
+msgstr ""
+"%s.\n"
+"Bitte erstelle einen Fehlerbericht und füge die unteren Informationen hinzu."
+
+#: ../roger/crash.c:339
+msgid "Debug log"
+msgstr "Debug Log"
+
+#: ../roger/crash.c:379
+msgid "Close"
+msgstr "Schließen"
+
+#: ../roger/crash.c:384
+msgid "Save in HOME"
+msgstr "Speichern in HOME"
+
+#: ../roger/crash.c:421
+#, c-format
+msgid "Roger Router process (%ld) received signal %d"
+msgstr "Der Router Router Prozess (%ld) erhielt das Signal %d"
+
 #: ../roger/journal.c:310 ../roger/journal.c:316 ../roger/journal.c:337
 msgid "<No profile>"
 msgstr "<Kein Profil>"
@@ -538,7 +569,7 @@ msgstr "Kontakt hinzufügen"
 msgid "Delete entry"
 msgstr "Eintrag löschen"
 
-#: ../roger/journal.c:996 ../roger/journal.c:1175
+#: ../roger/journal.c:996 ../roger/journal.c:1178
 msgid "Export journal"
 msgstr "Journal exportieren"
 
@@ -570,24 +601,24 @@ msgstr "Leitung"
 msgid "Duration"
 msgstr "Dauer"
 
-#: ../roger/journal.c:1172
+#: ../roger/journal.c:1175
 msgid "Refresh journal"
 msgstr "Journal laden"
 
-#: ../roger/journal.c:1173
+#: ../roger/journal.c:1176
 msgid "Print journal"
 msgstr "Journal drucken"
 
-#: ../roger/journal.c:1174
+#: ../roger/journal.c:1177
 msgid "Clear journal"
 msgstr "Journal löschen"
 
-#: ../roger/journal.c:1332
+#: ../roger/journal.c:1335
 msgid "Restore default"
 msgstr "Vorgabe verwenden"
 
 #. Journal
-#: ../roger/journal.c:1344 ../roger/settings.glade.h:52
+#: ../roger/journal.c:1347 ../roger/settings.glade.h:52
 #: ../roger/plugins/statusicon/gtk.c:198
 #: ../roger/plugins/indicator/indicator.c:218
 msgid "Journal"
@@ -2146,9 +2177,6 @@ msgstr "Journalansicht aller Anrufe"
 #~ msgid "Entry"
 #~ msgstr "Eintrag"
 
-#~ msgid "_Close"
-#~ msgstr "_Schließen"
-
 #~ msgid "Photo"
 #~ msgstr "Foto"
 
@@ -2366,9 +2394,6 @@ msgstr "Journalansicht aller Anrufe"
 
 #~ msgid "Level:"
 #~ msgstr "Stufe:"
-
-#~ msgid "Debug"
-#~ msgstr "Debug"
 
 #~ msgid "Warning"
 #~ msgstr "Warnung"

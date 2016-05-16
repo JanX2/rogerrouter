@@ -125,7 +125,9 @@ void log_init(gboolean debug)
 void log_shutdown(void)
 {
 	g_debug("Shutdown logging");
-	g_output_stream_close(G_OUTPUT_STREAM(stream), NULL, NULL);
+	if (stream) {
+		g_output_stream_close(G_OUTPUT_STREAM(stream), NULL, NULL);
+	}
 	g_log_set_default_handler(NULL, NULL);
 }
 

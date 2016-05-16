@@ -10,6 +10,7 @@ roger/assistant.c
 roger/contacts.c
 [type: gettext/glade]roger/contacts.glade
 roger/fax.c
+roger/crash.c
 roger/journal.c
 roger/main_ui.c
 roger/phone.c

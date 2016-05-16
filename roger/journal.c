@@ -1099,6 +1099,9 @@ void journal_window(GApplication *app)
 		{"contacts-edit-address-work", contacts_add_detail_activated},
 	};
 
+	//int i = 0;
+	//g_printf("%d ", journal_hide_on_start / i);
+
 	journal_startup(app);
 
 #if GTK_CHECK_VERSION(3,12,0)

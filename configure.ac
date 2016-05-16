@@ -105,6 +105,8 @@ PKG_CHECK_MODULES([PEAS_GTK], [libpeas-gtk-1.0])
 AC_CHECK_HEADERS([tiffio.h])
 AC_CHECK_LIB([tiff], [TIFFOpen], , AC_MSG_ERROR("Can't build without libtiff (does your system require a libtiff-devel package?)"), -lm)
 
+AC_CHECK_HEADERS(sys/utsname.h)
+
 dnl *******************************************************************
 dnl Decide which fax spooler solution to use
 dnl *******************************************************************
