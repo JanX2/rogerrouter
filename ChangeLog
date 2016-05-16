@@ -1,3 +1,24 @@
+roger - 1.9.0
+------------------------------------------------------------------------------------------------------------------
+* Reworked UI (Assistant, Preferences, Contacts with internal editing, Voice Playback, Phone) (Client Side Decoration and Service Side Decoration)
+* Network authorization support
+* Fritzbox: Query support improves communication to router by 16x
+* Internal password plugin using CFB encryption
+* New journal icons by dschaerf (color & monochrome)
+* Metainfo files to simplify add on installation in GNOME Software
+* Keyboard shortcuts window for GTK+ 3.20
+* Updated Google plugin to support oauth2 (+ Dialog)
+* Profile selection at startup
+* Improved web journal (HTML Journal with interactive sorting/dragging)
+* Reworked fax printing to simplify SE Linux rules
+* Restore defaults option for journal columns
+* Minor improvements for OS X (Shortcuts, Additional menu entries now working)
+* Updated reverse lookup
+* Improved translation
+* Fix dial support for FW > 6.35
+* Fix journal size on newer version of GTK
+* Bugfixes
+
 roger - 1.8.14
 ------------------------------------------------------------------------------------------------------------------
 * Support for old FRITZ!Box routers <= xx.04.74
