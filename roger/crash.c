@@ -49,7 +49,7 @@
 #define BUGZILLA_URI "https://www.tabos.org/forum"
 
 static const gchar *DEBUG_SCRIPT = "thread all apply\nbt full\nkill\nq";
-static gchar *argv0 = "/home/jbrummer/Projekte/roger/roger/roger";
+extern gchar *argv0;
 
 /**
  * \brief see if the crash dialog is allowed (because some developers may prefer to run claws-mail under gdb...)

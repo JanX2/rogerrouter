@@ -33,6 +33,7 @@
 #include <config.h>
 
 GtkApplication *application_new(void);
+gchar *argv0 = NULL;
 
 #ifdef G_OS_WIN32
 #include <windows.h>
@@ -63,6 +64,8 @@ int main(int argc, char **argv)
 	bindtextdomain(GETTEXT_PACKAGE, get_directory(APP_LOCALE));
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);
+
+	argv0 = g_strdup(argv[0]);
 
 	/* Checking for crash parameter here is very important */
 	for (idx = 0; idx < argc; idx++) {
