@@ -191,7 +191,7 @@ void journal_init_call_icon(void)
 		icon_call_in = gtk_icon_theme_load_icon(icons, "roger-call-in-symbolic", width, 0, NULL);
 		icon_call_missed = gtk_icon_theme_load_icon(icons, "roger-call-missed-symbolic", width, 0, NULL);
 		icon_call_out = gtk_icon_theme_load_icon(icons, "roger-call-out-symbolic", width, 0, NULL);
-		icon_fax = gtk_icon_theme_load_icon(icons, "roger-fax-report-symbolic", width, 0, NULL);
+		icon_fax = gtk_icon_theme_load_icon(icons, "roger-fax-symbolic", width, 0, NULL);
 		icon_fax_report = gtk_icon_theme_load_icon(icons, "roger-fax-report-symbolic", width, 0, NULL);
 		icon_voice = gtk_icon_theme_load_icon(icons, "roger-call-voice-symbolic", width, 0, NULL);
 		icon_record = gtk_icon_theme_load_icon(icons, "roger-record-symbolic", width, 0, NULL);
