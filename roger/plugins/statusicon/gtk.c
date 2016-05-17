@@ -33,6 +33,7 @@
 #include <roger/main.h>
 #include <roger/phone.h>
 #include <roger/uitools.h>
+#include <roger/settings.h>
 
 G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 
