@@ -834,8 +834,12 @@ void contacts_save_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 	}
 
 	if (ok) {
-		contact_copy(contacts->tmp_contact, contact);
-		address_book_save_contact(contact);
+		if (contact) {
+			contact_copy(contacts->tmp_contact, contact);
+			address_book_save_contact(contact);
+		} else {
+			address_book_save_contact(contacts->tmp_contact);
+		}
 
 		address_book_reload_contacts();
 	}
