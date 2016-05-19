@@ -44,6 +44,8 @@
 #endif
 
 #include <libroutermanager/file.h>
+#include <libroutermanager/profile.h>
+#include <libroutermanager/router.h>
 
 #define DEBUGGERRC "debuggerrc"
 #define BUGZILLA_URI "https://www.tabos.org/forum"
@@ -66,6 +68,7 @@ static void crash_handler(int sig)
 {
 	pid_t pid;
 	static volatile unsigned long crashed_ = 0;
+	struct profile *profile = profile_get_active();
 
 	/*
 	 * let's hope argv0 aren't trashed.
@@ -90,9 +93,11 @@ static void crash_handler(int sig)
 	gdk_flush();
 
 	if (0 == (pid = fork())) {
-		char buf[50];
+		char buf[128];
 		char *args[5];
-	
+		const gchar *name = router_get_name(profile);
+		const gchar *firmware = router_get_version(profile);
+
 		/*
 		 * probably also some other parameters (like GTK+ ones).
 		 * also we pass the full startup dir and the real command
@@ -101,7 +106,7 @@ static void crash_handler(int sig)
 		args[0] = argv0;
 		args[1] = "--debug";
 		args[2] = "--crash";
-		sprintf(buf, "%d,%d,%s", getppid(), sig, argv0);
+		sprintf(buf, "%d,%d,%s,%s,%s", getppid(), sig, argv0, name ? name : "", firmware ? firmware : "");
 		args[3] = buf;
 		args[4] = NULL;
 
@@ -297,7 +302,7 @@ static void crash_save_crash_log(GtkButton *button, const gchar *text)
  * \param debug_output Output text by gdb
  * \return GtkWidget *Dialog widget
  */
-static GtkWidget *crash_dialog_show(const gchar *text, const gchar *debug_output)
+static GtkWidget *crash_dialog_show(const gchar *text, const gchar *name, const gchar *firmware, const gchar *debug_output)
 {
 	GtkWidget *window1;
 	GtkWidget *vbox1;
@@ -356,12 +361,14 @@ static GtkWidget *crash_dialog_show(const gchar *text, const gchar *debug_output
 		"Roger Router version %s\n"
 		"GTK+ version %d.%d.%d / GLib %d.%d.%d\n"
 		"Operating system: %s\n"
-		"C Library: %s\n--\n%s",
+		"C Library: %s\n"
+		"Router: %s (%s)\n--\n%s",
 		VERSION,
 		gtk_major_version, gtk_minor_version, gtk_micro_version,
 		glib_major_version, glib_minor_version, glib_micro_version,
 		get_operating_system(),
 		get_lib_version(),
+		name, firmware,
 		debug_output);
 
 	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(text1));
@@ -423,7 +430,7 @@ void crash_main(const char *arg)
 	output = g_string_new("");
 	crash_debug(pid, tokens[2], output);
 
-	crash_dialog_show(text, output->str);
+	crash_dialog_show(text, tokens[3], tokens[4], output->str);
 	g_string_free(output, TRUE);
 	g_free(text);
 	g_strfreev(tokens);
