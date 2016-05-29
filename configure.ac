@@ -599,6 +599,8 @@ AM_CONDITIONAL(WITH_GNOTIFICATION, test "x$with_gnotification" != "xno")
 #	EXTRA_CFLAGS+="-Werror"
 #fi
 
+EXTRA_CFLAGS+=" -g"
+
 dnl ********************************************************************
 dnl Check for coverage tool gcov
 dnl ********************************************************************
