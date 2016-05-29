@@ -122,7 +122,9 @@ void net_monitor_state_changed(gboolean state)
 		for (list = net_event_list; list != NULL; list = list->next) {
 			struct net_event *event = list->data;
 
-			event->disconnect(event->user_data);
+			if (event->is_connected) {
+				event->is_connected = !event->disconnect(event->user_data);
+			}
 		}
 
 		/* Disable active profile */
@@ -134,7 +136,10 @@ void net_monitor_state_changed(gboolean state)
 			for (list = net_event_list; list != NULL; list = list->next) {
 				struct net_event *event = list->data;
 
-				event->connect(event->user_data);
+				if (!event->is_connected) {
+					g_debug("%s(): Calling connect", __FUNCTION__);
+					event->is_connected = event->connect(event->user_data);
+				}
 			}
 		}
 	}

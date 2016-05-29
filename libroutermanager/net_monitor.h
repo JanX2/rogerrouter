@@ -28,6 +28,7 @@ typedef gboolean (*net_disconnect_func)(gpointer user_data);
 struct net_event {
 	net_connect_func connect;
 	net_disconnect_func disconnect;
+	gboolean is_connected;
 	gpointer user_data;
 };
 
