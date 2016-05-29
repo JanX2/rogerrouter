@@ -336,7 +336,7 @@ static GtkWidget *crash_dialog_show(const gchar *text, const gchar *name, const 
 	gtk_container_set_border_width(GTK_CONTAINER(hbox1), 4);
 
 	label1 = gtk_label_new
-	    (g_strdup_printf(_("%s.\nPlease file a bug report and include the information below."), text));
+	    (g_strdup_printf(_("%s.\nPlease file a bug report and include the information below\nand the debug log (~/.cache/routermanager/debug.log)."), text));
 	gtk_widget_show(label1);
 	gtk_box_pack_start(GTK_BOX(hbox1), label1, TRUE, TRUE, 0);
 	gtk_misc_set_alignment(GTK_MISC(label1), 7.45058e-09, 0.5);
@@ -362,13 +362,15 @@ static GtkWidget *crash_dialog_show(const gchar *text, const gchar *name, const 
 		"GTK+ version %d.%d.%d / GLib %d.%d.%d\n"
 		"Operating system: %s\n"
 		"C Library: %s\n"
-		"Router: %s (%s)\n--\n%s",
+		"Router: %s (%s)\n"
+		"Message: %s\n--\n%s",
 		VERSION,
 		gtk_major_version, gtk_minor_version, gtk_micro_version,
 		glib_major_version, glib_minor_version, glib_micro_version,
 		get_operating_system(),
 		get_lib_version(),
 		name, firmware,
+		text,
 		debug_output);
 
 	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(text1));
