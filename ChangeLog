@@ -1,3 +1,10 @@
+roger - 1.9.1
+------------------------------------------------------------------------------------------------------------------
+* Correct fax icon
+* Extend crash logger
+* Fix Ubuntu 14.04 crashes
+* Bugfixes
+
 roger - 1.9.0
 ------------------------------------------------------------------------------------------------------------------
 * Reworked UI (Assistant, Preferences, Contacts with internal editing, Voice Playback, Phone) (Client Side Decoration and Service Side Decoration)
