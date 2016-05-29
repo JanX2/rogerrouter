@@ -18,6 +18,7 @@
  */
 
 #include <glib.h>
+#include <glib/gstdio.h>
 #include <gio/gio.h>
 
 #include <libroutermanager/logging.h>
@@ -111,10 +112,12 @@ void log_init(gboolean debug)
 	g_mkdir_with_parents(dirname, 0700);
 	g_free(dirname);
 
+	g_unlink(filename);
+
 	file = g_file_new_for_path(filename);
 	g_free(filename);
 
-	stream = g_file_replace(file, NULL, TRUE, G_FILE_CREATE_NONE, NULL, NULL);
+	stream = g_file_create(file, G_FILE_CREATE_NONE, NULL, NULL);
 
 	g_log_set_default_handler(log_func, NULL);
 }
