@@ -141,8 +141,15 @@ make_pkg "http://ftp.gnome.org/pub/GNOME/sources/gobject-introspection/1.42/" "g
 #make_pkg "http://ftp.gnome.org/pub/GNOME/sources/libpeas/1.12/" "libpeas-1.12.1.tar.xz" "libpeas-1.12.1"
 make_pkg "http://ftp.gnome.org/pub/GNOME/sources/libpeas/1.8/" "libpeas-1.8.1.tar.xz" "libpeas-1.8.1"
 
+make_pkg "http://ftp.gnome.org/pub/GNOME/sources/gssdp/0.14/" "gssdp-0.14.15.tar.xz" "gssdp-0.14.15"
+
+make_pkg "http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.20/" "gupnp-0.20.17.tar.xz" "gupnp-0.20.17"
+
+make_pkg "http://ftp.gnome.org/pub/GNOME/sources/json-glib/1.2/" "json-glib-1.2.0.tar.xz" "json-glib-1.2.0"
+
+
 # ******************** Roger Router *******************
-download http://downloads.ghostscript.com/public/ gs916w32.exe
+download https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs919/ gs919w32.exe
 
 # Compile Roger Router
 cd $topdir

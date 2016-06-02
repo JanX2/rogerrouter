@@ -24,6 +24,9 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+
+#ifndef G_OS_WIN32
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -437,3 +440,13 @@ void crash_main(const char *arg)
 	g_free(text);
 	g_strfreev(tokens);
 }
+
+#else
+void crash_install_handlers(void)
+{
+}
+
+void crash_main(const char *arg)
+{
+}
+#endif

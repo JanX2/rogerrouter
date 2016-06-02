@@ -26,7 +26,12 @@
 #include <stdlib.h>
 
 #ifndef	__APPLE__
+#if  defined  G_OS_WIN32
+ #include  <windows.h>
+ #include  <wincrypt.h>
+#else
 #include <crypt.h>
+#endif
 #endif
 
 #include <string.h>
@@ -40,6 +45,7 @@ static GSList *pm_plugins = NULL;
 guchar crypt_cfb_iv[64];
 gint crypt_cfb_blocksize = 8;
 
+#ifndef G_OS_WIN32
 /*
 * Shift len bytes from end of to buffer to beginning, then put len
 * bytes from from at the end.  Caution: the to buffer is unpacked,
@@ -163,6 +169,18 @@ guchar *password_decode(const gchar *in)
 
 	return tmp;
 }
+#else
+gchar *password_encode(const gchar *in)
+{
+	return g_strdup(in);
+}
+
+guchar *password_decode(const gchar *in)
+{
+	return g_strdup(in);
+}
+
+#endif
 
 /**
  * \brief Find password manager as requested by profile
