@@ -26,7 +26,7 @@ function build()
 	else
 		autoconf
 	fi
-	mingw32-configure --disable-werror
+	mingw32-configure
 	if [ $? -ne 0 ]; then
 		exit
 	fi
@@ -110,7 +110,7 @@ if [ $# -eq 1 ]; then
 			mingw32-icu mingw32-expat mingw32-jasper mingw32-filesystem mingw32-libffi mingw32-fontconfig mingw32-libjpeg-turbo \
 			mingw32-freetype mingw32-libpng mingw-binutils-generic mingw32-gcc-c++ mingw32-libxml2 mingw-filesystem-base \
 			mingw32-gcc mingw32-pango mingw32-gdk-pixbuf mingw32-pixman mingw32-libsoup mingw32-dlfcn mingw32-libtiff mingw32-pthreads \
-			mingw32-libogg mingw32-speex mingw32-librsvg2 mingw32-nsis \
+			mingw32-libogg mingw32-speex mingw32-librsvg2 mingw32-nsis mingw32-hicolor-icon-theme mingw32-gstreamer1-plugins-good \
 			flex bison python-devel wget gcc patch autoconf automake intltool libtool glib2-devel
 		sudo dnf install wine
 	fi
@@ -147,6 +147,7 @@ make_pkg "http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.20/" "gupnp-0.20.17.tar
 
 make_pkg "http://ftp.gnome.org/pub/GNOME/sources/json-glib/1.2/" "json-glib-1.2.0.tar.xz" "json-glib-1.2.0"
 
+#make_pkg "http://www.pjsip.org/release/2.5.1/" "pjproject-2.5.1.tar.bz2" "pjproject-2.5.1"
 
 # ******************** Roger Router *******************
 download https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs919/ gs919w32.exe
