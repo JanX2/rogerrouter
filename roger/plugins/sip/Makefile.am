@@ -7,8 +7,7 @@ plugindir = $(libdir)/roger/sip
 plugin_LTLIBRARIES = libsip.la
 
 libsip_la_SOURCES = \
-	sip.c\
-	sip.h
+	sip.c
 
 libsip_la_CFLAGS = $(plugin_cflags) $(SIP_CFLAGS)
 libsip_la_LDFLAGS = $(plugin_ldflags) $(SIP_LIBS)

@@ -19,7 +19,3 @@ endif
 if WIN32
 SUBDIRS += wincred
 endif
-
-if WITH_SIP
-SUBDIRS += sip
-endif
