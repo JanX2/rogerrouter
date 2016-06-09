@@ -224,7 +224,7 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 
 	/* If its a disconnect or a connect, close previous gnotification window */
 	if ((connection->type & CONNECTION_TYPE_DISCONNECT) || (connection->type & CONNECTION_TYPE_CONNECT)) {
-		ringtone_stop();
+		//ringtone_stop();
 
 		g_application_withdraw_notification(G_APPLICATION(roger_app), connection->notification);
 
@@ -237,7 +237,7 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 	}
 
 	if (g_settings_get_boolean(gnotification_settings, "play-ringtones")) {
-		ringtone_play(connection->type);
+		//ringtone_play(connection->type);
 	}
 
 	/** Ask for contact information */

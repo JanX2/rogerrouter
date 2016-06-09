@@ -55,7 +55,7 @@ struct phone_state {
 	gint phone_session_timer_id;
 
 	const gchar *number;
-	gpointer connection;
+	struct connection *connection;
 
 	gpointer priv;
 

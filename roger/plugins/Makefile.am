@@ -40,3 +40,7 @@ SUBDIRS += gnotification
 endif
 endif
 
+if WITH_SIP
+SUBDIRS += sip
+endif
+

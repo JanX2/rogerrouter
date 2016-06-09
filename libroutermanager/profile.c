@@ -193,7 +193,7 @@ void profile_set_active(struct profile *profile)
 	action_init(profile);
 
 	/* Init faxophone */
-	faxophone_setup();
+	//faxophone_setup();
 
 	/* Load journal list */
 	router_load_journal(profile_active);

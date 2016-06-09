@@ -91,7 +91,7 @@ static void notify_deny_clicked_cb(GtkWidget *notify, gpointer user_data)
 	gtk_widget_destroy(connection->notification);
 	connection->notification = NULL;
 
-	phone_hangup(connection->priv ? connection->priv : active_capi_connection);
+	faxophone_hangup(connection->priv ? connection->priv : active_capi_connection);
 }
 
 /**

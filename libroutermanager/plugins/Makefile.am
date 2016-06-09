@@ -1,4 +1,4 @@
-SUBDIRS = fritzbox callmonitor areacodes_global reverselookup simple_pwd
+SUBDIRS = fritzbox callmonitor areacodes_global reverselookup simple_pwd faxophone
 
 if WITH_PULSEAUDIO
 SUBDIRS += pulseaudio
@@ -18,4 +18,8 @@ endif
 
 if WIN32
 SUBDIRS += wincred
+endif
+
+if WITH_SIP
+SUBDIRS += sip
 endif

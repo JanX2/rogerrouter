@@ -66,18 +66,18 @@ void emit_fax_process(const gchar *filename)
 
 /**
  * \brief Emit signal: connection-established
- * \param connection capi connection pointer
+ * \param connection connection pointer
  */
-void emit_connection_established(struct capi_connection *connection)
+void emit_connection_established(struct connection *connection)
 {
 	g_signal_emit(app_object, app_object_signals[ACB_CONNECTION_ESTABLISHED], 0, connection);
 }
 
 /**
  * \brief Emit signal: connection-terminated
- * \param connection capi connection pointer
+ * \param connection connection pointer
  */
-void emit_connection_terminated(struct capi_connection *connection)
+void emit_connection_terminated(struct connection *connection)
 {
 	g_signal_emit(app_object, app_object_signals[ACB_CONNECTION_TERMINATED], 0, connection);
 }
@@ -85,9 +85,9 @@ void emit_connection_terminated(struct capi_connection *connection)
 /**
  * \brief Emit signal: connection-status
  * \param status connection status
- * \param connection capi connection pointer
+ * \param connection connection pointer
  */
-void emit_connection_status(gint status, struct capi_connection *connection)
+void emit_connection_status(gint status, struct connection *connection)
 {
 	g_signal_emit(app_object, app_object_signals[ACB_CONNECTION_STATUS], 0, status, connection);
 }

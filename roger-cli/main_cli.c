@@ -218,7 +218,8 @@ void fax_connection_status_cb(AppObject *object, gint status, struct capi_connec
 				g_message("%s", "Fax transfer failed");
 				success = FALSE;
 			}
-			phone_hangup(connection);
+			g_warning("%s(): TODO", __FUNCTION__);
+			//phone_hangup(connection);
 			fax_status->done = TRUE;
 			g_main_loop_quit(main_loop);
 			break;
@@ -306,7 +307,9 @@ int main(int argc, char **argv)
 
 		tiff = convert_fax_to_tiff(file_name);
 		if (tiff) {
-			gpointer connection = fax_dial(tiff, number, router_get_suppress_state(profile_get_active()));
+			gpointer connection = NULL;
+			g_warning("%s(): TODO", __FUNCTION__);
+			//connection = fax_dial(tiff, number, router_get_suppress_state(profile_get_active()));
 			if (!connection) {
 				g_error("could not create connection!");
 				exit(-2);

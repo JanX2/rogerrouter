@@ -31,9 +31,9 @@ void emit_contact_process(struct contact *contact);
 void emit_journal_loaded(GSList *journal);
 void emit_fax_process(const gchar *filename);
 
-void emit_connection_established(struct capi_connection *connection);
-void emit_connection_terminated(struct capi_connection *connection);
-void emit_connection_status(gint status, struct capi_connection *connection);
+void emit_connection_established(struct connection *connection);
+void emit_connection_terminated(struct connection *connection);
+void emit_connection_status(gint status, struct connection *connection);
 
 void emit_message(gchar *title, gchar *message);
 

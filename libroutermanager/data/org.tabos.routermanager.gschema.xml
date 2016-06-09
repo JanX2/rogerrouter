@@ -52,7 +52,7 @@
 			<default>''</default>
 		</key>
 		<key name="active-plugins" type="as">
-			<default>['callmonitor', 'areacodes_global', 'reverselookup', 'simple_pwd']</default>
+			<default>['callmonitor', 'areacodes_global', 'reverselookup', 'simple_pwd', 'faxophone']</default>
 		</key>
 
 		<key name="active-filter" type="s">

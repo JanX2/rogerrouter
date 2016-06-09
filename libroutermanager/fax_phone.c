@@ -22,7 +22,10 @@
  *  - get rid of active_capi_connection?
  *  - merge connection-XXXX signals
  */
+#include <string.h>
+struct capi_connection *active_capi_connection = NULL;
 
+#if 0
 #include <gio/gio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -35,11 +38,11 @@
 #include <libroutermanager/call.h>
 #include <libroutermanager/gstring.h>
 
-#include <libfaxophone/faxophone.h>
+/*#include <libfaxophone/faxophone.h>
 #include <libfaxophone/fax.h>
 #include <libfaxophone/sff.h>
 #include <libfaxophone/phone.h>
-#include <libfaxophone/ringtone.h>
+#include <libfaxophone/ringtone.h>*/
 
 #define RM_ERROR 
 
@@ -84,9 +87,11 @@ struct capi_connection *fax_dial(gchar *tiff, const gchar *trg_no, gboolean supp
 	}
 
 	if (g_settings_get_boolean(profile->settings, "fax-sff")) {
-		connection = sff_send(tiff, modem, ecm, controller, src_no, target, ident, header, suppress);
+		g_warning("%s(): TODO", __FUNCTION__);
+		//connection = sff_send(tiff, modem, ecm, controller, src_no, target, ident, header, suppress);
 	} else {
-		connection = fax_send(tiff, modem, ecm, controller, cip, src_no, target, ident, header, suppress);
+		g_warning("%s(): TODO", __FUNCTION__);
+		//connection = fax_send(tiff, modem, ecm, controller, cip, src_no, target, ident, header, suppress);
 	}
 	g_free(target);
 
@@ -114,7 +119,8 @@ struct capi_connection *phone_dial(const gchar *trg_no, gboolean suppress)
 
 	target = call_canonize_number(trg_no);
 
-	connection = phone_call(controller, src_no, target, suppress);
+	g_warning("%s(): TODO", __FUNCTION__);
+	//connection = phone_call(controller, src_no, target, suppress);
 
 	g_free(target);
 
@@ -199,44 +205,9 @@ struct session_handlers session_handlers = {
 	connection_status, /* connection_status */
 };
 
-/**
- * \brief Faxophone connect
- * \param user_data faxophone plugin pointer
- * \return error code
- */
-gboolean faxophone_connect(gpointer user_data)
+void faxophone_hangup(struct capi_connection *connection)
 {
-	struct profile *profile = profile_get_active();
-	gboolean retry = TRUE;
-
-again:
-	session = faxophone_init(&session_handlers, router_get_host(profile), g_settings_get_int(profile->settings, "phone-controller") + 1);
-	if (!session && retry) {
-		/* Maybe the port is closed, try to activate it and try again */
-		router_dial_number(profile, PORT_ISDN1, "#96*3*");
-		g_usleep(G_USEC_PER_SEC * 2);
-		retry = FALSE;
-		goto again;
-	}
-
-	return session != NULL;
+	g_warning("%s(): TODO", __FUNCTION__);
 }
 
-/**
- * \brief Network disconnect callback
- * \param user_data faxophone plugin pointer
- * \return TRUE
- */
-gboolean faxophone_disconnect(gpointer user_data)
-{
-	faxophone_close(TRUE);
-	return TRUE;
-}
-
-/**
- * \brief Init faxophone support
- */
-void faxophone_setup(void)
-{
-	net_event = net_add_event(faxophone_connect, faxophone_disconnect, NULL);
-}
+#endif

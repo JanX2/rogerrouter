@@ -190,10 +190,13 @@ void call_free(gpointer data)
 gchar *call_scramble_number(const gchar *number)
 {
 	gchar *scramble;
+
+	scramble = g_strdup(number);
+
+#ifdef SCRAMBLE_DATA
 	gint len;
 
 	len = strlen(number);
-	scramble = g_strdup(number);
 
 	if (len > 2) {
 		gint index;
@@ -207,6 +210,7 @@ gchar *call_scramble_number(const gchar *number)
 			scramble[index] = 'X';
 		}
 	}
+#endif
 
 	return scramble;
 }

@@ -94,7 +94,7 @@ static void notify_deny_clicked_cb(NotifyNotification *notify, gchar *action, gp
 	notify_notification_close(connection->notification, NULL);
 	connection->notification = NULL;
 
-	phone_hangup(connection->priv ? connection->priv : active_capi_connection);
+	faxophone_hangup(connection->priv ? connection->priv : active_capi_connection);
 }
 
 /**

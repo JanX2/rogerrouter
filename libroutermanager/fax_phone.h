@@ -28,6 +28,9 @@ void faxophone_setup(void);
 struct capi_connection *fax_dial(gchar *tiff, const gchar *number, gboolean suppress);
 struct capi_connection *phone_dial(const gchar *trg_no, gboolean suppress);
 
+void faxophone_hangup(struct capi_connection *connection);
+
+
 G_END_DECLS
 
 #endif

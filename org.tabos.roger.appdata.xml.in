@@ -28,6 +28,9 @@
     <keyword xml:lang="de">verwaltung</keyword>
   </keywords>
   <kudos>
+    <kudo>AppMenu</kudo>
+    <kudo>HiDpiIcon</kudo>
+    <kudo>ModernToolkit</kudo>
     <kudo>Notifications</kudo>
   </kudos>
   <url type="homepage">https://www.tabos.org</url>

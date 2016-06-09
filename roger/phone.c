@@ -57,12 +57,12 @@
 static GtkWidget *phone_window = NULL;
 gchar *phone_voice_get_title(void);
 gboolean phone_voice_init(struct contact *contact, struct connection *connection);
-void phone_voice_terminated(struct phone_state *state, struct capi_connection *connection);
+void phone_voice_terminated(struct phone_state *state, struct connection *connection);
 static GtkWidget *phone_window_create_menu(struct profile *profile, struct phone_state *state);
 GtkWidget *phone_voice_create_child(struct phone_state *state, GtkWidget *grid);
 void phone_voice_delete(struct phone_state *state);
 
-void phone_voice_status(struct phone_state *state, struct capi_connection *connection)
+void phone_voice_status(struct phone_state *state, struct connection *connection)
 {
 }
 
@@ -168,7 +168,8 @@ static gboolean phone_status_timer_cb(gpointer data)
 
 	if (state->connection) {
 		/* Flush recording buffer (if needed) */
-		phone_flush(state->connection);
+		//g_warning("%s(): TODO", __FUNCTION__);
+		//phone_flush(state->connection);
 	}
 
 	return TRUE;
@@ -252,35 +253,35 @@ void phone_dial_buttons_set_dial(struct phone_state *state, gboolean allow_dial)
 }
 
 /**
- * \brief CAPI connection established callback - Starts timer if needed
+ * \brief Connection established callback - Starts timer if needed
  * \param object appobject
- * \param connection capi connection pointer
+ * \param connection connection pointer
  * \param user_data phone state pointer
  */
-static void capi_connection_established_cb(AppObject *object, struct capi_connection *connection, gpointer user_data)
+static void connection_established_cb(AppObject *object, struct connection *connection, gpointer user_data)
 {
 	struct phone_state *state = user_data;
 
-	g_debug("%s(): called", __FUNCTION__);
+	g_debug("%s(): connection = %p, state->connection = %p", __FUNCTION__, connection, state->connection);
 
-	if (state->connection == connection) {
+	if (connection && state->connection && state->connection->id == connection->id) {
 		phone_setup_timer(state);
 	}
 }
 
 /**
- * \brief CAPI connection terminated callback - Stops timer
+ * \brief Connection terminated callback - Stops timer
  * \param object appobject
- * \param connection capi connection pointer
+ * \param connection connection pointer
  * \param user_data phone state pointer
  */
-static void capi_connection_terminated_cb(AppObject *object, struct capi_connection *connection, gpointer user_data)
+static void connection_terminated_cb(AppObject *object, struct connection *connection, gpointer user_data)
 {
 	struct phone_state *state = user_data;
 
-	g_debug("%s(): called", __FUNCTION__);
+	g_debug("%s(): connection = %p", __FUNCTION__, connection);
 
-	if (state->connection != connection) {
+	if (!connection || state->connection->id != connection->id) {
 		return;
 	}
 
@@ -291,9 +292,11 @@ static void capi_connection_terminated_cb(AppObject *object, struct capi_connect
 
 	phone_dial_buttons_set_dial(state, TRUE);
 	state->connection = NULL;
+
+	//TODO: Free connection
 }
 
-void capi_connection_status_cb(AppObject *object, gint status, struct capi_connection *connection, gpointer user_data)
+void connection_status_cb(AppObject *object, gint status, struct connection *connection, gpointer user_data)
 {
 	struct phone_state *state = user_data;
 
@@ -395,7 +398,8 @@ static void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	case PHONE_TYPE_FAX: {
 		struct fax_ui *fax_ui = state->priv;
 
-		state->connection = fax_dial(fax_ui->file, state->number, router_get_suppress_state(profile));
+		g_warning("%s(): TODO", __FUNCTION__);
+		//state->connection = fax_dial(fax_ui->file, state->number, router_get_suppress_state(profile));
 		if (state->connection) {
 			fax_window_clear(fax_ui);
 			phone_dial_buttons_set_dial(state, FALSE);
@@ -1170,7 +1174,8 @@ static void phone_control_button_mute_clicked_cb(GtkWidget *widget, gpointer use
 	}
 
 	/* Toggle mute call */
-	phone_mute(state->connection, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)));
+	g_warning("%s(): TODO", __FUNCTION__);
+	//phone_mute(state->connection, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)));
 }
 
 /**
@@ -1194,7 +1199,8 @@ static void phone_control_button_record_clicked_cb(GtkWidget *widget, gpointer u
 	g_mkdir_with_parents(path, 0700);
 
 	/* Toggle record state */
-	phone_record(state->connection, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)), path);
+	g_warning("%s(): TODO", __FUNCTION__);
+	//phone_record(state->connection, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)), path);
 
 	g_free(path);
 }
@@ -1464,23 +1470,19 @@ static GtkWidget *phone_window_create_menu(struct profile *profile, struct phone
 }
 
 /**
- * \brief Pick up incoming connection - either valid connection argument or active capi instead
+ * \brief Pick up incoming connection
  * \param state phone state pointer
  * \param connection incoming connection
  */
 static void phone_pickup_incoming(struct phone_state *state, struct connection *connection)
 {
-	struct capi_connection *capi_connection;
-
 	g_assert(state != NULL);
 	g_assert(connection != NULL);
 
-	capi_connection = connection->priv ? connection->priv : active_capi_connection;
-
 	/* Pick up */
-	if (capi_connection && !phone_pickup(capi_connection)) {
+	if (!phone_pickup(connection)) {
 		/* Set internal connection */
-		state->connection = capi_connection;
+		state->connection = connection;
 
 		/* Disable dial button */
 		phone_dial_buttons_set_dial(state, FALSE);
@@ -1582,9 +1584,9 @@ GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struc
 	phone_devices[state->type]->create_child(state, grid);
 
 	/* Connect connection signals */
-	g_signal_connect(app_object, "connection-established", G_CALLBACK(capi_connection_established_cb), state);
-	g_signal_connect(app_object, "connection-terminated", G_CALLBACK(capi_connection_terminated_cb), state);
-	g_signal_connect(app_object, "connection-status", G_CALLBACK(capi_connection_status_cb), state);
+	g_signal_connect(app_object, "connection-established", G_CALLBACK(connection_established_cb), state);
+	g_signal_connect(app_object, "connection-terminated", G_CALLBACK(connection_terminated_cb), state);
+	g_signal_connect(app_object, "connection-status", G_CALLBACK(connection_status_cb), state);
 
 	/* In case there is an incoming connection, pick it up */
 	if (connection) {
@@ -1640,7 +1642,7 @@ GtkWidget *phone_voice_create_child(struct phone_state *state, GtkWidget *grid)
 	return state->child_frame;
 }
 
-void phone_voice_terminated(struct phone_state *state, struct capi_connection *connection)
+void phone_voice_terminated(struct phone_state *state, struct connection *connection)
 {
 }
 

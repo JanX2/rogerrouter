@@ -57,16 +57,38 @@ static inline void callmonitor_convert(gchar *text)
 {
 	gchar **fields = g_strsplit(text, ";", -1);
 	struct connection *connection;
+	gchar *number = NULL;
+	gint type = -1;
 
 	if (!g_strcmp0(fields[1], "CALL")) {
+		type = 0;
+		number = fields[4];
+	} else if (!g_strcmp0(fields[1], "RING")) {
+		type = 1;
+		number = fields[4];
+	} else if (!g_strcmp0(fields[1], "CONNECT")) {
+		type = 2;
+	} else if (!g_strcmp0(fields[1], "DISCONNECT")) {
+		type = 3;
+	}
+
+	/* In case local number is handled by a phone/fax device, ignore it */
+	if (number && device_number_is_handled(number)) {
+		return;
+	}
+
+	switch (type) {
+	case 0:
 		connection = connection_add_call(atoi(fields[2]), CONNECTION_TYPE_OUTGOING, fields[4], fields[5]);
 
 		emit_connection_notify(connection);
-	} else if (!g_strcmp0(fields[1], "RING")) {
+		break;
+	case 1:
 		connection = connection_add_call(atoi(fields[2]), CONNECTION_TYPE_INCOMING, fields[4], fields[3]);
 
 		emit_connection_notify(connection);
-	} else if (!g_strcmp0(fields[1], "CONNECT")) {
+		break;
+	case 2:
 		connection = connection_find_by_id(atoi(fields[2]));
 
 		if (connection) {
@@ -74,7 +96,8 @@ static inline void callmonitor_convert(gchar *text)
 
 			emit_connection_notify(connection);
 		}
-	} else if (!g_strcmp0(fields[1], "DISCONNECT")) {
+		break;
+	case 4:
 		connection = connection_find_by_id(atoi(fields[2]));
 		if (connection) {
 			connection_set_type(connection, CONNECTION_TYPE_DISCONNECT);
@@ -83,6 +106,9 @@ static inline void callmonitor_convert(gchar *text)
 
 			connection_remove(connection);
 		}
+		break;
+	default:
+		break;
 	}
 
 	g_strfreev(fields);

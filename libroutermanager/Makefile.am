@@ -11,15 +11,6 @@ AM_CFLAGS = -I$(top_srcdir)
 libroutermanager_includedir = $(includedir)/libroutermanager/
 libroutermanager_include_HEADERS = $(wildcard *.h)
 
-libroutermanager_faxophone_includedir = $(includedir)/libroutermanager/libfaxophone
-libroutermanager_faxophone_include_HEADERS = \
-	libfaxophone/fax.h \
-	libfaxophone/sff.h \
-	libfaxophone/faxophone.h \
-	libfaxophone/isdn-convert.h \
-	libfaxophone/phone.h \
-	libfaxophone/ringtone.h
-
 libroutermanager_la_SOURCES = \
 	action.c\
 	action.h\
@@ -33,6 +24,10 @@ libroutermanager_la_SOURCES = \
 	audio.h\
 	call.c\
 	call.h\
+	device.c\
+	device.h\
+	device_phone.c\
+	device_phone.h\
 	routermanager.c\
 	routermanager.h\
 	contact.c\
@@ -79,19 +74,7 @@ libroutermanager_la_SOURCES = \
 	voxplay.c\
 	voxplay.h\
 	xml.c\
-	xml.h\
-	libfaxophone/fax.c \
-	libfaxophone/fax.h \
-	libfaxophone/faxophone.c \
-	libfaxophone/faxophone.h \
-	libfaxophone/isdn-convert.c \
-	libfaxophone/isdn-convert.h \
-	libfaxophone/phone.c \
-	libfaxophone/phone.h \
-	libfaxophone/ringtone.c \
-	libfaxophone/ringtone.h \
-	libfaxophone/sff.c \
-	libfaxophone/sff.h
+	xml.h
 
 libroutermanager_la_LDFLAGS = -rdynamic
 libroutermanager_la_LIBADD = -lc $(EXTRA_LIBS) $(PEAS_LIBS) $(SOUP_LIBS) $(CAPI_LIBS) $(SPANDSP_LIBS) $(DBUS_LIBS) $(OS_LIBS)

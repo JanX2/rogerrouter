@@ -41,7 +41,7 @@ AC_DEFINE(GDK_VERSION_MAX_ALLOWED, GDK_VERSION_3_10, [Prevent post 3.10 APIs])
 
 RRA_SET_LIBDIR([$prefix])
 
-AC_CHECK_LIB(m, pow)
+AC_CHECK_LIB(m, pow, gsm)
 AC_CHECK_LIB(gthread-2.0, g_thread_init)
 AC_PATH_PROG(INTLTOOL_MSGMERGE, msgmerge, msgmerge)
 AC_PATH_PROG(INTLTOOL_XGETTEXT, xgettext, xgettext)
@@ -476,6 +476,39 @@ AM_CONDITIONAL(WITH_PORTAUDIO, test "x$with_portaudio" != "xno")
 
 
 dnl ********************************************************************
+dnl sip is optional
+dnl ********************************************************************
+AC_ARG_WITH([sip],
+	[AS_HELP_STRING([--with-sip=@<:@ARG@:>@],
+	[Use sip (possible values: no, yes, check, or the path to pjproject) @<:@default=check@:>@])],
+	[],
+	[with_sip=check])
+
+AC_MSG_CHECKING(for pjproject)
+AS_IF([test "x$with_sip" != xsuper],
+	[if test "x$with_sip" = xcheck; then
+		$PKG_CONFIG --exists libpjproject && with_sip=yes
+	elif test "x$with_sip" = xyes; then
+		( $PKG_CONFIG --exists libpjproject ) || AC_MSG_FAILURE(
+			[--with-sip=yes was given, but test for pjproject failed])
+	fi
+	if test "x$with_sip" = xyes; then
+		AC_SUBST([SIP_CFLAGS], ["`$PKG_CONFIG --cflags libpjproject`"])
+		AC_SUBST([SIP_LIBS], ["`$PKG_CONFIG --libs libpjproject`"])
+		AC_DEFINE([HAVE_SIP], 1, [Have sip])
+		ROGER_FEATURES_YES="\tsip\n$ROGER_FEATURES_YES"
+	else
+		with_portaudio=no
+		ROGER_FEATURES_NO="\tsip\n$ROGER_FEATURES_NO"
+	fi
+])
+
+AC_MSG_RESULT($with_sip)
+
+AM_CONDITIONAL(WITH_SIP, test "x$with_sip" != "xno")
+
+
+dnl ********************************************************************
 dnl faxophone
 dnl ********************************************************************
 AC_MSG_CHECKING(for faxophone)
@@ -617,6 +650,7 @@ AC_CONFIG_FILES([
     libroutermanager/Makefile
     libroutermanager/data/Makefile
     libroutermanager/plugins/Makefile
+    libroutermanager/plugins/faxophone/Makefile
     libroutermanager/plugins/fritzbox/Makefile
     libroutermanager/plugins/callmonitor/Makefile
     libroutermanager/plugins/areacodes_global/Makefile
@@ -646,6 +680,7 @@ AC_CONFIG_FILES([
     roger/plugins/notification/Makefile
     roger/plugins/gnotification/Makefile
     roger/plugins/webjournal/Makefile
+    roger/plugins/sip/Makefile
     roger/images/Makefile
     roger/images/16x16/Makefile
     roger/images/22x22/Makefile
