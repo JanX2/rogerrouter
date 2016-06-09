@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-29 20:36+0200\n"
+"POT-Creation-Date: 2016-06-09 22:23+0200\n"
 "PO-Revision-Date: 2016-04-25 22:41+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <>\n"
@@ -227,6 +227,7 @@ msgid "Enter credentials you are using to login to routers webpage"
 msgstr "Gib die Zugangsdaten ein, die Du auf der Router Webseite verwendest"
 
 #: ../roger/assistant.glade.h:16 ../roger/plugins/google/google.c:906
+#: ../roger/plugins/sip/sip.c:440
 msgid "User"
 msgstr "Benutzer"
 
@@ -235,7 +236,7 @@ msgid "Optional"
 msgstr "Optional"
 
 #: ../roger/assistant.glade.h:18 ../roger/authenticate.glade.h:4
-#: ../roger/plugins/google/google.c:914
+#: ../roger/plugins/google/google.c:914 ../roger/plugins/sip/sip.c:448
 msgid "Password"
 msgstr "Passwort"
 
@@ -1051,7 +1052,7 @@ msgstr "Ortsvorwahl"
 msgid "Softphone"
 msgstr "Softphone"
 
-#: ../roger/settings.glade.h:28
+#: ../roger/settings.glade.h:28 ../roger/plugins/sip/sip.c:457
 msgid "MSN"
 msgstr "MSN"
 
@@ -1564,7 +1565,7 @@ msgstr "Code eingeben:"
 msgid "Authorization refresh error"
 msgstr "Fehler bei der Autorisierungserneuerung"
 
-#: ../roger/plugins/google/google.c:923
+#: ../roger/plugins/google/google.c:923 ../roger/plugins/sip/sip.c:465
 msgid "Access data"
 msgstr "Zugangsdaten"
 
@@ -1728,6 +1729,19 @@ msgstr "Speichert das Journal als HTML-Datei auf einem Server"
 #: ../roger/plugins/kwallet/roger-plugins-kwallet.metainfo.xml.in.h:2
 msgid "Support for KDE4 Wallet"
 msgstr "Unterstützung für die KDE4 Brieftasche"
+
+#: ../roger/plugins/sip/roger-plugins-sip.metainfo.xml.in.h:1
+#: ../roger/plugins/sip/sip.plugin.in.h:1
+msgid "SIP"
+msgstr "SIP"
+
+#: ../roger/plugins/sip/roger-plugins-sip.metainfo.xml.in.h:2
+msgid "Support for SIP protocol (phone)"
+msgstr "Unterstützung für das SIP Protokoll (Telefon)"
+
+#: ../roger/plugins/sip/sip.plugin.in.h:2
+msgid "Phone support based on SIP"
+msgstr "Telefonunterstützung basierend auf SIP"
 
 #: ../roger-cli/main_cli.c:167
 msgid "Connected"

@@ -52,6 +52,9 @@ roger/plugins/webjournal/webjournal.c
 [type: gettext/xml]roger/plugins/webjournal/roger-plugins-webjournal.metainfo.xml.in
 [type: gettext/ini]roger/plugins/webjournal/webjournal.plugin.in
 [type: gettext/xml]roger/plugins/kwallet/roger-plugins-kwallet.metainfo.xml.in
+[type: gettext/xml]roger/plugins/sip/roger-plugins-sip.metainfo.xml.in
+roger/plugins/sip/sip.c
+[type: gettext/ini]roger/plugins/sip/sip.plugin.in
 roger-cli/main_cli.c
 libroutermanager/fax_spooler.c
 libroutermanager/filter.c
