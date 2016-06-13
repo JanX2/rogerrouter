@@ -498,7 +498,7 @@ AS_IF([test "x$with_sip" != xsuper],
 		AC_DEFINE([HAVE_SIP], 1, [Have sip])
 		ROGER_FEATURES_YES="\tsip\n$ROGER_FEATURES_YES"
 	else
-		with_portaudio=no
+		with_sip=no
 		ROGER_FEATURES_NO="\tsip\n$ROGER_FEATURES_NO"
 	fi
 ])

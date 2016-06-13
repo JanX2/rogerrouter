@@ -49,6 +49,7 @@ gconstpointer net_add_event(net_connect_func connect, net_disconnect_func discon
 	event->connect = connect;
 	event->disconnect = disconnect;
 	event->user_data = user_data;
+	event->is_connected = FALSE;
 
 	/* Add to network event list */
 	net_event_list = g_slist_append(net_event_list, event);
