@@ -74,6 +74,13 @@ void phone_send_dtmf_code(gpointer connection, guchar chr)
 	phone->send_dtmf_code(connection, chr);
 }
 
+void phone_mute(gpointer connection, gboolean mute)
+{
+	struct device_phone *phone = phone_plugins->data;
+
+	phone->mute(connection, mute);
+}
+
 /**
  * \brief Register phone plugin
  * \param phone phone plugin

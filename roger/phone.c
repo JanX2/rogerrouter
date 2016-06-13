@@ -1174,8 +1174,7 @@ static void phone_control_button_mute_clicked_cb(GtkWidget *widget, gpointer use
 	}
 
 	/* Toggle mute call */
-	g_warning("%s(): TODO", __FUNCTION__);
-	//phone_mute(state->connection, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)));
+	phone_mute(state->connection, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)));
 }
 
 /**

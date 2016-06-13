@@ -509,20 +509,20 @@ AM_CONDITIONAL(WITH_SIP, test "x$with_sip" != "xno")
 
 
 dnl ********************************************************************
-dnl faxophone
+dnl capi
 dnl ********************************************************************
-AC_MSG_CHECKING(for faxophone)
-AC_ARG_WITH([faxophone],
-	[AS_HELP_STRING([--with-faxophone=@<:@ARG@:>@],
-	[Use faxophone (possible values: yes or no) @<:@default=yes@:>@])],
+AC_MSG_CHECKING(for capi)
+AC_ARG_WITH([capi],
+	[AS_HELP_STRING([--with-capi=@<:@ARG@:>@],
+	[Use capi (possible values: yes or no) @<:@default=yes@:>@])],
 	[],
-	[with_faxophone=yes])
-AC_MSG_RESULT($with_faxophone)
+	[with_capi=yes])
+AC_MSG_RESULT($with_capi)
 
-# Faxophone test
-if test "x$with_faxophone" = xyes; then
-	AC_DEFINE([HAVE_FAXOPHONE], 1, [Have faxophone])
-	ROGER_FEATURES_YES="\tfaxophone\n$ROGER_FEATURES_YES"
+# capi test
+if test "x$with_capi" = xyes; then
+	AC_DEFINE([HAVE_CAPI], 1, [Have capi])
+	ROGER_FEATURES_YES="\tcapi\n$ROGER_FEATURES_YES"
 
 	PKG_CHECK_MODULES([CAPI], [capi20 >= 3.6],
 		[AC_DEFINE([HAVE_CAPI_36], 1, [Use new CAPI])],
@@ -557,10 +557,10 @@ if test "x$with_faxophone" = xyes; then
 		fi
 	])
 else
-	ROGER_FEATURES_NO="\tfaxophone\n$ROGER_FEATURES_NO"
+	ROGER_FEATURES_NO="\tcapi\n$ROGER_FEATURES_NO"
 fi
 
-AM_CONDITIONAL(WITH_FAXOPHONE, test "x$with_faxophone" != "xno")
+AM_CONDITIONAL(WITH_CAPI, test "x$with_capi" != "xno")
 
 dnl ********************************************************************
 dnl appindicator is optional
@@ -650,7 +650,7 @@ AC_CONFIG_FILES([
     libroutermanager/Makefile
     libroutermanager/data/Makefile
     libroutermanager/plugins/Makefile
-    libroutermanager/plugins/faxophone/Makefile
+    libroutermanager/plugins/capi/Makefile
     libroutermanager/plugins/fritzbox/Makefile
     libroutermanager/plugins/callmonitor/Makefile
     libroutermanager/plugins/areacodes_global/Makefile

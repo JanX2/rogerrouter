@@ -25,10 +25,12 @@
 #ifndef FAXOPHONE_PHONE_H
 #define FAXOPHONE_PHONE_H
 
+#include <libroutermanager/connection.h>
+
 #define PHONE_CIP 0x04
 
 struct capi_connection *phone_call(guchar controller, const gchar *source, const gchar *target, gboolean anonymous);
-void phone_mute(struct capi_connection *connection, guchar mute);
+void capi_phone_mute(struct connection *connection, gboolean mute);
 void phone_hold(struct capi_connection *connection, guchar record);
 void phone_record(struct capi_connection *connection, guchar hold, const gchar *dir);
 void phone_send_dtmf_code(struct capi_connection *connection, guchar code);

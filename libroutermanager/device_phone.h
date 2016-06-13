@@ -32,12 +32,13 @@ struct device_phone {
 
 	gboolean (*number_is_handled)(gchar *number);
 
-	/*void (*mute)(gpointer connection, gboolean mute);
-	void (*record)(gpointer connection, guchar hold, const gchar *dir);*/
+	void (*mute)(struct connection *connection, gboolean mute);
+	/*void (*record)(gpointer connection, guchar hold, const gchar *dir);*/
 };
 
 void phone_register(struct device_phone *phone);
 GSList *phone_get_plugins(void);
+void phone_mute(gpointer connection, gboolean mute);
 
 G_END_DECLS
 

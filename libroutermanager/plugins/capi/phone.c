@@ -167,14 +167,16 @@ static struct connection *capi_phone_dial(const char *trg_no, gboolean anonymous
 }
 
 /**
- * \brief Mute/unmute active capi connection
- * \param connection active capi connection
+ * \brief Mute/unmute active connection
+ * \param connection active connection
  * \param mute mute flag
  */
-void phone_mute(struct capi_connection *connection, guchar mute)
+void capi_phone_mute(struct connection *connection, gboolean mute)
 {
+	struct capi_connection *capi_connection = connection->priv;
+
 	/* Just set the flag, the audio input thread handle the mute case */
-	connection->mute = mute;
+	capi_connection->mute = mute;
 }
 
 /**
@@ -544,13 +546,20 @@ void phone_conference(struct capi_connection *active, struct capi_connection *ho
 	isdn_unlock();
 }
 
+gboolean capi_number_is_handled(gchar *number)
+{
+	return TRUE;
+}
+
 struct device_phone capi_phone = {
 	"CAPI Phone",
 	capi_phone_dial,
 	NULL,
 	capi_phone_hangup,
 	capi_phone_hold,
-	capi_phone_send_dtmf_code
+	capi_phone_send_dtmf_code,
+	capi_number_is_handled,
+	capi_phone_mute
 };
 
 void faxophone_phone_init(void)

@@ -1,4 +1,4 @@
-SUBDIRS = fritzbox callmonitor areacodes_global reverselookup simple_pwd faxophone
+SUBDIRS = fritzbox callmonitor areacodes_global reverselookup simple_pwd capi
 
 if WITH_PULSEAUDIO
 SUBDIRS += pulseaudio

@@ -401,7 +401,6 @@ static void impl_activate(PeasActivatable *plugin)
 
 	sip_settings = rm_settings_plugin_new("org.tabos.roger.plugins.sip", "sip");
 
-
 	/* Add network event */
 	sip_plugin->priv->net_event_id = net_add_event(sip_connect, sip_disconnect, sip_plugin);
 
