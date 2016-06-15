@@ -101,8 +101,8 @@ static int capi_connection_set_type(struct capi_connection *connection, int type
 	/* Set informations depending on type */
 	switch (type) {
 	case SESSION_PHONE:
-		//connection->init_data = faxophone_phone_init_data;
-		connection->data = phone_transfer;
+		//connection->init_data = capi_phone_init_data;
+		connection->data = capi_phone_transfer;
 		connection->clean = NULL;
 		connection->early_b3 = 1;
 		break;
@@ -1996,7 +1996,7 @@ static void impl_activate(PeasActivatable *plugin)
 	/* Add network event */
 	faxophone_plugin->priv->net_event_id = net_add_event(faxophone_connect, faxophone_disconnect, faxophone_plugin);
 
-	faxophone_phone_init();
+	capi_phone_init();
 }
 
 /**

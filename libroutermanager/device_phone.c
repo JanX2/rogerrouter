@@ -50,12 +50,22 @@ gint phone_pickup(gpointer connection)
 {
 	struct device_phone *phone = phone_plugins->data;
 
+	if (!phone || !phone->pickup) {
+		g_warning("%s(): No phone or pickup function", __FUNCTION__);
+		return -1;
+	}
+
 	return phone->pickup(connection);
 }
 
 void phone_hangup(gpointer connection)
 {
 	struct device_phone *phone = phone_plugins->data;
+
+	if (!phone || !phone->hangup) {
+		g_warning("%s(): No phone or hangup function", __FUNCTION__);
+		return;
+	}
 
 	phone->hangup(connection);
 }
@@ -64,6 +74,11 @@ void phone_hold(gpointer connection, gboolean hold)
 {
 	struct device_phone *phone = phone_plugins->data;
 
+	if (!phone || !phone->hold) {
+		g_warning("%s(): No phone or hold function", __FUNCTION__);
+		return;
+	}
+
 	phone->hold(connection, hold);
 }
 
@@ -71,12 +86,22 @@ void phone_send_dtmf_code(gpointer connection, guchar chr)
 {
 	struct device_phone *phone = phone_plugins->data;
 
+	if (!phone || !phone->send_dtmf_code) {
+		g_warning("%s(): No phone or send dtmf code function", __FUNCTION__);
+		return;
+	}
+
 	phone->send_dtmf_code(connection, chr);
 }
 
 void phone_mute(gpointer connection, gboolean mute)
 {
 	struct device_phone *phone = phone_plugins->data;
+
+	if (!phone || !phone->mute) {
+		g_warning("%s(): No phone or mute function", __FUNCTION__);
+		return;
+	}
 
 	phone->mute(connection, mute);
 }

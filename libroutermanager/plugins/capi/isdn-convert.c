@@ -231,7 +231,7 @@ void convert_isdn_to_audio(struct capi_connection *connection, unsigned char *in
 	}
 
 	/* Record data */
-	if (recorder != NULL && rec_buf != NULL) {
+	if (connection->recording && rec_buf != NULL) {
 		recording_write(recorder, rec_buf, in_buf_len, RECORDING_REMOTE);
 	}
 

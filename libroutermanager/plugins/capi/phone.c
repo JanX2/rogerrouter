@@ -45,7 +45,7 @@ int recording_close(struct recorder *recorder);
  * \param data capi connection pointer
  * \return NULL
  */
-gpointer phone_input_thread(gpointer data)
+gpointer capi_phone_input_thread(gpointer data)
 {
 	struct session *session = faxophone_get_session();
 	struct capi_connection *connection = data;
@@ -80,7 +80,7 @@ gpointer phone_input_thread(gpointer data)
 	return NULL;
 }
 
-void faxophone_phone_init_data(gpointer connection)
+void capi_phone_init_data(struct connection *connection)
 {
 	struct session *session = faxophone_get_session();
 
@@ -88,7 +88,7 @@ void faxophone_phone_init_data(gpointer connection)
 	if (session->input_thread_state == 0) {
 		session->input_thread_state = 1;
 
-		//CREATE_THREAD("phone-input", phone_input_thread, connection);
+		//CREATE_THREAD("phone-input", capi_phone_input_thread, connection);
 	}
 }
 
@@ -97,7 +97,7 @@ void faxophone_phone_init_data(gpointer connection)
  * \param connection active capi connection
  * \param sCapiMessage current capi message
  */
-void phone_transfer(struct capi_connection *connection, _cmsg capi_message)
+void capi_phone_transfer(struct capi_connection *connection, _cmsg capi_message)
 {
 	struct session *session = faxophone_get_session();
 	_cmsg cmsg;
@@ -112,6 +112,11 @@ void phone_transfer(struct capi_connection *connection, _cmsg capi_message)
 	isdn_lock();
 	DATA_B3_RESP(&cmsg, session->appl_id, session->message_number++, connection->ncci, DATA_B3_IND_DATAHANDLE(&capi_message));
 	isdn_unlock();
+
+	if (!connection->audio) {
+		g_warning("%s(): No audio yet", __FUNCTION__);
+		return;
+	}
 
 	/* Send data to soundcard */
 	session->handlers->audio_output(connection->audio, audio_buffer, audio_buf_len);
@@ -410,10 +415,11 @@ int recording_close(struct recorder *recorder)
  * \brief Flush connection recorder
  * \param connection capi connection
  */
-void phone_flush(struct capi_connection *connection)
+void capi_phone_flush(struct connection *connection)
 {
 	if (connection != NULL) {
-		recording_flush(&connection->recorder, 0);
+		struct capi_connection *capi_connection = connection->priv;
+		recording_flush(&capi_connection->recorder, 0);
 	}
 }
 
@@ -423,7 +429,7 @@ void phone_flush(struct capi_connection *connection)
  * \param record record flag
  * \param dir storage directory
  */
-void phone_record(struct capi_connection *connection, guchar record, const char *dir)
+void capi_phone_record(struct capi_connection *connection, guchar record, const char *dir)
 {
 	if (record == 1) {
 		gchar *file = NULL;
@@ -495,7 +501,7 @@ void capi_phone_send_dtmf_code(struct connection *connection, guchar code)
  * \brief Hangup phone connection
  * \param connection active connection
  */
-static void capi_phone_hangup(struct connection *connection)
+void capi_phone_hangup(struct connection *connection)
 {
 	if (connection == NULL) {
 		return;
@@ -510,19 +516,21 @@ static void capi_phone_hangup(struct connection *connection)
  * \param connection active capi connection
  * \return see capiPickup
  */
-int phone_pickup(struct capi_connection *connection)
+int capi_phone_pickup(struct connection *connection)
 {
 	if (connection == NULL) {
 		return -1;
 	}
 
 	/* Pickup connection and set connection type to SESSION_PHONE */
-	return capi_pickup(connection, SESSION_PHONE);
+	return capi_pickup(connection->priv, SESSION_PHONE);
 }
 
-void phone_conference(struct capi_connection *active, struct capi_connection *hold)
+void capi_phone_conference(struct connection *connection_active, struct connection *connection_hold)
 {
 	struct session *session = faxophone_get_session();
+	struct capi_connection *active = connection_active->priv;
+	struct capi_connection *hold = connection_hold->priv;
 	_cmsg message;
 	_cbyte fac[24];
 	void *ptr = &(fac[4]);
@@ -562,7 +570,7 @@ struct device_phone capi_phone = {
 	capi_phone_mute
 };
 
-void faxophone_phone_init(void)
+void capi_phone_init(void)
 {
 	phone_register(&capi_phone);
 }

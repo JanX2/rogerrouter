@@ -29,17 +29,17 @@
 
 #define PHONE_CIP 0x04
 
-struct capi_connection *phone_call(guchar controller, const gchar *source, const gchar *target, gboolean anonymous);
+struct capi_connection *capi_phone_call(guchar controller, const gchar *source, const gchar *target, gboolean anonymous);
 void capi_phone_mute(struct connection *connection, gboolean mute);
-void phone_hold(struct capi_connection *connection, guchar record);
-void phone_record(struct capi_connection *connection, guchar hold, const gchar *dir);
-void phone_send_dtmf_code(struct capi_connection *connection, guchar code);
-void phone_hangup(struct capi_connection *connection);
-gint phone_pickup(struct capi_connection *connection);
-void phone_init_data(struct capi_connection *connection);
-void phone_transfer(struct capi_connection *connection, _cmsg message);
-void phone_conference(struct capi_connection *active, struct capi_connection *hold);
-void phone_flush(struct capi_connection *connection);
+void capi_phone_hold(struct connection *connection, gboolean mute);
+void capi_phone_record(struct capi_connection *connection, guchar hold, const gchar *dir);
+void capi_phone_send_dtmf_code(struct connection *connection, guchar code);
+void capi_phone_hangup(struct connection *connection);
+gint capi_phone_pickup(struct connection *connection);
+void capi_phone_init_data(struct connection *connection);
+void capi_phone_transfer(struct capi_connection *capi_connection, _cmsg message);
+void capi_phone_conference(struct connection *active, struct connection *hold);
+void capi_phone_flush(struct connection *connection);
 gint recording_write(struct recorder *recorder, short *buf, gint size, gint channel);
 
 #endif
