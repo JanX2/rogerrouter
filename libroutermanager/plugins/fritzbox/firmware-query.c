@@ -240,7 +240,7 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 
 	/* Parse msns */
 	g_debug("MSNs:");
-	json_reader_read_member(reader, "MSN");
+	json_reader_read_member(reader, "SIP");
 	count = json_reader_count_elements(reader);
 
 	gchar **numbers = NULL;
