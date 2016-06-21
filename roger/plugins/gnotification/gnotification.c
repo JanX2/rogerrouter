@@ -119,7 +119,7 @@ gboolean gnotification_show(struct connection *connection, struct contact *conta
 
 	connection->notification = g_strdup_printf("%s%s", connection->local_number, contact->number);
 
-	if (connection->type == CONNECTION_TYPE_INCOMING) {
+	if (connection->type == (CONNECTION_TYPE_INCOMING | CONNECTION_TYPE_SOFTPHONE)) {
 		g_notification_add_button_with_target(notify, _("Accept"), "app.pickup", "i", connection->id);
 		g_notification_add_button_with_target(notify, _("Decline"), "app.hangup", "i", connection->id);
 	} else if (connection->type == CONNECTION_TYPE_OUTGOING) {
