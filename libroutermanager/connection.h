@@ -30,6 +30,8 @@ G_BEGIN_DECLS
 #define CONNECTION_TYPE_DISCONNECT 0x08
 #define CONNECTION_TYPE_MISSED     (CONNECTION_TYPE_INCOMING | CONNECTION_TYPE_DISCONNECT)
 
+#define CONNECTION_TYPE_SOFTPHONE  0x80
+
 /** connection structure */
 struct connection {
 	/* Unique ID */
