@@ -1104,11 +1104,7 @@ void journal_window(GApplication *app)
 
 	journal_startup(app);
 
-#if GTK_CHECK_VERSION(3,12,0)
 	use_header = gtk_application_prefers_app_menu(GTK_APPLICATION(app));
-#else
-	g_object_get(gtk_settings_get_default(), "gtk-dialogs-use-header", &use_header, NULL);
-#endif
 	g_debug("Use headerbar: %d", use_header);
 
 	journal_init_call_icon();

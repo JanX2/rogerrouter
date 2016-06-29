@@ -53,7 +53,7 @@
 #define DEBUGGERRC "debuggerrc"
 #define BUGZILLA_URI "https://www.tabos.org/forum"
 
-static const gchar *DEBUG_SCRIPT = "thread all apply\nbt full\nkill\nq";
+static const gchar *DEBUG_SCRIPT = "thread apply all bt full\nkill\nq\n";
 extern gchar *argv0;
 
 /**
@@ -299,6 +299,17 @@ static void crash_save_crash_log(GtkButton *button, const gchar *text)
 	g_free(buf);
 }
 
+gboolean crash_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+	gtk_widget_destroy(widget);
+	return TRUE;
+}
+
+void crash_exit_clicked_cb(GtkWidget *widget, gpointer user_data)
+{
+	gtk_main_quit();
+}
+
 /**
  * \brief show crash dialog
  * \param text Description
@@ -398,12 +409,9 @@ static GtkWidget *crash_dialog_show(const gchar *text, const gchar *name, const 
 	gtk_container_add(GTK_CONTAINER(hbuttonbox4), button4);
 	gtk_widget_set_can_default(button4, TRUE);
 
-	g_signal_connect(G_OBJECT(window1), "delete_event",
-			 G_CALLBACK(gtk_main_quit), NULL);
-	g_signal_connect(G_OBJECT(button3),   "clicked",
-			 G_CALLBACK(gtk_main_quit), NULL);
-	g_signal_connect(G_OBJECT(button4), "clicked",
-			 G_CALLBACK(crash_save_crash_log), crash_report);
+	g_signal_connect(G_OBJECT(window1), "delete_event", G_CALLBACK(crash_delete_event_cb), NULL);
+	g_signal_connect(G_OBJECT(button3), "clicked", G_CALLBACK(crash_exit_clicked_cb), NULL);
+	g_signal_connect(G_OBJECT(button4), "clicked", G_CALLBACK(crash_save_crash_log), crash_report);
 
 	gtk_window_set_default_size(GTK_WINDOW(window1), 800, 600);
 

@@ -27,9 +27,15 @@
 #define SPANDSP_EXPOSE_INTERNAL_STRUCTURES
 #include <spandsp.h>
 
-#include <faxophone.h>
+#include <capi.h>
 #include <fax.h>
 #include <isdn-convert.h>
+
+#include <libroutermanager/connection.h>
+#include <libroutermanager/gstring.h>
+#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/device_fax.h>
+#include <sff.h>
 
 static int8_t *_linear16_2_law = (int8_t *) &linear16_2_law[32768];
 static uint16_t *_law_2_linear16 = &law_2_linear16[0];
@@ -60,7 +66,7 @@ static void real_time_frame_handler(t30_state_t *state, void *user_data, gint di
 {
 	struct capi_connection *connection = user_data;
 	struct fax_status *status = connection->priv;
-	struct session *session = faxophone_get_session();
+	struct session *session = capi_get_session();
 	t30_stats_t stats;
 
 	//g_debug("real_time_frame_handler() called (%d/%d/%d)", direction, len, msg[2]);
@@ -91,7 +97,7 @@ static gint phase_handler_b(t30_state_t *state, void *user_data, gint result)
 {
 	struct capi_connection *connection = user_data;
 	struct fax_status *status = connection->priv;
-	struct session *session = faxophone_get_session();
+	struct session *session = capi_get_session();
 	t30_stats_t stats;
 	t30_state_t *t30;
 	const gchar *ident;
@@ -152,7 +158,7 @@ static gint phase_handler_d(t30_state_t *state, void *user_data, gint result)
 {
 	struct capi_connection *connection = user_data;
 	struct fax_status *status = connection->priv;
-	struct session *session = faxophone_get_session();
+	struct session *session = capi_get_session();
 	t30_stats_t stats;
 
 	t30_get_transfer_statistics(state, &stats);
@@ -196,7 +202,7 @@ static void phase_handler_e(t30_state_t *state, void *user_data, gint result)
 {
 	struct capi_connection *connection = user_data;
 	struct fax_status *status = connection->priv;
-	struct session *session = faxophone_get_session();
+	struct session *session = capi_get_session();
 	gint transferred = 0;
 	t30_stats_t stats;
 	t30_state_t *t30;
@@ -391,7 +397,7 @@ gint spandsp_init(const gchar *tiff_file, gboolean sending, gchar modem, gchar e
 gint spandsp_close(fax_state_t *fax_state)
 {
 	struct fax_status *status = NULL;
-	struct session *session = faxophone_get_session();
+	struct session *session = capi_get_session();
 	gint i;
 
 	g_debug("Close");
@@ -465,7 +471,7 @@ gint spandsp_rx(fax_state_t *fax_state, uint8_t *buf, size_t len)
 void fax_transfer(struct capi_connection *connection, _cmsg capi_message)
 {
 	struct fax_status *status = connection->priv;
-	struct session *session = faxophone_get_session();
+	struct session *session = capi_get_session();
 	_cmsg cmsg;
 	guint8 alaw_buffer_tx[CAPI_PACKETS];
 	gint32 len = DATA_B3_IND_DATALENGTH(&capi_message);
@@ -623,4 +629,69 @@ void fax_clean(struct capi_connection *connection)
 
 	free(status);
 	connection->priv = NULL;
+}
+
+/**
+ * \brief Dial number via fax
+ * \param tiff tiff file name
+ * \param trg_no target number
+ * \param suppress suppress number flag
+ * \return capi connection pointer
+ */
+struct connection *capi_fax_dial(gchar *tiff, const gchar *trg_no, gboolean suppress)
+{
+	struct profile *profile = profile_get_active();
+	gint modem = g_settings_get_int(profile->settings, "fax-bitrate");
+	gboolean ecm = g_settings_get_boolean(profile->settings, "fax-ecm");
+	gint controller = g_settings_get_int(profile->settings, "fax-controller") + 1;
+	gint cip = g_settings_get_int(profile->settings, "fax-cip");
+	const gchar *src_no = g_settings_get_string(profile->settings, "fax-number");
+	const gchar *header = g_settings_get_string(profile->settings, "fax-header");
+	const gchar *ident = g_settings_get_string(profile->settings, "fax-ident");
+	struct capi_connection *capi_connection = NULL;
+	struct connection *connection = NULL;
+	gchar *target;
+
+	if (EMPTY_STRING(src_no)) {
+		emit_message(0, "Source MSN not set, cannot dial");
+		return NULL;
+	}
+
+	target = call_canonize_number(trg_no);
+
+	if (cip == 1) {
+		cip = FAX_CIP;
+		g_debug("Using 'ISDN Fax' id");
+	} else {
+		cip = SPEECH_CIP;
+		g_debug("Using 'Analog Fax' id");
+	}
+
+	if (g_settings_get_boolean(profile->settings, "fax-sff")) {
+		g_warning("%s(): TODO", __FUNCTION__);
+		capi_connection = sff_send(tiff, modem, ecm, controller, src_no, target, ident, header, suppress);
+	} else {
+		g_warning("%s(): TODO", __FUNCTION__);
+		capi_connection = fax_send(tiff, modem, ecm, controller, cip, src_no, target, ident, header, suppress);
+	}
+	g_free(target);
+
+	if (capi_connection) {
+		connection = connection_add_call(capi_connection->id, CONNECTION_TYPE_OUTGOING, src_no, trg_no);
+		connection->priv = capi_connection;
+	}
+
+	return connection;
+}
+
+struct device_fax capi_fax = {
+	"CAPI Fax",
+	capi_fax_dial,
+	NULL,
+	//capi_number_is_handled,
+};
+
+void capi_fax_init(void)
+{
+	fax_register(&capi_fax);
 }

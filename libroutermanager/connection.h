@@ -46,6 +46,8 @@ struct connection {
 	void *notification;
 	/* Private data */
 	void *priv;
+	/* Connection time */
+	GTimer *status_timer;
 };
 
 struct connection *connection_add_call(gint id, gint type, const gchar *local_number, const gchar *remote_number);
@@ -54,6 +56,11 @@ struct connection *connection_find_by_number(const gchar *number);
 void connection_set_type(struct connection *connection, gint type);
 void connection_remove(struct connection *connection);
 void connection_ignore(struct connection *connection);
+
+void connection_setup_status_timer(struct connection *connection);
+void connection_remove_status_timer(struct connection *connection);
+gchar *connection_get_time(struct connection *connection);
+
 
 G_END_DECLS
 

@@ -18,12 +18,12 @@
  */
 
 /**
- * \file faxophone.h
- * \brief faxophone main header
+ * \file capi.h
+ * \brief capi main header
  */
 
-#ifndef FAXOPHONE_H
-#define FAXOPHONE_H
+#ifndef CAPI_H
+#define CAPI_H
 
 /* CAPI headers */
 #include <capi20.h>
@@ -187,8 +187,8 @@ void capi_send_dtmf_code(struct capi_connection *connection, unsigned char nCode
 void capi_hangup(struct capi_connection *connection);
 int capi_pickup(struct capi_connection *connection, int type);
 
-struct session *faxophone_get_session(void);
-struct session *faxophone_init(struct session_handlers *handlers, const char *host, gint controller);
-int faxophone_close(int force);
+struct session *capi_get_session(void);
+struct session *capi_session_init(struct session_handlers *handlers, const char *host, gint controller);
+int capi_session_close(int force);
 
 #endif

@@ -27,6 +27,72 @@
 static GSList *connection_list = NULL;
 
 /**
+ * \brief Create elapsed time string from two times
+ * \param connection connection pointer
+ * \return time string
+ */
+static gchar *timediff_str(struct connection *connection)
+{
+	gint duration;
+	static gchar buf[9];
+	gint hours;
+	gint minutes;
+	gint seconds;
+	gdouble time;
+
+	if (!connection->status_timer) {
+		strncpy(buf, "00:00:00", sizeof(buf));
+		return buf;
+	}
+
+	time = g_timer_elapsed(connection->status_timer, NULL);
+
+	duration = (gint) time;
+	seconds = duration % 60;
+	minutes = (duration / 60) % 60;
+	hours = duration / (60 * 60);
+
+	if (snprintf(buf, sizeof(buf), "%02d:%02d:%02d", hours, minutes, seconds) >= 9) {
+		buf[8] = '\0';
+	}
+
+	return buf;
+}
+
+/**
+ * \brief Setup connection status timer
+ * \param connection connection pointer
+ */
+void connection_setup_status_timer(struct connection *connection)
+{
+	if (connection->status_timer) {
+		g_debug("%s(): Skip status timer setup, already active", __FUNCTION__);
+		return;
+	}
+
+	connection->status_timer = g_timer_new();
+	g_timer_start(connection->status_timer);
+}
+
+/**
+ * \brief Remove phone status timer
+ * \param connection connection pointer
+ */
+void connection_remove_status_timer(struct connection *connection)
+{
+	/* Remove gtimer */
+	if (connection->status_timer) {
+		g_timer_destroy(connection->status_timer);
+		connection->status_timer = NULL;
+	}
+}
+
+gchar *connection_get_time(struct connection *connection)
+{
+	return timediff_str(connection);
+}
+
+/**
  * \brief Add connection structure to connect list
  * \param id connection id
  */

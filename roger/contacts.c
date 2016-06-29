@@ -758,9 +758,7 @@ void refresh_edit_dialog(struct contact *contact)
 	g_menu_append(menu, _("Work address"), "app.contacts-edit-address-work");
 	g_menu_freeze(menu);
 
-#if GTK_CHECK_VERSION(3,12,0)
 	gtk_menu_button_set_use_popover(GTK_MENU_BUTTON(add_detail_button), TRUE);
-#endif
 	GtkWidget *detail_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
 	gtk_box_pack_start(GTK_BOX(detail_box), gtk_label_new(_("Add detail")), FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(detail_box), gtk_image_new_from_icon_name("pan-up-symbolic", GTK_ICON_SIZE_MENU), FALSE, FALSE, 0);

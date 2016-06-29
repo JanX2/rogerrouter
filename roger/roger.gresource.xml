@@ -7,6 +7,7 @@
 		<file preprocess="xml-stripblanks">contacts.glade</file>
 		<file preprocess="xml-stripblanks">settings.glade</file>
 		<file preprocess="xml-stripblanks">shortcuts.glade</file>
+		<file preprocess="xml-stripblanks">phone.glade</file>
 		<file preprocess="to-pixdata">images/app.png</file>
 		<file>images/address-book.svg</file>
 	</gresource>

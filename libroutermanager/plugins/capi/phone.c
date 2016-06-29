@@ -27,7 +27,7 @@
 #include <fcntl.h>
 #include <stdint.h>
 
-#include <faxophone.h>
+#include <capi.h>
 #include <phone.h>
 #include <isdn-convert.h>
 
@@ -47,7 +47,7 @@ int recording_close(struct recorder *recorder);
  */
 gpointer capi_phone_input_thread(gpointer data)
 {
-	struct session *session = faxophone_get_session();
+	struct session *session = capi_get_session();
 	struct capi_connection *connection = data;
 	guchar audio_buffer_rx[CAPI_PACKETS];
 	guchar audio_buffer[CAPI_PACKETS * 2];
@@ -82,13 +82,13 @@ gpointer capi_phone_input_thread(gpointer data)
 
 void capi_phone_init_data(struct connection *connection)
 {
-	struct session *session = faxophone_get_session();
+	struct session *session = capi_get_session();
 
 	g_debug("phone_init_data()");
 	if (session->input_thread_state == 0) {
 		session->input_thread_state = 1;
 
-		//CREATE_THREAD("phone-input", capi_phone_input_thread, connection);
+		CREATE_THREAD("phone-input", capi_phone_input_thread, connection);
 	}
 }
 
@@ -99,7 +99,7 @@ void capi_phone_init_data(struct connection *connection)
  */
 void capi_phone_transfer(struct capi_connection *connection, _cmsg capi_message)
 {
-	struct session *session = faxophone_get_session();
+	struct session *session = capi_get_session();
 	_cmsg cmsg;
 	guchar audio_buffer[CAPI_PACKETS * 2];
 	guint len = DATA_B3_IND_DATALENGTH(&capi_message);
@@ -115,6 +115,8 @@ void capi_phone_transfer(struct capi_connection *connection, _cmsg capi_message)
 
 	if (!connection->audio) {
 		g_warning("%s(): No audio yet", __FUNCTION__);
+		return;
+	} else {
 		return;
 	}
 
@@ -462,7 +464,7 @@ void capi_phone_record(struct capi_connection *connection, guchar record, const 
  */
 void capi_phone_hold(struct connection *connection, gboolean hold)
 {
-	struct session *session = faxophone_get_session();
+	struct session *session = capi_get_session();
 	struct capi_connection *capi_connection = connection->priv;
 	_cmsg message;
 	_cbyte fac[9];
@@ -528,7 +530,7 @@ int capi_phone_pickup(struct connection *connection)
 
 void capi_phone_conference(struct connection *connection_active, struct connection *connection_hold)
 {
-	struct session *session = faxophone_get_session();
+	struct session *session = capi_get_session();
 	struct capi_connection *active = connection_active->priv;
 	struct capi_connection *hold = connection_hold->priv;
 	_cmsg message;

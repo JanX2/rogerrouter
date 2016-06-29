@@ -70,6 +70,7 @@ void emit_fax_process(const gchar *filename)
  */
 void emit_connection_established(struct connection *connection)
 {
+	connection_setup_status_timer(connection);
 	g_signal_emit(app_object, app_object_signals[ACB_CONNECTION_ESTABLISHED], 0, connection);
 }
 
@@ -79,6 +80,9 @@ void emit_connection_established(struct connection *connection)
  */
 void emit_connection_terminated(struct connection *connection)
 {
+	/* Remove timer */
+	connection_remove_status_timer(connection);
+
 	g_signal_emit(app_object, app_object_signals[ACB_CONNECTION_TERMINATED], 0, connection);
 }
 

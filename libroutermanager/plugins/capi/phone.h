@@ -42,4 +42,7 @@ void capi_phone_conference(struct connection *active, struct connection *hold);
 void capi_phone_flush(struct connection *connection);
 gint recording_write(struct recorder *recorder, short *buf, gint size, gint channel);
 
+void capi_phone_init(void);
+void capi_phone_init_data(struct connection *connection);
+
 #endif

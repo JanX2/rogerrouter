@@ -34,6 +34,7 @@
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/routermanager.h>
 #include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/file.h>
 
 #include "fritzbox.h"
 #include "firmware-common.h"
@@ -873,6 +874,61 @@ gint fritzbox_find_phone_port(gint dial_port)
 	return -1;
 }
 
+
+gchar *fritzbox_new1(struct profile *profile)
+{
+	SoupMessage *msg;
+	SoupURI *uri;
+	gchar *ip = NULL;
+	gchar *request;
+	SoupMessageHeaders *headers;
+	gchar *url;
+
+	router_login(profile);
+
+	/* Create POST message */
+	if (FIRMWARE_IS(6, 6)) {
+		url = g_strdup_printf("http://%s/upnp/control/x_contact", router_get_host(profile));
+	} else {
+		url = g_strdup_printf("http://%s/upnp/control/x_contact", router_get_host(profile));
+	}
+
+	uri = soup_uri_new(url);
+	soup_uri_set_port(uri, 49000);
+	msg = soup_message_new_from_uri(SOUP_METHOD_POST, uri);
+	g_free(url);
+
+	request = g_strdup(
+	              "<?xml version='1.0' encoding='utf-8'?>"
+	              " <s:Envelope s:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/' xmlns:s='http://schemas.xmlsoap.org/soap/envelope/'>"
+	              " <s:Body>"
+	              " <u:GetCallList xmlns:u=\"urn:dslforum-org:service:X_AVM-DE_OnTel:1\" />"
+	              " </s:Body>"
+	              " </s:Envelope>\r\n");
+
+	soup_message_set_request(msg, "text/xml; charset=\"utf-8\"", SOUP_MEMORY_STATIC, request, strlen(request));
+	headers = msg->request_headers;
+	soup_message_headers_append(headers, "SoapAction", "urn:dslforum-org:service:X_AVM-DE_OnTel:1#GetCallList");
+
+	soup_session_send_message(soup_session, msg);
+
+	if (msg->status_code != 200) {
+		g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
+		g_object_unref(msg);
+		return NULL;
+	}
+file_save("moep", msg->response_body->data, -1);
+
+	ip = xml_extract_tag(msg->response_body->data, "NewCallListURL");
+
+	g_object_unref(msg);
+
+	g_debug("Got IP data (%s)", ip);
+
+	return ip;
+}
+
+
 /**
  * \brief Extract IP address from router
  * \param profile profile pointer
@@ -886,6 +942,8 @@ gchar *fritzbox_get_ip(struct profile *profile)
 	gchar *request;
 	SoupMessageHeaders *headers;
 	gchar *url;
+
+	return fritzbox_new1(profile);
 
 	/* Create POST message */
 	if (FIRMWARE_IS(6, 6)) {

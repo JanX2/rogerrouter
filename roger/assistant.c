@@ -279,9 +279,7 @@ static void router_stack_changed_cb(GtkEditable *entry, gpointer user_data)
 		gtk_widget_set_sensitive(assistant->next_button, FALSE);
 
 		/* Reselect active row */
-#if GTK_CHECK_VERSION(3,12,0)
 		gtk_list_box_unselect_all(GTK_LIST_BOX(assistant->router_listbox));
-#endif
 		gtk_list_box_select_row(GTK_LIST_BOX(assistant->router_listbox), row);
 	}
 }

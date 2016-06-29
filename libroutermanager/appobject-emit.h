@@ -22,7 +22,6 @@
 
 #include <libroutermanager/connection.h>
 #include <libroutermanager/network.h>
-#include <libroutermanager/libfaxophone/faxophone.h>
 
 G_BEGIN_DECLS
 

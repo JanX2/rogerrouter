@@ -45,14 +45,15 @@ struct phone_state {
 	GtkWidget *pickup_button;
 	GtkWidget *hangup_button;
 
+	GtkWidget *menu_button;
+
 	GtkWidget *contact_menu;
 	GtkWidget *scrolled_win;
 	GtkWidget *box;
 	const gchar *filter;
 	gboolean discard;
 
-	GTimer *phone_session_timer;
-	gint phone_session_timer_id;
+	gint status_timer_id;
 
 	const gchar *number;
 	struct connection *connection;
@@ -75,8 +76,8 @@ struct phone_device {
 void app_show_phone_window(struct contact *contact, struct connection *connection);
 GtkWidget *phone_search_entry_new(GtkWidget *window, struct contact *contact, struct phone_state *state);
 void phone_call_notify_cb(AppObject *object, struct call *call, gint connection, gchar *medium, gpointer user_data);
-void phone_setup_timer(struct phone_state *state);
-void phone_remove_timer(struct phone_state *state);
+void phone_setup_timer();
+void phone_remove_timer();
 GtkWidget *phone_dial_buttons_new(GtkWidget *window, struct phone_state *state);
 void phone_dial_buttons_set_dial(struct phone_state *state, gboolean allow);
 GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struct connection *connection, gpointer priv);

@@ -28,7 +28,7 @@
 #include <string.h>
 #include <math.h>
 
-#include <libroutermanager/libfaxophone/faxophone.h>
+#include "capi.h"
 
 // 16bit PCM, Mono, 8000 hz -> alaw
 extern signed char linear16_2_law[65536];

@@ -36,8 +36,6 @@ libroutermanager_la_SOURCES = \
 	connection.h\
 	csv.c\
 	csv.h\
-	fax_phone.c \
-	fax_phone.h \
 	fax_spooler.c\
 	fax_server.c\
 	fax_printer.h\

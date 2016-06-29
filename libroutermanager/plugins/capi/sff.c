@@ -28,7 +28,7 @@
 
 #include <libroutermanager/file.h>
 
-#include <faxophone.h>
+#include <capi.h>
 #include <fax.h>
 #include <sff.h>
 
@@ -43,7 +43,7 @@ static gsize sff_pos = 0;
  */
 static inline void sff_transfer(struct capi_connection *connection, _cmsg capi_message)
 {
-	struct session *session = faxophone_get_session();
+	struct session *session = capi_get_session();
 	struct fax_status *status = connection->priv;
 	_cmsg cmsg;
 	gint transfer = CAPI_PACKETS;

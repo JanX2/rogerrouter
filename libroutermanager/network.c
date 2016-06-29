@@ -91,6 +91,14 @@ static void network_authenticate_cb(SoupSession *session, SoupMessage *msg, Soup
 	user = g_settings_get_string(profile->settings, "auth-user");
 	password = g_settings_get_string(profile->settings, "auth-password");
 
+	if (EMPTY_STRING(user) && EMPTY_STRING(password)) {
+		user = router_get_login_user(profile);
+		g_settings_set_string(profile->settings, "auth-user", user);
+
+		password = router_get_login_password(profile);
+		g_settings_set_string(profile->settings, "auth-password", password);
+	}
+
 	if (!retrying && !EMPTY_STRING(user) && !EMPTY_STRING(password)) {
 		g_debug("%s(): Already configured...", __FUNCTION__);
 		soup_auth_authenticate(auth, user, password);

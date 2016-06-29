@@ -1,16 +1,16 @@
-plugin_in_files = faxophone.plugin
+plugin_in_files = capi.plugin
 
 include ../Makefile.plugins
 
-plugindir = $(libdir)/routermanager/faxophone
+plugindir = $(libdir)/routermanager/capi
 
-plugin_LTLIBRARIES = libfaxophone.la
+plugin_LTLIBRARIES = librmcapi.la
 
-libfaxophone_la_SOURCES = \
+librmcapi_la_SOURCES = \
 	fax.c\
 	fax.h\
-	faxophone.c\
-	faxophone.h\
+	capi.c\
+	capi.h\
 	isdn-convert.c\
 	isdn-convert.h\
 	phone.c\
@@ -20,6 +20,6 @@ libfaxophone_la_SOURCES = \
 	sff.c\
 	sff.h
 
-libfaxophone_la_CFLAGS = $(plugin_cflags)
-libfaxophone_la_LDFLAGS = $(plugin_ldflags)
-libfaxophone_la_LIBADD  = $(plugin_libadd)
+librmcapi_la_CFLAGS = $(plugin_cflags)
+librmcapi_la_LDFLAGS = $(plugin_ldflags)
+librmcapi_la_LIBADD  = $(plugin_libadd) -lcapi20

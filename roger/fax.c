@@ -49,6 +49,8 @@ gboolean fax_update_ui(gpointer user_data)
 	static int old_percent = 0;
 	gchar *tmp;
 
+	//fax_get_status(&fax_status);
+
 	/* update percentage */
 	if (fax_status->progress_status) {
 		percentage = (float) fax_status->bytes_sent / (float) fax_status->bytes_total;

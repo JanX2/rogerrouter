@@ -18,8 +18,8 @@
  */
 
 /**
- * \file faxophone/faxophone.c
- * \brief CAPI routines and main faxophone functions
+ * \file capi/capi.c
+ * \brief CAPI routines and main capi functions
  */
 
 #include <config.h>
@@ -39,25 +39,25 @@
 #include <libroutermanager/call.h>
 
 
-#include <faxophone.h>
+#include <capi.h>
 #include <fax.h>
 #include <sff.h>
 #include <phone.h>
 #include <isdn-convert.h>
 
-#define ROUTERMANAGER_TYPE_FAXOPHONE_PLUGIN (routermanager_faxophone_plugin_get_type ())
-#define ROUTERMANAGER_FAXOPHONE_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_FAXOPHONE_PLUGIN, RouterManagerFaxophonePlugin))
+#define ROUTERMANAGER_TYPE_CAPI_PLUGIN (routermanager_capi_plugin_get_type ())
+#define ROUTERMANAGER_CAPI_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_CAPI_PLUGIN, RouterManagerCapiPlugin))
 
 typedef struct {
 	gconstpointer net_event_id;
 
 	GIOChannel *channel;
 	guint id;
-} RouterManagerFaxophonePluginPrivate;
+} RouterManagerCapiPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_FAXOPHONE_PLUGIN, RouterManagerFaxophonePlugin, routermanager_faxophone_plugin)
+ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_CAPI_PLUGIN, RouterManagerCapiPlugin, routermanager_capi_plugin)
 
-//#define FAXOPHONE_DEBUG 1
+//#define CAPI_DEBUG 1
 
 /** The current active session */
 static struct session *session = NULL;
@@ -101,7 +101,7 @@ static int capi_connection_set_type(struct capi_connection *connection, int type
 	/* Set informations depending on type */
 	switch (type) {
 	case SESSION_PHONE:
-		//connection->init_data = capi_phone_init_data;
+		connection->init_data = capi_phone_init_data;
 		connection->data = capi_phone_transfer;
 		connection->clean = NULL;
 		connection->early_b3 = 1;
@@ -412,7 +412,7 @@ int capi_pickup(struct capi_connection *connection, int type)
 {
 	_cmsg message;
 	unsigned char local_num[4];
-	struct session *session = faxophone_get_session();
+	struct session *session = capi_get_session();
 
 	capi_connection_set_type(connection, type);
 
@@ -963,7 +963,7 @@ static int capi_indication(_cmsg capi_message)
 
 	/* CAPI_DATA_B3 - data - receive/send */
 	case CAPI_DATA_B3:
-#ifdef FAXOPHONE_DEBUG
+#ifdef CAPI_DEBUG
 		g_debug("IND: CAPI_DATA_B3");
 #endif
 		ncci = DATA_B3_IND_NCCI(&capi_message);
@@ -973,7 +973,7 @@ static int capi_indication(_cmsg capi_message)
 			break;
 		}
 
-#ifdef FAXOPHONE_DEBUG
+#ifdef CAPI_DEBUG
 		g_debug("IND: CAPI_DATA_B3 - nConnection: %d, plci: %ld, ncci: %ld", connection->id, connection->plci, connection->ncci);
 #endif
 		connection->data(connection, capi_message);
@@ -1371,7 +1371,7 @@ static void capi_confirmation(_cmsg capi_message)
 	unsigned int info;
 	unsigned int plci;
 	unsigned int ncci;
-#ifdef FAXOPHONE_DEBUG
+#ifdef CAPI_DEBUG
 	int controller;
 #endif
 
@@ -1382,7 +1382,7 @@ static void capi_confirmation(_cmsg capi_message)
 		break;
 	case CAPI_LISTEN:
 		/* Listen confirmation */
-#ifdef FAXOPHONE_DEBUG
+#ifdef CAPI_DEBUG
 		controller = LISTEN_CONF_CONTROLLER(&capi_message);
 		g_debug("CNF: CAPI_LISTEN: controller %d, info %d", controller, capi_message.Info);
 #endif
@@ -1407,13 +1407,13 @@ static void capi_confirmation(_cmsg capi_message)
 		break;
 	case CAPI_DATA_B3:
 		/* Sent data acknowledge, NOP */
-#ifdef FAXOPHONE_DEBUG
+#ifdef CAPI_DEBUG
 		g_debug("CNF: DATA_B3");
 #endif
 		info = DATA_B3_CONF_INFO(&capi_message);
 		ncci = DATA_B3_CONF_NCCI(&capi_message);
 
-#ifdef FAXOPHONE_DEBUG
+#ifdef CAPI_DEBUG
 		g_debug("CNF: CAPI_ALERT: info %d, ncci %d", info, ncci);
 #endif
 
@@ -1474,10 +1474,10 @@ static int capi_init(int controller);
 
 /**
  * \brief Our connection seems to be broken - reconnect
- * \param session faxophone session pointer
+ * \param session capi session pointer
  * \return error code
  */
-static void faxophone_reconnect(struct session *session)
+static void capi_reconnect(struct session *session)
 {
 	isdn_lock();
 	capi_close();
@@ -1526,7 +1526,7 @@ static gpointer capi_loop(void *user_data)
 			case CapiReceiveQueueEmpty:
 				g_warning("Empty queue, even if message pending.. reconnecting");
 				g_usleep(1 * G_USEC_PER_SEC);
-				faxophone_reconnect(session);
+				capi_reconnect(session);
 				break;
 			default:
 				return NULL;
@@ -1572,7 +1572,7 @@ static int capi_init(int controller)
 	CAPI_REGISTER_ERROR error_code = 0;
 	_cmsg capi_message;
 	unsigned int appl_id = -1;
-#ifdef FAXOPHONE_DEBUG
+#ifdef CAPI_DEBUG
 	unsigned char buffer[64];
 #endif
 	int index;
@@ -1602,7 +1602,7 @@ static int capi_init(int controller)
 		return -1;
 	}
 
-#ifdef FAXOPHONE_DEBUG
+#ifdef CAPI_DEBUG
 	for (index = 1; index <= num_controllers; index++) {
 		get_capi_profile(index, &profile);
 
@@ -1689,7 +1689,7 @@ static int capi_init(int controller)
 		}
 
 		g_debug("Listen to controller #%d ...", index);
-#ifdef FAXOPHONE_DEBUG
+#ifdef CAPI_DEBUG
 		g_debug("Listen to controller #%d ...", index);
 #endif
 	}
@@ -1703,13 +1703,13 @@ static int capi_init(int controller)
 void setHostName(const char *);
 
 /**
- * \brief Initialize faxophone structure
+ * \brief Initialize capi structure
  * \param handlers session handlers
  * \param host host name of router
  * \param controller listen controller or -1 for all
  * \return session pointer or NULL on error
  */
-struct session *faxophone_init(struct session_handlers *handlers, const char *host, gint controller)
+struct session *capi_session_init(struct session_handlers *handlers, const char *host, gint controller)
 {
 	int appl_id = -1;
 
@@ -1756,11 +1756,11 @@ struct session *faxophone_init(struct session_handlers *handlers, const char *ho
 }
 
 /**
- * \brief Destroy faxophone
+ * \brief Destroy capi
  * \param force force flag for capi_close()
  * \return error code 0
  */
-int faxophone_close(int force)
+int capi_session_close(int force)
 {
 	/* Close capi connection */
 	capi_close();
@@ -1775,10 +1775,10 @@ int faxophone_close(int force)
 }
 
 /**
- * \brief Get active faxophone session
+ * \brief Get active capi session
  * \return session pointer or NULL on error
  */
-struct session *faxophone_get_session(void)
+struct session *capi_get_session(void)
 {
 	return session;
 }
@@ -1957,18 +1957,18 @@ struct session_handlers session_handlers = {
 
 
 /**
- * \brief Faxophone connect
- * \param user_data faxophone plugin pointer
+ * \brief Capi connect
+ * \param user_data capi plugin pointer
  * \return error code
  */
-gboolean faxophone_connect(gpointer user_data)
+gboolean capi_session_connect(gpointer user_data)
 {
 	struct profile *profile = profile_get_active();
 	gboolean retry = TRUE;
 
 again:
 	g_debug("%s(): called", __FUNCTION__);
-	session = faxophone_init(&session_handlers, router_get_host(profile), g_settings_get_int(profile->settings, "phone-controller") + 1);
+	session = capi_session_init(&session_handlers, router_get_host(profile), g_settings_get_int(profile->settings, "phone-controller") + 1);
 	if (!session && retry) {
 		/* Maybe the port is closed, try to activate it and try again */
 		router_dial_number(profile, PORT_ISDN1, "#96*3*");
@@ -1980,7 +1980,7 @@ again:
 	return session != NULL;
 }
 
-gboolean faxophone_disconnect(gpointer user_data)
+gboolean capi_session_disconnect(gpointer user_data)
 {
 	return TRUE;
 }
@@ -1991,10 +1991,10 @@ gboolean faxophone_disconnect(gpointer user_data)
  */
 static void impl_activate(PeasActivatable *plugin)
 {
-	RouterManagerFaxophonePlugin *faxophone_plugin = ROUTERMANAGER_FAXOPHONE_PLUGIN(plugin);
+	RouterManagerCapiPlugin *capi_plugin = ROUTERMANAGER_CAPI_PLUGIN(plugin);
 
 	/* Add network event */
-	faxophone_plugin->priv->net_event_id = net_add_event(faxophone_connect, faxophone_disconnect, faxophone_plugin);
+	capi_plugin->priv->net_event_id = net_add_event(capi_session_connect, capi_session_disconnect, capi_plugin);
 
 	capi_phone_init();
 }
@@ -2005,9 +2005,9 @@ static void impl_activate(PeasActivatable *plugin)
  */
 static void impl_deactivate(PeasActivatable *plugin)
 {
-	RouterManagerFaxophonePlugin *faxophone_plugin = ROUTERMANAGER_FAXOPHONE_PLUGIN(plugin);
+	RouterManagerCapiPlugin *capi_plugin = ROUTERMANAGER_CAPI_PLUGIN(plugin);
 
-	g_debug("%s(): faxophone", __FUNCTION__);
+	g_debug("%s(): capi", __FUNCTION__);
 	/* Remove network event */
-	net_remove_event(faxophone_plugin->priv->net_event_id);
+	net_remove_event(capi_plugin->priv->net_event_id);
 }

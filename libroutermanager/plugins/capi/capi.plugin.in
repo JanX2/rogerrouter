@@ -1,5 +1,5 @@
 [Plugin]
-Module=faxophone
+Module=rmcapi
 _Name=CAPI
 _Description=Fax & phone support based on CAPI
 Authors=Jan-Michael Brummer <jan.brummer@tabos.org>

@@ -256,9 +256,9 @@ static void hangup_activated(GSimpleAction *action, GVariant *parameter, gpointe
 	//notify_gnotification_close(connection->notification, NULL);
 	connection->notification = NULL;
 
-	if (!connection->priv) {
-		connection->priv = active_capi_connection;
-	}
+	//if (!connection->priv) {
+		//connection->priv = active_capi_connection;
+	//}
 
 	phone_hangup(connection->priv);
 }

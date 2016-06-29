@@ -60,6 +60,8 @@ static inline void callmonitor_convert(gchar *text)
 	gchar *number = NULL;
 	gint type = -1;
 
+	g_debug("%s(): '%s'", __FUNCTION__, text);
+
 	if (!g_strcmp0(fields[1], "CALL")) {
 		type = 0;
 		number = fields[4];
@@ -97,7 +99,7 @@ static inline void callmonitor_convert(gchar *text)
 			emit_connection_notify(connection);
 		}
 		break;
-	case 4:
+	case 3:
 		connection = connection_find_by_id(atoi(fields[2]));
 		if (connection) {
 			connection_set_type(connection, CONNECTION_TYPE_DISCONNECT);
