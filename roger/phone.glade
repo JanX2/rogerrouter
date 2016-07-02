@@ -347,7 +347,7 @@
                           <object class="GtkButton">
                             <property name="name">button_1</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
                             <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
@@ -394,7 +394,7 @@
                           <object class="GtkButton">
                             <property name="name">button_2</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
                             <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
@@ -441,7 +441,7 @@
                           <object class="GtkButton">
                             <property name="name">button_3</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
                             <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
@@ -488,7 +488,7 @@
                           <object class="GtkButton">
                             <property name="name">button_4</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
                             <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
@@ -535,7 +535,7 @@
                           <object class="GtkButton">
                             <property name="name">button_7</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
                             <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
@@ -582,7 +582,7 @@
                           <object class="GtkButton">
                             <property name="name">button_*</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
                             <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
@@ -629,7 +629,7 @@
                           <object class="GtkButton">
                             <property name="name">button_0</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
                             <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
@@ -676,7 +676,7 @@
                           <object class="GtkButton">
                             <property name="name">button_#</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
                             <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
@@ -723,7 +723,7 @@
                           <object class="GtkButton">
                             <property name="name">button_6</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
                             <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
@@ -770,7 +770,7 @@
                           <object class="GtkButton">
                             <property name="name">button_5</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
                             <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
@@ -817,7 +817,7 @@
                           <object class="GtkButton">
                             <property name="name">button_8</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
                             <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
@@ -864,7 +864,7 @@
                           <object class="GtkButton">
                             <property name="name">button_9</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
                             <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>

@@ -33,6 +33,7 @@ enum phone_type {
 
 struct phone_state {
 	GtkWidget *window;
+	GtkWidget *grid;
 
 	GtkWidget *child_frame;
 	GtkWidget *control_frame;
@@ -79,7 +80,7 @@ void phone_call_notify_cb(AppObject *object, struct call *call, gint connection,
 void phone_setup_timer();
 void phone_remove_timer();
 GtkWidget *phone_dial_buttons_new(GtkWidget *window, struct phone_state *state);
-void phone_dial_buttons_set_dial(struct phone_state *state, gboolean allow);
+void phone_dial_buttons_set_dial(gboolean allow);
 GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struct connection *connection, gpointer priv);
 
 G_END_DECLS

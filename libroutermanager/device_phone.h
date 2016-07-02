@@ -39,6 +39,11 @@ struct device_phone {
 void phone_register(struct device_phone *phone);
 GSList *phone_get_plugins(void);
 void phone_mute(gpointer connection, gboolean mute);
+void phone_hold(struct connection *connection, gboolean hold);
+void phone_send_dtmf_code(struct connection *connection, guchar code);
+void phone_hangup(struct connection *connection);
+gint phone_pickup(struct connection *connection);
+struct connection *phone_dial(const gchar *target, gboolean anonymous);
 
 G_END_DECLS
 

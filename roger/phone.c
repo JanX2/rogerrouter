@@ -20,32 +20,22 @@
 #include <config.h>
 
 #include <string.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include <math.h>
 
 #include <gtk/gtk.h>
-#include <gdk/gdk.h>
 
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/contact.h>
-#include <libroutermanager/gstring.h>
-#include <libroutermanager/address-book.h>
-#include <libroutermanager/call.h>
-#include <libroutermanager/routermanager.h>
-#include <libroutermanager/profile.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/fax_phone.h>
+#include <libroutermanager/device_phone.h>
+#include <libroutermanager/address-book.h>
+#include <libroutermanager/gstring.h>
 
+#include <roger/main.h>
 #include <roger/journal.h>
 #include <roger/phone.h>
-#include <roger/fax.h>
-#include <roger/main.h>
 #include <roger/uitools.h>
 #include <roger/icons.h>
-#include <roger/application.h>
-#include <roger/journal.h>
+
 #include <roger/contacts.h>
 
 static struct phone_state *phone_state = NULL;
@@ -125,37 +115,30 @@ void phone_remove_timer(void)
  * \param state phone state pointer
  * \param status sensitive value
  */
-static void phone_control_buttons_set_sensitive(struct phone_state *state, gboolean status)
+static void phone_control_buttons_set_sensitive(gboolean sensitive)
 {
 	/* Set control button sensitive value */
-	if (state->mute_button) {
-		gtk_widget_set_sensitive(state->mute_button, status);
-	}
-	if (state->hold_button) {
-		gtk_widget_set_sensitive(state->hold_button, status);
-	}
-	if (state->record_button) {
-		gtk_widget_set_sensitive(state->record_button, status);
-	}
+	gtk_widget_set_sensitive(phone_state->mute_button, sensitive);
+	gtk_widget_set_sensitive(phone_state->hold_button, sensitive);
+	gtk_widget_set_sensitive(phone_state->record_button, sensitive);
 }
 
 /**
  * \brief Set sensitive value of hangup/pickup button depending of allow state
- * \param state pointer to phone state structure
  * \param allow_dial flag indicating if pick up is allowed
  */
-void phone_dial_buttons_set_dial(struct phone_state *state, gboolean allow_dial)
+void phone_dial_buttons_set_dial(gboolean allow_dial)
 {
 	struct profile *profile = profile_get_active();
 
-	gtk_widget_set_sensitive(state->pickup_button, allow_dial);
-	gtk_widget_set_sensitive(state->hangup_button, !allow_dial);
+	gtk_widget_set_sensitive(phone_state->pickup_button, allow_dial);
+	gtk_widget_set_sensitive(phone_state->hangup_button, !allow_dial);
 
 	/* Toggle control buttons sensitive value */
 	if (router_get_phone_port(profile) == PORT_SOFTPHONE) {
-		phone_control_buttons_set_sensitive(state, !allow_dial);
+		phone_control_buttons_set_sensitive(!allow_dial);
 	} else {
-		phone_control_buttons_set_sensitive(state, FALSE);
+		phone_control_buttons_set_sensitive(FALSE);
 	}
 }
 
@@ -189,7 +172,7 @@ static void connection_terminated_cb(AppObject *object, struct connection *conne
 	/* Remove timer */
 	phone_remove_timer();
 
-	phone_dial_buttons_set_dial(phone_state, TRUE);
+	phone_dial_buttons_set_dial(TRUE);
 	phone_state->connection = NULL;
 
 	//TODO: Free connection
@@ -203,9 +186,9 @@ void connection_status_cb(AppObject *object, gint status, struct connection *con
 /**
  * \brief Phone connection failed - Show error dialog including user support text
  */
-static void phone_connection_failed(struct phone_state *state)
+static void phone_connection_failed(void)
 {
-	GtkWidget *error_dialog = gtk_message_dialog_new(GTK_WINDOW(state->window), GTK_DIALOG_MODAL | GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, _("Connection problem"));
+	GtkWidget *error_dialog = gtk_message_dialog_new(GTK_WINDOW(phone_state->window), GTK_DIALOG_MODAL | GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, _("Connection problem"));
 	gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(error_dialog), _("This is most likely due to a closed CAPI port or an invalid phone number.\n\nSolution: Dial #96*3* with your phone and check your numbers within the settings"));
 
 	gtk_dialog_run(GTK_DIALOG(error_dialog));
@@ -228,19 +211,12 @@ static void phone_active_call_dialog(GtkWidget *window)
 
 /**
  * \brief Reset phone control buttons (active)
- * \param state pointer to phone state structure
  */
-static void phone_control_buttons_reset(struct phone_state *state)
+static void phone_control_buttons_reset(void)
 {
-	if (state->mute_button && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(state->mute_button))) {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(state->mute_button), FALSE);
-	}
-	if (state->hold_button && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(state->hold_button))) {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(state->hold_button), FALSE);
-	}
-	if (state->record_button && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(state->record_button))) {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(state->record_button), FALSE);
-	}
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(phone_state->mute_button), FALSE);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(phone_state->hold_button), FALSE);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(phone_state->record_button), FALSE);
 }
 
 /**
@@ -267,46 +243,26 @@ void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	g_debug("%s(): Want to dial '%s'", __FUNCTION__, scramble);
 	g_free(scramble);
 
-	switch (phone_state->type) {
-	case PHONE_TYPE_VOICE:
-		if (router_get_phone_port(profile) == PORT_SOFTPHONE) {
-			if (phone_state->connection) {
-				phone_active_call_dialog(phone_state->window);
-				return;
-			}
-			phone_state->connection = phone_dial(phone_state->number, router_get_suppress_state(profile));
-
-			if (!phone_state->connection) {
-				phone_connection_failed(phone_state);
-			} else {
-				phone_dial_buttons_set_dial(phone_state, FALSE);
-			}
-		} else {
-			gchar *number;
-
-			number = g_strdup_printf("%s%s", router_get_suppress_state(profile) ? "*31#" : "", phone_state->number);
-			if (router_dial_number(profile, router_get_phone_port(profile), number)) {
-				phone_dial_buttons_set_dial(phone_state, FALSE);
-			}
-			g_free(number);
-		}
-		break;
-	case PHONE_TYPE_FAX: {
-		struct fax_ui *fax_ui = phone_state->priv;
-
-		g_warning("%s(): TODO", __FUNCTION__);
-		//phone_state->connection = fax_dial(fax_ui->file, phone_state->number, router_get_suppress_state(profile));
+	if (router_get_phone_port(profile) == PORT_SOFTPHONE) {
 		if (phone_state->connection) {
-			fax_window_clear(fax_ui);
-			phone_dial_buttons_set_dial(phone_state, FALSE);
-		} else {
-			phone_connection_failed(phone_state);
+			phone_active_call_dialog(phone_state->window);
+			return;
 		}
-		break;
-	}
-	default:
-		g_warning("%s(): Unknown type selected", __FUNCTION__);
-		break;
+		phone_state->connection = phone_dial(phone_state->number, router_get_suppress_state(profile));
+
+		if (!phone_state->connection) {
+			phone_connection_failed();
+		} else {
+			phone_dial_buttons_set_dial(FALSE);
+		}
+	} else {
+		gchar *number;
+
+		number = g_strdup_printf("%s%s", router_get_suppress_state(profile) ? "*31#" : "", phone_state->number);
+		if (router_dial_number(profile, router_get_phone_port(profile), number)) {
+			phone_dial_buttons_set_dial(FALSE);
+		}
+		g_free(number);
 	}
 }
 
@@ -326,12 +282,12 @@ void hangup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 		}
 
 		g_debug("%s(): Hangup requested for %p", __FUNCTION__, phone_state->connection);
-		phone_control_buttons_reset(phone_state);
+		phone_control_buttons_reset();
 		phone_hangup(phone_state->connection);
-		phone_dial_buttons_set_dial(phone_state, TRUE);
+		phone_dial_buttons_set_dial(TRUE);
 	} else {
 		if (router_hangup(profile, router_get_phone_port(profile), number)) {
-			phone_dial_buttons_set_dial(phone_state, TRUE);
+			phone_dial_buttons_set_dial(TRUE);
 		}
 	}
 }
@@ -518,16 +474,14 @@ void phone_search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_d
 		gtk_popover_set_position(GTK_POPOVER(phone_state->contact_menu), GTK_POS_BOTTOM);
 		gtk_popover_set_relative_to(GTK_POPOVER(phone_state->contact_menu), GTK_WIDGET(entry));
 
-		width = gtk_widget_get_allocated_width(phone_state->search_entry) + gtk_widget_get_allocated_width(phone_state->pickup_button) + gtk_widget_get_allocated_width(phone_state->hangup_button);
-		height = gtk_widget_get_allocated_height(phone_state->child_frame) + gtk_widget_get_allocated_height(phone_state->search_entry);
+		width = gtk_widget_get_allocated_width(phone_state->grid);
+		height = gtk_widget_get_allocated_height(phone_state->child_frame);
 
 		gtk_widget_set_size_request(phone_state->contact_menu, width, height);
 
-		gtk_container_set_border_width(GTK_CONTAINER(phone_state->contact_menu), 6);
 		g_signal_connect(G_OBJECT(phone_state->contact_menu), "closed", G_CALLBACK(phone_contact_menu_closed_cb), phone_state);
 
 		phone_state->scrolled_win = gtk_scrolled_window_new(NULL, NULL);
-		gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(phone_state->scrolled_win), GTK_SHADOW_ETCHED_IN);
 		gtk_container_add(GTK_CONTAINER(phone_state->contact_menu), phone_state->scrolled_win);
 
 		phone_state->box = gtk_list_box_new();
@@ -542,6 +496,7 @@ void phone_search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_d
 
 		text = gtk_label_new(NULL);
 		gtk_label_set_markup(GTK_LABEL(text), _("<b>No contact found</b>"));
+		gtk_widget_set_sensitive(text, FALSE);
 		gtk_grid_attach(GTK_GRID(placeholder), text, 0, 1, 1, 1);
 
 		gtk_widget_show_all(placeholder);
@@ -678,13 +633,12 @@ void phone_search_entry_icon_press_cb(GtkEntry *entry, GtkEntryIconPosition icon
  * \brief Handle cursor up/down in name entry field which controls the open popover menu (listbox) without losing focus
  * \param entry entry widget
  * \param event active event
- * \param user_data pointer to phone state structure
+ * \param user_data UNUSED
  * \return TRUE if should be propagated, otherwise FALSE
  */
 gboolean phone_search_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event, gpointer user_data)
 {
 	GtkListBoxRow *row = NULL;
-	struct phone_state *state = user_data;
 	GList *childs;
 	guint keyval = ((GdkEventKey *)event)->keyval;
 	gint length;
@@ -699,14 +653,15 @@ gboolean phone_search_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event
 		gtk_widget_destroy(phone_state->contact_menu);
 		return TRUE;
 	}
+
 	/* Get selected row */
 	row = gtk_list_box_get_selected_row(GTK_LIST_BOX(phone_state->box));
 	if (!row) {
 		row = gtk_list_box_get_row_at_index(GTK_LIST_BOX(phone_state->box), 0);
-	}
 
-	if (!row) {
-		return FALSE;
+		if (!row) {
+			return FALSE;
+		}
 	}
 
 	/* If we have a selected row and return/enter is pressed, set number and exit */
@@ -796,8 +751,8 @@ static GtkWidget *phone_window_create_menu(struct profile *profile)
 	GSList *phone_radio_list = NULL;
 
 	/* Create vertical box */
-	box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
-	gtk_widget_set_margin(box, 12, 12, 12, 12);
+	box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+	gtk_widget_set_margin(box, 6, 6, 6, 6);
 
 	/* Create popover */
 	menu = gtk_popover_new(NULL);
@@ -862,8 +817,6 @@ void phone_dtmf_clicked_cb(GtkWidget *widget, gpointer user_data)
 {
 	const gchar *name = gtk_widget_get_name(widget);
 	gint num = name[7];
-
-	g_debug("%s(): name = %s/%c, num = %d", __FUNCTION__, name, name[7], num);
 
 	if (phone_state->connection) {
 		/* Active connection is available, send dtmf code */
@@ -944,18 +897,17 @@ void phone_clear_button_clicked_cb(GtkWidget *widget, gpointer user_data)
 
 /**
  * \brief Pick up incoming connection
- * \param state phone state pointer
  * \param connection incoming connection
  */
-static void phone_pickup_incoming(struct phone_state *state, struct connection *connection)
+static void phone_pickup_incoming(struct connection *connection)
 {
 	/* Pick up */
 	if (!phone_pickup(connection)) {
 		/* Set internal connection */
-		state->connection = connection;
+		phone_state->connection = connection;
 
 		/* Disable dial button */
-		phone_dial_buttons_set_dial(state, FALSE);
+		phone_dial_buttons_set_dial(FALSE);
 	}
 }
 
@@ -979,8 +931,6 @@ gboolean phone_window_delete_event_cb(GtkWidget *window, GdkEvent *event, gpoint
 	/* Disconnect all signal handlers */
 	g_signal_handlers_disconnect_by_data(app_object, phone_state);
 
-	//phone_devices[state->type]->delete(state);
-
 	phone_state->window = NULL;
 
 	/* Free phone state structure and release phone window */
@@ -1000,7 +950,7 @@ void app_show_phone_window(struct contact *contact, struct connection *connectio
 	if (phone_state) {
 		/* Incoming call? */
 		if (!phone_state->connection && connection) {
-			phone_pickup_incoming(phone_state, connection);
+			phone_pickup_incoming(connection);
 
 			/* Set contact name */
 			phone_search_entry_set_contact(phone_state, contact, TRUE);
@@ -1022,6 +972,8 @@ void app_show_phone_window(struct contact *contact, struct connection *connectio
 	/* Connect to builder objects */
 	phone_state->window = GTK_WIDGET(gtk_builder_get_object(builder, "phone_window"));
 	gtk_window_set_transient_for(GTK_WINDOW(phone_state->window), GTK_WINDOW(journal_get_window()));
+
+	phone_state->grid = GTK_WIDGET(gtk_builder_get_object(builder, "phone_grid"));
 
 	phone_state->search_entry = GTK_WIDGET(gtk_builder_get_object(builder, "call_search_entry"));
 
@@ -1063,10 +1015,10 @@ void app_show_phone_window(struct contact *contact, struct connection *connectio
 
 	/* In case there is an incoming connection, pick it up */
 	if (connection) {
-		phone_pickup_incoming(phone_state, connection);
+		phone_pickup_incoming(connection);
 	} else {
 		/* No incoming call, allow dialing */
-		phone_dial_buttons_set_dial(phone_state, TRUE);
+		phone_dial_buttons_set_dial(TRUE);
 	}
 
 	gtk_widget_show_all(phone_state->window);
