@@ -39,7 +39,7 @@ static void free_auth_data(struct auth_data *auth_data)
 static void save_password_callback(SoupMessage* msg, struct auth_data *auth_data)
 {
 	if (msg->status_code != 401 && msg->status_code < 500) {
-		struct profile *profile = profile_get_active();
+		RmProfile *profile = rm_profile_get_active();
 
 		g_settings_set_string(profile->settings, "auth-user", auth_data->username);
 		g_settings_set_string(profile->settings, "auth-password", auth_data->password);
@@ -70,7 +70,7 @@ void network_authenticate(gboolean auth_set, struct auth_data *auth_data)
 static void network_authenticate_cb(SoupSession *session, SoupMessage *msg, SoupAuth *auth, gboolean retrying, gpointer user_data)
 {
 	struct auth_data *auth_data;
-	struct profile *profile = profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	const gchar *user;
 	const gchar *password;
 

@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,31 +17,44 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_OSDEP_H
-#define LIBROUTERMANAGER_OSDEP_H
+#include <glib.h>
 
 #ifdef G_OS_WIN32
-#define OS_OPEN "start"
-#define APP_USER_DIR APP_NAME
+#include <windows.h>
+#include <shellapi.h>
 #endif
 
-#ifdef G_OS_UNIX
-#ifdef __APPLE__
-#define OS_OPEN "open"
-#define APP_USER_DIR "." APP_NAME
-/* work around for warnings where gtk-mac-integration expects a label to have an accel closure */
-/* we simply use an accel label instead of the normal label */
-#define gtk_label_new(text) gtk_accel_label_new(text)
+#include <libroutermanager/osdep.h>
+
+/**
+ * SECTION:rmosdep
+ * @title: RmOsDep
+ * @short_description: OS dependent functions which are not handled by glib
+ * @stability: Stable
+ *
+ * Covers os execute function for opening urls or other apps with their default applications depending on the platform.
+ */
+
+
+/**
+ * rm_os_execute:
+ * @uri: uri to open
+ *
+ * Execute URI (e.g. opens web browser for specifc url)
+ */
+void rm_os_execute(const gchar *uri)
+{
+	gchar *exec;
+
+	/* create execution command line for g_spawn */
+	exec = g_strdup_printf("%s %s", OS_OPEN, uri);
+
+#ifdef G_OS_WIN32
+	ShellExecute(0, "open", uri, 0, 0, SW_SHOW);
 #else
-#define OS_OPEN "xdg-open"
-#define APP_USER_DIR ".config/" APP_NAME
-#endif
+	g_spawn_command_line_async(exec, NULL);
 #endif
 
-G_BEGIN_DECLS
-
-void os_execute(const gchar *uri);
-
-G_END_DECLS
-
-#endif
+	/* free command line */
+	g_free(exec);
+}

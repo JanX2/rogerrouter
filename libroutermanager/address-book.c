@@ -62,10 +62,10 @@ struct address_book *address_book_find(struct profile *profile)
  * \brief Get whole contacts within the main internal address book
  * \return contact list
  */
-GSList *address_book_get_contacts(void)
+GSList *rm_address_book_get_contacts(void)
 {
 	GSList *list = NULL;
-	struct address_book *ab = address_book_find(profile_get_active());
+	struct address_book *ab = address_book_find(rm_profile_get_active());
 
 	if (ab) {
 		list = ab->get_contacts();
@@ -78,14 +78,14 @@ GSList *address_book_get_contacts(void)
  */
 gboolean address_book_available(void)
 {
-	struct address_book *ab = address_book_find(profile_get_active());
+	struct address_book *ab = address_book_find(rm_profile_get_active());
 
 	return ab != NULL;
 }
 
 gboolean address_book_remove_contact(struct contact *contact)
 {
-	struct address_book *ab = address_book_find(profile_get_active());
+	struct address_book *ab = address_book_find(rm_profile_get_active());
 	gboolean ret = FALSE;
 
 	if (ab && ab->remove_contact) {
@@ -97,7 +97,7 @@ gboolean address_book_remove_contact(struct contact *contact)
 
 gboolean address_book_save_contact(struct contact *contact)
 {
-	struct address_book *ab = address_book_find(profile_get_active());
+	struct address_book *ab = address_book_find(rm_profile_get_active());
 	gboolean ret = FALSE;
 
 	if (ab && ab->save_contact) {
@@ -109,7 +109,7 @@ gboolean address_book_save_contact(struct contact *contact)
 
 gboolean address_book_reload_contacts(void)
 {
-	struct address_book *ab = address_book_find(profile_get_active());
+	struct address_book *ab = address_book_find(rm_profile_get_active());
 	gboolean ret = FALSE;
 
 	if (ab && ab->reload_contacts) {
@@ -121,7 +121,7 @@ gboolean address_book_reload_contacts(void)
 
 gboolean address_book_can_save(void)
 {
-	struct address_book *ab = address_book_find(profile_get_active());
+	struct address_book *ab = address_book_find(rm_profile_get_active());
 	gboolean ret = FALSE;
 
 	if (ab && ab->save_contact && ab->remove_contact) {
@@ -159,7 +159,7 @@ void address_book_contact_process_cb(AppObject *obj, struct contact *contact, gp
 		return;
 	}
 
-	contacts = address_book_get_contacts();
+	contacts = rm_address_book_get_contacts();
 	if (!contacts) {
 		return;
 	}
@@ -218,7 +218,7 @@ void routermanager_address_book_unregister(struct address_book *book)
 
 gchar *address_book_get_name(void)
 {
-	struct address_book *ab = address_book_find(profile_get_active());
+	struct address_book *ab = address_book_find(rm_profile_get_active());
 
 	return ab ? ab->name : g_strdup("");
 }
@@ -227,7 +227,7 @@ gchar *address_book_get_name(void)
  * \brief Get a list of all address book plugins
  * \return list of address book plugins
  */
-GSList *address_book_get_plugins(void)
+GSList *rm_address_book_get_plugins(void)
 {
 	return ab_plugins;
 }

@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,14 +17,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_FAX_PRINTER_H
-#define LIBROUTERMANAGER_FAX_PRINTER_H
+#ifndef LIBROUTERMANAGER_OSDEP_H
+#define LIBROUTERMANAGER_OSDEP_H
+
+#ifdef G_OS_WIN32
+#define OS_OPEN "start"
+#define APP_USER_DIR APP_NAME
+#endif
+
+#ifdef G_OS_UNIX
+#ifdef __APPLE__
+#define OS_OPEN "open"
+#define APP_USER_DIR "." APP_NAME
+/* work around for warnings where gtk-mac-integration expects a label to have an accel closure */
+/* we simply use an accel label instead of the normal label */
+#define gtk_label_new(text) gtk_accel_label_new(text)
+#else
+#define OS_OPEN "xdg-open"
+#define APP_USER_DIR ".config/" APP_NAME
+#endif
+#endif
 
 G_BEGIN_DECLS
 
-#include <libroutermanager/rmmain.h>
-
-gboolean fax_printer_init(GError **error);
+void rm_os_execute(const gchar *uri);
 
 G_END_DECLS
 

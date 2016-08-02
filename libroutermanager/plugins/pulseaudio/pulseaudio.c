@@ -344,7 +344,7 @@ static void *pulse_audio_open(void)
 		sample_spec.format = PA_SAMPLE_S16LE;
 	}
 
-	output = g_settings_get_string(profile_get_active()->settings, "audio-output");
+	output = g_settings_get_string(rm_profile_get_active()->settings, "audio-output");
 	if (EMPTY_STRING(output)) {
 		output = NULL;
 	}
@@ -356,7 +356,7 @@ static void *pulse_audio_open(void)
 		return NULL;
 	}
 
-	input = g_settings_get_string(profile_get_active()->settings, "audio-input");
+	input = g_settings_get_string(rm_profile_get_active()->settings, "audio-input");
 	if (EMPTY_STRING(input)) {
 		input = NULL;
 	}

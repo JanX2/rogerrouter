@@ -44,6 +44,8 @@ typedef enum {
 	ACB_MAX
 } AppCallbackId;
 
+//G_DECLARE_FINAL_TYPE (AppObject, app_object, APP, OBJECT, GObject);
+
 #define APP_OBJECT_TYPE (app_object_get_type())
 #define APP_OBJECT(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), GEANY_OBJECT_TYPE, AppObject))
 #define APP_OBJECT_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST((klass), APP_OBJECT_TYPE, AppObjectClass))
@@ -71,7 +73,7 @@ struct _AppObjectClass {
 	void (*authenticate)(struct auth_data *auth_data);
 };
 
-GType app_object_get_type(void);
+//GType app_object_get_type(void);
 GObject *app_object_new(void);
 
 extern GObject *app_object;

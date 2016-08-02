@@ -593,7 +593,7 @@ static void *port_audio_open(void)
 	PaStreamParameters output_parameters;
 	PaStreamParameters input_parameters;
 	PaError err;
-	struct profile *profile = profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	const gchar *playback = g_settings_get_string(profile->settings, "audio-output");
 	const gchar *capture = g_settings_get_string(profile->settings, "audio-input");
 	const PaDeviceInfo *info;

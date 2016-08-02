@@ -19,8 +19,8 @@
 
 #include <libpeas/peas.h>
 
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/appobject.h>
-#include <libroutermanager/profile.h>
 #include <libroutermanager/plugins.h>
 
 /** Internal search path list */
@@ -115,7 +115,7 @@ void plugins_init(void)
  */
 void plugins_user_plugins(void)
 {
-	g_settings_bind(profile_get_active()->settings, "active-plugins", engine, "loaded-plugins", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(rm_profile_get_active()->settings, "active-plugins", engine, "loaded-plugins", G_SETTINGS_BIND_DEFAULT);
 }
 
 /**

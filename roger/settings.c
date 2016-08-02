@@ -26,7 +26,7 @@
 #include <libpeas/peas.h>
 #include <libpeas-gtk/peas-gtk.h>
 
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/net_monitor.h>
 #include <libroutermanager/ftp.h>
@@ -94,7 +94,7 @@ static struct settings *settings = NULL;
 void login_check_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
 	GtkWidget *dialog;
-	struct profile *profile = profile_get_active();
+	struct profile *profile = rm_profile_get_active();
 	gboolean locked = router_is_locked();
 	gboolean log_in = FALSE;
 
@@ -127,7 +127,7 @@ void ftp_login_check_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
 	GtkWidget *dialog = NULL;
 	struct ftp *client;
-	struct profile *profile = profile_get_active();
+	struct profile *profile = rm_profile_get_active();
 
 	client = ftp_init(router_get_host(profile));
 	if (!client) {
@@ -165,7 +165,7 @@ void reload_button_clicked_cb(GtkButton *button, gpointer user_data)
 		return;
 	}
 
-	router_get_settings(profile_get_active());
+	router_get_settings(rm_profile_get_active());
 }
 
 /**
@@ -175,7 +175,7 @@ void reload_button_clicked_cb(GtkButton *button, gpointer user_data)
  */
 void login_password_entry_changed_cb(GtkEntry *entry, gpointer user_data)
 {
-	struct profile *profile = profile_get_active();
+	struct profile *profile = rm_profile_get_active();
 
 	password_manager_set_password(profile, "login-password", gtk_entry_get_text(GTK_ENTRY(entry)));
 }
@@ -187,7 +187,7 @@ void login_password_entry_changed_cb(GtkEntry *entry, gpointer user_data)
  */
 void ftp_password_entry_changed_cb(GtkEntry *entry, gpointer user_data)
 {
-	struct profile *profile = profile_get_active();
+	struct profile *profile = rm_profile_get_active();
 
 	password_manager_set_password(profile, "ftp-password", gtk_entry_get_text(GTK_ENTRY(entry)));
 }
@@ -201,7 +201,7 @@ void fax_report_directory_chooser_file_set_cb(GtkFileChooserButton *chooser, gpo
 {
 	gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(chooser));
 
-	g_settings_set_string(profile_get_active()->settings, "fax-report-dir", filename);
+	g_settings_set_string(rm_profile_get_active()->settings, "fax-report-dir", filename);
 
 	g_free(filename);
 }
@@ -720,7 +720,7 @@ void filter_add_button_clicked_cb(GtkWidget *widget, gpointer data)
 	filter_save();
 }
 
-static struct action *selected_action = NULL;
+static struct rm_action *selected_action = NULL;
 static gchar **selected_numbers = NULL;
 
 
@@ -737,11 +737,11 @@ static void set_checkbutton_buttons(gboolean state)
 
 void action_refresh_list(GtkListStore *list_store)
 {
-	GSList *list = action_get_list(profile_get_active());
+	GSList *list = rm_action_get_list(rm_profile_get_active());
 	GtkTreeIter iter;
 
 	while (list) {
-		struct action *action = list->data;
+		struct rm_action *action = list->data;
 
 		gtk_list_store_insert_with_values(list_store, &iter, -1,
 			0, action->name,
@@ -763,7 +763,7 @@ void settings_destroy_cb(GtkWidget *widget, gpointer user_data)
 
 void settings_refresh_list(GtkListStore *list_store)
 {
-	gchar **numbers = router_get_numbers(profile_get_active());
+	gchar **numbers = router_get_numbers(rm_profile_get_active());
 	GtkTreeIter iter;
 	gint count;
 	gint index;
@@ -831,7 +831,7 @@ void action_apply_button_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 }
 
-gboolean action_edit(struct action *action)
+gboolean action_edit(struct rm_action *action)
 {
 
 #if 1
@@ -870,13 +870,14 @@ gboolean action_edit(struct action *action)
 
 	if (result == 1) {
 		if (!action) {
-			action = action_create();
-			action_add(profile_get_active(), action);
-			selected_action = action;
+			action = rm_action_add(rm_profile_get_active(), gtk_entry_get_text(GTK_ENTRY(name_entry)));
 		}
 
-		action = action_modify(action, gtk_entry_get_text(GTK_ENTRY(name_entry)), "", gtk_entry_get_text(GTK_ENTRY(exec_entry)), selected_numbers);
-		action_commit(profile_get_active());
+		rm_action_set_name(action, gtk_entry_get_text(GTK_ENTRY(name_entry)));
+		rm_action_set_description(action, "");
+		rm_action_set_exec(action, gtk_entry_get_text(GTK_ENTRY(exec_entry)));
+		rm_action_set_numbers(action, selected_numbers);
+		selected_action = action;
 
 		changed = TRUE;
 	}
@@ -998,12 +999,12 @@ gboolean action_edit(struct action *action)
 	if (result == GTK_RESPONSE_APPLY) {
 		if (!action) {
 			action = action_create();
-			action_add(profile_get_active(), action);
+			action_add(rm_profile_get_active(), action);
 			selected_action = action;
 		}
 
 		action = action_modify(action, gtk_entry_get_text(GTK_ENTRY(name_entry)), "", gtk_entry_get_text(GTK_ENTRY(exec_entry)), selected_numbers);
-		action_commit(profile_get_active());
+		action_commit(rm_profile_get_active());
 
 		changed = TRUE;
 	}
@@ -1032,7 +1033,7 @@ void actions_remove_button_clicked_cb(GtkWidget *widget, gpointer data)
 	GtkTreeModel *model;
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(data));
 	GtkListStore *list_store;
-	struct action *action = NULL;
+	struct rm_action *action = NULL;
 	GValue ptr = { 0 };
 
 	if (!gtk_tree_selection_get_selected(selection, &model, &selected_iter)) {
@@ -1058,9 +1059,9 @@ void actions_remove_button_clicked_cb(GtkWidget *widget, gpointer data)
 
 	g_value_unset(&ptr);
 
-	action_remove(profile_get_active(), action);
-	action_commit(profile_get_active());
-	action_free(action);
+	rm_action_remove(rm_profile_get_active(), action);
+	//action_commit(rm_profile_get_active());
+	//action_free(action);
 
 	list_store = GTK_LIST_STORE(model);
 	gtk_list_store_clear(list_store);
@@ -1073,7 +1074,7 @@ void actions_edit_button_clicked_cb(GtkWidget *widget, gpointer data)
 	GtkTreeModel *model;
 	GtkListStore *list_store;
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(data));
-	struct action *action = NULL;
+	struct rm_action *action = NULL;
 	GValue ptr = { 0 };
 
 	if (!gtk_tree_selection_get_selected(selection, &model, &selected_iter)) {
@@ -1098,7 +1099,7 @@ gboolean actions_treeview_cursor_changed_cb(GtkTreeView *view, gpointer user_dat
 	GtkTreeSelection *selection;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
-	struct action *action;
+	struct rm_action *action;
 
 	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(view));
 	if (!selection) {
@@ -1198,8 +1199,8 @@ void audio_plugin_combobox_changed_cb(GtkComboBox *box, gpointer user_data) {
 	gint input_cnt = 0;
 	gint output_cnt = 0;
 
-	input_name = g_settings_get_string(profile_get_active()->settings, "audio-input");
-	output_name = g_settings_get_string(profile_get_active()->settings, "audio-output");
+	input_name = g_settings_get_string(rm_profile_get_active()->settings, "audio-input");
+	output_name = g_settings_get_string(rm_profile_get_active()->settings, "audio-output");
 
 	/* Clear device comboboxes */
 	gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(settings->audio_output_combobox));
@@ -1276,7 +1277,7 @@ void settings_fill_address_book_plugin_combobox(struct settings *settings)
 	GSList *plugins;
 	GSList *list;
 
-	plugins = address_book_get_plugins();
+	plugins = rm_address_book_get_plugins();
 	for (list = plugins; list; list = list->next) {
 		struct address_book *ab = list->data;
 
@@ -1292,7 +1293,7 @@ void settings_notebook_switch_page_cb(GtkNotebook *notebook, GtkWidget *page, gu
 		return;
 	}
 
-	profile = profile_get_active();
+	profile = rm_profile_get_active();
 	g_settings_unbind(profile->settings, "address-book");
 
 	gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(settings->address_book_plugin_combobox));
@@ -1328,8 +1329,13 @@ void app_show_settings(void)
 		return;
 	}
 
+	profile = rm_profile_get_active();
+	if (!profile) {
+		g_warning("No active profile, exiting settings");
+		return;
+	}
+
 	settings = g_slice_new(struct settings);
-	profile = profile_get_active();
 
 	/* Connect to builder objects */
 	settings->window = GTK_WIDGET(gtk_builder_get_object(builder, "settings"));
@@ -1400,7 +1406,7 @@ void app_show_settings(void)
 
 	settings->softphone_controller_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "softphone_controller_combobox"));
 	g_settings_bind(profile->settings, "phone-controller", settings->softphone_controller_combobox, "active", G_SETTINGS_BIND_DEFAULT);
-	
+
 	settings->fax_header_entry = GTK_WIDGET(gtk_builder_get_object(builder, "fax_header_entry"));
 	g_settings_bind(profile->settings, "fax-header", settings->fax_header_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
@@ -1477,9 +1483,9 @@ void app_show_settings(void)
 
 	g_signal_connect(settings->audio_plugin_combobox, "changed", G_CALLBACK(audio_plugin_combobox_changed_cb), NULL);
 
-	g_settings_bind(profile_get_active()->settings, "audio-output", settings->audio_output_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
-	g_settings_bind(profile_get_active()->settings, "audio-input", settings->audio_input_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
-	g_settings_bind(profile_get_active()->settings, "audio-plugin", settings->audio_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(rm_profile_get_active()->settings, "audio-output", settings->audio_output_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(rm_profile_get_active()->settings, "audio-input", settings->audio_input_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(rm_profile_get_active()->settings, "audio-plugin", settings->audio_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 
 	if (audio_plugins) {
 		if (!gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(settings->audio_plugin_combobox))) {

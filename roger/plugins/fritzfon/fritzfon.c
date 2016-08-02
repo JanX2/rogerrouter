@@ -87,7 +87,7 @@ static void parse_person(struct contact *contact, xmlnode *person)
 		if (image_ptr != NULL) {
 			/* file:///var/InternerSpeicher/FRITZ/fonpix/946684999-0.jpg */
 			if (!strncmp(image_ptr, "file://", 7) && strlen(image_ptr) > 28) {
-				struct profile *profile = profile_get_active();
+				struct profile *profile = rm_profile_get_active();
 				gchar *url = strstr(image_ptr, "/ftp/");
 				gsize len;
 				guchar *buffer;
@@ -100,7 +100,7 @@ static void parse_person(struct contact *contact, xmlnode *person)
 					url += 5;
 				}
 
-				client = ftp_init(router_get_host(profile_get_active()));
+				client = ftp_init(router_get_host(rm_profile_get_active()));
 				ftp_login(client, router_get_ftp_user(profile), router_get_ftp_password(profile));
 				ftp_passive(client);
 				buffer = (guchar *) ftp_get_file(client, url, &len);
@@ -207,7 +207,7 @@ static gint fritzfon_read_book(void)
 	gchar uri[1024];
 	xmlnode *node = NULL;
 	xmlnode *child;
-	struct profile *profile = profile_get_active();
+	struct profile *profile = rm_profile_get_active();
 	gchar *owner;
 	gchar *name;
 
@@ -279,7 +279,7 @@ GSList *fritzfon_get_contacts(void)
 static gint fritzfon_get_books(void)
 {
 	gchar *url;
-	struct profile *profile = profile_get_active();
+	struct profile *profile = rm_profile_get_active();
 	SoupMessage *msg;
 	struct fritzfon_book *book = NULL;
 
@@ -533,7 +533,7 @@ xmlnode *phonebook_to_xmlnode(void)
 gboolean fritzfon_save(void)
 {
 	xmlnode *node;
-	struct profile *profile = profile_get_active();
+	struct profile *profile = rm_profile_get_active();
 	gchar *data;
 	gint len;
 	SoupBuffer *buffer;
@@ -595,7 +595,7 @@ gboolean fritzfon_remove_contact(struct contact *contact)
 void fritzfon_set_image(struct contact *contact)
 {
 	struct fritzfon_priv *priv = g_slice_new0(struct fritzfon_priv);
-	struct profile *profile = profile_get_active();
+	struct profile *profile = rm_profile_get_active();
 	struct ftp *client = ftp_init(router_get_host(profile));
 	gchar *volume_path;
 	gchar *path;

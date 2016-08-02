@@ -34,7 +34,7 @@ struct address_book {
 };
 
 gboolean address_book_available(void);
-GSList *address_book_get_contacts(void);
+GSList *rm_address_book_get_contacts(void);
 gboolean address_book_reload_contacts(void);
 gboolean address_book_remove_contact(struct contact *contact);
 gboolean address_book_save_contact(struct contact *contact);
@@ -42,7 +42,7 @@ gboolean address_book_can_save(void);
 void routermanager_address_book_register(struct address_book *book);
 void routermanager_address_book_unregister(struct address_book *book);
 gchar *address_book_get_name(void);
-GSList *address_book_get_plugins(void);
+GSList *rm_address_book_get_plugins(void);
 
 G_END_DECLS
 

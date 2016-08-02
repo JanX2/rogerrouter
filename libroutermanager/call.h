@@ -67,7 +67,7 @@ struct call_by_call_entry {
 
 GSList *call_add(GSList *journal, gint type, const gchar *date_time, const gchar *remote_name, const gchar *remote_number, const gchar *local_name, const gchar *local_number, const gchar *duration, gpointer priv);
 void call_free(gpointer data);
-gchar *call_scramble_number(const gchar *number);
+gchar *rm_call_scramble_number(const gchar *number);
 gchar *call_full_number(const gchar *number, gboolean country_code_prefix);
 gint call_sort_by_date(gconstpointer a, gconstpointer b);
 gchar *call_format_number(struct profile *profile, const gchar *number, enum number_format output_format);

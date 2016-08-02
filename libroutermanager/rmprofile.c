@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,11 +19,11 @@
 
 #include <string.h>
 
-#include <libroutermanager/action.h>
+#include <libroutermanager/rmaction.h>
 #include <libroutermanager/fax_phone.h>
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/plugins.h>
-#include <libroutermanager/routermanager.h>
+#include <libroutermanager/rmmain.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/net_monitor.h>
 #include <libroutermanager/password.h>
@@ -31,65 +31,113 @@
 #include <libroutermanager/audio.h>
 #include <libroutermanager/settings.h>
 
+/**
+ * SECTION:rmprofile
+ * @Title: RmProfile
+ * @Short_description: Profile handling functions
+ *
+ * Profiles are used to distinguish between several routers. This is useful for mobile devices using private and business environements.
+ */
+
 /** Internal profile list */
-static GSList *profile_list = NULL;
+static GSList *rm_profile_list = NULL;
 /** Internal pointer to active profile */
-static struct profile *profile_active = NULL;
+static struct profile *rm_profile_active = NULL;
 /** Global application settings */
-static GSettings *settings = NULL;
+static GSettings *rm_settings = NULL;
 
 /**
- * \brief Add profile to profile list
- * \param profile profile structure pointer
+ * rm_profile_get_name:
+ * @profile: a #RmProfile
+ *
+ * Get profiles name of @profile.
+ *
+ * Returns: profile name
  */
-void profile_add(struct profile *profile)
+const gchar *rm_profile_get_name(RmProfile *profile)
 {
-	profile_list = g_slist_prepend(profile_list, profile);
+	return profile->name;
 }
 
 /**
- * \brief Remove profile from list
- * \param profile profile to remove
+ * rm_profile_save:
+ *
+ * Update profiles in gsettting.
  */
-void profile_remove(struct profile *profile)
+static void rm_profile_save(void)
 {
-	profile_list = g_slist_remove(profile_list, profile);
+	GSList *plist = rm_profile_get_list();
+	GSList *list;
+	gchar **profiles;
+	gint counter = 0;
+
+	profiles = g_new0(gchar *, (g_slist_length(plist) + 1));
+	for (list = plist; list != NULL; list = list->next) {
+		RmProfile *current_profile = list->data;
+
+		profiles[counter++] = g_strdup(rm_profile_get_name(current_profile));
+	}
+	profiles[counter] = NULL;
+
+	g_settings_set_strv(rm_settings, "profiles", (const gchar * const *)profiles);
+
+	g_strfreev(profiles);
+}
+
+/**
+ * rm_profile_remove:
+ * @profile: a #RmProfile
+ *
+ * Remove @profile from list.
+ */
+void rm_profile_remove(RmProfile *profile)
+{
+	rm_profile_list = g_slist_remove(rm_profile_list, profile);
 
 	/* Remove gsettings entry */
-	profile_commit();
+	rm_profile_save();
 }
 
 /**
- * \brief Get active profile
- * \return active profile
+ * rm_profile_get_active:
+ *
+ * Get active profile.
+ *
+ * Returns: active #RmProfile
  */
-struct profile *profile_get_active(void)
+RmProfile *rm_profile_get_active(void)
 {
-	return profile_active;
+	return rm_profile_active;
 }
 
 /**
- * \brief Get profile list
- * \return profile list
+ * rm_profile_get_list:
+ *
+ * Get profile list
+ *
+ * Returns: profile list
  */
-GSList *profile_get_list(void)
+GSList *rm_profile_get_list(void)
 {
-	return profile_list;
+	return rm_profile_list;
 }
 
 /**
- * \brief Create new profile structure
- * \param name profile name
- * \return new profile structure poiner
+ * rm_profile_add:
+ * @name: profile name
+ *
+ * Create and add a new profile structure.
+ *
+ * Returns: new #RmProfile
  */
-struct profile *profile_new(const gchar *name)
+RmProfile *rm_profile_add(const gchar *name)
 {
-	struct profile *profile;
+	RmProfile *profile;
 	gchar *settings_path;
 	gchar *filename;
 
 	/* Create new profile structure */
-	profile = g_slice_new0(struct profile);
+	profile = g_slice_new0(RmProfile);
 
 	/* Add entries */
 	profile->name = g_strdup(name);
@@ -98,52 +146,38 @@ struct profile *profile_new(const gchar *name)
 	/* Setup profiles settings */
 	filename = g_build_filename(name, "profile.conf", NULL);
 	settings_path = g_strconcat("/org/tabos/routermanager/profile/", name, "/", NULL);
-	profile->settings = rm_settings_new_with_path(ROUTERMANAGER_SCHEME_PROFILE, settings_path, filename);
+	profile->settings = rm_settings_new_with_path(RM_SCHEME_PROFILE, settings_path, filename);
 	g_free(filename);
 
 	g_free(settings_path);
+
+	rm_profile_list = g_slist_prepend(rm_profile_list, profile);
+
+	rm_profile_save();
 
 	/* Return new profile */
 	return profile;
 }
 
 /**
- * \brief Update profiles in gsettting
+ * rm_profile_load:
+ * @name: profile name to load
+ *
+ * Load profile by name.
  */
-void profile_commit(void)
+static void rm_profile_load(const gchar *name)
 {
-	GSList *plist = profile_get_list();
-	GSList *list;
-	gchar **profiles;
-	gint counter = 0;
-
-	profiles = g_malloc(sizeof(gchar *) * (g_slist_length(plist) + 1));
-	for (list = plist; list != NULL; list = list->next) {
-		struct profile *current_profile = list->data;
-		profiles[counter++] = g_strdup(current_profile->name);
-	}
-	profiles[counter] = NULL;
-
-	g_settings_set_strv(settings, "profiles", (const gchar * const *)profiles);
-}
-
-/**
- * \brief Load profile by name
- * \param name profile name to load
- */
-static void profile_load(const gchar *name)
-{
-	struct profile *profile;
+	RmProfile *profile;
 	gchar *settings_path;
 	gchar *filename;
 
-	profile = g_slice_new0(struct profile);
+	profile = g_slice_new0(RmProfile);
 
 	profile->name = g_strdup(name);
 
 	filename = g_build_filename(name, "profile.conf", NULL);
 	settings_path = g_strconcat("/org/tabos/routermanager/profile/", name, "/", NULL);
-	profile->settings = rm_settings_new_with_path(ROUTERMANAGER_SCHEME_PROFILE, settings_path, filename);
+	profile->settings = rm_settings_new_with_path(RM_SCHEME_PROFILE, settings_path, filename);
 	g_free(filename);
 
 	profile->router_info = g_slice_new0(struct router_info);
@@ -153,30 +187,29 @@ static void profile_load(const gchar *name)
 
 	g_free(settings_path);
 
-	profile_add(profile);
+	rm_profile_list = g_slist_prepend(rm_profile_list, profile);
 }
 
 /**
- * \brief Set active profile
- * \param profile profile structure
+ * rm_profile_set_active:
+ * @profile: a #RmProfile
  *
  * Set active profile in detail:
  *  * Set internal active profile
  *  * Connect user plugin bindings
+ *  * Initialize audio
  *  * Load and initialize action
- *  * faxophone setup
  *  * Load journal
  */
-void profile_set_active(struct profile *profile)
+void rm_profile_set_active(RmProfile *profile)
 {
-	if (profile_active) {
-		action_shutdown(profile_active);
-	}
+	/* Shut profile actions down */
+	rm_action_shutdown(rm_profile_active);
 
-	profile_active = profile;
+	rm_profile_active = profile;
 
 	/* If we have no active profile, exit */
-	if (!profile_active) {
+	if (!rm_profile_active) {
 		/* Clear journal list */
 		emit_journal_loaded(NULL);
 		return;
@@ -190,25 +223,25 @@ void profile_set_active(struct profile *profile)
 	audio_init(profile);
 
 	/* Load and initialize action */
-	action_init(profile);
-
-	/* Init faxophone */
-	//faxophone_setup();
+	rm_action_init(profile);
 
 	/* Load journal list */
-	router_load_journal(profile_active);
+	router_load_journal(rm_profile_active);
 }
 
 /**
- * \brief Detect active profile (scan available routers and select correct profile)
- * \return TRUE on success, otherwise FALSE
+ * rm_profile_detect_active:
+ *
+ * Detect active profile (scan available routers and select correct profile).
+ *
+ * Returns: TRUE on success, otherwise FALSE
  */
-gboolean profile_detect_active(void)
+gboolean rm_profile_detect_active(void)
 {
-	GSList *list = profile_get_list();
-	struct profile *profile;
+	GSList *list = rm_profile_get_list();
+	RmProfile *profile;
 	struct router_info *router_info;
-	gchar *requested_profile = routermanager_get_requested_profile();
+	gchar *requested_profile = rm_get_requested_profile();
 
 	/* Compare our profile list against available routers */
 	while (list) {
@@ -230,7 +263,7 @@ gboolean profile_detect_active(void)
 
 			router_info_free(router_info);
 
-			profile_set_active(profile);
+			rm_profile_set_active(profile);
 			return TRUE;
 		}
 
@@ -245,19 +278,21 @@ gboolean profile_detect_active(void)
 }
 
 /**
- * \brief Initialize profiles (load profiles)
- * \return TRUE
+ * rm_profile_init:
+ *
+ * Initialize profiles (load profiles).
+ * Returns: TRUE
  */
-gboolean profile_init(void)
+gboolean rm_profile_init(void)
 {
-	settings = rm_settings_new(ROUTERMANAGER_SCHEME, ROUTERMANAGER_PATH, "routermanager.conf");
+	rm_settings = rm_settings_new(RM_SCHEME, RM_PATH, "routermanager.conf");
 
-	gchar **profiles = g_settings_get_strv(settings, "profiles");
+	gchar **profiles = g_settings_get_strv(rm_settings, "profiles");
 	gint count;
 
 	/* Load all available profiles */
 	for (count = 0; count < g_strv_length(profiles); count++) {
-		profile_load(profiles[count]);
+		rm_profile_load(profiles[count]);
 	}
 
 	g_strfreev(profiles);
@@ -266,12 +301,14 @@ gboolean profile_init(void)
 }
 
 /**
- * \brief Free profile entry
- * \param data pointer to profile structure
+ * rm_profile_free_entry:
+ * @data: pointer to a #RmProfile
+ *
+ * Free profile entry.
  */
-static void profile_free_entry(gpointer data)
+static void rm_profile_free_entry(gpointer data)
 {
-	struct profile *profile = data;
+	RmProfile *profile = data;
 
 	/* Free entries */
 	g_free(profile->name);
@@ -280,7 +317,7 @@ static void profile_free_entry(gpointer data)
 	router_info_free(profile->router_info);
 
 	/* Free actions */
-	action_shutdown(profile);
+	rm_action_shutdown(profile);
 
 	/* Free profiles settings */
 	g_clear_object(&profile->settings);
@@ -290,54 +327,63 @@ static void profile_free_entry(gpointer data)
 }
 
 /**
- * \brief Shutdown profile (free profile list, free settings)
+ * rm_profile_shutdown:
+ *
+ * Shutdown profile (free profile list, free settings).
  */
-void profile_shutdown(void)
+void rm_profile_shutdown(void)
 {
 	/* Set active profile to NULL */
-	profile_active = NULL;
+	rm_profile_active = NULL;
 
-	if (profile_list) {
+	if (rm_profile_list) {
 		/* Free profile list */
-		g_slist_free_full(profile_list, profile_free_entry);
+		g_slist_free_full(rm_profile_list, rm_profile_free_entry);
 	}
 
 	/* Clear settings object */
-	if (settings) {
-		g_clear_object(&settings);
+	if (rm_settings) {
+		g_clear_object(&rm_settings);
 	}
 }
 
 /**
- * \brief Set host name used in profile
- * \param profile profile structure
- * \param host new hostname
+ * rm_profile_set_host:
+ * @profile: a #RmProfile
+ * @host: new host name for @profile
+ *
+ * Set host name used in profile.
  */
-void profile_set_host(struct profile *profile, const gchar *host)
+void rm_profile_set_host(RmProfile *profile, const gchar *host)
 {
 	if (profile->router_info->host) {
 		g_free(profile->router_info->host);
 	}
+
 	profile->router_info->host = g_strdup(host);
 	g_settings_set_string(profile->settings, "host", host);
 }
 
 /**
- * \brief Set login user used in profile
- * \param profile profile structure
- * \param user username
+ * rm_profile_set_login_user:
+ * @profile: a #RmProfile
+ * @user: new user name for @profile
+*
+ * Set login user used in profile.
  */
-void profile_set_login_user(struct profile *profile, const gchar *user)
+void rm_profile_set_login_user(RmProfile *profile, const gchar *user)
 {
 	g_settings_set_string(profile->settings, "login-user", user);
 }
 
 /**
- * \brief Set login password used in profile
- * \param profile profile structure
- * \param password new password
+ * rm_profile_set_login_password:
+ * @profile: a #RmProfile
+ * @password: new password for @profile
+*
+ * Set login password used in profile.
  */
-void profile_set_login_password(struct profile *profile, const gchar *password)
+void rm_profile_set_login_password(RmProfile *profile, const gchar *password)
 {
 	password_manager_set_password(profile, "login-password", password);
 }

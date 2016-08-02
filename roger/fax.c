@@ -22,8 +22,8 @@
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
 
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/appobject.h>
-#include <libroutermanager/profile.h>
 #include <libroutermanager/libfaxophone/fax.h>
 #include <libroutermanager/libfaxophone/phone.h>
 #include <libroutermanager/routermanager.h>
@@ -95,10 +95,10 @@ gboolean fax_update_ui(gpointer user_data)
 				gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar), _("Fax transfer failed"));
 				g_debug("%s(): Fax transfer failed", __FUNCTION__);
 			}
-			if (g_settings_get_boolean(profile_get_active()->settings, "fax-report")) {
-				create_fax_report(fax_status, g_settings_get_string(profile_get_active()->settings, "fax-report-dir"));
+			if (g_settings_get_boolean(rm_profile_get_active()->settings, "fax-report")) {
+				create_fax_report(fax_status, g_settings_get_string(rm_profile_get_active()->settings, "fax-report-dir"));
 			}
-			phone_hangup(fax_status->connection);
+			rm_phone_hangup(fax_status->connection);
 			fax_status->done = TRUE;
 			break;
 		default:
@@ -209,7 +209,7 @@ GtkWidget *fax_information_frame(struct phone_state *state)
 	remote_station_label = ui_label_new(_("From:"));
 	gtk_grid_attach(GTK_GRID(grid), remote_station_label, 0, pos_y, 1, 1);
 
-	fax_ui->remote_label = gtk_label_new(g_settings_get_string(profile_get_active()->settings, "fax-header"));
+	fax_ui->remote_label = gtk_label_new(g_settings_get_string(rm_profile_get_active()->settings, "fax-header"));
 	gtk_grid_attach(GTK_GRID(grid), fax_ui->remote_label, 1, pos_y, 1, 1);
 
 	/* Add remote station line */
@@ -232,7 +232,7 @@ GtkWidget *fax_information_frame(struct phone_state *state)
 	gtk_grid_attach(GTK_GRID(grid), fax_ui->progress_bar, 1, pos_y, 1, 1);
 
 #ifdef FAX_SFF
-	if (g_settings_get_boolean(profile_get_active()->settings, "fax-sff")) {
+	if (g_settings_get_boolean(rm_profile_get_active()->settings, "fax-sff")) {
 		gtk_widget_set_no_show_all(fax_ui->remote_label, TRUE);
 	}
 #endif
@@ -244,7 +244,7 @@ void app_show_fax_window(gchar *fax_file)
 {
 	GtkWidget *window;
 	struct fax_ui *fax_ui;
-	struct profile *profile = profile_get_active();
+	struct profile *profile = rm_profile_get_active();
 
 	if (!profile) {
 		return;
@@ -255,10 +255,10 @@ void app_show_fax_window(gchar *fax_file)
 	fax_ui->status = g_malloc0(sizeof(struct fax_status));
 
 	/* 450, 280 */
-	window = phone_window_new(PHONE_TYPE_FAX, NULL, NULL, fax_ui);
+	//window = phone_window_new(PHONE_TYPE_FAX, NULL, NULL, fax_ui);
 
 	//g_signal_connect(app_object, "connection-status", G_CALLBACK(fax_connection_status_cb), state);
-	gtk_window_set_keep_above(GTK_WINDOW(window), TRUE);
+	//gtk_window_set_keep_above(GTK_WINDOW(window), TRUE);
 }
 
 gboolean app_show_fax_window_idle(gpointer data)
@@ -275,7 +275,7 @@ gchar *convert_to_fax(gchar *file_name)
 	gchar *args[13];
 	gchar *output;
 	gchar *out_file;
-	struct profile *profile = profile_get_active();
+	struct profile *profile = rm_profile_get_active();
 
 	/* convert ps to fax */
 #ifdef G_OS_WIN32
@@ -357,7 +357,7 @@ void fax_process_cb(GtkWidget *widget, gchar *file_name, gpointer user_data)
 void fax_process_init(void)
 {
 	g_signal_connect(app_object, "fax-process", G_CALLBACK(fax_process_cb), NULL);
-	//g_settings_set_boolean(profile_get_active()->settings, "fax-sff", TRUE);
+	//g_settings_set_boolean(rm_profile_get_active()->settings, "fax-sff", TRUE);
 	//fax_process_cb(NULL, "/home/jbrummer/t.ps", NULL);
 }
 
@@ -383,7 +383,7 @@ void phone_fax_terminated(struct phone_state *state, struct capi_connection *con
 {
 #ifdef FAX_SFF
 	struct fax_ui *fax_ui = state->priv;
-	struct profile *profile = profile_get_active();
+	struct profile *profile = rm_profile_get_active();
 
 	if (g_settings_get_boolean(profile->settings, "fax-sff")) {
 		int reason;

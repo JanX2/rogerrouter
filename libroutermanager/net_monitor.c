@@ -107,7 +107,7 @@ void net_monitor_state_changed(gboolean state)
 	GSList *list;
 
 	/* Compare internal and new network state, only handle new states */
-	if ((net_online == state) && (!state || profile_get_active())) {
+	if ((net_online == state) && (!state || rm_profile_get_active())) {
 		g_debug("Network state repeated, ignored (%s)", net_state(state));
 		return;
 	}
@@ -129,10 +129,10 @@ void net_monitor_state_changed(gboolean state)
 		}
 
 		/* Disable active profile */
-		profile_set_active(NULL);
+		rm_profile_set_active(NULL);
 	} else {
 		/* Online: Try to detect active profile */
-		if (profile_detect_active()) {
+		if (rm_profile_detect_active()) {
 			/* We have an active profile: Connect to all network events */
 			for (list = net_event_list; list != NULL; list = list->next) {
 				struct net_event *event = list->data;

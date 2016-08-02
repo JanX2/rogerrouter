@@ -155,7 +155,7 @@ gboolean fritzbox_dial_number_04_00(struct profile *profile, gint port, const gc
 	gchar *url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
 	port_str = g_strdup_printf("%d", fritzbox_get_dialport(port));
 
-	scramble = call_scramble_number(number);
+	scramble = rm_call_scramble_number(number);
 	g_debug("Call number '%s' on port %s...", scramble, port_str);
 	g_free(scramble);
 

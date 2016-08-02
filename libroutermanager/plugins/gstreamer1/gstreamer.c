@@ -198,7 +198,7 @@ static int gstreamer_init(unsigned char channels, unsigned short sample_rate, un
  */
 static void *gstreamer_open(void)
 {
-	struct profile *profile = profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	struct pipes *pipes = NULL;
 	GstElement *sink;
 	GstElement *audio_sink;

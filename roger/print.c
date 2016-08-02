@@ -568,7 +568,7 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	char *status_code = status->error_code == 0 ? _("SUCCESS") : _("FAILED");
 	int pages = status->page_current;
 	int bitrate = status->bitrate;
-	struct profile *profile = profile_get_active();
+	struct profile *profile = rm_profile_get_active();
 	TIFF *tiff;
 	GdkPixbuf *scale;
 

@@ -330,3 +330,29 @@ gchar *strip_html(gchar *word)
 
 	return return_str;
 }
+
+
+/**
+ * \brief Checks if @strv contains @str
+ * @strv: a %NULL%-terminated array of strings
+ * @str: a string
+ * Returns: %TRUE% if @str is found in @strv, otherwise FALSE
+ */
+gboolean rm_strv_contains(const gchar * const *strv, const gchar *str)
+{
+#if GLIB_CHECK_VERSION(2, 44, 0)
+	return g_strv_contains(strv, str);
+#else
+	g_return_val_if_fail(strv != NULL, FALSE);
+	g_return_val_if_fail(str != NULL, FALSE);
+
+	for (; *strv != NULL; strv++) {
+		if (g_str_equal(str, *strv)) {
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+#endif
+}
+

@@ -309,7 +309,7 @@ static struct contact *contacts_get_selected_contact(void)
 static void contacts_update_list(void)
 {
 	GSList *list;
-	GSList *contact_list = address_book_get_contacts();
+	GSList *contact_list = rm_address_book_get_contacts();
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(contacts->search_entry));
 	gint pos = 0;
 	struct contact *selected_contact;

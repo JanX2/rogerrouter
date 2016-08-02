@@ -102,9 +102,11 @@ struct contact *contact_find_by_number(gchar *number)
 	GSList *addresses;
 	int type = -1;
 
+	g_debug("a1");
 	/** Ask for contact information */
 	contact->number = number;
-	emit_contact_process(contact);
+	rm_emit_contact_process(contact);
+	g_debug("a2");
 
 	/* Depending on the number set the active address */
 	for (numbers = contact->numbers; numbers != NULL; numbers = numbers->next) {
@@ -115,6 +117,7 @@ struct contact *contact_find_by_number(gchar *number)
 			break;
 		}
 	}
+	g_debug("a3");
 
 	if (type == -1) {
 		return contact;

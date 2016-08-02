@@ -17,32 +17,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#ifndef LIBROUTERMANAGER_RM_H
+#define LIBROUTERMANAGER_RM_H
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <glib.h>
+#include <libintl.h>
 
-#ifdef G_OS_WIN32
-#include <windows.h>
-#include <shellapi.h>
+G_BEGIN_DECLS
+
+#define _(text) gettext(text)
+
+#define RM_SCHEME "org.tabos.routermanager"
+#define RM_SCHEME_PROFILE "org.tabos.routermanager.profile"
+#define RM_SCHEME_PROFILE_ACTION "org.tabos.routermanager.profile.action"
+
+#define RM_PATH "/org/tabos/routermanager/"
+
+#define RM_ERROR rm_print_error_quark()
+
+typedef enum {
+	RM_ERROR_FAX,
+	RM_ERROR_ROUTER,
+	RM_ERROR_AUDIO,
+} rm_error;
+
+GQuark rm_print_error_quark(void);
+gboolean rm_new(gboolean debug, GError **error);
+gboolean rm_init(GError **error);
+void rm_shutdown(void);
+gchar *rm_get_directory(gchar *type);
+void rm_set_requested_profile(gchar *name);
+gchar *rm_get_requested_profile(void);
+
+G_END_DECLS
+
 #endif
-
-#include <libroutermanager/osdep.h>
-
-/**
- * \brief Execute URI
- * \param uri uri name
- */
-void os_execute(const gchar *uri)
-{
-	gchar *exec;
-
-	/* create execution command line for g_spawn */
-	exec = g_strdup_printf("%s %s", OS_OPEN, uri);
-
-#ifdef G_OS_WIN32
-	ShellExecute(0, "open", uri, 0, 0, SW_SHOW);
-#else
-	g_spawn_command_line_async(exec, NULL);
-#endif
-
-	/* free command line */
-	g_free(exec);
-}

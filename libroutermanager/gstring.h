@@ -29,6 +29,7 @@ G_BEGIN_DECLS
 gchar *g_strcasestr(const gchar *haystack, const gchar *needle);
 gchar *g_convert_utf8(const gchar *text, gssize len);
 gchar *strip_html(gchar *text);
+gboolean rm_strv_contains(const gchar * const *strv, const gchar *str);
 
 G_END_DECLS
 

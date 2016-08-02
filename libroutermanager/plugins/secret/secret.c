@@ -145,10 +145,10 @@ void impl_activate(PeasActivatable *plugin)
 #ifdef SECRET_TEST
 	g_debug("Starting secret\n");
 
-	secret_store_password(profile_get_active(), "Test", "testpassword");
+	secret_store_password(rm_profile_get_active(), "Test", "testpassword");
 
-	g_debug("Got test password: '%s'", secret_get_password(profile_get_active(), "Test"));
-	secret_remove_password(profile_get_active(), "Test");
+	g_debug("Got test password: '%s'", secret_get_password(rm_profile_get_active(), "Test"));
+	secret_remove_password(rm_profile_get_active(), "Test");
 #endif
 }
 

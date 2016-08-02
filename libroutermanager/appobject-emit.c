@@ -50,7 +50,7 @@ void emit_journal_loaded(GSList *journal)
  * \brief Emit signal: contact-process
  * \param contact contact which needs to be processed
  */
-void emit_contact_process(struct contact *contact)
+void rm_emit_contact_process(struct contact *contact)
 {
 	g_signal_emit(app_object, app_object_signals[ACB_CONTACT_PROCESS], 0, contact);
 }
@@ -70,7 +70,7 @@ void emit_fax_process(const gchar *filename)
  */
 void emit_connection_established(struct connection *connection)
 {
-	connection_setup_status_timer(connection);
+	rm_connection_init_duration_timer(connection);
 	g_signal_emit(app_object, app_object_signals[ACB_CONNECTION_ESTABLISHED], 0, connection);
 }
 
@@ -81,7 +81,7 @@ void emit_connection_established(struct connection *connection)
 void emit_connection_terminated(struct connection *connection)
 {
 	/* Remove timer */
-	connection_remove_status_timer(connection);
+	rm_connection_shutdown_duration_timer(connection);
 
 	g_signal_emit(app_object, app_object_signals[ACB_CONNECTION_TERMINATED], 0, connection);
 }

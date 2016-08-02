@@ -26,7 +26,7 @@
 G_BEGIN_DECLS
 
 void emit_connection_notify(struct connection *connection);
-void emit_contact_process(struct contact *contact);
+void rm_emit_contact_process(struct contact *contact);
 void emit_journal_loaded(GSList *journal);
 void emit_fax_process(const gchar *filename);
 

@@ -23,6 +23,7 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
+#include <libroutermanager/rmconnection.h>
 #include <libroutermanager/profile.h>
 #include <libroutermanager/routermanager.h>
 #include <libroutermanager/plugins.h>
@@ -32,6 +33,7 @@
 #include <libroutermanager/net_monitor.h>
 #include <libroutermanager/settings.h>
 #include <libroutermanager/gstring.h>
+#include <libroutermanager/device_phone.h>
 
 #include <roger/journal.h>
 #include <roger/assistant.h>
@@ -42,6 +44,7 @@
 #include <roger/fax.h>
 #include <roger/contacts.h>
 #include <roger/shortcuts.h>
+#include <roger/crash.h>
 
 #include <config.h>
 
@@ -83,7 +86,7 @@ void app_quit(void)
 
 void app_copy_ip(void)
 {
-	struct profile *profile = profile_get_active();
+	struct profile *profile = rm_profile_get_active();
 	gchar *ip;
 
 	ip = router_get_ip(profile);
@@ -98,7 +101,7 @@ void app_copy_ip(void)
 
 void app_reconnect(void)
 {
-	struct profile *profile = profile_get_active();
+	struct profile *profile = rm_profile_get_active();
 
 	router_reconnect(profile);
 }
@@ -224,13 +227,10 @@ static void shortcuts_activated(GSimpleAction *action, GVariant *parameter, gpoi
 	app_shortcuts();
 }
 
-#include <libroutermanager/libfaxophone/phone.h>
-#include <libroutermanager/fax_phone.h>
-
 static void pickup_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
 	gint32 id = g_variant_get_int32(parameter);
-	struct connection *connection = connection_find_by_id(id);
+	RmConnection *connection = rm_connection_find_by_id(id);
 	struct contact *contact;
 
 	g_assert(connection != NULL);
@@ -249,7 +249,7 @@ static void pickup_activated(GSimpleAction *action, GVariant *parameter, gpointe
 static void hangup_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
 	gint32 id = g_variant_get_int32(parameter);
-	struct connection *connection = connection_find_by_id(id);
+	RmConnection *connection = rm_connection_find_by_id(id);
 
 	g_assert(connection != NULL);
 
@@ -260,7 +260,7 @@ static void hangup_activated(GSimpleAction *action, GVariant *parameter, gpointe
 		//connection->priv = active_capi_connection;
 	//}
 
-	phone_hangup(connection->priv);
+	rm_phone_hangup(connection->priv);
 }
 
 static void journal_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
@@ -417,7 +417,7 @@ static void app_init(GtkApplication *app)
 		journal_set_hide_on_quit(TRUE);
 	}
 
-	if (net_is_online() && !profile_get_active()) {
+	if (net_is_online() && !rm_profile_get_active()) {
 		journal_set_hide_on_start(TRUE);
 		app_assistant();
 	}

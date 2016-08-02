@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -36,14 +36,14 @@ struct device_phone {
 	/*void (*record)(gpointer connection, guchar hold, const gchar *dir);*/
 };
 
-void phone_register(struct device_phone *phone);
-GSList *phone_get_plugins(void);
-void phone_mute(gpointer connection, gboolean mute);
-void phone_hold(struct connection *connection, gboolean hold);
-void phone_send_dtmf_code(struct connection *connection, guchar code);
-void phone_hangup(struct connection *connection);
-gint phone_pickup(struct connection *connection);
-struct connection *phone_dial(const gchar *target, gboolean anonymous);
+void rm_phone_register(struct device_phone *phone);
+GSList *rm_phone_get_plugins(void);
+void rm_phone_mute(struct connection *connection, gboolean mute);
+void rm_phone_hold(struct connection *connection, gboolean hold);
+void rm_phone_dtmf(struct connection *connection, guchar code);
+void rm_phone_hangup(struct connection *connection);
+gint rm_phone_pickup(struct connection *connection);
+struct connection *rm_phone_dial(const gchar *target, gboolean anonymous);
 
 G_END_DECLS
 

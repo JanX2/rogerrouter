@@ -198,13 +198,13 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 	}
 
 	if (!found && connection->local_number[0] != '0') {
-		g_debug("type: %d, number '%s' not found", connection->type, call_scramble_number(connection->local_number));
+		g_debug("type: %d, number '%s' not found", connection->type, rm_call_scramble_number(connection->local_number));
 
 		gchar *tmp = call_full_number(connection->local_number, FALSE);
 
 		/* Match numbers against local number and check if we should show a notification */
 		for (count = 0; count < g_strv_length(numbers); count++) {
-			g_debug("type: %d, number '%s'/'%s' <-> '%s'", connection->type, call_scramble_number(connection->local_number), call_scramble_number(tmp), call_scramble_number(numbers[count]));
+			g_debug("type: %d, number '%s'/'%s' <-> '%s'", connection->type, rm_call_scramble_number(connection->local_number), rm_call_scramble_number(tmp), rm_call_scramble_number(numbers[count]));
 			if (!strcmp(tmp, numbers[count])) {
 				found = TRUE;
 				break;
@@ -311,8 +311,8 @@ void impl_activate(PeasActivatable *plugin)
 	gchar **outgoing_numbers = g_settings_get_strv(notification_settings, "outgoing-numbers");
 
 	if ((!incoming_numbers || !g_strv_length(incoming_numbers)) && (!outgoing_numbers || !g_strv_length(outgoing_numbers))) {
-		g_settings_set_strv(notification_settings, "incoming-numbers", (const gchar * const *) router_get_numbers(profile_get_active()));
-		g_settings_set_strv(notification_settings, "outgoing-numbers", (const gchar * const *) router_get_numbers(profile_get_active()));
+		g_settings_set_strv(notification_settings, "incoming-numbers", (const gchar * const *) router_get_numbers(rm_profile_get_active()));
+		g_settings_set_strv(notification_settings, "outgoing-numbers", (const gchar * const *) router_get_numbers(rm_profile_get_active()));
 	}
 
 	/* Init libnotify */
@@ -341,7 +341,7 @@ void impl_deactivate(PeasActivatable *plugin)
 
 void notification_settings_refresh_list(GtkListStore *list_store)
 {
-	gchar **numbers = router_get_numbers(profile_get_active());
+	gchar **numbers = router_get_numbers(rm_profile_get_active());
 	GtkTreeIter iter;
 	gint count;
 	gint index;

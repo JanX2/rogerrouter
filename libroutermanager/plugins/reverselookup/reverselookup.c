@@ -405,7 +405,7 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **street, gcha
 	gchar *country_code = NULL;
 	gboolean found = FALSE;
 	gint international_prefix_len;
-	struct profile *profile = profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	struct contact *rl_contact;
 
 	if (!profile) {
@@ -460,12 +460,12 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **street, gcha
 		return FALSE;
 	}
 
-	if (strcmp(country_code + international_prefix_len, router_get_country_code(profile_get_active()))) {
+	if (strcmp(country_code + international_prefix_len, router_get_country_code(rm_profile_get_active()))) {
 		/* if country code is not the same as the router country code, loop through country list */
 		list = get_lookup_list(country_code + international_prefix_len);
 	} else {
 		/* if country code is the same as the router country code, use default plugin */
-		list = get_lookup_list(router_get_country_code(profile_get_active()));
+		list = get_lookup_list(router_get_country_code(rm_profile_get_active()));
 	}
 
 	g_free(country_code);

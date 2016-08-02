@@ -27,13 +27,13 @@
 #include <netinet/tcp.h>
 #endif
 
+#include <libroutermanager/rmconnection.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/call.h>
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/profile.h>
 #include <libroutermanager/net_monitor.h>
-#include <libroutermanager/connection.h>
 
 #define ROUTERMANAGER_TYPE_CALLMONITOR_PLUGIN (routermanager_callmonitor_plugin_get_type ())
 #define ROUTERMANAGER_CALLMONITOR_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_CALLMONITOR_PLUGIN, RouterManagerCallMonitorPlugin))
@@ -81,32 +81,32 @@ static inline void callmonitor_convert(gchar *text)
 
 	switch (type) {
 	case 0:
-		connection = connection_add_call(atoi(fields[2]), CONNECTION_TYPE_OUTGOING, fields[4], fields[5]);
+		connection = rm_connection_add(atoi(fields[2]), RM_CONNECTION_TYPE_OUTGOING, fields[4], fields[5]);
 
 		emit_connection_notify(connection);
 		break;
 	case 1:
-		connection = connection_add_call(atoi(fields[2]), CONNECTION_TYPE_INCOMING, fields[4], fields[3]);
+		connection = rm_connection_add(atoi(fields[2]), RM_CONNECTION_TYPE_INCOMING, fields[4], fields[3]);
 
 		emit_connection_notify(connection);
 		break;
 	case 2:
-		connection = connection_find_by_id(atoi(fields[2]));
+		connection = rm_connection_find_by_id(atoi(fields[2]));
 
 		if (connection) {
-			connection_set_type(connection, CONNECTION_TYPE_CONNECT);
+			rm_connection_set_type(connection, RM_CONNECTION_TYPE_CONNECT);
 
 			emit_connection_notify(connection);
 		}
 		break;
 	case 3:
-		connection = connection_find_by_id(atoi(fields[2]));
+		connection = rm_connection_find_by_id(atoi(fields[2]));
 		if (connection) {
-			connection_set_type(connection, CONNECTION_TYPE_DISCONNECT);
+			rm_connection_set_type(connection, RM_CONNECTION_TYPE_DISCONNECT);
 
 			emit_connection_notify(connection);
 
-			connection_remove(connection);
+			rm_connection_remove(connection);
 		}
 		break;
 	default:
@@ -190,7 +190,7 @@ gboolean callmonitor_connect(gpointer user_data)
 	gint tcp_keepalive_time = 600;
 	gboolean retry = TRUE;
 
-	profile = profile_get_active();
+	profile = rm_profile_get_active();
 	if (!profile) {
 		g_debug("No active profile");
 		return FALSE;

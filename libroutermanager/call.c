@@ -182,19 +182,21 @@ void call_free(gpointer data)
 }
 
 /**
- * call_scramble_number:
+ * rm_call_scramble_number:
  * \brief Scramble number so we can print it to log files
  * \param number input number
  * Returns: scrambled number
  */
-gchar *call_scramble_number(const gchar *number)
+gchar *rm_call_scramble_number(const gchar *number)
 {
 	gchar *scramble;
+	gint len;
+
+	if (!number) {
+		return g_strdup("");
+	}
 
 	scramble = g_strdup(number);
-
-#ifdef SCRAMBLE_DATA
-	gint len;
 
 	len = strlen(number);
 
@@ -210,7 +212,6 @@ gchar *call_scramble_number(const gchar *number)
 			scramble[index] = 'X';
 		}
 	}
-#endif
 
 	return scramble;
 }
@@ -225,7 +226,7 @@ gchar *call_scramble_number(const gchar *number)
  */
 gint call_by_call_prefix_length(const gchar *number)
 {
-	gchar *my_country_code = router_get_country_code(profile_get_active());
+	gchar *my_country_code = router_get_country_code(rm_profile_get_active());
 	struct call_by_call_entry *entry;
 
 	if (EMPTY_STRING(my_country_code)) {
@@ -259,7 +260,7 @@ gchar *call_canonize_number(const gchar *number)
 		if (isdigit(*number) || *number == '*' || *number == '#') {
 			g_string_append_c(new_number, *number);
 		} else if (*number == '+') {
-			g_string_append(new_number, router_get_international_prefix(profile_get_active()));
+			g_string_append(new_number, router_get_international_prefix(rm_profile_get_active()));
 		}
 
 		number++;
@@ -438,7 +439,7 @@ gchar *call_full_number(const gchar *number, gboolean country_code_prefix)
 			return g_strdup(number);
 		}
 
-		my_country_code = router_get_country_code(profile_get_active());
+		my_country_code = router_get_country_code(rm_profile_get_active());
 		if (!strncmp(number + 2, my_country_code, strlen(my_country_code)))  {
 			out = g_strdup_printf("0%s", number + 4);
 		} else {
@@ -448,5 +449,5 @@ gchar *call_full_number(const gchar *number, gboolean country_code_prefix)
 		return out;
 	}
 
-	return call_format_number(profile_get_active(), number, country_code_prefix ? NUMBER_FORMAT_INTERNATIONAL : NUMBER_FORMAT_NATIONAL);
+	return call_format_number(rm_profile_get_active(), number, country_code_prefix ? NUMBER_FORMAT_INTERNATIONAL : NUMBER_FORMAT_NATIONAL);
 }

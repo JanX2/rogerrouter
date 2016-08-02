@@ -101,7 +101,7 @@ static void welcome_pre(struct assistant *assistant)
 void profile_entry_changed(GtkEditable *entry, gpointer user_data)
 {
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
-	GSList *profile_list = profile_get_list();
+	GSList *profile_list = rm_profile_get_list();
 	struct profile *profile;
 
 	/* Loop through all known profiles and check for duplicate profile name */
@@ -152,7 +152,7 @@ static gboolean profile_post(struct assistant *assistant)
 	const gchar *name = gtk_entry_get_text(GTK_ENTRY(assistant->profile_name));
 
 	/* Create new profile based on user input */
-	assistant->profile = profile_new(name);
+	assistant->profile = rm_profile_add(name);
 
 	return TRUE;
 }
@@ -320,7 +320,7 @@ static gboolean router_post(struct assistant *assistant)
 	}
 	g_debug("%s(): server %s", __FUNCTION__, server);
 
-	profile_set_host(assistant->profile, server);
+	rm_profile_set_host(assistant->profile, server);
 
 	/* Check if router is present */
 	present = router_present(assistant->profile->router_info);
@@ -353,8 +353,8 @@ static gboolean password_post(struct assistant *assistant)
 	gchar **numbers;
 
 	/* Create new profile based on user input */
-	profile_set_login_user(assistant->profile, user);
-	profile_set_login_password(assistant->profile, password);
+	rm_profile_set_login_user(assistant->profile, user);
+	rm_profile_set_login_password(assistant->profile, password);
 
 	/* Release any previous lock */
 	router_release_lock();
@@ -452,10 +452,6 @@ static gboolean finish_post(struct assistant *assistant)
 		router_hangup(assistant->profile, ROUTER_DIAL_PORT_AUTO, ROUTER_ENABLE_CAPI);
 	}
 
-	/* Add new profile and commit it */
-	profile_add(assistant->profile);
-	profile_commit();
-
 	/* Trigger network reconnect */
 	net_monitor_reconnect();
 
@@ -487,12 +483,16 @@ void back_button_clicked_cb(GtkWidget *next, gpointer user_data)
 	g_debug("%s(): current page %d", __FUNCTION__, assistant->current_page);
 	/* In case we are on the first page, exit assistant */
 	if (assistant->current_page <= 0) {
-		struct profile *profile = profile_get_active();
+		RmProfile *profile = rm_profile_get_active();
 
 		gtk_widget_destroy(assistant->window);
 
 		g_slice_free(struct assistant, assistant);
 		assistant = NULL;
+
+		if (assistant->profile) {
+			rm_profile_remove(assistant->profile);
+		}
 
 		/* In case no profile is active and assistant is aborted, exit application */
 		if (!profile) {

@@ -32,7 +32,7 @@
 
 #include <libroutermanager/libfaxophone/faxophone.h>
 #include <libroutermanager/libfaxophone/fax.h>
-#include <libroutermanager/libfaxophone/phone.h>
+#include <libroutermanager/rmphone.h>
 #include <libroutermanager/fax_phone.h>
 
 #include <config.h>
@@ -325,7 +325,7 @@ int main(int argc, char **argv)
 		g_signal_connect(app_object, "connection-established", G_CALLBACK(capi_connection_established_cb), NULL);
 		g_signal_connect(app_object, "connection-terminated", G_CALLBACK(capi_connection_terminated_cb), NULL);
 
-		phone_dial(number, FALSE);
+		rm_phone_dial(number, FALSE);
 	}
 
 	/* Create and start g_main_loop */

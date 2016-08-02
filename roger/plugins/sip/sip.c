@@ -23,13 +23,14 @@
 
 #include <pjsua-lib/pjsua.h>
 
+#include <libroutermanager/rmconnection.h>
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/profile.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/net_monitor.h>
 #include <libroutermanager/audio.h>
 #include <libroutermanager/gstring.h>
-#include <libroutermanager/device_phone.h>
+#include <libroutermanager/rmphone.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/settings.h>
@@ -123,7 +124,7 @@ void call_deinit_tonegen(pjsua_call_id call_id)
 /* Callback called by the library upon receiving incoming call */
 static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_rx_data *rdata)
 {
-	struct connection *connection;
+	RmConnection *connection;
 
 	pjsua_call_info ci;
 
@@ -134,14 +135,14 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
 
 	g_debug("Incoming call from %.*s!!", (int)ci.remote_info.slen, ci.remote_info.ptr);
 
-	connection = connection_add_call(call_id, CONNECTION_TYPE_INCOMING, ci.local_info.ptr, ci.remote_info.ptr);
+	connection = rm_connection_add(call_id, RM_CONNECTION_TYPE_INCOMING, ci.local_info.ptr, ci.remote_info.ptr);
 	emit_connection_notify(connection);
 }
 
 /* Callback called by the library when call's state has changed */
 static void on_call_state(pjsua_call_id call_id, pjsip_event *e)
 {
-	struct connection *connection;
+	RmConnection *connection;
 	pjsua_call_info ci;
 
 	PJ_UNUSED_ARG(e);
@@ -151,7 +152,7 @@ static void on_call_state(pjsua_call_id call_id, pjsip_event *e)
 	g_debug("%s(): Call %d state=%.*s", __FUNCTION__, call_id, (int)ci.state_text.slen, ci.state_text.ptr);
 	g_debug("%s(): ID = %s", __FUNCTION__, ci.call_id.ptr);
 
-	connection = connection_find_by_id(call_id);
+	connection = rm_connection_find_by_id(call_id);
 	if (!connection) {
 		g_debug("%s(): No connection found", __FUNCTION__);
 		return;
@@ -160,8 +161,11 @@ static void on_call_state(pjsua_call_id call_id, pjsip_event *e)
 	if (ci.state == PJSIP_INV_STATE_CONFIRMED) {
 		emit_connection_established(connection);
 	} else if (ci.state == PJSIP_INV_STATE_DISCONNECTED) {
+		g_debug("%s(): Emitting terminated", __FUNCTION__);
 		emit_connection_terminated(connection);
+		g_debug("%s(): Destroying connection", __FUNCTION__);
 		call_deinit_tonegen(call_id);
+		rm_connection_remove(connection);
 	}
 }
 
@@ -191,7 +195,7 @@ void sip_g722_state(gboolean state)
 static struct connection *sip_phone_dial(const char *trg_no, gboolean anonymous)
 {
 	struct connection *connection;
-	struct profile *profile = profile_get_active();
+	struct profile *profile = rm_profile_get_active();
 	pj_status_t status;
 	pjsua_acc_id acc_id = 0;
 	pjsua_call_id call_id;
@@ -217,7 +221,7 @@ static struct connection *sip_phone_dial(const char *trg_no, gboolean anonymous)
 		return NULL;
 	}
 
-	connection = connection_add_call(call_id, CONNECTION_TYPE_OUTGOING, g_settings_get_string(sip_settings, "msn"), trg_no);
+	connection = rm_connection_add(call_id, RM_CONNECTION_TYPE_OUTGOING, g_settings_get_string(sip_settings, "msn"), trg_no);
 
 	return connection;
 }
@@ -256,7 +260,7 @@ void sip_phone_send_dtmf_code(struct connection *connection, guchar code)
 gboolean sip_connect(gpointer user_data)
 {
 	//RouterManagerSipPlugin *sip_plugin = user_data;
-	struct profile *profile = profile_get_active();
+	struct profile *profile = rm_profile_get_active();
 	pj_status_t status;
 	pj_thread_desc rtpdesc;
 	pj_thread_t *thread = 0;
@@ -404,7 +408,7 @@ static void impl_activate(PeasActivatable *plugin)
 	/* Add network event */
 	sip_plugin->priv->net_event_id = net_add_event(sip_connect, sip_disconnect, sip_plugin);
 
-	phone_register(&sip_phone);
+	rm_phone_register(&sip_phone);
 }
 
 /**
@@ -465,4 +469,3 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 
 	return group;
 }
-

@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,16 +24,17 @@
 
 G_BEGIN_DECLS
 
-#define CONNECTION_TYPE_INCOMING   0x01
-#define CONNECTION_TYPE_OUTGOING   0x02
-#define CONNECTION_TYPE_CONNECT    0x04
-#define CONNECTION_TYPE_DISCONNECT 0x08
-#define CONNECTION_TYPE_MISSED     (CONNECTION_TYPE_INCOMING | CONNECTION_TYPE_DISCONNECT)
-
-#define CONNECTION_TYPE_SOFTPHONE  0x80
+typedef enum {
+	RM_CONNECTION_TYPE_INCOMING   = 0x01,
+	RM_CONNECTION_TYPE_OUTGOING   = 0x02,
+	RM_CONNECTION_TYPE_CONNECT    = 0x04,
+	RM_CONNECTION_TYPE_DISCONNECT = 0x08,
+	RM_CONNECTION_TYPE_MISSED     = (RM_CONNECTION_TYPE_INCOMING | RM_CONNECTION_TYPE_DISCONNECT),
+	RM_CONNECTION_TYPE_SOFTPHONE  = 0x80,
+} RmConnectionType;
 
 /** connection structure */
-struct connection {
+typedef struct connection {
 	/* Unique ID */
 	guint id;
 	/* Type */
@@ -47,20 +48,18 @@ struct connection {
 	/* Private data */
 	void *priv;
 	/* Connection time */
-	GTimer *status_timer;
-};
+	GTimer *duration_timer;
+} RmConnection;
 
-struct connection *connection_add_call(gint id, gint type, const gchar *local_number, const gchar *remote_number);
-struct connection *connection_find_by_id(gint id);
-struct connection *connection_find_by_number(const gchar *number);
-void connection_set_type(struct connection *connection, gint type);
-void connection_remove(struct connection *connection);
-void connection_ignore(struct connection *connection);
+RmConnection *rm_connection_add(gint id, RmConnectionType type, const gchar *local_number, const gchar *remote_number);
+RmConnection *rm_connection_find_by_id(gint id);
+RmConnection *rm_connection_find_by_remote_number(const gchar *number);
+void rm_connection_set_type(RmConnection *connection, RmConnectionType type);
+void rm_connection_remove(RmConnection *connection);
 
-void connection_setup_status_timer(struct connection *connection);
-void connection_remove_status_timer(struct connection *connection);
-gchar *connection_get_time(struct connection *connection);
-
+void rm_connection_init_duration_timer(RmConnection *connection);
+void rm_connection_shutdown_duration_timer(RmConnection *connection);
+gchar *rm_connection_get_duration_time(RmConnection *connection);
 
 G_END_DECLS
 

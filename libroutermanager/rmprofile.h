@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,29 +24,31 @@
 
 G_BEGIN_DECLS
 
-struct profile {
+typedef struct profile {
+	/*< private >*/
 	gchar *name;
 	struct router_info *router_info;
 
 	GSettings *settings;
 
 	GSList *action_list;
-};
+} RmProfile;
 
-gboolean profile_init(void);
-void profile_shutdown(void);
+gboolean rm_profile_init(void);
+void rm_profile_shutdown(void);
+GSList *rm_profile_get_list(void);
+RmProfile *rm_profile_add(const gchar *name);
+void rm_profile_remove(RmProfile *profile);
 
-struct profile *profile_new(const gchar *name);
-struct profile *profile_get_active(void);
-GSList *profile_get_list(void);
-void profile_add(struct profile *profile);
-void profile_remove(struct profile *profile);
-void profile_set_active(struct profile *profile);
-void profile_commit(void);
-gboolean profile_detect_active(void);
-void profile_set_host(struct profile *profile, const gchar *host);
-void profile_set_login_user(struct profile *profile, const gchar *user);
-void profile_set_login_password(struct profile *profile, const gchar *password);
+RmProfile *rm_profile_get_active(void);
+void rm_profile_set_active(RmProfile *profile);
+
+gboolean rm_profile_detect_active(void);
+
+const gchar *rm_profile_get_name(RmProfile *profile);
+void rm_profile_set_host(RmProfile *profile, const gchar *host);
+void rm_profile_set_login_user(RmProfile *profile, const gchar *user);
+void rm_profile_set_login_password(RmProfile *profile, const gchar *password);
 
 G_END_DECLS
 

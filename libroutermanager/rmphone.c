@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,15 +22,19 @@
 #include <string.h>
 #include <glib.h>
 
-#include <libroutermanager/device_phone.h>
+#include <libroutermanager/rmphone.h>
 #include <libroutermanager/gstring.h>
 
 /** Internal phone list */
-static GSList *phone_plugins = NULL;
+static GSList *rm_phone_plugins = NULL;
 
-gpointer phone_dial(const gchar *target, gboolean anonymous)
+struct connection *rm_phone_dial(const gchar *target, gboolean anonymous)
 {
-	struct device_phone *phone = phone_plugins->data;
+	struct device_phone *phone = NULL;
+
+	if (rm_phone_plugins) {
+		phone = rm_phone_plugins->data;
+	}
 
 	if (!phone) {
 		g_warning("%s(): No phone plugin", __FUNCTION__);
@@ -46,9 +50,9 @@ gpointer phone_dial(const gchar *target, gboolean anonymous)
 	return phone->dial(target, anonymous);
 }
 
-gint phone_pickup(gpointer connection)
+gint rm_phone_pickup(struct connection *connection)
 {
-	struct device_phone *phone = phone_plugins->data;
+	struct device_phone *phone = rm_phone_plugins->data;
 
 	if (!phone || !phone->pickup) {
 		g_warning("%s(): No phone or pickup function", __FUNCTION__);
@@ -58,9 +62,9 @@ gint phone_pickup(gpointer connection)
 	return phone->pickup(connection);
 }
 
-void phone_hangup(gpointer connection)
+void rm_phone_hangup(struct connection *connection)
 {
-	struct device_phone *phone = phone_plugins->data;
+	struct device_phone *phone = rm_phone_plugins->data;
 
 	if (!phone || !phone->hangup) {
 		g_warning("%s(): No phone or hangup function", __FUNCTION__);
@@ -70,9 +74,9 @@ void phone_hangup(gpointer connection)
 	phone->hangup(connection);
 }
 
-void phone_hold(gpointer connection, gboolean hold)
+void rm_phone_hold(struct connection *connection, gboolean hold)
 {
-	struct device_phone *phone = phone_plugins->data;
+	struct device_phone *phone = rm_phone_plugins->data;
 
 	if (!phone || !phone->hold) {
 		g_warning("%s(): No phone or hold function", __FUNCTION__);
@@ -82,9 +86,9 @@ void phone_hold(gpointer connection, gboolean hold)
 	phone->hold(connection, hold);
 }
 
-void phone_send_dtmf_code(gpointer connection, guchar chr)
+void rm_phone_dtmf(struct connection *connection, guchar chr)
 {
-	struct device_phone *phone = phone_plugins->data;
+	struct device_phone *phone = rm_phone_plugins->data;
 
 	if (!phone || !phone->send_dtmf_code) {
 		g_warning("%s(): No phone or send dtmf code function", __FUNCTION__);
@@ -94,9 +98,9 @@ void phone_send_dtmf_code(gpointer connection, guchar chr)
 	phone->send_dtmf_code(connection, chr);
 }
 
-void phone_mute(gpointer connection, gboolean mute)
+void rm_phone_mute(struct connection *connection, gboolean mute)
 {
-	struct device_phone *phone = phone_plugins->data;
+	struct device_phone *phone = rm_phone_plugins->data;
 
 	if (!phone || !phone->mute) {
 		g_warning("%s(): No phone or mute function", __FUNCTION__);
@@ -106,17 +110,21 @@ void phone_mute(gpointer connection, gboolean mute)
 	phone->mute(connection, mute);
 }
 
+void rm_phone_record(struct connection *connection, guchar record, const char *dir)
+{
+}
+
 /**
  * \brief Register phone plugin
  * \param phone phone plugin
  */
-void phone_register(struct device_phone *phone)
+void rm_phone_register(struct device_phone *phone)
 {
 	g_debug("%s(): Registering %s", __FUNCTION__, phone->name);
-	phone_plugins = g_slist_prepend(phone_plugins, phone);
+	rm_phone_plugins = g_slist_prepend(rm_phone_plugins, phone);
 }
 
-GSList *phone_get_plugins(void)
+GSList *rm_phone_get_plugins(void)
 {
-	return phone_plugins;
+	return rm_phone_plugins;
 }

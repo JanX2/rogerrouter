@@ -71,7 +71,7 @@ static void crash_handler(int sig)
 {
 	pid_t pid;
 	static volatile unsigned long crashed_ = 0;
-	struct profile *profile = profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 
 	/*
 	 * let's hope argv0 aren't trashed.

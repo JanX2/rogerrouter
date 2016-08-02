@@ -37,6 +37,13 @@ AC_SUBST(ROGER_VERSION_MICRO)
 
 RRA_SET_LIBDIR([$prefix])
 
+# check for gtk-doc
+m4_ifdef([GTK_DOC_CHECK], [
+GTK_DOC_CHECK([1.14],[--flavour no-tmpl])
+],[
+AM_CONDITIONAL([ENABLE_GTK_DOC], false)
+])
+
 AC_CHECK_LIB(m, pow, gsm)
 AC_CHECK_LIB(gthread-2.0, g_thread_init)
 AC_PATH_PROG(INTLTOOL_MSGMERGE, msgmerge, msgmerge)
@@ -622,6 +629,8 @@ AC_MSG_RESULT($with_gnotification)
 
 AM_CONDITIONAL(WITH_GNOTIFICATION, test "x$with_gnotification" != "xno")
 
+GLIB_TESTS
+
 #AC_ARG_ENABLE(werror,
 #	AS_HELP_STRING([--disable-werror], [don't use gcc's -Werror option when building]))
 
@@ -630,7 +639,7 @@ AM_CONDITIONAL(WITH_GNOTIFICATION, test "x$with_gnotification" != "xno")
 #	EXTRA_CFLAGS+="-Werror"
 #fi
 
-EXTRA_CFLAGS+=" -g"
+EXTRA_CFLAGS+=" -g -I. -fdiagnostics-color=auto"
 
 dnl ********************************************************************
 dnl Check for coverage tool gcov
@@ -643,7 +652,10 @@ AC_CONFIG_FILES([
     doc/Makefile
     doc/roger.1
     doc/roger_cli.1
+    docs/reference/libroutermanager/Makefile
+    docs/reference/libroutermanager/version.xml
     po/Makefile.in
+    libroutermanager/tests/Makefile
     libroutermanager/routermanager.pc
     libroutermanager/Makefile
     libroutermanager/data/Makefile

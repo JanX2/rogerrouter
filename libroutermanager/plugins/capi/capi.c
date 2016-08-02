@@ -1798,7 +1798,7 @@ struct capi_connection *active_capi_connection = NULL;
  */
 struct capi_connection *fax_dial(gchar *tiff, const gchar *trg_no, gboolean suppress)
 {
-	struct profile *profile = profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	gint modem = g_settings_get_int(profile->settings, "fax-bitrate");
 	gboolean ecm = g_settings_get_boolean(profile->settings, "fax-ecm");
 	gint controller = g_settings_get_int(profile->settings, "fax-controller") + 1;
@@ -1844,7 +1844,7 @@ struct capi_connection *fax_dial(gchar *tiff, const gchar *trg_no, gboolean supp
  */
 struct capi_connection *phone_dial(const gchar *trg_no, gboolean suppress)
 {
-	struct profile *profile = profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	gint controller = g_settings_get_int(profile->settings, "phone-controller") + 1;
 	const gchar *src_no = g_settings_get_string(profile->settings, "phone-number");
 	struct capi_connection *connection = NULL;
@@ -1963,7 +1963,7 @@ struct session_handlers session_handlers = {
  */
 gboolean capi_session_connect(gpointer user_data)
 {
-	struct profile *profile = profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	gboolean retry = TRUE;
 
 again:

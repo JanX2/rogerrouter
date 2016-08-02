@@ -103,7 +103,7 @@ GSettings *rm_settings_new_with_path(gchar *scheme, gchar *settings_path, gchar 
 GSettings *rm_settings_plugin_new(gchar *scheme, gchar *name)
 {
 	GSettings *settings = NULL;
-	struct profile *profile = profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	gchar *filename;
 
 	filename = g_strconcat(profile->name, "/plugin-", name, ".conf", NULL);

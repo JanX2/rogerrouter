@@ -618,7 +618,7 @@ gint fritzbox_get_dialport(gint type)
  */
 GSList *fritzbox_load_faxbox(GSList *journal)
 {
-	struct profile *profile = profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	struct ftp *client;
 	gchar *user = router_get_ftp_user(profile);
 	gchar *response;
@@ -747,7 +747,7 @@ GSList *fritzbox_load_voicebox(GSList *journal)
 	struct ftp *client;
 	gchar *path;
 	gint index;
-	struct profile *profile = profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	gchar *user = router_get_ftp_user(profile);
 	gchar *volume_path;
 

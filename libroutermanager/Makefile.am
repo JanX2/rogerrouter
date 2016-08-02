@@ -1,4 +1,4 @@
-SUBDIRS = . plugins data
+SUBDIRS = . plugins data tests
 AUTOMAKE_OPTIONS = no-dependencies foreign
 CLEANFILES              = *~ comperr
 DISTCLEANFILES			= intltool-extract intltool-merge intltool-update
@@ -12,8 +12,8 @@ libroutermanager_includedir = $(includedir)/libroutermanager/
 libroutermanager_include_HEADERS = $(wildcard *.h)
 
 libroutermanager_la_SOURCES = \
-	action.c\
-	action.h\
+	rmaction.c\
+	rmaction.h\
 	address-book.c\
 	address-book.h\
 	appobject-emit.c\
@@ -26,14 +26,10 @@ libroutermanager_la_SOURCES = \
 	call.h\
 	device.c\
 	device.h\
-	device_phone.c\
-	device_phone.h\
-	routermanager.c\
-	routermanager.h\
 	contact.c\
 	contact.h\
-	connection.c\
-	connection.h\
+	rmconnection.c\
+	rmconnection.h\
 	csv.c\
 	csv.h\
 	fax_spooler.c\
@@ -55,14 +51,18 @@ libroutermanager_la_SOURCES = \
 	net_monitor.h\
 	network.c\
 	network.h\
-	osdep.c\
-	osdep.h\
+	rmmain.c\
+	rmmain.h\
+	rmosdep.c\
+	rmosdep.h\
 	password.c\
 	password.h\
 	plugins.c\
 	plugins.h\
-	profile.c\
-	profile.h\
+	rmprofile.c\
+	rmprofile.h\
+	rmphone.c\
+	rmphone.h\
 	router.c\
 	router.h\
 	settings.c\
@@ -76,7 +76,7 @@ libroutermanager_la_SOURCES = \
 
 libroutermanager_la_LDFLAGS = -rdynamic
 libroutermanager_la_LIBADD = -lc $(EXTRA_LIBS) $(PEAS_LIBS) $(SOUP_LIBS) $(CAPI_LIBS) $(SPANDSP_LIBS) $(DBUS_LIBS) $(OS_LIBS)
-libroutermanager_la_CFLAGS = -fno-strict-aliasing -I.. $(EXTRA_CFLAGS) $(APP_CFLAGS) $(PEAS_CFLAGS) -Wall $(SOUP_CFLAGS) $(CAPI_CFLAGS) $(SPANDSP_CFLAGS) $(AM_CFLAGS) $(DBUS_CFLAGS) $(OS_CFLAGS) $(GTK_CFLAGS)
+libroutermanager_la_CFLAGS = -I. -fno-strict-aliasing -I.. $(EXTRA_CFLAGS) $(APP_CFLAGS) $(PEAS_CFLAGS) -Wall $(SOUP_CFLAGS) $(CAPI_CFLAGS) $(SPANDSP_CFLAGS) $(AM_CFLAGS) $(DBUS_CFLAGS) $(OS_CFLAGS) $(GTK_CFLAGS)
 
 if WIN32
 libroutermanager_la_LDFLAGS += -no-undefined -avoid-version

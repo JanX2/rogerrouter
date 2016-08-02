@@ -287,6 +287,10 @@ gchar *router_get_international_prefix(struct profile *profile)
  */
 gchar *router_get_national_prefix(struct profile *profile)
 {
+	if (!profile || !profile->settings) {
+		return NULL;
+	}
+
 	return g_settings_get_string(profile->settings, "national-call-prefix");
 }
 
@@ -464,7 +468,7 @@ void router_process_journal(GSList *journal)
 	for (list = journal; list; list = list->next) {
 		struct call *call = list->data;
 
-		emit_contact_process(call->remote);
+		rm_emit_contact_process(call->remote);
 	}
 
 	/* Emit "journal-loaded" signal */

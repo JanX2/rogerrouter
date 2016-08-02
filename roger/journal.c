@@ -28,7 +28,7 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/call.h>
 #include <libroutermanager/routermanager.h>
@@ -292,7 +292,7 @@ void journal_redraw(void)
 		count++;
 	}
 
-	profile = profile_get_active();
+	profile = rm_profile_get_active();
 
 	status = g_object_get_data(G_OBJECT(journal_win), "headerbar");
 
@@ -303,7 +303,7 @@ void journal_redraw(void)
 		GtkWidget *image;
 		gchar *markup;
 		PangoAttrList *attributes;
-		GSList *list = profile_get_list();
+		GSList *list = rm_profile_get_list();
 		gboolean selection = g_slist_length(list) > 1;
 
 		gtk_widget_set_hexpand(grid, TRUE);
@@ -435,13 +435,13 @@ void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
 static void journal_connection_notify_cb(AppObject *obj, struct connection *connection, gpointer user_data)
 {
 	if (connection->type & CONNECTION_TYPE_DISCONNECT) {
-		router_load_journal(profile_get_active());
+		router_load_journal(rm_profile_get_active());
 	}
 }
 
 gboolean journal_button_refresh_idle(gpointer data)
 {
-	struct profile *profile = profile_get_active();
+	struct profile *profile = rm_profile_get_active();
 
 	if (!profile) {
 		return FALSE;
@@ -489,7 +489,7 @@ void journal_button_clear_clicked_cb(GtkWidget *button, GtkWidget *view)
 		return;
 	}
 
-	router_clear_journal(profile_get_active());
+	router_clear_journal(rm_profile_get_active());
 }
 
 void delete_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
@@ -506,10 +506,10 @@ void delete_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, g
 		g_unlink(call->priv);
 		break;
 	case CALL_TYPE_VOICE:
-		router_delete_voice(profile_get_active(), call->priv);
+		router_delete_voice(rm_profile_get_active(), call->priv);
 		break;
 	case CALL_TYPE_FAX:
-		router_delete_fax(profile_get_active(), call->priv);
+		router_delete_fax(rm_profile_get_active(), call->priv);
 		break;
 	case CALL_TYPE_FAX_REPORT:
 		g_unlink(call->priv);
@@ -547,7 +547,7 @@ void journal_button_delete_clicked_cb(GtkWidget *button, GtkWidget *view)
 
 	gtk_tree_selection_selected_foreach(selection, delete_foreach, NULL);
 
-	router_load_journal(profile_get_active());
+	router_load_journal(rm_profile_get_active());
 }
 
 void journal_add_contact(struct call *call)
@@ -666,7 +666,7 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 	case CALL_TYPE_FAX_REPORT:
 	case CALL_TYPE_FAX: {
 		gsize len = 0;
-		gchar *data = router_load_fax(profile_get_active(), call->priv, &len);
+		gchar *data = router_load_fax(rm_profile_get_active(), call->priv, &len);
 
 		if (data && len) {
 			gchar *path = g_build_filename(g_get_user_cache_dir(), G_DIR_SEPARATOR_S, "fax.pdf", NULL);

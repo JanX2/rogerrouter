@@ -31,7 +31,7 @@ struct contact_address {
 	gchar *city;
 };
 
-struct contact {
+typedef struct contact {
 	/* Name */
 	gchar *name;
 	/* Picture */
@@ -58,7 +58,7 @@ struct contact {
 
 	/* Private data */
 	gpointer priv;
-};
+} RmContact;
 
 void contact_copy(struct contact *src, struct contact *dst);
 struct contact *contact_dup(struct contact *src);

@@ -478,7 +478,7 @@ void google_set_image(GDataContactsContact *gcontact, struct sPerson *contact) {
 int googleSaveBook(void) {
 	GList *list;
 	GError *error = NULL;
-	struct profile *profile = profile_get_active();
+	struct profile *profile = rm_profile_get_active();
 
 	g_debug("started");
 	if (google_init()) {

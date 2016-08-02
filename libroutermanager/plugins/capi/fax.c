@@ -640,7 +640,7 @@ void fax_clean(struct capi_connection *connection)
  */
 struct connection *capi_fax_dial(gchar *tiff, const gchar *trg_no, gboolean suppress)
 {
-	struct profile *profile = profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	gint modem = g_settings_get_int(profile->settings, "fax-bitrate");
 	gboolean ecm = g_settings_get_boolean(profile->settings, "fax-ecm");
 	gint controller = g_settings_get_int(profile->settings, "fax-controller") + 1;

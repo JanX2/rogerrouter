@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,7 @@
 
 #include <glib.h>
 
-#include <libroutermanager/routermanager.h>
+#include <libroutermanager/rmmain.h>
 #include <libroutermanager/filter.h>
 #include <libroutermanager/profile.h>
 #include <libroutermanager/router.h>
@@ -40,14 +40,25 @@
 #include <gtkmacintegration/gtkosxapplication.h>
 #endif
 
+/**
+ * SECTION:rmmain
+ * @Title: RmMain
+ * @Short_description: Main entry of libroutermanager.
+ *
+ * Initialize libroutermanager: e.g. logging, profiles, routers, plugins, actions, ...
+ */
+
 /** Private data pointing to the plugin directory */
-static gchar *plugin_dir = NULL;
+static gchar *rm_plugin_dir = NULL;
 /** Requested user profile */
-static gchar *requested_profile = NULL;
+static gchar *rm_requested_profile = NULL;
 
 /**
- * \brief Print error quark
- * \return quark
+ * rm_print_error_quark:
+ *
+ * Print error quark.
+ *
+ * Returns: a @GQuark
  */
 GQuark rm_print_error_quark(void)
 {
@@ -55,11 +66,14 @@ GQuark rm_print_error_quark(void)
 }
 
 /**
- * \brief Get directory of requested type
- * \param type directory type name
- * \return directory as duplicated string
+ * rm_get_directory:
+ * @type: directory type name
+ *
+ * Get directory of requested type (based on operating system).
+ *
+ * Returns: directory path, free it with g_free() when done.
  */
-gchar *get_directory(gchar *type)
+gchar *rm_get_directory(gchar *type)
 {
 #ifdef G_OS_WIN32
 	GFile *directory;
@@ -94,42 +108,49 @@ gchar *get_directory(gchar *type)
 }
 
 /**
- * \brief Initialize directory paths
+ * rm_init_directory_paths:
+ *
+ * Initialize directory paths.
  */
-void init_directory_paths(void)
+void rm_init_directory_paths(void)
 {
-	plugin_dir = get_directory(ROUTERMANAGER_PLUGINS);
+	rm_plugin_dir = rm_get_directory(ROUTERMANAGER_PLUGINS);
 }
 
 /**
- * \brief Return plugin directory
- * \return plugin directory string
+ * rm_get_plugin_dir:
+ *
+ * Return plugin directory.
+ *
+ * Returns: plugin directory string
  */
-static gchar *get_plugin_dir(void)
+static gchar *rm_get_plugin_dir(void)
 {
-	return plugin_dir;
+	return rm_plugin_dir;
 }
 
 /**
- * \brief Set requested profile
- * \param profile requested profile name
+ * rm_set_requested_profile:
+ * @name: requested profile name
+ *
+ * Set requested profile name.
  */
-void routermanager_set_requested_profile(gchar *name)
+void rm_set_requested_profile(gchar *name)
 {
-	if (requested_profile) {
-		g_free(requested_profile);
+	if (rm_requested_profile) {
+		g_free(rm_requested_profile);
 	}
 
-	requested_profile = g_strdup(name);
+	rm_requested_profile = g_strdup(name);
 }
 
 /**
  * \brief Get requested profile
  * \return requested profile name
  */
-gchar *routermanager_get_requested_profile(void)
+gchar *rm_get_requested_profile(void)
 {
-	return requested_profile;
+	return rm_requested_profile;
 }
 
 /**
@@ -137,7 +158,7 @@ gchar *routermanager_get_requested_profile(void)
  * \param debug enable debug output
  * \return TRUE on success, FALSE on error
  */
-gboolean routermanager_new(gboolean debug, GError **error)
+gboolean rm_new(gboolean debug, GError **error)
 {
 	gchar *dir;
 
@@ -147,7 +168,7 @@ gboolean routermanager_new(gboolean debug, GError **error)
 #endif
 
 	/* Init directory path */
-	init_directory_paths();
+	rm_init_directory_paths();
 
 	/* Initialize logging system */
 	log_init(debug);
@@ -172,10 +193,14 @@ gboolean routermanager_new(gboolean debug, GError **error)
 }
 
 /**
- * \brief Initialize routermanager
- * \return TRUE on success, FALSE on error
+ * rm_init:
+ * @error: a @GError
+ *
+ * Initialize routermanager.
+ *
+ * Returns: TRUE on success, FALSE on error
  */
-gboolean routermanager_init(GError **error)
+gboolean rm_init(GError **error)
 {
 	/* Init filter */
 	filter_init();
@@ -189,7 +214,7 @@ gboolean routermanager_init(GError **error)
 	net_init();
 
 	/* Load plugins depending on ui (router, audio, address book, reverse lookup...) */
-	routermanager_plugins_add_search_path(get_plugin_dir());
+	routermanager_plugins_add_search_path(rm_get_plugin_dir());
 
 	/* Initialize plugins */
 	plugins_init();
@@ -216,7 +241,9 @@ gboolean routermanager_init(GError **error)
 }
 
 /**
- * \brief Shutdown routermanager
+ * rm_shutdown:
+ *
+ * Shutdown routermanager
  * - Network monitor
  * - Profile
  * - Router
@@ -226,13 +253,13 @@ gboolean routermanager_init(GError **error)
  * - AppObject
  * - Log
  */
-void routermanager_shutdown(void)
+void rm_shutdown(void)
 {
 	/* Shutdown network monitor */
 	net_monitor_shutdown();
 
 	/* Shutdown profiles */
-	profile_shutdown();
+	rm_profile_shutdown();
 
 	/* Shutdown router */
 	router_shutdown();

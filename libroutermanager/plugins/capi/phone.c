@@ -147,7 +147,7 @@ void capi_phone_transfer(struct capi_connection *connection, _cmsg capi_message)
  */
 static struct connection *capi_phone_dial(const char *trg_no, gboolean anonymous)
 {
-	struct profile *profile = profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	gint controller = g_settings_get_int(profile->settings, "phone-controller") + 1;
 	const gchar *src_no = g_settings_get_string(profile->settings, "phone-number");
 	struct capi_connection *capi_connection;
@@ -574,5 +574,5 @@ struct device_phone capi_phone = {
 
 void capi_phone_init(void)
 {
-	phone_register(&capi_phone);
+	rm_phone_register(&capi_phone);
 }
