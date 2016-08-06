@@ -162,6 +162,8 @@ gboolean callmonitor_connect(gpointer user_data)
 	gint tcp_keepalive_time = 600;
 	gboolean retry = TRUE;
 
+	g_debug("%s(): called", __FUNCTION__);
+
 	profile = profile_get_active();
 	if (!profile) {
 		g_debug("No active profile");
@@ -283,6 +285,8 @@ gboolean callmonitor_disconnect(gpointer user_data)
 	RouterManagerCallMonitorPlugin *callmonitor_plugin = user_data;
 	GError *error = NULL;
 
+	g_debug("%s(): called", __FUNCTION__);
+
 	if (callmonitor_plugin->priv->id > 0) {
 		g_source_remove(callmonitor_plugin->priv->id);
 	}
@@ -309,6 +313,7 @@ static void impl_activate(PeasActivatable *plugin)
 	RouterManagerCallMonitorPlugin *callmonitor_plugin = ROUTERMANAGER_CALLMONITOR_PLUGIN(plugin);
 
 	/* Add network event */
+	g_debug("%s(): callmonitor", __FUNCTION__);
 	callmonitor_plugin->priv->net_event_id = net_add_event(callmonitor_connect, callmonitor_disconnect, callmonitor_plugin);
 }
 

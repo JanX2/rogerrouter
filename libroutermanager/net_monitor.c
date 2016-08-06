@@ -43,19 +43,22 @@ gconstpointer net_add_event(net_connect_func connect, net_disconnect_func discon
 	g_assert(disconnect != NULL);
 
 	/* Allocate new event */
-	event = g_slice_new(struct net_event);
+	event = g_slice_new0(struct net_event);
 
 	/* Set event functions */
 	event->connect = connect;
 	event->disconnect = disconnect;
 	event->user_data = user_data;
+	event->is_connected = FALSE;
 
 	/* Add to network event list */
 	net_event_list = g_slist_append(net_event_list, event);
 
 	/* If current state is online, start connect() function */
+	g_debug("%s(): net_online = %d", __FUNCTION__, net_online);
 	if (net_online) {
 		event->is_connected = event->connect(event->user_data);
+		g_debug("%s(): is_connected = %d", __FUNCTION__, event->is_connected);
 	}
 
 	return event;
@@ -122,9 +125,11 @@ void net_monitor_state_changed(gboolean state)
 		for (list = net_event_list; list != NULL; list = list->next) {
 			struct net_event *event = list->data;
 
+			g_debug("%s(): 1. is_connected = %d", __FUNCTION__, event->is_connected);
 			if (event->is_connected) {
 				event->is_connected = !event->disconnect(event->user_data);
 			}
+			g_debug("%s(): 2. is_connected = %d", __FUNCTION__, event->is_connected);
 		}
 
 		/* Disable active profile */
@@ -136,10 +141,12 @@ void net_monitor_state_changed(gboolean state)
 			for (list = net_event_list; list != NULL; list = list->next) {
 				struct net_event *event = list->data;
 
+				g_debug("%s(): 1. is_connected = %d", __FUNCTION__, event->is_connected);
 				if (!event->is_connected) {
 					g_debug("%s(): Calling connect", __FUNCTION__);
 					event->is_connected = event->connect(event->user_data);
 				}
+				g_debug("%s(): 2. is_connected = %d", __FUNCTION__, event->is_connected);
 			}
 		}
 	}
