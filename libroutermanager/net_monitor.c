@@ -55,7 +55,7 @@ gconstpointer net_add_event(net_connect_func connect, net_disconnect_func discon
 
 	/* If current state is online, start connect() function */
 	if (net_online) {
-		event->connect(event->user_data);
+		event->is_connected = event->connect(event->user_data);
 	}
 
 	return event;
@@ -72,7 +72,7 @@ void net_remove_event(gconstpointer net_event_id)
 	net_event_list = g_slist_remove(net_event_list, net_event_id);
 
 	if (net_online) {
-		event->disconnect(event->user_data);
+		event->is_connected = !event->disconnect(event->user_data);
 	}
 
 	g_slice_free(struct net_event, event);
