@@ -1431,6 +1431,7 @@ void app_show_settings(void)
 		g_debug("%s(): Setting fallback directory", __FUNCTION__);
 		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(settings->fax_report_directory_chooser), g_get_home_dir());
 	}
+	g_signal_connect(settings->fax_report_directory_chooser, "file-set", G_CALLBACK(fax_report_directory_chooser_file_set_cb), NULL);
 
 	//g_settings_bind(profile->settings, "fax-cip", settings->fax_cip_combobox, "active", G_SETTINGS_BIND_DEFAULT);
 
