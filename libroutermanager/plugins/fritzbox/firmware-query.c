@@ -85,6 +85,7 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 								"FaxKennung", "telcfg:settings/FaxKennung",
 								"DialPort", "telcfg:settings/DialPort",
 								"TamStick", "tam:settings/UseStick",
+								"FaxSavePath", "telcfg:settings/FaxSavePath",
 	                            "sid", profile->router_info->session_id,
 	                            NULL);
 	g_free(url);
@@ -146,11 +147,15 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 	g_settings_set_string(profile->settings, "fax-header", fax_ident);
 	json_reader_end_member(reader);
 
-	json_reader_read_member(reader, "storage");
-	const gchar *storage = json_reader_get_string_value(reader);
-	g_debug("Fax Storage: %s", storage);
-	g_settings_set_string(profile->settings, "fax-volume", storage);
-	json_reader_end_member(reader);
+	if ((port == 2 || port == 3)) {
+		json_reader_read_member(reader, "storage");
+		const gchar *storage = json_reader_get_string_value(reader);
+		g_debug("Fax Storage: %s", storage);
+		g_settings_set_string(profile->settings, "fax-volume", storage);
+		json_reader_end_member(reader);
+	} else {
+		g_settings_set_string(profile->settings, "fax-volume", "");
+	}
 
 	json_reader_read_member(reader, "FaxMSN0");
 	const gchar *fax_msn = json_reader_get_string_value(reader);
