@@ -1,3 +1,11 @@
+roger - 1.9.2
+------------------------------------------------------------------------------------------------------------------
+- Fix network event handling (aka telnet plugin sometimes not working)
+- Store fax-report directory
+- Fix fax-volume setting for firmware >= 6.30
+- Change incoming/outgoing fax icons to be in line with phone call icons
+- Set initial evolution address book if none is set
+
 roger - 1.9.1
 ------------------------------------------------------------------------------------------------------------------
 * Correct fax icon
