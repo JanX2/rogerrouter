@@ -1,0 +1,45 @@
+# files being edited
+*~
+
+# make and build files
+*.o
+*.lo
+*.la
+*.valid
+*.nsi
+*Makefile
+*.in
+*metainfo.xml
+*.plugin
+*.1
+*.gmo
+stamp-it
+stamp-h1
+POTFILES
+roger/roger_gresource.*
+*.rc
+*.pc
+*.desktop
+macosx/package
+macosx/roger.plist
+
+# Directories
+*.deps
+*.libs
+*.dirstamp
+
+# Misc
+aclocal.m4
+autom4te.cache/
+config.*
+depcomp
+m4/libtool.m4
+*appdata.xml
+po/.intltool-merge-cache
+libtool
+configure
+.buildconfig
+
+# Binaries
+roger-cli/roger_cli
+roger/roger
