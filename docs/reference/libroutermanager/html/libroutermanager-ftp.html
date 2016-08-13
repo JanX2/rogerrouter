@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ftp: Roger Router Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="index.html" title="Roger Router Reference Manual">
+<link rel="up" href="ch01.html" title="[Insert title here]">
+<link rel="prev" href="libroutermanager-fritzbox.html" title="fritzbox">
+<link rel="next" href="libroutermanager-gstring.html" title="gstring">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#libroutermanager-ftp.description" class="shortcut">Description</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="libroutermanager-fritzbox.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="libroutermanager-gstring.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="refentry">
+<a name="libroutermanager-ftp"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="libroutermanager-ftp.top_of_page"></a>ftp</span></h2>
+<p>ftp</p>
+</td>
+<td class="gallery_image" valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsect1">
+<a name="libroutermanager-ftp.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-ftp.html#ftp-read-response" title="ftp_read_response ()">ftp_read_response</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-ftp.html#ftp-send-command" title="ftp_send_command ()">ftp_send_command</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-ftp.html#ftp-login" title="ftp_login ()">ftp_login</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-ftp.html#ftp-passive" title="ftp_passive ()">ftp_passive</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-ftp.html#ftp-list-dir" title="ftp_list_dir ()">ftp_list_dir</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-ftp.html#ftp-get-file" title="ftp_get_file ()">ftp_get_file</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-ftp.html#ftp-put-file" title="ftp_put_file ()">ftp_put_file</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">struct <a class="link" href="libroutermanager-ftp.html#ftp" title="struct ftp"><span class="returnvalue">ftp</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-ftp.html#ftp-init" title="ftp_init ()">ftp_init</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-ftp.html#ftp-delete-file" title="ftp_delete_file ()">ftp_delete_file</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-ftp.html#ftp-shutdown" title="ftp_shutdown ()">ftp_shutdown</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-ftp.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody><tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="libroutermanager-ftp.html#ftp" title="struct ftp">ftp</a></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-ftp.description"></a><h2>Description</h2>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-ftp.functions_details"></a><h2>Functions</h2>
+<div class="refsect2">
+<a name="ftp-read-response"></a><h3>ftp_read_response ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+ftp_read_response (<em class="parameter"><code><a href="../glib/glib-IO-Channels.html#GIOChannel"><span class="type">GIOChannel</span></a> *channel</code></em>,
+                   <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> *len</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="ftp-send-command"></a><h3>ftp_send_command ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+ftp_send_command (<em class="parameter"><code><span class="type">struct ftp</span> *client</code></em>,
+                  <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *command</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="ftp-login"></a><h3>ftp_login ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+ftp_login (<em class="parameter"><code><span class="type">struct ftp</span> *client</code></em>,
+           <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *user</code></em>,
+           <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *password</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="ftp-passive"></a><h3>ftp_passive ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+ftp_passive (<em class="parameter"><code><span class="type">struct ftp</span> *client</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="ftp-list-dir"></a><h3>ftp_list_dir ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+ftp_list_dir (<em class="parameter"><code><span class="type">struct ftp</span> *client</code></em>,
+              <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dir</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="ftp-get-file"></a><h3>ftp_get_file ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+ftp_get_file (<em class="parameter"><code><span class="type">struct ftp</span> *client</code></em>,
+              <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>,
+              <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> *len</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="ftp-put-file"></a><h3>ftp_put_file ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+ftp_put_file (<em class="parameter"><code><span class="type">struct ftp</span> *client</code></em>,
+              <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>,
+              <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *path</code></em>,
+              <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *data</code></em>,
+              <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> size</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="ftp-init"></a><h3>ftp_init ()</h3>
+<pre class="programlisting">struct <a class="link" href="libroutermanager-ftp.html#ftp" title="struct ftp"><span class="returnvalue">ftp</span></a> *
+ftp_init (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *server</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="ftp-delete-file"></a><h3>ftp_delete_file ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+ftp_delete_file (<em class="parameter"><code><span class="type">struct ftp</span> *client</code></em>,
+                 <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="ftp-shutdown"></a><h3>ftp_shutdown ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+ftp_shutdown (<em class="parameter"><code><span class="type">struct ftp</span> *client</code></em>);</pre>
+</div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-ftp.other_details"></a><h2>Types and Values</h2>
+<div class="refsect2">
+<a name="ftp"></a><h3>struct ftp</h3>
+<pre class="programlisting">struct ftp {
+	gchar *server;
+	gint code;
+	gchar *response;
+	GIOChannel *control;
+	GIOChannel *data;
+	GTimer *timer;
+};
+</pre>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>Generated by GTK-Doc V1.25</div>
+</body>
+</html>

@@ -28,6 +28,8 @@
 #define SPANDSP_EXPOSE_INTERNAL_STRUCTURES
 #include <spandsp.h>
 
+#include <capi20.h>
+
 /* Service indicator (0x04=speech, 0x11=fax/g3) */
 #define SPEECH_CIP			0x04
 #define FAX_CIP				0x11

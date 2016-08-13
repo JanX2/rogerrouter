@@ -28,7 +28,7 @@
 #include <libroutermanager/voxplay.h>
 #include <libroutermanager/audio.h>
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/routermanager.h>
+#include <libroutermanager/rmmain.h>
 
 #define MAX_FRAME_SIZE 2000
 

@@ -20,7 +20,7 @@
 #include <string.h>
 
 #include <libroutermanager/rmaction.h>
-#include <libroutermanager/fax_phone.h>
+//#include <libroutermanager/fax_phone.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/rmmain.h>

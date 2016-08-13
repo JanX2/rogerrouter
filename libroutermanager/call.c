@@ -25,7 +25,7 @@
 
 #include <libroutermanager/call.h>
 #include <libroutermanager/gstring.h>
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/router.h>
 
 /** Call-by-call number table */

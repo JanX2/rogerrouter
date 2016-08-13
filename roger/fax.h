@@ -22,7 +22,7 @@
 
 G_BEGIN_DECLS
 
-#include <libroutermanager/libfaxophone/fax.h>
+#include <libroutermanager/plugins/capi/fax.h>
 
 struct fax_ui {
 	gchar *file;

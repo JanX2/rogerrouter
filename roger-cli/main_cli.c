@@ -24,16 +24,16 @@
 #include <glib/gprintf.h>
 
 #include <libroutermanager/appobject.h>
-#include <libroutermanager/profile.h>
-#include <libroutermanager/routermanager.h>
+#include <libroutermanager/rmprofile.h>
+#include <libroutermanager/rmmain.h>
 #include <libroutermanager/logging.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/gstring.h>
 
-#include <libroutermanager/libfaxophone/faxophone.h>
-#include <libroutermanager/libfaxophone/fax.h>
+//#include <libroutermanager/libfaxophone/faxophone.h>
+#include <libroutermanager/plugins/capi/fax.h>
 #include <libroutermanager/rmphone.h>
-#include <libroutermanager/fax_phone.h>
+//#include <libroutermanager/fax_phone.h>
 
 #include <config.h>
 
@@ -124,7 +124,7 @@ gchar *convert_fax_to_tiff(gchar *file_name)
 	args[3] = "-dSAFER";
 	args[4] = "-dBATCH";
 
-	if (g_settings_get_int(profile_get_active()->settings, "fax-controller") < 3) {
+	if (g_settings_get_int(rm_profile_get_active()->settings, "fax-controller") < 3) {
 		args[5] = "-sDEVICE=tiffg4";
 	} else {
 		args[5] = "-sDEVICE=tiffg32d";
@@ -132,7 +132,7 @@ gchar *convert_fax_to_tiff(gchar *file_name)
 
 	args[6] = "-sPAPERSIZE=a4";
 	args[7] = "-dFIXEDMEDIA";
-	if (g_settings_get_int(profile_get_active()->settings, "fax-resolution")) {
+	if (g_settings_get_int(rm_profile_get_active()->settings, "fax-resolution")) {
 		args[8] = "-r204x196";
 	} else {
 		args[8] = "-r204x98";
@@ -187,7 +187,7 @@ static void capi_connection_terminated_cb(AppObject *object, struct capi_connect
  */
 void fax_connection_status_cb(AppObject *object, gint status, struct capi_connection *connection, gpointer user_data)
 {
-	struct fax_status *fax_status;
+/*	struct fax_status *fax_status;
 	gchar buffer[256];
 
 	fax_status = connection->priv;
@@ -247,7 +247,7 @@ void fax_connection_status_cb(AppObject *object, gint status, struct capi_connec
 
 		snprintf(text, sizeof(text), "%d%%", percent);
 		g_message("Transfer at %s", text);
-	}
+	}*/
 }
 
 
@@ -281,11 +281,11 @@ int main(int argc, char **argv)
 		exit(-3);
 	}
 
-	routermanager_new(debug, NULL);
+	rm_new(debug, NULL);
 	/* Initialize routermanager */
 
-	routermanager_init(NULL);
-	if (!profile_get_active()) {
+	rm_init(NULL);
+	if (!rm_profile_get_active()) {
 		return 0;
 	}
 
@@ -297,7 +297,7 @@ int main(int argc, char **argv)
 		g_signal_connect(G_OBJECT(app_object), "journal-loaded", G_CALLBACK(journal_loaded_cb), NULL);
 
 		/* Request router journal */
-		router_load_journal(profile_get_active());
+		router_load_journal(rm_profile_get_active());
 	}
 
 	if (sendfax && file_name && number) {
@@ -333,7 +333,7 @@ int main(int argc, char **argv)
 	g_main_loop_run(main_loop);
 
 	/* Shutdown routermanager */
-	routermanager_shutdown();
+	rm_shutdown();
 
 	if (sendfax && tiff) {
 		g_unlink(tiff);

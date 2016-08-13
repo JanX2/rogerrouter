@@ -23,7 +23,7 @@
 #include <glib.h>
 
 #include <libroutermanager/call.h>
-#include <libroutermanager/routermanager.h>
+#include <libroutermanager/rmmain.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/file.h>
@@ -177,7 +177,7 @@ static void global_areacodes_contact_process_cb(AppObject *obj, struct contact *
 static void impl_activate(PeasActivatable *plugin)
 {
 	RouterManagerGlobalAreaCodesPlugin *areacodes_plugin = ROUTERMANAGER_GLOBAL_AREACODES_PLUGIN(plugin);
-	gchar *areacodes = g_build_filename(get_directory(ROUTERMANAGER_PLUGINS), "areacodes_global", "globalareacodes.csv", NULL);
+	gchar *areacodes = g_build_filename(rm_get_directory(RM_PLUGINS), "areacodes_global", "globalareacodes.csv", NULL);
 	gchar *data;
 	gsize read;
 

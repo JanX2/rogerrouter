@@ -24,14 +24,14 @@
 #include <gtk/gtk.h>
 
 #include <libroutermanager/plugins.h>
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/address-book.h>
 #include <libroutermanager/call.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/settings.h>
 #include <libroutermanager/gstring.h>
-#include <libroutermanager/osdep.h>
+#include <libroutermanager/rmosdep.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/password.h>
 

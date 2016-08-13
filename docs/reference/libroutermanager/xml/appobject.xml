@@ -1,0 +1,285 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+  <!ENTITY % gtkdocentities SYSTEM "../xml/gtkdocentities.ent">
+  %gtkdocentities;
+]>
+<refentry id="AppObject">
+<refmeta>
+<refentrytitle role="top_of_page" id="AppObject.top_of_page">AppObject</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>LIBROUTERMANAGER Library</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>AppObject</refname>
+<refpurpose></refpurpose>
+</refnamediv>
+
+<refsect1 id="AppObject.functions" role="functions_proto">
+<title role="functions_proto.title">Functions</title>
+<informaltable pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="functions_return" colwidth="150px"/>
+<colspec colname="functions_name"/>
+<tbody>
+<row><entry role="define_keyword">#define</entry><entry role="function_name"><link linkend="APP-OBJECT:CAPS">APP_OBJECT</link><phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="define_keyword">#define</entry><entry role="function_name"><link linkend="APP-OBJECT-CLASS:CAPS">APP_OBJECT_CLASS</link><phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="define_keyword">#define</entry><entry role="function_name"><link linkend="IS-APP-OBJECT:CAPS">IS_APP_OBJECT</link><phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="define_keyword">#define</entry><entry role="function_name"><link linkend="IS-APP-OBJECT-CLASS:CAPS">IS_APP_OBJECT_CLASS</link><phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="GObject"><returnvalue>GObject</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="app-object-new">app_object_new</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="AppObject.signals" role="signal_proto">
+<title role="signal_proto.title">Signals</title>
+<informaltable frame="none">
+<tgroup cols="3">
+<colspec colname="signals_return" colwidth="150px"/>
+<colspec colname="signals_name" colwidth="300px"/>
+<colspec colname="signals_flags" colwidth="200px"/>
+<tbody>
+<row><entry role="signal_type"><link linkend="void"><returnvalue>void</returnvalue></link></entry><entry role="signal_name"><link linkend="AppObject-authenticate">authenticate</link></entry><entry role="signal_flags"><link linkend="G-SIGNAL-RUN-FIRST:CAPS">Run First</link></entry></row>
+<row><entry role="signal_type"><link linkend="void"><returnvalue>void</returnvalue></link></entry><entry role="signal_name"><link linkend="AppObject-connection-established">connection-established</link></entry><entry role="signal_flags"><link linkend="G-SIGNAL-RUN-FIRST:CAPS">Run First</link></entry></row>
+<row><entry role="signal_type"><link linkend="void"><returnvalue>void</returnvalue></link></entry><entry role="signal_name"><link linkend="AppObject-connection-notify">connection-notify</link></entry><entry role="signal_flags"><link linkend="G-SIGNAL-RUN-FIRST:CAPS">Run First</link></entry></row>
+<row><entry role="signal_type"><link linkend="void"><returnvalue>void</returnvalue></link></entry><entry role="signal_name"><link linkend="AppObject-connection-status">connection-status</link></entry><entry role="signal_flags"><link linkend="G-SIGNAL-RUN-FIRST:CAPS">Run First</link></entry></row>
+<row><entry role="signal_type"><link linkend="void"><returnvalue>void</returnvalue></link></entry><entry role="signal_name"><link linkend="AppObject-connection-terminated">connection-terminated</link></entry><entry role="signal_flags"><link linkend="G-SIGNAL-RUN-FIRST:CAPS">Run First</link></entry></row>
+<row><entry role="signal_type"><link linkend="void"><returnvalue>void</returnvalue></link></entry><entry role="signal_name"><link linkend="AppObject-contact-process">contact-process</link></entry><entry role="signal_flags"><link linkend="G-SIGNAL-RUN-FIRST:CAPS">Run First</link></entry></row>
+<row><entry role="signal_type"><link linkend="void"><returnvalue>void</returnvalue></link></entry><entry role="signal_name"><link linkend="AppObject-contacts-changed">contacts-changed</link></entry><entry role="signal_flags"><link linkend="G-SIGNAL-RUN-FIRST:CAPS">Run First</link></entry></row>
+<row><entry role="signal_type"><link linkend="void"><returnvalue>void</returnvalue></link></entry><entry role="signal_name"><link linkend="AppObject-fax-process">fax-process</link></entry><entry role="signal_flags"><link linkend="G-SIGNAL-RUN-FIRST:CAPS">Run First</link></entry></row>
+<row><entry role="signal_type"><link linkend="void"><returnvalue>void</returnvalue></link></entry><entry role="signal_name"><link linkend="AppObject-journal-loaded">journal-loaded</link></entry><entry role="signal_flags"><link linkend="G-SIGNAL-RUN-FIRST:CAPS">Run First</link></entry></row>
+<row><entry role="signal_type"><link linkend="void"><returnvalue>void</returnvalue></link></entry><entry role="signal_name"><link linkend="AppObject-message">message</link></entry><entry role="signal_flags"><link linkend="G-SIGNAL-RUN-FIRST:CAPS">Run First</link></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="AppObject.other" role="other_proto">
+<title role="other_proto.title">Types and Values</title>
+<informaltable role="enum_members_table" pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="name" colwidth="150px"/>
+<colspec colname="description"/>
+<tbody>
+<row><entry role="datatype_keyword">enum</entry><entry role="function_name"><link linkend="AppCallbackId">AppCallbackId</link></entry></row>
+<row><entry role="define_keyword">#define</entry><entry role="function_name"><link linkend="APP-OBJECT-TYPE:CAPS">APP_OBJECT_TYPE</link></entry></row>
+<row><entry role="datatype_keyword">struct</entry><entry role="function_name"><link linkend="AppObject-struct">AppObject</link></entry></row>
+<row><entry role="datatype_keyword">struct</entry><entry role="function_name"><link linkend="AppObjectClass">AppObjectClass</link></entry></row>
+<row><entry role="variable_type">extern GObject *</entry><entry role="function_name"><link linkend="app-object">app_object</link></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="AppObject.object-hierarchy" role="object_hierarchy">
+<title role="object_hierarchy.title">Object Hierarchy</title>
+<screen>    <link linkend="GObject">GObject</link>
+    <phrase role="lineart">&#9584;&#9472;&#9472;</phrase> AppObject
+</screen>
+</refsect1>
+
+
+<refsect1 id="AppObject.description" role="desc">
+<title role="desc.title">Description</title>
+
+</refsect1>
+<refsect1 id="AppObject.functions_details" role="details">
+<title role="details.title">Functions</title>
+<refsect2 id="APP-OBJECT:CAPS" role="macro">
+<title>APP_OBJECT()</title>
+<indexterm zone="APP-OBJECT:CAPS"><primary>APP_OBJECT</primary></indexterm>
+<programlisting language="C">#define APP_OBJECT(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), GEANY_OBJECT_TYPE, AppObject))
+</programlisting>
+</refsect2>
+<refsect2 id="APP-OBJECT-CLASS:CAPS" role="macro">
+<title>APP_OBJECT_CLASS()</title>
+<indexterm zone="APP-OBJECT-CLASS:CAPS"><primary>APP_OBJECT_CLASS</primary></indexterm>
+<programlisting language="C">#define APP_OBJECT_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST((klass), APP_OBJECT_TYPE, AppObjectClass))
+</programlisting>
+</refsect2>
+<refsect2 id="IS-APP-OBJECT:CAPS" role="macro">
+<title>IS_APP_OBJECT()</title>
+<indexterm zone="IS-APP-OBJECT:CAPS"><primary>IS_APP_OBJECT</primary></indexterm>
+<programlisting language="C">#define IS_APP_OBJECT(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), APP_OBJECT_TYPE))
+</programlisting>
+</refsect2>
+<refsect2 id="IS-APP-OBJECT-CLASS:CAPS" role="macro">
+<title>IS_APP_OBJECT_CLASS()</title>
+<indexterm zone="IS-APP-OBJECT-CLASS:CAPS"><primary>IS_APP_OBJECT_CLASS</primary></indexterm>
+<programlisting language="C">#define IS_APP_OBJECT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), APP_OBJECT_TYPE))
+</programlisting>
+</refsect2>
+<refsect2 id="app-object-new" role="function">
+<title>app_object_new&#160;()</title>
+<indexterm zone="app-object-new"><primary>app_object_new</primary></indexterm>
+<programlisting language="C"><link linkend="GObject"><returnvalue>GObject</returnvalue></link>&#160;*
+app_object_new (<parameter><type>void</type></parameter>);</programlisting>
+</refsect2>
+
+</refsect1>
+<refsect1 id="AppObject.other_details" role="details">
+<title role="details.title">Types and Values</title>
+<refsect2 id="AppCallbackId" role="enum">
+<title>enum AppCallbackId</title>
+<indexterm zone="AppCallbackId"><primary>AppCallbackId</primary></indexterm>
+<refsect3 id="AppCallbackId.members" role="enum_members">
+<title>Members</title>
+<informaltable role="enum_members_table" pgwide="1" frame="none">
+<tgroup cols="3">
+<colspec colname="enum_members_name" colwidth="300px"/>
+<colspec colname="enum_members_description"/>
+<colspec colname="enum_members_annotations" colwidth="200px"/>
+<tbody>
+<row role="constant"><entry role="enum_member_name"><para id="ACB-JOURNAL-LOADED:CAPS">ACB_JOURNAL_LOADED</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="ACB-CONNECTION-NOTIFY:CAPS">ACB_CONNECTION_NOTIFY</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="ACB-CONTACT-PROCESS:CAPS">ACB_CONTACT_PROCESS</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="ACB-FAX-PROCESS:CAPS">ACB_FAX_PROCESS</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="ACB-CONNECTION-ESTABLISHED:CAPS">ACB_CONNECTION_ESTABLISHED</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="ACB-CONNECTION-TERMINATED:CAPS">ACB_CONNECTION_TERMINATED</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="ACB-CONNECTION-STATUS:CAPS">ACB_CONNECTION_STATUS</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="ACB-MESSAGE:CAPS">ACB_MESSAGE</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="ACB-CONTACTS-CHANGED:CAPS">ACB_CONTACTS_CHANGED</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="ACB-AUTHENTICATE:CAPS">ACB_AUTHENTICATE</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="ACB-MAX:CAPS">ACB_MAX</para></entry>
+<entry /><entry />
+</row>
+</tbody></tgroup></informaltable>
+</refsect3></refsect2>
+<refsect2 id="APP-OBJECT-TYPE:CAPS" role="macro">
+<title>APP_OBJECT_TYPE</title>
+<indexterm zone="APP-OBJECT-TYPE:CAPS"><primary>APP_OBJECT_TYPE</primary></indexterm>
+<programlisting language="C">#define APP_OBJECT_TYPE (app_object_get_type())
+</programlisting>
+</refsect2>
+<refsect2 id="AppObject-struct" role="struct">
+<title>struct AppObject</title>
+<indexterm zone="AppObject-struct"><primary>AppObject</primary></indexterm>
+<programlisting language="C">struct AppObject;</programlisting>
+</refsect2>
+<refsect2 id="AppObjectClass" role="struct">
+<title>struct AppObjectClass</title>
+<indexterm zone="AppObjectClass"><primary>AppObjectClass</primary></indexterm>
+<programlisting language="C">struct AppObjectClass {
+	GObjectClass parent_class;
+	void (*journal_loaded)(GSList *journal);
+	void (*connection_notify)(struct connection *connection);
+	void (*contact_process)(struct contact *contact);
+	void (*fax_process)(const gchar *filename);
+	void (*connection_established)(struct capi_connection *connection);
+	void (*connection_terminated)(struct capi_connection *connection);
+	void (*connection_status)(gint status, struct capi_connection *connection);
+	void (*message)(gchar *title, gchar *message);
+	void (*contacts_changed)(void);
+	void (*authenticate)(struct auth_data *auth_data);
+};
+</programlisting>
+</refsect2>
+<refsect2 id="app-object" role="variable">
+<title>app_object</title>
+<indexterm zone="app-object"><primary>app_object</primary></indexterm>
+<programlisting language="C">extern GObject *app_object;
+</programlisting>
+</refsect2>
+
+</refsect1>
+<refsect1 id="AppObject.signal-details" role="signals">
+<title role="signals.title">Signal Details</title>
+<refsect2 id="AppObject-authenticate" role="signal"><title>The <literal>“authenticate”</literal> signal</title>
+<indexterm zone="AppObject-authenticate"><primary>AppObject::authenticate</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+user_function (<link linkend="AppObject"><type>AppObject</type></link> *appobject,
+               <link linkend="gpointer"><type>gpointer</type></link>   arg1,
+               <link linkend="gpointer"><type>gpointer</type></link>   user_data)</programlisting>
+<para>Flags: <link linkend="G-SIGNAL-RUN-FIRST:CAPS">Run First</link></para>
+</refsect2><refsect2 id="AppObject-connection-established" role="signal"><title>The <literal>“connection-established”</literal> signal</title>
+<indexterm zone="AppObject-connection-established"><primary>AppObject::connection-established</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+user_function (<link linkend="AppObject"><type>AppObject</type></link> *appobject,
+               <link linkend="gpointer"><type>gpointer</type></link>   arg1,
+               <link linkend="gpointer"><type>gpointer</type></link>   user_data)</programlisting>
+<para>Flags: <link linkend="G-SIGNAL-RUN-FIRST:CAPS">Run First</link></para>
+</refsect2><refsect2 id="AppObject-connection-notify" role="signal"><title>The <literal>“connection-notify”</literal> signal</title>
+<indexterm zone="AppObject-connection-notify"><primary>AppObject::connection-notify</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+user_function (<link linkend="AppObject"><type>AppObject</type></link> *appobject,
+               <link linkend="gpointer"><type>gpointer</type></link>   arg1,
+               <link linkend="gpointer"><type>gpointer</type></link>   user_data)</programlisting>
+<para>Flags: <link linkend="G-SIGNAL-RUN-FIRST:CAPS">Run First</link></para>
+</refsect2><refsect2 id="AppObject-connection-status" role="signal"><title>The <literal>“connection-status”</literal> signal</title>
+<indexterm zone="AppObject-connection-status"><primary>AppObject::connection-status</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+user_function (<link linkend="AppObject"><type>AppObject</type></link> *appobject,
+               <link linkend="guint"><type>guint</type></link>      arg1,
+               <link linkend="gpointer"><type>gpointer</type></link>   arg2,
+               <link linkend="gpointer"><type>gpointer</type></link>   user_data)</programlisting>
+<para>Flags: <link linkend="G-SIGNAL-RUN-FIRST:CAPS">Run First</link></para>
+</refsect2><refsect2 id="AppObject-connection-terminated" role="signal"><title>The <literal>“connection-terminated”</literal> signal</title>
+<indexterm zone="AppObject-connection-terminated"><primary>AppObject::connection-terminated</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+user_function (<link linkend="AppObject"><type>AppObject</type></link> *appobject,
+               <link linkend="gpointer"><type>gpointer</type></link>   arg1,
+               <link linkend="gpointer"><type>gpointer</type></link>   user_data)</programlisting>
+<para>Flags: <link linkend="G-SIGNAL-RUN-FIRST:CAPS">Run First</link></para>
+</refsect2><refsect2 id="AppObject-contact-process" role="signal"><title>The <literal>“contact-process”</literal> signal</title>
+<indexterm zone="AppObject-contact-process"><primary>AppObject::contact-process</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+user_function (<link linkend="AppObject"><type>AppObject</type></link> *appobject,
+               <link linkend="gpointer"><type>gpointer</type></link>   arg1,
+               <link linkend="gpointer"><type>gpointer</type></link>   user_data)</programlisting>
+<para>Flags: <link linkend="G-SIGNAL-RUN-FIRST:CAPS">Run First</link></para>
+</refsect2><refsect2 id="AppObject-contacts-changed" role="signal"><title>The <literal>“contacts-changed”</literal> signal</title>
+<indexterm zone="AppObject-contacts-changed"><primary>AppObject::contacts-changed</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+user_function (<link linkend="AppObject"><type>AppObject</type></link> *appobject,
+               <link linkend="gpointer"><type>gpointer</type></link>   user_data)</programlisting>
+<para>Flags: <link linkend="G-SIGNAL-RUN-FIRST:CAPS">Run First</link></para>
+</refsect2><refsect2 id="AppObject-fax-process" role="signal"><title>The <literal>“fax-process”</literal> signal</title>
+<indexterm zone="AppObject-fax-process"><primary>AppObject::fax-process</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+user_function (<link linkend="AppObject"><type>AppObject</type></link> *appobject,
+               <link linkend="gpointer"><type>gpointer</type></link>   arg1,
+               <link linkend="gpointer"><type>gpointer</type></link>   user_data)</programlisting>
+<para>Flags: <link linkend="G-SIGNAL-RUN-FIRST:CAPS">Run First</link></para>
+</refsect2><refsect2 id="AppObject-journal-loaded" role="signal"><title>The <literal>“journal-loaded”</literal> signal</title>
+<indexterm zone="AppObject-journal-loaded"><primary>AppObject::journal-loaded</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+user_function (<link linkend="AppObject"><type>AppObject</type></link> *appobject,
+               <link linkend="gpointer"><type>gpointer</type></link>   arg1,
+               <link linkend="gpointer"><type>gpointer</type></link>   user_data)</programlisting>
+<para>Flags: <link linkend="G-SIGNAL-RUN-FIRST:CAPS">Run First</link></para>
+</refsect2><refsect2 id="AppObject-message" role="signal"><title>The <literal>“message”</literal> signal</title>
+<indexterm zone="AppObject-message"><primary>AppObject::message</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+user_function (<link linkend="AppObject"><type>AppObject</type></link> *appobject,
+               <link linkend="gpointer"><type>gpointer</type></link>   arg1,
+               <link linkend="gpointer"><type>gpointer</type></link>   arg2,
+               <link linkend="gpointer"><type>gpointer</type></link>   user_data)</programlisting>
+<para>Flags: <link linkend="G-SIGNAL-RUN-FIRST:CAPS">Run First</link></para>
+</refsect2>
+</refsect1>
+
+</refentry>

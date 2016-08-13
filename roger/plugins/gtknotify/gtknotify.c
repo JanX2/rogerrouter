@@ -27,11 +27,11 @@
 #include <libroutermanager/call.h>
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/libfaxophone/phone.h>
-#include <libroutermanager/libfaxophone/ringtone.h>
-#include <libroutermanager/fax_phone.h>
+#include <libroutermanager/plugins/capi/phone.h>
+#include <libroutermanager/plugins/capi/ringtone.h>
+#include <libroutermanager/rmphone.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/lookup.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/settings.h>
@@ -91,7 +91,7 @@ static void notify_deny_clicked_cb(GtkWidget *notify, gpointer user_data)
 	gtk_widget_destroy(connection->notification);
 	connection->notification = NULL;
 
-	faxophone_hangup(connection->priv ? connection->priv : active_capi_connection);
+	//faxophone_hangup(connection->priv ? connection->priv : active_capi_connection);
 }
 
 /**
@@ -176,9 +176,9 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 
 	g_debug("%s(): type = %d", __FUNCTION__, connection->type);
 	/* Get notification numbers */
-	if (connection->type & CONNECTION_TYPE_OUTGOING) {
+	if (connection->type & RM_CONNECTION_TYPE_OUTGOING) {
 		numbers = g_settings_get_strv(notification_gtk_settings, "outgoing-numbers");
-	} else if (connection->type & CONNECTION_TYPE_INCOMING) {
+	} else if (connection->type & RM_CONNECTION_TYPE_INCOMING) {
 		numbers = g_settings_get_strv(notification_gtk_settings, "incoming-numbers");
 	}
 
@@ -227,7 +227,7 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 	}
 
 	/* If its a disconnect or a connect, close previous notification window */
-	if ((connection->type & CONNECTION_TYPE_DISCONNECT) || (connection->type & CONNECTION_TYPE_CONNECT)) {
+	if ((connection->type & RM_CONNECTION_TYPE_DISCONNECT) || (connection->type & RM_CONNECTION_TYPE_CONNECT)) {
 		ringtone_stop();
 		g_debug("%s(): notification = %p", __FUNCTION__, connection->notification);
 		if (connection->notification) {
@@ -353,7 +353,7 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 		gtk_image_set_from_pixbuf(GTK_IMAGE(image), buf);
 	}
 
-	if (connection->type == CONNECTION_TYPE_INCOMING) {
+	if (connection->type == RM_CONNECTION_TYPE_INCOMING) {
 		GtkWidget *accept_button;
 		GtkWidget *decline_button;
 
@@ -377,7 +377,7 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 		gtk_grid_attach(GTK_GRID(phone_grid), decline_button, 1, 0, 1, 1);
 
 		gtk_grid_attach(GTK_GRID(main_grid), phone_grid, 0, 1, 1, 1);
-	} else if (connection->type == CONNECTION_TYPE_OUTGOING) {
+	} else if (connection->type == RM_CONNECTION_TYPE_OUTGOING) {
 		gint duration = g_settings_get_int(notification_gtk_settings, "duration");
 		tmp = ui_bold_text(_("Outgoing call"));
 		gtk_label_set_markup(GTK_LABEL(type_label), tmp);

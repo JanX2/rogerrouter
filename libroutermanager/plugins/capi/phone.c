@@ -31,8 +31,8 @@
 #include <phone.h>
 #include <isdn-convert.h>
 
-#include <libroutermanager/device_phone.h>
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmphone.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/appobject-emit.h>
 
@@ -166,7 +166,7 @@ static struct connection *capi_phone_dial(const char *trg_no, gboolean anonymous
 	g_free(target);
 
 	if (capi_connection) {
-		connection = connection_add_call(capi_connection->id, CONNECTION_TYPE_OUTGOING, src_no, trg_no);
+		connection = connection_add_call(capi_connection->id, RM_CONNECTION_TYPE_OUTGOING, src_no, trg_no);
 		connection->priv = capi_connection;
 	}
 

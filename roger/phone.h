@@ -21,7 +21,7 @@
 #define PHONE_H
 
 #include <libroutermanager/contact.h>
-#include <libroutermanager/connection.h>
+#include <libroutermanager/rmconnection.h>
 #include <libroutermanager/appobject.h>
 
 G_BEGIN_DECLS

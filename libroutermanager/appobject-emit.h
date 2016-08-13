@@ -20,7 +20,7 @@
 #ifndef LIBROUTERMANAGER_APPOBJECT_EMIT_H
 #define LIBROUTERMANAGER_APPOBJECT_EMIT_H
 
-#include <libroutermanager/connection.h>
+#include <libroutermanager/rmconnection.h>
 #include <libroutermanager/network.h>
 
 G_BEGIN_DECLS

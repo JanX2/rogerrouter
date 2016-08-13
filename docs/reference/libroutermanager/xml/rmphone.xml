@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+  <!ENTITY % gtkdocentities SYSTEM "../xml/gtkdocentities.ent">
+  %gtkdocentities;
+]>
+<refentry id="libroutermanager-rmphone">
+<refmeta>
+<refentrytitle role="top_of_page" id="libroutermanager-rmphone.top_of_page">rmphone</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>LIBROUTERMANAGER Library</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>rmphone</refname>
+<refpurpose></refpurpose>
+</refnamediv>
+
+<refsect1 id="libroutermanager-rmphone.functions" role="functions_proto">
+<title role="functions_proto.title">Functions</title>
+<informaltable pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="functions_return" colwidth="150px"/>
+<colspec colname="functions_name"/>
+<tbody>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="rm-phone-register">rm_phone_register</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="GSList"><returnvalue>GSList</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="rm-phone-get-plugins">rm_phone_get_plugins</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="rm-phone-mute">rm_phone_mute</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="rm-phone-hold">rm_phone_hold</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="rm-phone-dtmf">rm_phone_dtmf</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="rm-phone-hangup">rm_phone_hangup</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gint"><returnvalue>gint</returnvalue></link>
+</entry><entry role="function_name"><link linkend="rm-phone-pickup">rm_phone_pickup</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type">struct <link linkend="connection"><returnvalue>connection</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="rm-phone-dial">rm_phone_dial</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libroutermanager-rmphone.other" role="other_proto">
+<title role="other_proto.title">Types and Values</title>
+<informaltable role="enum_members_table" pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="name" colwidth="150px"/>
+<colspec colname="description"/>
+<tbody>
+<row><entry role="datatype_keyword">struct</entry><entry role="function_name"><link linkend="device-phone">device_phone</link></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+
+<refsect1 id="libroutermanager-rmphone.description" role="desc">
+<title role="desc.title">Description</title>
+
+</refsect1>
+<refsect1 id="libroutermanager-rmphone.functions_details" role="details">
+<title role="details.title">Functions</title>
+<refsect2 id="rm-phone-register" role="function">
+<title>rm_phone_register&#160;()</title>
+<indexterm zone="rm-phone-register"><primary>rm_phone_register</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+rm_phone_register (<parameter><type>struct device_phone</type> *phone</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rm-phone-get-plugins" role="function">
+<title>rm_phone_get_plugins&#160;()</title>
+<indexterm zone="rm-phone-get-plugins"><primary>rm_phone_get_plugins</primary></indexterm>
+<programlisting language="C"><link linkend="GSList"><returnvalue>GSList</returnvalue></link>&#160;*
+rm_phone_get_plugins (<parameter><type>void</type></parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rm-phone-mute" role="function">
+<title>rm_phone_mute&#160;()</title>
+<indexterm zone="rm-phone-mute"><primary>rm_phone_mute</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+rm_phone_mute (<parameter><type>struct connection</type> *connection</parameter>,
+               <parameter><link linkend="gboolean"><type>gboolean</type></link> mute</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rm-phone-hold" role="function">
+<title>rm_phone_hold&#160;()</title>
+<indexterm zone="rm-phone-hold"><primary>rm_phone_hold</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+rm_phone_hold (<parameter><type>struct connection</type> *connection</parameter>,
+               <parameter><link linkend="gboolean"><type>gboolean</type></link> hold</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rm-phone-dtmf" role="function">
+<title>rm_phone_dtmf&#160;()</title>
+<indexterm zone="rm-phone-dtmf"><primary>rm_phone_dtmf</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+rm_phone_dtmf (<parameter><type>struct connection</type> *connection</parameter>,
+               <parameter><link linkend="guchar"><type>guchar</type></link> code</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rm-phone-hangup" role="function">
+<title>rm_phone_hangup&#160;()</title>
+<indexterm zone="rm-phone-hangup"><primary>rm_phone_hangup</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+rm_phone_hangup (<parameter><type>struct connection</type> *connection</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rm-phone-pickup" role="function">
+<title>rm_phone_pickup&#160;()</title>
+<indexterm zone="rm-phone-pickup"><primary>rm_phone_pickup</primary></indexterm>
+<programlisting language="C"><link linkend="gint"><returnvalue>gint</returnvalue></link>
+rm_phone_pickup (<parameter><type>struct connection</type> *connection</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rm-phone-dial" role="function">
+<title>rm_phone_dial&#160;()</title>
+<indexterm zone="rm-phone-dial"><primary>rm_phone_dial</primary></indexterm>
+<programlisting language="C">struct <link linkend="connection"><returnvalue>connection</returnvalue></link>&#160;*
+rm_phone_dial (<parameter>const <link linkend="gchar"><type>gchar</type></link> *target</parameter>,
+               <parameter><link linkend="gboolean"><type>gboolean</type></link> anonymous</parameter>);</programlisting>
+</refsect2>
+
+</refsect1>
+<refsect1 id="libroutermanager-rmphone.other_details" role="details">
+<title role="details.title">Types and Values</title>
+<refsect2 id="device-phone" role="struct">
+<title>struct device_phone</title>
+<indexterm zone="device-phone"><primary>device_phone</primary></indexterm>
+<programlisting language="C">struct device_phone {
+	gchar *name;
+	struct connection *(*dial)(const gchar *target, gboolean anonymous);
+	gint (*pickup)(struct connection *connection);
+	void (*hangup)(struct connection *connection);
+	void (*hold)(struct connection *connection, gboolean hold);
+	void (*send_dtmf_code)(struct connection *connection, guchar code);
+
+	gboolean (*number_is_handled)(gchar *number);
+
+	void (*mute)(struct connection *connection, gboolean mute);
+	/*void (*record)(gpointer connection, guchar hold, const gchar *dir);*/
+};
+</programlisting>
+</refsect2>
+
+</refsect1>
+
+</refentry>

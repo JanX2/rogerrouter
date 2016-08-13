@@ -26,7 +26,7 @@
 
 #include <glib.h>
 
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/audio.h>
 
 /** global pointer to current used audio plugin */

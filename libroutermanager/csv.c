@@ -29,7 +29,7 @@
 
 #include <libroutermanager/csv.h>
 #include <libroutermanager/call.h>
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/file.h>
 
 #include <libroutermanager/plugins/fritzbox/csv.h>

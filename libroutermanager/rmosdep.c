@@ -24,7 +24,7 @@
 #include <shellapi.h>
 #endif
 
-#include <libroutermanager/osdep.h>
+#include <libroutermanager/rmosdep.h>
 
 /**
  * SECTION:rmosdep

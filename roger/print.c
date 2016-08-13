@@ -25,10 +25,12 @@
 #include <gtk/gtk.h>
 #include <cairo-pdf.h>
 
+#include <tiff.h>
+
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/libfaxophone/faxophone.h>
-#include <libroutermanager/libfaxophone/fax.h>
+//#include <libroutermanager/libfaxophone/faxophone.h>
+#include <libroutermanager/plugins/capi/fax.h>
 
 #include <roger/print.h>
 #include <roger/journal.h>

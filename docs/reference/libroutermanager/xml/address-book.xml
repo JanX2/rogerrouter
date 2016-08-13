@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+  <!ENTITY % gtkdocentities SYSTEM "../xml/gtkdocentities.ent">
+  %gtkdocentities;
+]>
+<refentry id="libroutermanager-address-book">
+<refmeta>
+<refentrytitle role="top_of_page" id="libroutermanager-address-book.top_of_page">address-book</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>LIBROUTERMANAGER Library</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>address-book</refname>
+<refpurpose></refpurpose>
+</refnamediv>
+
+<refsect1 id="libroutermanager-address-book.functions" role="functions_proto">
+<title role="functions_proto.title">Functions</title>
+<informaltable pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="functions_return" colwidth="150px"/>
+<colspec colname="functions_name"/>
+<tbody>
+<row><entry role="function_type"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+</entry><entry role="function_name"><link linkend="address-book-available">address_book_available</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="GSList"><returnvalue>GSList</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="rm-address-book-get-contacts">rm_address_book_get_contacts</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+</entry><entry role="function_name"><link linkend="address-book-reload-contacts">address_book_reload_contacts</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+</entry><entry role="function_name"><link linkend="address-book-remove-contact">address_book_remove_contact</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+</entry><entry role="function_name"><link linkend="address-book-save-contact">address_book_save_contact</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+</entry><entry role="function_name"><link linkend="address-book-can-save">address_book_can_save</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="routermanager-address-book-register">routermanager_address_book_register</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="routermanager-address-book-unregister">routermanager_address_book_unregister</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="address-book-get-name">address_book_get_name</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="GSList"><returnvalue>GSList</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="rm-address-book-get-plugins">rm_address_book_get_plugins</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libroutermanager-address-book.other" role="other_proto">
+<title role="other_proto.title">Types and Values</title>
+<informaltable role="enum_members_table" pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="name" colwidth="150px"/>
+<colspec colname="description"/>
+<tbody>
+<row><entry role="datatype_keyword">struct</entry><entry role="function_name"><link linkend="address-book">address_book</link></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+
+<refsect1 id="libroutermanager-address-book.description" role="desc">
+<title role="desc.title">Description</title>
+
+</refsect1>
+<refsect1 id="libroutermanager-address-book.functions_details" role="details">
+<title role="details.title">Functions</title>
+<refsect2 id="address-book-available" role="function">
+<title>address_book_available&#160;()</title>
+<indexterm zone="address-book-available"><primary>address_book_available</primary></indexterm>
+<programlisting language="C"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+address_book_available (<parameter><type>void</type></parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rm-address-book-get-contacts" role="function">
+<title>rm_address_book_get_contacts&#160;()</title>
+<indexterm zone="rm-address-book-get-contacts"><primary>rm_address_book_get_contacts</primary></indexterm>
+<programlisting language="C"><link linkend="GSList"><returnvalue>GSList</returnvalue></link>&#160;*
+rm_address_book_get_contacts (<parameter><type>void</type></parameter>);</programlisting>
+</refsect2>
+<refsect2 id="address-book-reload-contacts" role="function">
+<title>address_book_reload_contacts&#160;()</title>
+<indexterm zone="address-book-reload-contacts"><primary>address_book_reload_contacts</primary></indexterm>
+<programlisting language="C"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+address_book_reload_contacts (<parameter><type>void</type></parameter>);</programlisting>
+</refsect2>
+<refsect2 id="address-book-remove-contact" role="function">
+<title>address_book_remove_contact&#160;()</title>
+<indexterm zone="address-book-remove-contact"><primary>address_book_remove_contact</primary></indexterm>
+<programlisting language="C"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+address_book_remove_contact (<parameter><type>struct contact</type> *contact</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="address-book-save-contact" role="function">
+<title>address_book_save_contact&#160;()</title>
+<indexterm zone="address-book-save-contact"><primary>address_book_save_contact</primary></indexterm>
+<programlisting language="C"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+address_book_save_contact (<parameter><type>struct contact</type> *contact</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="address-book-can-save" role="function">
+<title>address_book_can_save&#160;()</title>
+<indexterm zone="address-book-can-save"><primary>address_book_can_save</primary></indexterm>
+<programlisting language="C"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+address_book_can_save (<parameter><type>void</type></parameter>);</programlisting>
+</refsect2>
+<refsect2 id="routermanager-address-book-register" role="function">
+<title>routermanager_address_book_register&#160;()</title>
+<indexterm zone="routermanager-address-book-register"><primary>routermanager_address_book_register</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+routermanager_address_book_register (<parameter><type>struct address_book</type> *book</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="routermanager-address-book-unregister" role="function">
+<title>routermanager_address_book_unregister&#160;()</title>
+<indexterm zone="routermanager-address-book-unregister"><primary>routermanager_address_book_unregister</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+routermanager_address_book_unregister (<parameter><type>struct address_book</type> *book</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="address-book-get-name" role="function">
+<title>address_book_get_name&#160;()</title>
+<indexterm zone="address-book-get-name"><primary>address_book_get_name</primary></indexterm>
+<programlisting language="C"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+address_book_get_name (<parameter><type>void</type></parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rm-address-book-get-plugins" role="function">
+<title>rm_address_book_get_plugins&#160;()</title>
+<indexterm zone="rm-address-book-get-plugins"><primary>rm_address_book_get_plugins</primary></indexterm>
+<programlisting language="C"><link linkend="GSList"><returnvalue>GSList</returnvalue></link>&#160;*
+rm_address_book_get_plugins (<parameter><type>void</type></parameter>);</programlisting>
+</refsect2>
+
+</refsect1>
+<refsect1 id="libroutermanager-address-book.other_details" role="details">
+<title role="details.title">Types and Values</title>
+<refsect2 id="address-book" role="struct">
+<title>struct address_book</title>
+<indexterm zone="address-book"><primary>address_book</primary></indexterm>
+<programlisting language="C">struct address_book {
+	gchar *name;
+	gchar *(*get_active_book_name)(void);
+	GSList *(*get_contacts)(void);
+	gboolean (*reload_contacts)(void);
+	gboolean (*remove_contact)(struct contact *contact);
+	gboolean (*save_contact)(struct contact *contact);
+};
+</programlisting>
+</refsect2>
+
+</refsect1>
+
+</refentry>

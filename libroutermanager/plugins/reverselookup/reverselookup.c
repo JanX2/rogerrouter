@@ -32,7 +32,7 @@
 #include <libroutermanager/logging.h>
 #include <libroutermanager/lookup.h>
 #include <libroutermanager/xml.h>
-#include <libroutermanager/routermanager.h>
+#include <libroutermanager/rmmain.h>
 
 #include <libxml/HTMLparser.h>
 #include <libxml/tree.h>
@@ -654,7 +654,7 @@ static void impl_activate(PeasActivatable *plugin)
 	if (!g_file_test(file, G_FILE_TEST_EXISTS)) {
 		g_free(file);
 
-		file = g_build_filename(get_directory(ROUTERMANAGER_PLUGINS), "reverselookup", "lookup.xml", NULL);
+		file = g_build_filename(rm_get_directory(RM_PLUGINS), "reverselookup", "lookup.xml", NULL);
 	}
 
 	node = read_xml_from_file(file);

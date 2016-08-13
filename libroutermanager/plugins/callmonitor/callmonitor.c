@@ -32,7 +32,7 @@
 #include <libroutermanager/call.h>
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/net_monitor.h>
 
 #define ROUTERMANAGER_TYPE_CALLMONITOR_PLUGIN (routermanager_callmonitor_plugin_get_type ())

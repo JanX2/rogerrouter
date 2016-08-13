@@ -24,9 +24,9 @@
 
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/appobject.h>
-#include <libroutermanager/libfaxophone/fax.h>
-#include <libroutermanager/libfaxophone/phone.h>
-#include <libroutermanager/routermanager.h>
+#include <libroutermanager/plugins/capi/fax.h>
+#include <libroutermanager/plugins/capi/phone.h>
+#include <libroutermanager/rmmain.h>
 #include <libroutermanager/gstring.h>
 
 #include <roger/phone.h>
@@ -110,9 +110,9 @@ gboolean fax_update_ui(gpointer user_data)
 	return FALSE;
 }
 
-void phone_fax_status(struct phone_state *state, struct capi_connection *connection)
+void phone_fax_status(struct phone_state *state, struct connection *connection)
 {
-	struct fax_ui *fax_ui = state->priv;
+	/*struct fax_ui *fax_ui = state->priv;
 
 	if (connection && connection->priv) {
 		memcpy(fax_ui->status, connection->priv, sizeof(struct fax_status));
@@ -120,7 +120,7 @@ void phone_fax_status(struct phone_state *state, struct capi_connection *connect
 		memset(fax_ui->status, 0, sizeof(struct fax_status));
 	}
 
-	g_idle_add_full(G_PRIORITY_HIGH_IDLE, fax_update_ui, (gpointer)fax_ui, NULL);
+	g_idle_add_full(G_PRIORITY_HIGH_IDLE, fax_update_ui, (gpointer)fax_ui, NULL);*/
 }
 
 /**
@@ -281,9 +281,9 @@ gchar *convert_to_fax(gchar *file_name)
 #ifdef G_OS_WIN32
 	args[0] = g_settings_get_string(profile->settings, "ghostscript");
 #elif __APPLE__
-	args[0] = get_directory("bin/gs");
+	args[0] = rm_get_directory("bin/gs");
 #else
-	args[0] = get_directory("gs");
+	args[0] = rm_get_directory("gs");
 #endif
 	g_debug("convert_fax_to_out_file(): args[0]=%s", args[0]);
 	args[1] = "-q";
@@ -379,8 +379,9 @@ GtkWidget *phone_fax_create_child(struct phone_state *state, GtkWidget *grid)
 	return state->child_frame;
 }
 
-void phone_fax_terminated(struct phone_state *state, struct capi_connection *connection)
+void phone_fax_terminated(struct phone_state *state, struct connection *connection)
 {
+/*
 #ifdef FAX_SFF
 	struct fax_ui *fax_ui = state->priv;
 	struct profile *profile = rm_profile_get_active();
@@ -409,6 +410,7 @@ void phone_fax_terminated(struct phone_state *state, struct capi_connection *con
 		}
 	}
 #endif
+*/
 }
 
 void phone_fax_delete(struct phone_state *state)

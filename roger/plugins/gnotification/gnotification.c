@@ -28,11 +28,10 @@
 #include <libroutermanager/call.h>
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/libfaxophone/phone.h>
-#include <libroutermanager/libfaxophone/ringtone.h>
-#include <libroutermanager/fax_phone.h>
+#include <libroutermanager/rmphone.h>
+#include <libroutermanager/plugins/capi/ringtone.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/lookup.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/settings.h>
@@ -74,7 +73,7 @@ gboolean gnotification_show(struct connection *connection, struct contact *conta
 	gchar *text = NULL;
 	gchar *map = NULL;
 
-	if (connection->type != CONNECTION_TYPE_INCOMING && connection->type != CONNECTION_TYPE_OUTGOING) {
+	if (connection->type != RM_CONNECTION_TYPE_INCOMING && connection->type != RM_CONNECTION_TYPE_OUTGOING) {
 		g_warning("Unhandled case in connection notify - gnotification!");
 
 		return FALSE;
@@ -105,7 +104,7 @@ gboolean gnotification_show(struct connection *connection, struct contact *conta
 	                               map ? map : ""
 	                              );
 
-	if (connection->type == CONNECTION_TYPE_INCOMING) {
+	if (connection->type == RM_CONNECTION_TYPE_INCOMING) {
 		title = g_strdup_printf(_("Incoming call (on %s)"), connection->local_number);
 	} else {
 		title = g_strdup_printf(_("Outgoing call (on %s)"), connection->local_number);
@@ -119,10 +118,10 @@ gboolean gnotification_show(struct connection *connection, struct contact *conta
 
 	connection->notification = g_strdup_printf("%s%s", connection->local_number, contact->number);
 
-	if (connection->type == (CONNECTION_TYPE_INCOMING | CONNECTION_TYPE_SOFTPHONE)) {
+	if (connection->type == (RM_CONNECTION_TYPE_INCOMING | RM_CONNECTION_TYPE_SOFTPHONE)) {
 		g_notification_add_button_with_target(notify, _("Accept"), "app.pickup", "i", connection->id);
 		g_notification_add_button_with_target(notify, _("Decline"), "app.hangup", "i", connection->id);
-	} else if (connection->type == CONNECTION_TYPE_OUTGOING) {
+	} else if (connection->type == RM_CONNECTION_TYPE_OUTGOING) {
 		gint duration = g_settings_get_int(gnotification_settings, "duration");
 
 		g_timeout_add_seconds(duration, gnotification_close, connection->notification);
@@ -173,9 +172,9 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 	gboolean found = FALSE;
 
 	/* Get gnotification numbers */
-	if (connection->type & CONNECTION_TYPE_OUTGOING) {
+	if (connection->type & RM_CONNECTION_TYPE_OUTGOING) {
 		numbers = g_settings_get_strv(gnotification_settings, "outgoing-numbers");
-	} else if (connection->type & CONNECTION_TYPE_INCOMING) {
+	} else if (connection->type & RM_CONNECTION_TYPE_INCOMING) {
 		numbers = g_settings_get_strv(gnotification_settings, "incoming-numbers");
 	}
 
@@ -223,12 +222,12 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 	}
 
 	/* If its a disconnect or a connect, close previous gnotification window */
-	if ((connection->type & CONNECTION_TYPE_DISCONNECT) || (connection->type & CONNECTION_TYPE_CONNECT)) {
+	if ((connection->type & RM_CONNECTION_TYPE_DISCONNECT) || (connection->type & RM_CONNECTION_TYPE_CONNECT)) {
 		//ringtone_stop();
 
 		g_application_withdraw_notification(G_APPLICATION(roger_app), connection->notification);
 
-		if (connection->type == CONNECTION_TYPE_MISSED) {
+		if (connection->type == RM_CONNECTION_TYPE_MISSED) {
 			missed_calls++;
 			gnotification_show_missed_calls();
 		}

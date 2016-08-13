@@ -20,7 +20,7 @@
 #ifndef LIBROUTERMANAGER_AUDIO_H
 #define LIBROUTERMANAGER_AUDIO_H
 
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 
 G_BEGIN_DECLS
 

@@ -26,7 +26,7 @@
 #include <libroutermanager/router.h>
 #include <libroutermanager/password.h>
 #include <libroutermanager/ftp.h>
-#include <libroutermanager/routermanager.h>
+#include <libroutermanager/rmmain.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/net_monitor.h>

@@ -24,16 +24,16 @@
 #include <gtk/gtk.h>
 
 #include <libroutermanager/rmconnection.h>
-#include <libroutermanager/profile.h>
-#include <libroutermanager/routermanager.h>
+#include <libroutermanager/rmprofile.h>
+#include <libroutermanager/rmmain.h>
 #include <libroutermanager/plugins.h>
-#include <libroutermanager/osdep.h>
+#include <libroutermanager/rmosdep.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/net_monitor.h>
 #include <libroutermanager/settings.h>
 #include <libroutermanager/gstring.h>
-#include <libroutermanager/device_phone.h>
+#include <libroutermanager/rmphone.h>
 
 #include <roger/journal.h>
 #include <roger/assistant.h>
@@ -76,7 +76,7 @@ void app_show_preferences(void)
 
 void app_show_help(void)
 {
-	os_execute("http://www.tabos.org/forum");
+	rm_os_execute("http://www.tabos.org/forum");
 }
 
 void app_quit(void)
@@ -168,7 +168,7 @@ void app_authenticate_cb(AppObject *app, struct auth_data *auth_data)
 
 static void application_shutdown(GObject *object)
 {
-	routermanager_shutdown();
+	rm_shutdown();
 }
 
 static void addressbook_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
@@ -194,7 +194,7 @@ static void preferences_activated(GSimpleAction *action, GVariant *parameter, gp
 
 static void donate_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
-	os_execute("http://www.tabos.org/");
+	rm_os_execute("http://www.tabos.org/");
 }
 
 static void forum_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
@@ -387,18 +387,18 @@ static void app_init(GtkApplication *app)
 	gchar *path = g_build_filename(user_plugins, "roger", G_DIR_SEPARATOR_S, "plugins", NULL);
 
 	routermanager_plugins_add_search_path(path);
-	routermanager_plugins_add_search_path(get_directory(APP_PLUGINS));
+	routermanager_plugins_add_search_path(rm_get_directory(APP_PLUGINS));
 	g_free(path);
 
 	if (option_state.profile) {
-		routermanager_set_requested_profile(option_state.profile);
+		rm_set_requested_profile(option_state.profile);
 	}
 
-	routermanager_new(option_state.debug, &error);
+	rm_new(option_state.debug, &error);
 	g_signal_connect(app_object, "authenticate", G_CALLBACK(app_authenticate_cb), NULL);
 	g_signal_connect(app_object, "message", G_CALLBACK(app_object_message_cb), NULL);
 
-	if (routermanager_init(&error) == FALSE) {
+	if (rm_init(&error) == FALSE) {
 		printf("routermanager() failed: %s\n", error ? error->message : "");
 
 		GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "RouterManager failed");
@@ -427,7 +427,7 @@ static void app_init(GtkApplication *app)
 
 G_GNUC_NORETURN static gboolean option_version_cb(const gchar *option_name, const gchar *value, gpointer data, GError **error)
 {
-	g_print("%s %s\n", PACKAGE_NAME, VERSION);
+	g_print("%s %s\n", PACKAGE_NAME, PACKAGE_VERSION);
 	exit(0);
 }
 

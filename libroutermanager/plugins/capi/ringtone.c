@@ -21,7 +21,7 @@
 
 #include <libroutermanager/audio.h>
 #include <libroutermanager/call.h>
-#include <libroutermanager/connection.h>
+#include <libroutermanager/rmconnection.h>
 
 #include "isdn-convert.h"
 
@@ -109,7 +109,7 @@ unsigned char fx_generate(gint type, int index, double seconds)
 	unsigned char x = 0;
 
 	switch (type) {
-	case CONNECTION_TYPE_INCOMING:
+	case RM_CONNECTION_TYPE_INCOMING:
 		/* 4 sec period */
 		rest = fmod(seconds, RING_PERIOD);
 		/* short period */
@@ -149,7 +149,7 @@ unsigned char fx_generate(gint type, int index, double seconds)
 
 		x = audio_lut_generate[(int)(sin(seconds * 2 * M_PI * RING_FREQUENCY) * factor * 127.5 + 127.5)];
 		break;
-	case CONNECTION_TYPE_OUTGOING:
+	case RM_CONNECTION_TYPE_OUTGOING:
 		/* waiting for the other end to pick up the phone */
 		rest = fmod(seconds, 5);
 

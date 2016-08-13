@@ -1,0 +1,7 @@
+<!ENTITY package "roger-router">
+<!ENTITY package_bugreport "http://www.tabos.org">
+<!ENTITY package_name "Roger Router">
+<!ENTITY package_string "Roger Router 1.10.0">
+<!ENTITY package_tarname "roger-router">
+<!ENTITY package_url "">
+<!ENTITY package_version "1.10.0">

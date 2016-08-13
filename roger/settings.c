@@ -32,7 +32,7 @@
 #include <libroutermanager/ftp.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/password.h>
-#include <libroutermanager/action.h>
+#include <libroutermanager/rmaction.h>
 #include <libroutermanager/audio.h>
 #include <libroutermanager/address-book.h>
 
@@ -1115,19 +1115,19 @@ gboolean actions_treeview_cursor_changed_cb(GtkTreeView *view, gpointer user_dat
 			/* Store flags as otherwise we would mix up the settings */
 			flags = selected_action->flags;
 
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->incoming_call_rings_checkbutton), flags & ACTION_INCOMING_RING);
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->incoming_call_begins_checkbutton), flags & ACTION_INCOMING_BEGIN);
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->incoming_call_ends_checkbutton), flags & ACTION_INCOMING_END);
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->incoming_call_rings_checkbutton), flags & ACTION_INCOMING_RING);
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->incoming_call_begins_checkbutton), flags & ACTION_INCOMING_BEGIN);
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->incoming_call_ends_checkbutton), flags & ACTION_INCOMING_END);
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->incoming_call_missed_checkbutton), flags & ACTION_INCOMING_MISSED);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->incoming_call_rings_checkbutton), flags & RM_ACTION_INCOMING_RING);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->incoming_call_begins_checkbutton), flags & RM_ACTION_INCOMING_BEGIN);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->incoming_call_ends_checkbutton), flags & RM_ACTION_INCOMING_END);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->incoming_call_rings_checkbutton), flags & RM_ACTION_INCOMING_RING);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->incoming_call_begins_checkbutton), flags & RM_ACTION_INCOMING_BEGIN);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->incoming_call_ends_checkbutton), flags & RM_ACTION_INCOMING_END);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->incoming_call_missed_checkbutton), flags & RM_ACTION_INCOMING_MISSED);
 
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->outgoing_call_begins_checkbutton), flags & ACTION_OUTGOING_BEGIN);
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->outgoing_call_ends_checkbutton), flags & ACTION_OUTGOING_END);
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->outgoing_call_dial_checkbutton), flags & ACTION_OUTGOING_DIAL);
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->outgoing_call_begins_checkbutton), flags & ACTION_OUTGOING_BEGIN);
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->outgoing_call_ends_checkbutton), flags & ACTION_OUTGOING_END);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->outgoing_call_begins_checkbutton), flags & RM_ACTION_OUTGOING_BEGIN);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->outgoing_call_ends_checkbutton), flags & RM_ACTION_OUTGOING_END);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->outgoing_call_dial_checkbutton), flags & RM_ACTION_OUTGOING_DIAL);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->outgoing_call_begins_checkbutton), flags & RM_ACTION_OUTGOING_BEGIN);
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->outgoing_call_ends_checkbutton), flags & RM_ACTION_OUTGOING_END);
 
 			set_checkbutton_buttons(TRUE);
 		} else {
@@ -1152,31 +1152,31 @@ void action_checkbutton_toggled_cb(GtkToggleButton *button, gpointer user_data)
 	guint flags = 0;
 
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(settings->incoming_call_rings_checkbutton))) {
-		flags |= ACTION_INCOMING_RING;
+		flags |= RM_ACTION_INCOMING_RING;
 	}
 
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(settings->incoming_call_begins_checkbutton))) {
-		flags |= ACTION_INCOMING_BEGIN;
+		flags |= RM_ACTION_INCOMING_BEGIN;
 	}
 
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(settings->incoming_call_ends_checkbutton))) {
-		flags |= ACTION_INCOMING_END;
+		flags |= RM_ACTION_INCOMING_END;
 	}
 
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(settings->incoming_call_missed_checkbutton))) {
-		flags |= ACTION_INCOMING_MISSED;
+		flags |= RM_ACTION_INCOMING_MISSED;
 	}
 
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(settings->outgoing_call_dial_checkbutton))) {
-		flags |= ACTION_OUTGOING_DIAL;
+		flags |= RM_ACTION_OUTGOING_DIAL;
 	}
 
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(settings->outgoing_call_begins_checkbutton))) {
-		flags |= ACTION_OUTGOING_BEGIN;
+		flags |= RM_ACTION_OUTGOING_BEGIN;
 	}
 
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(settings->outgoing_call_ends_checkbutton))) {
-		flags |= ACTION_OUTGOING_END;
+		flags |= RM_ACTION_OUTGOING_END;
 	}
 
 	selected_action->flags = flags;

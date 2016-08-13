@@ -1,0 +1,421 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>RmProfile: Roger Router Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="index.html" title="Roger Router Reference Manual">
+<link rel="up" href="ch01.html" title="[Insert title here]">
+<link rel="prev" href="libroutermanager-rmphone.html" title="rmphone">
+<link rel="next" href="libroutermanager-router.html" title="router">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#libroutermanager-RmProfile.description" class="shortcut">Description</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="libroutermanager-rmphone.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="libroutermanager-router.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="refentry">
+<a name="libroutermanager-RmProfile"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="libroutermanager-RmProfile.top_of_page"></a>RmProfile</span></h2>
+<p>RmProfile — Profile handling functions</p>
+</td>
+<td class="gallery_image" valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsect1">
+<a name="libroutermanager-RmProfile.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-RmProfile.html#rm-profile-init" title="rm_profile_init ()">rm_profile_init</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-RmProfile.html#rm-profile-shutdown" title="rm_profile_shutdown ()">rm_profile_shutdown</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-RmProfile.html#rm-profile-get-list" title="rm_profile_get_list ()">rm_profile_get_list</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="libroutermanager-RmProfile.html#RmProfile" title="RmProfile"><span class="returnvalue">RmProfile</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-RmProfile.html#rm-profile-add" title="rm_profile_add ()">rm_profile_add</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-RmProfile.html#rm-profile-remove" title="rm_profile_remove ()">rm_profile_remove</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="libroutermanager-RmProfile.html#RmProfile" title="RmProfile"><span class="returnvalue">RmProfile</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-RmProfile.html#rm-profile-get-active" title="rm_profile_get_active ()">rm_profile_get_active</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-RmProfile.html#rm-profile-set-active" title="rm_profile_set_active ()">rm_profile_set_active</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-RmProfile.html#rm-profile-detect-active" title="rm_profile_detect_active ()">rm_profile_detect_active</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">const <a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-RmProfile.html#rm-profile-get-name" title="rm_profile_get_name ()">rm_profile_get_name</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-RmProfile.html#rm-profile-set-host" title="rm_profile_set_host ()">rm_profile_set_host</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-RmProfile.html#rm-profile-set-login-user" title="rm_profile_set_login_user ()">rm_profile_set_login_user</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-RmProfile.html#rm-profile-set-login-password" title="rm_profile_set_login_password ()">rm_profile_set_login_password</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-RmProfile.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody><tr>
+<td class="datatype_keyword"> </td>
+<td class="function_name"><a class="link" href="libroutermanager-RmProfile.html#RmProfile" title="RmProfile">RmProfile</a></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-RmProfile.description"></a><h2>Description</h2>
+<p>Profiles are used to distinguish between several routers. This is useful for mobile devices using private and business environements.</p>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-RmProfile.functions_details"></a><h2>Functions</h2>
+<div class="refsect2">
+<a name="rm-profile-init"></a><h3>rm_profile_init ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+rm_profile_init (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>Initialize profiles (load profiles).</p>
+<div class="refsect3">
+<a name="rm-profile-init.returns"></a><h4>Returns</h4>
+<p> TRUE</p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rm-profile-shutdown"></a><h3>rm_profile_shutdown ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+rm_profile_shutdown (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>Shutdown profile (free profile list, free settings).</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rm-profile-get-list"></a><h3>rm_profile_get_list ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+rm_profile_get_list (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>Get profile list</p>
+<div class="refsect3">
+<a name="rm-profile-get-list.returns"></a><h4>Returns</h4>
+<p> profile list</p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rm-profile-add"></a><h3>rm_profile_add ()</h3>
+<pre class="programlisting"><a class="link" href="libroutermanager-RmProfile.html#RmProfile" title="RmProfile"><span class="returnvalue">RmProfile</span></a> *
+rm_profile_add (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+<p>Create and add a new profile structure.</p>
+<div class="refsect3">
+<a name="rm-profile-add.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>name</p></td>
+<td class="parameter_description"><p>profile name</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="rm-profile-add.returns"></a><h4>Returns</h4>
+<p> new <a class="link" href="libroutermanager-RmProfile.html#RmProfile" title="RmProfile"><span class="type">RmProfile</span></a></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rm-profile-remove"></a><h3>rm_profile_remove ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+rm_profile_remove (<em class="parameter"><code><a class="link" href="libroutermanager-RmProfile.html#RmProfile" title="RmProfile"><span class="type">RmProfile</span></a> *profile</code></em>);</pre>
+<p>Remove <em class="parameter"><code>profile</code></em>
+ from list.</p>
+<div class="refsect3">
+<a name="rm-profile-remove.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>profile</p></td>
+<td class="parameter_description"><p>a <a class="link" href="libroutermanager-RmProfile.html#RmProfile" title="RmProfile"><span class="type">RmProfile</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rm-profile-get-active"></a><h3>rm_profile_get_active ()</h3>
+<pre class="programlisting"><a class="link" href="libroutermanager-RmProfile.html#RmProfile" title="RmProfile"><span class="returnvalue">RmProfile</span></a> *
+rm_profile_get_active (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>Get active profile.</p>
+<div class="refsect3">
+<a name="rm-profile-get-active.returns"></a><h4>Returns</h4>
+<p> active <a class="link" href="libroutermanager-RmProfile.html#RmProfile" title="RmProfile"><span class="type">RmProfile</span></a></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rm-profile-set-active"></a><h3>rm_profile_set_active ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+rm_profile_set_active (<em class="parameter"><code><a class="link" href="libroutermanager-RmProfile.html#RmProfile" title="RmProfile"><span class="type">RmProfile</span></a> *profile</code></em>);</pre>
+<p>Set active profile in detail:</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>Set internal active profile</p></li>
+<li class="listitem"><p>Connect user plugin bindings</p></li>
+<li class="listitem"><p>Initialize audio</p></li>
+<li class="listitem"><p>Load and initialize action</p></li>
+<li class="listitem"><p>Load journal</p></li>
+</ul></div>
+<div class="refsect3">
+<a name="rm-profile-set-active.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>profile</p></td>
+<td class="parameter_description"><p>a <a class="link" href="libroutermanager-RmProfile.html#RmProfile" title="RmProfile"><span class="type">RmProfile</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rm-profile-detect-active"></a><h3>rm_profile_detect_active ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+rm_profile_detect_active (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>Detect active profile (scan available routers and select correct profile).</p>
+<div class="refsect3">
+<a name="rm-profile-detect-active.returns"></a><h4>Returns</h4>
+<p> TRUE on success, otherwise FALSE</p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rm-profile-get-name"></a><h3>rm_profile_get_name ()</h3>
+<pre class="programlisting">const <a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+rm_profile_get_name (<em class="parameter"><code><a class="link" href="libroutermanager-RmProfile.html#RmProfile" title="RmProfile"><span class="type">RmProfile</span></a> *profile</code></em>);</pre>
+<p>Get profiles name of <em class="parameter"><code>profile</code></em>
+.</p>
+<div class="refsect3">
+<a name="rm-profile-get-name.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>profile</p></td>
+<td class="parameter_description"><p>a <a class="link" href="libroutermanager-RmProfile.html#RmProfile" title="RmProfile"><span class="type">RmProfile</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="rm-profile-get-name.returns"></a><h4>Returns</h4>
+<p> profile name</p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rm-profile-set-host"></a><h3>rm_profile_set_host ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+rm_profile_set_host (<em class="parameter"><code><a class="link" href="libroutermanager-RmProfile.html#RmProfile" title="RmProfile"><span class="type">RmProfile</span></a> *profile</code></em>,
+                     <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *host</code></em>);</pre>
+<p>Set host name used in profile.</p>
+<div class="refsect3">
+<a name="rm-profile-set-host.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>profile</p></td>
+<td class="parameter_description"><p>a <a class="link" href="libroutermanager-RmProfile.html#RmProfile" title="RmProfile"><span class="type">RmProfile</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>host</p></td>
+<td class="parameter_description"><p>new host name for <em class="parameter"><code>profile</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rm-profile-set-login-user"></a><h3>rm_profile_set_login_user ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+rm_profile_set_login_user (<em class="parameter"><code><a class="link" href="libroutermanager-RmProfile.html#RmProfile" title="RmProfile"><span class="type">RmProfile</span></a> *profile</code></em>,
+                           <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *user</code></em>);</pre>
+<p>Set login user used in profile.</p>
+<div class="refsect3">
+<a name="rm-profile-set-login-user.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>profile</p></td>
+<td class="parameter_description"><p>a <a class="link" href="libroutermanager-RmProfile.html#RmProfile" title="RmProfile"><span class="type">RmProfile</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user</p></td>
+<td class="parameter_description"><p>new user name for <em class="parameter"><code>profile</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rm-profile-set-login-password"></a><h3>rm_profile_set_login_password ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+rm_profile_set_login_password (<em class="parameter"><code><a class="link" href="libroutermanager-RmProfile.html#RmProfile" title="RmProfile"><span class="type">RmProfile</span></a> *profile</code></em>,
+                               <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *password</code></em>);</pre>
+<p>Set login password used in profile.</p>
+<div class="refsect3">
+<a name="rm-profile-set-login-password.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>profile</p></td>
+<td class="parameter_description"><p>a <a class="link" href="libroutermanager-RmProfile.html#RmProfile" title="RmProfile"><span class="type">RmProfile</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>password</p></td>
+<td class="parameter_description"><p>new password for <em class="parameter"><code>profile</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-RmProfile.other_details"></a><h2>Types and Values</h2>
+<div class="refsect2">
+<a name="RmProfile"></a><h3>RmProfile</h3>
+<pre class="programlisting">typedef struct {
+} RmProfile;
+</pre>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>Generated by GTK-Doc V1.25</div>
+</body>
+</html>

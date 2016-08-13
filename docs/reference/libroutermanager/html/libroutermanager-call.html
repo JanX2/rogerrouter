@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>call: Roger Router Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="index.html" title="Roger Router Reference Manual">
+<link rel="up" href="ch01.html" title="[Insert title here]">
+<link rel="prev" href="libroutermanager-audio.html" title="audio">
+<link rel="next" href="libroutermanager-capi.html" title="capi">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#libroutermanager-call.description" class="shortcut">Description</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="libroutermanager-audio.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="libroutermanager-capi.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="refentry">
+<a name="libroutermanager-call"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="libroutermanager-call.top_of_page"></a>call</span></h2>
+<p>call</p>
+</td>
+<td class="gallery_image" valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsect1">
+<a name="libroutermanager-call.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-call.html#call-add" title="call_add ()">call_add</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-call.html#call-free" title="call_free ()">call_free</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-call.html#rm-call-scramble-number" title="rm_call_scramble_number ()">rm_call_scramble_number</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-call.html#call-full-number" title="call_full_number ()">call_full_number</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-call.html#call-sort-by-date" title="call_sort_by_date ()">call_sort_by_date</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-call.html#call-format-number" title="call_format_number ()">call_format_number</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-call.html#call-canonize-number" title="call_canonize_number ()">call_canonize_number</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-call.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="libroutermanager-call.html#number-format" title="enum number_format">number_format</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="libroutermanager-call.html#call" title="struct call">call</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="libroutermanager-call.html#call-by-call-entry" title="struct call_by_call_entry">call_by_call_entry</a></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-call.description"></a><h2>Description</h2>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-call.functions_details"></a><h2>Functions</h2>
+<div class="refsect2">
+<a name="call-add"></a><h3>call_add ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+call_add (<em class="parameter"><code><a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> *journal</code></em>,
+          <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> type</code></em>,
+          <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *date_time</code></em>,
+          <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *remote_name</code></em>,
+          <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *remote_number</code></em>,
+          <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *local_name</code></em>,
+          <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *local_number</code></em>,
+          <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *duration</code></em>,
+          <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> priv</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="call-free"></a><h3>call_free ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+call_free (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rm-call-scramble-number"></a><h3>rm_call_scramble_number ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+rm_call_scramble_number (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *number</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="call-full-number"></a><h3>call_full_number ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+call_full_number (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *number</code></em>,
+                  <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> country_code_prefix</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="call-sort-by-date"></a><h3>call_sort_by_date ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+call_sort_by_date (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gconstpointer"><span class="type">gconstpointer</span></a> a</code></em>,
+                   <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gconstpointer"><span class="type">gconstpointer</span></a> b</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="call-format-number"></a><h3>call_format_number ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+call_format_number (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>,
+                    <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *number</code></em>,
+                    <em class="parameter"><code><span class="type">enum number_format</span> output_format</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="call-canonize-number"></a><h3>call_canonize_number ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+call_canonize_number (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *number</code></em>);</pre>
+</div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-call.other_details"></a><h2>Types and Values</h2>
+<div class="refsect2">
+<a name="number-format"></a><h3>enum number_format</h3>
+<div class="refsect3">
+<a name="number-format.members"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="NUMBER-FORMAT-UNKNOWN:CAPS"></a>NUMBER_FORMAT_UNKNOWN</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="NUMBER-FORMAT-LOCAL:CAPS"></a>NUMBER_FORMAT_LOCAL</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="NUMBER-FORMAT-NATIONAL:CAPS"></a>NUMBER_FORMAT_NATIONAL</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="NUMBER-FORMAT-INTERNATIONAL:CAPS"></a>NUMBER_FORMAT_INTERNATIONAL</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="NUMBER-FORMAT-INTERNATIONAL-PLUS:CAPS"></a>NUMBER_FORMAT_INTERNATIONAL_PLUS</p></td>
+<td> </td>
+<td> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="call"></a><h3>struct call</h3>
+<pre class="programlisting">struct call {
+	gint type;
+	gchar *date_time;
+	gchar *duration;
+
+	struct contact *remote;
+	struct contact *local;
+
+	/* Private (e.g. original filename) */
+	gchar *priv;
+};
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="call-by-call-entry"></a><h3>struct call_by_call_entry</h3>
+<pre class="programlisting">struct call_by_call_entry {
+	gchar *country_code;
+	gchar *prefix;
+	gint prefix_length;
+};
+</pre>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>Generated by GTK-Doc V1.25</div>
+</body>
+</html>

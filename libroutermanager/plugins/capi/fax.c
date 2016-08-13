@@ -31,7 +31,7 @@
 #include <fax.h>
 #include <isdn-convert.h>
 
-#include <libroutermanager/connection.h>
+#include <libroutermanager/rmconnection.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/device_fax.h>
@@ -677,7 +677,7 @@ struct connection *capi_fax_dial(gchar *tiff, const gchar *trg_no, gboolean supp
 	g_free(target);
 
 	if (capi_connection) {
-		connection = connection_add_call(capi_connection->id, CONNECTION_TYPE_OUTGOING, src_no, trg_no);
+		connection = connection_add_call(capi_connection->id, RM_CONNECTION_TYPE_OUTGOING, src_no, trg_no);
 		connection->priv = capi_connection;
 	}
 

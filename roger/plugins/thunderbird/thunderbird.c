@@ -20,12 +20,13 @@
 #include <config.h>
 
 #include <string.h>
+#include <stdlib.h>
 #include <fcntl.h>
 
 #include <gtk/gtk.h>
 
 #include <libroutermanager/plugins.h>
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/address-book.h>
 #include <libroutermanager/call.h>

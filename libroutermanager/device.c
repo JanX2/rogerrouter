@@ -2,7 +2,7 @@
 
 #include <glib.h>
 
-#include <libroutermanager/device_phone.h>
+#include <libroutermanager/rmphone.h>
 
 gboolean device_number_is_handled(gchar *number)
 {

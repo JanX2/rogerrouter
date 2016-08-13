@@ -29,7 +29,7 @@
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/file.h>
-#include <libroutermanager/routermanager.h>
+#include <libroutermanager/rmmain.h>
 #include <libroutermanager/settings.h>
 #include <libroutermanager/gstring.h>
 
@@ -188,27 +188,27 @@ static void impl_activate(PeasActivatable *plugin)
 	RouterManagerWebJournalPlugin *webjournal_plugin = ROUTERMANAGER_WEBJOURNAL_PLUGIN(plugin);
 	gchar *file;
 
-	file = g_strconcat(get_directory(ROUTERMANAGER_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "header.html", NULL);
+	file = g_strconcat(get_directory(RM_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "header.html", NULL);
 	webjournal_plugin->priv->header = file_load(file, NULL);
 	g_free(file);
 
-	file = g_strconcat(get_directory(ROUTERMANAGER_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "entry.html", NULL);
+	file = g_strconcat(get_directory(RM_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "entry.html", NULL);
 	webjournal_plugin->priv->entry = file_load(file, NULL);
 	g_free(file);
 
-	file = g_strconcat(get_directory(ROUTERMANAGER_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "footer.html", NULL);
+	file = g_strconcat(get_directory(RM_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "footer.html", NULL);
 	webjournal_plugin->priv->footer = file_load(file, NULL);
 	g_free(file);
 
-	file = g_strconcat(get_directory(ROUTERMANAGER_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "dragtable.js", NULL);
+	file = g_strconcat(get_directory(RM_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "dragtable.js", NULL);
 	webjournal_plugin->priv->dragtable = file_load(file, NULL);
 	g_free(file);
 
-	file = g_strconcat(get_directory(ROUTERMANAGER_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "sortable.js", NULL);
+	file = g_strconcat(get_directory(RM_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "sortable.js", NULL);
 	webjournal_plugin->priv->sortable = file_load(file, NULL);
 	g_free(file);
 
-	file = g_strconcat(get_directory(ROUTERMANAGER_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "styling.css", NULL);
+	file = g_strconcat(get_directory(RM_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "styling.css", NULL);
 	webjournal_plugin->priv->styling = file_load(file, NULL);
 	g_free(file);
 

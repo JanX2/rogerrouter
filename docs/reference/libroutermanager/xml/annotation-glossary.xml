@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE glossary PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+  <!ENTITY % gtkdocentities SYSTEM "../xml/gtkdocentities.ent">
+  %gtkdocentities;
+]>
+<glossary id="annotation-glossary">
+  <title>Annotation Glossary</title>
+<glossdiv><title>S</title>
+    <glossentry>
+      <glossterm><anchor id="annotation-glossterm-Stable"/>Stable</glossterm>
+      <glossdef>
+        <para>The intention of a Stable interface is to enable arbitrary third parties to
+develop applications to these interfaces, release them, and have confidence that
+they will run on all minor releases of the product (after the one in which the
+interface was introduced, and within the same major release). Even at a major
+release, incompatible changes are expected to be rare, and to have strong
+justifications.
+</para>
+      </glossdef>
+    </glossentry>
+</glossdiv>
+</glossary>

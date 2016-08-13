@@ -26,7 +26,7 @@
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/address-book.h>
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/network.h>
 #include <libroutermanager/gstring.h>

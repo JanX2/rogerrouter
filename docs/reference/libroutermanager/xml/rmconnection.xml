@@ -1,0 +1,311 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+  <!ENTITY % gtkdocentities SYSTEM "../xml/gtkdocentities.ent">
+  %gtkdocentities;
+]>
+<refentry id="libroutermanager-RmConnection">
+<refmeta>
+<refentrytitle role="top_of_page" id="libroutermanager-RmConnection.top_of_page">RmConnection</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>LIBROUTERMANAGER Library</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>RmConnection</refname>
+<refpurpose>Connection handling functions</refpurpose>
+</refnamediv>
+
+<refsect1 id="libroutermanager-RmConnection.functions" role="functions_proto">
+<title role="functions_proto.title">Functions</title>
+<informaltable pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="functions_return" colwidth="150px"/>
+<colspec colname="functions_name"/>
+<tbody>
+<row><entry role="function_type"><link linkend="RmConnection"><returnvalue>RmConnection</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="rm-connection-add">rm_connection_add</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="RmConnection"><returnvalue>RmConnection</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="rm-connection-find-by-id">rm_connection_find_by_id</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="RmConnection"><returnvalue>RmConnection</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="rm-connection-find-by-remote-number">rm_connection_find_by_remote_number</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="rm-connection-set-type">rm_connection_set_type</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="rm-connection-remove">rm_connection_remove</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="rm-connection-init-duration-timer">rm_connection_init_duration_timer</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="rm-connection-shutdown-duration-timer">rm_connection_shutdown_duration_timer</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="rm-connection-get-duration-time">rm_connection_get_duration_time</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libroutermanager-RmConnection.other" role="other_proto">
+<title role="other_proto.title">Types and Values</title>
+<informaltable role="enum_members_table" pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="name" colwidth="150px"/>
+<colspec colname="description"/>
+<tbody>
+<row><entry role="datatype_keyword">enum</entry><entry role="function_name"><link linkend="RmConnectionType">RmConnectionType</link></entry></row>
+<row><entry role="datatype_keyword"></entry><entry role="function_name"><link linkend="RmConnection">RmConnection</link></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+
+<refsect1 id="libroutermanager-RmConnection.description" role="desc">
+<title role="desc.title">Description</title>
+<para>Connections are used to keep track of ongoing calls (phone/fax/...).</para>
+
+</refsect1>
+<refsect1 id="libroutermanager-RmConnection.functions_details" role="details">
+<title role="details.title">Functions</title>
+<refsect2 id="rm-connection-add" role="function">
+<title>rm_connection_add&#160;()</title>
+<indexterm zone="rm-connection-add"><primary>rm_connection_add</primary></indexterm>
+<programlisting language="C"><link linkend="RmConnection"><returnvalue>RmConnection</returnvalue></link>&#160;*
+rm_connection_add (<parameter><link linkend="gint"><type>gint</type></link> id</parameter>,
+                   <parameter><link linkend="RmConnectionType"><type>RmConnectionType</type></link> type</parameter>,
+                   <parameter>const <link linkend="gchar"><type>gchar</type></link> *local_number</parameter>,
+                   <parameter>const <link linkend="gchar"><type>gchar</type></link> *remote_number</parameter>);</programlisting>
+<para>Create and add a new <link linkend="RmConnection"><type>RmConnection</type></link> to connection list</para>
+<refsect3 id="rm-connection-add.parameters" role="parameters">
+<title>Parameters</title>
+<informaltable role="parameters_table" pgwide="1" frame="none">
+<tgroup cols="3">
+<colspec colname="parameters_name" colwidth="150px"/>
+<colspec colname="parameters_description"/>
+<colspec colname="parameters_annotations" colwidth="200px"/>
+<tbody>
+<row><entry role="parameter_name"><para>id</para></entry>
+<entry role="parameter_description"><para>unique connection id</para></entry>
+<entry role="parameter_annotations"></entry></row>
+<row><entry role="parameter_name"><para>type</para></entry>
+<entry role="parameter_description"><para>type of <link linkend="RmConnectionType"><type>RmConnectionType</type></link></para></entry>
+<entry role="parameter_annotations"></entry></row>
+<row><entry role="parameter_name"><para>local_number</para></entry>
+<entry role="parameter_description"><para>local phone number (callee)</para></entry>
+<entry role="parameter_annotations"></entry></row>
+<row><entry role="parameter_name"><para>remote_number</para></entry>
+<entry role="parameter_description"><para>remote phone number (caller)</para></entry>
+<entry role="parameter_annotations"></entry></row>
+</tbody></tgroup></informaltable>
+</refsect3></refsect2>
+<refsect2 id="rm-connection-find-by-id" role="function">
+<title>rm_connection_find_by_id&#160;()</title>
+<indexterm zone="rm-connection-find-by-id"><primary>rm_connection_find_by_id</primary></indexterm>
+<programlisting language="C"><link linkend="RmConnection"><returnvalue>RmConnection</returnvalue></link>&#160;*
+rm_connection_find_by_id (<parameter><link linkend="gint"><type>gint</type></link> id</parameter>);</programlisting>
+<para>Find <link linkend="RmConnection"><type>RmConnection</type></link> by <parameter>id</parameter>
+.</para>
+<refsect3 id="rm-connection-find-by-id.parameters" role="parameters">
+<title>Parameters</title>
+<informaltable role="parameters_table" pgwide="1" frame="none">
+<tgroup cols="3">
+<colspec colname="parameters_name" colwidth="150px"/>
+<colspec colname="parameters_description"/>
+<colspec colname="parameters_annotations" colwidth="200px"/>
+<tbody>
+<row><entry role="parameter_name"><para>id</para></entry>
+<entry role="parameter_description"><para>unique connection id</para></entry>
+<entry role="parameter_annotations"></entry></row>
+</tbody></tgroup></informaltable>
+</refsect3><refsect3 id="rm-connection-find-by-id.returns" role="returns">
+<title>Returns</title>
+<para> a <link linkend="RmConnection"><type>RmConnection</type></link>, or NULL if not found.</para>
+</refsect3></refsect2>
+<refsect2 id="rm-connection-find-by-remote-number" role="function">
+<title>rm_connection_find_by_remote_number&#160;()</title>
+<indexterm zone="rm-connection-find-by-remote-number"><primary>rm_connection_find_by_remote_number</primary></indexterm>
+<programlisting language="C"><link linkend="RmConnection"><returnvalue>RmConnection</returnvalue></link>&#160;*
+rm_connection_find_by_remote_number (<parameter>const <link linkend="gchar"><type>gchar</type></link> *number</parameter>);</programlisting>
+<para>Find <link linkend="RmConnection"><type>RmConnection</type></link> by <parameter>remote_number</parameter>
+.</para>
+<refsect3 id="rm-connection-find-by-remote-number.parameters" role="parameters">
+<title>Parameters</title>
+<informaltable role="parameters_table" pgwide="1" frame="none">
+<tgroup cols="3">
+<colspec colname="parameters_name" colwidth="150px"/>
+<colspec colname="parameters_description"/>
+<colspec colname="parameters_annotations" colwidth="200px"/>
+<tbody>
+<row><entry role="parameter_name"><para>remote_number</para></entry>
+<entry role="parameter_description"><para>remote phone number</para></entry>
+<entry role="parameter_annotations"></entry></row>
+</tbody></tgroup></informaltable>
+</refsect3><refsect3 id="rm-connection-find-by-remote-number.returns" role="returns">
+<title>Returns</title>
+<para> a <link linkend="RmConnection"><type>RmConnection</type></link>, or NULL if not found.</para>
+</refsect3></refsect2>
+<refsect2 id="rm-connection-set-type" role="function">
+<title>rm_connection_set_type&#160;()</title>
+<indexterm zone="rm-connection-set-type"><primary>rm_connection_set_type</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+rm_connection_set_type (<parameter><link linkend="RmConnection"><type>RmConnection</type></link> *connection</parameter>,
+                        <parameter><link linkend="RmConnectionType"><type>RmConnectionType</type></link> type</parameter>);</programlisting>
+<para>Set additional connection type.</para>
+<refsect3 id="rm-connection-set-type.parameters" role="parameters">
+<title>Parameters</title>
+<informaltable role="parameters_table" pgwide="1" frame="none">
+<tgroup cols="3">
+<colspec colname="parameters_name" colwidth="150px"/>
+<colspec colname="parameters_description"/>
+<colspec colname="parameters_annotations" colwidth="200px"/>
+<tbody>
+<row><entry role="parameter_name"><para>connection</para></entry>
+<entry role="parameter_description"><para>a <link linkend="RmConnection"><type>RmConnection</type></link></para></entry>
+<entry role="parameter_annotations"></entry></row>
+<row><entry role="parameter_name"><para>type</para></entry>
+<entry role="parameter_description"><para>a RmConnectionType</para></entry>
+<entry role="parameter_annotations"></entry></row>
+</tbody></tgroup></informaltable>
+</refsect3></refsect2>
+<refsect2 id="rm-connection-remove" role="function">
+<title>rm_connection_remove&#160;()</title>
+<indexterm zone="rm-connection-remove"><primary>rm_connection_remove</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+rm_connection_remove (<parameter><link linkend="RmConnection"><type>RmConnection</type></link> *connection</parameter>);</programlisting>
+<para>Removes <parameter>connection</parameter>
+ from connection list and frees structure.</para>
+<refsect3 id="rm-connection-remove.parameters" role="parameters">
+<title>Parameters</title>
+<informaltable role="parameters_table" pgwide="1" frame="none">
+<tgroup cols="3">
+<colspec colname="parameters_name" colwidth="150px"/>
+<colspec colname="parameters_description"/>
+<colspec colname="parameters_annotations" colwidth="200px"/>
+<tbody>
+<row><entry role="parameter_name"><para>connection</para></entry>
+<entry role="parameter_description"><para>a <link linkend="RmConnection"><type>RmConnection</type></link></para></entry>
+<entry role="parameter_annotations"></entry></row>
+</tbody></tgroup></informaltable>
+</refsect3></refsect2>
+<refsect2 id="rm-connection-init-duration-timer" role="function">
+<title>rm_connection_init_duration_timer&#160;()</title>
+<indexterm zone="rm-connection-init-duration-timer"><primary>rm_connection_init_duration_timer</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+rm_connection_init_duration_timer (<parameter><link linkend="RmConnection"><type>RmConnection</type></link> *connection</parameter>);</programlisting>
+<para>Setup connection duration timer.</para>
+<refsect3 id="rm-connection-init-duration-timer.parameters" role="parameters">
+<title>Parameters</title>
+<informaltable role="parameters_table" pgwide="1" frame="none">
+<tgroup cols="3">
+<colspec colname="parameters_name" colwidth="150px"/>
+<colspec colname="parameters_description"/>
+<colspec colname="parameters_annotations" colwidth="200px"/>
+<tbody>
+<row><entry role="parameter_name"><para>connection</para></entry>
+<entry role="parameter_description"><para>a <link linkend="RmConnection"><type>RmConnection</type></link></para></entry>
+<entry role="parameter_annotations"></entry></row>
+</tbody></tgroup></informaltable>
+</refsect3></refsect2>
+<refsect2 id="rm-connection-shutdown-duration-timer" role="function">
+<title>rm_connection_shutdown_duration_timer&#160;()</title>
+<indexterm zone="rm-connection-shutdown-duration-timer"><primary>rm_connection_shutdown_duration_timer</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+rm_connection_shutdown_duration_timer (<parameter><link linkend="RmConnection"><type>RmConnection</type></link> *connection</parameter>);</programlisting>
+<para>Remove phone duration timer.</para>
+<refsect3 id="rm-connection-shutdown-duration-timer.parameters" role="parameters">
+<title>Parameters</title>
+<informaltable role="parameters_table" pgwide="1" frame="none">
+<tgroup cols="3">
+<colspec colname="parameters_name" colwidth="150px"/>
+<colspec colname="parameters_description"/>
+<colspec colname="parameters_annotations" colwidth="200px"/>
+<tbody>
+<row><entry role="parameter_name"><para>connection</para></entry>
+<entry role="parameter_description"><para>a <link linkend="RmConnection"><type>RmConnection</type></link></para></entry>
+<entry role="parameter_annotations"></entry></row>
+</tbody></tgroup></informaltable>
+</refsect3></refsect2>
+<refsect2 id="rm-connection-get-duration-time" role="function">
+<title>rm_connection_get_duration_time&#160;()</title>
+<indexterm zone="rm-connection-get-duration-time"><primary>rm_connection_get_duration_time</primary></indexterm>
+<programlisting language="C"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+rm_connection_get_duration_time (<parameter><link linkend="RmConnection"><type>RmConnection</type></link> *connection</parameter>);</programlisting>
+<para>Retrieves duration time for given <parameter>connection</parameter>
+.</para>
+<refsect3 id="rm-connection-get-duration-time.parameters" role="parameters">
+<title>Parameters</title>
+<informaltable role="parameters_table" pgwide="1" frame="none">
+<tgroup cols="3">
+<colspec colname="parameters_name" colwidth="150px"/>
+<colspec colname="parameters_description"/>
+<colspec colname="parameters_annotations" colwidth="200px"/>
+<tbody>
+<row><entry role="parameter_name"><para>connection</para></entry>
+<entry role="parameter_description"><para>a <link linkend="RmConnection"><type>RmConnection</type></link></para></entry>
+<entry role="parameter_annotations"></entry></row>
+</tbody></tgroup></informaltable>
+</refsect3><refsect3 id="rm-connection-get-duration-time.returns" role="returns">
+<title>Returns</title>
+<para> (transfer full) duration time string</para>
+</refsect3></refsect2>
+
+</refsect1>
+<refsect1 id="libroutermanager-RmConnection.other_details" role="details">
+<title role="details.title">Types and Values</title>
+<refsect2 id="RmConnectionType" role="enum">
+<title>enum RmConnectionType</title>
+<indexterm zone="RmConnectionType"><primary>RmConnectionType</primary></indexterm>
+<refsect3 id="RmConnectionType.members" role="enum_members">
+<title>Members</title>
+<informaltable role="enum_members_table" pgwide="1" frame="none">
+<tgroup cols="3">
+<colspec colname="enum_members_name" colwidth="300px"/>
+<colspec colname="enum_members_description"/>
+<colspec colname="enum_members_annotations" colwidth="200px"/>
+<tbody>
+<row role="constant"><entry role="enum_member_name"><para id="RM-CONNECTION-TYPE-INCOMING:CAPS">RM_CONNECTION_TYPE_INCOMING</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="RM-CONNECTION-TYPE-OUTGOING:CAPS">RM_CONNECTION_TYPE_OUTGOING</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="RM-CONNECTION-TYPE-CONNECT:CAPS">RM_CONNECTION_TYPE_CONNECT</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="RM-CONNECTION-TYPE-DISCONNECT:CAPS">RM_CONNECTION_TYPE_DISCONNECT</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="RM-CONNECTION-TYPE-MISSED:CAPS">RM_CONNECTION_TYPE_MISSED</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="RM-CONNECTION-TYPE-SOFTPHONE:CAPS">RM_CONNECTION_TYPE_SOFTPHONE</para></entry>
+<entry /><entry />
+</row>
+</tbody></tgroup></informaltable>
+</refsect3></refsect2>
+<refsect2 id="RmConnection" role="struct">
+<title>RmConnection</title>
+<indexterm zone="RmConnection"><primary>RmConnection</primary></indexterm>
+<programlisting language="C">typedef struct {
+	/* Unique ID */
+	guint id;
+	/* Type */
+	guchar type;
+	/* Local number */
+	gchar *local_number;
+	/* Remote number */
+	gchar *remote_number;
+	/* Notification widget */
+	void *notification;
+	/* Private data */
+	void *priv;
+	/* Connection time */
+	GTimer *duration_timer;
+} RmConnection;
+</programlisting>
+</refsect2>
+
+</refsect1>
+
+</refentry>

@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>address-book: Roger Router Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="index.html" title="Roger Router Reference Manual">
+<link rel="up" href="ch01.html" title="[Insert title here]">
+<link rel="prev" href="ch01.html" title="[Insert title here]">
+<link rel="next" href="AppObject.html" title="AppObject">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#libroutermanager-address-book.description" class="shortcut">Description</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="ch01.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="AppObject.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="refentry">
+<a name="libroutermanager-address-book"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="libroutermanager-address-book.top_of_page"></a>address-book</span></h2>
+<p>address-book</p>
+</td>
+<td class="gallery_image" valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsect1">
+<a name="libroutermanager-address-book.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-address-book.html#address-book-available" title="address_book_available ()">address_book_available</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-address-book.html#rm-address-book-get-contacts" title="rm_address_book_get_contacts ()">rm_address_book_get_contacts</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-address-book.html#address-book-reload-contacts" title="address_book_reload_contacts ()">address_book_reload_contacts</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-address-book.html#address-book-remove-contact" title="address_book_remove_contact ()">address_book_remove_contact</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-address-book.html#address-book-save-contact" title="address_book_save_contact ()">address_book_save_contact</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-address-book.html#address-book-can-save" title="address_book_can_save ()">address_book_can_save</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-address-book.html#routermanager-address-book-register" title="routermanager_address_book_register ()">routermanager_address_book_register</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-address-book.html#routermanager-address-book-unregister" title="routermanager_address_book_unregister ()">routermanager_address_book_unregister</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-address-book.html#address-book-get-name" title="address_book_get_name ()">address_book_get_name</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-address-book.html#rm-address-book-get-plugins" title="rm_address_book_get_plugins ()">rm_address_book_get_plugins</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-address-book.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody><tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="libroutermanager-address-book.html#address-book" title="struct address_book">address_book</a></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-address-book.description"></a><h2>Description</h2>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-address-book.functions_details"></a><h2>Functions</h2>
+<div class="refsect2">
+<a name="address-book-available"></a><h3>address_book_available ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+address_book_available (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rm-address-book-get-contacts"></a><h3>rm_address_book_get_contacts ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+rm_address_book_get_contacts (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="address-book-reload-contacts"></a><h3>address_book_reload_contacts ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+address_book_reload_contacts (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="address-book-remove-contact"></a><h3>address_book_remove_contact ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+address_book_remove_contact (<em class="parameter"><code><span class="type">struct contact</span> *contact</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="address-book-save-contact"></a><h3>address_book_save_contact ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+address_book_save_contact (<em class="parameter"><code><span class="type">struct contact</span> *contact</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="address-book-can-save"></a><h3>address_book_can_save ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+address_book_can_save (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="routermanager-address-book-register"></a><h3>routermanager_address_book_register ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+routermanager_address_book_register (<em class="parameter"><code><span class="type">struct address_book</span> *book</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="routermanager-address-book-unregister"></a><h3>routermanager_address_book_unregister ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+routermanager_address_book_unregister (<em class="parameter"><code><span class="type">struct address_book</span> *book</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="address-book-get-name"></a><h3>address_book_get_name ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+address_book_get_name (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rm-address-book-get-plugins"></a><h3>rm_address_book_get_plugins ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+rm_address_book_get_plugins (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+</div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-address-book.other_details"></a><h2>Types and Values</h2>
+<div class="refsect2">
+<a name="address-book"></a><h3>struct address_book</h3>
+<pre class="programlisting">struct address_book {
+	gchar *name;
+	gchar *(*get_active_book_name)(void);
+	GSList *(*get_contacts)(void);
+	gboolean (*reload_contacts)(void);
+	gboolean (*remove_contact)(struct contact *contact);
+	gboolean (*save_contact)(struct contact *contact);
+};
+</pre>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>Generated by GTK-Doc V1.25</div>
+</body>
+</html>

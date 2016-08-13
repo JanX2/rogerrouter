@@ -28,8 +28,8 @@
 #endif
 
 #include <libroutermanager/settings.h>
-#include <libroutermanager/routermanager.h>
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmmain.h>
+#include <libroutermanager/rmprofile.h>
 
 /**
  * \brief Create new gsettings configuration (either keyfile based, or system based)

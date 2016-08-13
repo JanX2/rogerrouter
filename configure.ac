@@ -63,14 +63,14 @@ case "$host" in
 	*-*-*mingw*)
 		WIN32=yes
 		macos=no
-		OS_CFLAGS="-D_WIN32_WINNT=0x0501 -DROUTERMANAGER_PLUGINS='\"lib/routermanager/\"' -DAPP_PLUGINS='\"lib/roger/\"' -DAPP_DATA='\"share/roger/\"' -DAPP_LOCALE='\"share/locale\"'"
+		OS_CFLAGS="-D_WIN32_WINNT=0x0501 -DRM_PLUGINS='\"lib/routermanager/\"' -DAPP_PLUGINS='\"lib/roger/\"' -DAPP_DATA='\"share/roger/\"' -DAPP_LOCALE='\"share/locale\"'"
 		OS_LIBS="-mwindows -mms-bitfields -Wl,-subsystem,windows -lws2_32"
 		AC_CHECK_TOOL(WINDRES, windres)
 	;;
 	*darwin*)
 		WIN32=no
 		macos=yes
-		OS_CFLAGS="-DROUTERMANAGER_PLUGINS='\"lib/routermanager/\"' -DAPP_PLUGINS='\"lib/roger/\"' -DAPP_DATA='\"share/roger/\"' -DAPP_LOCALE='\"share/locale\"'"
+		OS_CFLAGS="-DRM_PLUGINS='\"lib/routermanager/\"' -DAPP_PLUGINS='\"lib/roger/\"' -DAPP_DATA='\"share/roger/\"' -DAPP_LOCALE='\"share/locale\"'"
 		OS_LIBS="-rdynamic"
 	;;
 	*freebsd*)
@@ -83,7 +83,7 @@ case "$host" in
 	*)
 		WIN32=no
 		macos=no
-		OS_CFLAGS="-DROUTERMANAGER_PLUGINS='\"\$(libdir)/routermanager/\"' -DAPP_PLUGINS='\"\$(libdir)/roger/\"' -DAPP_DATA='\"\$(datadir)/roger/\"' -DAPP_LOCALE='\"\$(localedir)\"' -Wall"
+		OS_CFLAGS="-DRM_PLUGINS='\"\$(libdir)/routermanager/\"' -DAPP_PLUGINS='\"\$(libdir)/roger/\"' -DAPP_DATA='\"\$(datadir)/roger/\"' -DAPP_LOCALE='\"\$(localedir)\"' -Wall"
 		OS_LIBS="-rdynamic -lcrypt"
 	;;
 esac

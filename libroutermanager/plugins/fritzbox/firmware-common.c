@@ -32,7 +32,7 @@
 #include <libroutermanager/call.h>
 #include <libroutermanager/ftp.h>
 #include <libroutermanager/gstring.h>
-#include <libroutermanager/routermanager.h>
+#include <libroutermanager/rmmain.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/file.h>
 

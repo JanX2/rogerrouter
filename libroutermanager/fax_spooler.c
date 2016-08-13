@@ -29,7 +29,7 @@
 #endif
 
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/routermanager.h>
+#include <libroutermanager/rmmain.h>
 #include <libroutermanager/fax_printer.h>
 
 #ifdef USE_PRINTER_SPOOLER

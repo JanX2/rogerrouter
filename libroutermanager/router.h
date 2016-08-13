@@ -22,7 +22,7 @@
 
 #include <gio/gio.h>
 
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 
 G_BEGIN_DECLS
 

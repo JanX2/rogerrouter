@@ -31,11 +31,11 @@
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/call.h>
-#include <libroutermanager/routermanager.h>
+#include <libroutermanager/rmmain.h>
 #include <libroutermanager/filter.h>
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/file.h>
-#include <libroutermanager/osdep.h>
+#include <libroutermanager/rmosdep.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/lookup.h>
 #include <libroutermanager/csv.h>
@@ -149,7 +149,7 @@ void journal_init_call_icon(void)
 
 	icons = gtk_icon_theme_get_default();
 
-	gtk_icon_theme_append_search_path(icons, get_directory(APP_DATA));
+	gtk_icon_theme_append_search_path(icons, rm_get_directory(APP_DATA));
 	if (icon_call_in) {
 		g_object_unref(icon_call_in);
 	}
@@ -434,7 +434,7 @@ void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
 
 static void journal_connection_notify_cb(AppObject *obj, struct connection *connection, gpointer user_data)
 {
-	if (connection->type & CONNECTION_TYPE_DISCONNECT) {
+	if (connection->type & RM_CONNECTION_TYPE_DISCONNECT) {
 		router_load_journal(rm_profile_get_active());
 	}
 }
@@ -672,14 +672,14 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 			gchar *path = g_build_filename(g_get_user_cache_dir(), G_DIR_SEPARATOR_S, "fax.pdf", NULL);
 			file_save(path, data, len);
 
-			os_execute(path);
+			rm_os_execute(path);
 			g_free(path);
 		}
 		g_free(data);
 		break;
 	}
 	case CALL_TYPE_RECORD:
-		os_execute(call->priv);
+		rm_os_execute(call->priv);
 		break;
 	case CALL_TYPE_VOICE:
 		answeringmachine_play(call->priv);

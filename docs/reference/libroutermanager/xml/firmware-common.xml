@@ -1,0 +1,339 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+  <!ENTITY % gtkdocentities SYSTEM "../xml/gtkdocentities.ent">
+  %gtkdocentities;
+]>
+<refentry id="libroutermanager-firmware-common">
+<refmeta>
+<refentrytitle role="top_of_page" id="libroutermanager-firmware-common.top_of_page">firmware-common</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>LIBROUTERMANAGER Library</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>firmware-common</refname>
+<refpurpose></refpurpose>
+</refnamediv>
+
+<refsect1 id="libroutermanager-firmware-common.functions" role="functions_proto">
+<title role="functions_proto.title">Functions</title>
+<informaltable pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="functions_return" colwidth="150px"/>
+<colspec colname="functions_name"/>
+<tbody>
+<row><entry role="define_keyword">#define</entry><entry role="function_name"><link linkend="FIRMWARE-IS:CAPS">FIRMWARE_IS</link><phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;**
+</entry><entry role="function_name"><link linkend="xml-extract-tags">xml_extract_tags</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="xml-extract-tag">xml_extract_tag</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="xml-extract-input-value">xml_extract_input_value</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="xml-extract-input-value-r">xml_extract_input_value_r</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="xml-extract-list-value">xml_extract_list_value</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="html-extract-assignment">html_extract_assignment</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;**
+</entry><entry role="function_name"><link linkend="strv-remove-duplicates">strv_remove_duplicates</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+</entry><entry role="function_name"><link linkend="fritzbox-present">fritzbox_present</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+</entry><entry role="function_name"><link linkend="fritzbox-logout">fritzbox_logout</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="fritzbox-read-msn">fritzbox_read_msn</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gint"><returnvalue>gint</returnvalue></link>
+</entry><entry role="function_name"><link linkend="fritzbox-get-dialport">fritzbox_get_dialport</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="fritzbox-load-fax">fritzbox_load_fax</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="fritzbox-load-voice">fritzbox_load_voice</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="GSList"><returnvalue>GSList</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="fritzbox-load-voicebox">fritzbox_load_voicebox</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="GSList"><returnvalue>GSList</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="fritzbox-load-faxbox">fritzbox_load_faxbox</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gint"><returnvalue>gint</returnvalue></link>
+</entry><entry role="function_name"><link linkend="fritzbox-find-phone-port">fritzbox_find_phone_port</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="fritzbox-get-ip">fritzbox_get_ip</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+</entry><entry role="function_name"><link linkend="fritzbox-reconnect">fritzbox_reconnect</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+</entry><entry role="function_name"><link linkend="fritzbox-delete-fax">fritzbox_delete_fax</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+</entry><entry role="function_name"><link linkend="fritzbox-delete-voice">fritzbox_delete_voice</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+</entry><entry role="function_name"><link linkend="strv-contains">strv_contains</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="return"><returnvalue>return</returnvalue></link>
+</entry><entry role="function_name"><link linkend="g-string-free">g_string_free</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libroutermanager-firmware-common.other" role="other_proto">
+<title role="other_proto.title">Types and Values</title>
+<informaltable role="enum_members_table" pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="name" colwidth="150px"/>
+<colspec colname="description"/>
+<tbody>
+<row><entry role="datatype_keyword">struct</entry><entry role="function_name"><link linkend="voice-data">voice_data</link></entry></row>
+<row><entry role="datatype_keyword">struct</entry><entry role="function_name"><link linkend="voice-box">voice_box</link></entry></row>
+<row><entry role="variable_type">GString *</entry><entry role="function_name"><link linkend="new-str">new_str</link></entry></row>
+<row><entry role="variable_type">GError *</entry><entry role="function_name"><link linkend="error">error</link></entry></row>
+<row><entry role="variable_type">gchar *</entry><entry role="function_name"><link linkend="ret">ret</link></entry></row>
+<row><entry role="variable_type">gchar *</entry><entry role="function_name"><link linkend="bin">bin</link></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+
+<refsect1 id="libroutermanager-firmware-common.description" role="desc">
+<title role="desc.title">Description</title>
+
+</refsect1>
+<refsect1 id="libroutermanager-firmware-common.functions_details" role="details">
+<title role="details.title">Functions</title>
+<refsect2 id="FIRMWARE-IS:CAPS" role="macro">
+<title>FIRMWARE_IS()</title>
+<indexterm zone="FIRMWARE-IS:CAPS"><primary>FIRMWARE_IS</primary></indexterm>
+<programlisting language="C">#define FIRMWARE_IS(major, minor) (((profile-&gt;router_info-&gt;maj_ver_id == major) &amp;&amp; (profile-&gt;router_info-&gt;min_ver_id &gt;= minor)) || (profile-&gt;router_info-&gt;maj_ver_id &gt; major))
+</programlisting>
+</refsect2>
+<refsect2 id="xml-extract-tags" role="function">
+<title>xml_extract_tags&#160;()</title>
+<indexterm zone="xml-extract-tags"><primary>xml_extract_tags</primary></indexterm>
+<programlisting language="C"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;**
+xml_extract_tags (<parameter>const <link linkend="gchar"><type>gchar</type></link> *data</parameter>,
+                  <parameter><link linkend="gchar"><type>gchar</type></link> *tag_start</parameter>,
+                  <parameter><link linkend="gchar"><type>gchar</type></link> *tag_end</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="xml-extract-tag" role="function">
+<title>xml_extract_tag&#160;()</title>
+<indexterm zone="xml-extract-tag"><primary>xml_extract_tag</primary></indexterm>
+<programlisting language="C"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+xml_extract_tag (<parameter>const <link linkend="gchar"><type>gchar</type></link> *data</parameter>,
+                 <parameter><link linkend="gchar"><type>gchar</type></link> *tag</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="xml-extract-input-value" role="function">
+<title>xml_extract_input_value&#160;()</title>
+<indexterm zone="xml-extract-input-value"><primary>xml_extract_input_value</primary></indexterm>
+<programlisting language="C"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+xml_extract_input_value (<parameter>const <link linkend="gchar"><type>gchar</type></link> *data</parameter>,
+                         <parameter><link linkend="gchar"><type>gchar</type></link> *tag</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="xml-extract-input-value-r" role="function">
+<title>xml_extract_input_value_r&#160;()</title>
+<indexterm zone="xml-extract-input-value-r"><primary>xml_extract_input_value_r</primary></indexterm>
+<programlisting language="C"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+xml_extract_input_value_r (<parameter>const <link linkend="gchar"><type>gchar</type></link> *data</parameter>,
+                           <parameter><link linkend="gchar"><type>gchar</type></link> *tag</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="xml-extract-list-value" role="function">
+<title>xml_extract_list_value&#160;()</title>
+<indexterm zone="xml-extract-list-value"><primary>xml_extract_list_value</primary></indexterm>
+<programlisting language="C"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+xml_extract_list_value (<parameter>const <link linkend="gchar"><type>gchar</type></link> *data</parameter>,
+                        <parameter><link linkend="gchar"><type>gchar</type></link> *tag</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="html-extract-assignment" role="function">
+<title>html_extract_assignment&#160;()</title>
+<indexterm zone="html-extract-assignment"><primary>html_extract_assignment</primary></indexterm>
+<programlisting language="C"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+html_extract_assignment (<parameter>const <link linkend="gchar"><type>gchar</type></link> *data</parameter>,
+                         <parameter><link linkend="gchar"><type>gchar</type></link> *tag</parameter>,
+                         <parameter><link linkend="gboolean"><type>gboolean</type></link> p</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="strv-remove-duplicates" role="function">
+<title>strv_remove_duplicates&#160;()</title>
+<indexterm zone="strv-remove-duplicates"><primary>strv_remove_duplicates</primary></indexterm>
+<programlisting language="C"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;**
+strv_remove_duplicates (<parameter><link linkend="gchar"><type>gchar</type></link> **numbers</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="fritzbox-present" role="function">
+<title>fritzbox_present&#160;()</title>
+<indexterm zone="fritzbox-present"><primary>fritzbox_present</primary></indexterm>
+<programlisting language="C"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+fritzbox_present (<parameter><type>struct router_info</type> *router_info</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="fritzbox-logout" role="function">
+<title>fritzbox_logout&#160;()</title>
+<indexterm zone="fritzbox-logout"><primary>fritzbox_logout</primary></indexterm>
+<programlisting language="C"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+fritzbox_logout (<parameter><type>struct profile</type> *profile</parameter>,
+                 <parameter><link linkend="gboolean"><type>gboolean</type></link> force</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="fritzbox-read-msn" role="function">
+<title>fritzbox_read_msn&#160;()</title>
+<indexterm zone="fritzbox-read-msn"><primary>fritzbox_read_msn</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+fritzbox_read_msn (<parameter><type>struct profile</type> *profile</parameter>,
+                   <parameter>const <link linkend="gchar"><type>gchar</type></link> *data</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="fritzbox-get-dialport" role="function">
+<title>fritzbox_get_dialport&#160;()</title>
+<indexterm zone="fritzbox-get-dialport"><primary>fritzbox_get_dialport</primary></indexterm>
+<programlisting language="C"><link linkend="gint"><returnvalue>gint</returnvalue></link>
+fritzbox_get_dialport (<parameter><link linkend="gint"><type>gint</type></link> type</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="fritzbox-load-fax" role="function">
+<title>fritzbox_load_fax&#160;()</title>
+<indexterm zone="fritzbox-load-fax"><primary>fritzbox_load_fax</primary></indexterm>
+<programlisting language="C"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+fritzbox_load_fax (<parameter><type>struct profile</type> *profile</parameter>,
+                   <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>,
+                   <parameter><link linkend="gsize"><type>gsize</type></link> *len</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="fritzbox-load-voice" role="function">
+<title>fritzbox_load_voice&#160;()</title>
+<indexterm zone="fritzbox-load-voice"><primary>fritzbox_load_voice</primary></indexterm>
+<programlisting language="C"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+fritzbox_load_voice (<parameter><type>struct profile</type> *profile</parameter>,
+                     <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>,
+                     <parameter><link linkend="gsize"><type>gsize</type></link> *len</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="fritzbox-load-voicebox" role="function">
+<title>fritzbox_load_voicebox&#160;()</title>
+<indexterm zone="fritzbox-load-voicebox"><primary>fritzbox_load_voicebox</primary></indexterm>
+<programlisting language="C"><link linkend="GSList"><returnvalue>GSList</returnvalue></link>&#160;*
+fritzbox_load_voicebox (<parameter><link linkend="GSList"><type>GSList</type></link> *journal</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="fritzbox-load-faxbox" role="function">
+<title>fritzbox_load_faxbox&#160;()</title>
+<indexterm zone="fritzbox-load-faxbox"><primary>fritzbox_load_faxbox</primary></indexterm>
+<programlisting language="C"><link linkend="GSList"><returnvalue>GSList</returnvalue></link>&#160;*
+fritzbox_load_faxbox (<parameter><link linkend="GSList"><type>GSList</type></link> *journal</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="fritzbox-find-phone-port" role="function">
+<title>fritzbox_find_phone_port&#160;()</title>
+<indexterm zone="fritzbox-find-phone-port"><primary>fritzbox_find_phone_port</primary></indexterm>
+<programlisting language="C"><link linkend="gint"><returnvalue>gint</returnvalue></link>
+fritzbox_find_phone_port (<parameter><link linkend="gint"><type>gint</type></link> dial_port</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="fritzbox-get-ip" role="function">
+<title>fritzbox_get_ip&#160;()</title>
+<indexterm zone="fritzbox-get-ip"><primary>fritzbox_get_ip</primary></indexterm>
+<programlisting language="C"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+fritzbox_get_ip (<parameter><type>struct profile</type> *profile</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="fritzbox-reconnect" role="function">
+<title>fritzbox_reconnect&#160;()</title>
+<indexterm zone="fritzbox-reconnect"><primary>fritzbox_reconnect</primary></indexterm>
+<programlisting language="C"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+fritzbox_reconnect (<parameter><type>struct profile</type> *profile</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="fritzbox-delete-fax" role="function">
+<title>fritzbox_delete_fax&#160;()</title>
+<indexterm zone="fritzbox-delete-fax"><primary>fritzbox_delete_fax</primary></indexterm>
+<programlisting language="C"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+fritzbox_delete_fax (<parameter><type>struct profile</type> *profile</parameter>,
+                     <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="fritzbox-delete-voice" role="function">
+<title>fritzbox_delete_voice&#160;()</title>
+<indexterm zone="fritzbox-delete-voice"><primary>fritzbox_delete_voice</primary></indexterm>
+<programlisting language="C"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+fritzbox_delete_voice (<parameter><type>struct profile</type> *profile</parameter>,
+                       <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="strv-contains" role="function">
+<title>strv_contains&#160;()</title>
+<indexterm zone="strv-contains"><primary>strv_contains</primary></indexterm>
+<programlisting language="C"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+strv_contains (<parameter>const <link linkend="gchar"><type>gchar</type></link> *const *strv</parameter>,
+               <parameter>const <link linkend="gchar"><type>gchar</type></link> *str</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="g-string-free" role="function">
+<title>g_string_free&#160;()</title>
+<indexterm zone="g-string-free"><primary>g_string_free</primary></indexterm>
+<programlisting language="C"><link linkend="return"><returnvalue>return</returnvalue></link>
+g_string_free (<parameter><link linkend="new-str"><type>new_str</type></link> Param1</parameter>,
+               <parameter><link linkend="FALSE:CAPS"><type>FALSE</type></link> Param2</parameter>);</programlisting>
+</refsect2>
+
+</refsect1>
+<refsect1 id="libroutermanager-firmware-common.other_details" role="details">
+<title role="details.title">Types and Values</title>
+<refsect2 id="voice-data" role="struct">
+<title>struct voice_data</title>
+<indexterm zone="voice-data"><primary>voice_data</primary></indexterm>
+<programlisting language="C">struct voice_data {
+	/* 0 */
+	gint header;
+	/* 4 */
+	gint index;
+	/* 8 (2=own message, 3=remote message) */
+	gint type;
+	/* 12 */
+	guint sub_type;
+	/* 16 */
+	guint size;
+	/* 20 */
+	guint duration;
+	/* 24 */
+	guint status;
+	/* 28 */
+	guchar tmp0[24];
+	/* 52 */
+	gchar remote_number[54];
+	/* 106 */
+	gchar tmp1[18];
+	/* 124 */
+	gchar file[32];
+	/* 151 */
+	gchar path[128];
+	/* 279 */
+	guchar day;
+	guchar month;
+	guchar year;
+	guchar hour;
+	guchar minute;
+	guchar tmp2[31];
+	gchar local_number[24];
+	gchar tmp3[4];
+};
+</programlisting>
+</refsect2>
+<refsect2 id="voice-box" role="struct">
+<title>struct voice_box</title>
+<indexterm zone="voice-box"><primary>voice_box</primary></indexterm>
+<programlisting language="C">struct voice_box {
+	gsize len;
+	gpointer data;
+};
+</programlisting>
+</refsect2>
+<refsect2 id="new-str" role="variable">
+<title>new_str</title>
+<indexterm zone="new-str"><primary>new_str</primary></indexterm>
+<programlisting language="C">	GString *new_str = g_string_new("");
+</programlisting>
+</refsect2>
+<refsect2 id="error" role="variable">
+<title>error</title>
+<indexterm zone="error"><primary>error</primary></indexterm>
+<programlisting language="C">	GError *error = NULL;
+</programlisting>
+</refsect2>
+<refsect2 id="ret" role="variable">
+<title>ret</title>
+<indexterm zone="ret"><primary>ret</primary></indexterm>
+<programlisting language="C">	gchar *ret = NULL;
+</programlisting>
+</refsect2>
+<refsect2 id="bin" role="variable">
+<title>bin</title>
+<indexterm zone="bin"><primary>bin</primary></indexterm>
+<programlisting language="C">	gchar *bin = g_convert(input, -1, "UTF-16LE", "UTF-8", NULL, &amp;written, &amp;error);
+</programlisting>
+</refsect2>
+
+</refsect1>
+
+</refentry>

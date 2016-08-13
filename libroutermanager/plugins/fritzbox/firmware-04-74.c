@@ -23,7 +23,7 @@
 
 #include <glib.h>
 
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/logging.h>
 #include <libroutermanager/network.h>

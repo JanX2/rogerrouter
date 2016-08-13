@@ -1,0 +1,1007 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>router: Roger Router Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="index.html" title="Roger Router Reference Manual">
+<link rel="up" href="ch01.html" title="[Insert title here]">
+<link rel="prev" href="libroutermanager-RmProfile.html" title="RmProfile">
+<link rel="next" href="libroutermanager-secret.html" title="secret">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#libroutermanager-router.description" class="shortcut">Description</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="libroutermanager-RmProfile.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="libroutermanager-secret.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="refentry">
+<a name="libroutermanager-router"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="libroutermanager-router.top_of_page"></a>router</span></h2>
+<p>router</p>
+</td>
+<td class="gallery_image" valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsect1">
+<a name="libroutermanager-router.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-present" title="router_present ()">router_present</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-login" title="router_login ()">router_login</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-logout" title="router_logout ()">router_logout</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-get-settings" title="router_get_settings ()">router_get_settings</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">const <a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-get-name" title="router_get_name ()">router_get_name</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">const <a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-get-version" title="router_get_version ()">router_get_version</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-get-host" title="router_get_host ()">router_get_host</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-get-login-password" title="router_get_login_password ()">router_get_login_password</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-get-login-user" title="router_get_login_user ()">router_get_login_user</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-get-ftp-password" title="router_get_ftp_password ()">router_get_ftp_password</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-get-ftp-user" title="router_get_ftp_user ()">router_get_ftp_user</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-load-journal" title="router_load_journal ()">router_load_journal</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-clear-journal" title="router_clear_journal ()">router_clear_journal</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-dial-number" title="router_dial_number ()">router_dial_number</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-hangup" title="router_hangup ()">router_hangup</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-get-ip" title="router_get_ip ()">router_get_ip</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-reconnect" title="router_reconnect ()">router_reconnect</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-delete-fax" title="router_delete_fax ()">router_delete_fax</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-delete-voice" title="router_delete_voice ()">router_delete_voice</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-get-area-code" title="router_get_area_code ()">router_get_area_code</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-get-country-code" title="router_get_country_code ()">router_get_country_code</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-get-international-prefix" title="router_get_international_prefix ()">router_get_international_prefix</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-get-national-prefix" title="router_get_national_prefix ()">router_get_national_prefix</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-init" title="router_init ()">router_init</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-shutdown" title="router_shutdown ()">router_shutdown</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-get-phone-list" title="router_get_phone_list ()">router_get_phone_list</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-get-numbers" title="router_get_numbers ()">router_get_numbers</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-process-journal" title="router_process_journal ()">router_process_journal</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#routermanager-router-register" title="routermanager_router_register ()">routermanager_router_register</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-load-fax" title="router_load_fax ()">router_load_fax</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-load-voice" title="router_load_voice ()">router_load_voice</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-info-free" title="router_info_free ()">router_info_free</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-is-cable" title="router_is_cable ()">router_is_cable</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-load-fax-reports" title="router_load_fax_reports ()">router_load_fax_reports</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-load-voice-records" title="router_load_voice_records ()">router_load_voice_records</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-free-phone-list" title="router_free_phone_list ()">router_free_phone_list</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-get-phone-port" title="router_get_phone_port ()">router_get_phone_port</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-set-phone-port" title="router_set_phone_port ()">router_set_phone_port</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-get-suppress-state" title="router_get_suppress_state ()">router_get_suppress_state</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-release-lock" title="router_release_lock ()">router_release_lock</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-router.html#router-is-locked" title="router_is_locked ()">router_is_locked</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-router.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="libroutermanager-router.html#ROUTER-ENABLE-TELNET:CAPS" title="ROUTER_ENABLE_TELNET">ROUTER_ENABLE_TELNET</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="libroutermanager-router.html#ROUTER-ENABLE-CAPI:CAPS" title="ROUTER_ENABLE_CAPI">ROUTER_ENABLE_CAPI</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="libroutermanager-router.html#phone-ports" title="enum phone_ports">phone_ports</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="libroutermanager-router.html#phone-number-type" title="enum phone_number_type">phone_number_type</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="libroutermanager-router.html#router-dial-port" title="enum router_dial_port">router_dial_port</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="libroutermanager-router.html#phone" title="struct phone">phone</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="libroutermanager-router.html#phone-number" title="struct phone_number">phone_number</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="libroutermanager-router.html#phone-port" title="struct phone_port">phone_port</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="libroutermanager-router.html#router-info" title="struct router_info">router_info</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="libroutermanager-router.html#router" title="struct router">router</a></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-router.description"></a><h2>Description</h2>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-router.functions_details"></a><h2>Functions</h2>
+<div class="refsect2">
+<a name="router-present"></a><h3>router_present ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+router_present (<em class="parameter"><code><span class="type">struct router_info</span> *router_info</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-login"></a><h3>router_login ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+router_login (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-logout"></a><h3>router_logout ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+router_logout (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-get-settings"></a><h3>router_get_settings ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+router_get_settings (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-get-name"></a><h3>router_get_name ()</h3>
+<pre class="programlisting">const <a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+router_get_name (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-get-version"></a><h3>router_get_version ()</h3>
+<pre class="programlisting">const <a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+router_get_version (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-get-host"></a><h3>router_get_host ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+router_get_host (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-get-login-password"></a><h3>router_get_login_password ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+router_get_login_password (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-get-login-user"></a><h3>router_get_login_user ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+router_get_login_user (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-get-ftp-password"></a><h3>router_get_ftp_password ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+router_get_ftp_password (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-get-ftp-user"></a><h3>router_get_ftp_user ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+router_get_ftp_user (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-load-journal"></a><h3>router_load_journal ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+router_load_journal (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-clear-journal"></a><h3>router_clear_journal ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+router_clear_journal (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-dial-number"></a><h3>router_dial_number ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+router_dial_number (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>,
+                    <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> port</code></em>,
+                    <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *number</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-hangup"></a><h3>router_hangup ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+router_hangup (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>,
+               <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> port</code></em>,
+               <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *number</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-get-ip"></a><h3>router_get_ip ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+router_get_ip (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-reconnect"></a><h3>router_reconnect ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+router_reconnect (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-delete-fax"></a><h3>router_delete_fax ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+router_delete_fax (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>,
+                   <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-delete-voice"></a><h3>router_delete_voice ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+router_delete_voice (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>,
+                     <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-get-area-code"></a><h3>router_get_area_code ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+router_get_area_code (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-get-country-code"></a><h3>router_get_country_code ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+router_get_country_code (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-get-international-prefix"></a><h3>router_get_international_prefix ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+router_get_international_prefix (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-get-national-prefix"></a><h3>router_get_national_prefix ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+router_get_national_prefix (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-init"></a><h3>router_init ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+router_init (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-shutdown"></a><h3>router_shutdown ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+router_shutdown (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-get-phone-list"></a><h3>router_get_phone_list ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+router_get_phone_list (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-get-numbers"></a><h3>router_get_numbers ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **
+router_get_numbers (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-process-journal"></a><h3>router_process_journal ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+router_process_journal (<em class="parameter"><code><a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> *journal</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="routermanager-router-register"></a><h3>routermanager_router_register ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+routermanager_router_register (<em class="parameter"><code><span class="type">struct router</span> *router_new</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-load-fax"></a><h3>router_load_fax ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+router_load_fax (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>,
+                 <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>,
+                 <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> *len</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-load-voice"></a><h3>router_load_voice ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+router_load_voice (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>,
+                   <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>,
+                   <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> *len</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-info-free"></a><h3>router_info_free ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+router_info_free (<em class="parameter"><code><span class="type">struct router_info</span> *info</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-is-cable"></a><h3>router_is_cable ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+router_is_cable (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-load-fax-reports"></a><h3>router_load_fax_reports ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+router_load_fax_reports (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>,
+                         <em class="parameter"><code><a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> *journal</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-load-voice-records"></a><h3>router_load_voice_records ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+router_load_voice_records (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>,
+                           <em class="parameter"><code><a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> *journal</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-free-phone-list"></a><h3>router_free_phone_list ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+router_free_phone_list (<em class="parameter"><code><a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> *phone_list</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-get-phone-port"></a><h3>router_get_phone_port ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+router_get_phone_port (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-set-phone-port"></a><h3>router_set_phone_port ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+router_set_phone_port (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>,
+                       <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> port</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-get-suppress-state"></a><h3>router_get_suppress_state ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+router_get_suppress_state (<em class="parameter"><code><span class="type">struct profile</span> *profile</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-release-lock"></a><h3>router_release_lock ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+router_release_lock (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-is-locked"></a><h3>router_is_locked ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+router_is_locked (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+</div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-router.other_details"></a><h2>Types and Values</h2>
+<div class="refsect2">
+<a name="ROUTER-ENABLE-TELNET:CAPS"></a><h3>ROUTER_ENABLE_TELNET</h3>
+<pre class="programlisting">#define ROUTER_ENABLE_TELNET "#96*5*"
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="ROUTER-ENABLE-CAPI:CAPS"></a><h3>ROUTER_ENABLE_CAPI</h3>
+<pre class="programlisting">#define ROUTER_ENABLE_CAPI		"#96*3*"
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="phone-ports"></a><h3>enum phone_ports</h3>
+<div class="refsect3">
+<a name="phone-ports.members"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-SOFTPHONE:CAPS"></a>PORT_SOFTPHONE</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-ANALOG1:CAPS"></a>PORT_ANALOG1</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-ANALOG2:CAPS"></a>PORT_ANALOG2</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-ANALOG3:CAPS"></a>PORT_ANALOG3</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-ISDNALL:CAPS"></a>PORT_ISDNALL</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-ISDN1:CAPS"></a>PORT_ISDN1</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-ISDN2:CAPS"></a>PORT_ISDN2</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-ISDN3:CAPS"></a>PORT_ISDN3</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-ISDN4:CAPS"></a>PORT_ISDN4</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-ISDN5:CAPS"></a>PORT_ISDN5</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-ISDN6:CAPS"></a>PORT_ISDN6</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-ISDN7:CAPS"></a>PORT_ISDN7</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-ISDN8:CAPS"></a>PORT_ISDN8</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-DECT1:CAPS"></a>PORT_DECT1</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-DECT2:CAPS"></a>PORT_DECT2</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-DECT3:CAPS"></a>PORT_DECT3</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-DECT4:CAPS"></a>PORT_DECT4</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-DECT5:CAPS"></a>PORT_DECT5</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-DECT6:CAPS"></a>PORT_DECT6</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-IP1:CAPS"></a>PORT_IP1</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-IP2:CAPS"></a>PORT_IP2</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-IP3:CAPS"></a>PORT_IP3</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-IP4:CAPS"></a>PORT_IP4</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-IP5:CAPS"></a>PORT_IP5</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-IP6:CAPS"></a>PORT_IP6</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-IP7:CAPS"></a>PORT_IP7</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-IP8:CAPS"></a>PORT_IP8</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-IP9:CAPS"></a>PORT_IP9</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-IP10:CAPS"></a>PORT_IP10</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PORT-MAX:CAPS"></a>PORT_MAX</p></td>
+<td> </td>
+<td> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="phone-number-type"></a><h3>enum phone_number_type</h3>
+<div class="refsect3">
+<a name="phone-number-type.members"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="PHONE-NUMBER-HOME:CAPS"></a>PHONE_NUMBER_HOME</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PHONE-NUMBER-WORK:CAPS"></a>PHONE_NUMBER_WORK</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PHONE-NUMBER-MOBILE:CAPS"></a>PHONE_NUMBER_MOBILE</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PHONE-NUMBER-FAX-HOME:CAPS"></a>PHONE_NUMBER_FAX_HOME</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PHONE-NUMBER-FAX-WORK:CAPS"></a>PHONE_NUMBER_FAX_WORK</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PHONE-NUMBER-PAGER:CAPS"></a>PHONE_NUMBER_PAGER</p></td>
+<td> </td>
+<td> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-dial-port"></a><h3>enum router_dial_port</h3>
+<div class="refsect3">
+<a name="router-dial-port.members"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody><tr>
+<td class="enum_member_name"><p><a name="ROUTER-DIAL-PORT-AUTO:CAPS"></a>ROUTER_DIAL_PORT_AUTO</p></td>
+<td> </td>
+<td> </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="phone"></a><h3>struct phone</h3>
+<pre class="programlisting">struct phone {
+	gchar *name;
+	gint type;
+};
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="phone-number"></a><h3>struct phone_number</h3>
+<pre class="programlisting">struct phone_number {
+	enum phone_number_type type;
+	gchar *number;
+};
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="phone-port"></a><h3>struct phone_port</h3>
+<pre class="programlisting">struct phone_port {
+	gchar *name;
+	gint type;
+	gint number;
+};
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router-info"></a><h3>struct router_info</h3>
+<pre class="programlisting">struct router_info {
+	gchar *host;
+	gchar *user;
+	gchar *password;
+	gchar *name;
+	gchar *version;
+	gchar *serial;
+	gchar *session_id;
+	gchar *lang;
+	gchar *annex;
+
+	/* Extend */
+	gint box_id;
+	gint maj_ver_id;
+	gint min_ver_id;
+	GTimer *session_timer;
+};
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="router"></a><h3>struct router</h3>
+<pre class="programlisting">struct router {
+	const gchar *name;
+	gboolean (*present)(struct router_info *router_info);
+	gboolean (*login)(struct profile *profile);
+	gboolean (*logout)(struct profile *profile, gboolean force);
+	gboolean (*get_settings)(struct profile *profile);
+	gboolean (*load_journal)(struct profile *profile, gchar **data);
+	gboolean (*clear_journal)(struct profile *profile);
+	gboolean (*dial_number)(struct profile *profile, gint port, const gchar *number);
+	gboolean (*hangup)(struct profile *profile, gint port, const gchar *number);
+	gchar *(*load_fax)(struct profile *profile, const gchar *filename, gsize *len);
+	gchar *(*load_voice)(struct profile *profile, const gchar *filename, gsize *len);
+	gchar *(*get_ip)(struct profile *profile);
+	gboolean (*reconnect)(struct profile *profile);
+	gboolean (*delete_fax)(struct profile *profile, const gchar *filename);
+	gboolean (*delete_voice)(struct profile *profile, const gchar *filename);
+};
+</pre>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>Generated by GTK-Doc V1.25</div>
+</body>
+</html>

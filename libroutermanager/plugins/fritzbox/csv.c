@@ -22,10 +22,9 @@
 
 #include <glib.h>
 
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/call.h>
 #include <libroutermanager/csv.h>
-#include <libroutermanager/profile.h>
 #include <libroutermanager/logging.h>
 
 #include "csv.h"

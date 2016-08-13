@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+  <!ENTITY % gtkdocentities SYSTEM "../xml/gtkdocentities.ent">
+  %gtkdocentities;
+]>
+<refentry id="libroutermanager-csv">
+<refmeta>
+<refentrytitle role="top_of_page" id="libroutermanager-csv.top_of_page">csv</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>LIBROUTERMANAGER Library</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>csv</refname>
+<refpurpose></refpurpose>
+</refnamediv>
+
+<refsect1 id="libroutermanager-csv.functions" role="functions_proto">
+<title role="functions_proto.title">Functions</title>
+<informaltable pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="functions_return" colwidth="150px"/>
+<colspec colname="functions_name"/>
+<tbody>
+<row><entry role="function_type"><link linkend="GSList"><returnvalue>GSList</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="csv-parse-fritzbox-journal-data">csv_parse_fritzbox_journal_data</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libroutermanager-csv.other" role="other_proto">
+<title role="other_proto.title">Types and Values</title>
+<informaltable role="enum_members_table" pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="name" colwidth="150px"/>
+<colspec colname="description"/>
+<tbody>
+<row><entry role="define_keyword">#define</entry><entry role="function_name"><link linkend="CSV-FRITZBOX-JOURNAL-DE:CAPS">CSV_FRITZBOX_JOURNAL_DE</link></entry></row>
+<row><entry role="define_keyword">#define</entry><entry role="function_name"><link linkend="CSV-FRITZBOX-JOURNAL-EN:CAPS">CSV_FRITZBOX_JOURNAL_EN</link></entry></row>
+<row><entry role="define_keyword">#define</entry><entry role="function_name"><link linkend="CSV-FRITZBOX-JOURNAL-EN2:CAPS">CSV_FRITZBOX_JOURNAL_EN2</link></entry></row>
+<row><entry role="define_keyword">#define</entry><entry role="function_name"><link linkend="CSV-FRITZBOX-JOURNAL-EN3:CAPS">CSV_FRITZBOX_JOURNAL_EN3</link></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+
+<refsect1 id="libroutermanager-csv.description" role="desc">
+<title role="desc.title">Description</title>
+
+</refsect1>
+<refsect1 id="libroutermanager-csv.functions_details" role="details">
+<title role="details.title">Functions</title>
+<refsect2 id="csv-parse-fritzbox-journal-data" role="function">
+<title>csv_parse_fritzbox_journal_data&#160;()</title>
+<indexterm zone="csv-parse-fritzbox-journal-data"><primary>csv_parse_fritzbox_journal_data</primary></indexterm>
+<programlisting language="C"><link linkend="GSList"><returnvalue>GSList</returnvalue></link>&#160;*
+csv_parse_fritzbox_journal_data (<parameter><link linkend="GSList"><type>GSList</type></link> *list</parameter>,
+                                 <parameter>const <link linkend="gchar"><type>gchar</type></link> *data</parameter>);</programlisting>
+</refsect2>
+
+</refsect1>
+<refsect1 id="libroutermanager-csv.other_details" role="details">
+<title role="details.title">Types and Values</title>
+<refsect2 id="CSV-FRITZBOX-JOURNAL-DE:CAPS" role="macro">
+<title>CSV_FRITZBOX_JOURNAL_DE</title>
+<indexterm zone="CSV-FRITZBOX-JOURNAL-DE:CAPS"><primary>CSV_FRITZBOX_JOURNAL_DE</primary></indexterm>
+<programlisting language="C">#define CSV_FRITZBOX_JOURNAL_DE "Typ;Datum;Name;Rufnummer;Nebenstelle;Eigene Rufnummer;Dauer"
+</programlisting>
+</refsect2>
+<refsect2 id="CSV-FRITZBOX-JOURNAL-EN:CAPS" role="macro">
+<title>CSV_FRITZBOX_JOURNAL_EN</title>
+<indexterm zone="CSV-FRITZBOX-JOURNAL-EN:CAPS"><primary>CSV_FRITZBOX_JOURNAL_EN</primary></indexterm>
+<programlisting language="C">#define CSV_FRITZBOX_JOURNAL_EN "Type;Date;Name;Number;Extension;Outgoing Caller ID;Duration"
+</programlisting>
+</refsect2>
+<refsect2 id="CSV-FRITZBOX-JOURNAL-EN2:CAPS" role="macro">
+<title>CSV_FRITZBOX_JOURNAL_EN2</title>
+<indexterm zone="CSV-FRITZBOX-JOURNAL-EN2:CAPS"><primary>CSV_FRITZBOX_JOURNAL_EN2</primary></indexterm>
+<programlisting language="C">#define CSV_FRITZBOX_JOURNAL_EN2 "Type;Date;Name;Number;Extension;Telephone Number;Duration"
+</programlisting>
+</refsect2>
+<refsect2 id="CSV-FRITZBOX-JOURNAL-EN3:CAPS" role="macro">
+<title>CSV_FRITZBOX_JOURNAL_EN3</title>
+<indexterm zone="CSV-FRITZBOX-JOURNAL-EN3:CAPS"><primary>CSV_FRITZBOX_JOURNAL_EN3</primary></indexterm>
+<programlisting language="C">#define CSV_FRITZBOX_JOURNAL_EN3 "Type;Date;Name;Telephone number;Extension;Telephone number;Duration"
+</programlisting>
+</refsect2>
+
+</refsect1>
+
+</refentry>

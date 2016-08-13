@@ -19,7 +19,7 @@
 
 #include <gio/gio.h>
 #include <libroutermanager/net_monitor.h>
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/ssdp.h>
 
 /** Internal network event list */

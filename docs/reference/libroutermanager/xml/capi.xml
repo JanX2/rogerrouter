@@ -1,0 +1,435 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+  <!ENTITY % gtkdocentities SYSTEM "../xml/gtkdocentities.ent">
+  %gtkdocentities;
+]>
+<refentry id="libroutermanager-capi">
+<refmeta>
+<refentrytitle role="top_of_page" id="libroutermanager-capi.top_of_page">capi</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>LIBROUTERMANAGER Library</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>capi</refname>
+<refpurpose></refpurpose>
+</refnamediv>
+
+<refsect1 id="libroutermanager-capi.functions" role="functions_proto">
+<title role="functions_proto.title">Functions</title>
+<informaltable pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="functions_return" colwidth="150px"/>
+<colspec colname="functions_name"/>
+<tbody>
+<row><entry role="define_keyword">#define</entry><entry role="function_name"><link linkend="isdn-lock">isdn_lock</link></entry></row>
+<row><entry role="define_keyword">#define</entry><entry role="function_name"><link linkend="isdn-unlock">isdn_unlock</link></entry></row>
+<row><entry role="define_keyword">#define</entry><entry role="function_name"><link linkend="CREATE-THREAD:CAPS">CREATE_THREAD</link><phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type">struct <link linkend="capi-connection"><returnvalue>capi_connection</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="capi-get-free-connection">capi_get_free_connection</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type">struct <link linkend="capi-connection"><returnvalue>capi_connection</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="capi-call">capi_call</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="capi-send-dtmf-code">capi_send_dtmf_code</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="capi-hangup">capi_hangup</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="int"><returnvalue>int</returnvalue></link>
+</entry><entry role="function_name"><link linkend="capi-pickup">capi_pickup</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type">struct <link linkend="session"><returnvalue>session</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="capi-get-session">capi_get_session</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type">struct <link linkend="session"><returnvalue>session</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="capi-session-init">capi_session_init</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="int"><returnvalue>int</returnvalue></link>
+</entry><entry role="function_name"><link linkend="capi-session-close">capi_session_close</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libroutermanager-capi.other" role="other_proto">
+<title role="other_proto.title">Types and Values</title>
+<informaltable role="enum_members_table" pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="name" colwidth="150px"/>
+<colspec colname="description"/>
+<tbody>
+<row><entry role="typedef_keyword">typedef</entry><entry role="function_name"><link linkend="uint16-t">uint16_t</link></entry></row>
+<row><entry role="typedef_keyword">typedef</entry><entry role="function_name"><link linkend="uint32-t">uint32_t</link></entry></row>
+<row><entry role="datatype_keyword"></entry><entry role="function_name"><link linkend="capi-profile">capi_profile</link></entry></row>
+<row><entry role="define_keyword">#define</entry><entry role="function_name"><link linkend="CAPI-CONNECTIONS:CAPS">CAPI_CONNECTIONS</link></entry></row>
+<row><entry role="define_keyword">#define</entry><entry role="function_name"><link linkend="CAPI-PACKETS:CAPS">CAPI_PACKETS</link></entry></row>
+<row><entry role="define_keyword">#define</entry><entry role="function_name"><link linkend="CAPI-BUFFERCNT:CAPS">CAPI_BUFFERCNT</link></entry></row>
+<row><entry role="define_keyword">#define</entry><entry role="function_name"><link linkend="CAPI-BCHANNELS:CAPS">CAPI_BCHANNELS</link></entry></row>
+<row><entry role="define_keyword">#define</entry><entry role="function_name"><link linkend="USE-ISDN-MUTEX:CAPS">USE_ISDN_MUTEX</link></entry></row>
+<row><entry role="datatype_keyword">enum</entry><entry role="function_name"><link linkend="state">state</link></entry></row>
+<row><entry role="datatype_keyword">enum</entry><entry role="function_name"><link linkend="session-type">session_type</link></entry></row>
+<row><entry role="define_keyword">#define</entry><entry role="function_name"><link linkend="RECORDING-BUFSIZE:CAPS">RECORDING_BUFSIZE</link></entry></row>
+<row><entry role="define_keyword">#define</entry><entry role="function_name"><link linkend="RECORDING-JITTER:CAPS">RECORDING_JITTER</link></entry></row>
+<row><entry role="datatype_keyword">enum</entry><entry role="function_name"><link linkend="recording">recording</link></entry></row>
+<row><entry role="datatype_keyword">struct</entry><entry role="function_name"><link linkend="record-channel">record_channel</link></entry></row>
+<row><entry role="datatype_keyword">struct</entry><entry role="function_name"><link linkend="recorder">recorder</link></entry></row>
+<row><entry role="datatype_keyword">struct</entry><entry role="function_name"><link linkend="capi-connection">capi_connection</link></entry></row>
+<row><entry role="datatype_keyword">struct</entry><entry role="function_name"><link linkend="session-handlers">session_handlers</link></entry></row>
+<row><entry role="datatype_keyword">struct</entry><entry role="function_name"><link linkend="session">session</link></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+
+<refsect1 id="libroutermanager-capi.description" role="desc">
+<title role="desc.title">Description</title>
+
+</refsect1>
+<refsect1 id="libroutermanager-capi.functions_details" role="details">
+<title role="details.title">Functions</title>
+<refsect2 id="isdn-lock" role="macro">
+<title>isdn_lock</title>
+<indexterm zone="isdn-lock"><primary>isdn_lock</primary></indexterm>
+<programlisting language="C">#define isdn_lock() do { g_mutex_lock(&amp;session-&gt;isdn_mutex); } while (0);
+</programlisting>
+</refsect2>
+<refsect2 id="isdn-unlock" role="macro">
+<title>isdn_unlock</title>
+<indexterm zone="isdn-unlock"><primary>isdn_unlock</primary></indexterm>
+<programlisting language="C">#define isdn_unlock() do { g_mutex_unlock(&amp;session-&gt;isdn_mutex); } while (0);
+</programlisting>
+</refsect2>
+<refsect2 id="CREATE-THREAD:CAPS" role="macro">
+<title>CREATE_THREAD()</title>
+<indexterm zone="CREATE-THREAD:CAPS"><primary>CREATE_THREAD</primary></indexterm>
+<programlisting language="C">#define CREATE_THREAD(name, func, data) g_thread_new(name, func, data)
+</programlisting>
+</refsect2>
+<refsect2 id="capi-get-free-connection" role="function">
+<title>capi_get_free_connection&#160;()</title>
+<indexterm zone="capi-get-free-connection"><primary>capi_get_free_connection</primary></indexterm>
+<programlisting language="C">struct <link linkend="capi-connection"><returnvalue>capi_connection</returnvalue></link>&#160;*
+capi_get_free_connection (<parameter><type>void</type></parameter>);</programlisting>
+</refsect2>
+<refsect2 id="capi-call" role="function">
+<title>capi_call&#160;()</title>
+<indexterm zone="capi-call"><primary>capi_call</primary></indexterm>
+<programlisting language="C">struct <link linkend="capi-connection"><returnvalue>capi_connection</returnvalue></link>&#160;*
+capi_call (<parameter><link linkend="unsigned"><type>unsigned</type></link> Param1</parameter>,
+           <parameter>const <link linkend="char"><type>char</type></link> *Param2</parameter>,
+           <parameter>const <link linkend="char"><type>char</type></link> *Param3</parameter>,
+           <parameter><link linkend="unsigned"><type>unsigned</type></link> Param4</parameter>,
+           <parameter><link linkend="unsigned"><type>unsigned</type></link> Param5</parameter>,
+           <parameter><link linkend="unsigned"><type>unsigned</type></link> Param6</parameter>,
+           <parameter><link linkend="cword"><type>_cword</type></link> Param7</parameter>,
+           <parameter><link linkend="cword"><type>_cword</type></link> Param8</parameter>,
+           <parameter><link linkend="cword"><type>_cword</type></link> Param9</parameter>,
+           <parameter><link linkend="cstruct"><type>_cstruct</type></link> Param10</parameter>,
+           <parameter><link linkend="cstruct"><type>_cstruct</type></link> Param11</parameter>,
+           <parameter><link linkend="cstruct"><type>_cstruct</type></link> Param12</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="capi-send-dtmf-code" role="function">
+<title>capi_send_dtmf_code&#160;()</title>
+<indexterm zone="capi-send-dtmf-code"><primary>capi_send_dtmf_code</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+capi_send_dtmf_code (<parameter><type>struct capi_connection</type> *connection</parameter>,
+                     <parameter>unsigned <link linkend="char"><type>char</type></link> nCode</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="capi-hangup" role="function">
+<title>capi_hangup&#160;()</title>
+<indexterm zone="capi-hangup"><primary>capi_hangup</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+capi_hangup (<parameter><type>struct capi_connection</type> *connection</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="capi-pickup" role="function">
+<title>capi_pickup&#160;()</title>
+<indexterm zone="capi-pickup"><primary>capi_pickup</primary></indexterm>
+<programlisting language="C"><link linkend="int"><returnvalue>int</returnvalue></link>
+capi_pickup (<parameter><type>struct capi_connection</type> *connection</parameter>,
+             <parameter><link linkend="int"><type>int</type></link> type</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="capi-get-session" role="function">
+<title>capi_get_session&#160;()</title>
+<indexterm zone="capi-get-session"><primary>capi_get_session</primary></indexterm>
+<programlisting language="C">struct <link linkend="session"><returnvalue>session</returnvalue></link>&#160;*
+capi_get_session (<parameter><type>void</type></parameter>);</programlisting>
+</refsect2>
+<refsect2 id="capi-session-init" role="function">
+<title>capi_session_init&#160;()</title>
+<indexterm zone="capi-session-init"><primary>capi_session_init</primary></indexterm>
+<programlisting language="C">struct <link linkend="session"><returnvalue>session</returnvalue></link>&#160;*
+capi_session_init (<parameter><type>struct session_handlers</type> *handlers</parameter>,
+                   <parameter>const <link linkend="char"><type>char</type></link> *host</parameter>,
+                   <parameter><link linkend="gint"><type>gint</type></link> controller</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="capi-session-close" role="function">
+<title>capi_session_close&#160;()</title>
+<indexterm zone="capi-session-close"><primary>capi_session_close</primary></indexterm>
+<programlisting language="C"><link linkend="int"><returnvalue>int</returnvalue></link>
+capi_session_close (<parameter><link linkend="int"><type>int</type></link> force</parameter>);</programlisting>
+</refsect2>
+
+</refsect1>
+<refsect1 id="libroutermanager-capi.other_details" role="details">
+<title role="details.title">Types and Values</title>
+<refsect2 id="uint16-t" role="typedef">
+<title>uint16_t</title>
+<indexterm zone="uint16-t"><primary>uint16_t</primary></indexterm>
+<programlisting language="C">typedef unsigned short uint16_t;
+</programlisting>
+</refsect2>
+<refsect2 id="uint32-t" role="typedef">
+<title>uint32_t</title>
+<indexterm zone="uint32-t"><primary>uint32_t</primary></indexterm>
+<programlisting language="C">typedef unsigned int uint32_t;
+</programlisting>
+</refsect2>
+<refsect2 id="capi-profile" role="struct">
+<title>capi_profile</title>
+<indexterm zone="capi-profile"><primary>capi_profile</primary></indexterm>
+<programlisting language="C">typedef struct {
+	uint16_t ncontroller;
+	uint16_t nbchannel;
+	uint32_t goptions;
+	uint32_t support1;
+	uint32_t support2;
+	uint32_t support3;
+	uint32_t reserved[6];
+	uint32_t manu[5];
+} capi_profile;
+</programlisting>
+</refsect2>
+<refsect2 id="CAPI-CONNECTIONS:CAPS" role="macro">
+<title>CAPI_CONNECTIONS</title>
+<indexterm zone="CAPI-CONNECTIONS:CAPS"><primary>CAPI_CONNECTIONS</primary></indexterm>
+<programlisting language="C">#define CAPI_CONNECTIONS 5
+</programlisting>
+</refsect2>
+<refsect2 id="CAPI-PACKETS:CAPS" role="macro">
+<title>CAPI_PACKETS</title>
+<indexterm zone="CAPI-PACKETS:CAPS"><primary>CAPI_PACKETS</primary></indexterm>
+<programlisting language="C">#define CAPI_PACKETS 160
+</programlisting>
+</refsect2>
+<refsect2 id="CAPI-BUFFERCNT:CAPS" role="macro">
+<title>CAPI_BUFFERCNT</title>
+<indexterm zone="CAPI-BUFFERCNT:CAPS"><primary>CAPI_BUFFERCNT</primary></indexterm>
+<programlisting language="C">#define CAPI_BUFFERCNT 6
+</programlisting>
+</refsect2>
+<refsect2 id="CAPI-BCHANNELS:CAPS" role="macro">
+<title>CAPI_BCHANNELS</title>
+<indexterm zone="CAPI-BCHANNELS:CAPS"><primary>CAPI_BCHANNELS</primary></indexterm>
+<programlisting language="C">#define CAPI_BCHANNELS 2
+</programlisting>
+</refsect2>
+<refsect2 id="USE-ISDN-MUTEX:CAPS" role="macro">
+<title>USE_ISDN_MUTEX</title>
+<indexterm zone="USE-ISDN-MUTEX:CAPS"><primary>USE_ISDN_MUTEX</primary></indexterm>
+<programlisting language="C">#define USE_ISDN_MUTEX 1
+</programlisting>
+</refsect2>
+<refsect2 id="state" role="enum">
+<title>enum state</title>
+<indexterm zone="state"><primary>state</primary></indexterm>
+<refsect3 id="state.members" role="enum_members">
+<title>Members</title>
+<informaltable role="enum_members_table" pgwide="1" frame="none">
+<tgroup cols="3">
+<colspec colname="enum_members_name" colwidth="300px"/>
+<colspec colname="enum_members_description"/>
+<colspec colname="enum_members_annotations" colwidth="200px"/>
+<tbody>
+<row role="constant"><entry role="enum_member_name"><para id="STATE-IDLE:CAPS">STATE_IDLE</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="STATE-CONNECT-REQ:CAPS">STATE_CONNECT_REQ</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="STATE-CONNECT-WAIT:CAPS">STATE_CONNECT_WAIT</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="STATE-CONNECT-ACTIVE:CAPS">STATE_CONNECT_ACTIVE</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="STATE-CONNECT-B3-WAIT:CAPS">STATE_CONNECT_B3_WAIT</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="STATE-CONNECTED:CAPS">STATE_CONNECTED</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="STATE-DISCONNECT-B3-REQ:CAPS">STATE_DISCONNECT_B3_REQ</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="STATE-DISCONNECT-B3-WAIT:CAPS">STATE_DISCONNECT_B3_WAIT</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="STATE-DISCONNECT-ACTIVE:CAPS">STATE_DISCONNECT_ACTIVE</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="STATE-DISCONNET-WAIT:CAPS">STATE_DISCONNET_WAIT</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="STATE-RINGING:CAPS">STATE_RINGING</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="STATE-INCOMING-WAIT:CAPS">STATE_INCOMING_WAIT</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="STATE-MAXSTATE:CAPS">STATE_MAXSTATE</para></entry>
+<entry /><entry />
+</row>
+</tbody></tgroup></informaltable>
+</refsect3></refsect2>
+<refsect2 id="session-type" role="enum">
+<title>enum session_type</title>
+<indexterm zone="session-type"><primary>session_type</primary></indexterm>
+<refsect3 id="session-type.members" role="enum_members">
+<title>Members</title>
+<informaltable role="enum_members_table" pgwide="1" frame="none">
+<tgroup cols="3">
+<colspec colname="enum_members_name" colwidth="300px"/>
+<colspec colname="enum_members_description"/>
+<colspec colname="enum_members_annotations" colwidth="200px"/>
+<tbody>
+<row role="constant"><entry role="enum_member_name"><para id="SESSION-NONE:CAPS">SESSION_NONE</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="SESSION-FAX:CAPS">SESSION_FAX</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="SESSION-PHONE:CAPS">SESSION_PHONE</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="SESSION-SFF:CAPS">SESSION_SFF</para></entry>
+<entry /><entry />
+</row>
+</tbody></tgroup></informaltable>
+</refsect3></refsect2>
+<refsect2 id="RECORDING-BUFSIZE:CAPS" role="macro">
+<title>RECORDING_BUFSIZE</title>
+<indexterm zone="RECORDING-BUFSIZE:CAPS"><primary>RECORDING_BUFSIZE</primary></indexterm>
+<programlisting language="C">#define RECORDING_BUFSIZE 32768
+</programlisting>
+</refsect2>
+<refsect2 id="RECORDING-JITTER:CAPS" role="macro">
+<title>RECORDING_JITTER</title>
+<indexterm zone="RECORDING-JITTER:CAPS"><primary>RECORDING_JITTER</primary></indexterm>
+<programlisting language="C">#define RECORDING_JITTER 200
+</programlisting>
+</refsect2>
+<refsect2 id="recording" role="enum">
+<title>enum recording</title>
+<indexterm zone="recording"><primary>recording</primary></indexterm>
+<refsect3 id="recording.members" role="enum_members">
+<title>Members</title>
+<informaltable role="enum_members_table" pgwide="1" frame="none">
+<tgroup cols="3">
+<colspec colname="enum_members_name" colwidth="300px"/>
+<colspec colname="enum_members_description"/>
+<colspec colname="enum_members_annotations" colwidth="200px"/>
+<tbody>
+<row role="constant"><entry role="enum_member_name"><para id="RECORDING-LOCAL:CAPS">RECORDING_LOCAL</para></entry>
+<entry /><entry />
+</row>
+<row role="constant"><entry role="enum_member_name"><para id="RECORDING-REMOTE:CAPS">RECORDING_REMOTE</para></entry>
+<entry /><entry />
+</row>
+</tbody></tgroup></informaltable>
+</refsect3></refsect2>
+<refsect2 id="record-channel" role="struct">
+<title>struct record_channel</title>
+<indexterm zone="record-channel"><primary>record_channel</primary></indexterm>
+<programlisting language="C">struct record_channel {
+	gint64 position;
+	short buffer[RECORDING_BUFSIZE];
+};
+</programlisting>
+</refsect2>
+<refsect2 id="recorder" role="struct">
+<title>struct recorder</title>
+<indexterm zone="recorder"><primary>recorder</primary></indexterm>
+<programlisting language="C">struct recorder {
+	SNDFILE *file;
+	char *file_name;
+
+	gint64 start_time;
+	struct record_channel local;
+	struct record_channel remote;
+	gint64 last_write;
+};
+</programlisting>
+</refsect2>
+<refsect2 id="capi-connection" role="struct">
+<title>struct capi_connection</title>
+<indexterm zone="capi-connection"><primary>capi_connection</primary></indexterm>
+<programlisting language="C">struct capi_connection {
+	enum state state;
+	enum session_type type;
+
+	unsigned int id;
+	unsigned int controller;
+	unsigned long int plci;
+	unsigned long int ncci;
+	gchar *ncpi;
+	unsigned int reason;
+	unsigned int reason_b3;
+	char *source;
+	char *target;
+	void *priv;
+	int early_b3;
+	int hold;
+	time_t connect_time;
+	int mute;
+	int recording;
+	double line_level_in_state;
+	double line_level_out_state;
+	struct recorder recorder;
+	int buffers;
+	gboolean use_buffers;
+
+	gpointer audio;
+
+	void (*init_data)(struct capi_connection *connection);
+	void (*data)(struct capi_connection *connection, _cmsg capi_message);
+	void (*clean)(struct capi_connection *connection);
+};
+</programlisting>
+</refsect2>
+<refsect2 id="session-handlers" role="struct">
+<title>struct session_handlers</title>
+<indexterm zone="session-handlers"><primary>session_handlers</primary></indexterm>
+<programlisting language="C">struct session_handlers {
+	gpointer (*audio_open)(void);
+	gsize (*audio_input)(gpointer audio, guchar *buf, gsize len);
+	gsize (*audio_output)(gpointer audio, guchar *buf, gsize len);
+	gboolean (*audio_close)(gpointer audio);
+
+	void (*connected)(struct capi_connection *connection);
+	void (*disconnected)(struct capi_connection *connection);
+	void (*ring)(struct capi_connection *connection);
+
+	void (*code)(struct capi_connection *connection, int code);
+
+	void (*status)(struct capi_connection *connection, int error_code);
+};
+</programlisting>
+</refsect2>
+<refsect2 id="session" role="struct">
+<title>struct session</title>
+<indexterm zone="session"><primary>session</primary></indexterm>
+<programlisting language="C">struct session {
+	GMutex isdn_mutex;
+
+	struct capi_connection connection[CAPI_CONNECTIONS];
+	int appl_id;
+	int message_number;
+	int input_thread_state;
+
+	struct session_handlers *handlers;
+};
+</programlisting>
+</refsect2>
+
+</refsect1>
+
+</refentry>

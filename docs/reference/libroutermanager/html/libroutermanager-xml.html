@@ -1,0 +1,329 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>xml: Roger Router Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="index.html" title="Roger Router Reference Manual">
+<link rel="up" href="ch01.html" title="[Insert title here]">
+<link rel="prev" href="libroutermanager-voxplay.html" title="voxplay">
+<link rel="next" href="object-tree.html" title="Object Hierarchy">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#libroutermanager-xml.description" class="shortcut">Description</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="libroutermanager-voxplay.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="object-tree.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="refentry">
+<a name="libroutermanager-xml"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="libroutermanager-xml.top_of_page"></a>xml</span></h2>
+<p>xml</p>
+</td>
+<td class="gallery_image" valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsect1">
+<a name="libroutermanager-xml.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody>
+<tr>
+<td class="function_type">
+<a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="returnvalue">xmlnode</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-xml.html#xmlnode-new" title="xmlnode_new ()">xmlnode_new</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="returnvalue">xmlnode</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-xml.html#xmlnode-new-child" title="xmlnode_new_child ()">xmlnode_new_child</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="returnvalue">xmlnode</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-xml.html#read-xml-from-file" title="read_xml_from_file ()">read_xml_from_file</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="returnvalue">xmlnode</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-xml.html#xmlnode-get-child" title="xmlnode_get_child ()">xmlnode_get_child</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="returnvalue">xmlnode</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-xml.html#xmlnode-get-next-twin" title="xmlnode_get_next_twin ()">xmlnode_get_next_twin</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-xml.html#xmlnode-get-data" title="xmlnode_get_data ()">xmlnode_get_data</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">const <a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-xml.html#xmlnode-get-attrib" title="xmlnode_get_attrib ()">xmlnode_get_attrib</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="returnvalue">xmlnode</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-xml.html#xmlnode-from-str" title="xmlnode_from_str ()">xmlnode_from_str</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-xml.html#xmlnode-insert-data" title="xmlnode_insert_data ()">xmlnode_insert_data</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-xml.html#xmlnode-free" title="xmlnode_free ()">xmlnode_free</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-xml.html#xmlnode-set-attrib" title="xmlnode_set_attrib ()">xmlnode_set_attrib</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-xml.html#xmlnode-insert-child" title="xmlnode_insert_child ()">xmlnode_insert_child</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-xml.html#xmlnode-to-formatted-str" title="xmlnode_to_formatted_str ()">xmlnode_to_formatted_str</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="returnvalue">xmlnode</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-xml.html#xmlnode-copy" title="xmlnode_copy ()">xmlnode_copy</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-xml.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="libroutermanager-xml.html#xml-node-type" title="enum xml_node_type">xml_node_type</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword"> </td>
+<td class="function_name"><a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode">xmlnode</a></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-xml.description"></a><h2>Description</h2>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-xml.functions_details"></a><h2>Functions</h2>
+<div class="refsect2">
+<a name="xmlnode-new"></a><h3>xmlnode_new ()</h3>
+<pre class="programlisting"><a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="returnvalue">xmlnode</span></a> *
+xmlnode_new (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="xmlnode-new-child"></a><h3>xmlnode_new_child ()</h3>
+<pre class="programlisting"><a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="returnvalue">xmlnode</span></a> *
+xmlnode_new_child (<em class="parameter"><code><a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="type">xmlnode</span></a> *parent</code></em>,
+                   <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="read-xml-from-file"></a><h3>read_xml_from_file ()</h3>
+<pre class="programlisting"><a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="returnvalue">xmlnode</span></a> *
+read_xml_from_file (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file_name</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="xmlnode-get-child"></a><h3>xmlnode_get_child ()</h3>
+<pre class="programlisting"><a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="returnvalue">xmlnode</span></a> *
+xmlnode_get_child (<em class="parameter"><code>const <a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="type">xmlnode</span></a> *parent</code></em>,
+                   <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="xmlnode-get-next-twin"></a><h3>xmlnode_get_next_twin ()</h3>
+<pre class="programlisting"><a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="returnvalue">xmlnode</span></a> *
+xmlnode_get_next_twin (<em class="parameter"><code><a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="type">xmlnode</span></a> *node</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="xmlnode-get-data"></a><h3>xmlnode_get_data ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+xmlnode_get_data (<em class="parameter"><code><a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="type">xmlnode</span></a> *node</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="xmlnode-get-attrib"></a><h3>xmlnode_get_attrib ()</h3>
+<pre class="programlisting">const <a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+xmlnode_get_attrib (<em class="parameter"><code><a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="type">xmlnode</span></a> *node</code></em>,
+                    <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *attr</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="xmlnode-from-str"></a><h3>xmlnode_from_str ()</h3>
+<pre class="programlisting"><a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="returnvalue">xmlnode</span></a> *
+xmlnode_from_str (<em class="parameter"><code>const <span class="type">char</span> *str</code></em>,
+                  <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gssize"><span class="type">gssize</span></a> size</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="xmlnode-insert-data"></a><h3>xmlnode_insert_data ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+xmlnode_insert_data (<em class="parameter"><code><a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="type">xmlnode</span></a> *node</code></em>,
+                     <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *data</code></em>,
+                     <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gssize"><span class="type">gssize</span></a> size</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="xmlnode-free"></a><h3>xmlnode_free ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+xmlnode_free (<em class="parameter"><code><a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="type">xmlnode</span></a> *node</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="xmlnode-set-attrib"></a><h3>xmlnode_set_attrib ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+xmlnode_set_attrib (<em class="parameter"><code><a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="type">xmlnode</span></a> *node</code></em>,
+                    <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *attr</code></em>,
+                    <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *value</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="xmlnode-insert-child"></a><h3>xmlnode_insert_child ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+xmlnode_insert_child (<em class="parameter"><code><a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="type">xmlnode</span></a> *parent</code></em>,
+                      <em class="parameter"><code><a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="type">xmlnode</span></a> *child</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="xmlnode-to-formatted-str"></a><h3>xmlnode_to_formatted_str ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+xmlnode_to_formatted_str (<em class="parameter"><code><a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="type">xmlnode</span></a> *node</code></em>,
+                          <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *len</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="xmlnode-copy"></a><h3>xmlnode_copy ()</h3>
+<pre class="programlisting"><a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="returnvalue">xmlnode</span></a> *
+xmlnode_copy (<em class="parameter"><code>const <a class="link" href="libroutermanager-xml.html#xmlnode" title="xmlnode"><span class="type">xmlnode</span></a> *node</code></em>);</pre>
+</div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-xml.other_details"></a><h2>Types and Values</h2>
+<div class="refsect2">
+<a name="xml-node-type"></a><h3>enum xml_node_type</h3>
+<div class="refsect3">
+<a name="xml-node-type.members"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="XMLNODE-TYPE-TAG:CAPS"></a>XMLNODE_TYPE_TAG</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="XMLNODE-TYPE-ATTRIB:CAPS"></a>XMLNODE_TYPE_ATTRIB</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="XMLNODE-TYPE-DATA:CAPS"></a>XMLNODE_TYPE_DATA</p></td>
+<td> </td>
+<td> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="xmlnode"></a><h3>xmlnode</h3>
+<pre class="programlisting">typedef struct {
+	gchar *name;
+	gchar *xml_ns;
+	xml_node_type type;
+	gchar *data;
+	size_t data_size;
+	struct xml_node *parent;
+	struct xml_node *child;
+	struct xml_node *last_child;
+	struct xml_node *next;
+	gchar *prefix;
+	GHashTable *namespace_map;
+} xmlnode;
+</pre>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>Generated by GTK-Doc V1.25</div>
+</body>
+</html>

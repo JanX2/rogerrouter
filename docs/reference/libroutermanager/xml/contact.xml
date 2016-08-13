@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+  <!ENTITY % gtkdocentities SYSTEM "../xml/gtkdocentities.ent">
+  %gtkdocentities;
+]>
+<refentry id="libroutermanager-contact">
+<refmeta>
+<refentrytitle role="top_of_page" id="libroutermanager-contact.top_of_page">contact</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>LIBROUTERMANAGER Library</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>contact</refname>
+<refpurpose></refpurpose>
+</refnamediv>
+
+<refsect1 id="libroutermanager-contact.functions" role="functions_proto">
+<title role="functions_proto.title">Functions</title>
+<informaltable pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="functions_return" colwidth="150px"/>
+<colspec colname="functions_name"/>
+<tbody>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="contact-copy">contact_copy</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type">struct <link linkend="contact"><returnvalue>contact</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="contact-dup">contact_dup</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gint"><returnvalue>gint</returnvalue></link>
+</entry><entry role="function_name"><link linkend="contact-name-compare">contact_name_compare</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type">struct <link linkend="contact"><returnvalue>contact</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="contact-find-by-number">contact_find_by_number</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="contact-free">contact_free</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libroutermanager-contact.other" role="other_proto">
+<title role="other_proto.title">Types and Values</title>
+<informaltable role="enum_members_table" pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="name" colwidth="150px"/>
+<colspec colname="description"/>
+<tbody>
+<row><entry role="datatype_keyword">struct</entry><entry role="function_name"><link linkend="contact-address">contact_address</link></entry></row>
+<row><entry role="datatype_keyword"></entry><entry role="function_name"><link linkend="RmContact">RmContact</link></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+
+<refsect1 id="libroutermanager-contact.description" role="desc">
+<title role="desc.title">Description</title>
+
+</refsect1>
+<refsect1 id="libroutermanager-contact.functions_details" role="details">
+<title role="details.title">Functions</title>
+<refsect2 id="contact-copy" role="function">
+<title>contact_copy&#160;()</title>
+<indexterm zone="contact-copy"><primary>contact_copy</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+contact_copy (<parameter><type>struct contact</type> *src</parameter>,
+              <parameter><type>struct contact</type> *dst</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="contact-dup" role="function">
+<title>contact_dup&#160;()</title>
+<indexterm zone="contact-dup"><primary>contact_dup</primary></indexterm>
+<programlisting language="C">struct <link linkend="contact"><returnvalue>contact</returnvalue></link>&#160;*
+contact_dup (<parameter><type>struct contact</type> *src</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="contact-name-compare" role="function">
+<title>contact_name_compare&#160;()</title>
+<indexterm zone="contact-name-compare"><primary>contact_name_compare</primary></indexterm>
+<programlisting language="C"><link linkend="gint"><returnvalue>gint</returnvalue></link>
+contact_name_compare (<parameter><link linkend="gconstpointer"><type>gconstpointer</type></link> a</parameter>,
+                      <parameter><link linkend="gconstpointer"><type>gconstpointer</type></link> b</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="contact-find-by-number" role="function">
+<title>contact_find_by_number&#160;()</title>
+<indexterm zone="contact-find-by-number"><primary>contact_find_by_number</primary></indexterm>
+<programlisting language="C">struct <link linkend="contact"><returnvalue>contact</returnvalue></link>&#160;*
+contact_find_by_number (<parameter><link linkend="gchar"><type>gchar</type></link> *number</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="contact-free" role="function">
+<title>contact_free&#160;()</title>
+<indexterm zone="contact-free"><primary>contact_free</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+contact_free (<parameter><type>struct contact</type> *contact</parameter>);</programlisting>
+</refsect2>
+
+</refsect1>
+<refsect1 id="libroutermanager-contact.other_details" role="details">
+<title role="details.title">Types and Values</title>
+<refsect2 id="contact-address" role="struct">
+<title>struct contact_address</title>
+<indexterm zone="contact-address"><primary>contact_address</primary></indexterm>
+<programlisting language="C">struct contact_address {
+	gint type;
+	gchar *street;
+	gchar *zip;
+	gchar *city;
+};
+</programlisting>
+</refsect2>
+<refsect2 id="RmContact" role="struct">
+<title>RmContact</title>
+<indexterm zone="RmContact"><primary>RmContact</primary></indexterm>
+<programlisting language="C">typedef struct {
+	/* Name */
+	gchar *name;
+	/* Picture */
+	gpointer image;
+	/* Picture len */
+	gsize image_len;
+	/* Picture URI for online services */
+	gchar *image_uri;
+
+#if 1
+	/* currently active number */
+	gchar *number;
+	gchar *company;
+	gchar *street;
+	gchar *zip;
+	gchar *city;
+	gboolean lookup;
+#endif
+
+	/* Phone numbers */
+	GSList *numbers;
+	/* Addresses */
+	GSList *addresses;
+
+	/* Private data */
+	gpointer priv;
+} RmContact;
+</programlisting>
+</refsect2>
+
+</refsect1>
+
+</refentry>

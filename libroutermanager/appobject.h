@@ -23,9 +23,9 @@
 #include <glib.h>
 #include <glib-object.h>
 
-#include <libroutermanager/connection.h>
+#include <libroutermanager/rmconnection.h>
 #include <libroutermanager/network.h>
-#include <libroutermanager/libfaxophone/faxophone.h>
+//#include <libroutermanager/libfaxophone/faxophone.h>
 
 G_BEGIN_DECLS
 

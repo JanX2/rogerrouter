@@ -24,7 +24,7 @@
 #include <gst/app/gstappsrc.h>
 #include <gst/app/gstappsink.h>
 
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/audio.h>
 #include <libroutermanager/gstring.h>

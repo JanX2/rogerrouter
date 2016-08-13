@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+  <!ENTITY % gtkdocentities SYSTEM "../xml/gtkdocentities.ent">
+  %gtkdocentities;
+]>
+<refentry id="libroutermanager-filter">
+<refmeta>
+<refentrytitle role="top_of_page" id="libroutermanager-filter.top_of_page">filter</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>LIBROUTERMANAGER Library</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>filter</refname>
+<refpurpose></refpurpose>
+</refnamediv>
+
+<refsect1 id="libroutermanager-filter.functions" role="functions_proto">
+<title role="functions_proto.title">Functions</title>
+<informaltable pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="functions_return" colwidth="150px"/>
+<colspec colname="functions_name"/>
+<tbody>
+<row><entry role="function_type"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+</entry><entry role="function_name"><link linkend="filter-rule-match">filter_rule_match</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="filter-rule-add">filter_rule_add</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type">struct <link linkend="filter"><returnvalue>filter</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="filter-new">filter_new</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="filter-free">filter_free</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="GSList"><returnvalue>GSList</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="filter-get-list">filter_get_list</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="filter-init">filter_init</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="filter-shutdown">filter_shutdown</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="filter-add">filter_add</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="filter-remove">filter_remove</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="filter-save">filter_save</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libroutermanager-filter.other" role="other_proto">
+<title role="other_proto.title">Types and Values</title>
+<informaltable role="enum_members_table" pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="name" colwidth="150px"/>
+<colspec colname="description"/>
+<tbody>
+<row><entry role="datatype_keyword">struct</entry><entry role="function_name"><link linkend="filter-rule">filter_rule</link></entry></row>
+<row><entry role="datatype_keyword">struct</entry><entry role="function_name"><link linkend="filter">filter</link></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+
+<refsect1 id="libroutermanager-filter.description" role="desc">
+<title role="desc.title">Description</title>
+
+</refsect1>
+<refsect1 id="libroutermanager-filter.functions_details" role="details">
+<title role="details.title">Functions</title>
+<refsect2 id="filter-rule-match" role="function">
+<title>filter_rule_match&#160;()</title>
+<indexterm zone="filter-rule-match"><primary>filter_rule_match</primary></indexterm>
+<programlisting language="C"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+filter_rule_match (<parameter><type>struct filter</type> *filter</parameter>,
+                   <parameter><type>struct call</type> *call</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="filter-rule-add" role="function">
+<title>filter_rule_add&#160;()</title>
+<indexterm zone="filter-rule-add"><primary>filter_rule_add</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+filter_rule_add (<parameter><type>struct filter</type> *filter</parameter>,
+                 <parameter><link linkend="gint"><type>gint</type></link> type</parameter>,
+                 <parameter><link linkend="gint"><type>gint</type></link> sub_type</parameter>,
+                 <parameter><link linkend="gchar"><type>gchar</type></link> *entry</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="filter-new" role="function">
+<title>filter_new&#160;()</title>
+<indexterm zone="filter-new"><primary>filter_new</primary></indexterm>
+<programlisting language="C">struct <link linkend="filter"><returnvalue>filter</returnvalue></link>&#160;*
+filter_new (<parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="filter-free" role="function">
+<title>filter_free&#160;()</title>
+<indexterm zone="filter-free"><primary>filter_free</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+filter_free (<parameter><link linkend="gpointer"><type>gpointer</type></link> data</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="filter-get-list" role="function">
+<title>filter_get_list&#160;()</title>
+<indexterm zone="filter-get-list"><primary>filter_get_list</primary></indexterm>
+<programlisting language="C"><link linkend="GSList"><returnvalue>GSList</returnvalue></link>&#160;*
+filter_get_list (<parameter><type>void</type></parameter>);</programlisting>
+</refsect2>
+<refsect2 id="filter-init" role="function">
+<title>filter_init&#160;()</title>
+<indexterm zone="filter-init"><primary>filter_init</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+filter_init (<parameter><type>void</type></parameter>);</programlisting>
+</refsect2>
+<refsect2 id="filter-shutdown" role="function">
+<title>filter_shutdown&#160;()</title>
+<indexterm zone="filter-shutdown"><primary>filter_shutdown</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+filter_shutdown (<parameter><type>void</type></parameter>);</programlisting>
+</refsect2>
+<refsect2 id="filter-add" role="function">
+<title>filter_add&#160;()</title>
+<indexterm zone="filter-add"><primary>filter_add</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+filter_add (<parameter><type>struct filter</type> *filter</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="filter-remove" role="function">
+<title>filter_remove&#160;()</title>
+<indexterm zone="filter-remove"><primary>filter_remove</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+filter_remove (<parameter><type>struct filter</type> *filter</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="filter-save" role="function">
+<title>filter_save&#160;()</title>
+<indexterm zone="filter-save"><primary>filter_save</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+filter_save (<parameter><type>void</type></parameter>);</programlisting>
+</refsect2>
+
+</refsect1>
+<refsect1 id="libroutermanager-filter.other_details" role="details">
+<title role="details.title">Types and Values</title>
+<refsect2 id="filter-rule" role="struct">
+<title>struct filter_rule</title>
+<indexterm zone="filter-rule"><primary>filter_rule</primary></indexterm>
+<programlisting language="C">struct filter_rule {
+	gint type;
+	gint sub_type;
+	gchar *entry;
+};
+</programlisting>
+</refsect2>
+<refsect2 id="filter" role="struct">
+<title>struct filter</title>
+<indexterm zone="filter"><primary>filter</primary></indexterm>
+<programlisting language="C">struct filter {
+	gchar *name;
+	gchar *file;
+	gboolean compare_or;
+	GSList *rules;
+};
+</programlisting>
+</refsect2>
+
+</refsect1>
+
+</refentry>

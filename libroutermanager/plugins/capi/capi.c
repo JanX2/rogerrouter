@@ -34,7 +34,7 @@
 #include <libroutermanager/audio.h>
 #include <libroutermanager/gstring.h>
 
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/call.h>
 

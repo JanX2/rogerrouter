@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+  <!ENTITY % gtkdocentities SYSTEM "../xml/gtkdocentities.ent">
+  %gtkdocentities;
+]>
+<refentry id="libroutermanager-device-fax">
+<refmeta>
+<refentrytitle role="top_of_page" id="libroutermanager-device-fax.top_of_page">device_fax</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>LIBROUTERMANAGER Library</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>device_fax</refname>
+<refpurpose></refpurpose>
+</refnamediv>
+
+<refsect1 id="libroutermanager-device-fax.functions" role="functions_proto">
+<title role="functions_proto.title">Functions</title>
+<informaltable pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="functions_return" colwidth="150px"/>
+<colspec colname="functions_name"/>
+<tbody>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="fax-register">fax_register</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="GSList"><returnvalue>GSList</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="fax-get-plugins">fax_get_plugins</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libroutermanager-device-fax.other" role="other_proto">
+<title role="other_proto.title">Types and Values</title>
+<informaltable role="enum_members_table" pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="name" colwidth="150px"/>
+<colspec colname="description"/>
+<tbody>
+<row><entry role="datatype_keyword">struct</entry><entry role="function_name"><link linkend="device-fax">device_fax</link></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+
+<refsect1 id="libroutermanager-device-fax.description" role="desc">
+<title role="desc.title">Description</title>
+
+</refsect1>
+<refsect1 id="libroutermanager-device-fax.functions_details" role="details">
+<title role="details.title">Functions</title>
+<refsect2 id="fax-register" role="function">
+<title>fax_register&#160;()</title>
+<indexterm zone="fax-register"><primary>fax_register</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+fax_register (<parameter><type>struct device_fax</type> *fax</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="fax-get-plugins" role="function">
+<title>fax_get_plugins&#160;()</title>
+<indexterm zone="fax-get-plugins"><primary>fax_get_plugins</primary></indexterm>
+<programlisting language="C"><link linkend="GSList"><returnvalue>GSList</returnvalue></link>&#160;*
+fax_get_plugins (<parameter><type>void</type></parameter>);</programlisting>
+</refsect2>
+
+</refsect1>
+<refsect1 id="libroutermanager-device-fax.other_details" role="details">
+<title role="details.title">Types and Values</title>
+<refsect2 id="device-fax" role="struct">
+<title>struct device_fax</title>
+<indexterm zone="device-fax"><primary>device_fax</primary></indexterm>
+<programlisting language="C">struct device_fax {
+	gchar *name;
+	struct connection *(*send)(gchar *tiff, const gchar *target, gboolean anonymous);
+	gboolean (*get_status)(struct fax_status *status);
+	gint (*pickup)(struct connection *connection);
+	void (*hangup)(struct connection *connection);
+
+	gboolean (*number_is_handled)(gchar *number);
+};
+</programlisting>
+</refsect2>
+
+</refsect1>
+
+</refentry>

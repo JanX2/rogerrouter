@@ -29,11 +29,10 @@
 #include <libroutermanager/call.h>
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/libfaxophone/phone.h>
-#include <libroutermanager/libfaxophone/ringtone.h>
-#include <libroutermanager/fax_phone.h>
+#include <libroutermanager/rmphone.h>
+#include <libroutermanager/plugins/capi/ringtone.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/lookup.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/settings.h>
@@ -94,7 +93,7 @@ static void notify_deny_clicked_cb(NotifyNotification *notify, gchar *action, gp
 	notify_notification_close(connection->notification, NULL);
 	connection->notification = NULL;
 
-	faxophone_hangup(connection->priv ? connection->priv : active_capi_connection);
+	//faxophone_hangup(connection->priv ? connection->priv : active_capi_connection);
 }
 
 /**
@@ -178,9 +177,9 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 	gboolean intern = FALSE;
 
 	/* Get notification numbers */
-	if (connection->type & CONNECTION_TYPE_OUTGOING) {
+	if (connection->type & RM_CONNECTION_TYPE_OUTGOING) {
 		numbers = g_settings_get_strv(notification_settings, "outgoing-numbers");
-	} else if (connection->type & CONNECTION_TYPE_INCOMING) {
+	} else if (connection->type & RM_CONNECTION_TYPE_INCOMING) {
 		numbers = g_settings_get_strv(notification_settings, "incoming-numbers");
 	}
 
@@ -226,7 +225,7 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 	}
 
 	/* If its a disconnect or a connect, close previous notification window */
-	if ((connection->type & CONNECTION_TYPE_DISCONNECT) || (connection->type & CONNECTION_TYPE_CONNECT)) {
+	if ((connection->type & RM_CONNECTION_TYPE_DISCONNECT) || (connection->type & RM_CONNECTION_TYPE_CONNECT)) {
 		ringtone_stop();
 		if (connection->notification) {
 			notify_notification_close(connection->notification, NULL);
@@ -257,7 +256,7 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 		text = g_markup_printf_escaped(_("Number:\t%s"), connection->local_number);
 	}
 
-	if (connection->type == CONNECTION_TYPE_INCOMING) {
+	if (connection->type == RM_CONNECTION_TYPE_INCOMING) {
 		gchar *title = g_strdup_printf(_("Incoming call (on %s)"), connection->local_number);
 
 		notify = notify_notification_new(title, text, "notification-message-roger-in.svg");
@@ -265,7 +264,7 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 		notify_notification_add_action(notify, "deny", _("Decline"), notify_deny_clicked_cb, connection, NULL);
 
 		g_free(title);
-	} else if (connection->type == CONNECTION_TYPE_OUTGOING) {
+	} else if (connection->type == RM_CONNECTION_TYPE_OUTGOING) {
 		gint duration = g_settings_get_int(notification_settings, "duration");
 
 		notify = notify_notification_new(_("Outgoing call"), text, "notification-message-roger-out.svg");

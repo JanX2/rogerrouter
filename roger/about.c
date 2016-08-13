@@ -23,7 +23,7 @@
 
 #include <gtk/gtk.h>
 
-#include <libroutermanager/routermanager.h>
+#include <libroutermanager/rmmain.h>
 
 #include <roger/main.h>
 #include <roger/journal.h>

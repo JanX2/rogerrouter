@@ -1,0 +1,266 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>fax: Roger Router Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="index.html" title="Roger Router Reference Manual">
+<link rel="up" href="ch01.html" title="[Insert title here]">
+<link rel="prev" href="libroutermanager-device-fax.html" title="device_fax">
+<link rel="next" href="libroutermanager-fax-printer.html" title="fax_printer">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#libroutermanager-fax.description" class="shortcut">Description</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="libroutermanager-device-fax.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="libroutermanager-fax-printer.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="refentry">
+<a name="libroutermanager-fax"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="libroutermanager-fax.top_of_page"></a>fax</span></h2>
+<p>fax</p>
+</td>
+<td class="gallery_image" valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsect1">
+<a name="libroutermanager-fax.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody>
+<tr>
+<td class="function_type">struct <a class="link" href="libroutermanager-capi.html#capi-connection" title="struct capi_connection"><span class="returnvalue">capi_connection</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-fax.html#fax-send" title="fax_send ()">fax_send</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-fax.html#fax-recv" title="fax_recv ()">fax_recv</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-fax.html#fax-transfer" title="fax_transfer ()">fax_transfer</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-fax.html#fax-clean" title="fax_clean ()">fax_clean</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="libroutermanager-fax.html#fax-spandsp-workaround" title="fax_spandsp_workaround ()">fax_spandsp_workaround</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-fax.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="libroutermanager-fax.html#SPANDSP-EXPOSE-INTERNAL-STRUCTURES:CAPS" title="SPANDSP_EXPOSE_INTERNAL_STRUCTURES">SPANDSP_EXPOSE_INTERNAL_STRUCTURES</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="libroutermanager-fax.html#SPEECH-CIP:CAPS" title="SPEECH_CIP">SPEECH_CIP</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="libroutermanager-fax.html#FAX-CIP:CAPS" title="FAX_CIP">FAX_CIP</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="libroutermanager-fax.html#fax-phase" title="enum fax_phase">fax_phase</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="libroutermanager-fax.html#fax-status" title="struct fax_status">fax_status</a></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-fax.description"></a><h2>Description</h2>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-fax.functions_details"></a><h2>Functions</h2>
+<div class="refsect2">
+<a name="fax-send"></a><h3>fax_send ()</h3>
+<pre class="programlisting">struct <a class="link" href="libroutermanager-capi.html#capi-connection" title="struct capi_connection"><span class="returnvalue">capi_connection</span></a> *
+fax_send (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tiff_file</code></em>,
+          <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> modem</code></em>,
+          <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> ecm</code></em>,
+          <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> controller</code></em>,
+          <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> cip</code></em>,
+          <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *src_no</code></em>,
+          <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *trg_no</code></em>,
+          <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *lsi</code></em>,
+          <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *local_header_info</code></em>,
+          <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> call_anonymous</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fax-recv"></a><h3>fax_recv ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+fax_recv (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tiff_file</code></em>,
+          <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> modem</code></em>,
+          <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> ecm</code></em>,
+          <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *src_no</code></em>,
+          <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *trg_no</code></em>,
+          <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *lsi</code></em>,
+          <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *local_header_info</code></em>,
+          <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> manual_hookup</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fax-transfer"></a><h3>fax_transfer ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+fax_transfer (<em class="parameter"><code><span class="type">struct capi_connection</span> *connection</code></em>,
+              <em class="parameter"><code><span class="type">_cmsg</span> message</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fax-clean"></a><h3>fax_clean ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+fax_clean (<em class="parameter"><code><span class="type">struct capi_connection</span> *connection</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fax-spandsp-workaround"></a><h3>fax_spandsp_workaround ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+fax_spandsp_workaround (<em class="parameter"><code><span class="type">struct capi_connection</span> *connection</code></em>);</pre>
+</div>
+</div>
+<div class="refsect1">
+<a name="libroutermanager-fax.other_details"></a><h2>Types and Values</h2>
+<div class="refsect2">
+<a name="SPANDSP-EXPOSE-INTERNAL-STRUCTURES:CAPS"></a><h3>SPANDSP_EXPOSE_INTERNAL_STRUCTURES</h3>
+<pre class="programlisting">#define SPANDSP_EXPOSE_INTERNAL_STRUCTURES
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="SPEECH-CIP:CAPS"></a><h3>SPEECH_CIP</h3>
+<pre class="programlisting">#define SPEECH_CIP			0x04
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="FAX-CIP:CAPS"></a><h3>FAX_CIP</h3>
+<pre class="programlisting">#define FAX_CIP				0x11
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fax-phase"></a><h3>enum fax_phase</h3>
+<div class="refsect3">
+<a name="fax-phase.members"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="IDLE:CAPS"></a>IDLE</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="CONNECT:CAPS"></a>CONNECT</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PHASE-B:CAPS"></a>PHASE_B</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PHASE-D:CAPS"></a>PHASE_D</p></td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="PHASE-E:CAPS"></a>PHASE_E</p></td>
+<td> </td>
+<td> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="fax-status"></a><h3>struct fax_status</h3>
+<pre class="programlisting">struct fax_status {
+	gchar tiff_file[256];
+	gchar src_no[64];
+	gchar trg_no[64];
+	gchar ident[64];
+	gchar header[64];
+	gchar remote_ident[64];
+
+	enum fax_phase phase;
+	gint error_code;
+	gboolean sending;
+	gchar ecm;
+	gchar modem;
+	gint bitrate;
+	gint encoding;
+	gint bad_rows;
+	gint page_current;
+	gint page_total;
+	gint bytes_received;
+	gint bytes_sent;
+	gint bytes_total;
+	gboolean manual_hookup;
+	gboolean done;
+	gboolean progress_status;
+
+	struct capi_connection *connection;
+
+	fax_state_t *fax_state;
+};
+</pre>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>Generated by GTK-Doc V1.25</div>
+</body>
+</html>

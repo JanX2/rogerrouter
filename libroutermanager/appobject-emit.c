@@ -24,7 +24,7 @@
 
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/connection.h>
+#include <libroutermanager/rmconnection.h>
 
 /**
  * \brief Emit signal: connection-notify

@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include <config.h>
+
 #include <libpeas/peas.h>
 
 #include <libroutermanager/rmprofile.h>
@@ -88,7 +90,7 @@ void plugins_init(void)
 	g_signal_connect(exten, "extension-removed", G_CALLBACK(plugins_extension_removed_cb), NULL);
 
 	/* Look for plugins in plugin_dir */
-	peas_engine_add_search_path(engine, ROUTERMANAGER_PLUGINS, ROUTERMANAGER_PLUGINS);
+	peas_engine_add_search_path(engine, RM_PLUGINS, RM_PLUGINS);
 
 	/* And all other directories */
 	for (slist = search_path_list; slist != NULL; slist = slist->next) {

@@ -24,7 +24,7 @@
 
 #include <gtk/gtk.h>
 
-#include <libroutermanager/routermanager.h>
+#include <libroutermanager/rmmain.h>
 
 #include <roger/application.h>
 #include <roger/main.h>
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 	int idx;
 
 	/* Set local bindings */
-	bindtextdomain(GETTEXT_PACKAGE, get_directory(APP_LOCALE));
+	bindtextdomain(GETTEXT_PACKAGE, rm_get_directory(APP_LOCALE));
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);
 

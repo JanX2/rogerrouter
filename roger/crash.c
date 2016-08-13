@@ -47,7 +47,7 @@
 #endif
 
 #include <libroutermanager/file.h>
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/router.h>
 
 #define DEBUGGERRC "debuggerrc"
@@ -378,7 +378,7 @@ static GtkWidget *crash_dialog_show(const gchar *text, const gchar *name, const 
 		"C Library: %s\n"
 		"Router: %s (%s)\n"
 		"Message: %s\n--\n%s",
-		VERSION,
+		"",//VERSION,
 		gtk_major_version, gtk_minor_version, gtk_micro_version,
 		glib_major_version, glib_minor_version, glib_micro_version,
 		get_operating_system(),

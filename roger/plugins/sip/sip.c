@@ -25,7 +25,7 @@
 
 #include <libroutermanager/rmconnection.h>
 #include <libroutermanager/plugins.h>
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/net_monitor.h>
 #include <libroutermanager/audio.h>

@@ -31,7 +31,7 @@
 
 #include <libroutermanager/file.h>
 #include <libroutermanager/call.h>
-#include <libroutermanager/routermanager.h>
+#include <libroutermanager/rmmain.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/filter.h>
 

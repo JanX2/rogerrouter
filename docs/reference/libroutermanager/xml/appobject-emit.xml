@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+  <!ENTITY % gtkdocentities SYSTEM "../xml/gtkdocentities.ent">
+  %gtkdocentities;
+]>
+<refentry id="libroutermanager-appobject-emit">
+<refmeta>
+<refentrytitle role="top_of_page" id="libroutermanager-appobject-emit.top_of_page">appobject-emit</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>LIBROUTERMANAGER Library</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>appobject-emit</refname>
+<refpurpose></refpurpose>
+</refnamediv>
+
+<refsect1 id="libroutermanager-appobject-emit.functions" role="functions_proto">
+<title role="functions_proto.title">Functions</title>
+<informaltable pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="functions_return" colwidth="150px"/>
+<colspec colname="functions_name"/>
+<tbody>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="emit-connection-notify">emit_connection_notify</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="rm-emit-contact-process">rm_emit_contact_process</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="emit-journal-loaded">emit_journal_loaded</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="emit-fax-process">emit_fax_process</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="emit-connection-established">emit_connection_established</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="emit-connection-terminated">emit_connection_terminated</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="emit-connection-status">emit_connection_status</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="emit-message">emit_message</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="emit-contacts-changed">emit_contacts_changed</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="void"><returnvalue>void</returnvalue></link>
+</entry><entry role="function_name"><link linkend="emit-authenticate">emit_authenticate</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+
+<refsect1 id="libroutermanager-appobject-emit.description" role="desc">
+<title role="desc.title">Description</title>
+
+</refsect1>
+<refsect1 id="libroutermanager-appobject-emit.functions_details" role="details">
+<title role="details.title">Functions</title>
+<refsect2 id="emit-connection-notify" role="function">
+<title>emit_connection_notify&#160;()</title>
+<indexterm zone="emit-connection-notify"><primary>emit_connection_notify</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+emit_connection_notify (<parameter><type>struct connection</type> *connection</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rm-emit-contact-process" role="function">
+<title>rm_emit_contact_process&#160;()</title>
+<indexterm zone="rm-emit-contact-process"><primary>rm_emit_contact_process</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+rm_emit_contact_process (<parameter><type>struct contact</type> *contact</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="emit-journal-loaded" role="function">
+<title>emit_journal_loaded&#160;()</title>
+<indexterm zone="emit-journal-loaded"><primary>emit_journal_loaded</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+emit_journal_loaded (<parameter><link linkend="GSList"><type>GSList</type></link> *journal</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="emit-fax-process" role="function">
+<title>emit_fax_process&#160;()</title>
+<indexterm zone="emit-fax-process"><primary>emit_fax_process</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+emit_fax_process (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="emit-connection-established" role="function">
+<title>emit_connection_established&#160;()</title>
+<indexterm zone="emit-connection-established"><primary>emit_connection_established</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+emit_connection_established (<parameter><type>struct connection</type> *connection</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="emit-connection-terminated" role="function">
+<title>emit_connection_terminated&#160;()</title>
+<indexterm zone="emit-connection-terminated"><primary>emit_connection_terminated</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+emit_connection_terminated (<parameter><type>struct connection</type> *connection</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="emit-connection-status" role="function">
+<title>emit_connection_status&#160;()</title>
+<indexterm zone="emit-connection-status"><primary>emit_connection_status</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+emit_connection_status (<parameter><link linkend="gint"><type>gint</type></link> status</parameter>,
+                        <parameter><type>struct connection</type> *connection</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="emit-message" role="function">
+<title>emit_message&#160;()</title>
+<indexterm zone="emit-message"><primary>emit_message</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+emit_message (<parameter><link linkend="gchar"><type>gchar</type></link> *title</parameter>,
+              <parameter><link linkend="gchar"><type>gchar</type></link> *message</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="emit-contacts-changed" role="function">
+<title>emit_contacts_changed&#160;()</title>
+<indexterm zone="emit-contacts-changed"><primary>emit_contacts_changed</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+emit_contacts_changed (<parameter><type>void</type></parameter>);</programlisting>
+</refsect2>
+<refsect2 id="emit-authenticate" role="function">
+<title>emit_authenticate&#160;()</title>
+<indexterm zone="emit-authenticate"><primary>emit_authenticate</primary></indexterm>
+<programlisting language="C"><link linkend="void"><returnvalue>void</returnvalue></link>
+emit_authenticate (<parameter><type>struct auth_data</type> *auth_data</parameter>);</programlisting>
+</refsect2>
+
+</refsect1>
+<refsect1 id="libroutermanager-appobject-emit.other_details" role="details">
+<title role="details.title">Types and Values</title>
+
+</refsect1>
+
+</refentry>

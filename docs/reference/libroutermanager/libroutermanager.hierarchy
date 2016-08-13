@@ -1,0 +1,4 @@
+GObject
+  AppObject
+GInterface
+  GTypePlugin

@@ -21,8 +21,8 @@
 #define PRINT_H
 
 #include <libroutermanager/router.h>
-#include <libroutermanager/libfaxophone/faxophone.h>
-#include <libroutermanager/libfaxophone/fax.h>
+//#include <libroutermanager/libfaxophone/faxophone.h>
+//#include <libroutermanager/libfaxophone/fax.h>
 
 G_BEGIN_DECLS
 

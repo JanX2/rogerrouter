@@ -25,7 +25,7 @@
 #include <libroutermanager/rmconnection.h>
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/routermanager.h>
+#include <libroutermanager/rmmain.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/settings.h>
 
@@ -168,7 +168,7 @@ void rm_action_set_name(RmAction *action, const gchar *name)
 	/* Setup action settings */
 	settings_path = g_strconcat("/org/tabos/routermanager/profile/", profile->name, "/", name, "/", NULL);
 	filename = g_strconcat("actions/", profile->name, "-", name, NULL);
-	action->settings = rm_settings_new_with_path(ROUTERMANAGER_SCHEME_PROFILE_ACTION, settings_path, filename);
+	action->settings = rm_settings_new_with_path(RM_SCHEME_PROFILE_ACTION, settings_path, filename);
 	g_free(filename);
 
 	/* Set internal data to settings */
@@ -404,7 +404,7 @@ static void rm_action_load(RmProfile *profile, const gchar *name)
 
 	/* Create/Read settings from path */
 	filename = g_strconcat("actions/", profile->name, "-", name, NULL);
-	action->settings = rm_settings_new_with_path(ROUTERMANAGER_SCHEME_PROFILE_ACTION, settings_path, filename);
+	action->settings = rm_settings_new_with_path(RM_SCHEME_PROFILE_ACTION, settings_path, filename);
 	g_free(filename);
 
 	/* Read internal data */

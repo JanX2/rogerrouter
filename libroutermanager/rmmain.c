@@ -17,13 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include <config.h>
+
 #include <string.h>
 
 #include <glib.h>
 
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/filter.h>
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/plugins.h>
 #include <libroutermanager/appobject.h>
@@ -31,9 +33,9 @@
 #include <libroutermanager/logging.h>
 #include <libroutermanager/network.h>
 #include <libroutermanager/net_monitor.h>
-#include <libroutermanager/fax_phone.h>
+#include <libroutermanager/rmphone.h>
 #include <libroutermanager/fax_printer.h>
-#include <libroutermanager/action.h>
+#include <libroutermanager/rmaction.h>
 #include <libroutermanager/password.h>
 
 #ifdef __APPLE__
@@ -114,7 +116,7 @@ gchar *rm_get_directory(gchar *type)
  */
 void rm_init_directory_paths(void)
 {
-	rm_plugin_dir = rm_get_directory(ROUTERMANAGER_PLUGINS);
+	rm_plugin_dir = rm_get_directory(RM_PLUGINS);
 }
 
 /**
@@ -232,7 +234,7 @@ gboolean rm_init(GError **error)
 	}
 
 	/* Initialize profiles */
-	profile_init();
+	rm_profile_init();
 
 	/* Initialize network monitor */
 	net_monitor_init();

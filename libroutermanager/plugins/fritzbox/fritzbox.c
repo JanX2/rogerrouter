@@ -22,7 +22,7 @@
 
 #include <gio/gio.h>
 
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/csv.h>
 #include <libroutermanager/logging.h>

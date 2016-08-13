@@ -25,7 +25,9 @@
 #ifndef FAXOPHONE_PHONE_H
 #define FAXOPHONE_PHONE_H
 
-#include <libroutermanager/connection.h>
+#include <capi20.h>
+
+#include <libroutermanager/rmconnection.h>
 
 #define PHONE_CIP 0x04
 

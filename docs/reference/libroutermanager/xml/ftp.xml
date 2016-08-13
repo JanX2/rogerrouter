@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+  <!ENTITY % gtkdocentities SYSTEM "../xml/gtkdocentities.ent">
+  %gtkdocentities;
+]>
+<refentry id="libroutermanager-ftp">
+<refmeta>
+<refentrytitle role="top_of_page" id="libroutermanager-ftp.top_of_page">ftp</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>LIBROUTERMANAGER Library</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>ftp</refname>
+<refpurpose></refpurpose>
+</refnamediv>
+
+<refsect1 id="libroutermanager-ftp.functions" role="functions_proto">
+<title role="functions_proto.title">Functions</title>
+<informaltable pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="functions_return" colwidth="150px"/>
+<colspec colname="functions_name"/>
+<tbody>
+<row><entry role="function_type"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="ftp-read-response">ftp_read_response</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+</entry><entry role="function_name"><link linkend="ftp-send-command">ftp_send_command</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+</entry><entry role="function_name"><link linkend="ftp-login">ftp_login</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+</entry><entry role="function_name"><link linkend="ftp-passive">ftp_passive</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="ftp-list-dir">ftp_list_dir</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="ftp-get-file">ftp_get_file</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+</entry><entry role="function_name"><link linkend="ftp-put-file">ftp_put_file</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type">struct <link linkend="ftp"><returnvalue>ftp</returnvalue></link>&#160;*
+</entry><entry role="function_name"><link linkend="ftp-init">ftp_init</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+</entry><entry role="function_name"><link linkend="ftp-delete-file">ftp_delete_file</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+<row><entry role="function_type"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+</entry><entry role="function_name"><link linkend="ftp-shutdown">ftp_shutdown</link>&#160;<phrase role="c_punctuation">()</phrase></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libroutermanager-ftp.other" role="other_proto">
+<title role="other_proto.title">Types and Values</title>
+<informaltable role="enum_members_table" pgwide="1" frame="none">
+<tgroup cols="2">
+<colspec colname="name" colwidth="150px"/>
+<colspec colname="description"/>
+<tbody>
+<row><entry role="datatype_keyword">struct</entry><entry role="function_name"><link linkend="ftp">ftp</link></entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+
+<refsect1 id="libroutermanager-ftp.description" role="desc">
+<title role="desc.title">Description</title>
+
+</refsect1>
+<refsect1 id="libroutermanager-ftp.functions_details" role="details">
+<title role="details.title">Functions</title>
+<refsect2 id="ftp-read-response" role="function">
+<title>ftp_read_response&#160;()</title>
+<indexterm zone="ftp-read-response"><primary>ftp_read_response</primary></indexterm>
+<programlisting language="C"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+ftp_read_response (<parameter><link linkend="GIOChannel"><type>GIOChannel</type></link> *channel</parameter>,
+                   <parameter><link linkend="gsize"><type>gsize</type></link> *len</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="ftp-send-command" role="function">
+<title>ftp_send_command&#160;()</title>
+<indexterm zone="ftp-send-command"><primary>ftp_send_command</primary></indexterm>
+<programlisting language="C"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+ftp_send_command (<parameter><type>struct ftp</type> *client</parameter>,
+                  <parameter><link linkend="gchar"><type>gchar</type></link> *command</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="ftp-login" role="function">
+<title>ftp_login&#160;()</title>
+<indexterm zone="ftp-login"><primary>ftp_login</primary></indexterm>
+<programlisting language="C"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+ftp_login (<parameter><type>struct ftp</type> *client</parameter>,
+           <parameter>const <link linkend="gchar"><type>gchar</type></link> *user</parameter>,
+           <parameter>const <link linkend="gchar"><type>gchar</type></link> *password</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="ftp-passive" role="function">
+<title>ftp_passive&#160;()</title>
+<indexterm zone="ftp-passive"><primary>ftp_passive</primary></indexterm>
+<programlisting language="C"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+ftp_passive (<parameter><type>struct ftp</type> *client</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="ftp-list-dir" role="function">
+<title>ftp_list_dir&#160;()</title>
+<indexterm zone="ftp-list-dir"><primary>ftp_list_dir</primary></indexterm>
+<programlisting language="C"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+ftp_list_dir (<parameter><type>struct ftp</type> *client</parameter>,
+              <parameter>const <link linkend="gchar"><type>gchar</type></link> *dir</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="ftp-get-file" role="function">
+<title>ftp_get_file&#160;()</title>
+<indexterm zone="ftp-get-file"><primary>ftp_get_file</primary></indexterm>
+<programlisting language="C"><link linkend="gchar"><returnvalue>gchar</returnvalue></link>&#160;*
+ftp_get_file (<parameter><type>struct ftp</type> *client</parameter>,
+              <parameter>const <link linkend="gchar"><type>gchar</type></link> *file</parameter>,
+              <parameter><link linkend="gsize"><type>gsize</type></link> *len</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="ftp-put-file" role="function">
+<title>ftp_put_file&#160;()</title>
+<indexterm zone="ftp-put-file"><primary>ftp_put_file</primary></indexterm>
+<programlisting language="C"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+ftp_put_file (<parameter><type>struct ftp</type> *client</parameter>,
+              <parameter>const <link linkend="gchar"><type>gchar</type></link> *file</parameter>,
+              <parameter>const <link linkend="gchar"><type>gchar</type></link> *path</parameter>,
+              <parameter><link linkend="gchar"><type>gchar</type></link> *data</parameter>,
+              <parameter><link linkend="gsize"><type>gsize</type></link> size</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="ftp-init" role="function">
+<title>ftp_init&#160;()</title>
+<indexterm zone="ftp-init"><primary>ftp_init</primary></indexterm>
+<programlisting language="C">struct <link linkend="ftp"><returnvalue>ftp</returnvalue></link>&#160;*
+ftp_init (<parameter>const <link linkend="gchar"><type>gchar</type></link> *server</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="ftp-delete-file" role="function">
+<title>ftp_delete_file&#160;()</title>
+<indexterm zone="ftp-delete-file"><primary>ftp_delete_file</primary></indexterm>
+<programlisting language="C"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+ftp_delete_file (<parameter><type>struct ftp</type> *client</parameter>,
+                 <parameter>const <link linkend="gchar"><type>gchar</type></link> *file</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="ftp-shutdown" role="function">
+<title>ftp_shutdown&#160;()</title>
+<indexterm zone="ftp-shutdown"><primary>ftp_shutdown</primary></indexterm>
+<programlisting language="C"><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>
+ftp_shutdown (<parameter><type>struct ftp</type> *client</parameter>);</programlisting>
+</refsect2>
+
+</refsect1>
+<refsect1 id="libroutermanager-ftp.other_details" role="details">
+<title role="details.title">Types and Values</title>
+<refsect2 id="ftp" role="struct">
+<title>struct ftp</title>
+<indexterm zone="ftp"><primary>ftp</primary></indexterm>
+<programlisting language="C">struct ftp {
+	gchar *server;
+	gint code;
+	gchar *response;
+	GIOChannel *control;
+	GIOChannel *data;
+	GTimer *timer;
+};
+</programlisting>
+</refsect2>
+
+</refsect1>
+
+</refentry>

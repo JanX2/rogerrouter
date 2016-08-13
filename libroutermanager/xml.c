@@ -24,7 +24,7 @@
 
 #include <string.h>
 
-#include <gtk/gtk.h>
+//#include <gtk/gtk.h>
 #include <glib.h>
 
 #include <libxml/parser.h>
