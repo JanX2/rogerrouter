@@ -128,6 +128,7 @@ void rm_init_directory_paths(void)
  */
 static gchar *rm_get_plugin_dir(void)
 {
+	g_debug("plugin_dir = %s", rm_plugin_dir);
 	return rm_plugin_dir;
 }
 

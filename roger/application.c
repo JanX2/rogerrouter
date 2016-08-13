@@ -399,7 +399,7 @@ static void app_init(GtkApplication *app)
 	g_signal_connect(app_object, "message", G_CALLBACK(app_object_message_cb), NULL);
 
 	if (rm_init(&error) == FALSE) {
-		printf("routermanager() failed: %s\n", error ? error->message : "");
+		g_warning("routermanager() failed: %s\n", error ? error->message : "");
 
 		GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "RouterManager failed");
 		gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), "%s", error ? error->message : "");

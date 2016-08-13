@@ -1,0 +1,7 @@
+subdir('areacodes_global')
+subdir('callmonitor')
+subdir('capi')
+subdir('fritzbox')
+subdir('reverselookup')
+subdir('secret')
+subdir('simple_pwd')

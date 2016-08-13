@@ -1718,14 +1718,14 @@ struct session *capi_session_init(struct session_handlers *handlers, const char 
 	}
 
 	if (host != NULL) {
-#if HAVE_CAPI_36
+//#if HAVE_CAPI_36
 		capi20ext_set_driver("fritzbox");
 		capi20ext_set_host((char *) host);
 		capi20ext_set_port(5031);
 		capi20ext_set_tracelevel(0);
-#else
-		setHostName(host);
-#endif
+//#else
+//		setHostName(host);
+//#endif
 	}
 
 	appl_id = capi_init(controller);
@@ -1871,7 +1871,7 @@ struct capi_connection *phone_dial(const gchar *trg_no, gboolean suppress)
  */
 void connection_established(struct capi_connection *capi_connection)
 {
-	struct connection *connection = connection_find_by_id(capi_connection->id);
+	struct connection *connection = rm_connection_find_by_id(capi_connection->id);
 
 	if (connection) {
 		emit_connection_established(connection);
@@ -1884,7 +1884,7 @@ void connection_established(struct capi_connection *capi_connection)
  */
 void connection_terminated(struct capi_connection *capi_connection)
 {
-	struct connection *connection = connection_find_by_id(capi_connection->id);
+	struct connection *connection = rm_connection_find_by_id(capi_connection->id);
 
 	if (connection) {
 		emit_connection_terminated(connection);
@@ -1902,7 +1902,7 @@ void connection_ring(struct capi_connection *capi_connection)
 	active_capi_connection = capi_connection;
 
 	g_debug("connection_ring() src %s trg %s", capi_connection->source, capi_connection->target);
-	connection = connection_find_by_number(capi_connection->source);
+	connection = rm_connection_find_by_remote_number(capi_connection->source);
 #if ACCEPT_INTERN
 	if (!connection && !strncmp(capi_connection->source, "**", 2)) {
 		connection = connection_add_call(981, CONNECTION_TYPE_INCOMING, capi_connection->source, capi_connection->target);
@@ -1935,7 +1935,7 @@ void connection_code(struct capi_connection *connection, gint code)
  */
 void connection_status(struct capi_connection *capi_connection, gint status)
 {
-	struct connection *connection = connection_find_by_id(capi_connection->id);
+	struct connection *connection = rm_connection_find_by_id(capi_connection->id);
 
 	if (connection) {
 		emit_connection_status(status, connection);

@@ -32,7 +32,7 @@ struct device_fax {
 	gboolean (*number_is_handled)(gchar *number);
 };
 
-void fax_register(struct device_fax *fax);
+void rm_fax_register(struct device_fax *fax);
 GSList *fax_get_plugins(void);
 
 G_END_DECLS

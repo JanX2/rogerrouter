@@ -32,7 +32,7 @@ static GSList *fax_plugins = NULL;
  * \brief Register phone plugin
  * \param phone phone plugin
  */
-void fax_register(struct device_fax *fax)
+void rm_fax_register(struct device_fax *fax)
 {
 	g_debug("%s(): Registering %s", __FUNCTION__, fax->name);
 	fax_plugins = g_slist_prepend(fax_plugins, fax);

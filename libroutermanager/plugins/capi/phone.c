@@ -166,7 +166,7 @@ static struct connection *capi_phone_dial(const char *trg_no, gboolean anonymous
 	g_free(target);
 
 	if (capi_connection) {
-		connection = connection_add_call(capi_connection->id, RM_CONNECTION_TYPE_OUTGOING, src_no, trg_no);
+		connection = rm_connection_add(capi_connection->id, RM_CONNECTION_TYPE_OUTGOING, src_no, trg_no);
 		connection->priv = capi_connection;
 	}
 
