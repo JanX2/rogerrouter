@@ -1,12 +1,10 @@
-project('roger', 'c', version : '1.10-pre1', license : 'GPL2', default_options : ['b_lundef=false'])
+project('roger', 'c', version : '1.10-pre1', license : 'GPL2', default_options : ['b_lundef=false', 'prefix=/usr'])
 
 gnome = import('gnome')
 
 msgfmt = find_program('msgfmt')
 
 add_global_arguments('-DUSE_PRINTER_SPOOLER', language : 'c')
-add_global_link_arguments('-lcrypt', language : 'c')
-add_global_link_arguments('-lm', language : 'c')
 
 name = 'roger'
 version = '1.10-pre1'

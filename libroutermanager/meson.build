@@ -52,7 +52,8 @@ libroutermanager = shared_library('routermanager',
                         routermanager_sources,
                         include_directories : routermanager_inc,
                         dependencies : routermanager_dep,
-                        install : true)
+                        install : true,
+                        link_args : '-lcrypt')
 
 pkg_mod = import('pkgconfig')
 pkg_mod.generate(libraries : libroutermanager,
