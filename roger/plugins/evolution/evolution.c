@@ -50,7 +50,6 @@ typedef struct {
 ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_EVOLUTION_PLUGIN, RouterManagerEvolutionPlugin, routermanager_evolution_plugin)
 
 void pref_notebook_add_page(GtkWidget *notebook, GtkWidget *page, gchar *title);
-GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand, gboolean vexpand);
 
 static GSList *contacts = NULL;
 static GSettings *ebook_settings = NULL;

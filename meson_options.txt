@@ -1,0 +1,4 @@
+option('enable-gstreamer', type : 'boolean', value : true, description : 'Enable gstreamer audio plugin')
+option('enable-portaudio', type : 'boolean', value : false, description : 'Enable portaudio audio plugin')
+option('enable-pulseaudio', type : 'boolean', value : false, description : 'Enable pulseaudio audio plugin')
+option('enable-indicator', type : 'boolean', value : false, description : 'Enable app indicator plugin')

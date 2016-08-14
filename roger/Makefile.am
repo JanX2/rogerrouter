@@ -30,7 +30,7 @@ DISTCLEANFILES = \
 bin_PROGRAMS = roger
 
 roger_CFLAGS =$(EXTRA_CFLAGS) $(GTK_CFLAGS) $(GMODULE_CFLAGS) -Wall -O2 -g $(PEAS_GTK_CFLAGS) $(SNDFILE_CFLAGS) $(AM_CFLAGS) $(OS_CFLAGS) $(TIFF_CFLAGS) $(SOUP_CFLAGS) -I$(topdir) 
-roger_LDFLAGS = $(EXTRA_LIBS) $(GTK_LIBS) $(GMODULE_LIBS) -export-dynamic $(top_builddir)/libroutermanager/libroutermanager.la $(PEAS_GTK_LIBS) $(SNDFILE_LIBS) $(SPANDSP_LIBS) $(OS_LIBS) $(TIFF_LIBS) $(SOUP_LIBS)
+roger_LDFLAGS = $(EXTRA_LIBS) $(GTK_LIBS) $(GMODULE_LIBS) $(top_builddir)/libroutermanager/libroutermanager.la $(PEAS_GTK_LIBS) $(SNDFILE_LIBS) $(SPANDSP_LIBS) $(OS_LIBS) $(TIFF_LIBS) $(SOUP_LIBS)
 
 GLIB_COMPILE_RESOURCES = $(shell $(PKG_CONFIG) --variable=glib_compile_resources gio-2.0)
 
@@ -101,3 +101,15 @@ libroger_core_la_SOURCES = $(roger_core_SOURCES)
 libroger_core_la_CFLAGS = $(roger_CFLAGS)
 libroger_core_la_LDFLAGS = $(roger_LDFLAGS) -shared -no-undefined -avoid-version
 endif
+
+
+appsdir = $(datadir)/applications
+apps_in_files = org.tabos.roger.desktop.in
+apps_DATA = $(apps_in_files:.desktop.in=.desktop)
+@INTLTOOL_DESKTOP_RULE@
+
+appdatadir = $(datadir)/appdata
+appdata_in_files = org.tabos.roger.appdata.xml.in
+appdata_DATA = $(appdata_in_files:.xml.in=.xml)
+
+@INTLTOOL_XML_RULE@

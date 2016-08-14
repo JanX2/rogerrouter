@@ -256,7 +256,6 @@ GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand,
 	return grid;
 }
 
-
 /**
  * \brief Update option combobox according filter type
  * \param widget combobox widget

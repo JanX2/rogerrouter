@@ -27,6 +27,7 @@ macosx/roger.plist
 *.deps
 *.libs
 *.dirstamp
+build
 
 # Misc
 aclocal.m4

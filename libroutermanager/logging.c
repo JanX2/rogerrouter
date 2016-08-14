@@ -68,6 +68,7 @@ static void log_func(const gchar *log_domain, GLogLevelFlags log_level, const gc
 	g_free(time);
 	g_date_time_unref(datetime);
 
+#ifndef G_LOG_USE_STRUCTURED
 	if (log_domain) {
 		g_string_append_printf(output, " %s:", log_domain);
 	}
@@ -90,6 +91,19 @@ static void log_func(const gchar *log_domain, GLogLevelFlags log_level, const gc
 	}
 
 	g_string_append_printf(output, "%s\n", message);
+#else
+	g_string_append_printf(output, " %s\n", message);
+
+	const GLogField fields[] = {
+		{ "MESSAGE", output->str, -1 }};
+	gchar *fmt_str = g_log_writer_format_fields(log_level, fields, G_N_ELEMENTS (fields), TRUE);
+
+	g_string_free(output, TRUE);
+
+	output = g_string_new("");
+	g_string_append_printf(output, "%s", fmt_str);
+	g_free(fmt_str);
+#endif
 
 	g_print("%s", output->str);
 	g_output_stream_printf(G_OUTPUT_STREAM(stream), &len, NULL, NULL, "%s", output->str);
@@ -121,6 +135,7 @@ void log_init(gboolean debug)
 
 	stream = g_file_create(file, G_FILE_CREATE_NONE, NULL, NULL);
 
+	g_setenv("G_MESSAGE_DEBUG", "all", TRUE);
 	g_log_set_default_handler(log_func, NULL);
 }
 

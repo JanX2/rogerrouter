@@ -7,33 +7,28 @@ CLEANFILES = $(plugin_DATA)
 DISTCLEANFILES = $(plugin_DATA)
 EXTRA_DIST = $(plugin_in_files).in
 
-AM_CFLAGS = \
-	$(GTK_CFLAGS) \
-	$(PEAS_CFLAGS)		\
-	$(OS_CFLAGS) \
-	$(EXTRA_CFLAGS) \
-	-I$(top_srcdir)/
-
 plugin_cflags =			\
 	$(GTK_CFLAGS) \
 	$(PEAS_CFLAGS)		\
-	$(OS_CFLAGS) \
 	$(EXTRA_CFLAGS) \
 	-I$(top_srcdir)/
 
+#plugin_ldflags = \
+#	-export-dynamic \
+#	-no-undefined \
+#	-avoid-version \
+#	-module \
+#	$(PLUGIN_LIBTOOL_FLAGS)
+
 plugin_ldflags = \
-	-export-dynamic \
-	-no-undefined \
-	-avoid-version \
-	-module \
 	$(PLUGIN_LIBTOOL_FLAGS)
 
 plugin_libadd = \
 	$(GTK_LIBS) \
 	$(PEAS_GTK_LIBS) \
-	$(OS_LIBS) \
 	$(PEAS_LIBS)
 
+#	$(OS_LIBS) 
 if WIN32
 plugin_ldflags += -L$(top_srcdir)/libroutermanager/.libs -lroutermanager -L$(top_srcdir)/roger/.libs -lroger_core -no-undefined
 endif

@@ -33,14 +33,3 @@ share_DATA = \
 noinst_HEADERS = config.h
 
 DISTCLEANFILES = intltool-extract intltool-merge intltool-update org.tabos.roger.desktop org.tabos.roger.appdata.xml
-
-appsdir = $(datadir)/applications
-apps_in_files = org.tabos.roger.desktop.in
-apps_DATA = $(apps_in_files:.desktop.in=.desktop)
-@INTLTOOL_DESKTOP_RULE@
-
-appdatadir = $(datadir)/appdata
-appdata_in_files = org.tabos.roger.appdata.xml.in
-appdata_DATA = $(appdata_in_files:.xml.in=.xml)
-
-@INTLTOOL_XML_RULE@

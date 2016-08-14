@@ -653,7 +653,7 @@ AC_CONFIG_FILES([
     doc/roger.1
     doc/roger_cli.1
     docs/reference/libroutermanager/Makefile
-    #docs/reference/libroutermanager/version.xml
+    docs/reference/libroutermanager/version.xml
     po/Makefile.in
     libroutermanager/tests/Makefile
     libroutermanager/routermanager.pc
@@ -668,7 +668,7 @@ AC_CONFIG_FILES([
     libroutermanager/plugins/reverselookup/Makefile
     libroutermanager/plugins/wincred/Makefile
     libroutermanager/plugins/portaudio/Makefile
-    libroutermanager/plugins/gstreamer1/Makefile
+    libroutermanager/plugins/gstreamer/Makefile
     libroutermanager/plugins/secret/Makefile
     libroutermanager/plugins/simple_pwd/Makefile
     roger/Makefile

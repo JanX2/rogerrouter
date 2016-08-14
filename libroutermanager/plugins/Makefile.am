@@ -9,7 +9,7 @@ SUBDIRS += portaudio
 endif
 
 if WITH_GSTREAMER1
-SUBDIRS += gstreamer1
+SUBDIRS += gstreamer
 endif
 
 if WITH_SECRET
