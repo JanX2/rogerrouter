@@ -19,4 +19,4 @@ custom_target('fritzfon.plugin',
     input : 'fritzfon.plugin.in',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', podir, '-o', '@OUTPUT@'],
     install : true,
-    install_dir : get_option('prefix') + '/' + get_option('libdir') + '/routermanager/fritzfon/')
+    install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/fritzfon/')

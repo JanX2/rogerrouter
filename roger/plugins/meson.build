@@ -9,3 +9,5 @@ if get_option('enable-indicator')
 	indicator += dependency('appindicator3-0.1')
 	subdir('indicator')
 endif
+
+subdir('webjournal')

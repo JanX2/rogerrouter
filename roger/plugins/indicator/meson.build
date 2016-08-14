@@ -19,4 +19,4 @@ custom_target('indicator.plugin',
     input : 'indicator.plugin.in',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', podir, '-o', '@OUTPUT@'],
     install : true,
-    install_dir : get_option('prefix') + '/' + get_option('libdir') + '/routermanager/indicator/')
+    install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/indicator/')

@@ -11,14 +11,15 @@ plugin_cflags =			\
 	$(GTK_CFLAGS) \
 	$(PEAS_CFLAGS)		\
 	$(EXTRA_CFLAGS) \
+	$(OS_CFLAGS) \
 	-I$(top_srcdir)/
 
-#plugin_ldflags = \
-#	-export-dynamic \
-#	-no-undefined \
-#	-avoid-version \
-#	-module \
-#	$(PLUGIN_LIBTOOL_FLAGS)
+plugin_ldflags = \
+	-export-dynamic \
+	-no-undefined \
+	-avoid-version \
+	-module \
+	$(PLUGIN_LIBTOOL_FLAGS)
 
 plugin_ldflags = \
 	$(PLUGIN_LIBTOOL_FLAGS)
@@ -26,9 +27,9 @@ plugin_ldflags = \
 plugin_libadd = \
 	$(GTK_LIBS) \
 	$(PEAS_GTK_LIBS) \
+	$(OS_LIBS) \
 	$(PEAS_LIBS)
 
-#	$(OS_LIBS) 
 if WIN32
 plugin_ldflags += -L$(top_srcdir)/libroutermanager/.libs -lroutermanager -L$(top_srcdir)/roger/.libs -lroger_core -no-undefined
 endif

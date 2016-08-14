@@ -19,4 +19,4 @@ custom_target('gtknotify.plugin',
     input : 'gtknotify.plugin.in',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', podir, '-o', '@OUTPUT@'],
     install : true,
-    install_dir : get_option('prefix') + '/' + get_option('libdir') + '/routermanager/gtknotify/')
+    install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/gtknotify/')

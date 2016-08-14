@@ -19,4 +19,4 @@ custom_target('gnotification.plugin',
     input : 'gnotification.plugin.in',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', podir, '-o', '@OUTPUT@'],
     install : true,
-    install_dir : get_option('prefix') + '/' + get_option('libdir') + '/routermanager/gnotification/')
+    install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/gnotification/')

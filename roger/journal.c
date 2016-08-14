@@ -149,7 +149,6 @@ void journal_init_call_icon(void)
 
 	icons = gtk_icon_theme_get_default();
 
-	g_debug("app_data: %s", rm_get_directory(APP_DATA));
 	gtk_icon_theme_append_search_path(icons, rm_get_directory(APP_DATA));
 	if (icon_call_in) {
 		g_object_unref(icon_call_in);

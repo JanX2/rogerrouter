@@ -19,4 +19,4 @@ custom_target('google.plugin',
     input : 'google.plugin.in',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', podir, '-o', '@OUTPUT@'],
     install : true,
-    install_dir : get_option('prefix') + '/' + get_option('libdir') + '/routermanager/google/')
+    install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/google/')
