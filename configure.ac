@@ -653,7 +653,6 @@ AC_CONFIG_FILES([
     doc/roger.1
     doc/roger_cli.1
     docs/reference/libroutermanager/Makefile
-    docs/reference/libroutermanager/version.xml
     po/Makefile.in
     libroutermanager/tests/Makefile
     libroutermanager/routermanager.pc

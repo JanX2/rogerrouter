@@ -1,2 +1,0 @@
-rm_connection_find_by_remote_number(remote_number)
-rm_network_authenticate(auth_set)

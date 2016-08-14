@@ -32,4 +32,4 @@ share_DATA = \
 
 noinst_HEADERS = config.h
 
-DISTCLEANFILES = intltool-extract intltool-merge intltool-update org.tabos.roger.desktop org.tabos.roger.appdata.xml
+DISTCLEANFILES = intltool-extract intltool-merge intltool-update
