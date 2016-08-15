@@ -21,11 +21,18 @@
 
 #include <glib.h>
 
-#include <libroutermanager/contact.h>
+#include <libroutermanager/rmcontact.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/router.h>
 
-void contact_copy(struct contact *src, struct contact *dst)
+/**
+ * rm_contact_copy:
+ * @src: source #RmContact
+ * @dst: destination #RmContact
+ *
+ * Copies one contact data to another
+ */
+void rm_contact_copy(RmContact *src, RmContact *dst)
 {
 	dst->name = g_strdup(src->name);
 
@@ -78,35 +85,58 @@ void contact_copy(struct contact *src, struct contact *dst)
 	dst->priv = src->priv;
 }
 
-struct contact *contact_dup(struct contact *src)
+/**
+ * rm_contact_dup:
+ * @src: source #RmContact
+ *
+ * Duplicates a #RmContact
+ *
+ * Returns: new #RmContact
+ */
+RmContact *rm_contact_dup(RmContact *src)
 {
-	struct contact *dst = g_slice_new0(struct contact);
+	RmContact *dst = g_slice_new0(RmContact);
 
-	contact_copy(src, dst);
+	rm_contact_copy(src, dst);
 
 	return dst;
 }
 
-gint contact_name_compare(gconstpointer a, gconstpointer b)
+/**
+ * rm_contact_name_compare:
+ * @a: pointer to first #RmContact
+ * @b: pointer to second #RmContact
+ *
+ * Compares two contacts based on contacts name.
+ *
+ * Returns: return values of #strcasecmp
+ */
+gint rm_contact_name_compare(gconstpointer a, gconstpointer b)
 {
-	struct contact *contact_a = (struct contact *)a;
-	struct contact *contact_b = (struct contact *)b;
+	RmContact *contact_a = (RmContact *)a;
+	RmContact *contact_b = (RmContact *)b;
 
 	return strcasecmp(contact_a->name, contact_b->name);
 }
 
-struct contact *contact_find_by_number(gchar *number)
+/**
+ * rm_contact_find_by_number:
+ * @number: phone number
+ *
+ * Try to find a contact by it's number
+ *
+ * Returns: a #RmContact if number has been found, or %NULL% if not.
+ */
+RmContact *rm_contact_find_by_number(gchar *number)
 {
-	struct contact *contact = g_slice_new0(struct contact);
+	RmContact *contact = g_slice_new0(RmContact);
 	GSList *numbers;
 	GSList *addresses;
 	int type = -1;
 
-	g_debug("a1");
 	/** Ask for contact information */
 	contact->number = number;
 	rm_emit_contact_process(contact);
-	g_debug("a2");
 
 	/* Depending on the number set the active address */
 	for (numbers = contact->numbers; numbers != NULL; numbers = numbers->next) {
@@ -117,7 +147,6 @@ struct contact *contact_find_by_number(gchar *number)
 			break;
 		}
 	}
-	g_debug("a3");
 
 	if (type == -1) {
 		return contact;
@@ -138,7 +167,7 @@ struct contact *contact_find_by_number(gchar *number)
 	}
 
 	for (addresses = contact->addresses; addresses != NULL; addresses = addresses->next) {
-		struct contact_address *contact_address = addresses->data;
+		RmContactAddress *contact_address = addresses->data;
 
 		if (contact_address->type == type) {
 			contact->street = contact_address->street;
@@ -151,12 +180,18 @@ struct contact *contact_find_by_number(gchar *number)
 	return contact;
 }
 
-void contact_free(struct contact *contact)
+/**
+ * rm_contact_free:
+ * @contact: a #RmContact
+ *
+ * Frees a #RmContact.
+ */
+void rm_contact_free(RmContact *contact)
 {
 	if (contact->name) {
 		g_free(contact->name);
 		contact->name = NULL;
 	}
-	g_slice_free(struct contact, contact);
-}
 
+	g_slice_free(RmContact, contact);
+}

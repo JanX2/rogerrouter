@@ -24,14 +24,14 @@
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
-#include <libroutermanager/plugins.h>
+#include <libroutermanager/rmplugins.h>
 #include <libroutermanager/call.h>
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/address-book.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/settings.h>
+#include <libroutermanager/rmsettings.h>
 
 #include <roger/main.h>
 #include "config.h"
@@ -378,7 +378,7 @@ void ebook_read_data(EClient *e_client)
 			contact->addresses = g_slist_prepend(contact->addresses, c_address);
 		}
 
-		contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
+		contacts = g_slist_insert_sorted(contacts, contact, rm_contact_name_compare);
 	}
 
 	g_slist_free(ebook_contacts);

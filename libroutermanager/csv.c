@@ -30,7 +30,7 @@
 #include <libroutermanager/csv.h>
 #include <libroutermanager/call.h>
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/file.h>
+#include <libroutermanager/rmfile.h>
 
 #include <libroutermanager/plugins/fritzbox/csv.h>
 
@@ -209,7 +209,7 @@ GSList *csv_load_journal(GSList *journal)
 	RmProfile *profile = rm_profile_get_active();
 
 	file_name = g_build_filename(g_get_user_data_dir(), "routermanager", profile->name, "journal.csv", NULL);
-	file_data = file_load(file_name, NULL);
+	file_data = rm_file_load(file_name, NULL);
 	g_free(file_name);
 
 	if (file_data) {

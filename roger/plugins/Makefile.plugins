@@ -21,9 +21,6 @@ plugin_ldflags = \
 	-module \
 	$(PLUGIN_LIBTOOL_FLAGS)
 
-plugin_ldflags = \
-	$(PLUGIN_LIBTOOL_FLAGS)
-
 plugin_libadd = \
 	$(GTK_LIBS) \
 	$(PEAS_GTK_LIBS) \

@@ -30,10 +30,10 @@
 
 #include <libroutermanager/call.h>
 #include <libroutermanager/gstring.h>
-#include <libroutermanager/plugins.h>
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmplugins.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/routermanager.h>
-#include <libroutermanager/settings.h>
+#include <libroutermanager/rmsettings.h>
 
 #include <roger/about.h>
 #include <roger/application.h>

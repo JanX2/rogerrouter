@@ -34,7 +34,7 @@
 #include <libroutermanager/rmconnection.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/device_fax.h>
+#include <libroutermanager/rmdevicefax.h>
 #include <sff.h>
 
 static int8_t *_linear16_2_law = (int8_t *) &linear16_2_law[32768];
@@ -693,5 +693,5 @@ struct device_fax capi_fax = {
 
 void capi_fax_init(void)
 {
-	rm_fax_register(&capi_fax);
+	rm_device_fax_register(&capi_fax);
 }

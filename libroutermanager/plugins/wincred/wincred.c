@@ -22,8 +22,8 @@
 
 #include <wchar.h>
 
-#include <libroutermanager/plugins.h>
-#include <libroutermanager/password.h>
+#include <libroutermanager/rmplugins.h>
+#include <libroutermanager/rmpassword.h>
 
 #define ROUTERMANAGER_TYPE_WINCRED_PLUGIN        (routermanager_wincred_plugin_get_type ())
 #define ROUTERMANAGER_WINCRED_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_WINCRED_PLUGIN, RouterManagerWinCredPlugin))
@@ -145,7 +145,7 @@ struct password_manager wincred = {
 void impl_activate(PeasActivatable *plugin)
 {
 	g_debug("Register wincred password manager plugin");
-	password_manager_register(&wincred);
+	rm_password_register(&wincred);
 }
 
 /**

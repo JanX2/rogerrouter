@@ -22,19 +22,21 @@
 #include <string.h>
 #include <glib.h>
 
-#include <libroutermanager/device_fax.h>
+#include <libroutermanager/rmdevicefax.h>
 #include <libroutermanager/gstring.h>
 
 /** Internal fax list */
-static GSList *fax_plugins = NULL;
+static GSList *rm_fax_plugins = NULL;
 
 /**
- * \brief Register phone plugin
- * \param phone phone plugin
+ * rm_device_fax_register:
+ * @fax: a #RmDeviceFax
+ *
+ * Register fax plugin.
  */
-void rm_fax_register(struct device_fax *fax)
+void rm_device_fax_register(RmDeviceFax *fax)
 {
 	g_debug("%s(): Registering %s", __FUNCTION__, fax->name);
-	fax_plugins = g_slist_prepend(fax_plugins, fax);
+	rm_fax_plugins = g_slist_prepend(rm_fax_plugins, fax);
 }
 

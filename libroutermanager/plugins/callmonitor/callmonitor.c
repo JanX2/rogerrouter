@@ -30,10 +30,10 @@
 #include <libroutermanager/rmconnection.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/call.h>
-#include <libroutermanager/plugins.h>
+#include <libroutermanager/rmplugins.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/net_monitor.h>
+#include <libroutermanager/rmnetmonitor.h>
 
 #define ROUTERMANAGER_TYPE_CALLMONITOR_PLUGIN (routermanager_callmonitor_plugin_get_type ())
 #define ROUTERMANAGER_CALLMONITOR_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_CALLMONITOR_PLUGIN, RouterManagerCallMonitorPlugin))
@@ -41,7 +41,7 @@
 #define CALLMONITOR_DEBUG 1
 
 typedef struct {
-	gconstpointer net_event_id;
+	RmNetEvent *net_event;
 
 	GIOChannel *channel;
 	guint id;
@@ -75,7 +75,7 @@ static inline void callmonitor_convert(gchar *text)
 	}
 
 	/* In case local number is handled by a phone/fax device, ignore it */
-	if (number && device_number_is_handled(number)) {
+	if (number && rm_device_number_is_handled(number)) {
 		return;
 	}
 
@@ -337,7 +337,7 @@ static void impl_activate(PeasActivatable *plugin)
 	RouterManagerCallMonitorPlugin *callmonitor_plugin = ROUTERMANAGER_CALLMONITOR_PLUGIN(plugin);
 
 	/* Add network event */
-	callmonitor_plugin->priv->net_event_id = net_add_event(callmonitor_connect, callmonitor_disconnect, callmonitor_plugin);
+	callmonitor_plugin->priv->net_event = rm_netmonitor_add_event(callmonitor_connect, callmonitor_disconnect, callmonitor_plugin);
 }
 
 /**
@@ -350,5 +350,5 @@ static void impl_deactivate(PeasActivatable *plugin)
 
 	g_debug("%s(): callmonitor", __FUNCTION__);
 	/* Remove network event */
-	net_remove_event(callmonitor_plugin->priv->net_event_id);
+	rm_netmonitor_remove_event(callmonitor_plugin->priv->net_event);
 }

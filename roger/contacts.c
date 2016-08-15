@@ -69,7 +69,7 @@ static void dial_clicked_cb(GtkWidget *button, gpointer user_data)
 	g_assert(full_number != NULL);
 
 	/* Find matching contact */
-	contact = contact_find_by_number(full_number);
+	contact = rm_contact_find_by_number(full_number);
 	g_free(full_number);
 	g_assert(contact != NULL);
 
@@ -791,7 +791,7 @@ void contacts_cancel_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 	gtk_widget_set_visible(contacts->edit_button, TRUE);
 
 	if (contacts->tmp_contact) {
-		contact_free(contacts->tmp_contact);
+		rm_contact_free(contacts->tmp_contact);
 		contacts->tmp_contact = NULL;
 	}
 
@@ -833,7 +833,7 @@ void contacts_save_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 
 	if (ok) {
 		if (contact) {
-			contact_copy(contacts->tmp_contact, contact);
+			rm_contact_copy(contacts->tmp_contact, contact);
 			address_book_save_contact(contact);
 		} else {
 			address_book_save_contact(contacts->tmp_contact);
@@ -843,7 +843,7 @@ void contacts_save_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 	}
 
 	if (contacts->tmp_contact) {
-		contact_free(contacts->tmp_contact);
+		rm_contact_free(contacts->tmp_contact);
 		contacts->tmp_contact = NULL;
 	}
 
@@ -853,7 +853,7 @@ void contacts_save_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 
 void contact_editor(struct contact *contact)
 {
-	contacts->tmp_contact = contact_dup(contact);
+	contacts->tmp_contact = rm_contact_dup(contact);
 
 	gtk_widget_set_visible(contacts->cancel_button, TRUE);
 	gtk_widget_set_visible(contacts->save_button, TRUE);
@@ -968,7 +968,7 @@ gboolean contacts_window_delete_event_cb(GtkWidget *widget, GdkEvent event, gpoi
 	contacts->active_user_widget = NULL;
 
 	if (contacts->new_contact) {
-		contact_free(contacts->new_contact);
+		rm_contact_free(contacts->new_contact);
 		contacts->new_contact = NULL;
 	}
 
@@ -987,7 +987,7 @@ static void contacts_contacts_changed_cb(AppObject *object, gpointer user_data)
 void contacts_set_contact(struct contacts *contacts, struct contact *contact)
 {
 	if (contacts->new_contact) {
-		contact_free(contacts->new_contact);
+		rm_contact_free(contacts->new_contact);
 		contacts->new_contact = NULL;
 	}
 
@@ -995,7 +995,7 @@ void contacts_set_contact(struct contacts *contacts, struct contact *contact)
 		return;
 	}
 
-	contacts->new_contact = contact_dup(contact);
+	contacts->new_contact = rm_contact_dup(contact);
 }
 
 /**

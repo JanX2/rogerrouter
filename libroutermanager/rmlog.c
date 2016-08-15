@@ -23,41 +23,45 @@
 #include <glib/gstdio.h>
 #include <gio/gio.h>
 
-#include <libroutermanager/logging.h>
-#include <libroutermanager/file.h>
+#include <libroutermanager/rmlog.h>
+#include <libroutermanager/rmfile.h>
 
 /** Internal minium log level, starting with DEBUG */
-static GLogLevelFlags log_level = G_LOG_LEVEL_DEBUG;
-static GFileOutputStream *stream = NULL;
+static GLogLevelFlags rm_log_level = G_LOG_LEVEL_DEBUG;
+static GFileOutputStream *rm_file_stream = NULL;
 
 /**
- * \brief Save log data to temp directory (if log level is set to DEBUG)
- * \param name file name
- * \param data data pointer
- * \param len length of data
+ * rm_log_save_data:
+ * @name: file name
+ * @data: data pointer
+ * @len: length of data
+ *
+ * Save log data to temp directory (if log level is set to DEBUG).
  */
-void log_save_data(gchar *name, const gchar *data, gsize len)
+void rm_log_save_data(gchar *name, const gchar *data, gsize len)
 {
 	gchar *file;
 
-	if (log_level != G_LOG_LEVEL_DEBUG) {
+	if (rm_log_level != G_LOG_LEVEL_DEBUG) {
 		return;
 	}
 
 	file = g_build_filename(g_get_user_cache_dir(), "routermanager", name, NULL);
-	file_save(file, data, len);
+	rm_file_save(file, data, len);
 
 	g_free(file);
 }
 
 /**
- * \brief Logging function - prints log output to shell
- * \paramm log_domain logging domain
- * \param log_level log level flags
- * \param message output message
- * \param user_data user data poiner (UNUSED)
+ * rm_log_func:
+ * @log_domain logging domain
+ * @log_level: #GLogLevelFlags
+ * @message: output message
+ * @user_data: user data poiner (UNUSED)
+ *
+ * Logging function - prints log output to shell.
  */
-static void log_func(const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data)
+static void rm_log_func(const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data)
 {
 	GDateTime *datetime = g_date_time_new_now_local();
 	GString *output;
@@ -106,14 +110,17 @@ static void log_func(const gchar *log_domain, GLogLevelFlags log_level, const gc
 #endif
 
 	g_print("%s", output->str);
-	g_output_stream_printf(G_OUTPUT_STREAM(stream), &len, NULL, NULL, "%s", output->str);
+	g_output_stream_printf(G_OUTPUT_STREAM(rm_file_stream), &len, NULL, NULL, "%s", output->str);
 	g_string_free(output, TRUE);
 }
 
 /**
- * \brief Initialize logging (set default log handler)
+ * rm_log_init:
+ * @debug: flag to toggle debug on/off
+ *
+ * Initialize logging (set default log handler).
  */
-void log_init(gboolean debug)
+void rm_log_init(gboolean debug)
 {
 	GFile *file;
 	gchar *filename;
@@ -133,29 +140,34 @@ void log_init(gboolean debug)
 	file = g_file_new_for_path(filename);
 	g_free(filename);
 
-	stream = g_file_create(file, G_FILE_CREATE_NONE, NULL, NULL);
+	rm_file_stream = g_file_create(file, G_FILE_CREATE_NONE, NULL, NULL);
 
 	g_setenv("G_MESSAGE_DEBUG", "all", TRUE);
-	g_log_set_default_handler(log_func, NULL);
+	g_log_set_default_handler(rm_log_func, NULL);
 }
 
 /**
+ * rm_log_shutdown:
  * \brief Shutdown logging
  */
-void log_shutdown(void)
+void rm_log_shutdown(void)
 {
 	g_debug("Shutdown logging");
-	if (stream) {
-		g_output_stream_close(G_OUTPUT_STREAM(stream), NULL, NULL);
+
+	if (rm_file_stream) {
+		g_output_stream_close(G_OUTPUT_STREAM(rm_file_stream), NULL, NULL);
 	}
+
 	g_log_set_default_handler(NULL, NULL);
 }
 
 /**
- * \brief Set minium log level
- * \param new minimum log level
+ * rm_log_set_level:
+ * @level: new minimum log level (#GLogLevelFlags)
+ *
+ * Sets minium log level.
  */
-void log_set_level(GLogLevelFlags level)
+void rm_log_set_level(GLogLevelFlags level)
 {
-	log_level = level;
+	rm_log_level = level;
 }

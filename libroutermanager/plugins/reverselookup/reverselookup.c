@@ -21,18 +21,19 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 
 #include <glib.h>
 
 #include <libroutermanager/call.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/appobject.h>
-#include <libroutermanager/file.h>
-#include <libroutermanager/plugins.h>
+#include <libroutermanager/rmfile.h>
+#include <libroutermanager/rmplugins.h>
 #include <libroutermanager/gstring.h>
-#include <libroutermanager/network.h>
-#include <libroutermanager/logging.h>
-#include <libroutermanager/lookup.h>
+#include <libroutermanager/rmnetwork.h>
+#include <libroutermanager/rmlog.h>
+#include <libroutermanager/rmlookup.h>
 #include <libroutermanager/xml.h>
 #include <libroutermanager/rmmain.h>
 
@@ -148,7 +149,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 	msg = soup_message_new_from_uri(SOUP_METHOD_GET, uri);
 	soup_message_headers_append (msg->request_headers, "User-Agent", "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)");
 
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 	soup_uri_free(uri);
 	g_free(url);
 	if (msg->status_code != 200) {
@@ -177,7 +178,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 		if (!g_regex_match(reg, rdata, 0, &info)) {
 #ifdef RL_DEBUG
 			gchar *tmp_file = g_strdup_printf("rl-%s-%s.html", lookup->service, number);
-			log_save_data(tmp_file, rdata, len);
+			rm_log_save_data(tmp_file, rdata, len);
 			g_free(tmp_file);
 #endif
 			goto end;
@@ -185,7 +186,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 
 #ifdef RL_DEBUG
 		gchar *tmp_file = g_strdup_printf("rl-found-%s-%s.html", lookup->service, number);
-		log_save_data(tmp_file, rdata, len);
+		rm_log_save_data(tmp_file, rdata, len);
 		g_free(tmp_file);
 #endif
 
@@ -262,7 +263,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 		if (!extract_element(lookup->name, node, name)) {
 #ifdef RL_DEBUG
 			gchar *tmp_file = g_strdup_printf("rl-%s-%s.html", lookup->service, number);
-			log_save_data(tmp_file, rdata, len);
+			rm_log_save_data(tmp_file, rdata, len);
 			g_free(tmp_file);
 			g_debug("%s(): Could not extract name", __FUNCTION__);
 #endif
@@ -272,7 +273,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 		if (!extract_element(lookup->street, node, street)) {
 #ifdef RL_DEBUG
 			gchar *tmp_file = g_strdup_printf("rl-%s-%s.html", lookup->service, number);
-			log_save_data(tmp_file, rdata, len);
+			rm_log_save_data(tmp_file, rdata, len);
 			g_free(tmp_file);
 			g_debug("%s(): Could not extract street", __FUNCTION__);
 #endif
@@ -282,7 +283,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 		if (!extract_element(lookup->city, node, city)) {
 #ifdef RL_DEBUG
 			gchar *tmp_file = g_strdup_printf("rl-%s-%s.html", lookup->service, number);
-			log_save_data(tmp_file, rdata, len);
+			rm_log_save_data(tmp_file, rdata, len);
 			g_free(tmp_file);
 			g_debug("%s(): Could not extract city", __FUNCTION__);
 #endif
@@ -311,13 +312,13 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 		rl_contact->city);
 
 	file = g_build_filename(g_get_user_cache_dir(), "routermanager", "reverselookup", number, NULL);
-	file_save(file, rl_tmp, strlen(rl_tmp));
+	rm_file_save(file, rl_tmp, strlen(rl_tmp));
 	g_free(file);
 	g_free(rl_tmp);
 
 #ifdef RL_DEBUG
 	gchar *tmp_file = g_strdup_printf("rl-found-%s-%s.html", lookup->service, number);
-	log_save_data(tmp_file, rdata, len);
+	rm_log_save_data(tmp_file, rdata, len);
 	g_free(tmp_file);
 #endif
 
@@ -618,7 +619,7 @@ static void lookup_read_cache(gchar *dir_name)
 		struct contact *contact;
 
 		uri = g_build_filename(dir_name, file_name, NULL);
-		data = file_load(uri, NULL);
+		data = rm_file_load(uri, NULL);
 		g_free(uri);
 
 		g_assert(data != NULL);
@@ -683,7 +684,7 @@ static void impl_activate(PeasActivatable *plugin)
 
 	xmlnode_free(node);
 
-	routermanager_lookup_register(reverse_lookup);
+	rm_lookup_register(reverse_lookup);
 }
 
 /**

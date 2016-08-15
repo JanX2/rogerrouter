@@ -26,7 +26,7 @@
 
 #include <glib.h>
 
-#include <libroutermanager/file.h>
+#include <libroutermanager/rmfile.h>
 
 #include <capi.h>
 #include <fax.h>
@@ -155,7 +155,7 @@ struct capi_connection *sff_send(gchar *sff_file, gint modem, gint ecm, gint con
 	}
 
 	/* Open SFF file */
-	sff_data = file_load(sff_file, &sff_len);
+	sff_data = rm_file_load(sff_file, &sff_len);
 	sff_pos = 0;
 
 	connection = capi_call(controller, src_no, trg_no, (guint) call_anonymous, SESSION_SFF, SFF_CIP, 4, 4, 4, b1, b2, b3);

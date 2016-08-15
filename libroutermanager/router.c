@@ -21,11 +21,11 @@
 
 #include <libroutermanager/router.h>
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/contact.h>
+#include <libroutermanager/rmcontact.h>
 #include <libroutermanager/gstring.h>
-#include <libroutermanager/file.h>
+#include <libroutermanager/rmfile.h>
 #include <libroutermanager/csv.h>
-#include <libroutermanager/password.h>
+#include <libroutermanager/rmpassword.h>
 #include <libroutermanager/rmmain.h>
 
 /** Active router structure */
@@ -233,7 +233,7 @@ gchar *router_get_host(struct profile *profile)
  */
 gchar *router_get_login_password(struct profile *profile)
 {
-	return password_manager_get_password(profile, "login-password");
+	return rm_password_get(profile, "login-password");
 }
 
 /**
@@ -253,7 +253,7 @@ gchar *router_get_login_user(struct profile *profile)
  */
 gchar *router_get_ftp_password(struct profile *profile)
 {
-	return password_manager_get_password(profile, "ftp-password");
+	return rm_password_get(profile, "ftp-password");
 }
 
 /**
@@ -485,7 +485,7 @@ void router_process_journal(GSList *journal)
  */
 gchar *router_load_fax(struct profile *profile, const gchar *filename, gsize *len)
 {
-	return filename[0] == '/' ? file_load((gchar*)filename, len) : active_router->load_fax(profile, filename, len);
+	return filename[0] == '/' ? rm_file_load((gchar*)filename, len) : active_router->load_fax(profile, filename, len);
 }
 
 /**

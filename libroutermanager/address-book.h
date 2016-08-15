@@ -20,7 +20,7 @@
 #ifndef LIBROUTERMANAGER_ADDRESS_BOOK_H
 #define LIBROUTERMANAGER_ADDRESS_BOOK_H
 
-#include <libroutermanager/contact.h>
+#include <libroutermanager/rmcontact.h>
 
 G_BEGIN_DECLS
 

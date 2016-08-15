@@ -23,18 +23,18 @@
 
 #include <gtk/gtk.h>
 
-#include <libroutermanager/plugins.h>
+#include <libroutermanager/rmplugins.h>
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/address-book.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/network.h>
+#include <libroutermanager/rmnetwork.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/ftp.h>
 #include <libroutermanager/xml.h>
-#include <libroutermanager/logging.h>
-#include <libroutermanager/file.h>
-#include <libroutermanager/settings.h>
+#include <libroutermanager/rmlog.h>
+#include <libroutermanager/rmfile.h>
+#include <libroutermanager/rmsettings.h>
 
 #include <roger/main.h>
 
@@ -189,7 +189,7 @@ static void contact_add(struct profile *profile, xmlnode *node, gint count)
 		}
 	}
 
-	contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
+	contacts = g_slist_insert_sorted(contacts, contact, rm_contact_name_compare);
 }
 
 static void phonebook_add(struct profile *profile, xmlnode *node)
@@ -229,7 +229,7 @@ static gint fritzfon_read_book(void)
 	soup_multipart_append_form_string(multipart, "PhonebookExport", "1");
 	SoupMessage *msg = soup_form_request_new_from_multipart(uri, multipart);
 
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 
 	g_free(owner);
 	g_free(name);
@@ -246,7 +246,7 @@ static gint fritzfon_read_book(void)
 	g_return_val_if_fail(data != NULL, -2);
 #if FRITZFON_DEBUG
 	if (read > 0) {
-		log_save_data("test-in.xml", data, read);
+		rm_log_save_data("test-in.xml", data, read);
 	}
 #endif
 
@@ -293,7 +293,7 @@ static gint fritzfon_get_books(void)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 	if (msg->status_code != 200) {
 		g_warning("Could not get fonbook file");
 		g_object_unref(msg);
@@ -303,7 +303,7 @@ static gint fritzfon_get_books(void)
 	const gchar *data = msg->response_body->data;
 
 	gint read = msg->response_body->length;
-	log_save_data("fritzfon-getbooks.html", data, read);
+	rm_log_save_data("fritzfon-getbooks.html", data, read);
 
 	g_return_val_if_fail(data != NULL, -2);
 
@@ -556,7 +556,7 @@ gboolean fritzfon_save(void)
 	g_debug("len: %d", len);
 	file = g_strdup("/tmp/test.xml");
 	if (len > 0) {
-		file_save(file, data, len);
+		rm_file_save(file, data, len);
 	}
 	g_free(file);
 #endif
@@ -572,7 +572,7 @@ gboolean fritzfon_save(void)
 	soup_multipart_append_form_file(multipart, "PhonebookImportFile", "dummy", "text/xml", buffer);
 	SoupMessage *msg = soup_form_request_new_from_multipart(url, multipart);
 
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 	soup_buffer_free(buffer);
 	g_free(url);
 
@@ -614,7 +614,7 @@ void fritzfon_set_image(struct contact *contact)
 	path = g_strdup_printf("%s/FRITZ/fonpix/", volume_path);
 	g_free(volume_path);
 
-	data = file_load(contact->image_uri, &size);
+	data = rm_file_load(contact->image_uri, &size);
 	ftp_put_file(client, file_name, path, data, size);
 	ftp_shutdown(client);
 
@@ -629,7 +629,7 @@ gboolean fritzfon_save_contact(struct contact *contact)
 		if (contact->image_uri) {
 			fritzfon_set_image(contact);
 		}
-		contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
+		contacts = g_slist_insert_sorted(contacts, contact, rm_contact_name_compare);
 	} else {
 		if (contact->image_uri) {
 			fritzfon_set_image(contact);

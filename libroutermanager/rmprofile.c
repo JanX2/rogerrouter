@@ -22,14 +22,14 @@
 #include <libroutermanager/rmaction.h>
 //#include <libroutermanager/fax_phone.h>
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/plugins.h>
+#include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/net_monitor.h>
-#include <libroutermanager/password.h>
+#include <libroutermanager/rmnetmonitor.h>
+#include <libroutermanager/rmpassword.h>
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/audio.h>
-#include <libroutermanager/settings.h>
+#include <libroutermanager/rmaudio.h>
+#include <libroutermanager/rmsettings.h>
 
 /**
  * SECTION:rmprofile
@@ -183,7 +183,7 @@ static void rm_profile_load(const gchar *name)
 	profile->router_info = g_slice_new0(struct router_info);
 	profile->router_info->host = g_settings_get_string(profile->settings, "host");
 	profile->router_info->user = g_settings_get_string(profile->settings, "login-user");
-	profile->router_info->password = password_manager_get_password(profile, "login-password");
+	profile->router_info->password = rm_password_get(profile, "login-password");
 
 	g_free(settings_path);
 
@@ -217,10 +217,10 @@ void rm_profile_set_active(RmProfile *profile)
 
 	router_present(profile->router_info);
 
-	plugins_user_plugins();
+	rm_plugins_bind_loaded_plugins();
 
 	/* Init audio */
-	audio_init(profile);
+	rm_audio_init(profile);
 
 	/* Load and initialize action */
 	rm_action_init(profile);
@@ -385,5 +385,5 @@ void rm_profile_set_login_user(RmProfile *profile, const gchar *user)
  */
 void rm_profile_set_login_password(RmProfile *profile, const gchar *password)
 {
-	password_manager_set_password(profile, "login-password", password);
+	rm_password_set(profile, "login-password", password);
 }

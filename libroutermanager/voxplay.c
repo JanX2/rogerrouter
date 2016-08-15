@@ -26,7 +26,7 @@
 #include <speex/speex_callbacks.h>
 
 #include <libroutermanager/voxplay.h>
-#include <libroutermanager/audio.h>
+#include <libroutermanager/rmaudio.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/rmmain.h>
 
@@ -338,7 +338,7 @@ gpointer vox_init(gchar *data, gsize len, GError **error)
 	playback->len = len;
 
 	/* Get default audio device */
-	playback->audio = audio_get_default();
+	playback->audio = rm_audio_get_default();
 	if (!playback->audio) {
 		g_warning("No audio device");
 		g_slice_free(struct vox_playback, playback);

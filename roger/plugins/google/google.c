@@ -23,17 +23,17 @@
 
 #include <gtk/gtk.h>
 
-#include <libroutermanager/plugins.h>
+#include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/address-book.h>
 #include <libroutermanager/call.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/settings.h>
+#include <libroutermanager/rmsettings.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/rmosdep.h>
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/password.h>
+#include <libroutermanager/rmpassword.h>
 
 #include <roger/main.h>
 #include <roger/uitools.h>
@@ -447,7 +447,7 @@ static int google_read_book(void) {
 				gdk_pixbuf_loader_close(loader, NULL);
 			}
 
-			contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
+			contacts = g_slist_insert_sorted(contacts, contact, rm_contact_name_compare);
 		}
 
 		gdata_query_next_page(GDATA_QUERY(query));

@@ -27,16 +27,16 @@
 #include <libroutermanager/filter.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/plugins.h>
+#include <libroutermanager/rmplugins.h>
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/logging.h>
-#include <libroutermanager/network.h>
-#include <libroutermanager/net_monitor.h>
+#include <libroutermanager/rmlog.h>
+#include <libroutermanager/rmnetwork.h>
+#include <libroutermanager/rmnetmonitor.h>
 #include <libroutermanager/rmphone.h>
-#include <libroutermanager/fax_printer.h>
+#include <libroutermanager/rmfaxprinter.h>
 #include <libroutermanager/rmaction.h>
-#include <libroutermanager/password.h>
+#include <libroutermanager/rmpassword.h>
 
 #ifdef __APPLE__
 #include <gtkmacintegration/gtkosxapplication.h>
@@ -174,7 +174,7 @@ gboolean rm_new(gboolean debug, GError **error)
 	rm_init_directory_paths();
 
 	/* Initialize logging system */
-	log_init(debug);
+	rm_log_init(debug);
 
 	/* Say hello */
 	g_debug("%s %s", PACKAGE_NAME, PACKAGE_VERSION);
@@ -209,21 +209,21 @@ gboolean rm_init(GError **error)
 	filter_init();
 
 	/* Init fax printer */
-	if (!fax_printer_init(error)) {
+	if (!rm_faxprinter_init(error)) {
 		return FALSE;
 	}
 
 	/* Initialize network */
-	net_init();
+	rm_network_init();
 
 	/* Load plugins depending on ui (router, audio, address book, reverse lookup...) */
-	routermanager_plugins_add_search_path(rm_get_plugin_dir());
+	rm_plugins_add_search_path(rm_get_plugin_dir());
 
 	/* Initialize plugins */
-	plugins_init();
+	rm_plugins_init();
 
 	/* Check password manager */
-	if (!password_manager_get_plugins()) {
+	if (!rm_password_get_plugins()) {
 		g_set_error(error, RM_ERROR, RM_ERROR_ROUTER, "%s", "No password manager plugins active");
 		return FALSE;
 	}
@@ -238,7 +238,7 @@ gboolean rm_init(GError **error)
 	rm_profile_init();
 
 	/* Initialize network monitor */
-	net_monitor_init();
+	rm_netmonitor_init();
 
 	return TRUE;
 }
@@ -259,7 +259,7 @@ gboolean rm_init(GError **error)
 void rm_shutdown(void)
 {
 	/* Shutdown network monitor */
-	net_monitor_shutdown();
+	rm_netmonitor_shutdown();
 
 	/* Shutdown profiles */
 	rm_profile_shutdown();
@@ -268,10 +268,10 @@ void rm_shutdown(void)
 	router_shutdown();
 
 	/* Shutdown plugins */
-	plugins_shutdown();
+	rm_plugins_shutdown();
 
 	/* Shutdown network */
-	net_shutdown();
+	rm_network_shutdown();
 
 	/* Shutdown filter */
 	filter_shutdown();
@@ -280,5 +280,5 @@ void rm_shutdown(void)
 	g_clear_object(&app_object);
 
 	/* Shutdown logging */
-	log_shutdown();
+	rm_log_shutdown();
 }

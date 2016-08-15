@@ -20,8 +20,8 @@
 #include <libsecret/secret.h>
 
 #include <libroutermanager/call.h>
-#include <libroutermanager/plugins.h>
-#include <libroutermanager/password.h>
+#include <libroutermanager/rmplugins.h>
+#include <libroutermanager/rmpassword.h>
 
 #include <secret.h>
 
@@ -140,7 +140,7 @@ struct password_manager secret = {
  */
 void impl_activate(PeasActivatable *plugin)
 {
-	password_manager_register(&secret);
+	rm_password_register(&secret);
 
 #ifdef SECRET_TEST
 	g_debug("Starting secret\n");

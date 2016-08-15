@@ -21,7 +21,7 @@
 #define LIBROUTERMANAGER_APPOBJECT_EMIT_H
 
 #include <libroutermanager/rmconnection.h>
-#include <libroutermanager/network.h>
+#include <libroutermanager/rmnetwork.h>
 
 G_BEGIN_DECLS
 

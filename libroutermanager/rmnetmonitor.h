@@ -17,17 +17,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_LOGGING_H
-#define LIBROUTERMANAGER_LOGGING_H
+#ifndef LIBROUTERMANAGER_RMNETMONITOR_H
+#define LIBROUTERMANAGER_RMNETMONITOR_H
 
 G_BEGIN_DECLS
 
-void log_save_data(gchar *name, const gchar *data, gsize len);
+typedef gboolean (*RmNetConnect)(gpointer user_data);
+typedef gboolean (*RmNetDisconnect)(gpointer user_data);
 
-void log_init(gboolean debug);
-void log_shutdown(void);
+typedef struct net_event {
+	RmNetConnect connect;
+	RmNetDisconnect disconnect;
+	gboolean is_connected;
+	gpointer user_data;
+} RmNetEvent;
 
-void log_set_level(GLogLevelFlags level);
+gboolean rm_netmonitor_init(void);
+void rm_netmonitor_shutdown(void);
+
+void rm_netmonitor_state_changed(gboolean state);
+RmNetEvent *rm_netmonitor_add_event(RmNetConnect connect, RmNetDisconnect disconnect, gpointer user_data);
+void rm_netmonitor_remove_event(RmNetEvent *net_event);
+gboolean rm_netmonitor_is_online(void);
+void rm_netmonitor_reconnect(void);
 
 G_END_DECLS
 

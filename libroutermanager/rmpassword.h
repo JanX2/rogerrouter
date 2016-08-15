@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_PASSWORD_H
-#define LIBROUTERMANAGER_PASSWORD_H
+#ifndef LIBROUTERMANAGER_RMPASSWORD_H
+#define LIBROUTERMANAGER_RMPASSWORD_H
 
 #include <glib.h>
 
@@ -26,21 +26,21 @@
 
 G_BEGIN_DECLS
 
-struct password_manager {
+typedef struct password_manager {
 	const gchar *name;
-	void (*set_password)(struct profile *profile, const gchar *name, const gchar *password);
-	gchar *(*get_password)(struct profile *profile, const gchar *name);
-	gboolean (*remove_password)(struct profile *profile, const gchar *name);
-};
+	void (*set)(RmProfile *profile, const gchar *name, const gchar *password);
+	gchar *(*get)(RmProfile *profile, const gchar *name);
+	gboolean (*remove)(RmProfile *profile, const gchar *name);
+} RmPasswordManager;
 
-void password_manager_set_password(struct profile *profile, const gchar *name, const gchar *password);
-gchar *password_manager_get_password(struct profile *profile, const gchar *name);
-gboolean password_manager_remove_password(struct profile *profile, const gchar *name);
-void password_manager_register(struct password_manager *manager);
-GSList *password_manager_get_plugins(void);
-void password_manager_init(void);
-gchar *password_encode(const gchar *in);
-guchar *password_decode(const gchar *in);
+void rm_password_set(RmProfile *profile, const gchar *name, const gchar *password);
+gchar *rm_password_get(RmProfile *profile, const gchar *name);
+gboolean rm_password_remove(RmProfile *profile, const gchar *name);
+void rm_password_register(RmPasswordManager *manager);
+GSList *rm_password_get_plugins(void);
+void rm_password_init(void);
+gchar *rm_password_encode(const gchar *in);
+guchar *rm_password_decode(const gchar *in);
 
 G_END_DECLS
 

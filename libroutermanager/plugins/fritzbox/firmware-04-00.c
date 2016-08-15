@@ -25,9 +25,9 @@
 #include <glib.h>
 
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/file.h>
-#include <libroutermanager/logging.h>
-#include <libroutermanager/network.h>
+#include <libroutermanager/rmfile.h>
+#include <libroutermanager/rmlog.h>
+#include <libroutermanager/rmnetwork.h>
 #include <libroutermanager/csv.h>
 #include <libroutermanager/ftp.h>
 #include <libroutermanager/call.h>
@@ -54,7 +54,7 @@ gboolean fritzbox_present_04_00(struct router_info *router_info)
 	url = g_strdup_printf("http://%s/cgi-bin/webcm", router_info->host);
 	msg = soup_message_new(SOUP_METHOD_GET, url);
 
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 	if (msg->status_code != 200) {
 		g_warning("Could not load 04_00 present page (Error: %d)", msg->status_code);
 		g_object_unref(msg);
@@ -66,7 +66,7 @@ gboolean fritzbox_present_04_00(struct router_info *router_info)
 	data = msg->response_body->data;
 	read = msg->response_body->length;
 
-	log_save_data("fritzbox-04_00-present.html", data, read);
+	rm_log_save_data("fritzbox-04_00-present.html", data, read);
 	g_assert(data != NULL);
 
 	if (g_strcasestr(data, "fritz!box")) {
@@ -109,7 +109,7 @@ gboolean fritzbox_login_04_00(struct profile *profile)
 				    "var:loginDone", "1",
 				    NULL);
 
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 	if (msg->status_code != 200) {
 		g_warning("Could not load 04_00 login page (Error: %d)", msg->status_code);
 		g_object_unref(msg);
@@ -121,7 +121,7 @@ gboolean fritzbox_login_04_00(struct profile *profile)
 	data = msg->response_body->data;
 	read = msg->response_body->length;
 
-	log_save_data("fritzbox-04_00-login1.html", data, read);
+	rm_log_save_data("fritzbox-04_00-login1.html", data, read);
 	g_assert(data != NULL);
 
 	if (!strstr(data, "FRITZ!Box Anmeldung")) {
@@ -169,7 +169,7 @@ gboolean fritzbox_dial_number_04_00(struct profile *profile, gint port, const gc
 	g_free(url);
 
 	/* Send message */
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 	if (msg->status_code == 200) {
 		ret = TRUE;
 	}
@@ -212,7 +212,7 @@ gboolean fritzbox_hangup_04_00(struct profile *profile, gint port, const gchar *
 	g_free(url);
 
 	/* Send message */
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 	fritzbox_logout(profile, FALSE);
 
 	return TRUE;

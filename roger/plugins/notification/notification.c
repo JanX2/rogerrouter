@@ -25,7 +25,7 @@
 
 #include <libnotify/notify.h>
 
-#include <libroutermanager/plugins.h>
+#include <libroutermanager/rmplugins.h>
 #include <libroutermanager/call.h>
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/appobject-emit.h>
@@ -33,9 +33,9 @@
 #include <libroutermanager/plugins/capi/ringtone.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/lookup.h>
+#include <libroutermanager/rmlookup.h>
 #include <libroutermanager/gstring.h>
-#include <libroutermanager/settings.h>
+#include <libroutermanager/rmsettings.h>
 
 #include <roger/main.h>
 #include <roger/application.h>
@@ -70,7 +70,7 @@ static void notify_accept_clicked_cb(NotifyNotification *notify, gchar *action, 
 	g_assert(connection != NULL);
 
 	/** Ask for contact information */
-	contact = contact_find_by_number(connection->remote_number);
+	contact = rm_contact_find_by_number(connection->remote_number);
 
 	notify_notification_close(connection->notification, NULL);
 	connection->notification = NULL;
@@ -152,7 +152,7 @@ static gpointer notification_reverse_lookup_thread(gpointer data)
 	contact->number = g_strdup(connection->remote_number);
 	contact->priv = data;
 
-	routermanager_lookup(contact->number, &contact->name, &contact->street, &contact->zip, &contact->city);
+	rm_lookup(contact->number, &contact->name, &contact->street, &contact->zip, &contact->city);
 
 	g_idle_add(notification_update, contact);
 	g_debug("done");
@@ -239,7 +239,7 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 	}
 
 	/** Ask for contact information */
-	contact = contact_find_by_number(connection->remote_number);
+	contact = rm_contact_find_by_number(connection->remote_number);
 
 	/* Create notification message */
 	if (!intern) {

@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2016 Jan-Michael Brummer
+ * Copyright (c) 2012-2014 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,23 +17,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_DEVICE_FAX_H
-#define LIBROUTERMANAGER_DEVICE_FAX_H
+#ifndef LIBROUTERMANAGER_RMFAXPRINTER_H
+#define LIBROUTERMANAGER_RMFAXPRINTER_H
 
 G_BEGIN_DECLS
 
-struct device_fax {
-	gchar *name;
-	struct connection *(*send)(gchar *tiff, const gchar *target, gboolean anonymous);
-	gboolean (*get_status)(struct fax_status *status);
-	gint (*pickup)(struct connection *connection);
-	void (*hangup)(struct connection *connection);
+#include <libroutermanager/rmmain.h>
 
-	gboolean (*number_is_handled)(gchar *number);
-};
-
-void rm_fax_register(struct device_fax *fax);
-GSList *fax_get_plugins(void);
+gboolean rm_faxprinter_init(GError **error);
 
 G_END_DECLS
 

@@ -24,7 +24,7 @@
 #include <gio/gio.h>
 #include <gtk/gtk.h>
 
-#include <libroutermanager/plugins.h>
+#include <libroutermanager/rmplugins.h>
 #include <libroutermanager/call.h>
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/appobject-emit.h>
@@ -32,9 +32,9 @@
 #include <libroutermanager/plugins/capi/ringtone.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/lookup.h>
+#include <libroutermanager/rmlookup.h>
 #include <libroutermanager/gstring.h>
-#include <libroutermanager/settings.h>
+#include <libroutermanager/rmsettings.h>
 
 #include <roger/main.h>
 #include <roger/application.h>
@@ -240,10 +240,10 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 	}
 
 	/** Ask for contact information */
-	struct contact *contact = contact_find_by_number(connection->remote_number);
+	struct contact *contact = rm_contact_find_by_number(connection->remote_number);
 
 	if (EMPTY_STRING(contact->name)) {
-		routermanager_lookup(contact->number, &contact->name, &contact->street, &contact->zip, &contact->city);
+		rm_lookup(contact->number, &contact->name, &contact->street, &contact->zip, &contact->city);
 	}
 
 	gnotification_show(connection, contact);

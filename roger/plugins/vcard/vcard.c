@@ -28,14 +28,14 @@
 #include <gtk/gtk.h>
 
 #include <libroutermanager/gstring.h>
-#include <libroutermanager/contact.h>
-#include <libroutermanager/plugins.h>
+#include <libroutermanager/rmcontact.h>
+#include <libroutermanager/rmplugins.h>
 #include <libroutermanager/address-book.h>
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/file.h>
+#include <libroutermanager/rmfile.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/settings.h>
+#include <libroutermanager/rmsettings.h>
 
 #include <roger/main.h>
 #include <roger/settings.h>
@@ -507,7 +507,7 @@ static void process_card_end(struct contact *contact)
 		contact->name = g_strdup("");
 	}
 
-	contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
+	contacts = g_slist_insert_sorted(contacts, contact, rm_contact_name_compare);
 
 	/* Free firstname */
 	if (first_name != NULL) {
@@ -1110,7 +1110,7 @@ void vcard_write_file(char *file_name)
 		vcard_print(data, "END:VCARD\n\n");
 	}
 
-	file_save(file_name, data->str, data->len);
+	rm_file_save(file_name, data->str, data->len);
 
 	g_string_free(data, TRUE);
 }
@@ -1149,7 +1149,7 @@ gboolean vcard_save_contact(struct contact *contact)
 	gchar *name;
 
 	if (!contact->priv) {
-		contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
+		contacts = g_slist_insert_sorted(contacts, contact, rm_contact_name_compare);
 	}
 
 	name = g_settings_get_string(vcard_settings, "filename");

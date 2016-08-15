@@ -25,10 +25,10 @@
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/csv.h>
-#include <libroutermanager/logging.h>
-#include <libroutermanager/network.h>
+#include <libroutermanager/rmlog.h>
+#include <libroutermanager/rmnetwork.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/plugins.h>
+#include <libroutermanager/rmplugins.h>
 
 #include <libsoup/soup.h>
 

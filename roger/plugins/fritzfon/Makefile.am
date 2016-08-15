@@ -16,15 +16,15 @@ libfritzfon_la_LIBADD  = $(plugin_libadd) $(EXTRA_LIBS) $(SOUP_LIBS)
 #This has to be defined, because GSETTINGS_CHECK_RULE adds to it
 MOSTLYCLEANFILES =
 
-@INTLTOOL_SCHEMAS_RULE@
-
 gsettings_SCHEMAS = org.tabos.roger.plugins.fritzfon.gschema.xml
 @GSETTINGS_RULES@
 
 appstreamdir = $(datadir)/appdata
 appstream_in_files = roger-plugins-fritzfon.metainfo.xml.in
 appstream_DATA = $(appstream_in_files:.xml.in=.xml)
-@INTLTOOL_XML_RULE@
+
+%.metainfo.xml: %.metainfo.xml.in
+	 $(AM_V_GEN)$(MSGFMT) --xml --template $< -d $(top_srcdir)/po -o $@
 
 EXTRA_DIST += $(gsettings_SCHEMAS) $(appstream_in_files)
 

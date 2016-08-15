@@ -25,9 +25,9 @@
 #include <glib.h>
 
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/file.h>
-#include <libroutermanager/logging.h>
-#include <libroutermanager/network.h>
+#include <libroutermanager/rmfile.h>
+#include <libroutermanager/rmlog.h>
+#include <libroutermanager/rmnetwork.h>
 #include <libroutermanager/csv.h>
 #include <libroutermanager/ftp.h>
 #include <libroutermanager/call.h>
@@ -96,7 +96,7 @@ gboolean fritzbox_login_05_50(struct profile *profile)
 	msg = soup_message_new(SOUP_METHOD_GET, url);
 	g_free(url);
 
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
 		g_object_unref(msg);
@@ -108,7 +108,7 @@ gboolean fritzbox_login_05_50(struct profile *profile)
 	data = msg->response_body->data;
 	read = msg->response_body->length;
 
-	log_save_data("fritzbox-05_50-login_1.html", data, read);
+	rm_log_save_data("fritzbox-05_50-login_1.html", data, read);
 	g_assert(data != NULL);
 
 	/* <SID>session_id</SID> */
@@ -142,7 +142,7 @@ gboolean fritzbox_login_05_50(struct profile *profile)
 		                            NULL);
 		g_free(url);
 
-		soup_session_send_message(soup_session, msg);
+		soup_session_send_message(rm_soup_session, msg);
 		g_free(user);
 		if (msg->status_code != 200) {
 			g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
@@ -156,7 +156,7 @@ gboolean fritzbox_login_05_50(struct profile *profile)
 		data = msg->response_body->data;
 		read = msg->response_body->length;
 
-		log_save_data("fritzbox-05_50-login_2.html", data, read);
+		rm_log_save_data("fritzbox-05_50-login_2.html", data, read);
 
 		g_free(response);
 
@@ -348,7 +348,7 @@ gboolean fritzbox_get_fax_information_05_50(struct profile *profile)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
 		g_object_unref(msg);
@@ -357,7 +357,7 @@ gboolean fritzbox_get_fax_information_05_50(struct profile *profile)
 	data = msg->response_body->data;
 	read = msg->response_body->length;
 
-	log_save_data("fritzbox-05_50-get-settings-fax.html", data, read);
+	rm_log_save_data("fritzbox-05_50-get-settings-fax.html", data, read);
 
 	g_assert(data != NULL);
 
@@ -430,7 +430,7 @@ gboolean fritzbox_get_fax_information_06_00(struct profile *profile)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
 		g_object_unref(msg);
@@ -439,7 +439,7 @@ gboolean fritzbox_get_fax_information_06_00(struct profile *profile)
 	data = msg->response_body->data;
 	read = msg->response_body->length;
 
-	log_save_data("fritzbox-06_00-get-settings-fax.html", data, read);
+	rm_log_save_data("fritzbox-06_00-get-settings-fax.html", data, read);
 
 	g_assert(data != NULL);
 
@@ -490,7 +490,7 @@ gboolean fritzbox_get_fax_information_06_00(struct profile *profile)
 				                    NULL);
 			g_free(url);
 
-			soup_session_send_message(soup_session, msg);
+			soup_session_send_message(rm_soup_session, msg);
 			if (msg->status_code != 200) {
 				g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
 				g_object_unref(msg);
@@ -499,7 +499,7 @@ gboolean fritzbox_get_fax_information_06_00(struct profile *profile)
 			data = msg->response_body->data;
 			read = msg->response_body->length;
 
-			log_save_data("fritzbox-06_00-show-usb-devices.html", data, read);
+			rm_log_save_data("fritzbox-06_00-show-usb-devices.html", data, read);
 
 			g_assert(data != NULL);
 
@@ -546,7 +546,7 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
 		g_object_unref(msg);
@@ -555,7 +555,7 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 	data = msg->response_body->data;
 	read = msg->response_body->length;
 
-	log_save_data("fritzbox-05_50-get-settings-0.html", data, read);
+	rm_log_save_data("fritzbox-05_50-get-settings-0.html", data, read);
 	g_assert(data != NULL);
 
 	gchar **numbers = xml_extract_tags(data, "td title=\"[^\"]*\"", "td");
@@ -584,7 +584,7 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
 		g_object_unref(msg);
@@ -593,7 +593,7 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 	data = msg->response_body->data;
 	read = msg->response_body->length;
 
-	log_save_data("fritzbox-05_50-get-settings-1.html", data, read);
+	rm_log_save_data("fritzbox-05_50-get-settings-1.html", data, read);
 	g_assert(data != NULL);
 
 	/* Try to detect controller */
@@ -634,7 +634,7 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
 		g_object_unref(msg);
@@ -643,7 +643,7 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 	data = msg->response_body->data;
 	read = msg->response_body->length;
 
-	log_save_data("fritzbox-05_50-get-settings-2.html", data, read);
+	rm_log_save_data("fritzbox-05_50-get-settings-2.html", data, read);
 	g_assert(data != NULL);
 
 	gchar *value;
@@ -692,7 +692,7 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
 		g_object_unref(msg);
@@ -701,7 +701,7 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 	data = msg->response_body->data;
 	read = msg->response_body->length;
 
-	log_save_data("fritzbox-05_50-get-settings-3.html", data, read);
+	rm_log_save_data("fritzbox-05_50-get-settings-3.html", data, read);
 	g_assert(data != NULL);
 
 	gchar *dialport = xml_extract_list_value(data, "telcfg:settings/DialPort");
@@ -779,7 +779,7 @@ gboolean fritzbox_load_journal_05_50(struct profile *profile, gchar **data_ptr)
 	g_free(url);
 
 	/* Queue message to session */
-	soup_session_queue_message(soup_session, msg, fritzbox_journal_05_50_cb, profile);
+	soup_session_queue_message(rm_soup_session, msg, fritzbox_journal_05_50_cb, profile);
 
 	return TRUE;
 }
@@ -808,7 +808,7 @@ gboolean fritzbox_clear_journal_05_50(struct profile *profile)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
 		g_object_unref(msg);

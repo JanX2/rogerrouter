@@ -17,19 +17,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_CONTACT_H
-#define LIBROUTERMANAGER_CONTACT_H
+#ifndef LIBROUTERMANAGER_RMCONTACT_H
+#define LIBROUTERMANAGER_RMCONTACT_H
 
 #include <glib.h>
 
 G_BEGIN_DECLS
 
-struct contact_address {
+typedef struct contact_address {
 	gint type;
 	gchar *street;
 	gchar *zip;
 	gchar *city;
-};
+} RmContactAddress;
 
 typedef struct contact {
 	/* Name */
@@ -60,11 +60,11 @@ typedef struct contact {
 	gpointer priv;
 } RmContact;
 
-void contact_copy(struct contact *src, struct contact *dst);
-struct contact *contact_dup(struct contact *src);
-gint contact_name_compare(gconstpointer a, gconstpointer b);
-struct contact *contact_find_by_number(gchar *number);
-void contact_free(struct contact *contact);
+void rm_contact_copy(RmContact *src, RmContact *dst);
+RmContact *rm_contact_dup(RmContact *src);
+gint rm_contact_name_compare(gconstpointer a, gconstpointer b);
+RmContact *rm_contact_find_by_number(gchar *number);
+void rm_contact_free(RmContact *contact);
 
 G_END_DECLS
 

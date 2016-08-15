@@ -355,4 +355,3 @@ gboolean rm_strv_contains(const gchar * const *strv, const gchar *str)
 	return FALSE;
 #endif
 }
-

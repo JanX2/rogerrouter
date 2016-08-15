@@ -296,7 +296,7 @@ static void phone_search_entry_set_contact(struct phone_state *state, struct con
 
 	if (identify) {
 		/* Copy contact and try to identify it */
-		search_contact = contact_dup(contact);
+		search_contact = rm_contact_dup(contact);
 		rm_emit_contact_process(search_contact);
 	} else {
 		search_contact = contact;

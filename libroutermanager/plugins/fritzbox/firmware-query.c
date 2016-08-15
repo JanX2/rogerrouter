@@ -26,9 +26,9 @@
 #include <json-glib/json-glib.h>
 
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/file.h>
-#include <libroutermanager/logging.h>
-#include <libroutermanager/network.h>
+#include <libroutermanager/rmfile.h>
+#include <libroutermanager/rmlog.h>
+#include <libroutermanager/rmnetwork.h>
 #include <libroutermanager/csv.h>
 #include <libroutermanager/ftp.h>
 #include <libroutermanager/call.h>
@@ -95,7 +95,7 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("Received status code: %d", msg->status_code);
 		g_object_unref(msg);
@@ -106,7 +106,7 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 	data = msg->response_body->data;
 	read = msg->response_body->length;
 
-	log_save_data("fritzbox-06_35-query.html", data, read);
+	rm_log_save_data("fritzbox-06_35-query.html", data, read);
 	g_assert(data != NULL);
 
 	parser = json_parser_new();

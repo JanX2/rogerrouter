@@ -27,8 +27,8 @@
 #include <CoreServices/CoreServices.h>
 
 #include <libroutermanager/call.h>
-#include <libroutermanager/plugins.h>
-#include <libroutermanager/password.h>
+#include <libroutermanager/rmplugins.h>
+#include <libroutermanager/rmpassword.h>
 
 #define ROUTERMANAGER_TYPE_KEYCHAIN_PLUGIN        (routermanager_keychain_plugin_get_type ())
 #define ROUTERMANAGER_KEYCHAIN_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_KEYCHAIN_PLUGIN, RouterManagerKeyChainPlugin))
@@ -205,7 +205,7 @@ struct password_manager keychain = {
 void impl_activate(PeasActivatable *plugin)
 {
 	g_debug("Register keychain password manager plugin");
-	password_manager_register(&keychain);
+	rm_password_register(&keychain);
 }
 
 /**

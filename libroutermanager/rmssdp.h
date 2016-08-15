@@ -17,30 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_NET_MONITOR_H
-#define LIBROUTERMANAGER_NET_MONITOR_H
+#ifndef LIBROUTERMANAGER_RMSSDP_H
+#define LIBROUTERMANAGER_RMSSDP_H
 
-G_BEGIN_DECLS
-
-typedef gboolean (*net_connect_func)(gpointer user_data);
-typedef gboolean (*net_disconnect_func)(gpointer user_data);
-
-struct net_event {
-	net_connect_func connect;
-	net_disconnect_func disconnect;
-	gboolean is_connected;
-	gpointer user_data;
-};
-
-gboolean net_monitor_init(void);
-void net_monitor_shutdown(void);
-
-void net_monitor_state_changed(gboolean state);
-gconstpointer net_add_event(net_connect_func connect, net_disconnect_func disconnect, gpointer user_data);
-void net_remove_event(gconstpointer net_event_id);
-gboolean net_is_online(void);
-void net_monitor_reconnect(void);
-
-G_END_DECLS
+void rm_ssdp_init(void);
+GList *rm_ssdp_get_routers(void);
 
 #endif

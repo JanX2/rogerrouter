@@ -32,4 +32,3 @@ share_DATA = \
 
 noinst_HEADERS = config.h
 
-DISTCLEANFILES = intltool-extract intltool-merge intltool-update

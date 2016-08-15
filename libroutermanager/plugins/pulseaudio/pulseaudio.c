@@ -27,9 +27,9 @@
 #include <pulse/simple.h>
 #include <pulse/error.h>
 
-#include <libroutermanager/profile.h>
-#include <libroutermanager/plugins.h>
-#include <libroutermanager/audio.h>
+#include <libroutermanager/rmprofile.h>
+#include <libroutermanager/rmplugins.h>
+#include <libroutermanager/rmaudio.h>
 #include <libroutermanager/gstring.h>
 
 #define ROUTERMANAGER_TYPE_PULSEAUDIO_PLUGIN (routermanager_pulseaudio_plugin_get_type())

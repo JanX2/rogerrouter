@@ -24,16 +24,16 @@
 #include <pjsua-lib/pjsua.h>
 
 #include <libroutermanager/rmconnection.h>
-#include <libroutermanager/plugins.h>
+#include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/net_monitor.h>
-#include <libroutermanager/audio.h>
+#include <libroutermanager/rmnetmonitor.h>
+#include <libroutermanager/rmaudio.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/rmphone.h>
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/gstring.h>
-#include <libroutermanager/settings.h>
+#include <libroutermanager/rmsettings.h>
 
 #include <roger/main.h>
 #include <roger/uitools.h>
@@ -406,7 +406,7 @@ static void impl_activate(PeasActivatable *plugin)
 	sip_settings = rm_settings_plugin_new("org.tabos.roger.plugins.sip", "sip");
 
 	/* Add network event */
-	sip_plugin->priv->net_event_id = net_add_event(sip_connect, sip_disconnect, sip_plugin);
+	sip_plugin->priv->net_event_id = rm_netmonitor_add_event(sip_connect, sip_disconnect, sip_plugin);
 
 	rm_phone_register(&sip_phone);
 }
@@ -421,7 +421,7 @@ static void impl_deactivate(PeasActivatable *plugin)
 
 	g_debug("%s(): sip", __FUNCTION__);
 	/* Remove network event */
-	net_remove_event(sip_plugin->priv->net_event_id);
+	rm_netmonitor_remove_event(sip_plugin->priv->net_event_id);
 
 	g_object_unref(sip_settings);
 }

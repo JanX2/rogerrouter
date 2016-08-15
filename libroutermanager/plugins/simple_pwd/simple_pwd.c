@@ -18,8 +18,8 @@
  */
 
 #include <libroutermanager/call.h>
-#include <libroutermanager/plugins.h>
-#include <libroutermanager/password.h>
+#include <libroutermanager/rmplugins.h>
+#include <libroutermanager/rmpassword.h>
 
 #define ROUTERMANAGER_TYPE_SIMPLE_PWD_PLUGIN        (routermanager_simple_pwd_plugin_get_type ())
 #define ROUTERMANAGER_SIMPLE_PWD_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_SIMPLE_PWD_PLUGIN, RouterManagerSimplePwdPlugin))
@@ -43,7 +43,7 @@ ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_SIMPLE_PWD_PLUGIN, RouterManage
 static void simple_pwd_store_password(struct profile *profile, const gchar *name, const gchar *password)
 {
 	GError *error = NULL;
-	gchar *enc_password = password_encode(password);
+	gchar *enc_password = rm_password_encode(password);
 
 	if (!simple_pwd_keyfile) {
 		return;
@@ -72,7 +72,7 @@ static gchar *simple_pwd_get_password(struct profile *profile, const gchar *name
 	enc_password = g_key_file_get_string(simple_pwd_keyfile, simple_pwd_group, name, &error);
 
 	if (enc_password) {
-		password = (gchar*) password_decode(enc_password);
+		password = (gchar*) rm_password_decode(enc_password);
 		g_free(enc_password);
 	} else {
 		g_debug("%s(): Failed to get password: %s", __FUNCTION__, error ? error->message : "");
@@ -122,10 +122,10 @@ void impl_activate(PeasActivatable *plugin)
 
 	if (!g_key_file_load_from_file(simple_pwd_keyfile, simple_pwd_file, G_KEY_FILE_NONE, &error)) {
 		g_debug("%s(): could not load key file -> %s", __FUNCTION__, error ? error->message : "");
-		//file_save(simple_pwd_file, NULL, 0);
+		//rm_file_save(simple_pwd_file, NULL, 0);
 	}
 
-	password_manager_register(&simple_pwd);
+	rm_password_register(&simple_pwd);
 }
 
 /**

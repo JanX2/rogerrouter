@@ -25,7 +25,7 @@
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/call.h>
 #include <libroutermanager/csv.h>
-#include <libroutermanager/logging.h>
+#include <libroutermanager/rmlog.h>
 
 #include "csv.h"
 #include "firmware-common.h"
@@ -92,7 +92,7 @@ GSList *csv_parse_fritzbox_journal_data(GSList *list, const gchar *data)
 	}
 
 	if (!new_list) {
-		log_save_data("fritzbox-journal.csv", data, strlen(data));
+		rm_log_save_data("fritzbox-journal.csv", data, strlen(data));
 	}
 
 	/* Return call list */

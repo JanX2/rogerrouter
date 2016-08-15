@@ -21,15 +21,17 @@
 
 #include <gio/gio.h>
 
-#include <libroutermanager/file.h>
+#include <libroutermanager/rmfile.h>
 
 /**
- * \brief Save data to file
- * \param file file name
- * \param data data pointer
- * \param len length of data
+ * rm_file_save:
+ * @file: file name
+ * @data: data pointer
+ * @len: length of data
+ *
+ * Save @data of length @len to file @name.
  */
-void file_save(gchar *name, const gchar *data, gsize len)
+void rm_file_save(gchar *name, const gchar *data, gsize len)
 {
 	GFile *file = g_file_new_for_path(name);
 	GError *error = NULL;
@@ -64,12 +66,15 @@ void file_save(gchar *name, const gchar *data, gsize len)
 }
 
 /**
- * \brief Load file
- * \param name file name
- * \param size pointer to store length of data to
- * \return file data pointer
+ * rm_file_load:
+ * @name: file name
+ * @size: pointer to store length of data to
+ *
+ * Load file @name.
+ *
+ * Returns: file data pointer
  */
-gchar *file_load(gchar *name, gsize *size)
+gchar *rm_file_load(gchar *name, gsize *size)
 {
 	GFile *file;
 	GFileInfo *file_info;

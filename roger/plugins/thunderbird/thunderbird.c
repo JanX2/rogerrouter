@@ -25,15 +25,15 @@
 
 #include <gtk/gtk.h>
 
-#include <libroutermanager/plugins.h>
+#include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/address-book.h>
 #include <libroutermanager/call.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/file.h>
+#include <libroutermanager/rmfile.h>
 #include <libroutermanager/gstring.h>
-#include <libroutermanager/settings.h>
+#include <libroutermanager/rmsettings.h>
 
 #include <roger/main.h>
 #include <roger/settings.h>
@@ -153,10 +153,10 @@ static gchar *find_thunderbird_dir(void) {
 	result = g_string_new(NULL);
 	snprintf(file, sizeof(file), "%s/.mozilla-thunderbird/profiles.ini", g_get_home_dir());
 
-	buffer = (gchar *) file_load(file, NULL);
+	buffer = (gchar *) rm_file_load(file, NULL);
 	if (buffer == NULL) {
 		snprintf(file, sizeof(file), "%s/.thunderbird/profiles.ini", g_get_home_dir());
-		buffer = (gchar *) file_load(file, NULL);
+		buffer = (gchar *) rm_file_load(file, NULL);
 		version3 = TRUE;
 	}
 
@@ -812,7 +812,7 @@ static void parse_person(GHashTable *map, gpointer pId) {
 		contact->addresses = g_slist_prepend(contact->addresses, address);
 	}
 
-	contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
+	contacts = g_slist_insert_sorted(contacts, contact, rm_contact_name_compare);
 	num_persons++;
 }
 

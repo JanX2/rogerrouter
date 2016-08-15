@@ -26,12 +26,12 @@
 #include <libroutermanager/rmconnection.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/rmmain.h>
-#include <libroutermanager/plugins.h>
+#include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmosdep.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/net_monitor.h>
-#include <libroutermanager/settings.h>
+#include <libroutermanager/rmnetmonitor.h>
+#include <libroutermanager/rmsettings.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/rmphone.h>
 
@@ -118,7 +118,7 @@ static void auth_response_callback(GtkDialog *dialog, gint response_id, gpointer
 		auth_data->password = g_strdup(gtk_entry_get_text(GTK_ENTRY(password_entry)));
 	}
 
-	network_authenticate(response_id == 1, auth_data);
+	rm_network_authenticate(response_id == 1, auth_data);
 
 	gtk_widget_destroy(GTK_WIDGET(dialog));
 }
@@ -236,7 +236,7 @@ static void pickup_activated(GSimpleAction *action, GVariant *parameter, gpointe
 	g_assert(connection != NULL);
 
 	/** Ask for contact information */
-	contact = contact_find_by_number(connection->remote_number);
+	contact = rm_contact_find_by_number(connection->remote_number);
 
 	/* Close notifications */
 	//notify_gnotification_close(connection->notification, NULL);
@@ -386,8 +386,8 @@ static void app_init(GtkApplication *app)
 	const gchar *user_plugins = g_get_user_data_dir();
 	gchar *path = g_build_filename(user_plugins, "roger", G_DIR_SEPARATOR_S, "plugins", NULL);
 
-	routermanager_plugins_add_search_path(path);
-	routermanager_plugins_add_search_path(rm_get_directory(APP_PLUGINS));
+	rm_plugins_add_search_path(path);
+	rm_plugins_add_search_path(rm_get_directory(APP_PLUGINS));
 	g_free(path);
 
 	if (option_state.profile) {
@@ -417,7 +417,7 @@ static void app_init(GtkApplication *app)
 		journal_set_hide_on_quit(TRUE);
 	}
 
-	if (net_is_online() && !rm_profile_get_active()) {
+	if (rm_netmonitor_is_online() && !rm_profile_get_active()) {
 		journal_set_hide_on_start(TRUE);
 		app_assistant();
 	}
@@ -514,7 +514,7 @@ static gint application_command_line_cb(GtkApplication *app, GApplicationCommand
 			full_number = call_full_number(option_state.number, FALSE);
 
 			/** Ask for contact information */
-			contact = contact_find_by_number(full_number);
+			contact = rm_contact_find_by_number(full_number);
 
 			app_show_phone_window(contact, NULL);
 			g_free(full_number);

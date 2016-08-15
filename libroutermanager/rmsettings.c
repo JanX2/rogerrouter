@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,16 +27,19 @@
 #include <gio/gsettingsbackend.h>
 #endif
 
-#include <libroutermanager/settings.h>
+#include <libroutermanager/rmsettings.h>
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/rmprofile.h>
 
 /**
- * \brief Create new gsettings configuration (either keyfile based, or system based)
- * \param scheme scheme name
- * \param path root path or NULL
- * \param file filename (used in keyfile case)
- * \return newly create gsettings
+ * rm_settings_new:
+ * @scheme: scheme name
+ * @path: root path or %NULL%
+ * @file: filename (used in keyfile case)
+ *
+ * Create new gsettings configuration (either keyfile based, or system based).
+ *
+ * Returns: newly create gsettings
  */
 GSettings *rm_settings_new(gchar *scheme, gchar *root_path, gchar *file)
 {
@@ -47,18 +50,18 @@ GSettings *rm_settings_new(gchar *scheme, gchar *root_path, gchar *file)
 	gchar *filename;
 
 	filename = g_build_filename(g_get_user_config_dir(), "routermanager", file, NULL);
-	g_debug("filename: '%s'", filename);
+	g_debug("%s(): filename: '%s'", __FUNCTION__, filename);
 	//keyfile = g_keyfile_settings_backend_new(filename, ROUTERMANAGER_PATH, "General");
 	if (!root_path) {
 		root_path = "/";
 	}
 	if (root_path) {
-		g_debug("root_path: '%s'", root_path);
+		g_debug("%s(): root_path: '%s'", __FUNCTION__, root_path);
 	}
 	keyfile = g_keyfile_settings_backend_new(filename, root_path, "General");
-	g_debug("keyfile: '%p'", keyfile);
+	g_debug("%s(): keyfile: '%p'", __FUNCTION__, keyfile);
 	settings = g_settings_new_with_backend(scheme, keyfile);
-	g_debug("settings: '%p'", settings);
+	g_debug("%s(): settings: '%p'", __FUNCTION__, settings);
 	g_free(filename);
 #else
 	settings = g_settings_new(scheme);
@@ -68,11 +71,14 @@ GSettings *rm_settings_new(gchar *scheme, gchar *root_path, gchar *file)
 }
 
 /**
- * \brief Create new gsettings configuration (either keyfile based, or system based)
- * \param scheme scheme name
- * \param settings_path settings path name
- * \param file filename (used in keyfile case)
- * \return newly create gsettings
+ * rm_settings_new_with_path:
+ * @scheme: scheme name
+ * @settings_path: settings path name
+ * @file: filename (used in keyfile case)
+ *
+ * Create new gsettings configuration (either keyfile based, or system based).
+ *
+ * Returns: newly create gsettings
  */
 GSettings *rm_settings_new_with_path(gchar *scheme, gchar *settings_path, gchar *file)
 {
@@ -95,10 +101,13 @@ GSettings *rm_settings_new_with_path(gchar *scheme, gchar *settings_path, gchar 
 }
 
 /**
- * \brief Create new plugin gsettings configuration (either keyfile based, or system based)
- * \param scheme scheme name
- * \param name plugin name
- * \return newly create gsettings
+ * rm_settings_plugin_new:
+ * @scheme: scheme name
+ * @name: plugin name
+ *
+ * Create new plugin gsettings configuration (either keyfile based, or system based).
+ *
+ * Returns: newly create gsettings
  */
 GSettings *rm_settings_plugin_new(gchar *scheme, gchar *name)
 {

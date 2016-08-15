@@ -25,8 +25,8 @@
 #include <gst/app/gstappsink.h>
 
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/plugins.h>
-#include <libroutermanager/audio.h>
+#include <libroutermanager/rmplugins.h>
+#include <libroutermanager/rmaudio.h>
 #include <libroutermanager/gstring.h>
 
 #define ROUTERMANAGER_TYPE_GSTREAMER_PLUGIN (routermanager_gstreamer_plugin_get_type())
@@ -89,13 +89,13 @@ static GSList *gstreamer_detect_devices(void)
 
 		audio_device->internal_name = g_strdup("autoaudiosink");
 		audio_device->name = g_strdup("Standard");
-		audio_device->type = AUDIO_OUTPUT;
+		audio_device->type = RM_AUDIO_OUTPUT;
 		devices = g_slist_prepend(devices, audio_device);
  
 		audio_device = g_slice_new0(struct audio_device);
 		audio_device->internal_name = g_strdup("autoaudiosrc");
 		audio_device->name = g_strdup("Standard");
-		audio_device->type = AUDIO_INPUT;
+		audio_device->type = RM_AUDIO_INPUT;
 		devices = g_slist_prepend(devices, audio_device);
 
 		return devices;
@@ -119,13 +119,13 @@ static GSList *gstreamer_detect_devices(void)
 			audio_device = g_slice_new0(struct audio_device);
 			audio_device->internal_name = g_strdup(name);
 			audio_device->name = g_strdup(name);
-			audio_device->type = AUDIO_OUTPUT;
+			audio_device->type = RM_AUDIO_OUTPUT;
 			devices = g_slist_prepend(devices, audio_device);
 		} else if (!strcmp(class, "Audio/Source")) {
 			audio_device = g_slice_new0(struct audio_device);
 			audio_device->internal_name = g_strdup(name);
 			audio_device->name = g_strdup(name);
-			audio_device->type = AUDIO_INPUT;
+			audio_device->type = RM_AUDIO_INPUT;
 			devices = g_slist_prepend(devices, audio_device);
 		}
 	}
@@ -478,7 +478,7 @@ static void impl_activate(PeasActivatable *plugin)
 	g_setenv("PULSE_PROP_media.role", "phone", TRUE);
 	g_setenv("PULSE_PROP_filter.want", "echo-cancel", TRUE);
 
-	routermanager_audio_register(&gstreamer);
+	rm_audio_register(&gstreamer);
 }
 
 /**

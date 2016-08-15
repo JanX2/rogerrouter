@@ -20,7 +20,7 @@
 #ifndef LIBROUTERMANAGER_CALL_H
 #define LIBROUTERMANAGER_CALL_H
 
-#include <libroutermanager/contact.h>
+#include <libroutermanager/rmcontact.h>
 #include <libroutermanager/rmprofile.h>
 
 G_BEGIN_DECLS

@@ -167,7 +167,7 @@ void address_book_contact_process_cb(AppObject *obj, struct contact *contact, gp
 	tmp_contact = g_hash_table_lookup(table, contact->number);
 	if (tmp_contact) {
 		if (!EMPTY_STRING(tmp_contact->name)) {
-			contact_copy(tmp_contact, contact);
+			rm_contact_copy(tmp_contact, contact);
 		} else {
 			/* Previous lookup done but no result found */
 			return;
@@ -182,7 +182,7 @@ void address_book_contact_process_cb(AppObject *obj, struct contact *contact, gp
 
 			g_hash_table_insert(table, contact->number, tmp_contact);
 
-			contact_copy(tmp_contact, contact);
+			rm_contact_copy(tmp_contact, contact);
 		} else {
 			/* We have found no entry, mark it in table to speedup further lookup */
 			tmp_contact = g_slice_alloc0(sizeof(struct contact));

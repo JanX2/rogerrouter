@@ -20,7 +20,7 @@
 #ifndef PHONE_H
 #define PHONE_H
 
-#include <libroutermanager/contact.h>
+#include <libroutermanager/rmcontact.h>
 #include <libroutermanager/rmconnection.h>
 #include <libroutermanager/appobject.h>
 

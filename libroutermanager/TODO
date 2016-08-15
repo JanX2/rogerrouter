@@ -1,0 +1,4 @@
+* soup cache
+* remove global soup session
+
+* move password plugin info to profile

@@ -27,10 +27,10 @@
 
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/plugins.h>
-#include <libroutermanager/file.h>
+#include <libroutermanager/rmplugins.h>
+#include <libroutermanager/rmfile.h>
 #include <libroutermanager/rmmain.h>
-#include <libroutermanager/settings.h>
+#include <libroutermanager/rmsettings.h>
 #include <libroutermanager/gstring.h>
 
 #include <roger/settings.h>
@@ -158,20 +158,20 @@ void webjournal_journal_loaded_cb(AppObject *obj, GSList *journal, gpointer user
 
 	out = g_string_free(string, FALSE);
 
-	file_save(file, out, -1);
+	rm_file_save(file, out, -1);
 
 	dirname = g_path_get_dirname(file);
 
 	file = g_strdup_printf("%s/dragtable.js", dirname);
-	file_save(file, webjournal_plugin->priv->dragtable, -1);
+	rm_file_save(file, webjournal_plugin->priv->dragtable, -1);
 	g_free(file);
 
 	file = g_strdup_printf("%s/sortable.js", dirname);
-	file_save(file, webjournal_plugin->priv->sortable, -1);
+	rm_file_save(file, webjournal_plugin->priv->sortable, -1);
 	g_free(file);
 
 	file = g_strdup_printf("%s/styling.css", dirname);
-	file_save(file, webjournal_plugin->priv->styling, -1);
+	rm_file_save(file, webjournal_plugin->priv->styling, -1);
 	g_free(file);
 
 	g_free(dirname);
@@ -189,27 +189,27 @@ static void impl_activate(PeasActivatable *plugin)
 	gchar *file;
 
 	file = g_strconcat(rm_get_directory(RM_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "header.html", NULL);
-	webjournal_plugin->priv->header = file_load(file, NULL);
+	webjournal_plugin->priv->header = rm_file_load(file, NULL);
 	g_free(file);
 
 	file = g_strconcat(rm_get_directory(RM_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "entry.html", NULL);
-	webjournal_plugin->priv->entry = file_load(file, NULL);
+	webjournal_plugin->priv->entry = rm_file_load(file, NULL);
 	g_free(file);
 
 	file = g_strconcat(rm_get_directory(RM_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "footer.html", NULL);
-	webjournal_plugin->priv->footer = file_load(file, NULL);
+	webjournal_plugin->priv->footer = rm_file_load(file, NULL);
 	g_free(file);
 
 	file = g_strconcat(rm_get_directory(RM_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "dragtable.js", NULL);
-	webjournal_plugin->priv->dragtable = file_load(file, NULL);
+	webjournal_plugin->priv->dragtable = rm_file_load(file, NULL);
 	g_free(file);
 
 	file = g_strconcat(rm_get_directory(RM_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "sortable.js", NULL);
-	webjournal_plugin->priv->sortable = file_load(file, NULL);
+	webjournal_plugin->priv->sortable = rm_file_load(file, NULL);
 	g_free(file);
 
 	file = g_strconcat(rm_get_directory(RM_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "styling.css", NULL);
-	webjournal_plugin->priv->styling = file_load(file, NULL);
+	webjournal_plugin->priv->styling = rm_file_load(file, NULL);
 	g_free(file);
 
 	webjournal_settings = rm_settings_plugin_new("org.tabos.roger.plugins.webjournal", "webjournal");

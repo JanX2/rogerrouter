@@ -21,22 +21,36 @@
 
 #include <string.h>
 #include <libroutermanager/gstring.h>
-#include <libroutermanager/network.h>
+#include <libroutermanager/rmnetwork.h>
 #include <libroutermanager/appobject-emit.h>
 
 /** Soup session */
-SoupSession *soup_session = NULL;
+SoupSession *rm_soup_session = NULL;
 
-static void free_auth_data(struct auth_data *auth_data)
+/**
+ * rm_network_free_auth_data:
+ * @auth_data: a #RmAuthData
+ *
+ * Releases and frees authentication data.
+ */
+static void rm_network_free_auth_data(RmAuthData *auth_data)
 {
 	g_object_unref(auth_data->msg);
+
 	g_free(auth_data->username);
 	g_free(auth_data->password);
 
 	g_slice_free(struct auth_data, auth_data);
 }
 
-static void save_password_callback(SoupMessage* msg, struct auth_data *auth_data)
+/**
+ * rm_network_save_password_cb:
+ * @msg: a #SoupMessage
+ * @auth_data: a #RmAuthData
+ *
+ * Saves authentication credentials if network transfer was successful.
+ */
+static void rm_network_save_password_cb(SoupMessage* msg, RmAuthData *auth_data)
 {
 	if (msg->status_code != 401 && msg->status_code < 500) {
 		RmProfile *profile = rm_profile_get_active();
@@ -47,29 +61,44 @@ static void save_password_callback(SoupMessage* msg, struct auth_data *auth_data
 		g_debug("%s(): Storing data for later processing", __FUNCTION__);
 	}
 
-	g_signal_handlers_disconnect_by_func(msg, save_password_callback, auth_data);
+	g_signal_handlers_disconnect_by_func(msg, rm_network_save_password_cb, auth_data);
 
-	free_auth_data(auth_data);
+	rm_network_free_auth_data(auth_data);
 }
 
-void network_authenticate(gboolean auth_set, struct auth_data *auth_data)
+/**
+ * rm_network_authenticate:
+ * @auth_set: indicated whether authtentification data has been set
+ * @auth_data: a #RmAuthData
+ */
+void rm_network_authenticate(gboolean auth_set, RmAuthData *auth_data)
 {
 	g_debug("%s(): calling authenticate", __FUNCTION__);
 
 	if (auth_set) {
 		soup_auth_authenticate(auth_data->auth, auth_data->username, auth_data->password);
-		g_signal_connect(auth_data->msg, "got-headers", G_CALLBACK(save_password_callback), auth_data);
+		g_signal_connect(auth_data->msg, "got-headers", G_CALLBACK(rm_network_save_password_cb), auth_data);
 	}
 
 	soup_session_unpause_message(auth_data->session, auth_data->msg);
 	if (!auth_set) {
-		free_auth_data(auth_data);
+		rm_network_free_auth_data(auth_data);
 	}
 }
 
+/**
+ * rm_network_authenticate_cb:
+ * @sesion: a #SoupSession
+ * @msg: a #SoupMessage
+ * @auth: a #SoupAuth
+ * @retrying: flag indicating if method is called again
+ * @user_data: user data
+ *
+ * A network authentication is required. Retrieve information from settings or ask user.
+ */
 static void network_authenticate_cb(SoupSession *session, SoupMessage *msg, SoupAuth *auth, gboolean retrying, gpointer user_data)
 {
-	struct auth_data *auth_data;
+	RmAuthData *auth_data;
 	RmProfile *profile = rm_profile_get_active();
 	const gchar *user;
 	const gchar *password;
@@ -105,7 +134,7 @@ static void network_authenticate_cb(SoupSession *session, SoupMessage *msg, Soup
 
 		soup_session_unpause_message(session, msg);
 	} else {
-		auth_data = g_slice_new0(struct auth_data);
+		auth_data = g_slice_new0(RmAuthData);
 
 		auth_data->msg = msg;
 		auth_data->auth = auth;
@@ -119,22 +148,27 @@ static void network_authenticate_cb(SoupSession *session, SoupMessage *msg, Soup
 }
 
 /**
- * \brief Initialize network functions
- * \return TRUE on success, otherwise FALSE
+ * rm_network_init:
+ *
+ * Initialize network functions.
+ *
+ * Returns: TRUE on success, otherwise FALSE
  */
-gboolean net_init(void)
+gboolean rm_network_init(void)
 {
-	soup_session = soup_session_new_with_options(SOUP_SESSION_TIMEOUT, 5, NULL);
+	rm_soup_session = soup_session_new_with_options(SOUP_SESSION_TIMEOUT, 5, NULL);
 
-	g_signal_connect(soup_session, "authenticate", G_CALLBACK(network_authenticate_cb), soup_session);
+	g_signal_connect(rm_soup_session, "authenticate", G_CALLBACK(network_authenticate_cb), rm_soup_session);
 
-	return soup_session != NULL;
+	return rm_soup_session != NULL;
 }
 
 /**
- * \brief Deinitialize network infrastructure
+ * rm_network_shutdown:
+ *
+ * Shutdown network infrastructure.
  */
-void net_shutdown(void)
+void rm_network_shutdown(void)
 {
-	g_clear_object(&soup_session);
+	g_clear_object(&rm_soup_session);
 }

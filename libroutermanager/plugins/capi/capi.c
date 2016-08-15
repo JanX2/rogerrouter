@@ -29,9 +29,9 @@
 #endif
 
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/plugins.h>
-#include <libroutermanager/net_monitor.h>
-#include <libroutermanager/audio.h>
+#include <libroutermanager/rmplugins.h>
+#include <libroutermanager/rmnetmonitor.h>
+#include <libroutermanager/rmaudio.h>
 #include <libroutermanager/gstring.h>
 
 #include <libroutermanager/rmprofile.h>
@@ -49,7 +49,7 @@
 #define ROUTERMANAGER_CAPI_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_CAPI_PLUGIN, RouterManagerCapiPlugin))
 
 typedef struct {
-	gconstpointer net_event_id;
+	RmNetEvent *net_event;
 
 	GIOChannel *channel;
 	guint id;
@@ -1943,10 +1943,10 @@ void connection_status(struct capi_connection *capi_connection, gint status)
 }
 
 struct session_handlers session_handlers = {
-	audio_open, /* audio_open */
-	audio_read, /* audio_read */
-	audio_write, /* audio_write */
-	audio_close, /* audio_close */
+	rm_audio_open, /* audio_open */
+	rm_audio_read, /* audio_read */
+	rm_audio_write, /* audio_write */
+	rm_audio_close, /* audio_close */
 
 	connection_established, /* connection_established */
 	connection_terminated, /* connection_terminated */
@@ -1994,7 +1994,7 @@ static void impl_activate(PeasActivatable *plugin)
 	RouterManagerCapiPlugin *capi_plugin = ROUTERMANAGER_CAPI_PLUGIN(plugin);
 
 	/* Add network event */
-	capi_plugin->priv->net_event_id = net_add_event(capi_session_connect, capi_session_disconnect, capi_plugin);
+	capi_plugin->priv->net_event = rm_netmonitor_add_event(capi_session_connect, capi_session_disconnect, capi_plugin);
 
 	capi_phone_init();
 }
@@ -2009,5 +2009,6 @@ static void impl_deactivate(PeasActivatable *plugin)
 
 	g_debug("%s(): capi", __FUNCTION__);
 	/* Remove network event */
-	net_remove_event(capi_plugin->priv->net_event_id);
+
+	rm_netmonitor_remove_event(capi_plugin->priv->net_event);
 }

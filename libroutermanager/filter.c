@@ -29,7 +29,7 @@
 #include <gio/gio.h>
 #include <libintl.h>
 
-#include <libroutermanager/file.h>
+#include <libroutermanager/rmfile.h>
 #include <libroutermanager/call.h>
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/gstring.h>
@@ -514,7 +514,7 @@ void filter_save(void)
 		gchar *file = g_build_filename(path, filter->name, NULL);
 		gchar *data = filter_to_data(filter);
 
-		file_save(file, data, -1);
+		rm_file_save(file, data, -1);
 		if (!filter->file) {
 			filter->file = g_strdup(file);
 		}

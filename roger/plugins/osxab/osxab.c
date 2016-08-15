@@ -26,16 +26,16 @@
 #include <AddressBook/ABAddressBookC.h>
 #include <AddressBook/ABGlobalsC.h>
 
-#include <libroutermanager/plugins.h>
-#include <libroutermanager/profile.h>
+#include <libroutermanager/rmplugins.h>
+#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/address-book.h>
 #include <libroutermanager/call.h>
-#include <libroutermanager/contact.h>
+#include <libroutermanager/rmcontact.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/file.h>
+#include <libroutermanager/rmfile.h>
 #include <libroutermanager/gstring.h>
-#include <libroutermanager/settings.h>
+#include <libroutermanager/rmsettings.h>
 
 #define ROUTERMANAGER_TYPE_OSXAB_PLUGIN        (routermanager_osxab_plugin_get_type ())
 #define ROUTERMANAGER_OSXAB_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_OSXAB_PLUGIN, RouterManagerOSXAbPlugin))
@@ -178,7 +178,7 @@ static int osxab_read_book(void) {
 			gdk_pixbuf_loader_close(loader, NULL);
 		}
 
-		contacts = g_slist_insert_sorted(contacts, contact, contact_name_compare);
+		contacts = g_slist_insert_sorted(contacts, contact, rm_contact_name_compare);
 	}
 
 	return 0;

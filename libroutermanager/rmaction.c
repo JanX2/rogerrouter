@@ -27,7 +27,7 @@
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/gstring.h>
-#include <libroutermanager/settings.h>
+#include <libroutermanager/rmsettings.h>
 
 /**
  * SECTION:rmaction
@@ -83,7 +83,7 @@ gchar *rm_action_regex(gchar *str, RmConnection *connection)
 	g_hash_table_insert(h, "%NUMBER%", connection->remote_number);
 
 	/* Based on connection ask for contact information */
-	contact = contact_find_by_number(connection->remote_number);
+	contact = rm_contact_find_by_number(connection->remote_number);
 
 	if (contact) {
 		g_hash_table_insert(h, "%NAME%", contact->name ? contact->name : "");

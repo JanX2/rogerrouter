@@ -17,10 +17,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_SSDP_H
-#define LIBROUTERMANAGER_SSDP_H
+#ifndef LIBROUTERMANAGER_RMFILE_H
+#define LIBROUTERMANAGER_RMFILE_H
 
-void ssdp_init(void);
-GList *ssdp_get_routers(void);
+G_BEGIN_DECLS
+
+void rm_file_save(gchar *name, const gchar *data, gsize len);
+gchar *rm_file_load(gchar *name, gsize *size);
+
+G_END_DECLS
 
 #endif

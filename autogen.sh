@@ -32,5 +32,4 @@ if [ $RES != 0 ]; then
 fi
 rm -rf autom4te*.cache
 gtkdocize || exit 1
-echo "copy intltool related files" && intltoolize --automake --force --copy
 echo 'run "./configure && make"'

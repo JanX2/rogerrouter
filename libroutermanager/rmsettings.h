@@ -17,27 +17,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_NETWORK_H
-#define LIBROUTERMANAGER_NETWORK_H
+#ifndef LIBROUTERMANAGER_RMSETTINGS_H
+#define LIBROUTERMANAGER_RMSETTINGS_H
 
 G_BEGIN_DECLS
 
-#include <libsoup/soup.h>
-
-struct auth_data {
-	SoupMessage *msg;
-	SoupAuth *auth;
-	SoupSession *session;
-	gboolean retry;
-	gchar *username;
-	gchar *password;
-};
-
-extern SoupSession *soup_session;
-
-gboolean net_init(void);
-void net_shutdown(void);
-void network_authenticate(gboolean auth, struct auth_data *auth_data);
+GSettings *rm_settings_new(gchar *scheme, gchar *root_path, gchar *file);
+GSettings *rm_settings_plugin_new(gchar *scheme, gchar *file);
+GSettings *rm_settings_new_with_path(gchar *scheme, gchar *path, gchar *file);
 
 G_END_DECLS
 

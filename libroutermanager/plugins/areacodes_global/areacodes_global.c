@@ -28,8 +28,8 @@
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/appobject.h>
-#include <libroutermanager/file.h>
-#include <libroutermanager/plugins.h>
+#include <libroutermanager/rmfile.h>
+#include <libroutermanager/rmplugins.h>
 #include <libroutermanager/gstring.h>
 
 #include "csv.h"
@@ -186,7 +186,7 @@ static void impl_activate(PeasActivatable *plugin)
 	g_debug("AreaCodes: '%s'", areacodes);
 
 	/* Load data file */
-	data = file_load(areacodes, &read);
+	data = rm_file_load(areacodes, &read);
 	if (!data || read < 1) {
 		g_debug("Could not load areacodes: %s", areacodes);
 		g_free(data);

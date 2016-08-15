@@ -26,15 +26,15 @@
 
 #include <libsoup/soup.h>
 
-#include <libroutermanager/logging.h>
+#include <libroutermanager/rmlog.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/network.h>
+#include <libroutermanager/rmnetwork.h>
 #include <libroutermanager/call.h>
 #include <libroutermanager/ftp.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/file.h>
+#include <libroutermanager/rmfile.h>
 
 #include "fritzbox.h"
 #include "firmware-common.h"
@@ -391,7 +391,7 @@ gboolean fritzbox_present(struct router_info *router_info)
 	url = g_strdup_printf("http://%s/jason_boxinfo.xml", router_info->host);
 	msg = soup_message_new(SOUP_METHOD_GET, url);
 
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 	if (msg->status_code != 200) {
 		g_object_unref(msg);
 		g_free(url);
@@ -407,7 +407,7 @@ gboolean fritzbox_present(struct router_info *router_info)
 	data = msg->response_body->data;
 	read = msg->response_body->length;
 
-	log_save_data("fritzbox-present.html", data, read);
+	rm_log_save_data("fritzbox-present.html", data, read);
 	g_return_val_if_fail(data != NULL, FALSE);
 
 	name = xml_extract_tag(data, "j:Name");
@@ -479,7 +479,7 @@ gboolean fritzbox_logout(struct profile *profile, gboolean force)
 	                            NULL);
 	g_free(url);
 
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 	if (msg->status_code != 200) {
 		g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
 		g_object_unref(msg);
@@ -910,14 +910,14 @@ gchar *fritzbox_new1(struct profile *profile)
 	headers = msg->request_headers;
 	soup_message_headers_append(headers, "SoapAction", "urn:dslforum-org:service:X_AVM-DE_OnTel:1#GetCallList");
 
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 
 	if (msg->status_code != 200) {
 		g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
 		g_object_unref(msg);
 		return NULL;
 	}
-file_save("moep", msg->response_body->data, -1);
+	rm_file_save("moep", msg->response_body->data, -1);
 
 	ip = xml_extract_tag(msg->response_body->data, "NewCallListURL");
 
@@ -969,7 +969,7 @@ gchar *fritzbox_get_ip(struct profile *profile)
 	headers = msg->request_headers;
 	soup_message_headers_append(headers, "SoapAction", "urn:schemas-upnp-org:service:WANIPConnection:1#GetExternalIPAddress");
 
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 
 	if (msg->status_code != 200) {
 		g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
@@ -1023,7 +1023,7 @@ gboolean fritzbox_reconnect(struct profile *profile)
 	headers = msg->request_headers;
 	soup_message_headers_append(headers, "SoapAction", "urn:schemas-upnp-org:service:WANIPConnection:1#ForceTermination");
 
-	soup_session_send_message(soup_session, msg);
+	soup_session_send_message(rm_soup_session, msg);
 
 	if (msg->status_code != 200) {
 		g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);

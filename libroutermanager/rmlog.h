@@ -17,15 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_LOOKUP_H
-#define LIBROUTERMANAGER_LOOKUP_H
+#ifndef LIBROUTERMANAGER_RMLOG_H
+#define LIBROUTERMANAGER_RMLOG_H
 
 G_BEGIN_DECLS
 
-typedef gboolean (*lookup_func)(gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city);
-
-gboolean routermanager_lookup(gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city);
-gboolean routermanager_lookup_register(lookup_func func);
+void rm_log_save_data(gchar *name, const gchar *data, gsize len);
+void rm_log_init(gboolean debug);
+void rm_log_shutdown(void);
+void rm_log_set_level(GLogLevelFlags level);
 
 G_END_DECLS
 

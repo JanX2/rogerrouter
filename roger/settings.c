@@ -28,12 +28,12 @@
 
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/net_monitor.h>
+#include <libroutermanager/rmnetmonitor.h>
 #include <libroutermanager/ftp.h>
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/password.h>
+#include <libroutermanager/rmpassword.h>
 #include <libroutermanager/rmaction.h>
-#include <libroutermanager/audio.h>
+#include <libroutermanager/rmaudio.h>
 #include <libroutermanager/address-book.h>
 
 #include <roger/application.h>
@@ -109,7 +109,7 @@ void login_check_button_clicked_cb(GtkButton *button, gpointer user_data)
 		gtk_widget_destroy(dialog);
 
 		if (locked) {
-			net_monitor_reconnect();
+			rm_netmonitor_reconnect();
 		}
 	} else {
 		//dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("Login password is invalid"));
@@ -177,7 +177,7 @@ void login_password_entry_changed_cb(GtkEntry *entry, gpointer user_data)
 {
 	struct profile *profile = rm_profile_get_active();
 
-	password_manager_set_password(profile, "login-password", gtk_entry_get_text(GTK_ENTRY(entry)));
+	rm_password_set(profile, "login-password", gtk_entry_get_text(GTK_ENTRY(entry)));
 }
 
 /**
@@ -189,7 +189,7 @@ void ftp_password_entry_changed_cb(GtkEntry *entry, gpointer user_data)
 {
 	struct profile *profile = rm_profile_get_active();
 
-	password_manager_set_password(profile, "ftp-password", gtk_entry_get_text(GTK_ENTRY(entry)));
+	rm_password_set(profile, "ftp-password", gtk_entry_get_text(GTK_ENTRY(entry)));
 }
 
 /**
@@ -1209,7 +1209,7 @@ void audio_plugin_combobox_changed_cb(GtkComboBox *box, gpointer user_data) {
 	active = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(settings->audio_plugin_combobox));
 
 	/* Find active audio plugin structure */
-	audio_plugins = audio_get_plugins();
+	audio_plugins = rm_audio_get_plugins();
 	for (list = audio_plugins; list != NULL; list = list->next) {
 		audio = list->data;
 
@@ -1225,7 +1225,7 @@ void audio_plugin_combobox_changed_cb(GtkComboBox *box, gpointer user_data) {
 	for (list = devices; list; list = list->next) {
 		struct audio_device *device = list->data;
 
-		if (device->type == AUDIO_INPUT) {
+		if (device->type == RM_AUDIO_INPUT) {
 			gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->audio_input_combobox), device->internal_name, device->name);
 
 			if (!strcmp(device->internal_name, input_name)) {
@@ -1254,7 +1254,7 @@ void audio_plugin_combobox_changed_cb(GtkComboBox *box, gpointer user_data) {
 		}
 	}
 
-	audio_set_default(active);
+	rm_audio_set_default(active);
 }
 
 void view_call_type_icons_combobox_changed_cb(GtkComboBox *widget, gpointer user_data)
@@ -1471,7 +1471,7 @@ void app_show_settings(void)
 	settings->audio_output_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "audio_output_combobox"));
 	settings->audio_input_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "audio_input_combobox"));
 
-	audio_plugins = audio_get_plugins();
+	audio_plugins = rm_audio_get_plugins();
 	for (list = audio_plugins; list != NULL; list = list->next) {
 		struct audio *audio = list->data;
 
@@ -1495,7 +1495,7 @@ void app_show_settings(void)
 	}
 
 	/* Security group */
-	GSList *plugins = password_manager_get_plugins();
+	GSList *plugins = rm_password_get_plugins();
 	settings->security_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "security_plugin_combobox"));
 
 	for (list = plugins; list; list = list->next) {

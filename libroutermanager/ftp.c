@@ -25,7 +25,7 @@
 #include <gio/gio.h>
 
 #include <libroutermanager/router.h>
-#include <libroutermanager/network.h>
+#include <libroutermanager/rmnetwork.h>
 #include <libroutermanager/ftp.h>
 
 //#define FTP_DEBUG 1

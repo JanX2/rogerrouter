@@ -46,7 +46,7 @@
 #	include <gnu/libc-version.h>
 #endif
 
-#include <libroutermanager/file.h>
+#include <libroutermanager/rmfile.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/router.h>
 
@@ -167,7 +167,7 @@ static void crash_create_debugger_file(void)
 {
 	gchar *filespec = g_strconcat(g_get_user_cache_dir(), G_DIR_SEPARATOR_S, DEBUGGERRC, NULL);
 
-	file_save(filespec, DEBUG_SCRIPT, -1);
+	rm_file_save(filespec, DEBUG_SCRIPT, -1);
 	g_free(filespec);
 }
 
@@ -295,7 +295,7 @@ static void crash_save_crash_log(GtkButton *button, const gchar *text)
 	g_free(time);
 	g_date_time_unref(datetime);
 
-	file_save(buf, text, -1);
+	rm_file_save(buf, text, -1);
 	g_free(buf);
 }
 

@@ -21,12 +21,20 @@
 #include <libgupnp/gupnp-device-info.h>
 
 #include <libroutermanager/router.h>
+#include <libroutermanager/rmssdp.h>
 
-static GUPnPContextManager *context_manager;
+static GUPnPContextManager *rm_context_manager;
 
-static GList *routers = NULL;
+static GList *rm_routers = NULL;
 
-static void device_proxy_available_cb(GUPnPControlPoint *cp, GUPnPDeviceProxy *proxy)
+/**
+ * rm_device_proxy_available_cb:
+ * @cp: a #GUPnPControlPoint
+ * @proxy: a #GUPnPDeviceProxy
+ *
+ * Scan for available routers once a new network device is attached.
+ */
+static void rm_device_proxy_available_cb(GUPnPControlPoint *cp, GUPnPDeviceProxy *proxy)
 {
 	struct router_info *router_info = g_slice_new0(struct router_info);
 	GUPnPDeviceInfo *info = GUPNP_DEVICE_INFO(proxy);
@@ -37,50 +45,76 @@ static void device_proxy_available_cb(GUPnPControlPoint *cp, GUPnPDeviceProxy *p
 
 	/* Scan for router and add detected devices */
 	if (router_present(router_info) == TRUE) {
-		routers = g_list_append(routers, router_info);
+		rm_routers = g_list_append(rm_routers, router_info);
 	}
 }
 
-static void device_proxy_unavailable_cb(GUPnPControlPoint *cp, GUPnPDeviceProxy *proxy)
+/**
+ * rm_device_proxy_unavailable_cb:
+ * @cp: a #GUPnPControlPoint
+ * @proxy: a #GUPnPDeviceProxy
+ *
+ * Currently does nothing....
+ */
+static void rm_device_proxy_unavailable_cb(GUPnPControlPoint *cp, GUPnPDeviceProxy *proxy)
 {
 	g_debug("%s(): %s", __FUNCTION__, gupnp_device_info_get_model_name(GUPNP_DEVICE_INFO(proxy)));
 }
 
-GList *ssdp_get_routers(void)
+/**
+ * rm_ssdp_get_routers:
+ *
+ * Returns: a list of detected routers
+ */
+GList *rm_ssdp_get_routers(void)
 {
-	if (!routers) {
+	if (!rm_routers) {
 		struct router_info *router_info = g_slice_new0(struct router_info);
 
-		/* Fallback - In case no routers have been detected, try at least fritz.box manually */
+		/* Fallback - In case no rm_routers have been detected, try at least fritz.box manually */
 		router_info->host = g_strdup("fritz.box");
 
 		/* Scan for router and add detected devices */
 		if (router_present(router_info) == TRUE) {
-			routers = g_list_append(routers, router_info);
+			rm_routers = g_list_append(rm_routers, router_info);
 		}
 	}
 
-	return routers;
+	return rm_routers;
 }
 
-static void on_context_available(GUPnPContextManager *manager, GUPnPContext *context, gpointer user_data)
+/**
+ * rm_on_context_available:
+ * @manager: a #GUPnPContextManager
+ * @context: a GUPnPContext
+ * @user_data: unused
+ *
+ * Activated once a new upnp context is available. Scans for new upnp internet gateway devices.
+ */
+static void rm_on_context_available(GUPnPContextManager *manager, GUPnPContext *context, gpointer user_data)
 {
 	GUPnPControlPoint *cp;
 
 	cp = gupnp_control_point_new(context, "urn:schemas-upnp-org:device:InternetGatewayDevice:1");
 
-	g_signal_connect(cp, "device-proxy-available", G_CALLBACK(device_proxy_available_cb), NULL);
-	g_signal_connect(cp, "device-proxy-unavailable", G_CALLBACK (device_proxy_unavailable_cb), NULL);
+	g_signal_connect(cp, "device-proxy-available", G_CALLBACK(rm_device_proxy_available_cb), NULL);
+	g_signal_connect(cp, "device-proxy-unavailable", G_CALLBACK(rm_device_proxy_unavailable_cb), NULL);
 
 	gssdp_resource_browser_set_active(GSSDP_RESOURCE_BROWSER(cp), TRUE);
 
-	gupnp_context_manager_manage_control_point(context_manager, cp);
+	gupnp_context_manager_manage_control_point(rm_context_manager, cp);
 
 	g_object_unref (cp);
 }
 
-void ssdp_init(void)
+/**
+ * rm_ssdp_init:
+ *
+ * Initialize ssdp handling
+ */
+void rm_ssdp_init(void)
 {
-	context_manager = gupnp_context_manager_new(NULL, 1900);
-	g_signal_connect(context_manager, "context-available", G_CALLBACK(on_context_available), NULL);
+	rm_context_manager = gupnp_context_manager_new(NULL, 1900);
+
+	g_signal_connect(rm_context_manager, "context-available", G_CALLBACK(rm_on_context_available), NULL);
 }

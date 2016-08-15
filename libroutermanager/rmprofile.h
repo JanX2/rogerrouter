@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_PROFILE_H
-#define LIBROUTERMANAGER_PROFILE_H
+#ifndef LIBROUTERMANAGER_RMPROFILE_H
+#define LIBROUTERMANAGER_RMPROFILE_H
 
 #include <gio/gio.h>
 

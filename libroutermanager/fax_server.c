@@ -29,7 +29,7 @@
 #endif
 
 #include <appobject-emit.h>
-#include <fax_printer.h>
+#include <rmfaxprinter.h>
 
 #ifdef USE_PRINTER_SERVER
 

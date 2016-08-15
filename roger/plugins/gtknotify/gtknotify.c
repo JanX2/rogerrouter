@@ -23,7 +23,7 @@
 
 #include <gtk/gtk.h>
 
-#include <libroutermanager/plugins.h>
+#include <libroutermanager/rmplugins.h>
 #include <libroutermanager/call.h>
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/appobject-emit.h>
@@ -32,9 +32,9 @@
 #include <libroutermanager/rmphone.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/lookup.h>
+#include <libroutermanager/rmlookup.h>
 #include <libroutermanager/gstring.h>
-#include <libroutermanager/settings.h>
+#include <libroutermanager/rmsettings.h>
 
 #include <roger/main.h>
 #include <roger/application.h>
@@ -69,7 +69,7 @@ static void notify_accept_clicked_cb(GtkWidget *notify, gpointer user_data)
 	g_assert(connection != NULL);
 
 	/** Ask for contact information */
-	contact = contact_find_by_number(connection->remote_number);
+	contact = rm_contact_find_by_number(connection->remote_number);
 
 	gtk_widget_destroy(connection->notification);
 	connection->notification = NULL;
@@ -120,7 +120,7 @@ static gpointer notification_reverse_lookup_thread(gpointer data)
 
 	number = connection->remote_number;
 
-	if (routermanager_lookup(number, &name, &address, &zip, &city)) {
+	if (rm_lookup(number, &name, &address, &zip, &city)) {
 		if (connection->notification) {
 			GtkWidget *contact_name_label = g_object_get_data(connection->notification, "name");
 			GtkWidget *contact_street_label = g_object_get_data(connection->notification, "street");
@@ -243,7 +243,7 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 	}
 
 	/** Ask for contact information */
-	contact = contact_find_by_number(connection->remote_number);
+	contact = rm_contact_find_by_number(connection->remote_number);
 
 	notify = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 

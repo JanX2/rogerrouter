@@ -34,10 +34,10 @@
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/filter.h>
 #include <libroutermanager/appobject.h>
-#include <libroutermanager/file.h>
+#include <libroutermanager/rmfile.h>
 #include <libroutermanager/rmosdep.h>
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/lookup.h>
+#include <libroutermanager/rmlookup.h>
 #include <libroutermanager/csv.h>
 #include <libroutermanager/gstring.h>
 
@@ -388,7 +388,7 @@ gpointer lookup_journal(gpointer user_data)
 			continue;
 		}
 
-		if (routermanager_lookup(call->remote->number, &name, &street, &zip, &city)) {
+		if (rm_lookup(call->remote->number, &name, &street, &zip, &city)) {
 			call->remote->name = name;
 			call->remote->street = street;
 			call->remote->zip = zip;
@@ -670,7 +670,7 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 
 		if (data && len) {
 			gchar *path = g_build_filename(g_get_user_cache_dir(), G_DIR_SEPARATOR_S, "fax.pdf", NULL);
-			file_save(path, data, len);
+			rm_file_save(path, data, len);
 
 			rm_os_execute(path);
 			g_free(path);

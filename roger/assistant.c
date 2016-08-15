@@ -24,13 +24,13 @@
 #include <gtk/gtk.h>
 
 #include <libroutermanager/router.h>
-#include <libroutermanager/password.h>
+#include <libroutermanager/rmpassword.h>
 #include <libroutermanager/ftp.h>
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/gstring.h>
 #include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/net_monitor.h>
-#include <libroutermanager/ssdp.h>
+#include <libroutermanager/rmnetmonitor.h>
+#include <libroutermanager/rmssdp.h>
 
 #include <roger/main.h>
 #include <roger/journal.h>
@@ -174,7 +174,7 @@ static void router_listbox_destroy(GtkWidget *widget, gpointer user_data)
  */
 static gboolean scan(gpointer user_data)
 {
-	GList *routers = ssdp_get_routers();
+	GList *routers = rm_ssdp_get_routers();
 	GList *list;
 
 	//return G_SOURCE_REMOVE;
@@ -421,7 +421,7 @@ static gboolean ftp_password_post(struct assistant *assistant)
 
 		/* Store FTP credentials */
 		g_settings_set_string(assistant->profile->settings, "ftp-user", ftp_user);
-		password_manager_set_password(assistant->profile, "ftp-password", ftp_password);
+		rm_password_set(assistant->profile, "ftp-password", ftp_password);
 	}
 
 	return TRUE;
@@ -453,7 +453,7 @@ static gboolean finish_post(struct assistant *assistant)
 	}
 
 	/* Trigger network reconnect */
-	net_monitor_reconnect();
+	rm_netmonitor_reconnect();
 
 	/* Set journal visible if needed */
 	journal_set_visible(TRUE);

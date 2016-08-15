@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,18 +17,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_AUDIO_H
-#define LIBROUTERMANAGER_AUDIO_H
+#ifndef LIBROUTERMANAGER_RMAUDIO_H
+#define LIBROUTERMANAGER_RMAUDIO_H
 
 #include <libroutermanager/rmprofile.h>
 
 G_BEGIN_DECLS
 
-#define AUDIO_OUTPUT 0
-#define AUDIO_INPUT  1
+#define RM_AUDIO_OUTPUT 0
+#define RM_AUDIO_INPUT  1
 
 /** Audio device structure */
-struct audio {
+typedef struct audio {
 	/* Name of plugin */
 	const gchar *name;
 	/* Initialize function */
@@ -42,26 +42,26 @@ struct audio {
 	/* Close audio device */
 	gboolean (*close)(gpointer priv);
 	/* Shutdown audio device */
-	gboolean (*deinit)(void);
+	gboolean (*shutdown)(void);
 	/* Get possible audio input/output devices */
 	GSList *(*get_devices)(void);
-};
+} RmAudio;
 
-struct audio_device {
+typedef struct audio_device {
 	gchar *name;
 	gchar *internal_name;
 	gchar type;
-};
+} RmAudioDevice;
 
-void routermanager_audio_register(struct audio *audio);
-struct audio *audio_get_default(void);
-gpointer audio_open(void);
-gsize audio_read(gpointer audio_priv, guchar *data, gsize size);
-gsize audio_write(gpointer audio_priv, guchar *data, gsize size);
-gboolean audio_close(gpointer audio_priv);
-GSList *audio_get_plugins(void);
-void audio_set_default(gchar *name);
-void audio_init(struct profile *profile);
+void rm_audio_register(RmAudio *audio);
+RmAudio *rm_audio_get_default(void);
+gpointer rm_audio_open(void);
+gsize rm_audio_read(gpointer audio_priv, guchar *data, gsize size);
+gsize rm_audio_write(gpointer audio_priv, guchar *data, gsize size);
+gboolean rm_audio_close(gpointer audio_priv);
+GSList *rm_audio_get_plugins(void);
+void rm_audio_set_default(gchar *name);
+void rm_audio_init(RmProfile *profile);
 
 G_END_DECLS
 

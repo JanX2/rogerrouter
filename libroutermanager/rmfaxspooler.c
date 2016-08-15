@@ -30,7 +30,7 @@
 
 #include <libroutermanager/appobject-emit.h>
 #include <libroutermanager/rmmain.h>
-#include <libroutermanager/fax_printer.h>
+#include <libroutermanager/rmfaxprinter.h>
 
 #ifdef USE_PRINTER_SPOOLER
 #define SPOOLER_DIR "/var/spool/roger"
@@ -45,7 +45,7 @@ struct event_translate {
 };
 
 /** text values of file monitor events */
-struct event_translate event_translation_table[] = {
+struct event_translate rm_event_translation_table[] = {
 	{G_FILE_MONITOR_EVENT_CHANGED , "file changed"},
 	{G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT, "file changes finished"},
 	{G_FILE_MONITOR_EVENT_DELETED, "file deleted"},
@@ -56,13 +56,21 @@ struct event_translate event_translation_table[] = {
 	{G_FILE_MONITOR_EVENT_MOVED, "file moved"},
 };
 
-static const char *event_to_text(GFileMonitorEvent event)
+/**
+ * rm_faxspooler_event_to_text:
+ * @event: a #GFileMonitorEvent
+ *
+ * Translates a file monitor event into a human readable string
+ *
+ * Returns: a newly created event string
+ */
+static const char *rm_faxspooler_event_to_text(GFileMonitorEvent event)
 {
 	int index;
 
-	for (index = 0; index < sizeof(event_translation_table) / sizeof(event_translation_table[0]); index++) {
-		if (event_translation_table[index].event == event) {
-			return event_translation_table[index].text;
+	for (index = 0; index < G_N_ELEMENTS(rm_event_translation_table); index++) {
+		if (rm_event_translation_table[index].event == event) {
+			return rm_event_translation_table[index].text;
 		}
 	}
 
@@ -71,12 +79,15 @@ static const char *event_to_text(GFileMonitorEvent event)
 #endif
 
 /**
- * \brief Check if given file name ends with the requested extension
- * \param file file name
- * \param ext file extension
- * \return TRUE if file ends with given extension or FALSE if not
+ * rm_faxspooler_has_file_extension:
+ * @file: file name
+ * @ext: file extension
+ *
+ * Check if given file name ends with the requested extension.
+ *
+ * Returns: %TRUE% if file ends with given extension or %FALSE% if not
  */
-gboolean has_file_extension(const char *file, const char *ext)
+gboolean rm_faxspooler_has_file_extension(const char *file, const char *ext)
 {
 	int len, ext_len;
 
@@ -95,23 +106,26 @@ gboolean has_file_extension(const char *file, const char *ext)
 }
 
 /**
- * \brief Fax spooler callback for the users own spool directory
- * Monitors the users fax spooler directory for changes and if a new final file is created emit fax process signal
- * \param monitor file monitor
- * \param file file structure
- * \param other_file unused file structure
- * \param event_type file monitor event
- * \param user_data unused pointer
+ * rm_faxspooler_changed_cb:
+ * @monitor: a #GFileMonitor
+ * @file: a #GFile
+ * @other_file: a #GFile
+ * @event_type: a #GFileMonitorEvent
+ * @user_data: additional user data
+ *
+ * Fax spooler callback for the users own spool directory. Monitors the users fax spooler directory
+ * for changes and if a new final file is created emit fax process signal.
  */
-static void fax_spooler_new_file_cb(GFileMonitor *monitor, GFile *file, GFile *other_file, GFileMonitorEvent event_type, gpointer user_data)
+static void rm_faxspooler_changed_cb(GFileMonitor *monitor, GFile *file, GFile *other_file, GFileMonitorEvent event_type, gpointer user_data)
 {
 	GFileType type;
 	gchar *file_name = NULL;
 
-	g_debug("fax_spooler_new_file_cb(): event type: %d", event_type);
+	g_debug("%s(): event_type: %d", __FUNCTION__, event_type);
 #ifdef SPOOLER_DEBUG
-	g_debug("=> %s", event_to_text(event_type));
+	g_debug("%s(): => %s", __FUNCTION__, rm_faxspooler_event_to_text(event_type));
 #endif
+
 	if (event_type != G_FILE_MONITOR_EVENT_CREATED) {
 		return;
 	}
@@ -126,12 +140,12 @@ static void fax_spooler_new_file_cb(GFileMonitor *monitor, GFile *file, GFile *o
 	}
 
 	/* Sort out invalid files */
-	if (has_file_extension(file_name, ".tmp") || has_file_extension(file_name, ".tif") || has_file_extension(file_name, ".sff")) {
+	if (rm_faxspooler_has_file_extension(file_name, ".tmp") || rm_faxspooler_has_file_extension(file_name, ".tif") || rm_faxspooler_has_file_extension(file_name, ".sff")) {
 		/* Skip it */
 		goto end;
 	}
 
-	g_debug("Print job received on spooler");
+	g_debug("%s(): Print job received on spooler", __FUNCTION__);
 	emit_fax_process(file_name);
 
 end:
@@ -139,10 +153,15 @@ end:
 }
 
 /**
- * Create file monitor for the users own spooler directory
+ * rm_faxspooler_setup_file_monitor:
+ * @dir_name: directory to monitor
+ * @error: a #GError
  *
+ * Create file monitor for the users own spooler directory.
+ *
+ * Returns: %TRUE% on successful creation, %FALSE% on error.
  */
-static gboolean fax_setup_file_monitor(const gchar *dir_name, GError **error)
+static gboolean rm_faxspooler_setup_file_monitor(const gchar *dir_name, GError **error)
 {
 	GFileMonitor *file_monitor = NULL;
 	GFile *file = NULL;
@@ -151,7 +170,7 @@ static gboolean fax_setup_file_monitor(const gchar *dir_name, GError **error)
 	g_assert(user_name != NULL);
 
 #ifdef SPOOLER_DEBUG
-	g_debug("Setting file monitor to '%s'", dir_name);
+	g_debug("%s(): Setting file monitor to '%s'", __FUNCTION__, dir_name);
 #endif
 
 	/* Create GFile for GFileMonitor */
@@ -161,11 +180,11 @@ static gboolean fax_setup_file_monitor(const gchar *dir_name, GError **error)
 	g_object_unref(file);
 	if (file_monitor) {
 		/* Set callback for file monitor */
-		g_signal_connect(file_monitor, "changed", G_CALLBACK(fax_spooler_new_file_cb), NULL);
+		g_signal_connect(file_monitor, "changed", G_CALLBACK(rm_faxspooler_changed_cb), NULL);
 		ret = TRUE;
 	} else {
-		g_debug("Error occurred creating new file monitor\n");
-		g_debug("Message: %s\n", (*error)->message);
+		g_debug("%s(): Error occurred creating new file monitor", __FUNCTION__);
+		g_debug("%s(): Message: %s\n", __FUNCTION__, (*error)->message);
 		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Spooler directory %s does not exists!", dir_name);
 		ret = FALSE;
 	}
@@ -173,9 +192,14 @@ static gboolean fax_setup_file_monitor(const gchar *dir_name, GError **error)
 }
 
 /**
- * \brief Initialize new printer spool queue
+ * rm_faxprinter_init:
+ * @error: a #GError
+ *
+ * Initialize new printer spool queue and file monitor
+ *
+ * Returns: %TRUE% on successful creation, %FALSE% on error.
  */
-gboolean fax_printer_init(GError **error)
+gboolean rm_faxprinter_init(GError **error)
 {
 	GDir *dir;
 	GError *file_error = NULL;
@@ -195,6 +219,6 @@ gboolean fax_printer_init(GError **error)
 	}
 	g_dir_close(dir);
 
-	return fax_setup_file_monitor(SPOOLER_DIR, &file_error);
+	return rm_faxspooler_setup_file_monitor(SPOOLER_DIR, &file_error);
 }
 #endif

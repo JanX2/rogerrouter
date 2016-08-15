@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_PLUGINS_H
-#define LIBROUTERMANAGER_PLUGINS_H
+#ifndef LIBROUTERMANAGER_RMPLUGINS_H
+#define LIBROUTERMANAGER_RMPLUGINS_H
 
 #include <libpeas/peas.h>
 
@@ -164,13 +164,13 @@ G_BEGIN_DECLS
 		iface->create_configure_widget = impl_create_configure_widget;	\
 	}
 
-extern PeasEngine *engine;
+extern PeasEngine *rm_engine;
 
-void plugins_init(void);
-void plugins_shutdown(void);
-void plugins_user_plugins(void);
+void rm_plugins_init(void);
+void rm_plugins_shutdown(void);
+void rm_plugins_bind_loaded_plugins(void);
 
-void routermanager_plugins_add_search_path(gchar *path);
+void rm_plugins_add_search_path(gchar *path);
 
 G_END_DECLS
 

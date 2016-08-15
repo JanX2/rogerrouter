@@ -26,7 +26,7 @@
 #include <libroutermanager/appobject.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/rmmain.h>
-#include <libroutermanager/logging.h>
+#include <libroutermanager/rmlog.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/gstring.h>
 

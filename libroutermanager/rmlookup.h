@@ -17,14 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_SETTINGS_H
-#define LIBROUTERMANAGER_SETTINGS_H
+#ifndef LIBROUTERMANAGER_RMLOOKUP_H
+#define LIBROUTERMANAGER_RMLOOKUP_H
 
 G_BEGIN_DECLS
 
-GSettings *rm_settings_new(gchar *scheme, gchar *root_path, gchar *file);
-GSettings *rm_settings_plugin_new(gchar *scheme, gchar *file);
-GSettings *rm_settings_new_with_path(gchar *scheme, gchar *path, gchar *file);
+typedef gboolean (*RmLookup)(gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city);
+
+gboolean rm_lookup(gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city);
+gboolean rm_lookup_register(RmLookup func);
 
 G_END_DECLS
 

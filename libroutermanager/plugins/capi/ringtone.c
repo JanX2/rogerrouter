@@ -19,7 +19,7 @@
 
 #include <glib.h>
 
-#include <libroutermanager/audio.h>
+#include <libroutermanager/rmaudio.h>
 #include <libroutermanager/call.h>
 #include <libroutermanager/rmconnection.h>
 
@@ -185,7 +185,7 @@ static gpointer ringtone_thread(gpointer user_data)
 	unsigned int snd_count = 0;
 	unsigned long effect_pos = 0;
 	void *priv = NULL;
-	struct audio *audio = audio_get_default();
+	struct audio *audio = rm_audio_get_default();
 	int counter = 0;
 
 	if (audio == NULL) {

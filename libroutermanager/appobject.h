@@ -24,7 +24,7 @@
 #include <glib-object.h>
 
 #include <libroutermanager/rmconnection.h>
-#include <libroutermanager/network.h>
+#include <libroutermanager/rmnetwork.h>
 //#include <libroutermanager/libfaxophone/faxophone.h>
 
 G_BEGIN_DECLS
@@ -62,12 +62,12 @@ struct _AppObject {
 struct _AppObjectClass {
 	GObjectClass parent_class;
 	void (*journal_loaded)(GSList *journal);
-	void (*connection_notify)(struct connection *connection);
+	void (*connection_notify)(RmConnection *connection);
 	void (*contact_process)(struct contact *contact);
 	void (*fax_process)(const gchar *filename);
-	void (*connection_established)(struct capi_connection *connection);
-	void (*connection_terminated)(struct capi_connection *connection);
-	void (*connection_status)(gint status, struct capi_connection *connection);
+	void (*connection_established)(RmConnection *connection);
+	void (*connection_terminated)(RmConnection *connection);
+	void (*connection_status)(gint status, RmConnection *connection);
 	void (*message)(gchar *title, gchar *message);
 	void (*contacts_changed)(void);
 	void (*authenticate)(struct auth_data *auth_data);

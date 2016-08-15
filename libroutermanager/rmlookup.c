@@ -24,40 +24,47 @@
 
 #include <glib.h>
 
-#include <libroutermanager/lookup.h>
+#include <libroutermanager/rmlookup.h>
 
 /** Pointer to internal lookup function */
-static lookup_func lookup_active = NULL;
+static RmLookup rm_lookup_active = NULL;
 
 /** Lookup function list */
-static GSList *lookup_list = NULL;
+static GSList *rm_lookup_list = NULL;
 
 /**
- * \brief Lookup number and return name/address/zip/city
- * \param number number to lookup
- * \param name pointer to store name to
- * \param address pointer to store address to
- * \param zip pointer to store zip to
- * \param city pointer to store city to
- * \return TRUE is lookup data has been found, otherwise FALSE
+ * rm_lookup:
+ * @number: number to lookup
+ * @name: pointer to store name to
+ * @address: pointer to store address to
+ * @zip: pointer to store zip to
+ * @city: pointer to store city to
+ *
+ * Lookup number and return name/address/zip/city
+ *
+ * Returns: TRUE is lookup data has been found, otherwise FALSE
  */
-gboolean routermanager_lookup(gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city)
+gboolean rm_lookup(gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city)
 {
-	if (lookup_active) {
-		return lookup_active(number, name, address, zip, city);
+	if (rm_lookup_active) {
+		return rm_lookup_active(number, name, address, zip, city);
 	}
 
 	return FALSE;
 }
 
 /**
- * \brief Register lookup routine
- * \return TRUE
+ * rm_lookup_register:
+ * @lookup: a #RmLookup
+ *
+ * Register lookup routine.
+ *
+ * Returns: TRUE
  */
-gboolean routermanager_lookup_register(lookup_func lookup)
+gboolean rm_lookup_register(RmLookup lookup)
 {
-	lookup_list = g_slist_prepend(lookup_list, lookup);
-	lookup_active = lookup;
+	rm_lookup_list = g_slist_prepend(rm_lookup_list, lookup);
+	rm_lookup_active = lookup;
 
 	return TRUE;
 }

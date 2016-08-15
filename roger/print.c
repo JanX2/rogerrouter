@@ -657,7 +657,7 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	cairo_show_text(cairo, _("Recipient name:"));
 
 	/** Ask for contact information */
-	contact = contact_find_by_number(remote);
+	contact = rm_contact_find_by_number(remote);
 	cairo_move_to(cairo, 280, 145);
 	cairo_show_text(cairo, contact ? contact->name : "");
 
