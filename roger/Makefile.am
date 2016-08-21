@@ -102,17 +102,13 @@ libroger_core_la_CFLAGS = $(roger_CFLAGS)
 libroger_core_la_LDFLAGS = $(roger_LDFLAGS) -shared -no-undefined -avoid-version
 endif
 
-
-appsdir = $(datadir)/applications
+ appsdir = $(datadir)/applications
 apps_in_files = org.tabos.roger.desktop.in
 apps_DATA = $(apps_in_files:.desktop.in=.desktop)
-
-%.desktop: %.desktop.in
-	$(AM_V_GEN)$(MSGFMT) --desktop --template $< -d $(top_srcdir)/po -o $@
+@INTLTOOL_DESKTOP_RULE@
 
 appdatadir = $(datadir)/appdata
 appdata_in_files = org.tabos.roger.appdata.xml.in
 appdata_DATA = $(appdata_in_files:.xml.in=.xml)
 
-%.appdata.xml: %.appdata.xml.in
-	 $(AM_V_GEN)$(MSGFMT) --xml --template $< -d $(top_srcdir)/po -o $@
+@INTLTOOL_XML_RULE@

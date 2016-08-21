@@ -46,15 +46,17 @@ AM_CONDITIONAL([ENABLE_GTK_DOC], false)
 
 AC_CHECK_LIB(m, pow, gsm)
 AC_CHECK_LIB(gthread-2.0, g_thread_init)
+AC_PATH_PROG(INTLTOOL_MSGMERGE, msgmerge, msgmerge)
+AC_PATH_PROG(INTLTOOL_XGETTEXT, xgettext, xgettext)
 
 dnl Add the languages which your application supports to po/LINGUAS
 GETTEXT_PACKAGE=roger
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, ["$GETTEXT_PACKAGE"], [Define to the Gettext package name])
 AC_SUBST(GETTEXT_PACKAGE)
+IT_PROG_INTLTOOL([0.40.0])
 
 ALL_LINGUAS=""
-AM_GNU_GETTEXT_VERSION([0.19.7])
-AM_GNU_GETTEXT([external])
+AM_GLIB_GNU_GETTEXT
 
 AC_MSG_CHECKING([if cross-building for win32])
 case "$host" in
@@ -647,9 +649,9 @@ dnl AC_TDD_GCOV
 AC_CONFIG_FILES([
     Makefile
     win32/roger.nsi
-    doc/Makefile
-    doc/roger.1
-    doc/roger_cli.1
+    docs/Makefile
+    docs/roger.1
+    docs/roger_cli.1
     po/Makefile.in
     libroutermanager/tests/Makefile
     libroutermanager/routermanager.pc

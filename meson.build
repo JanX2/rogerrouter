@@ -24,6 +24,9 @@ configure_file(input : 'config.h.meson',
   configuration : cdata)
 
 subdir('po')
-subdir('docs')
 subdir('libroutermanager')
 subdir('roger')
+
+if get_option('enable-gtk-doc')
+	subdir('docs')
+endif

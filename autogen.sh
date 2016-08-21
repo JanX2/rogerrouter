@@ -33,3 +33,4 @@ fi
 rm -rf autom4te*.cache
 gtkdocize || exit 1
 echo 'run "./configure && make"'
+CC="ccache gcc" ./configure

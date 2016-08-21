@@ -41,7 +41,7 @@ static gboolean rm_net_online = FALSE;
  * @disconnect: a #RmNetDisconnect
  * @user_data: additional user data pointer
  *
- * Add network event which fill be triggered for online and offline cases.
+ * Add network event which will be triggered for online and offline cases.
  *
  * Returns: a #RmNetEvent
  */
@@ -121,7 +121,7 @@ gboolean rm_netmonitor_is_online(void)
  *
  * Returns: Handle network state changes.
  */
-void rm_netmonitor_state_changed(gboolean state)
+static void rm_netmonitor_state_changed(gboolean state)
 {
 	GSList *list;
 

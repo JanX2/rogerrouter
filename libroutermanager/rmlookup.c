@@ -42,7 +42,7 @@ static GSList *rm_lookup_list = NULL;
  *
  * Lookup number and return name/address/zip/city
  *
- * Returns: TRUE is lookup data has been found, otherwise FALSE
+ * Returns: %TRUE is lookup data has been found, otherwise %FALSE
  */
 gboolean rm_lookup(gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city)
 {

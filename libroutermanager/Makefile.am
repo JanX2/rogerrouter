@@ -20,55 +20,55 @@ libroutermanager_la_SOURCES = \
 	appobject-emit.h\
 	appobject.c\
 	appobject.h\
-	audio.c\
-	audio.h\
+	rmaudio.c\
+	rmaudio.h\
 	call.c\
 	call.h\
-	device.c\
-	device.h\
-	contact.c\
-	contact.h\
+	rmdevice.c\
+	rmdevice.h\
+	rmcontact.c\
+	rmcontact.h\
 	rmconnection.c\
 	rmconnection.h\
 	csv.c\
 	csv.h\
-	fax_spooler.c\
+	rmfaxspooler.c\
 	fax_server.c\
 	fax_printer.h\
-	file.c\
-	file.h\
+	rmfile.c\
+	rmfile.h\
 	filter.c\
 	filter.h\
 	ftp.c\
 	ftp.h\
 	gstring.c\
 	gstring.h\
-	logging.c\
-	logging.h\
-	lookup.c\
-	lookup.h\
-	net_monitor.c\
-	net_monitor.h\
-	network.c\
-	network.h\
+	rmlog.c\
+	rmlog.h\
+	rmlookup.c\
+	rmlookup.h\
+	rmnetmonitor.c\
+	rmnetmonitor.h\
+	rmnetwork.c\
+	rmnetwork.h\
 	rmmain.c\
 	rmmain.h\
 	rmosdep.c\
 	rmosdep.h\
-	password.c\
-	password.h\
-	plugins.c\
-	plugins.h\
+	rmpassword.c\
+	rmpassword.h\
+	rmplugins.c\
+	rmplugins.h\
 	rmprofile.c\
 	rmprofile.h\
 	rmphone.c\
 	rmphone.h\
 	router.c\
 	router.h\
-	settings.c\
-	settings.h\
-	ssdp.c\
-	ssdp.h\
+	rmsettings.c\
+	rmsettings.h\
+	rmssdp.c\
+	rmssdp.h\
 	voxplay.c\
 	voxplay.h\
 	xml.c\

@@ -1,4 +1,4 @@
-SUBDIRS = libroutermanager roger roger-cli po doc
+SUBDIRS = libroutermanager roger roger-cli po docs
 
 AM_DISTCHECK_CONFIGURE_FLAGS = \
 	--disable-werror
@@ -31,4 +31,3 @@ share_DATA = \
 	share/install-fax.sh
 
 noinst_HEADERS = config.h
-

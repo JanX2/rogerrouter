@@ -35,7 +35,7 @@ typedef struct net_event {
 gboolean rm_netmonitor_init(void);
 void rm_netmonitor_shutdown(void);
 
-void rm_netmonitor_state_changed(gboolean state);
+//void rm_netmonitor_state_changed(gboolean state);
 RmNetEvent *rm_netmonitor_add_event(RmNetConnect connect, RmNetDisconnect disconnect, gpointer user_data);
 void rm_netmonitor_remove_event(RmNetEvent *net_event);
 gboolean rm_netmonitor_is_online(void);

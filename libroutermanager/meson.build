@@ -52,7 +52,6 @@ libroutermanager = shared_library('routermanager',
                         routermanager_sources,
                         include_directories : routermanager_inc,
                         dependencies : routermanager_dep,
-                        so_version : '1.2',
                         install : true,
                         link_args : '-lcrypt')
 

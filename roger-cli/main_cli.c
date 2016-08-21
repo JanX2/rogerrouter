@@ -290,7 +290,7 @@ int main(int argc, char **argv)
 	}
 
 	/* Only show messages >= INFO */
-	log_set_level(G_LOG_LEVEL_INFO);
+	rm_log_set_level(G_LOG_LEVEL_INFO);
 
 	if (journal) {
 		/* Connect "journal-loaded" callback */

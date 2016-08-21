@@ -22,9 +22,7 @@ gsettings_SCHEMAS = org.tabos.roger.plugins.fritzfon.gschema.xml
 appstreamdir = $(datadir)/appdata
 appstream_in_files = roger-plugins-fritzfon.metainfo.xml.in
 appstream_DATA = $(appstream_in_files:.xml.in=.xml)
-
-%.metainfo.xml: %.metainfo.xml.in
-	 $(AM_V_GEN)$(MSGFMT) --xml --template $< -d $(top_srcdir)/po -o $@
+@INTLTOOL_XML_RULE@
 
 EXTRA_DIST += $(gsettings_SCHEMAS) $(appstream_in_files)
 
