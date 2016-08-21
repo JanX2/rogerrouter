@@ -24,16 +24,16 @@
 #include <gtk/gtk.h>
 
 #include <libroutermanager/rmplugins.h>
-#include <libroutermanager/call.h>
-#include <libroutermanager/appobject.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmcall.h>
+#include <libroutermanager/rmobject.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/plugins/capi/phone.h>
 #include <libroutermanager/plugins/capi/ringtone.h>
 #include <libroutermanager/rmphone.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/rmlookup.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmsettings.h>
 
 #include <roger/main.h>
@@ -145,7 +145,7 @@ static gpointer notification_reverse_lookup_thread(gpointer data)
  * \param connection connection structure
  * \param unused_pointer unused user pointer
  */
-void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *connection, gpointer unused_pointer)
+void notification_gtk_connection_notify_cb(RmObject *obj, struct connection *connection, gpointer unused_pointer)
 {
 	GtkWidget *notify = NULL;
 	GtkWidget *main_frame;
@@ -198,7 +198,7 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 
 	if (!found && connection->local_number[0] != '0') {
 		gchar *scramble_local = rm_call_scramble_number(connection->local_number);
-		gchar *tmp = call_full_number(connection->local_number, FALSE);
+		gchar *tmp = rm_call_full_number(connection->local_number, FALSE);
 		gchar *scramble_tmp = rm_call_scramble_number(tmp);
 
 		g_debug("type: %d, number '%s' not found", connection->type, scramble_local);
@@ -417,7 +417,7 @@ void notification_gtk_connection_notify_cb(AppObject *obj, struct connection *co
 
 	connection->notification = notify;
 
-	if (EMPTY_STRING(contact->name)) {
+	if (RM_EMPTY_STRING(contact->name)) {
 		g_thread_new("notification reverse lookup", notification_reverse_lookup_thread, connection);
 	}
 }
@@ -441,7 +441,7 @@ void impl_activate(PeasActivatable *plugin)
 	}
 
 	/* Connect to "call-notify" signal */
-	notify_plugin->priv->signal_id = g_signal_connect(G_OBJECT(app_object), "connection-notify", G_CALLBACK(notification_gtk_connection_notify_cb), NULL);
+	notify_plugin->priv->signal_id = g_signal_connect(G_OBJECT(rm_object), "connection-notify", G_CALLBACK(notification_gtk_connection_notify_cb), NULL);
 }
 
 /**
@@ -453,8 +453,8 @@ void impl_deactivate(PeasActivatable *plugin)
 	RouterManagerNotificationGtkPlugin *notify_plugin = ROUTERMANAGER_NOTIFICATION_GTK_PLUGIN(plugin);
 
 	/* If signal handler is connected: disconnect */
-	if (g_signal_handler_is_connected(G_OBJECT(app_object), notify_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(app_object), notify_plugin->priv->signal_id);
+	if (g_signal_handler_is_connected(G_OBJECT(rm_object), notify_plugin->priv->signal_id)) {
+		g_signal_handler_disconnect(G_OBJECT(rm_object), notify_plugin->priv->signal_id);
 	}
 }
 

@@ -36,7 +36,7 @@
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmaudio.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 
 #define ROUTERMANAGER_TYPE_PORTAUDIO_PLUGIN (routermanager_portaudio_plugin_get_type())
 #define ROUTERMANAGER_PORTAUDIO_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_PORTAUDIO_PLUGIN, RouterManagerPortAudioPlugin))

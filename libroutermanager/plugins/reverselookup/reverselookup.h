@@ -24,7 +24,6 @@ struct lookup {
 	gboolean prefix;
 	gchar *service;
 	gchar *url;
-	gchar *pattern;
 	gchar **name;
 	gchar **street;
 	gchar **city;

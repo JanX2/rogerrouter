@@ -26,7 +26,7 @@
 #include <Security/Security.h>
 #include <CoreServices/CoreServices.h>
 
-#include <libroutermanager/call.h>
+#include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmpassword.h>
 

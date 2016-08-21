@@ -27,8 +27,8 @@
 #include <libroutermanager/rmpassword.h>
 #include <libroutermanager/ftp.h>
 #include <libroutermanager/rmmain.h>
-#include <libroutermanager/gstring.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmstring.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmnetmonitor.h>
 #include <libroutermanager/rmssdp.h>
 
@@ -120,7 +120,7 @@ void profile_entry_changed(GtkEditable *entry, gpointer user_data)
 	}
 
 	/* Update button state and icon entry */
-	gtk_widget_set_sensitive(assistant->next_button, !EMPTY_STRING(text));
+	gtk_widget_set_sensitive(assistant->next_button, !RM_EMPTY_STRING(text));
 	gtk_entry_set_icon_from_icon_name(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, NULL);
 }
 
@@ -133,7 +133,7 @@ static void profile_pre(struct assistant *assistant)
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(assistant->profile_name));
 
 	/* Set button state */
-	gtk_widget_set_sensitive(assistant->next_button, !EMPTY_STRING(text));
+	gtk_widget_set_sensitive(assistant->next_button, !RM_EMPTY_STRING(text));
 
 	/* Grab focus */
 	gtk_widget_grab_focus(assistant->profile_name);
@@ -325,7 +325,7 @@ static gboolean router_post(struct assistant *assistant)
 	/* Check if router is present */
 	present = router_present(assistant->profile->router_info);
 	if (!present) {
-		emit_message(_("Login failed"), _("Please change the router ip and try again"));
+		rm_object_emit_message(_("Login failed"), _("Please change the router ip and try again"));
 	}
 
 	return present;
@@ -387,7 +387,7 @@ static void ftp_password_pre(struct assistant *assistant)
 	const gchar *password = gtk_entry_get_text(GTK_ENTRY(assistant->password));
 
 	/* Set credentials from router to FTP for simplicity */
-	gtk_entry_set_text(GTK_ENTRY(assistant->ftp_user), EMPTY_STRING(user) ? "ftpuser" : user);
+	gtk_entry_set_text(GTK_ENTRY(assistant->ftp_user), RM_EMPTY_STRING(user) ? "ftpuser" : user);
 	gtk_entry_set_text(GTK_ENTRY(assistant->ftp_password), password);
 
 	/* Update title */
@@ -413,7 +413,7 @@ static gboolean ftp_password_post(struct assistant *assistant)
 		if (!ftp_login(ftp, ftp_user, ftp_password)) {
 			/* Error: Could not login to ftp */
 			message = g_strdup(_("Please check your ftp user/password."));
-			emit_message(_("Login failed"), message);
+			rm_object_emit_message(_("Login failed"), message);
 			ftp_shutdown(ftp);
 			return FALSE;
 		}

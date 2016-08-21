@@ -33,8 +33,8 @@
 
 #include <libroutermanager/rmphone.h>
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/gstring.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmstring.h>
+#include <libroutermanager/rmobjectemit.h>
 
 
 /* Close recording */
@@ -154,12 +154,12 @@ static struct connection *capi_phone_dial(const char *trg_no, gboolean anonymous
 	struct connection *connection = NULL;
 	gchar *target;
 
-	if (EMPTY_STRING(src_no)) {
-		emit_message(0, "Source MSN not set, cannot dial");
+	if (RM_EMPTY_STRING(src_no)) {
+		rm_object_emit_message(0, "Source MSN not set, cannot dial");
 		return NULL;
 	}
 
-	target = call_canonize_number(trg_no);
+	target = rm_call_canonize_number(trg_no);
 
 	capi_connection = capi_call(controller, src_no, target, anonymous, SESSION_PHONE, PHONE_CIP, 1, 1, 0, NULL, NULL, NULL);
 

@@ -22,7 +22,7 @@
 #include <libpeas/peas.h>
 
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/appobject.h>
+#include <libroutermanager/rmobject.h>
 #include <libroutermanager/rmplugins.h>
 
 /**
@@ -101,7 +101,7 @@ void rm_plugins_init(void)
 	rm_engine = peas_engine_get_default();
 
 	/* Set app object as object to rm_engine */
-	rm_extension = peas_extension_set_new(rm_engine, PEAS_TYPE_ACTIVATABLE, "object", app_object, NULL);
+	rm_extension = peas_extension_set_new(rm_engine, PEAS_TYPE_ACTIVATABLE, "object", rm_object, NULL);
 
 	/* Connect rm_extensionsion added/removed signals */
 	g_signal_connect(rm_extension, "extension-added", G_CALLBACK(rm_plugins_extension_added_cb), NULL);

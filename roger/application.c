@@ -29,10 +29,10 @@
 #include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmosdep.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmnetmonitor.h>
 #include <libroutermanager/rmsettings.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmphone.h>
 
 #include <roger/journal.h>
@@ -123,7 +123,7 @@ static void auth_response_callback(GtkDialog *dialog, gint response_id, gpointer
 	gtk_widget_destroy(GTK_WIDGET(dialog));
 }
 
-void app_authenticate_cb(AppObject *app, struct auth_data *auth_data)
+void app_authenticate_cb(RmObject *app, struct auth_data *auth_data)
 {
 	GtkBuilder *builder;
 	GtkWidget *dialog;
@@ -296,7 +296,7 @@ static void application_startup(GtkApplication *application)
 	startup_called = TRUE;
 }
 
-static void app_object_message_cb(AppObject *object, gchar *title, gchar *message)
+static void rm_object_message_cb(RmObject *object, gchar *title, gchar *message)
 {
 	//GtkWidget *dialog = gtk_message_dialog_new(roger_app ? gtk_application_get_active_window(roger_app) : NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, title);
 	GtkWidget *dialog = gtk_message_dialog_new_with_markup(roger_app ? gtk_application_get_active_window(roger_app) : NULL, GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE, "<span weight=\"bold\" size=\"larger\">%s</span>", title);
@@ -395,8 +395,8 @@ static void app_init(GtkApplication *app)
 	}
 
 	rm_new(option_state.debug, &error);
-	g_signal_connect(app_object, "authenticate", G_CALLBACK(app_authenticate_cb), NULL);
-	g_signal_connect(app_object, "message", G_CALLBACK(app_object_message_cb), NULL);
+	g_signal_connect(rm_object, "authenticate", G_CALLBACK(app_authenticate_cb), NULL);
+	g_signal_connect(rm_object, "message", G_CALLBACK(rm_object_message_cb), NULL);
 
 	if (rm_init(&error) == FALSE) {
 		g_warning("routermanager() failed: %s\n", error ? error->message : "");
@@ -511,7 +511,7 @@ static gint application_command_line_cb(GtkApplication *app, GApplicationCommand
 			gchar *full_number;
 
 			g_debug("number: %s", option_state.number);
-			full_number = call_full_number(option_state.number, FALSE);
+			full_number = rm_call_full_number(option_state.number, FALSE);
 
 			/** Ask for contact information */
 			contact = rm_contact_find_by_number(full_number);

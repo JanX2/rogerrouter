@@ -5,7 +5,7 @@
 #include <glib.h>
 #include <libroutermanager/rmaction.h>
 #include <libroutermanager/rmconnection.h>
-#include <libroutermanager/appobject.h>
+#include <libroutermanager/rmobject.h>
 
 typedef struct {
 	struct profile *profile;
@@ -13,7 +13,7 @@ typedef struct {
 
 static void test_action_init(action_fixture *af, gconstpointer user_data)
 {
-	app_object = app_object_new();
+	rm_object = rm_object_new();
 	af->profile = rm_profile_add("Test");
 }
 

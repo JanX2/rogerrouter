@@ -25,11 +25,11 @@
 #include <glib.h>
 
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmlog.h>
 #include <libroutermanager/rmnetwork.h>
-#include <libroutermanager/csv.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmcsv.h>
+#include <libroutermanager/rmstring.h>
 
 #include "fritzbox.h"
 #include "csv.h"
@@ -208,7 +208,7 @@ gboolean extract_number_04_74(GSList **number_list, const gchar *data, gchar *ms
 	gchar *fon;
 
 	fon = xml_extract_input_value(data, msn_str);
-	if (!EMPTY_STRING(fon) && isdigit(fon[0])) {
+	if (!RM_EMPTY_STRING(fon) && isdigit(fon[0])) {
 		if (!g_slist_find_custom(*number_list, fon, number_compare_04_74)) {
 			*number_list = g_slist_prepend(*number_list, fon);
 		} else {
@@ -234,7 +234,7 @@ gboolean copy_number_04_74(GSList **number_list, const gchar *data, gsize len)
 	gchar *fon;
 
 	fon = g_strndup(data, len);
-	if (!EMPTY_STRING(fon) && isdigit(fon[0])) {
+	if (!RM_EMPTY_STRING(fon) && isdigit(fon[0])) {
 		if (!g_slist_find_custom(*number_list, fon, number_compare_04_74)) {
 			*number_list = g_slist_prepend(*number_list, fon);
 		} else {
@@ -547,7 +547,7 @@ gboolean fritzbox_get_settings_04_74(struct profile *profile)
 
 	gchar *fax_msn = xml_extract_input_value(data, "telcfg:settings/FaxMSN0");
 	if (fax_msn) {
-		gchar *formated_number = call_format_number(profile, fax_msn, NUMBER_FORMAT_INTERNATIONAL_PLUS);
+		gchar *formated_number = rm_call_format_number(profile, fax_msn, RM_NUMBER_FORMAT_INTERNATIONAL_PLUS);
 		gchar *scramble = rm_call_scramble_number(fax_msn);
 
 		g_debug("Fax number: '%s'", scramble);

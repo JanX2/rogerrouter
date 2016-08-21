@@ -20,11 +20,11 @@
 #include <string.h>
 
 #include <libroutermanager/router.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmcontact.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmfile.h>
-#include <libroutermanager/csv.h>
+#include <libroutermanager/rmcsv.h>
 #include <libroutermanager/rmpassword.h>
 #include <libroutermanager/rmmain.h>
 
@@ -91,7 +91,7 @@ GSList *router_get_phone_list(struct profile *profile)
 
 	for (index = 0; index < PORT_MAX - 2; index++) {
 		fon = g_settings_get_string(profile->settings, router_phone_ports[index].name);
-		if (!EMPTY_STRING(fon)) {
+		if (!RM_EMPTY_STRING(fon)) {
 			phone = g_slice_new(struct phone);
 
 			phone->name = g_strdup(fon);
@@ -181,7 +181,7 @@ gboolean router_login(struct profile *profile)
 	result = active_router->login(profile);
 	if (!result) {
 		g_warning(_("Login data are wrong or permissions are missing.\nPlease check your login data."));
-		emit_message(_("Login failed"), _("Login data are wrong or permissions are missing.\nPlease check your login data."));
+		rm_object_emit_message(_("Login failed"), _("Login data are wrong or permissions are missing.\nPlease check your login data."));
 		router_login_blocked = TRUE;
 	}
 
@@ -388,7 +388,7 @@ gboolean router_clear_journal(struct profile *profile)
  */
 gboolean router_dial_number(struct profile *profile, gint port, const gchar *number)
 {
-	gchar *target = call_canonize_number(number);
+	gchar *target = rm_call_canonize_number(number);
 	gboolean ret;
 
 	ret = active_router->dial_number(profile, port, target);
@@ -459,20 +459,20 @@ void router_process_journal(GSList *journal)
 	GSList *list;
 
 	/* Parse offline journal and combine new entries */
-	journal = csv_load_journal(journal);
+	journal = rm_csv_load_journal(journal);
 
 	/* Store it back to disk */
-	csv_save_journal(journal);
+	rm_csv_save_journal(journal);
 
 	/* Try to lookup entries in address book */
 	for (list = journal; list; list = list->next) {
-		struct call *call = list->data;
+		RmCall *call = list->data;
 
-		rm_emit_contact_process(call->remote);
+		rm_object_emit_contact_process(call->remote);
 	}
 
 	/* Emit "journal-loaded" signal */
-	emit_journal_loaded(journal);
+	rm_object_emit_journal_loaded(journal);
 
 }
 
@@ -582,7 +582,7 @@ gboolean router_is_cable(struct profile *profile)
 {
 	gboolean is_cable = FALSE;
 
-	if (!EMPTY_STRING(profile->router_info->annex) && !strcmp(profile->router_info->annex, "Kabel")) {
+	if (!RM_EMPTY_STRING(profile->router_info->annex) && !strcmp(profile->router_info->annex, "Kabel")) {
 		is_cable = TRUE;
 	}
 
@@ -630,7 +630,7 @@ GSList *router_load_fax_reports(struct profile *profile, GSList *journal)
 		uri = g_build_filename(dir_name, file_name, NULL);
 
 		date_time = g_strdup_printf("%s.%s.%s %2.2s:%2.2s", split[3], split[4], split[5] + 2, split[6], split[7]);
-		journal = call_add(journal, CALL_TYPE_FAX_REPORT, date_time, "", split[2], ("Fax-Report"), split[1], "0:01", g_strdup(uri));
+		journal = rm_call_add(journal, RM_CALL_TYPE_FAX_REPORT, date_time, "", split[2], ("Fax-Report"), split[1], "0:01", g_strdup(uri));
 
 		g_free(uri);
 		g_strfreev(split);
@@ -690,7 +690,7 @@ GSList *router_load_voice_records(struct profile *profile, GSList *journal)
 
 		//date_time = g_strdup_printf("%s.%s.%s %2.2s:%2.2s", split[3], split[4], split[5] + 2, split[6], split[7]);
 		date_time = g_strdup_printf("%s %2.2s:%2.2s", split[0], split[1], split[2]);
-		journal = call_add(journal, CALL_TYPE_RECORD, date_time, "", num, ("Record"), split[3], "0:01", g_strdup(uri));
+		journal = rm_call_add(journal, RM_CALL_TYPE_RECORD, date_time, "", num, ("Record"), split[3], "0:01", g_strdup(uri));
 
 		g_free(uri);
 		g_strfreev(split);

@@ -32,8 +32,8 @@
 #include <isdn-convert.h>
 
 #include <libroutermanager/rmconnection.h>
-#include <libroutermanager/gstring.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmstring.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmdevicefax.h>
 #include <sff.h>
 
@@ -652,12 +652,12 @@ struct connection *capi_fax_dial(gchar *tiff, const gchar *trg_no, gboolean supp
 	struct connection *connection = NULL;
 	gchar *target;
 
-	if (EMPTY_STRING(src_no)) {
-		emit_message(0, "Source MSN not set, cannot dial");
+	if (RM_EMPTY_STRING(src_no)) {
+		rm_object_emit_message(0, "Source MSN not set, cannot dial");
 		return NULL;
 	}
 
-	target = call_canonize_number(trg_no);
+	target = rm_call_canonize_number(trg_no);
 
 	if (cip == 1) {
 		cip = FAX_CIP;

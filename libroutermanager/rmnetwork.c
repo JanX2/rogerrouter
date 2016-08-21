@@ -20,9 +20,9 @@
 #include <libsoup/soup.h>
 
 #include <string.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmnetwork.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmobjectemit.h>
 
 /** Soup session */
 SoupSession *rm_soup_session = NULL;
@@ -120,7 +120,7 @@ static void network_authenticate_cb(SoupSession *session, SoupMessage *msg, Soup
 	user = g_settings_get_string(profile->settings, "auth-user");
 	password = g_settings_get_string(profile->settings, "auth-password");
 
-	if (EMPTY_STRING(user) && EMPTY_STRING(password)) {
+	if (RM_EMPTY_STRING(user) && RM_EMPTY_STRING(password)) {
 		user = router_get_login_user(profile);
 		g_settings_set_string(profile->settings, "auth-user", user);
 
@@ -128,7 +128,7 @@ static void network_authenticate_cb(SoupSession *session, SoupMessage *msg, Soup
 		g_settings_set_string(profile->settings, "auth-password", password);
 	}
 
-	if (!retrying && !EMPTY_STRING(user) && !EMPTY_STRING(password)) {
+	if (!retrying && !RM_EMPTY_STRING(user) && !RM_EMPTY_STRING(password)) {
 		g_debug("%s(): Already configured...", __FUNCTION__);
 		soup_auth_authenticate(auth, user, password);
 
@@ -143,7 +143,7 @@ static void network_authenticate_cb(SoupSession *session, SoupMessage *msg, Soup
 		auth_data->username = g_strdup(user);
 		auth_data->password = g_strdup(password);
 
-		emit_authenticate(auth_data);
+		rm_object_emit_authenticate(auth_data);
 	}
 }
 

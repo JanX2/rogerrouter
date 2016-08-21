@@ -17,32 +17,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_ADDRESS_BOOK_H
-#define LIBROUTERMANAGER_ADDRESS_BOOK_H
+#ifndef LIBROUTERMANAGER_RMADDRESSBOOK_H
+#define LIBROUTERMANAGER_RMADDRESSBOOK_H
 
 #include <libroutermanager/rmcontact.h>
 
 G_BEGIN_DECLS
 
-struct address_book {
+typedef struct rm_address_book {
 	gchar *name;
 	gchar *(*get_active_book_name)(void);
 	GSList *(*get_contacts)(void);
 	gboolean (*reload_contacts)(void);
-	gboolean (*remove_contact)(struct contact *contact);
-	gboolean (*save_contact)(struct contact *contact);
-};
+	gboolean (*remove_contact)(RmContact *contact);
+	gboolean (*save_contact)(RmContact *contact);
+} RmAddressBook;
 
-gboolean address_book_available(void);
-GSList *rm_address_book_get_contacts(void);
-gboolean address_book_reload_contacts(void);
-gboolean address_book_remove_contact(struct contact *contact);
-gboolean address_book_save_contact(struct contact *contact);
-gboolean address_book_can_save(void);
-void routermanager_address_book_register(struct address_book *book);
-void routermanager_address_book_unregister(struct address_book *book);
-gchar *address_book_get_name(void);
-GSList *rm_address_book_get_plugins(void);
+gboolean rm_addressbook_available(void);
+GSList *rm_addressbook_get_contacts(void);
+gboolean rm_addressbook_reload_contacts(void);
+gboolean rm_addressbook_remove_contact(RmContact *contact);
+gboolean rm_addressbook_save_contact(RmContact *contact);
+gboolean rm_addressbook_can_save(void);
+void rm_addressbook_register(RmAddressBook *book);
+void rm_addressbook_unregister(RmAddressBook *book);
+gchar *rm_addressbook_get_name(void);
+GSList *rm_addressbook_get_plugins(void);
 
 G_END_DECLS
 

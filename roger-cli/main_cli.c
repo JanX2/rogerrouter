@@ -23,12 +23,12 @@
 #include <glib/gstdio.h>
 #include <glib/gprintf.h>
 
-#include <libroutermanager/appobject.h>
+#include <libroutermanager/rmobject.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/rmlog.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 
 //#include <libroutermanager/libfaxophone/faxophone.h>
 #include <libroutermanager/plugins/capi/fax.h>
@@ -76,9 +76,9 @@ void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
 
 	/* Just dump journal to cli */
 	for (list = journal; list != NULL; list = list->next) {
-		struct call *call = list->data;
-		gchar *local_name = g_convert_utf8(call->local->name, -1);
-		gchar *remote_name = g_convert_utf8(call->remote->name, -1);
+		RmCall *call = list->data;
+		gchar *local_name = rm_convert_utf8(call->local->name, -1);
+		gchar *remote_name = rm_convert_utf8(call->remote->name, -1);
 
 		g_printf("|----------------------------------------------------------------------------------------------------------------------------------|\n");
 		g_printf("|%-15.15s|%-20.20s|%-20.20s|%-20.20s|%-20.20s|%-20.20s|%-9.9s|\n",
@@ -294,16 +294,16 @@ int main(int argc, char **argv)
 
 	if (journal) {
 		/* Connect "journal-loaded" callback */
-		g_signal_connect(G_OBJECT(app_object), "journal-loaded", G_CALLBACK(journal_loaded_cb), NULL);
+		g_signal_connect(G_OBJECT(rm_object), "journal-loaded", G_CALLBACK(journal_loaded_cb), NULL);
 
 		/* Request router journal */
 		router_load_journal(rm_profile_get_active());
 	}
 
 	if (sendfax && file_name && number) {
-		g_signal_connect(app_object, "connection-status", G_CALLBACK(fax_connection_status_cb), NULL);
-		g_signal_connect(app_object, "connection-established", G_CALLBACK(capi_connection_established_cb), NULL);
-		g_signal_connect(app_object, "connection-terminated", G_CALLBACK(capi_connection_terminated_cb), NULL);
+		g_signal_connect(rm_object, "connection-status", G_CALLBACK(fax_connection_status_cb), NULL);
+		g_signal_connect(rm_object, "connection-established", G_CALLBACK(capi_connection_established_cb), NULL);
+		g_signal_connect(rm_object, "connection-terminated", G_CALLBACK(capi_connection_terminated_cb), NULL);
 
 		tiff = convert_fax_to_tiff(file_name);
 		if (tiff) {
@@ -322,8 +322,8 @@ int main(int argc, char **argv)
 	}
 
 	if (call && number) {
-		g_signal_connect(app_object, "connection-established", G_CALLBACK(capi_connection_established_cb), NULL);
-		g_signal_connect(app_object, "connection-terminated", G_CALLBACK(capi_connection_terminated_cb), NULL);
+		g_signal_connect(rm_object, "connection-established", G_CALLBACK(capi_connection_established_cb), NULL);
+		g_signal_connect(rm_object, "connection-terminated", G_CALLBACK(capi_connection_terminated_cb), NULL);
 
 		rm_phone_dial(number, FALSE);
 	}

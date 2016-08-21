@@ -17,34 +17,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <appobject.h>
+#include <libroutermanager/rmobject.h>
 
 /**
  * \TODO List
  * - combine connection-XXX in connection-notify
  */
 
-/** main internal app_object containing signals and private data */
-GObject *app_object = NULL;
+/** main internal rm_object containing signals and private data */
+GObject *rm_object = NULL;
 
-/** app_object signals array */
-guint app_object_signals[ACB_MAX] = { 0 };
+/** rm_object signals array */
+guint rm_object_signals[RM_ACB_MAX] = { 0 };
 
-/** Private app_object data */
-typedef struct _AppObjectPrivate AppObjectPrivate;
+/** Private rm_object data */
+typedef struct _RmObjectPrivate RmObjectPrivate;
 
-struct _AppObjectPrivate {
+struct _RmObjectPrivate {
 	gchar dummy;
 };
 
-G_DEFINE_TYPE(AppObject, app_object, G_TYPE_OBJECT);
+G_DEFINE_TYPE(RmObject, rm_object, G_TYPE_OBJECT);
 
 #define g_marshal_value_peek_pointer(v)  (v)->data[0].v_pointer
 
-void app_marshal_VOID__POINTER_POINTER(GClosure *closure, GValue *return_value, guint n_param_values, const GValue *param_values, gpointer invocation_hint, gpointer marshal_data)
+static void marshal_VOID__POINTER_POINTER(GClosure *closure, GValue *return_value, guint n_param_values, const GValue *param_values, gpointer invocation_hint, gpointer marshal_data)
 {
-	typedef void (*GMarshalFunc_VOID__POINTER_POINTER)(gpointer data1, gpointer arg_1, gpointer arg_2, gpointer data2);
-	register GMarshalFunc_VOID__POINTER_POINTER callback;
+	typedef void (*GMarshalFunc_VOID_POINTER_POINTER)(gpointer data1, gpointer arg_1, gpointer arg_2, gpointer data2);
+	register GMarshalFunc_VOID_POINTER_POINTER callback;
 	register GCClosure *cc = (GCClosure*) closure;
 	register gpointer data1, data2;
 
@@ -58,22 +58,24 @@ void app_marshal_VOID__POINTER_POINTER(GClosure *closure, GValue *return_value, 
 		data2 = closure->data;
 	}
 
-	callback = (GMarshalFunc_VOID__POINTER_POINTER)(marshal_data ? marshal_data : cc->callback);
+	callback = (GMarshalFunc_VOID_POINTER_POINTER)(marshal_data ? marshal_data : cc->callback);
 
 	callback(data1, g_marshal_value_peek_pointer(param_values + 1), g_marshal_value_peek_pointer(param_values + 2), data2);
 }
 
 /**
- * \brief Create internal app_object signals
- * \param g_object_class main object class
+ * rm_object_create_signals:
+ * g_object_class: a #GObjectClass
+ *
+ * Create internal rm_object signals.
  */
-static void app_object_create_signals(GObjectClass *g_object_class)
+static void rm_object_create_signals(GObjectClass *g_object_class)
 {
-	app_object_signals[ACB_JOURNAL_LOADED] = g_signal_new(
+	rm_object_signals[RM_ACB_JOURNAL_LOADED] = g_signal_new(
 	            "journal-loaded",
 	            G_OBJECT_CLASS_TYPE(g_object_class),
 	            G_SIGNAL_RUN_FIRST,
-	            G_STRUCT_OFFSET(AppObjectClass, journal_loaded),
+	            G_STRUCT_OFFSET(RmObjectClass, journal_loaded),
 	            NULL,
 	            NULL,
 	            g_cclosure_marshal_VOID__POINTER,
@@ -81,11 +83,11 @@ static void app_object_create_signals(GObjectClass *g_object_class)
 	            1,
 	            G_TYPE_POINTER);
 
-	app_object_signals[ACB_CONNECTION_NOTIFY] = g_signal_new(
+	rm_object_signals[RM_ACB_CONNECTION_NOTIFY] = g_signal_new(
 	            "connection-notify",
 	            G_OBJECT_CLASS_TYPE(g_object_class),
 	            G_SIGNAL_RUN_FIRST,
-	            G_STRUCT_OFFSET(AppObjectClass, connection_notify),
+	            G_STRUCT_OFFSET(RmObjectClass, connection_notify),
 	            NULL,
 	            NULL,
 	            g_cclosure_marshal_VOID__POINTER,
@@ -93,11 +95,11 @@ static void app_object_create_signals(GObjectClass *g_object_class)
 	            1,
 	            G_TYPE_POINTER);
 
-	app_object_signals[ACB_CONTACT_PROCESS] = g_signal_new(
+	rm_object_signals[RM_ACB_CONTACT_PROCESS] = g_signal_new(
 	            "contact-process",
 	            G_OBJECT_CLASS_TYPE(g_object_class),
 	            G_SIGNAL_RUN_FIRST,
-	            G_STRUCT_OFFSET(AppObjectClass, contact_process),
+	            G_STRUCT_OFFSET(RmObjectClass, contact_process),
 	            NULL,
 	            NULL,
 	            g_cclosure_marshal_VOID__POINTER,
@@ -105,11 +107,11 @@ static void app_object_create_signals(GObjectClass *g_object_class)
 	            1,
 	            G_TYPE_POINTER);
 
-	app_object_signals[ACB_FAX_PROCESS] = g_signal_new(
+	rm_object_signals[RM_ACB_FAX_PROCESS] = g_signal_new(
 	        "fax-process",
 	        G_OBJECT_CLASS_TYPE(g_object_class),
 	        G_SIGNAL_RUN_FIRST,
-	        G_STRUCT_OFFSET(AppObjectClass, fax_process),
+	        G_STRUCT_OFFSET(RmObjectClass, fax_process),
 	        NULL,
 	        NULL,
 	        g_cclosure_marshal_VOID__POINTER,
@@ -117,11 +119,11 @@ static void app_object_create_signals(GObjectClass *g_object_class)
 	        1,
 	        G_TYPE_POINTER);
 
-	app_object_signals[ACB_CONNECTION_ESTABLISHED] = g_signal_new(
+	rm_object_signals[RM_ACB_CONNECTION_ESTABLISHED] = g_signal_new(
 	            "connection-established",
 	            G_OBJECT_CLASS_TYPE(g_object_class),
 	            G_SIGNAL_RUN_FIRST,
-	            G_STRUCT_OFFSET(AppObjectClass, connection_established),
+	            G_STRUCT_OFFSET(RmObjectClass, connection_established),
 	            NULL,
 	            NULL,
 	            g_cclosure_marshal_VOID__POINTER,
@@ -129,11 +131,11 @@ static void app_object_create_signals(GObjectClass *g_object_class)
 	            1,
 	            G_TYPE_POINTER);
 
-	app_object_signals[ACB_CONNECTION_TERMINATED] = g_signal_new(
+	rm_object_signals[RM_ACB_CONNECTION_TERMINATED] = g_signal_new(
 	            "connection-terminated",
 	            G_OBJECT_CLASS_TYPE(g_object_class),
 	            G_SIGNAL_RUN_FIRST,
-	            G_STRUCT_OFFSET(AppObjectClass, connection_terminated),
+	            G_STRUCT_OFFSET(RmObjectClass, connection_terminated),
 	            NULL,
 	            NULL,
 	            g_cclosure_marshal_VOID__POINTER,
@@ -141,11 +143,11 @@ static void app_object_create_signals(GObjectClass *g_object_class)
 	            1,
 	            G_TYPE_POINTER);
 
-	app_object_signals[ACB_CONNECTION_STATUS] = g_signal_new(
+	rm_object_signals[RM_ACB_CONNECTION_STATUS] = g_signal_new(
 	            "connection-status",
 	            G_OBJECT_CLASS_TYPE(g_object_class),
 	            G_SIGNAL_RUN_FIRST,
-	            G_STRUCT_OFFSET(AppObjectClass, connection_status),
+	            G_STRUCT_OFFSET(RmObjectClass, connection_status),
 	            NULL,
 	            NULL,
 	            g_cclosure_marshal_VOID__UINT_POINTER,
@@ -154,24 +156,24 @@ static void app_object_create_signals(GObjectClass *g_object_class)
 	            G_TYPE_UINT,
 	            G_TYPE_POINTER);
 
-	app_object_signals[ACB_MESSAGE] = g_signal_new(
+	rm_object_signals[RM_ACB_MESSAGE] = g_signal_new(
 	            "message",
 	            G_OBJECT_CLASS_TYPE(g_object_class),
 	            G_SIGNAL_RUN_FIRST,
-	            G_STRUCT_OFFSET(AppObjectClass, message),
+	            G_STRUCT_OFFSET(RmObjectClass, message),
 	            NULL,
 	            NULL,
-	            app_marshal_VOID__POINTER_POINTER,
+	            marshal_VOID__POINTER_POINTER,
 	            G_TYPE_NONE,
 	            2,
 	            G_TYPE_POINTER,
 	            G_TYPE_POINTER);
 
-	app_object_signals[ACB_CONTACTS_CHANGED] = g_signal_new(
+	rm_object_signals[RM_ACB_CONTACTS_CHANGED] = g_signal_new(
 	            "contacts-changed",
 	            G_OBJECT_CLASS_TYPE(g_object_class),
 	            G_SIGNAL_RUN_FIRST,
-	            G_STRUCT_OFFSET(AppObjectClass, contacts_changed),
+	            G_STRUCT_OFFSET(RmObjectClass, contacts_changed),
 	            NULL,
 	            NULL,
 	            g_cclosure_marshal_VOID__VOID,
@@ -179,11 +181,11 @@ static void app_object_create_signals(GObjectClass *g_object_class)
 	            0,
 	            G_TYPE_NONE);
 
-	app_object_signals[ACB_AUTHENTICATE] = g_signal_new(
+	rm_object_signals[RM_ACB_AUTHENTICATE] = g_signal_new(
 	            "authenticate",
 	            G_OBJECT_CLASS_TYPE(g_object_class),
 	            G_SIGNAL_RUN_FIRST,
-	            G_STRUCT_OFFSET(AppObjectClass, authenticate),
+	            G_STRUCT_OFFSET(RmObjectClass, authenticate),
 	            NULL,
 	            NULL,
 	            g_cclosure_marshal_VOID__POINTER,
@@ -193,32 +195,40 @@ static void app_object_create_signals(GObjectClass *g_object_class)
 }
 
 /**
- * \brief Initialize app_object class
- * \param klass main class object
+ * rm_object_class_init:
+ * @klass: a #RmObjectClass
+ *
+ * Initialize rm_object class.
  */
-static void app_object_class_init(AppObjectClass *klass)
+static void rm_object_class_init(RmObjectClass *klass)
 {
 	GObjectClass *g_object_class;
 
 	g_object_class = G_OBJECT_CLASS(klass);
 
-	g_type_class_add_private(klass, sizeof(AppObjectPrivate));
-	app_object_create_signals(g_object_class);
+	//g_type_class_add_private(klass, sizeof(RmObjectPrivate));
+	rm_object_create_signals(g_object_class);
 }
 
 /**
- * \brief Initialize app_object (does nothing ATM)
- * \param self pointer to app_object itself
+ * rm_object_init:
+ * @self: a #RmObject
+ *
+ * Initialize rm_object (does nothing ATM).
+ *
  */
-static void app_object_init(AppObject *self)
+static void rm_object_init(RmObject *self)
 {
 }
 
 /**
- * \brief Create new app_object
- * \return new app_object
+ * rm_object_new:
+ *
+ * Create new rm_object.
+ *
+ * Returns: new rm_object.
  */
-GObject *app_object_new(void)
+GObject *rm_object_new(void)
 {
-	return g_object_new(APP_OBJECT_TYPE, NULL);
+	return g_object_new(RM_OBJECT_TYPE, NULL);
 }

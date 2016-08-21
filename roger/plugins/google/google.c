@@ -25,14 +25,14 @@
 
 #include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/appobject.h>
-#include <libroutermanager/address-book.h>
-#include <libroutermanager/call.h>
+#include <libroutermanager/rmobject.h>
+#include <libroutermanager/rmaddressbook.h>
+#include <libroutermanager/rmcall.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmsettings.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmosdep.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmpassword.h>
 
 #include <roger/main.h>
@@ -202,7 +202,7 @@ static int google_init(void)
 		user = g_settings_get_string(google_settings, "user");
 		pwd = g_settings_get_string(google_settings, "password");
 
-		if (EMPTY_STRING(user) || EMPTY_STRING(pwd)) {
+		if (RM_EMPTY_STRING(user) || RM_EMPTY_STRING(pwd)) {
 			return 0;
 		}
 
@@ -233,7 +233,7 @@ static int google_init(void)
 		/* Try to use refresh token */
 		gchar *token = g_settings_get_string(google_settings, "token");
 
-		if (!EMPTY_STRING(token)) {
+		if (!RM_EMPTY_STRING(token)) {
 			GError *error = NULL;
 			g_debug("%s(): Trying to refresh authorization", __FUNCTION__);
 
@@ -241,7 +241,7 @@ static int google_init(void)
 			if (!gdata_authorizer_refresh_authorization(GDATA_AUTHORIZER(authorizer), NULL, &error)) {
 				if (!g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
 					g_debug("%s(): Authorization refresh error: %s", __FUNCTION__, error->message);
-					emit_message("Google Plugin", _("Authorization refresh error"));
+					rm_object_emit_message("Google Plugin", _("Authorization refresh error"));
 				}
 
 				g_error_free(error);
@@ -398,7 +398,7 @@ static int google_read_book(void) {
 				} else if (strcmp(type, GDATA_GD_PHONE_NUMBER_WORK_FAX) == 0) {
 					phone_number->type = PHONE_NUMBER_FAX_WORK;
 				}
-				phone_number->number = call_full_number(num, FALSE);
+				phone_number->number = rm_call_full_number(num, FALSE);
 				contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 
 				number_list = number_list->next;
@@ -847,7 +847,7 @@ gchar *google_get_active_book_name(void)
 	return g_strdup("Google");
 }
 
-struct address_book google_book = {
+RmAddressBook google_book = {
 	"Google",
 	google_get_active_book_name,
 	google_get_contacts,
@@ -866,19 +866,19 @@ void impl_activate(PeasActivatable *plugin)
 
 	google_read_book();
 
-	//google_plugin->priv->signal_id = g_signal_connect(G_OBJECT(app_object), "contact-process", G_CALLBACK(google_contact_process_cb), NULL);
+	//google_plugin->priv->signal_id = g_signal_connect(G_OBJECT(rm_object), "contact-process", G_CALLBACK(google_contact_process_cb), NULL);
 
-	routermanager_address_book_register(&google_book);
+	rm_addressbook_register(&google_book);
 }
 
 void impl_deactivate(PeasActivatable *plugin)
 {
 	RouterManagerGooglePlugin *google_plugin = ROUTERMANAGER_GOOGLE_PLUGIN(plugin);
 
-	routermanager_address_book_unregister(&google_book);
+	rm_addressbook_unregister(&google_book);
 
-	if (g_signal_handler_is_connected(G_OBJECT(app_object), google_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(app_object), google_plugin->priv->signal_id);
+	if (g_signal_handler_is_connected(G_OBJECT(rm_object), google_plugin->priv->signal_id)) {
+		g_signal_handler_disconnect(G_OBJECT(rm_object), google_plugin->priv->signal_id);
 	}
 
 	google_shutdown();

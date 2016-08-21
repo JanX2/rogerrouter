@@ -29,11 +29,11 @@
 #include <libroutermanager/rmlog.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmnetwork.h>
-#include <libroutermanager/call.h>
+#include <libroutermanager/rmcall.h>
 #include <libroutermanager/ftp.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmmain.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmfile.h>
 
 #include "fritzbox.h"
@@ -632,7 +632,7 @@ GSList *fritzbox_load_faxbox(GSList *journal)
 
 	if (!ftp_login(client, user, router_get_ftp_password(profile))) {
 		g_warning("Could not login to router ftp");
-		emit_message(_("FTP Login failed"), _("Please check your ftp credentials"));
+		rm_object_emit_message(_("FTP Login failed"), _("Please check your ftp credentials"));
 		ftp_shutdown(client);
 		return journal;
 	}
@@ -685,7 +685,7 @@ GSList *fritzbox_load_faxbox(GSList *journal)
 				number = "";
 			}
 
-			journal = call_add(journal, CALL_TYPE_FAX, g_strdup_printf("%s %s", date, time), "", number, ("Telefax"), "", "0:01", g_strdup(full));
+			journal = rm_call_add(journal, RM_CALL_TYPE_FAX, g_strdup_printf("%s %s", date, time), "", number, ("Telefax"), "", "0:01", g_strdup(full));
 			g_free(full);
 		}
 
@@ -731,7 +731,7 @@ static GSList *fritzbox_parse_voice_data(GSList *journal, const gchar *data, gsi
 
 		snprintf(date_time, sizeof(date_time), "%2.2d.%2.2d.%2.2d %2.2d:%2.2d", voice_data->day, voice_data->month, voice_data->year,
 		         voice_data->hour, voice_data->minute);
-		journal = call_add(journal, CALL_TYPE_VOICE, date_time, "", voice_data->remote_number, "", voice_data->local_number, "0:01", g_strdup(voice_data->file));
+		journal = rm_call_add(journal, RM_CALL_TYPE_VOICE, date_time, "", voice_data->remote_number, "", voice_data->local_number, "0:01", g_strdup(voice_data->file));
 	}
 
 	return journal;
@@ -759,7 +759,7 @@ GSList *fritzbox_load_voicebox(GSList *journal)
 
 	if (!ftp_login(client, user, router_get_ftp_password(profile))) {
 		g_warning("Could not login to router ftp");
-		emit_message(_("FTP Login failed"), _("Please check your ftp credentials"));
+		rm_object_emit_message(_("FTP Login failed"), _("Please check your ftp credentials"));
 		ftp_shutdown(client);
 		return journal;
 	}

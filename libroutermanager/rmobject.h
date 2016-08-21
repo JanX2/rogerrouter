@@ -17,49 +17,46 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_APPOBJECT_H
-#define LIBROUTERMANAGER_APPOBJECT_H
+#ifndef LIBROUTERMANAGER_RMOBJECT_H
+#define LIBROUTERMANAGER_RMOBJECT_H
 
 #include <glib.h>
 #include <glib-object.h>
 
 #include <libroutermanager/rmconnection.h>
 #include <libroutermanager/rmnetwork.h>
-//#include <libroutermanager/libfaxophone/faxophone.h>
 
 G_BEGIN_DECLS
 
-/** App Callbacks Signals */
+/**  Callbacks Signals */
 typedef enum {
-	ACB_JOURNAL_LOADED,
-	ACB_CONNECTION_NOTIFY,
-	ACB_CONTACT_PROCESS,
-	ACB_FAX_PROCESS,
-	ACB_CONNECTION_ESTABLISHED,
-	ACB_CONNECTION_TERMINATED,
-	ACB_CONNECTION_STATUS,
-	ACB_MESSAGE,
-	ACB_CONTACTS_CHANGED,
-	ACB_AUTHENTICATE,
-	ACB_MAX
-} AppCallbackId;
+	RM_ACB_JOURNAL_LOADED,
+	RM_ACB_CONNECTION_NOTIFY,
+	RM_ACB_CONTACT_PROCESS,
+	RM_ACB_FAX_PROCESS,
+	RM_ACB_CONNECTION_ESTABLISHED,
+	RM_ACB_CONNECTION_TERMINATED,
+	RM_ACB_CONNECTION_STATUS,
+	RM_ACB_MESSAGE,
+	RM_ACB_CONTACTS_CHANGED,
+	RM_ACB_AUTHENTICATE,
+	RM_ACB_MAX
+} RmCallbackId;
 
-//G_DECLARE_FINAL_TYPE (AppObject, app_object, APP, OBJECT, GObject);
+#define RM_OBJECT_TYPE (rm_object_get_type())
+#define RM_OBJECT(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), GEANY_OBJECT_TYPE, RmObject))
+#define RM_OBJECT_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST((klass), RM_OBJECT_TYPE, RmObjectClass))
+#define IS_RM_OBJECT(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), RM_OBJECT_TYPE))
+#define IS_RM_OBJECT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), RM_OBJECT_TYPE))
 
-#define APP_OBJECT_TYPE (app_object_get_type())
-#define APP_OBJECT(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), GEANY_OBJECT_TYPE, AppObject))
-#define APP_OBJECT_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST((klass), APP_OBJECT_TYPE, AppObjectClass))
-#define IS_APP_OBJECT(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), APP_OBJECT_TYPE))
-#define IS_APP_OBJECT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), APP_OBJECT_TYPE))
+typedef struct _RmObject RmObject;
+typedef struct _RmObjectClass RmObjectClass;
 
-typedef struct _AppObject AppObject;
-typedef struct _AppObjectClass AppObjectClass;
-
-struct _AppObject {
+struct _RmObject {
 	GObject parent;
 };
 
-struct _AppObjectClass {
+struct _RmObjectClass {
 	GObjectClass parent_class;
 	void (*journal_loaded)(GSList *journal);
 	void (*connection_notify)(RmConnection *connection);
@@ -70,14 +67,13 @@ struct _AppObjectClass {
 	void (*connection_status)(gint status, RmConnection *connection);
 	void (*message)(gchar *title, gchar *message);
 	void (*contacts_changed)(void);
-	void (*authenticate)(struct auth_data *auth_data);
+	void (*authenticate)(RmAuthData *auth_data);
 };
 
-//GType app_object_get_type(void);
-GObject *app_object_new(void);
+GObject *rm_object_new(void);
 
-extern GObject *app_object;
-extern guint app_object_signals[ACB_MAX];
+extern GObject *rm_object;
+extern guint rm_object_signals[RM_ACB_MAX];
 
 G_END_DECLS
 

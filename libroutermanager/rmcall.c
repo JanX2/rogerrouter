@@ -23,13 +23,13 @@
 
 #include <glib.h>
 
-#include <libroutermanager/call.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmcall.h>
+#include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/router.h>
 
 /** Call-by-call number table */
-struct call_by_call_entry call_by_call_table[] = {
+struct rm_call_by_call_entry rm_call_by_call_table[] = {
 	{"49", "0100", 6},
 	{"49", "010", 5},
 	{"31", "16", 4},
@@ -37,15 +37,18 @@ struct call_by_call_entry call_by_call_table[] = {
 };
 
 /**
- * \brief Sort calls (compares two calls based on date/time)
- * \param a call a
- * \param b call b
- * \return see strncmp
+ * rm_call_sort_by_date:
+ * @a: a #RmCall
+ * @b: a #RmCall
+ *
+ * Sort calls (compares two calls based on date/time).
+ *
+ * Returns: see strncmp
  */
-gint call_sort_by_date(gconstpointer a, gconstpointer b)
+gint rm_call_sort_by_date(gconstpointer a, gconstpointer b)
 {
-	struct call *call_a = (struct call *) a;
-	struct call *call_b = (struct call *) b;
+	RmCall *call_a = (RmCall *) a;
+	RmCall *call_b = (RmCall *) b;
 	gchar *number_a = NULL;
 	gchar *number_b = NULL;
 	gchar part_time_a[7];
@@ -90,22 +93,25 @@ gint call_sort_by_date(gconstpointer a, gconstpointer b)
 }
 
 /**
- * \brief Add call to journal
- * \param journal call list
- * \param type call type
- * \param date_time date and time of call
- * \param remote_name remote caller name
- * \param remote_number remote caller number
- * \param local_name local caller name
- * \param local_number local caller number
- * \param duration call duration
- * \param priv private data
- * \return new call list with appended call structure
+ * rm_call_add:
+ * @journal: call list
+ * @type: call type
+ * @date_time: date and time of call
+ * @remote_name: remote caller name
+ * @remote_number: remote caller number
+ * @local_name: local caller name
+ * @local_number: local caller number
+ * @duration: call duration
+ * @priv: private data
+ *
+ * Add call to journal
+ *
+ * Returns: new call list with appended call structure
  */
-GSList *call_add(GSList *journal, gint type, const gchar *date_time, const gchar *remote_name, const gchar *remote_number, const gchar *local_name, const gchar *local_number, const gchar *duration, gpointer priv)
+GSList *rm_call_add(GSList *journal, enum rm_call_types type, const gchar *date_time, const gchar *remote_name, const gchar *remote_number, const gchar *local_name, const gchar *local_number, const gchar *duration, gpointer priv)
 {
 	GSList *list = journal;
-	struct call *call = NULL;
+	RmCall *call = NULL;
 
 	/* Search through list and find duplicates */
 	for (list = journal; list != NULL; list = list->next) {
@@ -119,7 +125,7 @@ GSList *call_add(GSList *journal, gint type, const gchar *date_time, const gchar
 			}
 
 			/* Found same call with different type (voice/fax): merge them */
-			if (type == CALL_TYPE_VOICE || type == CALL_TYPE_FAX) {
+			if (type == RM_CALL_TYPE_VOICE || type == RM_CALL_TYPE_FAX) {
 				call->type = type;
 				call->priv = priv;
 
@@ -129,17 +135,17 @@ GSList *call_add(GSList *journal, gint type, const gchar *date_time, const gchar
 	}
 
 	/* Create new call structure */
-	call = g_slice_new0(struct call);
+	call = g_slice_new0(RmCall);
 
 	/* Set entries */
 	call->type = type;
 	call->date_time = date_time ? g_strdup(date_time) : g_strdup("");
 	call->remote = g_slice_new0(struct contact);
 	call->remote->image = NULL;
-	call->remote->name = remote_name ? g_convert_utf8(remote_name, -1) : g_strdup("");
+	call->remote->name = remote_name ? rm_convert_utf8(remote_name, -1) : g_strdup("");
 	call->remote->number = remote_number ? g_strdup(remote_number) : g_strdup("");
 	call->local = g_slice_new0(struct contact);
-	call->local->name = local_name ? g_convert_utf8(local_name, -1) : g_strdup("");
+	call->local->name = local_name ? rm_convert_utf8(local_name, -1) : g_strdup("");
 	call->local->number = local_number ? g_strdup(local_number) : g_strdup("");
 	call->duration = duration ? g_strdup(duration) : g_strdup("");
 
@@ -149,19 +155,21 @@ GSList *call_add(GSList *journal, gint type, const gchar *date_time, const gchar
 	call->priv = priv;
 
 	/* Append call sorted to the list */
-	list = g_slist_insert_sorted(journal, call, call_sort_by_date);
+	list = g_slist_insert_sorted(journal, call, rm_call_sort_by_date);
 
 	/* Return new call list */
 	return list;
 }
 
 /**
- * \brief Free call structure
- * \param data pointer to call structure
+ * rm_call_free:
+ * @data: pointer to call structure
+ *
+ * Free call structure.
  */
-void call_free(gpointer data)
+void rm_call_free(gpointer data)
 {
-	struct call *call = data;
+	RmCall *call = data;
 
 	/* Free entries */
 	g_free(call->date_time);
@@ -176,15 +184,17 @@ void call_free(gpointer data)
 	g_free(call->remote->city);
 
 	/* Free structure */
-	g_slice_free(struct contact, call->remote);
-	g_slice_free(struct contact, call->local);
-	g_slice_free(struct call, call);
+	g_slice_free(RmContact, call->remote);
+	g_slice_free(RmContact, call->local);
+	g_slice_free(RmCall, call);
 }
 
 /**
  * rm_call_scramble_number:
- * \brief Scramble number so we can print it to log files
- * \param number input number
+ * @number: input number
+ *
+ * Scramble number so we can print it to log files.
+ *
  * Returns: scrambled number
  */
 gchar *rm_call_scramble_number(const gchar *number)
@@ -217,24 +227,24 @@ gchar *rm_call_scramble_number(const gchar *number)
 }
 
 /**
- * call_by_call_prefix_length:
+ * rm_call_by_call_prefix_length:
  * @number: input number string
  *
  * Get call-by-call prefix length
  *
  * Returns: length of call-by-call prefix
  */
-gint call_by_call_prefix_length(const gchar *number)
+gint rm_call_by_call_prefix_length(const gchar *number)
 {
 	gchar *my_country_code = router_get_country_code(rm_profile_get_active());
-	struct call_by_call_entry *entry;
+	struct rm_call_by_call_entry *entry;
 
-	if (EMPTY_STRING(my_country_code)) {
+	if (RM_EMPTY_STRING(my_country_code)) {
 		g_free(my_country_code);
 		return 0;
 	}
 
-	for (entry = call_by_call_table; strlen(entry->country_code); entry++) {
+	for (entry = rm_call_by_call_table; strlen(entry->country_code); entry++) {
 		if (!strcmp(my_country_code, entry->country_code) && !strncmp(number, entry->prefix, strlen(entry->prefix))) {
 			g_free(my_country_code);
 			return entry->prefix_length;
@@ -247,11 +257,14 @@ gint call_by_call_prefix_length(const gchar *number)
 }
 
 /**
- * \brief Canonize number (valid chars: 0123456789#*)
- * \param number input number
- * \return canonized number
+ * rm_call_canonize_number:
+ * @number: input number
+ *
+ * Canonize number (valid chars: 0123456789#*).
+ *
+ * Returns: canonized number
  */
-gchar *call_canonize_number(const gchar *number)
+gchar *rm_call_canonize_number(const gchar *number)
 {
 	GString *new_number;
 
@@ -270,12 +283,16 @@ gchar *call_canonize_number(const gchar *number)
 }
 
 /**
- * \brief Format number according to phone standard
- * \param number input number
- * \output_format selected number output format
- * \return real number
+ * rm_call_format_number:
+ * @profile: a #RmProfile
+ * @number: input number
+ * @output_format: selected number output format
+ *
+ * Format number according to phone standard.
+ *
+ * Returns: real number
  */
-gchar *call_format_number(struct profile *profile, const gchar *number, enum number_format output_format)
+gchar *rm_call_format_number(RmProfile *profile, const gchar *number, enum rm_number_format output_format)
 {
 	gchar *tmp;
 	gchar *canonized;
@@ -283,7 +300,7 @@ gchar *call_format_number(struct profile *profile, const gchar *number, enum num
 	gchar *national_prefix;
 	gchar *my_country_code;
 	gchar *my_area_code;
-	gint number_format = NUMBER_FORMAT_UNKNOWN;
+	gint number_format = RM_NUMBER_FORMAT_UNKNOWN;
 	const gchar *my_prefix;
 	gchar *result = NULL;
 
@@ -292,14 +309,14 @@ gchar *call_format_number(struct profile *profile, const gchar *number, enum num
 		return g_strdup(number);
 	}
 
-	canonized = tmp = call_canonize_number(number);
+	canonized = tmp = rm_call_canonize_number(number);
 
 	international_prefix = router_get_international_prefix(profile);
 	national_prefix = router_get_national_prefix(profile);
 	my_country_code = router_get_country_code(profile);
 	my_area_code = router_get_area_code(profile);
 
-	/* we only need to check for international prefix, as call_canonize_number() already replaced '+'
+	/* we only need to check for international prefix, as rm_call_canonize_number() already replaced '+'
 	 * Example of the following:
 	 *    tmp = 00494012345678  with international_prefix 00 and my_country_code 49
 	 *    number_format = NUMBER_FORMAT_UNKNOWN
@@ -307,7 +324,7 @@ gchar *call_format_number(struct profile *profile, const gchar *number, enum num
 	if (!strncmp(tmp, international_prefix, strlen(international_prefix))) {
 		/* International format number */
 		tmp += strlen(international_prefix);
-		number_format = NUMBER_FORMAT_INTERNATIONAL;
+		number_format = RM_NUMBER_FORMAT_INTERNATIONAL;
 
 		/* Example:
 		 * tmp = 494012345678
@@ -316,7 +333,7 @@ gchar *call_format_number(struct profile *profile, const gchar *number, enum num
 		if (!strncmp(tmp, my_country_code, strlen(my_country_code)))  {
 			/* national number */
 			tmp = tmp + strlen(my_country_code);
-			number_format = NUMBER_FORMAT_NATIONAL;
+			number_format = RM_NUMBER_FORMAT_NATIONAL;
 
 			/* Example:
 			 * tmp = 4012345678
@@ -325,9 +342,9 @@ gchar *call_format_number(struct profile *profile, const gchar *number, enum num
 		}
 	} else {
 		/* not an international format, test for national or local format */
-		if (!EMPTY_STRING(national_prefix) && !strncmp(tmp, national_prefix, strlen(national_prefix))) {
+		if (!RM_EMPTY_STRING(national_prefix) && !strncmp(tmp, national_prefix, strlen(national_prefix))) {
 			tmp = tmp + strlen(national_prefix);
-			number_format = NUMBER_FORMAT_NATIONAL;
+			number_format = RM_NUMBER_FORMAT_NATIONAL;
 
 			/* Example:
 			 * Input was: 04012345678
@@ -335,7 +352,7 @@ gchar *call_format_number(struct profile *profile, const gchar *number, enum num
 			 * number_format = NUMBER_FORMAT_NATIONAL
 			 */
 		} else {
-			number_format = NUMBER_FORMAT_LOCAL;
+			number_format = RM_NUMBER_FORMAT_LOCAL;
 			/* Example:
 			 * Input was 12345678
 			 * tmp = 12345678
@@ -344,10 +361,10 @@ gchar *call_format_number(struct profile *profile, const gchar *number, enum num
 		}
 	}
 
-	if ((number_format == NUMBER_FORMAT_NATIONAL) && (!strncmp(tmp, my_area_code, strlen(my_area_code)))) {
+	if ((number_format == RM_NUMBER_FORMAT_NATIONAL) && (!strncmp(tmp, my_area_code, strlen(my_area_code)))) {
 		/* local number */
 		tmp = tmp + strlen(my_area_code);
-		number_format = NUMBER_FORMAT_LOCAL;
+		number_format = RM_NUMBER_FORMAT_LOCAL;
 
 		/* Example:
 		 * Input was 4012345678
@@ -357,39 +374,39 @@ gchar *call_format_number(struct profile *profile, const gchar *number, enum num
 	}
 
 	switch (output_format) {
-	case NUMBER_FORMAT_LOCAL:
+	case RM_NUMBER_FORMAT_LOCAL:
 	/* local number format */
-	case NUMBER_FORMAT_NATIONAL:
+	case RM_NUMBER_FORMAT_NATIONAL:
 		/* national number format */
 		switch (number_format) {
-		case NUMBER_FORMAT_LOCAL:
-			if (output_format == NUMBER_FORMAT_LOCAL) {
+		case RM_NUMBER_FORMAT_LOCAL:
+			if (output_format == RM_NUMBER_FORMAT_LOCAL) {
 				result = g_strdup(tmp);
 			} else {
 				result = g_strconcat(national_prefix, my_area_code, tmp, NULL);
 			}
 			break;
-		case NUMBER_FORMAT_NATIONAL:
+		case RM_NUMBER_FORMAT_NATIONAL:
 			result = g_strconcat(national_prefix, tmp, NULL);
 			break;
-		case NUMBER_FORMAT_INTERNATIONAL:
+		case RM_NUMBER_FORMAT_INTERNATIONAL:
 			result = g_strconcat(international_prefix, tmp, NULL);
 			break;
 		}
 		break;
-	case NUMBER_FORMAT_INTERNATIONAL:
+	case RM_NUMBER_FORMAT_INTERNATIONAL:
 	/* international prefix + international format */
-	case NUMBER_FORMAT_INTERNATIONAL_PLUS:
+	case RM_NUMBER_FORMAT_INTERNATIONAL_PLUS:
 		/* international format prefixed by a + */
-		my_prefix = (output_format == NUMBER_FORMAT_INTERNATIONAL_PLUS) ? "+" : international_prefix;
+		my_prefix = (output_format == RM_NUMBER_FORMAT_INTERNATIONAL_PLUS) ? "+" : international_prefix;
 		switch (number_format) {
-		case NUMBER_FORMAT_LOCAL:
+		case RM_NUMBER_FORMAT_LOCAL:
 			result = g_strconcat(my_prefix, my_country_code, my_area_code, tmp, NULL);
 			break;
-		case NUMBER_FORMAT_NATIONAL:
+		case RM_NUMBER_FORMAT_NATIONAL:
 			result = g_strconcat(my_prefix, my_country_code, tmp, NULL);
 			break;
-		case NUMBER_FORMAT_INTERNATIONAL:
+		case RM_NUMBER_FORMAT_INTERNATIONAL:
 			result = g_strconcat(my_prefix, tmp, NULL);
 			break;
 		}
@@ -411,14 +428,17 @@ gchar *call_format_number(struct profile *profile, const gchar *number, enum num
 }
 
 /**
- * \brief Convenient function to retrieve standardized number without call by call prefix
- * \param number input phone number
- * \param country_code_prefix whether we want a international or national phone number format
- * \return canonized and formatted phone number
+ * rm_call_full_number:
+ * @number: input phone number
+ * @country_code_prefix: whether we want a international or national phone number format
+ *
+ * Convenient function to retrieve standardized number without call by call prefix
+ *
+ * Returns: canonized and formatted phone number
  */
-gchar *call_full_number(const gchar *number, gboolean country_code_prefix)
+gchar *rm_call_full_number(const gchar *number, gboolean country_code_prefix)
 {
-	if (EMPTY_STRING(number)) {
+	if (RM_EMPTY_STRING(number)) {
 		return NULL;
 	}
 
@@ -428,7 +448,7 @@ gchar *call_full_number(const gchar *number, gboolean country_code_prefix)
 	}
 
 	/* Remove call-by-call (carrier preselect) prefix */
-	number += call_by_call_prefix_length(number);
+	number += rm_call_by_call_prefix_length(number);
 
 	/* Check if it is an international number */
 	if (!strncmp(number, "00", 2)) {
@@ -449,5 +469,5 @@ gchar *call_full_number(const gchar *number, gboolean country_code_prefix)
 		return out;
 	}
 
-	return call_format_number(rm_profile_get_active(), number, country_code_prefix ? NUMBER_FORMAT_INTERNATIONAL : NUMBER_FORMAT_NATIONAL);
+	return rm_call_format_number(rm_profile_get_active(), number, country_code_prefix ? RM_NUMBER_FORMAT_INTERNATIONAL : RM_NUMBER_FORMAT_NATIONAL);
 }

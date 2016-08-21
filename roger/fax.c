@@ -23,11 +23,11 @@
 #include <glib/gstdio.h>
 
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/appobject.h>
+#include <libroutermanager/rmobject.h>
 #include <libroutermanager/plugins/capi/fax.h>
 #include <libroutermanager/plugins/capi/phone.h>
 #include <libroutermanager/rmmain.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 
 #include <roger/phone.h>
 #include <roger/main.h>
@@ -70,7 +70,7 @@ gboolean fax_update_ui(gpointer user_data)
 		switch (fax_status->phase) {
 		case PHASE_B:
 			g_debug("%s(): PHASE_B", __FUNCTION__);
-			tmp = g_convert_utf8(fax_status->remote_ident, -1);
+			tmp = rm_convert_utf8(fax_status->remote_ident, -1);
 			g_debug("%s(): Ident: %s", __FUNCTION__, tmp);
 			gtk_label_set_text(GTK_LABEL(fax_ui->remote_label), tmp);
 			g_free(tmp);
@@ -356,7 +356,7 @@ void fax_process_cb(GtkWidget *widget, gchar *file_name, gpointer user_data)
 
 void fax_process_init(void)
 {
-	g_signal_connect(app_object, "fax-process", G_CALLBACK(fax_process_cb), NULL);
+	g_signal_connect(rm_object, "fax-process", G_CALLBACK(fax_process_cb), NULL);
 	//g_settings_set_boolean(rm_profile_get_active()->settings, "fax-sff", TRUE);
 	//fax_process_cb(NULL, "/home/jbrummer/t.ps", NULL);
 }

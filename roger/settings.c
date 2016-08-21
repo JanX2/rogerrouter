@@ -30,11 +30,11 @@
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmnetmonitor.h>
 #include <libroutermanager/ftp.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmpassword.h>
 #include <libroutermanager/rmaction.h>
 #include <libroutermanager/rmaudio.h>
-#include <libroutermanager/address-book.h>
+#include <libroutermanager/rmaddressbook.h>
 
 #include <roger/application.h>
 #include <roger/settings.h>
@@ -136,7 +136,7 @@ void ftp_login_check_button_clicked_cb(GtkButton *button, gpointer user_data)
 		if (ftp_login(client, router_get_ftp_user(profile), router_get_ftp_password(profile)) == TRUE) {
 			dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE, _("FTP password is valid"));
 		} else {
-			emit_message(_("FTP password is invalid"), _("Please check your FTP credentials"));
+			rm_object_emit_message(_("FTP password is invalid"), _("Please check your FTP credentials"));
 		}
 		ftp_shutdown(client);
 	}
@@ -219,9 +219,9 @@ void filter_refresh_list(GtkListStore *list_store)
 {
 	GSList *list;
 
-	for (list = filter_get_list(); list != NULL; list = list->next) {
+	for (list = rm_filter_get_list(); list != NULL; list = list->next) {
 		GtkTreeIter iter;
-		struct filter *filter = list->data;
+		RmFilter *filter = list->data;
 
 		gtk_list_store_insert_with_values(list_store, &iter, -1, 0, filter->name, 1, filter, -1);
 	}
@@ -325,7 +325,7 @@ static void type_box_changed_cb(GtkWidget *widget, gpointer next)
  */
 static void type_box_changed_cb2(GtkWidget *widget, gpointer rule_ptr)
 {
-	struct filter_rule *rule = rule_ptr;
+	RmFilterRule *rule = rule_ptr;
 
 	rule->type = gtk_combo_box_get_active(GTK_COMBO_BOX(widget));
 }
@@ -337,7 +337,7 @@ static void type_box_changed_cb2(GtkWidget *widget, gpointer rule_ptr)
  */
 static void sub_type_box_changed_cb(GtkWidget *widget, gpointer rule_ptr)
 {
-	struct filter_rule *rule = rule_ptr;
+	RmFilterRule *rule = rule_ptr;
 
 	rule->sub_type = gtk_combo_box_get_active(GTK_COMBO_BOX(widget));
 }
@@ -349,7 +349,7 @@ static void sub_type_box_changed_cb(GtkWidget *widget, gpointer rule_ptr)
  */
 static void entry_changed_cb(GtkWidget *widget, gpointer data)
 {
-	struct filter_rule *rule = data;
+	RmFilterRule *rule = data;
 
 	if (rule->entry != NULL) {
 		g_free(rule->entry);
@@ -360,7 +360,7 @@ static void entry_changed_cb(GtkWidget *widget, gpointer data)
 }
 
 /* Forward declaration */
-static void pref_filters_add_rule(gpointer grid_ptr, struct filter_rule *rule);
+static void pref_filters_add_rule(gpointer grid_ptr, RmFilterRule *rule);
 
 /**
  * \brief Add button callback
@@ -380,14 +380,14 @@ static void add_button_clicked_cb(GtkWidget *widget, gpointer grid)
 static void remove_button_clicked_cb(GtkWidget *widget, gpointer grid_ptr)
 {
 	GtkWidget *grid = grid_ptr;
-	struct filter_rule *rule = g_object_get_data(G_OBJECT(grid), "rule");
+	RmFilterRule *rule = g_object_get_data(G_OBJECT(grid), "rule");
 
 	if (g_slist_length(pref_filters_current_rules) <= 1) {
 		return;
 	}
 
 	pref_filters_current_rules = g_slist_remove(pref_filters_current_rules, rule);
-	g_slice_free(struct filter_rule, rule);
+	g_slice_free(RmFilterRule, rule);
 
 	gtk_widget_destroy(grid);
 }
@@ -397,7 +397,7 @@ static void remove_button_clicked_cb(GtkWidget *widget, gpointer grid_ptr)
  * \param grid grid widget pointer
  * \param rule filter rule pointer
  */
-static void pref_filters_add_rule(gpointer grid_ptr, struct filter_rule *rule)
+static void pref_filters_add_rule(gpointer grid_ptr, RmFilterRule *rule)
 {
 	GtkWidget *grid = grid_ptr;
 	GtkWidget *own_grid;
@@ -409,7 +409,7 @@ static void pref_filters_add_rule(gpointer grid_ptr, struct filter_rule *rule)
 	GtkWidget *image;
 
 	if (!rule) {
-		rule = g_slice_new0(struct filter_rule);
+		rule = g_slice_new0(RmFilterRule);
 	}
 
 	own_grid = gtk_grid_new();
@@ -483,7 +483,7 @@ void filter_edit_button_clicked_cb(GtkWidget *widget, gpointer data)
 	GtkTreeIter selected_iter;
 	GtkTreeModel *model;
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(data));
-	struct filter *filter;
+	RmFilter *filter;
 	GtkWidget *dialog;
 	GtkWidget *grid;
 	GtkWidget *content;
@@ -491,7 +491,7 @@ void filter_edit_button_clicked_cb(GtkWidget *widget, gpointer data)
 	GtkWidget *entry;
 	GtkWidget *save;
 	GSList *list;
-	struct filter_rule *rule;
+	RmFilterRule *rule;
 	GValue ptr = {0};
 	GtkListStore *list_store;
 	gint result;
@@ -582,7 +582,7 @@ void filter_edit_button_clicked_cb(GtkWidget *widget, gpointer data)
 	filter_refresh_list(list_store);
 
 	journal_update_filter();
-	filter_save();
+	rm_filter_save();
 }
 
 /**
@@ -596,7 +596,7 @@ void filter_remove_button_clicked_cb(GtkWidget *widget, gpointer data)
 	GtkTreeModel *model;
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(data));
 	GtkListStore *list_store;
-	struct filter *filter = NULL;
+	RmFilter *filter = NULL;
 	GValue ptr = { 0 };
 
 	if (!gtk_tree_selection_get_selected(selection, &model, &selected_iter)) {
@@ -618,7 +618,7 @@ void filter_remove_button_clicked_cb(GtkWidget *widget, gpointer data)
 		return;
 	}
 
-	filter_remove(filter);
+	rm_filter_remove(filter);
 
 	g_value_unset(&ptr);
 
@@ -627,7 +627,7 @@ void filter_remove_button_clicked_cb(GtkWidget *widget, gpointer data)
 	filter_refresh_list(list_store);
 
 	journal_update_filter();
-	filter_save();
+	rm_filter_save();
 }
 
 
@@ -646,7 +646,7 @@ void filter_add_button_clicked_cb(GtkWidget *widget, gpointer data)
 	GtkWidget *content;
 	GtkListStore *list_store;
 	GtkTreeModel *model;
-	struct filter *filter;
+	RmFilter *filter;
 	gint result;
 	gboolean use_header = roger_uses_headerbar();
 
@@ -704,9 +704,9 @@ void filter_add_button_clicked_cb(GtkWidget *widget, gpointer data)
 
 	const gchar *name = gtk_entry_get_text(GTK_ENTRY(entry));
 
-	filter = filter_new(name);
+	filter = rm_filter_new(name);
 	filter->rules = pref_filters_current_rules;
-	filter_add(filter);
+	rm_filter_add(filter);
 
 	gtk_widget_destroy(dialog);
 
@@ -716,7 +716,7 @@ void filter_add_button_clicked_cb(GtkWidget *widget, gpointer data)
 	filter_refresh_list(list_store);
 
 	journal_update_filter();
-	filter_save();
+	rm_filter_save();
 }
 
 static struct rm_action *selected_action = NULL;
@@ -1276,9 +1276,9 @@ void settings_fill_address_book_plugin_combobox(struct settings *settings)
 	GSList *plugins;
 	GSList *list;
 
-	plugins = rm_address_book_get_plugins();
+	plugins = rm_addressbook_get_plugins();
 	for (list = plugins; list; list = list->next) {
-		struct address_book *ab = list->data;
+		RmAddressBook *ab = list->data;
 
 		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->address_book_plugin_combobox), ab->name, ab->name);
 	}

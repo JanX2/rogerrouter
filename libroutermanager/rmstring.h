@@ -17,17 +17,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_CSV_H
-#define LIBROUTERMANAGER_CSV_H
+#ifndef LIBROUTERMANAGER_RMSTRING_H
+#define LIBROUTERMANAGER_RMSTRING_H
 
 G_BEGIN_DECLS
 
-typedef gpointer (*csv_parse_line_func)(gpointer ptr, gchar **split);
+#ifndef RM_EMPTY_STRING
+#define RM_EMPTY_STRING(x) (!(x) || !strlen(x))
+#endif
 
-gpointer csv_parse_data(const gchar *data, const gchar *header, csv_parse_line_func csv_parse_line, gpointer ptr);
-gboolean csv_save_journal_as(GSList *journal, gchar *file_name);
-gboolean csv_save_journal(GSList *journal);
-GSList *csv_load_journal(GSList *journal);
+gchar *rm_strcasestr(const gchar *haystack, const gchar *needle);
+gchar *rm_convert_utf8(const gchar *text, gssize len);
+gboolean rm_strv_contains(const gchar * const *strv, const gchar *str);
 
 G_END_DECLS
 

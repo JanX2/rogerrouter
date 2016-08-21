@@ -17,19 +17,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_GSTRING_H
-#define LIBROUTERMANAGER_GSTRING_H
+#ifndef LIBROUTERMANAGER_RMVOX_H
+#define LIBROUTERMANAGER_RMVOX_H
 
 G_BEGIN_DECLS
 
-#ifndef EMPTY_STRING
-#define EMPTY_STRING(x) (!(x) || !strlen(x))
-#endif
-
-gchar *g_strcasestr(const gchar *haystack, const gchar *needle);
-gchar *g_convert_utf8(const gchar *text, gssize len);
-gchar *strip_html(gchar *text);
-gboolean rm_strv_contains(const gchar * const *strv, const gchar *str);
+gpointer rm_vox_init(gchar *data, gsize len, GError **error);
+gboolean rm_vox_play(gpointer vox_data);
+gboolean rm_vox_stop(gpointer vox_data);
+gboolean rm_vox_playpause(gpointer vox_data);
+gboolean rm_vox_seek(gpointer vox_data, gdouble pos);
+gint rm_vox_get_fraction(gpointer vox_data);
+gfloat rm_vox_get_seconds(gpointer vox_data);
 
 G_END_DECLS
 

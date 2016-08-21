@@ -22,7 +22,7 @@
 
 #include <glib.h>
 
-#include <libroutermanager/csv.h>
+#include <libroutermanager/rmcsv.h>
 #include "csv.h"
 
 #define CSV_AREACODES "\"Country\",\"Country Code\",\"Area\",\"Area Code\""
@@ -120,7 +120,7 @@ GHashTable *csv_parse_global_areacodes_data(gchar *data)
 
 	global_table = g_hash_table_new_full(g_str_hash, g_str_equal, csv_data_destroy, csv_areacode_destroy);
 
-	csv_parse_data(data, CSV_AREACODES, csv_parse_global_areacodes, global_table);
+	rm_csv_parse_data(data, CSV_AREACODES, csv_parse_global_areacodes, global_table);
 
 	return global_table;
 }

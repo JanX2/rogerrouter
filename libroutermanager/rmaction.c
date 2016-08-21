@@ -23,10 +23,10 @@
 
 #include <libroutermanager/rmaction.h>
 #include <libroutermanager/rmconnection.h>
-#include <libroutermanager/appobject.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmobject.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmmain.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmsettings.h>
 
 /**
@@ -102,13 +102,13 @@ gchar *rm_action_regex(gchar *str, RmConnection *connection)
 
 /**
  * rm_action_connection_notify_cb:
- * @object: an #AppObject
+ * @object: an #RmObject
  * @connection: a #RmConnection
  * @user_data: user data pointer to #RmProfile
  *
  * \brief connection-notify callback - based on connection type execute actions
  */
-static void rm_action_connection_notify_cb(AppObject *object, RmConnection *connection, gpointer user_data)
+static void rm_action_connection_notify_cb(RmObject *object, RmConnection *connection, gpointer user_data)
 {
 	GSList *list;
 	RmProfile *profile = user_data;
@@ -116,7 +116,7 @@ static void rm_action_connection_notify_cb(AppObject *object, RmConnection *conn
 	/* Sanity check #1 - profile must be != NULL */
 	g_return_if_fail(profile != NULL);
 	/* Sanity check #2 - if local number is NULL there is no reason to execute specified actions */
-	g_return_if_fail(!EMPTY_STRING(connection->local_number));
+	g_return_if_fail(!RM_EMPTY_STRING(connection->local_number));
 
 	/* Loop through all actions within the profile */
 	for (list = profile->action_list; list != NULL; list = list->next) {
@@ -446,7 +446,7 @@ void rm_action_init(RmProfile *profile)
 	g_strfreev(actions);
 
 	/* Connect to ::connection-notify signal */
-	g_signal_connect(G_OBJECT(app_object), "connection-notify", G_CALLBACK(rm_action_connection_notify_cb), profile);
+	g_signal_connect(G_OBJECT(rm_object), "connection-notify", G_CALLBACK(rm_action_connection_notify_cb), profile);
 }
 
 /**
@@ -462,7 +462,7 @@ void rm_action_shutdown(RmProfile *profile)
 	}
 
 	/* Disconnect connection-notify signal */
-	g_signal_handlers_disconnect_by_func(G_OBJECT(app_object), G_CALLBACK(rm_action_connection_notify_cb), profile);
+	g_signal_handlers_disconnect_by_func(G_OBJECT(rm_object), G_CALLBACK(rm_action_connection_notify_cb), profile);
 
 	/* Clear action list */
 	g_slist_free_full(profile->action_list, rm_action_free);

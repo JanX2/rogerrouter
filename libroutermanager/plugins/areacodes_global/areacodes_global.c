@@ -24,13 +24,13 @@
 
 #include <glib.h>
 
-#include <libroutermanager/call.h>
+#include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/appobject.h>
+#include <libroutermanager/rmobject.h>
 #include <libroutermanager/rmfile.h>
 #include <libroutermanager/rmplugins.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 
 #include "csv.h"
 
@@ -92,7 +92,7 @@ static gchar *areacodes_get_city(RouterManagerGlobalAreaCodesPlugin *areacodes_p
 		return g_strdup("");
 	}
 
-	full_number = call_full_number(number, TRUE);
+	full_number = rm_call_full_number(number, TRUE);
 	//g_debug("full_number: '%s'", full_number);
 
 	/* Find area code */
@@ -148,7 +148,7 @@ static gchar *areacodes_get_city(RouterManagerGlobalAreaCodesPlugin *areacodes_p
 	}
 
 	//g_debug("Ret: %s", ret);
-	return g_convert_utf8(ret, -1);
+	return rm_convert_utf8(ret, -1);
 }
 
 /**
@@ -157,11 +157,11 @@ static gchar *areacodes_get_city(RouterManagerGlobalAreaCodesPlugin *areacodes_p
  * \param contact contact structure
  * \param user_data pointer to areacodes plugin structure
  */
-static void global_areacodes_contact_process_cb(AppObject *obj, struct contact *contact, gpointer user_data)
+static void global_areacodes_contact_process_cb(RmObject *obj, struct contact *contact, gpointer user_data)
 {
 	RouterManagerGlobalAreaCodesPlugin *areacodes_plugin = user_data;
 
-	if (EMPTY_STRING(contact->number)) {
+	if (RM_EMPTY_STRING(contact->number)) {
 		return;
 	}
 
@@ -206,7 +206,7 @@ static void impl_activate(PeasActivatable *plugin)
 	g_free(areacodes);
 
 	/* Connect to "contact-process" signal using "after" as this should come last */
-	areacodes_plugin->priv->signal_id = g_signal_connect_after(G_OBJECT(app_object), "contact-process", G_CALLBACK(global_areacodes_contact_process_cb), areacodes_plugin);
+	areacodes_plugin->priv->signal_id = g_signal_connect_after(G_OBJECT(rm_object), "contact-process", G_CALLBACK(global_areacodes_contact_process_cb), areacodes_plugin);
 }
 
 /**
@@ -218,8 +218,8 @@ static void impl_deactivate(PeasActivatable *plugin)
 	RouterManagerGlobalAreaCodesPlugin *areacodes_plugin = ROUTERMANAGER_GLOBAL_AREACODES_PLUGIN(plugin);
 
 	/* If signal handler is connected: disconnect */
-	if (g_signal_handler_is_connected(G_OBJECT(app_object), areacodes_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(app_object), areacodes_plugin->priv->signal_id);
+	if (g_signal_handler_is_connected(G_OBJECT(rm_object), areacodes_plugin->priv->signal_id)) {
+		g_signal_handler_disconnect(G_OBJECT(rm_object), areacodes_plugin->priv->signal_id);
 	}
 
 	/* Free hash table */

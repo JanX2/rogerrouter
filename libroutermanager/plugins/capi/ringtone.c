@@ -20,7 +20,7 @@
 #include <glib.h>
 
 #include <libroutermanager/rmaudio.h>
-#include <libroutermanager/call.h>
+#include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmconnection.h>
 
 #include "isdn-convert.h"

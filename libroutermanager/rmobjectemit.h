@@ -17,18 +17,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_VOXPLAY_H
-#define LIBROUTERMANAGER_VOXPLAY_H
+#ifndef LIBROUTERMANAGER_RMOBJECTEMIT_H
+#define LIBROUTERMANAGER_RMOBJECTEMIT_H
+
+#include <libroutermanager/rmconnection.h>
+#include <libroutermanager/rmnetwork.h>
 
 G_BEGIN_DECLS
 
-gpointer vox_init(gchar *data, gsize len, GError **error);
-gboolean vox_play(gpointer vox_data);
-gboolean vox_stop(gpointer vox_data);
-gboolean vox_playpause(gpointer vox_data);
-gboolean vox_seek(gpointer vox_data, gdouble pos);
-gint vox_get_fraction(gpointer vox_data);
-gfloat vox_get_seconds(gpointer vox_data);
+void rm_object_emit_connection_notify(RmConnection *connection);
+void rm_object_emit_contact_process(RmContact *contact);
+void rm_object_emit_journal_loaded(GSList *journal);
+void rm_object_emit_fax_process(const gchar *filename);
+void rm_object_emit_connection_established(RmConnection *connection);
+void rm_object_emit_connection_terminated(RmConnection *connection);
+void rm_object_emit_connection_status(gint status, RmConnection *connection);
+void rm_object_emit_message(gchar *title, gchar *message);
+void rm_object_emit_contacts_changed(void);
+void rm_object_emit_authenticate(RmAuthData *auth_data);
 
 G_END_DECLS
 

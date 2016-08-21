@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_CALL_H
-#define LIBROUTERMANAGER_CALL_H
+#ifndef LIBROUTERMANAGER_RMCALL_H
+#define LIBROUTERMANAGER_RMCALL_H
 
 #include <libroutermanager/rmcontact.h>
 #include <libroutermanager/rmprofile.h>
@@ -26,52 +26,52 @@
 G_BEGIN_DECLS
 
 /** Supported call types */
-enum {
-	CALL_TYPE_ALL,
-	CALL_TYPE_INCOMING,
-	CALL_TYPE_MISSED,
-	CALL_TYPE_OUTGOING,
-	CALL_TYPE_VOICE,
-	CALL_TYPE_FAX,
-	CALL_TYPE_FAX_REPORT,
-	CALL_TYPE_RECORD,
-	CALL_TYPE_BLOCKED
+enum rm_call_types {
+	RM_CALL_TYPE_ALL,
+	RM_CALL_TYPE_INCOMING,
+	RM_CALL_TYPE_MISSED,
+	RM_CALL_TYPE_OUTGOING,
+	RM_CALL_TYPE_VOICE,
+	RM_CALL_TYPE_FAX,
+	RM_CALL_TYPE_FAX_REPORT,
+	RM_CALL_TYPE_RECORD,
+	RM_CALL_TYPE_BLOCKED
 };
 
 /* current number format */
-enum number_format {
-	NUMBER_FORMAT_UNKNOWN,
-	NUMBER_FORMAT_LOCAL,
-	NUMBER_FORMAT_NATIONAL,
-	NUMBER_FORMAT_INTERNATIONAL,
-	NUMBER_FORMAT_INTERNATIONAL_PLUS
+enum rm_number_format {
+	RM_NUMBER_FORMAT_UNKNOWN,
+	RM_NUMBER_FORMAT_LOCAL,
+	RM_NUMBER_FORMAT_NATIONAL,
+	RM_NUMBER_FORMAT_INTERNATIONAL,
+	RM_NUMBER_FORMAT_INTERNATIONAL_PLUS
 };
 
-struct call {
-	gint type;
+typedef struct rm_call {
+	enum rm_call_types type;
 	gchar *date_time;
 	gchar *duration;
 
-	struct contact *remote;
-	struct contact *local;
+	RmContact *remote;
+	RmContact *local;
 
 	/* Private (e.g. original filename) */
 	gchar *priv;
-};
+} RmCall;
 
-struct call_by_call_entry {
+struct rm_call_by_call_entry {
 	gchar *country_code;
 	gchar *prefix;
 	gint prefix_length;
 };
 
-GSList *call_add(GSList *journal, gint type, const gchar *date_time, const gchar *remote_name, const gchar *remote_number, const gchar *local_name, const gchar *local_number, const gchar *duration, gpointer priv);
-void call_free(gpointer data);
+GSList *rm_call_add(GSList *journal, enum rm_call_types type, const gchar *date_time, const gchar *remote_name, const gchar *remote_number, const gchar *local_name, const gchar *local_number, const gchar *duration, gpointer priv);
+void rm_call_free(gpointer data);
 gchar *rm_call_scramble_number(const gchar *number);
-gchar *call_full_number(const gchar *number, gboolean country_code_prefix);
-gint call_sort_by_date(gconstpointer a, gconstpointer b);
-gchar *call_format_number(struct profile *profile, const gchar *number, enum number_format output_format);
-gchar *call_canonize_number(const gchar *number);
+gchar *rm_call_full_number(const gchar *number, gboolean country_code_prefix);
+gint rm_call_sort_by_date(gconstpointer a, gconstpointer b);
+gchar *rm_call_format_number(struct profile *profile, const gchar *number, enum rm_number_format output_format);
+gchar *rm_call_canonize_number(const gchar *number);
 
 G_END_DECLS
 

@@ -28,10 +28,10 @@
 #include <libroutermanager/rmfile.h>
 #include <libroutermanager/rmlog.h>
 #include <libroutermanager/rmnetwork.h>
-#include <libroutermanager/csv.h>
+#include <libroutermanager/rmcsv.h>
 #include <libroutermanager/ftp.h>
-#include <libroutermanager/call.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmcall.h>
+#include <libroutermanager/rmstring.h>
 
 #include "fritzbox.h"
 #include "csv.h"
@@ -69,7 +69,7 @@ gboolean fritzbox_present_04_00(struct router_info *router_info)
 	rm_log_save_data("fritzbox-04_00-present.html", data, read);
 	g_assert(data != NULL);
 
-	if (g_strcasestr(data, "fritz!box")) {
+	if (rm_strcasestr(data, "fritz!box")) {
 		ret = TRUE;
 
 		router_info->name = g_strdup("FRITZ!Box");

@@ -17,28 +17,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_APPOBJECT_EMIT_H
-#define LIBROUTERMANAGER_APPOBJECT_EMIT_H
-
-#include <libroutermanager/rmconnection.h>
-#include <libroutermanager/rmnetwork.h>
+#ifndef LIBROUTERMANAGER_RMCSV_H
+#define LIBROUTERMANAGER_RMCSV_H
 
 G_BEGIN_DECLS
 
-void emit_connection_notify(struct connection *connection);
-void rm_emit_contact_process(struct contact *contact);
-void emit_journal_loaded(GSList *journal);
-void emit_fax_process(const gchar *filename);
+typedef gpointer (*rm_csv_parse_line_func)(gpointer ptr, gchar **split);
 
-void emit_connection_established(struct connection *connection);
-void emit_connection_terminated(struct connection *connection);
-void emit_connection_status(gint status, struct connection *connection);
-
-void emit_message(gchar *title, gchar *message);
-
-void emit_contacts_changed(void);
-
-void emit_authenticate(struct auth_data *auth_data);
+gpointer rm_csv_parse_data(const gchar *data, const gchar *header, rm_csv_parse_line_func csv_parse_line, gpointer ptr);
+gboolean rm_csv_save_journal_as(GSList *journal, gchar *file_name);
+gboolean rm_csv_save_journal(GSList *journal);
+GSList *rm_csv_load_journal(GSList *journal);
 
 G_END_DECLS
 

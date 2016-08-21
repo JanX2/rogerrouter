@@ -28,8 +28,8 @@
 
 #include <libappindicator/app-indicator.h>
 
-#include <libroutermanager/call.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmcall.h>
+#include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/routermanager.h>
@@ -114,12 +114,12 @@ void indicator_menu_last_calls_group(GtkWidget *menu, gchar *label, int call_typ
 	list = journal_list;
 
 	while (list != NULL) {
-		struct call *call = list->data;
+		RmCall *call = list->data;
 
-		if (call->type == call_type && (!EMPTY_STRING(call->remote->name) || !EMPTY_STRING(call->remote->number))) {
+		if (call->type == call_type && (!RM_EMPTY_STRING(call->remote->name) || !RM_EMPTY_STRING(call->remote->number))) {
 			item = gtk_menu_item_new();
 
-			if (!EMPTY_STRING(call->remote->name)) {
+			if (!RM_EMPTY_STRING(call->remote->name)) {
 				gtk_menu_item_set_label(GTK_MENU_ITEM(item), call->remote->name);
 			} else {
 				gtk_menu_item_set_label(GTK_MENU_ITEM(item), call->remote->number);
@@ -151,21 +151,21 @@ GtkWidget *indicator_menu_last_calls(void)
 	menu = gtk_menu_new();
 
 	/* Last calls - Incomming */
-	indicator_menu_last_calls_group(menu, _("Incoming"), CALL_TYPE_INCOMING);
+	indicator_menu_last_calls_group(menu, _("Incoming"), RM_CALL_TYPE_INCOMING);
 
 	/* Separator */
 	item = gtk_separator_menu_item_new();
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
 	/* Last calls - Outgoing */
-	indicator_menu_last_calls_group(menu, _("Outgoing"), CALL_TYPE_OUTGOING);
+	indicator_menu_last_calls_group(menu, _("Outgoing"), RM_CALL_TYPE_OUTGOING);
 
 	/* Separator */
 	item = gtk_separator_menu_item_new();
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
 	/* Last calls - Missed */
-	indicator_menu_last_calls_group(menu, _("Missed"), CALL_TYPE_MISSED);
+	indicator_menu_last_calls_group(menu, _("Missed"), RM_CALL_TYPE_MISSED);
 
 	return menu;
 }
@@ -288,7 +288,7 @@ GtkWidget *indicator_menu(void)
  * \param connection connection structure
  * \param unused_pointer unused user pointer
  */
-void indicator_connection_notify_cb(AppObject *obj, struct connection *connection, gpointer unused_pointer)
+void indicator_connection_notify_cb(RmObject *obj, struct connection *connection, gpointer unused_pointer)
 {
 	g_debug("Called: '%d/%d", connection->type, CONNECTION_TYPE_MISSED);
 	if (connection->type == CONNECTION_TYPE_MISSED) {
@@ -356,7 +356,7 @@ void impl_activate(PeasActivatable *plugin)
 
 	/* Connect to "call-notify" signal */
 	indicator_plugin = ROUTERMANAGER_INDICATOR_PLUGIN(plugin);
-	indicator_plugin->priv->signal_id = g_signal_connect(G_OBJECT(app_object), "connection-notify", G_CALLBACK(indicator_connection_notify_cb), NULL);
+	indicator_plugin->priv->signal_id = g_signal_connect(G_OBJECT(rm_object), "connection-notify", G_CALLBACK(indicator_connection_notify_cb), NULL);
 
 	if (g_settings_get_boolean(indicator_settings, "hide-journal-on-startup")) {
 		journal_set_hide_on_start(TRUE);
@@ -372,8 +372,8 @@ void impl_deactivate(PeasActivatable *plugin)
 
 	/* If signal handler is connected: disconnect */
 	indicator_plugin = ROUTERMANAGER_INDICATOR_PLUGIN(plugin);
-	if (g_signal_handler_is_connected(G_OBJECT(app_object), indicator_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(app_object), indicator_plugin->priv->signal_id);
+	if (g_signal_handler_is_connected(G_OBJECT(rm_object), indicator_plugin->priv->signal_id)) {
+		g_signal_handler_disconnect(G_OBJECT(rm_object), indicator_plugin->priv->signal_id);
 	}
 
 	if (journal_win) {

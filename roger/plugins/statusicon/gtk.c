@@ -21,7 +21,7 @@
 
 #include <gtk/gtk.h>
 
-#include <libroutermanager/call.h>
+#include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/routermanager.h>
@@ -108,7 +108,7 @@ void statusicon_menu_last_calls_group(GtkWidget *menu, gchar *label, int call_ty
 	list = journal_list;
 
 	while (list != NULL) {
-		struct call *call = list->data;
+		RmCall *call = list->data;
 
 		if (call->type == call_type && (strlen(call->remote->name) || strlen(call->remote->number))) {
 			item = gtk_menu_item_new();
@@ -145,21 +145,21 @@ GtkWidget *statusicon_menu_last_calls(void)
 	menu = gtk_menu_new();
 
 	/* Last calls - Incomming */
-	statusicon_menu_last_calls_group(menu, _("Incoming"), CALL_TYPE_INCOMING);
+	statusicon_menu_last_calls_group(menu, _("Incoming"), RM_CALL_TYPE_INCOMING);
 
 	/* Separator */
 	item = gtk_separator_menu_item_new();
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
 	/* Last calls - Outgoing */
-	statusicon_menu_last_calls_group(menu, _("Outgoing"), CALL_TYPE_OUTGOING);
+	statusicon_menu_last_calls_group(menu, _("Outgoing"), RM_CALL_TYPE_OUTGOING);
 
 	/* Separator */
 	item = gtk_separator_menu_item_new();
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
 	/* Last calls - Missed */
-	statusicon_menu_last_calls_group(menu, _("Missed"), CALL_TYPE_MISSED);
+	statusicon_menu_last_calls_group(menu, _("Missed"), RM_CALL_TYPE_MISSED);
 
 	return menu;
 }
@@ -268,7 +268,7 @@ void statusicon_popup_menu_cb(GtkStatusIcon *statusicon, guint button, guint act
  * \param connection connection structure
  * \param unused_pointer unused user pointer
  */
-void statusicon_connection_notify_cb(AppObject *obj, struct connection *connection, gpointer unused_pointer)
+void statusicon_connection_notify_cb(RmObject *obj, struct connection *connection, gpointer unused_pointer)
 {
 	g_debug("Called: '%d/%d", connection->type, CONNECTION_TYPE_MISSED);
 	if (connection->type == CONNECTION_TYPE_MISSED) {
@@ -338,7 +338,7 @@ void impl_activate(PeasActivatable *plugin)
 
 	/* Connect to "call-notify" signal */
 	statusicon_plugin = ROUTERMANAGER_STATUSICON_PLUGIN(plugin);
-	statusicon_plugin->priv->signal_id = g_signal_connect(G_OBJECT(app_object), "connection-notify", G_CALLBACK(statusicon_connection_notify_cb), NULL);
+	statusicon_plugin->priv->signal_id = g_signal_connect(G_OBJECT(rm_object), "connection-notify", G_CALLBACK(statusicon_connection_notify_cb), NULL);
 
 	if (g_settings_get_boolean(statusicon_settings, "hide-journal-on-startup")) {
 		journal_set_hide_on_start(TRUE);
@@ -356,8 +356,8 @@ void impl_deactivate(PeasActivatable *plugin)
 
 	/* If signal handler is connected: disconnect */
 	statusicon_plugin = ROUTERMANAGER_STATUSICON_PLUGIN(plugin);
-	if (g_signal_handler_is_connected(G_OBJECT(app_object), statusicon_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(app_object), statusicon_plugin->priv->signal_id);
+	if (g_signal_handler_is_connected(G_OBJECT(rm_object), statusicon_plugin->priv->signal_id)) {
+		g_signal_handler_disconnect(G_OBJECT(rm_object), statusicon_plugin->priv->signal_id);
 	}
 
 	if (journal_win) {

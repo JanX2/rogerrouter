@@ -23,8 +23,8 @@
 #include <glib.h>
 
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/call.h>
-#include <libroutermanager/csv.h>
+#include <libroutermanager/rmcall.h>
+#include <libroutermanager/rmcsv.h>
 #include <libroutermanager/rmlog.h>
 
 #include "csv.h"
@@ -45,27 +45,27 @@ static inline gpointer csv_parse_fritzbox(gpointer ptr, gchar **split)
 
 		switch (atoi(split[0])) {
 		case 1:
-			call_type = CALL_TYPE_INCOMING;
+			call_type = RM_CALL_TYPE_INCOMING;
 			break;
 		case 2:
-			call_type = CALL_TYPE_MISSED;
+			call_type = RM_CALL_TYPE_MISSED;
 			break;
 		case 3: {
 			RmProfile *profile = rm_profile_get_active();
 
 			if (FIRMWARE_IS(4, 74)) {
-				call_type = CALL_TYPE_BLOCKED;
+				call_type = RM_CALL_TYPE_BLOCKED;
 			} else {
-				call_type = CALL_TYPE_OUTGOING;
+				call_type = RM_CALL_TYPE_OUTGOING;
 			}
 			break;
 		}
 		case 4:
-			call_type = CALL_TYPE_OUTGOING;
+			call_type = RM_CALL_TYPE_OUTGOING;
 			break;
 		}
 
-		list = call_add(list, call_type, split[1], split[2], split[3], split[4], split[5], split[6], NULL);
+		list = rm_call_add(list, call_type, split[1], split[2], split[3], split[4], split[5], split[6], NULL);
 	}
 
 	return list;
@@ -80,13 +80,13 @@ GSList *csv_parse_fritzbox_journal_data(GSList *list, const gchar *data)
 {
 	GSList *new_list = NULL;
 
-	new_list = csv_parse_data(data, CSV_FRITZBOX_JOURNAL_DE, csv_parse_fritzbox, list);
+	new_list = rm_csv_parse_data(data, CSV_FRITZBOX_JOURNAL_DE, csv_parse_fritzbox, list);
 	if (!new_list) {
-		new_list = csv_parse_data(data, CSV_FRITZBOX_JOURNAL_EN, csv_parse_fritzbox, list);
+		new_list = rm_csv_parse_data(data, CSV_FRITZBOX_JOURNAL_EN, csv_parse_fritzbox, list);
 		if (!new_list) {
-			new_list = csv_parse_data(data, CSV_FRITZBOX_JOURNAL_EN2, csv_parse_fritzbox, list);
+			new_list = rm_csv_parse_data(data, CSV_FRITZBOX_JOURNAL_EN2, csv_parse_fritzbox, list);
 			if (!new_list) {
-				new_list = csv_parse_data(data, CSV_FRITZBOX_JOURNAL_EN3, csv_parse_fritzbox, list);
+				new_list = rm_csv_parse_data(data, CSV_FRITZBOX_JOURNAL_EN3, csv_parse_fritzbox, list);
 			}
 		}
 	}

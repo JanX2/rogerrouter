@@ -17,61 +17,62 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_FILTER_H
-#define LIBROUTERMANAGER_FILTER_H
+#ifndef LIBROUTERMANAGER_RMFILTER_H
+#define LIBROUTERMANAGER_RMFILTER_H
 
-#include <libroutermanager/call.h>
+#include <libroutermanager/rmcall.h>
 
 G_BEGIN_DECLS
 
 enum {
-	FILTER_IS = 0,
-	FILTER_IS_NOT,
-	FILTER_STARTS_WITH,
-	FILTER_CONTAINS
+	RM_FILTER_IS = 0,
+	RM_FILTER_IS_NOT,
+	RM_FILTER_STARTS_WITH,
+	RM_FILTER_CONTAINS
 };
 
 enum {
-	FILTER_CALL_TYPE = 0,
-	FILTER_DATE_TIME,
-	FILTER_REMOTE_NAME,
-	FILTER_REMOTE_NUMBER,
-	FILTER_LOCAL_NAME,
-	FILTER_LOCAL_NUMBER
+	RM_FILTER_CALL_TYPE = 0,
+	RM_FILTER_DATE_TIME,
+	RM_FILTER_REMOTE_NAME,
+	RM_FILTER_REMOTE_NUMBER,
+	RM_FILTER_LOCAL_NAME,
+	RM_FILTER_LOCAL_NUMBER
 };
 
 enum {
-	FILTER_CALL_ALL = 0,
-	FILTER_CALL_INCOMING,
-	FILTER_CALL_MISSED,
-	FILTER_CALL_OUTGOING,
-	FILTER_CALL_VOICE,
-	FILTER_CALL_FAX,
+	RM_FILTER_CALL_ALL = 0,
+	RM_FILTER_CALL_INCOMING,
+	RM_FILTER_CALL_MISSED,
+	RM_FILTER_CALL_OUTGOING,
+	RM_FILTER_CALL_VOICE,
+	RM_FILTER_CALL_FAX,
 };
 
-struct filter_rule {
+typedef struct rm_filter_rule {
 	gint type;
 	gint sub_type;
 	gchar *entry;
-};
+} RmFilterRule;
 
-struct filter {
+typedef struct rm_filter {
 	gchar *name;
 	gchar *file;
 	gboolean compare_or;
 	GSList *rules;
-};
+} RmFilter;
 
-gboolean filter_rule_match(struct filter *filter, struct call *call);
-void filter_rule_add(struct filter *filter, gint type, gint sub_type, gchar *entry);
-struct filter *filter_new(const gchar *name);
-void filter_free(gpointer data);
-GSList *filter_get_list(void);
-void filter_init(void);
-void filter_shutdown(void);
-void filter_add(struct filter *filter);
-void filter_remove(struct filter *filter);
-void filter_save(void);
+gboolean rm_filter_rule_match(RmFilter *filter, RmCall *call);
+void rm_filter_rule_add(RmFilter *filter, gint type, gint sub_type, gchar *entry);
+
+struct rm_filter *filter_new(const gchar *name);
+void rm_filter_free(gpointer data);
+GSList *rm_filter_get_list(void);
+void rm_filter_init(void);
+void rm_filter_shutdown(void);
+void rm_filter_add(RmFilter *filter);
+void rm_filter_remove(RmFilter *filter);
+void rm_filter_save(void);
 
 G_END_DECLS
 

@@ -24,12 +24,12 @@
 #include <gtk/gtk.h>
 
 #include <libroutermanager/rmplugins.h>
-#include <libroutermanager/appobject.h>
-#include <libroutermanager/address-book.h>
+#include <libroutermanager/rmobject.h>
+#include <libroutermanager/rmaddressbook.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmnetwork.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 #include <libroutermanager/ftp.h>
 #include <libroutermanager/xml.h>
 #include <libroutermanager/rmlog.h>
@@ -132,7 +132,7 @@ static void parse_telephony(struct contact *contact, xmlnode *telephony)
 		}
 
 		number = xmlnode_get_data(child);
-		if (!EMPTY_STRING(number)) {
+		if (!RM_EMPTY_STRING(number)) {
 			struct phone_number *phone_number;
 
 			phone_number = g_slice_new(struct phone_number);
@@ -152,7 +152,7 @@ static void parse_telephony(struct contact *contact, xmlnode *telephony)
 				phone_number->type = -1;
 				g_debug("Unhandled phone number type: '%s'", type);
 			}
-			phone_number->number = call_full_number(number, FALSE);
+			phone_number->number = rm_call_full_number(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 		}
 
@@ -643,7 +643,7 @@ gchar *fritzfon_get_active_book_name(void)
 	return g_strdup("FritzFon");
 }
 
-struct address_book fritzfon_book = {
+RmAddressBook fritzfon_book = {
 	"FritzFon",
 	fritzfon_get_active_book_name,
 	fritzfon_get_contacts,
@@ -659,12 +659,12 @@ void impl_activate(PeasActivatable *plugin)
 	fritzfon_get_books();
 	fritzfon_read_book();
 
-	routermanager_address_book_register(&fritzfon_book);
+	rm_addressbook_register(&fritzfon_book);
 }
 
 void impl_deactivate(PeasActivatable *plugin)
 {
-	routermanager_address_book_unregister(&fritzfon_book);
+	rm_addressbook_unregister(&fritzfon_book);
 	g_object_unref(fritzfon_settings);
 }
 

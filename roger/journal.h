@@ -20,8 +20,8 @@
 #ifndef JOURNAL_H
 #define JOURNAL_H
 
-#include <libroutermanager/filter.h>
-#include <libroutermanager/call.h>
+#include <libroutermanager/rmfilter.h>
+#include <libroutermanager/rmcall.h>
 
 G_BEGIN_DECLS
 

@@ -2,3 +2,9 @@
 * remove global soup session
 
 * move password plugin info to profile
+* profile should be the global place
+
+
+* Verify gtk doc strings
+* Check includes
+* Update versions / years

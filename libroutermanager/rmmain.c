@@ -24,12 +24,12 @@
 #include <glib.h>
 
 #include <libroutermanager/rmmain.h>
-#include <libroutermanager/filter.h>
+#include <libroutermanager/rmfilter.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmplugins.h>
-#include <libroutermanager/appobject.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmobject.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmlog.h>
 #include <libroutermanager/rmnetwork.h>
 #include <libroutermanager/rmnetmonitor.h>
@@ -189,8 +189,8 @@ gboolean rm_new(gboolean debug, GError **error)
 	g_free(dir);
 
 	/* Create main app object (signals) */
-	app_object = app_object_new();
-	g_assert(app_object != NULL);
+	rm_object = rm_object_new();
+	g_assert(rm_object != NULL);
 
 	return TRUE;
 }
@@ -206,7 +206,7 @@ gboolean rm_new(gboolean debug, GError **error)
 gboolean rm_init(GError **error)
 {
 	/* Init filter */
-	filter_init();
+	rm_filter_init();
 
 	/* Init fax printer */
 	if (!rm_faxprinter_init(error)) {
@@ -274,10 +274,10 @@ void rm_shutdown(void)
 	rm_network_shutdown();
 
 	/* Shutdown filter */
-	filter_shutdown();
+	rm_filter_shutdown();
 
-	/* Destroy app_object */
-	g_clear_object(&app_object);
+	/* Destroy rm_object */
+	g_clear_object(&rm_object);
 
 	/* Shutdown logging */
 	rm_log_shutdown();

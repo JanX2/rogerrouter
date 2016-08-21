@@ -25,11 +25,11 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include <libroutermanager/rmplugins.h>
-#include <libroutermanager/call.h>
-#include <libroutermanager/appobject.h>
-#include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/gstring.h>
-#include <libroutermanager/address-book.h>
+#include <libroutermanager/rmcall.h>
+#include <libroutermanager/rmobject.h>
+#include <libroutermanager/rmobjectemit.h>
+#include <libroutermanager/rmstring.h>
+#include <libroutermanager/rmaddressbook.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmsettings.h>
 
@@ -112,7 +112,7 @@ static ESource *get_selected_ebook_esource(void)
 	GList *list;
 	ESourceRegistry *registry = get_source_registry();
 	const gchar *id = get_selected_ebook_id();
-	gboolean none_selected = EMPTY_STRING(id);
+	gboolean none_selected = RM_EMPTY_STRING(id);
 
 	list = get_ebook_list();
 	while (list) {
@@ -177,7 +177,7 @@ void ebook_objects_changed_cb(EBookClientView *view, const GSList *ids, gpointer
 	evolution_reload();
 
 	/* Send signal to redraw journal and update contacts view */
-	emit_contacts_changed();
+	rm_object_emit_contacts_changed();
 }
 
 void ebook_read_data(EClient *e_client)
@@ -257,7 +257,7 @@ void ebook_read_data(EClient *e_client)
 
 		display_name = e_contact_get_const(e_contact, E_CONTACT_FULL_NAME);
 
-		if (EMPTY_STRING(display_name)) {
+		if (RM_EMPTY_STRING(display_name)) {
 			continue;
 		}
 
@@ -314,47 +314,47 @@ void ebook_read_data(EClient *e_client)
 		contact->numbers = NULL;
 
 		number = e_contact_get_const(e_contact, E_CONTACT_PHONE_HOME);
-		if (!EMPTY_STRING(number)) {
+		if (!RM_EMPTY_STRING(number)) {
 			phone_number = g_slice_new(struct phone_number);
 			phone_number->type = PHONE_NUMBER_HOME;
-			phone_number->number = call_full_number(number, FALSE);
+			phone_number->number = rm_call_full_number(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 		}
 
 		number = e_contact_get_const(e_contact, E_CONTACT_PHONE_BUSINESS);
-		if (!EMPTY_STRING(number)) {
+		if (!RM_EMPTY_STRING(number)) {
 			phone_number = g_slice_new(struct phone_number);
 			phone_number->type = PHONE_NUMBER_WORK;
-			phone_number->number = call_full_number(number, FALSE);
+			phone_number->number = rm_call_full_number(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 		}
 
 		number = e_contact_get_const(e_contact, E_CONTACT_PHONE_MOBILE);
-		if (!EMPTY_STRING(number)) {
+		if (!RM_EMPTY_STRING(number)) {
 			phone_number = g_slice_new(struct phone_number);
 			phone_number->type = PHONE_NUMBER_MOBILE;
-			phone_number->number = call_full_number(number, FALSE);
+			phone_number->number = rm_call_full_number(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 		}
 
 		number = e_contact_get_const(e_contact, E_CONTACT_PHONE_HOME_FAX);
-		if (!EMPTY_STRING(number)) {
+		if (!RM_EMPTY_STRING(number)) {
 			phone_number = g_slice_new(struct phone_number);
 			phone_number->type = PHONE_NUMBER_FAX_HOME;
-			phone_number->number = call_full_number(number, FALSE);
+			phone_number->number = rm_call_full_number(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 		}
 
 		number = e_contact_get_const(e_contact, E_CONTACT_PHONE_BUSINESS_FAX);
-		if (!EMPTY_STRING(number)) {
+		if (!RM_EMPTY_STRING(number)) {
 			phone_number = g_slice_new(struct phone_number);
 			phone_number->type = PHONE_NUMBER_FAX_WORK;
-			phone_number->number = call_full_number(number, FALSE);
+			phone_number->number = rm_call_full_number(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 		}
 
 		company = e_contact_get_const(e_contact, E_CONTACT_ORG);
-		if (!EMPTY_STRING(company)) {
+		if (!RM_EMPTY_STRING(company)) {
 			contact->company = g_strdup(company);
 		}
 
@@ -619,7 +619,7 @@ gchar *evolution_get_active_book_name(void)
 	return g_strdup("Evolution");
 }
 
-struct address_book evolution_book = {
+RmAddressBook evolution_book = {
 	"Evolution",
 	evolution_get_active_book_name,
 	evolution_get_contacts,
@@ -634,12 +634,12 @@ void impl_activate(PeasActivatable *plugin)
 
 	ebook_read_book();
 
-	routermanager_address_book_register(&evolution_book);
+	rm_addressbook_register(&evolution_book);
 }
 
 void impl_deactivate(PeasActivatable *plugin)
 {
-	routermanager_address_book_unregister(&evolution_book);
+	rm_addressbook_unregister(&evolution_book);
 	g_object_unref(ebook_settings);
 }
 

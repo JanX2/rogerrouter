@@ -29,10 +29,9 @@
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmnetmonitor.h>
 #include <libroutermanager/rmaudio.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmphone.h>
-#include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmsettings.h>
 
 #include <roger/main.h>
@@ -136,7 +135,7 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
 	g_debug("Incoming call from %.*s!!", (int)ci.remote_info.slen, ci.remote_info.ptr);
 
 	connection = rm_connection_add(call_id, RM_CONNECTION_TYPE_INCOMING, ci.local_info.ptr, ci.remote_info.ptr);
-	emit_connection_notify(connection);
+	rm_object_emit_connection_notify(connection);
 }
 
 /* Callback called by the library when call's state has changed */
@@ -159,10 +158,10 @@ static void on_call_state(pjsua_call_id call_id, pjsip_event *e)
 	}
 
 	if (ci.state == PJSIP_INV_STATE_CONFIRMED) {
-		emit_connection_established(connection);
+		rm_object_emit_connection_established(connection);
 	} else if (ci.state == PJSIP_INV_STATE_DISCONNECTED) {
 		g_debug("%s(): Emitting terminated", __FUNCTION__);
-		emit_connection_terminated(connection);
+		rm_object_emit_connection_terminated(connection);
 		g_debug("%s(): Destroying connection", __FUNCTION__);
 		call_deinit_tonegen(call_id);
 		rm_connection_remove(connection);

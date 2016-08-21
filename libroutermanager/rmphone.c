@@ -23,7 +23,7 @@
 #include <glib.h>
 
 #include <libroutermanager/rmphone.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 
 /** Internal phone list */
 static GSList *rm_phone_plugins = NULL;
@@ -42,7 +42,7 @@ struct connection *rm_phone_dial(const gchar *target, gboolean anonymous)
 	} else if (!phone->dial) {
 		g_warning("%s(): No dial function in phone plugin", __FUNCTION__);
 		return NULL;
-	} else if (EMPTY_STRING(target)) {
+	} else if (RM_EMPTY_STRING(target)) {
 		g_warning("%s(): target is empty", __FUNCTION__);
 		return NULL;
 	}

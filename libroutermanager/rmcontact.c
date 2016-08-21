@@ -22,7 +22,7 @@
 #include <glib.h>
 
 #include <libroutermanager/rmcontact.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/router.h>
 
 /**
@@ -136,7 +136,7 @@ RmContact *rm_contact_find_by_number(gchar *number)
 
 	/** Ask for contact information */
 	contact->number = number;
-	rm_emit_contact_process(contact);
+	rm_object_emit_contact_process(contact);
 
 	/* Depending on the number set the active address */
 	for (numbers = contact->numbers; numbers != NULL; numbers = numbers->next) {

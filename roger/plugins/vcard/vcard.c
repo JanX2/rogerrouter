@@ -27,12 +27,12 @@
 #include <gio/gio.h>
 #include <gtk/gtk.h>
 
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmcontact.h>
 #include <libroutermanager/rmplugins.h>
-#include <libroutermanager/address-book.h>
-#include <libroutermanager/appobject.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmaddressbook.h>
+#include <libroutermanager/rmobject.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmfile.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmsettings.h>
@@ -294,7 +294,7 @@ static void process_address(struct vcard_data *card_data, struct contact *contac
 	tmp = card_data->entry;
 
 	/* Create address string */
-	if (g_strcasestr(card_data->options, "HOME") != NULL) {
+	if (rm_strcasestr(card_data->options, "HOME") != NULL) {
 		address->type = 0;
 	} else {
 		address->type = 1;
@@ -374,8 +374,8 @@ static void process_telephone(struct vcard_data *card_data, struct contact *cont
 
 	number = g_slice_new(struct phone_number);
 
-	if (g_strcasestr(card_data->options, "FAX") != NULL) {
-		/*if (g_strcasestr(card_data->options, "WORK") != NULL) {
+	if (rm_strcasestr(card_data->options, "FAX") != NULL) {
+		/*if (rm_strcasestr(card_data->options, "WORK") != NULL) {
 			if (business_fax == NULL) {
 				business_fax = g_string_new("");
 				while (*tmp != 0x00 && *tmp != 0x0A && *tmp != 0x0D) {
@@ -388,17 +388,17 @@ static void process_telephone(struct vcard_data *card_data, struct contact *cont
 		}
 	} else {
 		/* Check for cell phone number, and create string if needed */
-		if (g_strcasestr(card_data->options, "CELL") != NULL) {
+		if (rm_strcasestr(card_data->options, "CELL") != NULL) {
 			number->type = PHONE_NUMBER_MOBILE;
 		}
 
 		/* Check for home phone number, and create string if needed */
-		if (g_strcasestr(card_data->options, "HOME") != NULL) {
+		if (rm_strcasestr(card_data->options, "HOME") != NULL) {
 			number->type = PHONE_NUMBER_HOME;
 		}
 
 		/* Check for work phone number, and create string if needed */
-		if (g_strcasestr(card_data->options, "WORK") != NULL) {
+		if (rm_strcasestr(card_data->options, "WORK") != NULL) {
 			number->type = PHONE_NUMBER_WORK;
 		}
 	}
@@ -409,7 +409,7 @@ static void process_telephone(struct vcard_data *card_data, struct contact *cont
 		tmp++;
 	}
 
-	number->number = call_full_number(number_str->str, FALSE);
+	number->number = rm_call_full_number(number_str->str, FALSE);
 	g_string_free(number_str, FALSE);
 
 	contact->numbers = g_slist_prepend(contact->numbers, number);
@@ -432,7 +432,7 @@ static void process_photo(struct vcard_data *card_data, struct contact *contact)
 	}
 
 	if (card_data->options) {
-		if (g_strcasestr(card_data->options, "VALUE=URL") != NULL) {
+		if (rm_strcasestr(card_data->options, "VALUE=URL") != NULL) {
 			return;
 		}
 	}
@@ -695,7 +695,7 @@ static void vcard_file_changed_cb(GFileMonitor *monitor, GFile *file, GFile *oth
 	vcard_reload_contacts();
 
 	/* Send signal to redraw journal and update contacts view */
-	emit_contacts_changed();
+	rm_object_emit_contacts_changed();
 }
 
 /**
@@ -1163,7 +1163,7 @@ gchar *vcard_get_active_book_name(void)
 	return g_strdup("VCard");
 }
 
-struct address_book vcard_book = {
+RmAddressBook vcard_book = {
 	"VCard",
 	vcard_get_active_book_name,
 	vcard_get_contacts,
@@ -1179,19 +1179,19 @@ void impl_activate(PeasActivatable *plugin)
 	vcard_settings = rm_settings_plugin_new("org.tabos.roger.plugins.vcard", "vcard");
 
 	name = g_settings_get_string(vcard_settings, "filename");
-	if (EMPTY_STRING(name)) {
+	if (RM_EMPTY_STRING(name)) {
 		name = g_build_filename(g_get_user_data_dir(), "roger", "ab.vcf", NULL);
 		g_settings_set_string(vcard_settings, "filename", name);
 	}
 
 	vcard_load_file(name);
 
-	routermanager_address_book_register(&vcard_book);
+	rm_addressbook_register(&vcard_book);
 }
 
 void impl_deactivate(PeasActivatable *plugin)
 {
-	routermanager_address_book_unregister(&vcard_book);
+	rm_addressbook_unregister(&vcard_book);
 	g_object_unref(vcard_settings);
 }
 

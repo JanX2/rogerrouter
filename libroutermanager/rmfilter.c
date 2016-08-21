@@ -30,15 +30,24 @@
 #include <libintl.h>
 
 #include <libroutermanager/rmfile.h>
-#include <libroutermanager/call.h>
+#include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmmain.h>
-#include <libroutermanager/gstring.h>
-#include <libroutermanager/filter.h>
+#include <libroutermanager/rmstring.h>
+#include <libroutermanager/rmfilter.h>
 
 /** Internal filter list in memory */
-static GSList *filter_list = NULL;
+static GSList *rm_filter_list = NULL;
 
-static inline gboolean filter_compare(struct filter_rule *rule, const gchar *compare)
+/**
+ * rm_filter_compare:
+ * @rule: a #RmFilterRule
+ * @compare: compare string
+ *
+ * Compares two filter
+ *
+ * Returns:
+ */
+static inline gboolean rm_filter_compare(RmFilterRule *rule, const gchar *compare)
 {
 	gboolean valid = FALSE;
 
@@ -47,23 +56,23 @@ static inline gboolean filter_compare(struct filter_rule *rule, const gchar *com
 	}
 
 	switch (rule->sub_type) {
-	case FILTER_IS:
+	case RM_FILTER_IS:
 		if (!strcmp(compare, rule->entry)) {
 			valid = TRUE;
 		}
 		break;
-	case FILTER_IS_NOT:
+	case RM_FILTER_IS_NOT:
 		if (strcmp(compare, rule->entry)) {
 			valid = TRUE;
 		}
 		break;
-	case FILTER_STARTS_WITH:
+	case RM_FILTER_STARTS_WITH:
 		if (!strncmp(compare, rule->entry, strlen(rule->entry))) {
 			valid = TRUE;
 		}
 		break;
-	case FILTER_CONTAINS:
-		if (g_strcasestr(compare, rule->entry)) {
+	case RM_FILTER_CONTAINS:
+		if (rm_strcasestr(compare, rule->entry)) {
 			valid = TRUE;
 		}
 		break;
@@ -75,12 +84,15 @@ static inline gboolean filter_compare(struct filter_rule *rule, const gchar *com
 }
 
 /**
- * \brief Check if call structure matches filter rules
- * \param filter compare filter
- * \param call call structure
- * \return TRUE on match, otherwise FALSE
+ * rm_filter_rule_match:
+ * @filter: a #RmFilter
+ * @call: a #RmCall
+ *
+ * Check if call structure matches filter rules.
+ *
+ * Returns: %TRUE on match, otherwise %FALSE
  */
-gboolean filter_rule_match(struct filter *filter, struct call *call)
+gboolean rm_filter_rule_match(RmFilter *filter, RmCall *call)
 {
 	GSList *list;
 	gint result = 0;
@@ -104,14 +116,14 @@ gboolean filter_rule_match(struct filter *filter, struct call *call)
 
 	/* Test each filter rule with the call structure */
 	for (list = filter->rules; list != NULL; list = list->next) {
-		struct filter_rule *rule = list->data;
+		RmFilterRule *rule = list->data;
 
 		switch (rule->type) {
-		case FILTER_CALL_TYPE:
+		case RM_FILTER_CALL_TYPE:
 			/* Call type */
 			call_type = TRUE;
 
-			if (rule->sub_type == CALL_TYPE_ALL || rule->sub_type == call->type) {
+			if (rule->sub_type == RM_CALL_TYPE_ALL || rule->sub_type == call->type) {
 				call_type_valid = TRUE;
 			}
 
@@ -120,7 +132,7 @@ gboolean filter_rule_match(struct filter *filter, struct call *call)
 			}
 
 			break;
-		case FILTER_DATE_TIME: {
+		case RM_FILTER_DATE_TIME: {
 			/* Date/Time */
 			gchar *number_a = rule->entry;
 			gchar *number_b = call->date_time;
@@ -133,7 +145,7 @@ gboolean filter_rule_match(struct filter *filter, struct call *call)
 			dates++;
 
 			switch (rule->sub_type) {
-			case FILTER_IS:
+			case RM_FILTER_IS:
 				/* Compare year */
 				ret = strncmp(number_a + 6, number_b + 6, 2);
 				if (ret == 0) {
@@ -148,7 +160,7 @@ gboolean filter_rule_match(struct filter *filter, struct call *call)
 					}
 				}
 				break;
-			case FILTER_IS_NOT:
+			case RM_FILTER_IS_NOT:
 				/* Compare year */
 				ret = strncmp(number_a + 6, number_b + 6, 2);
 				if (ret == 0) {
@@ -166,7 +178,7 @@ gboolean filter_rule_match(struct filter *filter, struct call *call)
 				} else {
 					dates_valid++;
 				}
-			case FILTER_STARTS_WITH:
+			case RM_FILTER_STARTS_WITH:
 				/* Compare year */
 				ret = strncmp(number_a + 6, number_b + 6, 2);
 				if (ret >= 0) {
@@ -184,7 +196,7 @@ gboolean filter_rule_match(struct filter *filter, struct call *call)
 				} else {
 					dates_valid++;
 				}
-			case FILTER_CONTAINS:
+			case RM_FILTER_CONTAINS:
 				/* Compare year */
 				ret = strncmp(number_a + 6, number_b + 6, 2);
 				if (ret <= 0) {
@@ -207,25 +219,25 @@ gboolean filter_rule_match(struct filter *filter, struct call *call)
 
 			break;
 		}
-		case FILTER_REMOTE_NAME:
+		case RM_FILTER_REMOTE_NAME:
 			/* Remote name */
 			remote_name = TRUE;
-			remote_name_valid = filter_compare(rule, call->remote->name);
+			remote_name_valid = rm_filter_compare(rule, call->remote->name);
 			break;
-		case FILTER_REMOTE_NUMBER:
+		case RM_FILTER_REMOTE_NUMBER:
 			/* Remote number */
 			remote_number = TRUE;
-			remote_number_valid = filter_compare(rule, call->remote->number);
+			remote_number_valid = rm_filter_compare(rule, call->remote->number);
 			break;
-		case FILTER_LOCAL_NAME:
+		case RM_FILTER_LOCAL_NAME:
 			/* Local name */
 			local_name = TRUE;
-			local_name_valid = filter_compare(rule, call->local->name);
+			local_name_valid = rm_filter_compare(rule, call->local->name);
 			break;
-		case FILTER_LOCAL_NUMBER:
+		case RM_FILTER_LOCAL_NUMBER:
 			/* Local number */
 			local_number = TRUE;
-			local_number_valid = filter_compare(rule, call->local->number);
+			local_number_valid = rm_filter_compare(rule, call->local->number);
 			break;
 		default:
 			break;
@@ -259,29 +271,34 @@ gboolean filter_rule_match(struct filter *filter, struct call *call)
 }
 
 /**
- * \brief Sort filter by name
- * \param a pointer to first filter
- * \param b pointer to second filter
- * \return result of strcmp
+ * rm_filter_sort_by_name:
+ * @a: a #RmFilter
+ * @b: a #RmFilter
+ *
+ * Sort filter by name.
+ *
+ * Returns: result of #strcmp
  */
-gint filter_sort_by_name(gconstpointer a, gconstpointer b)
+gint rm_filter_sort_by_name(gconstpointer a, gconstpointer b)
 {
-	struct filter *filter_a = (struct filter *)a;
-	struct filter *filter_b = (struct filter *)b;
+	RmFilter *filter_a = (RmFilter *)a;
+	RmFilter *filter_b = (RmFilter *)b;
 
 	return strcmp(filter_a->name, filter_b->name);
 }
 
 /**
- * \brief Add new filter rule
- * \param filter filter structure
- * \param type type of filter
- * \param sub_type sub type of filter
- * \param entry ruleal entry
+ * rm_filter_rule_add:
+ * @filter: a #RmFilter
+ * @type: type of filter
+ * @sub_type: sub type of filter
+ * @entry: ruleal entry
+ *
+ * Add new filter rule.
  */
-void filter_rule_add(struct filter *filter, gint type, gint sub_type, gchar *entry)
+void rm_filter_rule_add(RmFilter *filter, gint type, gint sub_type, gchar *entry)
 {
-	struct filter_rule *rule = g_slice_new(struct filter_rule);
+	RmFilterRule *rule = g_slice_new(RmFilterRule);
 
 	rule->type = type;
 	rule->sub_type = sub_type;
@@ -291,12 +308,14 @@ void filter_rule_add(struct filter *filter, gint type, gint sub_type, gchar *ent
 }
 
 /**
- * \brief Free filter rules
- * \param data filter rule pointer
+ * rm_filter_rules_free:
+ * @data: a #RmFilterRule
+ *
+ * Free filter rules.
  */
-static void filter_rules_free(gpointer data)
+static void rm_filter_rules_free(gpointer data)
 {
-	struct filter_rule *rule = data;
+	RmFilterRule *rule = data;
 
 	g_return_if_fail(rule != NULL);
 
@@ -304,44 +323,51 @@ static void filter_rules_free(gpointer data)
 	g_free(rule->entry);
 
 	/* Free rule structure */
-	g_slice_free(struct filter_rule, rule);
+	g_slice_free(RmFilterRule, rule);
 }
 
 /**
- * \brief Free filter structure (including rules)
- * \param data filter structrue to free
+ * rm_filter_free:
+ * @data: a #RmFilter
+ *
+ * Free filter structure (including rules)
  */
-void filter_free(gpointer data)
+void rm_filter_free(gpointer data)
 {
-	struct filter *filter = data;
+	RmFilter *filter = data;
 
 	/* Free filter rules */
-	g_slist_free_full(filter->rules, filter_rules_free);
+	g_slist_free_full(filter->rules, rm_filter_rules_free);
 
 	/* Free filter name */
 	g_free(filter->name);
 
 	/* Free filter structure */
-	g_slice_free(struct filter, filter);
+	g_slice_free(RmFilter, filter);
 }
 
 /**
- * \brief Add filter structure to list
- * \param filter filter structure
+ * rm_filter_add:
+ * @filter: a #RmFilter
+ *
+ * Add filter structure to list.
  */
-void filter_add(struct filter *filter)
+void rm_filter_add(RmFilter *filter)
 {
-	filter_list = g_slist_insert_sorted(filter_list, filter, filter_sort_by_name);
+	rm_filter_list = g_slist_insert_sorted(rm_filter_list, filter, rm_filter_sort_by_name);
 }
 
 /**
- * \brief Create new filter structure with given name
- * \param name filter name
- * \return filter structure pointer
+ * rm_filter_new:
+ * @name: filter name
+ *
+ * Create new filter structure with given name.
+ *
+ * Returns: filter structure pointer
  */
-struct filter *filter_new(const gchar *name)
+RmFilter *rm_filter_new(const gchar *name)
 {
-	struct filter *filter = g_slice_new0(struct filter);
+	RmFilter *filter = g_slice_new0(RmFilter);
 
 	filter->name = g_strdup(name);
 	filter->compare_or = FALSE;
@@ -351,18 +377,23 @@ struct filter *filter_new(const gchar *name)
 }
 
 /**
- * \brief Get filter list
- * \return filter list
+ * rm_filter_get_list:
+ *
+ * Get filter list.
+ *
+ * Returns: filter list
  */
-GSList *filter_get_list(void)
+GSList *rm_filter_get_list(void)
 {
-	return filter_list;
+	return rm_filter_list;
 }
 
 /**
- * \brief Load filter from storage - INTERNAL -
+ * rm_filter_load:
+ *
+ * Load filter from storage - INTERNAL -
  */
-static void filter_load(void)
+static void rm_filter_load(void)
 {
 	GFile *dir;
 	GFileEnumerator *enumerator;
@@ -381,14 +412,14 @@ static void filter_load(void)
 		const gchar *name = g_file_info_get_name(info);
 		gchar *tmp = g_strconcat(path, name, NULL);
 		GKeyFile *keyfile = g_key_file_new();
-		struct filter *filter;
+		RmFilter *filter;
 		gsize cnt;
 		gchar **groups;
 		gint idx;
 
 		g_key_file_load_from_file(keyfile, tmp, G_KEY_FILE_NONE, NULL);
 		groups = g_key_file_get_groups(keyfile, &cnt);
-		filter = filter_new(name);
+		filter = rm_filter_new(name);
 		for (idx = 0; idx < cnt; idx++) {
 			gint type;
 			gint subtype;
@@ -397,12 +428,12 @@ static void filter_load(void)
 			type = g_key_file_get_integer(keyfile, groups[idx], "type", NULL);
 			subtype = g_key_file_get_integer(keyfile, groups[idx], "subtype", NULL);
 			entry =  g_key_file_get_string(keyfile, groups[idx], "entry", NULL);
-			filter_rule_add(filter, type, subtype, entry);
+			rm_filter_rule_add(filter, type, subtype, entry);
 
 			filter->file = g_strdup(tmp);
 			g_free(entry);
 		}
-		filter_add(filter);
+		rm_filter_add(filter);
 
 		g_key_file_unref(keyfile);
 
@@ -413,73 +444,78 @@ static void filter_load(void)
 }
 
 /**
- * \brief Initialize filter and add default filters
+ * rm_filter_init:
+ *
+ * Initialize filter and add default filters.
  */
-void filter_init(void)
+void rm_filter_init(void)
 {
-	struct filter *filter;
+	RmFilter *filter;
 
-	filter_load();
+	rm_filter_load();
 
-	if (filter_list) {
+	if (rm_filter_list) {
 		return;
 	}
 
 	/* No self-made filters available, create standard filters */
 
 	/* All calls */
-	filter = filter_new(_("All calls"));
-	filter_rule_add(filter, 0, CALL_TYPE_ALL, NULL);
-	filter_add(filter);
+	filter = rm_filter_new(_("All calls"));
+	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_ALL, NULL);
+	rm_filter_add(filter);
 
 	/* Incoming calls */
-	filter = filter_new(_("Incoming calls"));
-	filter_rule_add(filter, 0, CALL_TYPE_INCOMING, NULL);
-	filter_add(filter);
+	filter = rm_filter_new(_("Incoming calls"));
+	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_INCOMING, NULL);
+	rm_filter_add(filter);
 
 	/* Missed calls */
-	filter = filter_new(_("Missed calls"));
-	filter_rule_add(filter, 0, CALL_TYPE_MISSED, NULL);
-	filter_add(filter);
+	filter = rm_filter_new(_("Missed calls"));
+	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_MISSED, NULL);
+	rm_filter_add(filter);
 
 	/* Outgoing calls */
-	filter = filter_new(_("Outgoing calls"));
-	filter_rule_add(filter, 0, CALL_TYPE_OUTGOING, NULL);
-	filter_add(filter);
+	filter = rm_filter_new(_("Outgoing calls"));
+	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_OUTGOING, NULL);
+	rm_filter_add(filter);
 
 	/* Fax */
-	filter = filter_new(_("Fax"));
-	filter_rule_add(filter, 0, CALL_TYPE_FAX, NULL);
-	filter_add(filter);
+	filter = rm_filter_new(_("Fax"));
+	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_FAX, NULL);
+	rm_filter_add(filter);
 
 	/* Answering machine */
-	filter = filter_new(_("Answering machine"));
-	filter_rule_add(filter, 0, CALL_TYPE_VOICE, NULL);
-	filter_add(filter);
+	filter = rm_filter_new(_("Answering machine"));
+	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_VOICE, NULL);
+	rm_filter_add(filter);
 
 	/* Fax Report */
-	filter = filter_new(_("Fax Report"));
-	filter_rule_add(filter, 0, CALL_TYPE_FAX_REPORT, NULL);
-	filter_add(filter);
+	filter = rm_filter_new(_("Fax Report"));
+	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_FAX_REPORT, NULL);
+	rm_filter_add(filter);
 
 	/* Voice Record */
-	filter = filter_new(_("Record"));
-	filter_rule_add(filter, 0, CALL_TYPE_RECORD, NULL);
-	filter_add(filter);
+	filter = rm_filter_new(_("Record"));
+	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_RECORD, NULL);
+	rm_filter_add(filter);
 
 	/* Blocked calls */
-	filter = filter_new(_("Blocked"));
-	filter_rule_add(filter, 0, CALL_TYPE_BLOCKED, NULL);
-	filter_add(filter);
+	filter = rm_filter_new(_("Blocked"));
+	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_BLOCKED, NULL);
+	rm_filter_add(filter);
 
 }
 
 /**
- * \brief Convert filter structure to keyfile data
- * \param filter filter structure
- * \return keyfile data
+ * rm_filter_to_data:
+ * @filter: a #RmFilter
+ *
+ * Convert filter structure to keyfile data.
+ *
+ * Returns: keyfile data
  */
-static inline gchar *filter_to_data(struct filter *filter)
+static inline gchar *rm_filter_to_data(RmFilter *filter)
 {
 	GSList *rules;
 	gchar *data = g_strdup("# Filter file\n\n");
@@ -487,7 +523,7 @@ static inline gchar *filter_to_data(struct filter *filter)
 
 	/* We have always rules available */
 	for (rules = filter->rules, counter = 0; rules != NULL; rules = rules->next, counter++) {
-		struct filter_rule *rule = rules->data;
+		RmFilterRule *rule = rules->data;
 		gchar *rule_str = g_strdup_printf("[rule%d]\ntype=%d\nsubtype=%d\nentry=%s\n\n", counter, rule->type, rule->sub_type, rule->entry ? rule->entry : "");
 		gchar *tmp;
 
@@ -500,19 +536,21 @@ static inline gchar *filter_to_data(struct filter *filter)
 }
 
 /**
- * \brief Save filters to keyfiles
+ * rm_filter_save:
+ *
+ * Save filters to keyfiles.
  */
-void filter_save(void)
+void rm_filter_save(void)
 {
-	GSList *list = filter_list;
+	GSList *list = rm_filter_list;
 	gchar *path = g_build_filename(g_get_user_config_dir(), "routermanager/filters", G_DIR_SEPARATOR_S, NULL);
 
 	g_mkdir_with_parents(path, 0700);
 
 	while (list) {
-		struct filter *filter = list->data;
+		RmFilter *filter = list->data;
 		gchar *file = g_build_filename(path, filter->name, NULL);
-		gchar *data = filter_to_data(filter);
+		gchar *data = rm_filter_to_data(filter);
 
 		rm_file_save(file, data, -1);
 		if (!filter->file) {
@@ -526,20 +564,24 @@ void filter_save(void)
 }
 
 /**
- * \brief Shutdown filter (free list and entries)
+ * rm_filter_shutdown:
+ *
+ * Shutdown filter (free list and entries).
  */
-void filter_shutdown(void)
+void rm_filter_shutdown(void)
 {
-	g_slist_free_full(filter_list, filter_free);
+	g_slist_free_full(rm_filter_list, rm_filter_free);
 }
 
 /**
- * \brief Remove filter from list
- * \param filter filter to remove
+ * rm_filter_remove:
+ * @filter: a #RmFilter
+ *
+ * Remove filter from list.
  */
-void filter_remove(struct filter *filter)
+void rm_filter_remove(RmFilter *filter)
 {
-	filter_list = g_slist_remove(filter_list, filter);
+	rm_filter_list = g_slist_remove(rm_filter_list, filter);
 
 	if (filter->file) {
 		g_remove(filter->file);

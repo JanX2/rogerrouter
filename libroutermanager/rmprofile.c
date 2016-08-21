@@ -27,7 +27,7 @@
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmnetmonitor.h>
 #include <libroutermanager/rmpassword.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmaudio.h>
 #include <libroutermanager/rmsettings.h>
 
@@ -211,7 +211,7 @@ void rm_profile_set_active(RmProfile *profile)
 	/* If we have no active profile, exit */
 	if (!rm_profile_active) {
 		/* Clear journal list */
-		emit_journal_loaded(NULL);
+		rm_object_emit_journal_loaded(NULL);
 		return;
 	}
 

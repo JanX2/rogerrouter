@@ -14,35 +14,31 @@ libroutermanager_include_HEADERS = $(wildcard *.h)
 libroutermanager_la_SOURCES = \
 	rmaction.c\
 	rmaction.h\
-	address-book.c\
-	address-book.h\
-	appobject-emit.c\
-	appobject-emit.h\
-	appobject.c\
-	appobject.h\
+	rmaddressbook.c\
+	rmaddressbook.h\
 	rmaudio.c\
 	rmaudio.h\
-	call.c\
-	call.h\
+	rmcall.c\
+	rmcall.h\
 	rmdevice.c\
 	rmdevice.h\
 	rmcontact.c\
 	rmcontact.h\
 	rmconnection.c\
 	rmconnection.h\
-	csv.c\
-	csv.h\
+	rmcsv.c\
+	rmcsv.h\
 	rmfaxspooler.c\
-	fax_server.c\
-	fax_printer.h\
+	rmfaxserver.c\
+	rmfaxprinter.h\
 	rmfile.c\
 	rmfile.h\
-	filter.c\
-	filter.h\
+	rmfilter.c\
+	rmfilter.h\
 	ftp.c\
 	ftp.h\
-	gstring.c\
-	gstring.h\
+	rmstring.c\
+	rmstring.h\
 	rmlog.c\
 	rmlog.h\
 	rmlookup.c\
@@ -53,6 +49,10 @@ libroutermanager_la_SOURCES = \
 	rmnetwork.h\
 	rmmain.c\
 	rmmain.h\
+	rmobjectemit.c\
+	rmobjectemit.h\
+	rmobject.c\
+	rmobject.h\
 	rmosdep.c\
 	rmosdep.h\
 	rmpassword.c\
@@ -69,8 +69,8 @@ libroutermanager_la_SOURCES = \
 	rmsettings.h\
 	rmssdp.c\
 	rmssdp.h\
-	voxplay.c\
-	voxplay.h\
+	rmvox.c\
+	rmvox.h\
 	xml.c\
 	xml.h
 

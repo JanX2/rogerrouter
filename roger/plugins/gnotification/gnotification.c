@@ -25,15 +25,15 @@
 #include <gtk/gtk.h>
 
 #include <libroutermanager/rmplugins.h>
-#include <libroutermanager/call.h>
-#include <libroutermanager/appobject.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmcall.h>
+#include <libroutermanager/rmobject.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmphone.h>
 #include <libroutermanager/plugins/capi/ringtone.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/rmlookup.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmsettings.h>
 
 #include <roger/main.h>
@@ -79,7 +79,7 @@ gboolean gnotification_show(struct connection *connection, struct contact *conta
 		return FALSE;
 	}
 
-	if (!EMPTY_STRING(contact->street) && !EMPTY_STRING(contact->city)) {
+	if (!RM_EMPTY_STRING(contact->street) && !RM_EMPTY_STRING(contact->city)) {
 		gchar *map_un;
 
 		map_un = g_strdup_printf("http://maps.google.de/?q=%s,%s %s",
@@ -136,7 +136,7 @@ gboolean gnotification_show(struct connection *connection, struct contact *conta
 	g_application_send_notification(G_APPLICATION(roger_app), connection->notification, notify);
 	g_object_unref(notify);
 
-	return EMPTY_STRING(contact->name);
+	return RM_EMPTY_STRING(contact->name);
 }
 
 void gnotification_show_missed_calls(void)
@@ -165,7 +165,7 @@ void gnotification_show_missed_calls(void)
  * \param connection connection structure
  * \param unused_pointer unused user pointer
  */
-void gnotifications_connection_notify_cb(AppObject *obj, struct connection *connection, gpointer unused_pointer)
+void gnotifications_connection_notify_cb(RmObject *obj, struct connection *connection, gpointer unused_pointer)
 {
 	gchar **numbers = NULL;
 	gint count;
@@ -193,7 +193,7 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 
 	if (!found && connection->local_number[0] != '0') {
 		gchar *scramble_local = rm_call_scramble_number(connection->local_number);
-		gchar *tmp = call_full_number(connection->local_number, FALSE);
+		gchar *tmp = rm_call_full_number(connection->local_number, FALSE);
 		gchar *scramble_tmp = rm_call_scramble_number(tmp);
 
 		g_debug("type: %d, number '%s' not found", connection->type, scramble_local);
@@ -242,7 +242,7 @@ void gnotifications_connection_notify_cb(AppObject *obj, struct connection *conn
 	/** Ask for contact information */
 	struct contact *contact = rm_contact_find_by_number(connection->remote_number);
 
-	if (EMPTY_STRING(contact->name)) {
+	if (RM_EMPTY_STRING(contact->name)) {
 		rm_lookup(contact->number, &contact->name, &contact->street, &contact->zip, &contact->city);
 	}
 
@@ -268,7 +268,7 @@ void impl_activate(PeasActivatable *plugin)
 	}
 
 	/* Connect to "call-notify" signal */
-	notify_plugin->priv->signal_id = g_signal_connect(G_OBJECT(app_object), "connection-notify", G_CALLBACK(gnotifications_connection_notify_cb), NULL);
+	notify_plugin->priv->signal_id = g_signal_connect(G_OBJECT(rm_object), "connection-notify", G_CALLBACK(gnotifications_connection_notify_cb), NULL);
 }
 
 /**
@@ -282,8 +282,8 @@ void impl_deactivate(PeasActivatable *plugin)
 	g_application_withdraw_notification(G_APPLICATION(roger_app), "missed-calls");
 
 	/* If signal handler is connected: disconnect */
-	if (g_signal_handler_is_connected(G_OBJECT(app_object), notify_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(app_object), notify_plugin->priv->signal_id);
+	if (g_signal_handler_is_connected(G_OBJECT(rm_object), notify_plugin->priv->signal_id)) {
+		g_signal_handler_disconnect(G_OBJECT(rm_object), notify_plugin->priv->signal_id);
 	}
 }
 

@@ -29,6 +29,14 @@
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/rmaudio.h>
 
+/**
+ * SECTION:rmaudio
+ * @title: RmAudio
+ * @short_description: Audio handling functions
+ *
+ * Audio contains handling of plugins and common audio functions.
+ */
+
 /** global pointer to current used audio plugin */
 static struct audio *rm_internal_audio = NULL;
 

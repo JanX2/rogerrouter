@@ -28,15 +28,15 @@
 #include <sys/resource.h>
 #endif
 
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmnetmonitor.h>
 #include <libroutermanager/rmaudio.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/call.h>
+#include <libroutermanager/rmcall.h>
 
 
 #include <capi.h>
@@ -886,7 +886,7 @@ static int capi_indication(_cmsg capi_message)
 					connection->audio = session->handlers->audio_open();
 					if (!connection->audio) {
 						g_warning("Could not open audio. Hangup");
-						emit_message(0, "Could not open audio. Hangup");
+						rm_object_emit_message(0, "Could not open audio. Hangup");
 						capi_hangup(connection);
 						connection->audio = NULL;
 					}
@@ -1254,7 +1254,7 @@ static int capi_indication(_cmsg capi_message)
 					connection->audio = session->handlers->audio_open();
 					if (!connection->audio) {
 						g_warning("Could not open audio. Hangup");
-						emit_message(0, "Could not open audio. Hangup");
+						rm_object_emit_message(0, "Could not open audio. Hangup");
 						capi_hangup(connection);
 						connection->audio = NULL;
 					} else {
@@ -1809,12 +1809,12 @@ struct capi_connection *fax_dial(gchar *tiff, const gchar *trg_no, gboolean supp
 	struct capi_connection *connection = NULL;
 	gchar *target;
 
-	if (EMPTY_STRING(src_no)) {
-		emit_message(0, "Source MSN not set, cannot dial");
+	if (RM_EMPTY_STRING(src_no)) {
+		rm_object_emit_message(0, "Source MSN not set, cannot dial");
 		return NULL;
 	}
 
-	target = call_canonize_number(trg_no);
+	target = rm_call_canonize_number(trg_no);
 
 	if (cip == 1) {
 		cip = FAX_CIP;
@@ -1850,12 +1850,12 @@ struct capi_connection *phone_dial(const gchar *trg_no, gboolean suppress)
 	struct capi_connection *connection = NULL;
 	gchar *target;
 
-	if (EMPTY_STRING(src_no)) {
-		emit_message(0, "Source MSN not set, cannot dial");
+	if (RM_EMPTY_STRING(src_no)) {
+		rm_object_emit_message(0, "Source MSN not set, cannot dial");
 		return NULL;
 	}
 
-	target = call_canonize_number(trg_no);
+	target = rm_call_canonize_number(trg_no);
 
 	g_warning("%s(): TODO", __FUNCTION__);
 	//connection = phone_call(controller, src_no, target, suppress);
@@ -1874,7 +1874,7 @@ void connection_established(struct capi_connection *capi_connection)
 	struct connection *connection = rm_connection_find_by_id(capi_connection->id);
 
 	if (connection) {
-		emit_connection_established(connection);
+		rm_object_emit_connection_established(connection);
 	}
 }
 
@@ -1887,7 +1887,7 @@ void connection_terminated(struct capi_connection *capi_connection)
 	struct connection *connection = rm_connection_find_by_id(capi_connection->id);
 
 	if (connection) {
-		emit_connection_terminated(connection);
+		rm_object_emit_connection_terminated(connection);
 	}
 }
 
@@ -1914,7 +1914,7 @@ void connection_ring(struct capi_connection *capi_connection)
 		g_debug("connection_ring() set capi_connection %p", capi_connection);
 		connection->priv = capi_connection;
 
-		emit_connection_notify(connection);
+		rm_object_emit_connection_notify(connection);
 	}
 }
 
@@ -1938,7 +1938,7 @@ void connection_status(struct capi_connection *capi_connection, gint status)
 	struct connection *connection = rm_connection_find_by_id(capi_connection->id);
 
 	if (connection) {
-		emit_connection_status(status, connection);
+		rm_object_emit_connection_status(status, connection);
 	}
 }
 

@@ -28,14 +28,22 @@
 #include "config.h"
 #endif
 
-#include <appobject-emit.h>
+#include <rmobjectemit.h>
 #include <rmfaxprinter.h>
 
 #ifdef USE_PRINTER_SERVER
 
 #define BUFFER_LENGTH 1024
 
-gpointer print_server_thread(gpointer data)
+/**
+ * rm_faxserver_thread:
+ * @data: a #GSocket
+ *
+ * Server thread which accepts new data as fax files
+ *
+ * Returns: %NULL
+ */
+gpointer rm_faxserver_thread(gpointer data)
 {
 	GSocket *server = data;
 	GSocket *sock;
@@ -77,7 +85,7 @@ gpointer print_server_thread(gpointer data)
 		if (len == 0) {
 			g_debug("Print job received on socket");
 
-			emit_fax_process(file_name);
+			rm_object_emit_fax_process(file_name);
 		}
 
 		g_socket_close(sock, &error);
@@ -87,7 +95,15 @@ gpointer print_server_thread(gpointer data)
 	return NULL;
 }
 
-gboolean fax_printer_init(GError **error)
+/**
+ * rm_faxprinter_init:
+ * @error: a #GError:
+ *
+ * Initialize fax network spooler
+ *
+ * Returns: %TRUE if network spooler could be started, %FALSE on error
+ */
+gboolean rm_faxprinter_init(GError **error)
 {
 	GSocket *socket = NULL;
 	GInetAddress *inet_address = NULL;
@@ -130,7 +146,7 @@ gboolean fax_printer_init(GError **error)
 
 	g_debug("Fax Server running on port 9100");
 
-	g_thread_new("printserver", print_server_thread, socket);
+	g_thread_new("printserver", rm_faxserver_thread, socket);
 
 	return TRUE;
 }

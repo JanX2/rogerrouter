@@ -28,8 +28,8 @@
 #endif
 
 #include <libroutermanager/rmconnection.h>
-#include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/call.h>
+#include <libroutermanager/rmobjectemit.h>
+#include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmplugins.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmprofile.h>
@@ -83,12 +83,12 @@ static inline void callmonitor_convert(gchar *text)
 	case 0:
 		connection = rm_connection_add(atoi(fields[2]), RM_CONNECTION_TYPE_OUTGOING, fields[4], fields[5]);
 
-		emit_connection_notify(connection);
+		rm_object_emit_connection_notify(connection);
 		break;
 	case 1:
 		connection = rm_connection_add(atoi(fields[2]), RM_CONNECTION_TYPE_INCOMING, fields[4], fields[3]);
 
-		emit_connection_notify(connection);
+		rm_object_emit_connection_notify(connection);
 		break;
 	case 2:
 		connection = rm_connection_find_by_id(atoi(fields[2]));
@@ -96,7 +96,7 @@ static inline void callmonitor_convert(gchar *text)
 		if (connection) {
 			rm_connection_set_type(connection, RM_CONNECTION_TYPE_CONNECT);
 
-			emit_connection_notify(connection);
+			rm_object_emit_connection_notify(connection);
 		}
 		break;
 	case 3:
@@ -104,7 +104,7 @@ static inline void callmonitor_convert(gchar *text)
 		if (connection) {
 			rm_connection_set_type(connection, RM_CONNECTION_TYPE_DISCONNECT);
 
-			emit_connection_notify(connection);
+			rm_object_emit_connection_notify(connection);
 
 			rm_connection_remove(connection);
 		}

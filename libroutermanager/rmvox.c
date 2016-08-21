@@ -25,9 +25,9 @@
 
 #include <speex/speex_callbacks.h>
 
-#include <libroutermanager/voxplay.h>
+#include <libroutermanager/rmvox.h>
 #include <libroutermanager/rmaudio.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmmain.h>
 
 #define MAX_FRAME_SIZE 2000
@@ -63,11 +63,14 @@ struct vox_playback {
 };
 
 /**
- * \brief Main playback thread
- * \param user_data audio private pointer
- * \return NULL
+ * rm_vox_playback_thread:
+ * @user_data audio private pointer:
+ *
+ * Main playback thread
+ *
+ * Returns: %NULL
  */
-static gpointer playback_thread(gpointer user_data)
+static gpointer rm_vox_playback_thread(gpointer user_data)
 {
 	struct vox_playback *playback = user_data;
 	spx_int32_t frame_size;
@@ -165,11 +168,14 @@ static gpointer playback_thread(gpointer user_data)
 }
 
 /**
- * \brief Play voicebox message file
- * \param vox_data pointer to vox playback data
- * \return TRUE on playback started, FALSE otherwise
+ * rm_vox_play:
+ * @vox_data: pointer to vox playback data
+ *
+ * Play voicebox message file.
+ *
+ * Returns: %TRUE on playback started, %FALSE otherwise
  */
-gboolean vox_play(gpointer vox_data)
+gboolean rm_vox_play(gpointer vox_data)
 {
 	struct vox_playback *playback = vox_data;
 
@@ -183,17 +189,20 @@ gboolean vox_play(gpointer vox_data)
 
 	/* Start playback thread */
 	playback->state = FALSE;
-	playback->thread = g_thread_new("play vox", playback_thread, playback);
+	playback->thread = g_thread_new("play vox", rm_vox_playback_thread, playback);
 
 	return playback->thread != NULL;
 }
 
 /**
- * \brief Toggle play/pause state
- * \param vox_data pointer to vox playback data
- * \return TRUE if pause, FALSE on playing
+ * rm_vox_playpause:
+ * @vox_data: pointer to vox playback data
+ *
+ * Toggle play/pause state.
+ *
+ * Returns: %TRUE if pause, %FALSE on playing
  */
-gboolean vox_playpause(gpointer vox_data)
+gboolean rm_vox_playpause(gpointer vox_data)
 {
 	struct vox_playback *playback = vox_data;
 
@@ -207,10 +216,14 @@ gboolean vox_playpause(gpointer vox_data)
 }
 
 /**
- * \brief Stop vox playback if it is still running
- * \param vox_data pointer to vox playback data
+ * rm_vox_stop:
+ * @vox_data: pointer to vox playback data
+ *
+ * Stop vox playback if it is still running
+ *
+ * Returns: %TRUE if playback has been stop, %FALSE on error
  */
-gboolean vox_stop(gpointer vox_data)
+gboolean rm_vox_stop(gpointer vox_data)
 {
 	struct vox_playback *playback = vox_data;
 
@@ -239,12 +252,15 @@ gboolean vox_stop(gpointer vox_data)
 }
 
 /**
- * \brief Seek within vox stream
- * \param vox_data pointer to vox playback data
- * \param pos position fraction
- * \return TRUE on seek success, FALSE on error
+ * rm_vox_seek:
+ * @vox_data: pointer to vox playback data
+ * @pos: position fraction
+ *
+ * Seek within vox stream.
+ *
+ * Returns: %TRUE on seek success, %FALSE on error
  */
-gboolean vox_seek(gpointer vox_data, gdouble pos)
+gboolean rm_vox_seek(gpointer vox_data, gdouble pos)
 {
 	struct vox_playback *playback = vox_data;
 	spx_int32_t frame_size;
@@ -296,11 +312,14 @@ gboolean vox_seek(gpointer vox_data, gdouble pos)
 }
 
 /**
- * \brief Get current fraction of playback slider
- * \param vox_data internal vox playback structure
- * \return current fraction
+ * rm_vox_get_fraction:
+ * @vox_data: internal vox playback structure
+ *
+ * Get current fraction of playback slider.
+ *
+ * Returns: current fraction
  */
-gint vox_get_fraction(gpointer vox_data)
+gint rm_vox_get_fraction(gpointer vox_data)
 {
 	struct vox_playback *playback = vox_data;
 
@@ -308,11 +327,14 @@ gint vox_get_fraction(gpointer vox_data)
 }
 
 /**
- * \brief Get current seconds of playback
- * \param vox_data internal vox playback structure
- * \return current seconds
+ * rm_vox_get_seconds:
+ * @vox_data: internal vox playback structure
+ *
+ * Get current seconds of playback.#
+ *
+ * Returns: current seconds
  */
-gfloat vox_get_seconds(gpointer vox_data)
+gfloat rm_vox_get_seconds(gpointer vox_data)
 {
 	struct vox_playback *playback = vox_data;
 
@@ -320,13 +342,16 @@ gfloat vox_get_seconds(gpointer vox_data)
 }
 
 /**
- * \brief Initialize vox playback structure
- * \param data voice data
- * \param len length of voice data
- * \param error error message
- * \return vox play structure
+ * rm_vox_init:
+ * @data: voice data
+ * @len: length of voice data
+ * @error: a #GError
+ *
+ * Initialize vox playback structure.
+ *
+ * Returns: vox play structure
  */
-gpointer vox_init(gchar *data, gsize len, GError **error)
+gpointer rm_vox_init(gchar *data, gsize len, GError **error)
 {
 	struct vox_playback *playback;
 	const SpeexMode *mode;

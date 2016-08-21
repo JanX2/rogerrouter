@@ -30,7 +30,7 @@
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmaudio.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 
 #define ROUTERMANAGER_TYPE_PULSEAUDIO_PLUGIN (routermanager_pulseaudio_plugin_get_type())
 #define ROUTERMANAGER_PULSEAUDIO_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_PULSEAUDIO_PLUGIN, RouterManagerPulseAudioPlugin))
@@ -345,7 +345,7 @@ static void *pulse_audio_open(void)
 	}
 
 	output = g_settings_get_string(rm_profile_get_active()->settings, "audio-output");
-	if (EMPTY_STRING(output)) {
+	if (RM_EMPTY_STRING(output)) {
 		output = NULL;
 	}
 
@@ -357,7 +357,7 @@ static void *pulse_audio_open(void)
 	}
 
 	input = g_settings_get_string(rm_profile_get_active()->settings, "audio-input");
-	if (EMPTY_STRING(input)) {
+	if (RM_EMPTY_STRING(input)) {
 		input = NULL;
 	}
 

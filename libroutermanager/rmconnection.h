@@ -20,7 +20,7 @@
 #ifndef LIBROUTERMANAGER_CONNECTION_H
 #define LIBROUTERMANAGER_CONNECTION_H
 
-#include <libroutermanager/call.h>
+#include <libroutermanager/rmcall.h>
 
 G_BEGIN_DECLS
 

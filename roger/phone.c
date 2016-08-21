@@ -23,12 +23,12 @@
 
 #include <gtk/gtk.h>
 
-#include <libroutermanager/appobject.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmobject.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmphone.h>
-#include <libroutermanager/address-book.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmaddressbook.h>
+#include <libroutermanager/rmstring.h>
 
 #include <roger/main.h>
 #include <roger/journal.h>
@@ -128,7 +128,7 @@ void phone_dial_buttons_set_dial(gboolean allow_dial)
  * \param connection connection pointer
  * \param user_data phone state pointer
  */
-static void phone_connection_established_cb(AppObject *object, struct connection *connection, gpointer user_data)
+static void phone_connection_established_cb(RmObject *object, struct connection *connection, gpointer user_data)
 {
 	if (!phone_state->status_timer_id) {
 		phone_state->status_timer_id = g_timeout_add(250, phone_status_timer_cb, NULL);
@@ -141,7 +141,7 @@ static void phone_connection_established_cb(AppObject *object, struct connection
  * \param connection connection pointer
  * \param user_data phone state pointer
  */
-static void phone_connection_terminated_cb(AppObject *object, struct connection *connection, gpointer user_data)
+static void phone_connection_terminated_cb(RmObject *object, struct connection *connection, gpointer user_data)
 {
 	g_debug("%s(): connection = %p", __FUNCTION__, connection);
 
@@ -210,11 +210,11 @@ void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 
 	/* Get selected number (either number format or based on the selected name) */
 	phone_state->number = gtk_entry_get_text(GTK_ENTRY(phone_state->search_entry));
-	if (!EMPTY_STRING(phone_state->number) && !(isdigit(phone_state->number[0]) || phone_state->number[0] == '*' || phone_state->number[0] == '#' || phone_state->number[0] == '+')) {
+	if (!RM_EMPTY_STRING(phone_state->number) && !(isdigit(phone_state->number[0]) || phone_state->number[0] == '*' || phone_state->number[0] == '#' || phone_state->number[0] == '+')) {
 		phone_state->number = g_object_get_data(G_OBJECT(phone_state->search_entry), "number");
 	}
 
-	if (EMPTY_STRING(phone_state->number)) {
+	if (RM_EMPTY_STRING(phone_state->number)) {
 		return;
 	}
 
@@ -297,14 +297,14 @@ static void phone_search_entry_set_contact(struct phone_state *state, struct con
 	if (identify) {
 		/* Copy contact and try to identify it */
 		search_contact = rm_contact_dup(contact);
-		rm_emit_contact_process(search_contact);
+		rm_object_emit_contact_process(search_contact);
 	} else {
 		search_contact = contact;
 	}
 
 	g_object_set_data(G_OBJECT(state->search_entry), "number", search_contact->number);
 
-	if (!EMPTY_STRING(search_contact->name)) {
+	if (!RM_EMPTY_STRING(search_contact->name)) {
 		gtk_entry_set_text(GTK_ENTRY(state->search_entry), search_contact->name);
 	} else {
 		gtk_entry_set_text(GTK_ENTRY(state->search_entry), search_contact->number);
@@ -381,11 +381,11 @@ static gboolean phone_search_entry_filter_cb(GtkListBoxRow *row, gpointer user_d
 	g_assert(phone_state != NULL);
 	g_assert(contact != NULL);
 
-	if (EMPTY_STRING(phone_state->filter)) {
+	if (RM_EMPTY_STRING(phone_state->filter)) {
 		return TRUE;
 	}
 
-	return g_strcasestr(contact->name, phone_state->filter) != NULL;
+	return rm_strcasestr(contact->name, phone_state->filter) != NULL;
 }
 
 /**
@@ -403,7 +403,7 @@ void phone_search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_d
 	phone_state->filter = gtk_entry_get_text(GTK_ENTRY(entry));
 
 	/* If it is an invalid filter, abort and close menu if needed */
-	if (EMPTY_STRING(phone_state->filter) || isdigit(phone_state->filter[0]) || phone_state->discard || phone_state->filter[0] == '*' || phone_state->filter[0] == '#') {
+	if (RM_EMPTY_STRING(phone_state->filter) || isdigit(phone_state->filter[0]) || phone_state->discard || phone_state->filter[0] == '*' || phone_state->filter[0] == '#') {
 		phone_state->discard = FALSE;
 		if (phone_state->contact_menu) {
 			gtk_widget_destroy(phone_state->contact_menu);
@@ -463,7 +463,7 @@ void phone_search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_d
 	phone_state->filter = gtk_entry_get_text(GTK_ENTRY(entry));
 
 	/* Add contacts to entry completion */
-	contacts = rm_address_book_get_contacts();
+	contacts = rm_addressbook_get_contacts();
 
 	for (list = contacts; list; list = list->next) {
 		struct contact *contact = list->data;
@@ -472,7 +472,7 @@ void phone_search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_d
 		GtkWidget *grid;
 		gchar *name;
 
-		if (!g_strcasestr(contact->name, phone_state->filter) || !contact->numbers) {
+		if (!rm_strcasestr(contact->name, phone_state->filter) || !contact->numbers) {
 			continue;
 		}
 
@@ -829,7 +829,7 @@ void phone_clear_button_clicked_cb(GtkWidget *widget, gpointer user_data)
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(phone_state->search_entry));
 
 	/* If there is text within the entry, remove last char */
-	if (!EMPTY_STRING(text)) {
+	if (!RM_EMPTY_STRING(text)) {
 		gchar *new = g_strdup(text);
 
 		new[strlen(text) - 1] = '\0';
@@ -872,7 +872,7 @@ gboolean phone_window_delete_event_cb(GtkWidget *window, GdkEvent *event, gpoint
 	}
 
 	/* Disconnect all signal handlers */
-	g_signal_handlers_disconnect_by_data(app_object, phone_state);
+	g_signal_handlers_disconnect_by_data(rm_object, phone_state);
 
 	phone_state->window = NULL;
 
@@ -952,8 +952,8 @@ void app_show_phone_window(struct contact *contact, struct connection *connectio
 	g_object_unref(G_OBJECT(builder));
 
 	/* Connect connection signals */
-	g_signal_connect(app_object, "connection-established", G_CALLBACK(phone_connection_established_cb), NULL);
-	g_signal_connect(app_object, "connection-terminated", G_CALLBACK(phone_connection_terminated_cb), NULL);
+	g_signal_connect(rm_object, "connection-established", G_CALLBACK(phone_connection_established_cb), NULL);
+	g_signal_connect(rm_object, "connection-terminated", G_CALLBACK(phone_connection_terminated_cb), NULL);
 
 	/* In case there is an incoming connection, pick it up */
 	if (connection) {

@@ -27,7 +27,7 @@
 
 #include <tiff.h>
 
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/router.h>
 //#include <libroutermanager/libfaxophone/faxophone.h>
 #include <libroutermanager/plugins/capi/fax.h>
@@ -665,7 +665,7 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	cairo_move_to(cairo, 1000, 145);
 	cairo_show_text(cairo, _("Recipient number:"));
 	cairo_move_to(cairo, 1220, 145);
-	buffer = call_full_number(remote, FALSE);
+	buffer = rm_call_full_number(remote, FALSE);
 	cairo_show_text(cairo, buffer);
 	g_free(buffer);
 
@@ -681,7 +681,7 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	cairo_move_to(cairo, 1000, 170);
 	cairo_show_text(cairo, _("Sender number:"));
 	cairo_move_to(cairo, 1220, 170);
-	buffer = call_full_number(local, FALSE);
+	buffer = rm_call_full_number(local, FALSE);
 	cairo_show_text(cairo, buffer);
 	g_free(buffer);
 

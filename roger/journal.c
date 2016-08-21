@@ -30,16 +30,16 @@
 
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/router.h>
-#include <libroutermanager/call.h>
+#include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmmain.h>
-#include <libroutermanager/filter.h>
-#include <libroutermanager/appobject.h>
+#include <libroutermanager/rmfilter.h>
+#include <libroutermanager/rmobject.h>
 #include <libroutermanager/rmfile.h>
 #include <libroutermanager/rmosdep.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmlookup.h>
-#include <libroutermanager/csv.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmcsv.h>
+#include <libroutermanager/rmstring.h>
 
 #include <roger/main.h>
 #include <roger/phone.h>
@@ -64,8 +64,8 @@ static GdkPixbuf *icon_fax_report = NULL;
 static GdkPixbuf *icon_voice = NULL;
 static GdkPixbuf *icon_record = NULL;
 static GdkPixbuf *icon_blocked = NULL;
-static struct filter *journal_filter = NULL;
-static struct filter *journal_search_filter = NULL;
+static RmFilter *journal_filter = NULL;
+static RmFilter *journal_search_filter = NULL;
 static GtkWidget *spinner = NULL;
 static GMutex journal_mutex;
 static gboolean use_header = FALSE;
@@ -212,21 +212,21 @@ void journal_init_call_icon(void)
 GdkPixbuf *journal_get_call_icon(gint type)
 {
 	switch (type) {
-	case CALL_TYPE_INCOMING:
+	case RM_CALL_TYPE_INCOMING:
 		return icon_call_in;
-	case CALL_TYPE_MISSED:
+	case RM_CALL_TYPE_MISSED:
 		return icon_call_missed;
-	case CALL_TYPE_OUTGOING:
+	case RM_CALL_TYPE_OUTGOING:
 		return icon_call_out;
-	case CALL_TYPE_FAX:
+	case RM_CALL_TYPE_FAX:
 		return icon_fax;
-	case CALL_TYPE_FAX_REPORT:
+	case RM_CALL_TYPE_FAX_REPORT:
 		return icon_fax_report;
-	case CALL_TYPE_VOICE:
+	case RM_CALL_TYPE_VOICE:
 		return icon_voice;
-	case CALL_TYPE_RECORD:
+	case RM_CALL_TYPE_RECORD:
 		return icon_record;
-	case CALL_TYPE_BLOCKED:
+	case RM_CALL_TYPE_BLOCKED:
 		return icon_blocked;
 	default:
 		g_debug("Unknown icon type: %d", type);
@@ -255,15 +255,15 @@ void journal_redraw(void)
 	/* Update liststore */
 	for (list = journal_list; list != NULL; list = list->next) {
 		GtkTreeIter iter;
-		struct call *call = list->data;
+		RmCall *call = list->data;
 
 		g_assert(call != NULL);
 
-		if (filter_rule_match(journal_filter, call) == FALSE) {
+		if (rm_filter_rule_match(journal_filter, call) == FALSE) {
 			continue;
 		}
 
-		if (filter_rule_match(journal_search_filter, call) == FALSE) {
+		if (rm_filter_rule_match(journal_search_filter, call) == FALSE) {
 			continue;
 		}
 
@@ -346,7 +346,7 @@ static gboolean reload_journal(gpointer user_data)
 	GtkListStore *list_store;
 	GtkTreeIter iter;
 	gboolean valid;
-	struct call *call;
+	RmCall *call;
 
 	if (!journal_win) {
 		return FALSE;
@@ -378,13 +378,13 @@ gpointer lookup_journal(gpointer user_data)
 	GSList *list;
 
 	for (list = journal; list; list = list->next) {
-		struct call *call = list->data;
+		RmCall *call = list->data;
 		gchar *name = NULL;
 		gchar *street = NULL;
 		gchar *zip = NULL;
 		gchar *city = NULL;
 
-		if (!EMPTY_STRING(call->remote->name)) {
+		if (!RM_EMPTY_STRING(call->remote->name)) {
 			continue;
 		}
 
@@ -402,7 +402,7 @@ gpointer lookup_journal(gpointer user_data)
 	return NULL;
 }
 
-void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
+void journal_loaded_cb(RmObject *obj, GSList *journal, gpointer unused)
 {
 	GSList *old;
 
@@ -424,7 +424,7 @@ void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
 	journal_list = journal;
 
 	if (old) {
-		g_slist_free_full(old, call_free);
+		g_slist_free_full(old, rm_call_free);
 	}
 
 	journal_redraw();
@@ -432,7 +432,7 @@ void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
 	g_thread_new("Reverse Lookup Journal", lookup_journal, journal_list);
 }
 
-static void journal_connection_notify_cb(AppObject *obj, struct connection *connection, gpointer user_data)
+static void journal_connection_notify_cb(RmObject *obj, struct connection *connection, gpointer user_data)
 {
 	if (connection->type & RM_CONNECTION_TYPE_DISCONNECT) {
 		router_load_journal(rm_profile_get_active());
@@ -494,7 +494,7 @@ void journal_button_clear_clicked_cb(GtkWidget *button, GtkWidget *view)
 
 void delete_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
 {
-	struct call *call = NULL;
+	RmCall *call = NULL;
 	GValue ptr = { 0 };
 
 	gtk_tree_model_get_value(model, iter, JOURNAL_COL_CALL_PTR, &ptr);
@@ -502,22 +502,22 @@ void delete_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, g
 	call = g_value_get_pointer(&ptr);
 
 	switch (call->type) {
-	case CALL_TYPE_RECORD:
+	case RM_CALL_TYPE_RECORD:
 		g_unlink(call->priv);
 		break;
-	case CALL_TYPE_VOICE:
+	case RM_CALL_TYPE_VOICE:
 		router_delete_voice(rm_profile_get_active(), call->priv);
 		break;
-	case CALL_TYPE_FAX:
+	case RM_CALL_TYPE_FAX:
 		router_delete_fax(rm_profile_get_active(), call->priv);
 		break;
-	case CALL_TYPE_FAX_REPORT:
+	case RM_CALL_TYPE_FAX_REPORT:
 		g_unlink(call->priv);
 		break;
 	default:
 		journal_list = g_slist_remove(journal_list, call);
 		g_debug("Deleting: '%s'", call->date_time);
-		csv_save_journal(journal_list);
+		rm_csv_save_journal(journal_list);
 		break;
 	}
 }
@@ -550,14 +550,14 @@ void journal_button_delete_clicked_cb(GtkWidget *button, GtkWidget *view)
 	router_load_journal(rm_profile_get_active());
 }
 
-void journal_add_contact(struct call *call)
+void journal_add_contact(RmCall *call)
 {
 	app_contacts(call->remote);
 }
 
 void add_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
 {
-	struct call *call = NULL;
+	RmCall *call = NULL;
 	GValue ptr = { 0 };
 
 	gtk_tree_model_get_value(model, iter, JOURNAL_COL_CALL_PTR, &ptr);
@@ -584,17 +584,17 @@ void search_entry_changed(GtkEditable *entry, GtkTreeView *view)
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 
 	if (journal_search_filter) {
-		filter_free(journal_search_filter);
+		rm_filter_free(journal_search_filter);
 		journal_search_filter = NULL;
 	}
 
 	if (strlen(text)) {
-		journal_search_filter = filter_new("internal_search");
+		journal_search_filter = rm_filter_new("internal_search");
 
 		if (g_ascii_isdigit(text[0])) {
-			filter_rule_add(journal_search_filter, FILTER_REMOTE_NUMBER, FILTER_CONTAINS, (gchar *)text);
+			rm_filter_rule_add(journal_search_filter, RM_FILTER_REMOTE_NUMBER, RM_FILTER_CONTAINS, (gchar *)text);
 		} else {
-			filter_rule_add(journal_search_filter, FILTER_REMOTE_NAME, FILTER_CONTAINS, (gchar *)text);
+			rm_filter_rule_add(journal_search_filter, RM_FILTER_REMOTE_NAME, RM_FILTER_CONTAINS, (gchar *)text);
 		}
 	}
 
@@ -616,7 +616,7 @@ void entry_icon_released(GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEven
 void filter_box_changed(GtkComboBox *box, gpointer user_data)
 {
 	const gchar *text = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(box));
-	GSList *filter_list = filter_get_list();
+	GSList *filter_list = rm_filter_get_list();
 
 	if (!text) {
 		journal_filter = NULL;
@@ -626,7 +626,7 @@ void filter_box_changed(GtkComboBox *box, gpointer user_data)
 	}
 
 	while (filter_list) {
-		struct filter *filter = filter_list->data;
+		RmFilter *filter = filter_list->data;
 
 		if (!strcmp(filter->name, text)) {
 			journal_filter = filter;
@@ -643,12 +643,12 @@ void journal_update_filter(void)
 {
 	GSList *filter_list;
 
-	filter_list = filter_get_list();
+	filter_list = rm_filter_get_list();
 
 	gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(journal_filter_box));
 
 	while (filter_list) {
-		struct filter *filter = filter_list->data;
+		RmFilter *filter = filter_list->data;
 
 		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(journal_filter_box), NULL, filter->name);
 		filter_list = filter_list->next;
@@ -658,13 +658,13 @@ void journal_update_filter(void)
 
 void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
 {
-	struct call *call;
+	RmCall *call;
 
 	gtk_tree_model_get(model, iter, JOURNAL_COL_CALL_PTR, &call, -1);
 
 	switch (call->type) {
-	case CALL_TYPE_FAX_REPORT:
-	case CALL_TYPE_FAX: {
+	case RM_CALL_TYPE_FAX_REPORT:
+	case RM_CALL_TYPE_FAX: {
 		gsize len = 0;
 		gchar *data = router_load_fax(rm_profile_get_active(), call->priv, &len);
 
@@ -678,10 +678,10 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 		g_free(data);
 		break;
 	}
-	case CALL_TYPE_RECORD:
+	case RM_CALL_TYPE_RECORD:
 		rm_os_execute(call->priv);
 		break;
-	case CALL_TYPE_VOICE:
+	case RM_CALL_TYPE_VOICE:
 		answeringmachine_play(call->priv);
 		break;
 	default:
@@ -730,13 +730,13 @@ gint journal_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpointer data)
 
 gint journal_sort_by_date(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer data)
 {
-	struct call *call_a;
-	struct call *call_b;
+	RmCall *call_a;
+	RmCall *call_b;
 
 	gtk_tree_model_get(model, a, JOURNAL_COL_CALL_PTR, &call_a, -1);
 	gtk_tree_model_get(model, b, JOURNAL_COL_CALL_PTR, &call_b, -1);
 
-	return call_sort_by_date(call_a, call_b);
+	return rm_call_sort_by_date(call_a, call_b);
 }
 
 gint journal_sort_by_type(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer data)
@@ -752,7 +752,7 @@ gint journal_sort_by_type(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, g
 
 void name_column_cell_data_func(GtkTreeViewColumn *column, GtkCellRenderer *renderer, GtkTreeModel *model, GtkTreeIter *iter, gpointer user_data)
 {
-	struct call *call;
+	RmCall *call;
 
 	gtk_tree_model_get(model, iter, JOURNAL_COL_CALL_PTR, &call, -1);
 
@@ -830,22 +830,22 @@ static gboolean journal_column_header_button_pressed_cb(GtkTreeViewColumn *colum
 	return FALSE;
 }
 
-void journal_popup_copy_number(GtkWidget *widget, struct call *call)
+void journal_popup_copy_number(GtkWidget *widget, RmCall *call)
 {
 	gtk_clipboard_set_text(gtk_clipboard_get(GDK_NONE), call->remote->number, -1);
 }
 
-void journal_popup_call_number(GtkWidget *widget, struct call *call)
+void journal_popup_call_number(GtkWidget *widget, RmCall *call)
 {
 	app_show_phone_window(call->remote, NULL);
 }
 
-void journal_popup_add_contact(GtkWidget *widget, struct call *call)
+void journal_popup_add_contact(GtkWidget *widget, RmCall *call)
 {
 	journal_add_contact(call);
 }
 
-void journal_popup_delete_entry(GtkWidget *widget, struct call *call)
+void journal_popup_delete_entry(GtkWidget *widget, RmCall *call)
 {
 	journal_button_delete_clicked_cb(NULL, journal_view);
 }
@@ -857,7 +857,7 @@ void journal_popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer use
 	GtkTreeModel *model;
 	GList *list;
 	GtkTreeIter iter;
-	struct call *call = NULL;
+	RmCall *call = NULL;
 
 	if (gtk_tree_selection_count_selected_rows(selection) != 1) {
 		return;
@@ -983,7 +983,7 @@ static void journal_export_cb(GtkWidget *dialog, gint response, gpointer user_da
 		gchar *file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
 
 		g_debug("file: %s", file);
-		csv_save_journal_as(journal_list, file);
+		rm_csv_save_journal_as(journal_list, file);
 	}
 
 	gtk_widget_destroy(dialog);
@@ -1009,7 +1009,7 @@ void add_contact_activated(GSimpleAction *action, GVariant *parameter, gpointer 
 	journal_button_add_clicked_cb(NULL, journal_view);
 }
 
-static void journal_contacts_changed_cb(AppObject *app, gpointer user_data)
+static void journal_contacts_changed_cb(RmObject *app, gpointer user_data)
 {
 	journal_button_refresh_clicked_cb(NULL, NULL);
 }
@@ -1346,14 +1346,14 @@ void journal_window(GApplication *app)
 	g_signal_connect(G_OBJECT(journal_view), "button-press-event", G_CALLBACK(journal_button_press_event_cb), list_store);
 
 	g_signal_connect(journal_win, "delete-event", G_CALLBACK(journal_delete_event_cb), app);
-	g_signal_connect(G_OBJECT(app_object), "journal-loaded", G_CALLBACK(journal_loaded_cb), NULL);
+	g_signal_connect(G_OBJECT(rm_object), "journal-loaded", G_CALLBACK(journal_loaded_cb), NULL);
 
-	g_signal_connect(G_OBJECT(app_object), "connection-notify", G_CALLBACK(journal_connection_notify_cb), NULL);
+	g_signal_connect(G_OBJECT(rm_object), "connection-notify", G_CALLBACK(journal_connection_notify_cb), NULL);
 
 	g_signal_connect(G_OBJECT(journal_win), "configure-event", G_CALLBACK(journal_configure_event_cb), NULL);
 	g_signal_connect(G_OBJECT(journal_win), "window-state-event", G_CALLBACK(journal_window_state_event_cb), NULL);
 
-	g_signal_connect(app_object, "contacts-changed", G_CALLBACK(journal_contacts_changed_cb), NULL);
+	g_signal_connect(rm_object, "contacts-changed", G_CALLBACK(journal_contacts_changed_cb), NULL);
 
 	gtk_widget_hide_on_delete(journal_win);
 

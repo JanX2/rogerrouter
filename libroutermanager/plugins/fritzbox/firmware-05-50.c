@@ -28,10 +28,10 @@
 #include <libroutermanager/rmfile.h>
 #include <libroutermanager/rmlog.h>
 #include <libroutermanager/rmnetwork.h>
-#include <libroutermanager/csv.h>
+#include <libroutermanager/rmcsv.h>
 #include <libroutermanager/ftp.h>
-#include <libroutermanager/call.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmcall.h>
+#include <libroutermanager/rmstring.h>
 
 #include "fritzbox.h"
 #include "csv.h"
@@ -193,7 +193,7 @@ gboolean extract_number_05_50(GSList **number_list, const gchar *data, gchar *ms
 	gchar *fon;
 
 	fon = xml_extract_list_value(data, msn_str);
-	if (!EMPTY_STRING(fon) && isdigit(fon[0])) {
+	if (!RM_EMPTY_STRING(fon) && isdigit(fon[0])) {
 		if (!g_slist_find_custom(*number_list, fon, number_compare)) {
 			if (strlen(fon) > 2) {
 				*number_list = g_slist_prepend(*number_list, fon);
@@ -379,7 +379,7 @@ gboolean fritzbox_get_fax_information_05_50(struct profile *profile)
 		}
 		gchar *formated_number;
 
-		formated_number = call_format_number(profile, fax_msn, NUMBER_FORMAT_INTERNATIONAL_PLUS);
+		formated_number = rm_call_format_number(profile, fax_msn, RM_NUMBER_FORMAT_INTERNATIONAL_PLUS);
 
 		scramble = rm_call_scramble_number(fax_msn);
 		g_debug("Fax number: '%s'", scramble);
@@ -461,7 +461,7 @@ gboolean fritzbox_get_fax_information_06_00(struct profile *profile)
 		}
 		gchar *formated_number;
 
-		formated_number = call_format_number(profile, fax_msn, NUMBER_FORMAT_INTERNATIONAL_PLUS);
+		formated_number = rm_call_format_number(profile, fax_msn, RM_NUMBER_FORMAT_INTERNATIONAL_PLUS);
 
 		scramble = rm_call_scramble_number(fax_msn);
 		g_debug("Fax number: '%s'", scramble);
@@ -605,7 +605,7 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 
 		value = xml_extract_list_value(data, fritzbox_phone_ports[index].name);
 		if (value) {
-			if (!EMPTY_STRING(value)) {
+			if (!RM_EMPTY_STRING(value)) {
 				g_debug("Port %d: '%s'", index, value);
 			}
 			g_settings_set_string(profile->settings, router_phone_ports[index].name, value);

@@ -26,15 +26,15 @@
 #include <libnotify/notify.h>
 
 #include <libroutermanager/rmplugins.h>
-#include <libroutermanager/call.h>
-#include <libroutermanager/appobject.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmcall.h>
+#include <libroutermanager/rmobject.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmphone.h>
 #include <libroutermanager/plugins/capi/ringtone.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/rmlookup.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmsettings.h>
 
 #include <roger/main.h>
@@ -116,7 +116,7 @@ gboolean notification_update(gpointer data) {
 
 	connection = contact->priv;
 
-	if (connection->notification && !EMPTY_STRING(contact->name)) {
+	if (connection->notification && !RM_EMPTY_STRING(contact->name)) {
 		gchar *text;
 
 		text = g_markup_printf_escaped(_("Name:\t%s\nNumber:\t%s\nCompany:\t%s\nStreet:\t%s\nCity:\t\t%s%s%s"),
@@ -128,7 +128,7 @@ gboolean notification_update(gpointer data) {
 		                               contact->zip ? " " : "",
 		                               contact->city);
 
-		notify_notification_update(connection->notification, connection->type == CALL_TYPE_INCOMING ? _("Incoming call") : _("Outgoing call"), text, "dialog-information");
+		notify_notification_update(connection->notification, connection->type == RM_CALL_TYPE_INCOMING ? _("Incoming call") : _("Outgoing call"), text, "dialog-information");
 
 		notify_notification_show(connection->notification, NULL);
 		g_free(text);
@@ -166,7 +166,7 @@ static gpointer notification_reverse_lookup_thread(gpointer data)
  * \param connection connection structure
  * \param unused_pointer unused user pointer
  */
-void notifications_connection_notify_cb(AppObject *obj, struct connection *connection, gpointer unused_pointer)
+void notifications_connection_notify_cb(RmObject *obj, struct connection *connection, gpointer unused_pointer)
 {
 	NotifyNotification *notify = NULL;
 	gchar *text = NULL;
@@ -199,7 +199,7 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 	if (!found && connection->local_number[0] != '0') {
 		g_debug("type: %d, number '%s' not found", connection->type, rm_call_scramble_number(connection->local_number));
 
-		gchar *tmp = call_full_number(connection->local_number, FALSE);
+		gchar *tmp = rm_call_full_number(connection->local_number, FALSE);
 
 		/* Match numbers against local number and check if we should show a notification */
 		for (count = 0; count < g_strv_length(numbers); count++) {
@@ -288,7 +288,7 @@ void notifications_connection_notify_cb(AppObject *obj, struct connection *conne
 
 	notify_notification_show(notify, NULL);
 
-	if (EMPTY_STRING(contact->name)) {
+	if (RM_EMPTY_STRING(contact->name)) {
 		g_debug("Starting lookup thread");
 		g_thread_new("notification reverse lookup", notification_reverse_lookup_thread, connection);
 	}
@@ -318,7 +318,7 @@ void impl_activate(PeasActivatable *plugin)
 	notify_init(PACKAGE_NAME);
 
 	/* Connect to "call-notify" signal */
-	notify_plugin->priv->signal_id = g_signal_connect(G_OBJECT(app_object), "connection-notify", G_CALLBACK(notifications_connection_notify_cb), NULL);
+	notify_plugin->priv->signal_id = g_signal_connect(G_OBJECT(rm_object), "connection-notify", G_CALLBACK(notifications_connection_notify_cb), NULL);
 }
 
 /**
@@ -330,8 +330,8 @@ void impl_deactivate(PeasActivatable *plugin)
 	RouterManagerNotificationPlugin *notify_plugin = ROUTERMANAGER_NOTIFICATION_PLUGIN(plugin);
 
 	/* If signal handler is connected: disconnect */
-	if (g_signal_handler_is_connected(G_OBJECT(app_object), notify_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(app_object), notify_plugin->priv->signal_id);
+	if (g_signal_handler_is_connected(G_OBJECT(rm_object), notify_plugin->priv->signal_id)) {
+		g_signal_handler_disconnect(G_OBJECT(rm_object), notify_plugin->priv->signal_id);
 	}
 
 	/* Uninit notify */

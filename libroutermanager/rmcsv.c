@@ -27,25 +27,28 @@
 
 #include <glib.h>
 
-#include <libroutermanager/csv.h>
-#include <libroutermanager/call.h>
+#include <libroutermanager/rmcsv.h>
+#include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/rmfile.h>
 
 #include <libroutermanager/plugins/fritzbox/csv.h>
 
 /** This is our private header, not the one used by the router! */
-#define ROUTERMANAGER_JOURNAL_HEADER "Typ;Datum;Name;Rufnummer;Nebenstelle;Eigene Rufnummer;Dauer"
+#define RM_JOURNAL_HEADER "Typ;Datum;Name;Rufnummer;Nebenstelle;Eigene Rufnummer;Dauer"
 
 /**
- * \brief Parse data as csv
- * \param data raw data to parse
- * \param header expected header line
- * \param csv_parse_line function pointer
- * \param ptr user pointer
- * \return user pointer
+ * rm_csv_parse_data:
+ * @data: raw data to parse
+ * @header expected: header line
+ * @csv_parse_line: a function pointer
+ * @ptr: user pointer
+ *
+ * Parse data as csv.
+ *
+ * Returns: user pointer
  */
-gpointer csv_parse_data(const gchar *data, const gchar *header, csv_parse_line_func csv_parse_line, gpointer ptr)
+gpointer rm_csv_parse_data(const gchar *data, const gchar *header, rm_csv_parse_line_func csv_parse_line, gpointer ptr)
 {
 	gint index = 0;
 	gchar sep[2];
@@ -93,15 +96,18 @@ end:
 }
 
 /**
- * \brief Save journal to local storage
- * \param journal journal list pointer
- * \param filename file name to store journal to
- * \return TRUE on success, otherwise FALSE
+ * rm_csv_save_journal_as:
+ * @journal: journal list pointer
+ * @filename: file name to store journal to
+ *
+ * Save journal to local storage.
+ *
+ * Returns: %TRUE on success, otherwise %FALSE
  */
-gboolean csv_save_journal_as(GSList *journal, gchar *file_name)
+gboolean rm_csv_save_journal_as(GSList *journal, gchar *file_name)
 {
 	GSList *list;
-	struct call *call;
+	RmCall *call;
 	FILE *file;
 
 	/* Open output file */
@@ -113,13 +119,13 @@ gboolean csv_save_journal_as(GSList *journal, gchar *file_name)
 	}
 
 	fprintf(file, "sep=;\n");
-	fprintf(file, ROUTERMANAGER_JOURNAL_HEADER);
+	fprintf(file, RM_JOURNAL_HEADER);
 	fprintf(file, "\n");
 
 	for (list = journal; list; list = list->next) {
 		call = list->data;
 
-		if (call->type != CALL_TYPE_INCOMING && call->type != CALL_TYPE_OUTGOING && call->type != CALL_TYPE_MISSED && call->type != CALL_TYPE_BLOCKED) {
+		if (call->type != RM_CALL_TYPE_INCOMING && call->type != RM_CALL_TYPE_OUTGOING && call->type != RM_CALL_TYPE_MISSED && call->type != RM_CALL_TYPE_BLOCKED) {
 			continue;
 		}
 
@@ -141,11 +147,14 @@ gboolean csv_save_journal_as(GSList *journal, gchar *file_name)
 }
 
 /**
- * \brief Save journal to local storage
- * \param journal journal list pointer
- * \return TRUE on success, otherwise FALSE
+ * rm_csv_save_journal:
+ * @journal: journal list pointer
+ *
+ * Save journal to local storage.
+ *
+ * Returns: %TRUE on success, otherwise %FALSE
  */
-gboolean csv_save_journal(GSList *journal)
+gboolean rm_csv_save_journal(GSList *journal)
 {
 	RmProfile *profile = rm_profile_get_active();
 	gchar *dir;
@@ -158,7 +167,7 @@ gboolean csv_save_journal(GSList *journal)
 
 	file_name = g_build_filename(dir, "journal.csv", NULL);
 
-	ret = csv_save_journal_as(journal, file_name);
+	ret = rm_csv_save_journal_as(journal, file_name);
 
 	g_free(dir);
 	g_free(file_name);
@@ -167,41 +176,51 @@ gboolean csv_save_journal(GSList *journal)
 }
 
 /**
- * \brief Parse routermanager
- * \param ptr pointer to journal
- * \param split splitted line
- * \return pointer to journal with attached call line
+ * rm_csv_parse_rm:
+ * @ptr: pointer to journal
+ * @split: splitted line
+ *
+ * Parse routermanager csv.
+ *
+ * Returns: pointer to journal with attached call line
  */
-static inline gpointer csv_parse_routermanager(gpointer ptr, gchar **split)
+static inline gpointer rm_csv_parse_rm(gpointer ptr, gchar **split)
 {
 	GSList *list = ptr;
 
 	if (g_strv_length(split) == 7) {
-		list = call_add(list, atoi(split[0]), split[1], split[2], split[3], split[4], split[5], split[6], NULL);
+		list = rm_call_add(list, atoi(split[0]), split[1], split[2], split[3], split[4], split[5], split[6], NULL);
 	}
 
 	return list;
 }
 
 /**
- * \brief Parse journal data as csv
- * \param data raw data to parse
- * \return call list
+ * rm_csv_parse_journal_data:
+ * @list: journal list
+ * @data: raw data to parse
+ *
+ * Parse journal data as csv.
+ *
+ * Returns: new journal call list
  */
-GSList *csv_parse_journal_data(GSList *list, const gchar *data)
+GSList *rm_csv_parse_journal_data(GSList *list, const gchar *data)
 {
-	list = csv_parse_data(data, ROUTERMANAGER_JOURNAL_HEADER, csv_parse_routermanager, list);
+	list = rm_csv_parse_data(data, RM_JOURNAL_HEADER, rm_csv_parse_rm, list);
 
 	/* Return call list */
 	return list;
 }
 
 /**
- * \brief Load saved journal
- * \param journal list pointer to fill
- * \return filled journal list
+ * rm_csv_load_journal:
+ * @journal: list pointer to fill
+ *
+ * Load saved journal
+ *
+ * Returns: filled journal list
  */
-GSList *csv_load_journal(GSList *journal)
+GSList *rm_csv_load_journal(GSList *journal)
 {
 	gchar *file_name;
 	gchar *file_data;
@@ -213,7 +232,7 @@ GSList *csv_load_journal(GSList *journal)
 	g_free(file_name);
 
 	if (file_data) {
-		list = csv_parse_journal_data(journal, file_data);
+		list = rm_csv_parse_journal_data(journal, file_data);
 		g_free(file_data);
 	}
 

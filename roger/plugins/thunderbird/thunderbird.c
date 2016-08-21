@@ -27,12 +27,12 @@
 
 #include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/appobject.h>
-#include <libroutermanager/address-book.h>
-#include <libroutermanager/call.h>
+#include <libroutermanager/rmobject.h>
+#include <libroutermanager/rmaddressbook.h>
+#include <libroutermanager/rmcall.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmfile.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmsettings.h>
 
 #include <roger/main.h>
@@ -745,22 +745,22 @@ static void parse_person(GHashTable *map, gpointer pId) {
 
 		if (!strcmp(column, "HomePhone")) {
 			number = g_slice_new(struct phone_number);
-			number->number = call_full_number(value, FALSE);
+			number->number = rm_call_full_number(value, FALSE);
 			number->type = PHONE_NUMBER_HOME;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
 		} else if (!strcmp(column, "WorkPhone")) {
 			number = g_slice_new(struct phone_number);
-			number->number = call_full_number(value, FALSE);
+			number->number = rm_call_full_number(value, FALSE);
 			number->type = PHONE_NUMBER_WORK;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
 		} else if (!strcmp(column, "FaxNumber")) {
 			number = g_slice_new(struct phone_number);
-			number->number = call_full_number(value, FALSE);
+			number->number = rm_call_full_number(value, FALSE);
 			number->type = PHONE_NUMBER_FAX_HOME;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
 		} else if (!strcmp(column, "CellularNumber")) {
 			number = g_slice_new(struct phone_number);
-			number->number = call_full_number(value, FALSE);
+			number->number = rm_call_full_number(value, FALSE);
 			number->type = PHONE_NUMBER_MOBILE;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
 		} else if (!strcmp(column, "DisplayName")) {
@@ -786,7 +786,7 @@ static void parse_person(GHashTable *map, gpointer pId) {
 	}
 
 	/* Do not add entries without name */
-	if (EMPTY_STRING(contact->name)) {
+	if (RM_EMPTY_STRING(contact->name)) {
 		return;
 	}
 
@@ -980,7 +980,7 @@ gchar *thunderbird_get_active_book_name(void)
 	return g_strdup("Thunderbird");
 }
 
-struct address_book thunderbird_book = {
+RmAddressBook thunderbird_book = {
 	"Thunderbird",
 	thunderbird_get_active_book_name,
 	thunderbird_get_contacts,
@@ -999,20 +999,20 @@ void impl_activate(PeasActivatable *plugin)
 
 	thunderbird_read_book();
 
-	//thunderbird_plugin->priv->signal_id = g_signal_connect(G_OBJECT(app_object), "contact-process", G_CALLBACK(thunderbird_contact_process_cb), NULL);
+	//thunderbird_plugin->priv->signal_id = g_signal_connect(G_OBJECT(rm_object), "contact-process", G_CALLBACK(thunderbird_contact_process_cb), NULL);
 
-	routermanager_address_book_register(&thunderbird_book);
+	rm_addressbook_register(&thunderbird_book);
 }
 
 void impl_deactivate(PeasActivatable *plugin)
 {
 	RouterManagerThunderbirdPlugin *thunderbird_plugin = ROUTERMANAGER_THUNDERBIRD_PLUGIN(plugin);
 
-	if (g_signal_handler_is_connected(G_OBJECT(app_object), thunderbird_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(app_object), thunderbird_plugin->priv->signal_id);
+	if (g_signal_handler_is_connected(G_OBJECT(rm_object), thunderbird_plugin->priv->signal_id)) {
+		g_signal_handler_disconnect(G_OBJECT(rm_object), thunderbird_plugin->priv->signal_id);
 	}
 
-	routermanager_address_book_unregister(&thunderbird_book);
+	rm_addressbook_unregister(&thunderbird_book);
 	g_object_unref(thunderbird_settings);
 
 	if (table) {

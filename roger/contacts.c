@@ -22,8 +22,8 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
-#include <libroutermanager/address-book.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmaddressbook.h>
+#include <libroutermanager/rmstring.h>
 #include <libroutermanager/router.h>
 #include <roger/contacts.h>
 #include <roger/main.h>
@@ -65,7 +65,7 @@ static void dial_clicked_cb(GtkWidget *button, gpointer user_data)
 	gchar *number = user_data;
 
 	/* Create full number including prefixes */
-	full_number = call_full_number(number, FALSE);
+	full_number = rm_call_full_number(number, FALSE);
 	g_assert(full_number != NULL);
 
 	/* Find matching contact */
@@ -100,7 +100,7 @@ static void contacts_update_details(struct contact *contact)
 	gtk_label_set_text(GTK_LABEL(contacts->header_bar_title), "");
 
 	/* Check for an active address book */
-	if (address_book_available()) {
+	if (rm_addressbook_available()) {
 		if (contact) {
 			gtk_widget_set_margin(grid, 18, 18, 18, 18);
 
@@ -211,9 +211,9 @@ static void contacts_update_details(struct contact *contact)
 				gtk_grid_attach(GTK_GRID(grid), type, 0, detail_row, 1, 1);
 
 				g_string_append_printf(addr_str, "%s", address->street);
-				if (!EMPTY_STRING(address->zip)) {
+				if (!RM_EMPTY_STRING(address->zip)) {
 					g_string_append_printf(addr_str, "\n%s %s", address->zip, address->city);
-				} else if (!EMPTY_STRING(address->city)) {
+				} else if (!RM_EMPTY_STRING(address->city)) {
 					g_string_append_printf(addr_str, "%s", address->city);
 				}
 
@@ -309,7 +309,7 @@ static struct contact *contacts_get_selected_contact(void)
 static void contacts_update_list(void)
 {
 	GSList *list;
-	GSList *contact_list = rm_address_book_get_contacts();
+	GSList *contact_list = rm_addressbook_get_contacts();
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(contacts->search_entry));
 	gint pos = 0;
 	struct contact *selected_contact;
@@ -326,7 +326,7 @@ static void contacts_update_list(void)
 		GtkWidget *txt;
 
 		/* Check whether we have a filter set and it matches */
-		if (text && (!g_strcasestr(contact->name, text) && !g_strcasestr(contact->company, text))) {
+		if (text && (!rm_strcasestr(contact->name, text) && !rm_strcasestr(contact->company, text))) {
 			continue;
 		}
 
@@ -834,12 +834,12 @@ void contacts_save_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 	if (ok) {
 		if (contact) {
 			rm_contact_copy(contacts->tmp_contact, contact);
-			address_book_save_contact(contact);
+			rm_addressbook_save_contact(contact);
 		} else {
-			address_book_save_contact(contacts->tmp_contact);
+			rm_addressbook_save_contact(contacts->tmp_contact);
 		}
 
-		address_book_reload_contacts();
+		rm_addressbook_reload_contacts();
 	}
 
 	if (contacts->tmp_contact) {
@@ -866,10 +866,10 @@ void contact_editor(struct contact *contact)
 
 		contacts->tmp_contact->numbers = g_slist_append(contacts->tmp_contact->numbers, phone_number);
 
-		if (EMPTY_STRING(contacts->tmp_contact->name) && !EMPTY_STRING(contacts->new_contact->name)) {
+		if (RM_EMPTY_STRING(contacts->tmp_contact->name) && !RM_EMPTY_STRING(contacts->new_contact->name)) {
 			contacts->tmp_contact->name = g_strdup(contacts->new_contact->name);
 		}
-		if (!contacts->tmp_contact->addresses && !EMPTY_STRING(contacts->new_contact->street)) {
+		if (!contacts->tmp_contact->addresses && !RM_EMPTY_STRING(contacts->new_contact->street)) {
 			struct contact_address *address = g_malloc(sizeof(struct contact_address));
 
 			address->type = 0;
@@ -955,7 +955,7 @@ void remove_button_clicked_cb(GtkWidget *button, gpointer user_data)
 
 	if (result == GTK_RESPONSE_OK) {
 		/* Remove selected contact */
-		address_book_remove_contact(contact);
+		rm_addressbook_remove_contact(contact);
 
 		/* Update contact list */
 		contacts_update_list();
@@ -978,7 +978,7 @@ gboolean contacts_window_delete_event_cb(GtkWidget *widget, GdkEvent event, gpoi
 	return FALSE;
 }
 
-static void contacts_contacts_changed_cb(AppObject *object, gpointer user_data)
+static void contacts_contacts_changed_cb(RmObject *object, gpointer user_data)
 {
 	/* Update contact list */
 	contacts_update_list();
@@ -1040,7 +1040,7 @@ void app_contacts(struct contact *contact)
 	contacts->remove_button = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_remove_button"));
 	contacts->view_port = GTK_WIDGET(gtk_builder_get_object(builder, "view_port"));
 	contacts_header_bar_left = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_header_bar_left"));
-	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(contacts_header_bar_left), address_book_get_name());
+	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(contacts_header_bar_left), rm_addressbook_get_name());
 
 	contacts->header_bar_title = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_header_bar_label"));
 	placeholder_image = GTK_WIDGET(gtk_builder_get_object(builder, "placeholder_image"));
@@ -1071,7 +1071,7 @@ void app_contacts(struct contact *contact)
 	}
 
 	/* Only set buttons to sensitive if we can write to the selected book */
-	if (!address_book_can_save()) {
+	if (!rm_addressbook_can_save()) {
 		gtk_widget_set_sensitive(contacts->add_button, FALSE);
 		gtk_widget_set_sensitive(contacts->remove_button, FALSE);
 		gtk_widget_set_sensitive(contacts->edit_button, FALSE);
@@ -1082,7 +1082,7 @@ void app_contacts(struct contact *contact)
 
 	gtk_builder_connect_signals(builder, NULL);
 
-	g_signal_connect(app_object, "contacts-changed", G_CALLBACK(contacts_contacts_changed_cb), NULL);
+	g_signal_connect(rm_object, "contacts-changed", G_CALLBACK(contacts_contacts_changed_cb), NULL);
 
 	/* Show window */
 	gtk_widget_show_all(contacts->window);

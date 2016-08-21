@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 
 <lookup>
-	<country code="31">
+	<!-- <country code="31">
 		<lookup>
 			<service>gebeld.nl</service>
 			<prefix>0</prefix>
@@ -34,7 +34,7 @@
 			<pattern>\s+&lt;td\sclass=&quot;nowrap&quot;&gt;(?P&lt;city&gt;.*)&lt;/td&gt;</pattern>
 			<pattern>\s+&lt;td\sclass=&quot;nowrap&quot;&gt;</pattern>
 		</lookup>
-	</country>
+	</country>-->
 	<country code="49">
 		<lookup>
 			<service>11880.com</service>

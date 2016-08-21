@@ -25,13 +25,13 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
-#include <libroutermanager/appobject.h>
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmobject.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmfile.h>
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/rmsettings.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 
 #include <roger/settings.h>
 #include <roger/uitools.h>
@@ -58,19 +58,19 @@ static GSettings *webjournal_settings = NULL;
 gchar *get_call_type_string(gint type)
 {
 	switch (type) {
-	case CALL_TYPE_INCOMING:
+	case RM_CALL_TYPE_INCOMING:
 		return "in";
-	case CALL_TYPE_OUTGOING:
+	case RM_CALL_TYPE_OUTGOING:
 		return "out";
-	case CALL_TYPE_MISSED:
+	case RM_CALL_TYPE_MISSED:
 		return "missed";
-	case CALL_TYPE_FAX:
-	case CALL_TYPE_FAX_REPORT:
+	case RM_CALL_TYPE_FAX:
+	case RM_CALL_TYPE_FAX_REPORT:
 		return "fax";
-	case CALL_TYPE_VOICE:
-	case CALL_TYPE_RECORD:
+	case RM_CALL_TYPE_VOICE:
+	case RM_CALL_TYPE_RECORD:
 		return "voice";
-	case CALL_TYPE_BLOCKED:
+	case RM_CALL_TYPE_BLOCKED:
 		return "blocked";
 	}
 
@@ -90,7 +90,7 @@ static gchar *convert_date_time(gchar *date_time)
 	return g_strdup_printf("%4.4d%2.2d%2.2d%2.2d%2.2d00", 2000 + year, month, day, hour, min);
 }
 
-void webjournal_journal_loaded_cb(AppObject *obj, GSList *journal, gpointer user_data)
+void webjournal_journal_loaded_cb(RmObject *obj, GSList *journal, gpointer user_data)
 {
 	RouterManagerWebJournalPlugin *webjournal_plugin = user_data;
 	gchar *file;
@@ -104,7 +104,7 @@ void webjournal_journal_loaded_cb(AppObject *obj, GSList *journal, gpointer user
 	string = g_string_new(webjournal_plugin->priv->header);
 
 	for (list = journal; list != NULL; list = list->next) {
-		struct call *call = list->data;
+		RmCall *call = list->data;
 		GRegex *type = g_regex_new("%TYPE%", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
 		GRegex *date_time = g_regex_new("%DATETIME%", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
 		GRegex *name = g_regex_new("%NAME%", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
@@ -215,12 +215,12 @@ static void impl_activate(PeasActivatable *plugin)
 	webjournal_settings = rm_settings_plugin_new("org.tabos.roger.plugins.webjournal", "webjournal");
 
 	file = g_settings_get_string(webjournal_settings, "filename");
-	if (EMPTY_STRING(file)) {
+	if (RM_EMPTY_STRING(file)) {
 		file = g_build_filename(g_get_user_data_dir(), "roger", "journal.html", NULL);
 		g_settings_set_string(webjournal_settings, "filename", file);
 	}
 
-	webjournal_plugin->priv->signal_id = g_signal_connect_after(G_OBJECT(app_object), "journal-loaded", G_CALLBACK(webjournal_journal_loaded_cb), webjournal_plugin);
+	webjournal_plugin->priv->signal_id = g_signal_connect_after(G_OBJECT(rm_object), "journal-loaded", G_CALLBACK(webjournal_journal_loaded_cb), webjournal_plugin);
 
 }
 
@@ -233,8 +233,8 @@ static void impl_deactivate(PeasActivatable *plugin)
 	RouterManagerWebJournalPlugin *webjournal_plugin = ROUTERMANAGER_WEBJOURNAL_PLUGIN(plugin);
 
 	/* If signal handler is connected: disconnect */
-	if (g_signal_handler_is_connected(G_OBJECT(app_object), webjournal_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(app_object), webjournal_plugin->priv->signal_id);
+	if (g_signal_handler_is_connected(G_OBJECT(rm_object), webjournal_plugin->priv->signal_id)) {
+		g_signal_handler_disconnect(G_OBJECT(rm_object), webjournal_plugin->priv->signal_id);
 	}
 }
 

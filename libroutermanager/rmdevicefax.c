@@ -23,7 +23,7 @@
 #include <glib.h>
 
 #include <libroutermanager/rmdevicefax.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 
 /** Internal fax list */
 static GSList *rm_fax_plugins = NULL;

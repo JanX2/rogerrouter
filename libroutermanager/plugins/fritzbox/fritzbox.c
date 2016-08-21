@@ -23,8 +23,8 @@
 #include <gio/gio.h>
 
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/csv.h>
+#include <libroutermanager/rmobjectemit.h>
+#include <libroutermanager/rmcsv.h>
 #include <libroutermanager/rmlog.h>
 #include <libroutermanager/rmnetwork.h>
 #include <libroutermanager/router.h>

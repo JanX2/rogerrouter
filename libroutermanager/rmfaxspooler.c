@@ -28,7 +28,7 @@
 #include "config.h"
 #endif
 
-#include <libroutermanager/appobject-emit.h>
+#include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/rmfaxprinter.h>
 
@@ -146,7 +146,7 @@ static void rm_faxspooler_changed_cb(GFileMonitor *monitor, GFile *file, GFile *
 	}
 
 	g_debug("%s(): Print job received on spooler", __FUNCTION__);
-	emit_fax_process(file_name);
+	rm_object_emit_fax_process(file_name);
 
 end:
 	g_free(file_name);

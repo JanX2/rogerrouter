@@ -29,10 +29,10 @@
 #include <libroutermanager/rmfile.h>
 #include <libroutermanager/rmlog.h>
 #include <libroutermanager/rmnetwork.h>
-#include <libroutermanager/csv.h>
+#include <libroutermanager/rmcsv.h>
 #include <libroutermanager/ftp.h>
-#include <libroutermanager/call.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmcall.h>
+#include <libroutermanager/rmstring.h>
 
 #include "fritzbox.h"
 #include "firmware-common.h"
@@ -166,7 +166,7 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 	g_settings_set_string(profile->settings, "fax-number", fax_msn);
 	json_reader_end_member(reader);
 
-	gchar *formated_number = call_format_number(profile, fax_msn, NUMBER_FORMAT_INTERNATIONAL_PLUS);
+	gchar *formated_number = rm_call_format_number(profile, fax_msn, RM_NUMBER_FORMAT_INTERNATIONAL_PLUS);
 	g_settings_set_string(profile->settings, "fax-ident", formated_number);
 	g_free(formated_number);
 
@@ -254,7 +254,7 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 		tmp = json_reader_get_string_value(reader);
 		json_reader_end_member(reader);
 
-		if (!EMPTY_STRING(tmp)) {
+		if (!RM_EMPTY_STRING(tmp)) {
 			scramble = rm_call_scramble_number(tmp);
 			g_debug(" MSN: %s", scramble);
 			g_free(scramble);

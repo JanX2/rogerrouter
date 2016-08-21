@@ -28,13 +28,13 @@
 
 #include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/appobject.h>
-#include <libroutermanager/address-book.h>
-#include <libroutermanager/call.h>
+#include <libroutermanager/rmobject.h>
+#include <libroutermanager/rmaddressbook.h>
+#include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmcontact.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmfile.h>
-#include <libroutermanager/gstring.h>
+#include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmsettings.h>
 
 #define ROUTERMANAGER_TYPE_OSXAB_PLUGIN        (routermanager_osxab_plugin_get_type ())
@@ -331,7 +331,7 @@ gchar *osxab_get_active_book_name(void)
 	return g_strdup("osxab");
 }
 
-struct address_book osxab_book = {
+RmAddressBook osxab_book = {
 	"OS X AB",
 	osxab_get_active_book_name,
 	osxab_get_contacts,
@@ -344,16 +344,16 @@ void impl_activate(PeasActivatable *plugin)
 {
 	osxab_read_book();
 
-	routermanager_address_book_register(&osxab_book);
+	rm_addressbook_register(&osxab_book);
 }
 
 void impl_deactivate(PeasActivatable *plugin)
 {
 	RouterManagerOSXAbPlugin *osxab_plugin = ROUTERMANAGER_OSXAB_PLUGIN(plugin);
 
-	routermanager_address_book_unregister(&osxab_book);
+	rm_addressbook_unregister(&osxab_book);
 
-	if (g_signal_handler_is_connected(G_OBJECT(app_object), osxab_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(app_object), osxab_plugin->priv->signal_id);
+	if (g_signal_handler_is_connected(G_OBJECT(rm_object), osxab_plugin->priv->signal_id)) {
+		g_signal_handler_disconnect(G_OBJECT(rm_object), osxab_plugin->priv->signal_id);
 	}
 }

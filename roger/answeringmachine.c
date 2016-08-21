@@ -21,7 +21,7 @@
 
 #include <gtk/gtk.h>
 
-#include <libroutermanager/voxplay.h>
+#include <libroutermanager/rmvox.h>
 #include <libroutermanager/router.h>
 
 #include <roger/journal.h>
@@ -46,11 +46,11 @@ static gboolean vox_update_ui(gpointer data)
 {
 	gint fraction;
 
-	fraction = vox_get_fraction(playback_data->vox_data);
+	fraction = rm_vox_get_fraction(playback_data->vox_data);
 
 	if (playback_data->fraction != fraction) {
 		gchar *tmp;
-		gfloat seconds = vox_get_seconds(playback_data->vox_data);
+		gfloat seconds = rm_vox_get_seconds(playback_data->vox_data);
 
 		playback_data->fraction = fraction;
 
@@ -73,7 +73,7 @@ void vox_media_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	if (playback_data->vox_data && playback_data->fraction != 100) {
 		GtkWidget *media_image;
 
-		if (vox_playpause(playback_data->vox_data)) {
+		if (rm_vox_playpause(playback_data->vox_data)) {
 			media_image = gtk_image_new_from_icon_name("media-playback-pause-symbolic", GTK_ICON_SIZE_BUTTON);
 		} else {
 			media_image = gtk_image_new_from_icon_name("media-playback-start-symbolic", GTK_ICON_SIZE_BUTTON);
@@ -82,7 +82,7 @@ void vox_media_button_clicked_cb(GtkWidget *button, gpointer user_data)
 		gtk_button_set_image(GTK_BUTTON(playback_data->media_button), media_image);
 	} else {
 		gtk_range_set_value(GTK_RANGE(playback_data->scale), 0.0f);
-		vox_play(playback_data->vox_data);
+		rm_vox_play(playback_data->vox_data);
 
 		GtkWidget *media_image = gtk_image_new_from_icon_name("media-playback-pause-symbolic", GTK_ICON_SIZE_BUTTON);
 		gtk_button_set_image(GTK_BUTTON(playback_data->media_button), media_image);
@@ -94,7 +94,7 @@ gboolean vox_scale_change_value_cb(GtkRange *range, GtkScrollType scroll, gdoubl
 	value = ABS(value);
 
 	if (playback_data->vox_data && playback_data->fraction != 100) {
-		vox_seek(playback_data->vox_data, value);
+		rm_vox_seek(playback_data->vox_data, value);
 	}
 
 	return FALSE;
@@ -116,7 +116,7 @@ void answeringmachine_play(const gchar *name)
 		return;
 	}
 
-	vox = vox_init(data, len, &error);
+	vox = rm_vox_init(data, len, &error);
 	if (!vox) {
 		g_debug("Could not init vox!");
 		g_free(data);
@@ -162,7 +162,7 @@ void answeringmachine_play(const gchar *name)
 	playback_data->scale = GTK_WIDGET(gtk_builder_get_object(builder, "progress"));
 	update_id = g_timeout_add(250, vox_update_ui, playback_data);
 
-	vox_play(playback_data->vox_data);
+	rm_vox_play(playback_data->vox_data);
 
 	gtk_builder_connect_signals(builder, NULL);
 
@@ -174,7 +174,7 @@ void answeringmachine_play(const gchar *name)
 	g_source_remove(update_id);
 
 	if (playback_data->vox_data) {
-		vox_stop(playback_data->vox_data);
+		rm_vox_stop(playback_data->vox_data);
 	}
 
 	gtk_widget_destroy(window);
