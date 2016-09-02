@@ -25,7 +25,7 @@
 
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmpassword.h>
-#include <libroutermanager/ftp.h>
+#include <libroutermanager/rmftp.h>
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmobjectemit.h>
@@ -405,19 +405,19 @@ static gboolean ftp_password_post(struct assistant *assistant)
 	const gchar *ftp_user = gtk_entry_get_text(GTK_ENTRY(assistant->ftp_user));
 	const gchar *ftp_password = gtk_entry_get_text(GTK_ENTRY(assistant->ftp_password));
 	gchar *message;
-	struct ftp *ftp;
+	RmFtp *ftp;
 
 	/* Test ftp login */
-	ftp = ftp_init(host);
+	ftp = rm_ftp_init(host);
 	if (ftp) {
-		if (!ftp_login(ftp, ftp_user, ftp_password)) {
+		if (!rm_ftp_login(ftp, ftp_user, ftp_password)) {
 			/* Error: Could not login to ftp */
 			message = g_strdup(_("Please check your ftp user/password."));
 			rm_object_emit_message(_("Login failed"), message);
-			ftp_shutdown(ftp);
+			rm_ftp_shutdown(ftp);
 			return FALSE;
 		}
-		ftp_shutdown(ftp);
+		rm_ftp_shutdown(ftp);
 
 		/* Store FTP credentials */
 		g_settings_set_string(assistant->profile->settings, "ftp-user", ftp_user);

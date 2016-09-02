@@ -2,11 +2,11 @@ callmonitor_sources = []
 callmonitor_sources += 'callmonitor.c'
 
 callmonitor_dep = []
-callmonitor_dep += routermanager_dep
+callmonitor_dep += rm_dep
 
 libcallmonitor = shared_library('callmonitor',
                         callmonitor_sources,
-                        include_directories : routermanager_inc,
+                        include_directories : rm_inc,
                         dependencies : callmonitor_dep,
                         link_with : libroutermanager,
                         install : true,

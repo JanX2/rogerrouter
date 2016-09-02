@@ -29,7 +29,8 @@
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmnetmonitor.h>
-#include <libroutermanager/ftp.h>
+#include <libroutermanager/rmftp.h>
+#include <libroutermanager/rmfilter.h>
 #include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmpassword.h>
 #include <libroutermanager/rmaction.h>
@@ -126,19 +127,19 @@ void login_check_button_clicked_cb(GtkButton *button, gpointer user_data)
 void ftp_login_check_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
 	GtkWidget *dialog = NULL;
-	struct ftp *client;
+	RmFtp *client;
 	struct profile *profile = rm_profile_get_active();
 
-	client = ftp_init(router_get_host(profile));
+	client = rm_ftp_init(router_get_host(profile));
 	if (!client) {
 		dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("Could not connect to FTP. Missing USB storage?"));
 	} else {
-		if (ftp_login(client, router_get_ftp_user(profile), router_get_ftp_password(profile)) == TRUE) {
+		if (rm_ftp_login(client, router_get_ftp_user(profile), router_get_ftp_password(profile)) == TRUE) {
 			dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE, _("FTP password is valid"));
 		} else {
 			rm_object_emit_message(_("FTP password is invalid"), _("Please check your FTP credentials"));
 		}
-		ftp_shutdown(client);
+		rm_ftp_shutdown(client);
 	}
 
 	if (dialog) {
@@ -719,7 +720,7 @@ void filter_add_button_clicked_cb(GtkWidget *widget, gpointer data)
 	rm_filter_save();
 }
 
-static struct rm_action *selected_action = NULL;
+static RmAction *selected_action = NULL;
 static gchar **selected_numbers = NULL;
 
 
@@ -740,11 +741,15 @@ void action_refresh_list(GtkListStore *list_store)
 	GtkTreeIter iter;
 
 	while (list) {
-		struct rm_action *action = list->data;
+		RmAction *action = list->data;
+		gchar *name = rm_action_get_name(action);
 
 		gtk_list_store_insert_with_values(list_store, &iter, -1,
-			0, action->name,
+			0, name,
 			1, action, -1);
+
+		g_free(name);
+
 		list = list->next;
 	}
 
@@ -767,7 +772,7 @@ void settings_refresh_list(GtkListStore *list_store)
 	gint count;
 	gint index;
 
-	selected_numbers = selected_action ? g_settings_get_strv(selected_action->settings, "numbers") : NULL;
+	selected_numbers = selected_action ? rm_action_get_numbers(selected_action) : NULL;
 
 	for (index = 0; index < g_strv_length(numbers); index++) {
 		gtk_list_store_append(list_store, &iter);
@@ -781,6 +786,10 @@ void settings_refresh_list(GtkListStore *list_store)
 				}
 			}
 		}
+	}
+
+	if (selected_numbers) {
+		g_strfreev(selected_numbers);
 	}
 }
 
@@ -830,7 +839,7 @@ void action_apply_button_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 }
 
-gboolean action_edit(struct rm_action *action)
+gboolean action_edit(RmAction *action)
 {
 
 #if 1
@@ -860,8 +869,14 @@ gboolean action_edit(struct rm_action *action)
 	g_object_unref(G_OBJECT(builder));
 
 	if (action) {
-		gtk_entry_set_text(GTK_ENTRY(name_entry), action->name);
-		gtk_entry_set_text(GTK_ENTRY(exec_entry), action->exec);
+		gchar *name = rm_action_get_name(action);
+		gchar *exec = rm_action_get_exec(action);
+
+		gtk_entry_set_text(GTK_ENTRY(name_entry), name);
+		gtk_entry_set_text(GTK_ENTRY(exec_entry), exec);
+
+		g_free(exec);
+		g_free(name);
 	}
 	settings_refresh_list(list_store);
 
@@ -869,13 +884,14 @@ gboolean action_edit(struct rm_action *action)
 
 	if (result == 1) {
 		if (!action) {
-			action = rm_action_add(rm_profile_get_active(), gtk_entry_get_text(GTK_ENTRY(name_entry)));
+			action = rm_action_new(rm_profile_get_active());
+			rm_action_set_name(action, gtk_entry_get_text(GTK_ENTRY(name_entry)));
 		}
 
 		rm_action_set_name(action, gtk_entry_get_text(GTK_ENTRY(name_entry)));
 		rm_action_set_description(action, "");
 		rm_action_set_exec(action, gtk_entry_get_text(GTK_ENTRY(exec_entry)));
-		rm_action_set_numbers(action, selected_numbers);
+		rm_action_set_numbers(action, (const gchar **)selected_numbers);
 		selected_action = action;
 
 		changed = TRUE;
@@ -1032,8 +1048,9 @@ void actions_remove_button_clicked_cb(GtkWidget *widget, gpointer data)
 	GtkTreeModel *model;
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(data));
 	GtkListStore *list_store;
-	struct rm_action *action = NULL;
+	RmAction *action = NULL;
 	GValue ptr = { 0 };
+	gchar *name;
 
 	if (!gtk_tree_selection_get_selected(selection, &model, &selected_iter)) {
 		return;
@@ -1042,12 +1059,14 @@ void actions_remove_button_clicked_cb(GtkWidget *widget, gpointer data)
 	gtk_tree_model_get_value(model, &selected_iter, 1, &ptr);
 
 	action = g_value_get_pointer(&ptr);
-	GtkWidget *remove_dialog = gtk_message_dialog_new(GTK_WINDOW(settings->window), GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Do you want to delete the action '%s'?"), action->name);
+	name = rm_action_get_name(action);
+	GtkWidget *remove_dialog = gtk_message_dialog_new(GTK_WINDOW(settings->window), GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, _("Do you want to delete the action '%s'?"), name);
 	gtk_window_set_title(GTK_WINDOW(remove_dialog), _("Delete action"));
 	gtk_window_set_position(GTK_WINDOW(remove_dialog), GTK_WIN_POS_CENTER_ON_PARENT);
 
 	gint result = gtk_dialog_run(GTK_DIALOG(remove_dialog));
 	gtk_widget_destroy(remove_dialog);
+	g_free(name);
 
 	if (result != GTK_RESPONSE_OK) {
 		g_value_unset(&ptr);
@@ -1073,7 +1092,7 @@ void actions_edit_button_clicked_cb(GtkWidget *widget, gpointer data)
 	GtkTreeModel *model;
 	GtkListStore *list_store;
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(data));
-	struct rm_action *action = NULL;
+	RmAction *action = NULL;
 	GValue ptr = { 0 };
 
 	if (!gtk_tree_selection_get_selected(selection, &model, &selected_iter)) {
@@ -1098,7 +1117,7 @@ gboolean actions_treeview_cursor_changed_cb(GtkTreeView *view, gpointer user_dat
 	GtkTreeSelection *selection;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
-	struct rm_action *action;
+	RmAction *action;
 
 	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(view));
 	if (!selection) {
@@ -1112,7 +1131,7 @@ gboolean actions_treeview_cursor_changed_cb(GtkTreeView *view, gpointer user_dat
 		selected_action = action;
 		if (action) {
 			/* Store flags as otherwise we would mix up the settings */
-			flags = selected_action->flags;
+			flags = rm_action_get_flags(selected_action);
 
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->incoming_call_rings_checkbutton), flags & RM_ACTION_INCOMING_RING);
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(settings->incoming_call_begins_checkbutton), flags & RM_ACTION_INCOMING_BEGIN);
@@ -1178,8 +1197,7 @@ void action_checkbutton_toggled_cb(GtkToggleButton *button, gpointer user_data)
 		flags |= RM_ACTION_OUTGOING_END;
 	}
 
-	selected_action->flags = flags;
-	g_settings_set_int(selected_action->settings, "flags", flags);
+	rm_action_set_flags(selected_action, flags);
 }
 
 /**

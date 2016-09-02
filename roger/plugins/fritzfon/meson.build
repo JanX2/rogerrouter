@@ -2,13 +2,13 @@ fritzfon_sources = []
 fritzfon_sources += 'fritzfon.c'
 
 fritzfon_dep = []
-fritzfon_dep += routermanager_dep
+fritzfon_dep += rm_dep
 fritzfon_dep += roger_dep
 fritzfon_dep += dependency('libebook-1.2')
 
 libfritzfon = shared_library('fritzfon',
                         fritzfon_sources,
-                        include_directories : routermanager_inc,
+                        include_directories : rm_inc,
                         dependencies : fritzfon_dep,
                         link_with : libroutermanager,
                         install : true,

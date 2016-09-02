@@ -17,6 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include <libroutermanager/rmconfig.h>
+
+#ifdef HAVE_SSDP
+
 #include <libgupnp/gupnp.h>
 #include <libgupnp/gupnp-device-info.h>
 
@@ -114,7 +118,33 @@ static void rm_on_context_available(GUPnPContextManager *manager, GUPnPContext *
  */
 void rm_ssdp_init(void)
 {
+	g_debug("%s(): Initialize upnp context manager", __FUNCTION__);
 	rm_context_manager = gupnp_context_manager_new(NULL, 1900);
 
 	g_signal_connect(rm_context_manager, "context-available", G_CALLBACK(rm_on_context_available), NULL);
 }
+
+#else
+
+/**
+ * rm_ssdp_get_routers:
+ *
+ * Dummy function - SSDP not compiled in
+ *
+ * Returns: NULL
+ */
+GList *rm_ssdp_get_routers(void)
+{
+	return NULL;
+}
+
+/**
+ * rm_ssdp_init:
+ *
+ * Dummy function - SSDP not compiled in
+ */
+void rm_ssdp_init(void)
+{
+}
+
+#endif

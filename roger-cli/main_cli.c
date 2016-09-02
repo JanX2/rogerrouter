@@ -67,7 +67,7 @@ static gboolean success = FALSE;
  * \param journal journal call list
  * \param unused unused user pointer
  */
-void journal_loaded_cb(AppObject *obj, GSList *journal, gpointer unused)
+void journal_loaded_cb(RmObject *obj, GSList *journal, gpointer unused)
 {
 	GSList *list;
 
@@ -158,34 +158,34 @@ gchar *convert_fax_to_tiff(gchar *file_name)
 
 /**
  * \brief CAPI connection established callback - just print message
- * \param object appobject
+ * \param object RmObject
  * \param connection capi connection pointer
  * \param user_data user data pointer (NULL)
  */
-static void capi_connection_established_cb(AppObject *object, struct capi_connection *connection, gpointer user_data)
+static void capi_connection_established_cb(RmObject *object, struct capi_connection *connection, gpointer user_data)
 {
 	g_message(_("Connected"));
 }
 
 /**
  * \brief CAPI connection terminated callback - just print message
- * \param object appobject
+ * \param object RmObject
  * \param connection capi connection pointer
  * \param user_data user data pointer (NULL)
  */
-static void capi_connection_terminated_cb(AppObject *object, struct capi_connection *connection, gpointer user_data)
+static void capi_connection_terminated_cb(RmObject *object, struct capi_connection *connection, gpointer user_data)
 {
 	g_message(_("Disconnected"));
 }
 
 /**
  * \brief FAX connection status - show status message
- * \param object appobject
+ * \param object RmObject
  * \param status fax connection status
  * \param connection capi connection pointer
  * \param user_data user data pointer (NULL)
  */
-void fax_connection_status_cb(AppObject *object, gint status, struct capi_connection *connection, gpointer user_data)
+void fax_connection_status_cb(RmObject *object, gint status, struct capi_connection *connection, gpointer user_data)
 {
 /*	struct fax_status *fax_status;
 	gchar buffer[256];

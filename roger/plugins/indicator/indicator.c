@@ -340,7 +340,7 @@ void impl_activate(PeasActivatable *plugin)
 
 	journal_set_hide_on_quit(TRUE);
 
-	indicator_settings = rm_settings_plugin_new("org.tabos.roger.plugins.indicator", "indicator");
+	indicator_settings = rm_settings_new("org.tabos.roger.plugins.indicator");
 
 	/* Create Application Indicator */
 	gchar *iconname = g_strconcat("roger-", g_settings_get_string(indicator_settings, "default-icon"), NULL);
@@ -382,7 +382,7 @@ void impl_deactivate(PeasActivatable *plugin)
 	}
 
 	app_indicator_set_status(indicator, APP_INDICATOR_STATUS_PASSIVE);
-	g_object_unref(indicator);
+	g_clear_object(&indicator);
 
 	indicator = NULL;
 }

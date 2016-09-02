@@ -20,22 +20,21 @@
 #include <string.h>
 
 #include <glib.h>
+#include <uuid.h>
+#include <dconf.h>
 
 #include <libroutermanager/rmaction.h>
-#include <libroutermanager/rmconnection.h>
-#include <libroutermanager/rmobject.h>
-#include <libroutermanager/rmobjectemit.h>
-#include <libroutermanager/rmmain.h>
 #include <libroutermanager/rmstring.h>
+#include <libroutermanager/rmobject.h>
 #include <libroutermanager/rmsettings.h>
 
 /**
  * SECTION:rmaction
  * @title: RmAction
- * @short_description: Action handling functions
+ * @short_description: User action (execute an application for a set of phone numbers)
  * @stability: Stable
  *
- * Actions are user defined reactions to specific call event types. E.g. stop music on incoming calls.
+ * Actions are user defined reactions to specific call event types, e.g. stop music on incoming calls.
  */
 
 /**
@@ -120,34 +119,61 @@ static void rm_action_connection_notify_cb(RmObject *object, RmConnection *conne
 
 	/* Loop through all actions within the profile */
 	for (list = profile->action_list; list != NULL; list = list->next) {
-		struct rm_action *action = list->data;
+		RmAction *action = list->data;
+		gchar **numbers = rm_action_get_numbers(action);
+		gchar flags = rm_action_get_flags(action);
 
 		/* If connection number is not within the action or no flags are set, continue with next entry */
-		if (!action->flags || !rm_strv_contains(action->numbers, connection->local_number)) {
+		if (!rm_action_get_flags(action) || !rm_strv_contains((const gchar * const *)numbers, connection->local_number)) {
+			g_strfreev(numbers);
 			continue;
 		}
+		g_strfreev(numbers);
 
 		if (/* Incoming connection */
-		    ((connection->type == RM_CONNECTION_TYPE_INCOMING) && (action->flags & RM_ACTION_INCOMING_RING)) ||
+		    ((connection->type == RM_CONNECTION_TYPE_INCOMING) && (flags & RM_ACTION_INCOMING_RING)) ||
 		    /* Outgoing connection */
-		    ((connection->type == RM_CONNECTION_TYPE_OUTGOING) && (action->flags & RM_ACTION_OUTGOING_DIAL)) ||
+		    ((connection->type == RM_CONNECTION_TYPE_OUTGOING) && (flags & RM_ACTION_OUTGOING_DIAL)) ||
 		    /* Incoming connection missed */
-		    ((connection->type == RM_CONNECTION_TYPE_MISSED) && (action->flags & RM_ACTION_INCOMING_MISSED)) ||
+		    ((connection->type == RM_CONNECTION_TYPE_MISSED) && (flags & RM_ACTION_INCOMING_MISSED)) ||
 		    /* Incoming connection established */
-		    ((connection->type == (RM_CONNECTION_TYPE_INCOMING | RM_CONNECTION_TYPE_CONNECT)) && (action->flags & RM_ACTION_INCOMING_BEGIN)) ||
+		    ((connection->type == (RM_CONNECTION_TYPE_INCOMING | RM_CONNECTION_TYPE_CONNECT)) && (flags & RM_ACTION_INCOMING_BEGIN)) ||
 		    /* Outgoing connection established */
-		    ((connection->type == (RM_CONNECTION_TYPE_OUTGOING | RM_CONNECTION_TYPE_CONNECT)) && (action->flags & RM_ACTION_OUTGOING_BEGIN)) ||
+		    ((connection->type == (RM_CONNECTION_TYPE_OUTGOING | RM_CONNECTION_TYPE_CONNECT)) && (flags & RM_ACTION_OUTGOING_BEGIN)) ||
 		    /* Incoming connection terminated */
-		    ((connection->type == (RM_CONNECTION_TYPE_INCOMING | RM_CONNECTION_TYPE_CONNECT | RM_CONNECTION_TYPE_DISCONNECT)) && (action->flags & RM_ACTION_INCOMING_END)) ||
+		    ((connection->type == (RM_CONNECTION_TYPE_INCOMING | RM_CONNECTION_TYPE_CONNECT | RM_CONNECTION_TYPE_DISCONNECT)) && (flags & RM_ACTION_INCOMING_END)) ||
 		    /* Outgoing connection terminated */
-		    ((connection->type == (RM_CONNECTION_TYPE_OUTGOING | RM_CONNECTION_TYPE_CONNECT | RM_CONNECTION_TYPE_DISCONNECT)) && (action->flags & RM_ACTION_OUTGOING_END))) {
-			gchar *tmp = rm_action_regex(action->exec, connection);
+		    ((connection->type == (RM_CONNECTION_TYPE_OUTGOING | RM_CONNECTION_TYPE_CONNECT | RM_CONNECTION_TYPE_DISCONNECT)) && (flags & RM_ACTION_OUTGOING_END))) {
+			gchar *tmp = rm_action_regex(rm_action_get_exec(action), connection);
 
-			g_debug("Action requested: '%s', executing '%s'", action->exec, tmp);
+			g_debug("%s(): Action requested = '%s', executing = '%s'", __FUNCTION__, rm_action_get_exec(action), tmp);
 			g_spawn_command_line_async(tmp, NULL);
 			g_free(tmp);
 		}
 	}
+}
+
+/**
+ * rm_action_set_path:
+ * @action: a #RmAction
+ * @path: new path of @action
+ *
+ * Set action path.
+ */
+static void rm_action_set_path(RmAction *action, const gchar *path)
+{
+	g_object_set_data(G_OBJECT(action), "path", g_strdup(path));
+}
+
+/**
+ * rm_action_get_path:
+ * @action: a #RmAction
+ *
+ * Returns: (transfer full) action path.
+ */
+static gchar *rm_action_get_path(RmAction *action)
+{
+	return g_object_get_data(G_OBJECT(action), "path");
 }
 
 /**
@@ -159,26 +185,7 @@ static void rm_action_connection_notify_cb(RmObject *object, RmConnection *conne
  */
 void rm_action_set_name(RmAction *action, const gchar *name)
 {
-	RmProfile *profile = rm_profile_get_active();
-	gchar *settings_path;
-	gchar *filename;
-
-	action->name = g_strdup(name);
-
-	/* Setup action settings */
-	settings_path = g_strconcat("/org/tabos/routermanager/profile/", profile->name, "/", name, "/", NULL);
-	filename = g_strconcat("actions/", profile->name, "-", name, NULL);
-	action->settings = rm_settings_new_with_path(RM_SCHEME_PROFILE_ACTION, settings_path, filename);
-	g_free(filename);
-
-	/* Set internal data to settings */
-	g_settings_set_string(action->settings, "name", action->name);
-	g_settings_set_string(action->settings, "description", action->description);
-	g_settings_set_string(action->settings, "exec", action->exec);
-	g_settings_set_int(action->settings, "flags", action->flags);
-	g_settings_set_strv(action->settings, "numbers", (const gchar * const *) action->numbers);
-
-	g_free(settings_path);
+	g_settings_set_string(action, "name", name);
 }
 
 /**
@@ -189,7 +196,7 @@ void rm_action_set_name(RmAction *action, const gchar *name)
  */
 gchar *rm_action_get_name(RmAction *action)
 {
-	return g_strdup(action->name);
+	return g_settings_get_string(action, "name");
 }
 
 /**
@@ -201,8 +208,7 @@ gchar *rm_action_get_name(RmAction *action)
  */
 void rm_action_set_description(RmAction *action, const gchar *description)
 {
-	action->description = g_strdup(description);
-	g_settings_set_string(action->settings, "description", action->description);
+	g_settings_set_string(action, "description", description);
 }
 
 /**
@@ -213,7 +219,7 @@ void rm_action_set_description(RmAction *action, const gchar *description)
  */
 gchar *rm_action_get_description(RmAction *action)
 {
-	return g_strdup(action->description);
+	return g_settings_get_string(action, "description");
 }
 
 /**
@@ -225,8 +231,7 @@ gchar *rm_action_get_description(RmAction *action)
  */
 void rm_action_set_exec(RmAction *action, const gchar *exec)
 {
-	action->exec = g_strdup(exec);
-	g_settings_set_string(action->settings, "exec", action->exec);
+	g_settings_set_string(action, "exec", exec);
 }
 
 /**
@@ -237,7 +242,30 @@ void rm_action_set_exec(RmAction *action, const gchar *exec)
  */
 gchar *rm_action_get_exec(RmAction *action)
 {
-	return g_strdup(action->exec);
+	return g_settings_get_string(action, "exec");
+}
+
+/**
+ * rm_action_get_flags:
+ * @action: a #RmAction
+ *
+ * Returns: action flags.
+ */
+guchar rm_action_get_flags(RmAction *action)
+{
+	return g_settings_get_int(action, "flags");
+}
+
+/**
+ * rm_action_set_flags:
+ * @action: a #RmAction
+ * @flags: action flags
+ *
+ * Set action flags.
+ */
+void rm_action_set_flags(RmAction *action, guchar flags)
+{
+	g_settings_set_int(action, "flags", flags);
 }
 
 /**
@@ -249,8 +277,7 @@ gchar *rm_action_get_exec(RmAction *action)
  */
 void rm_action_set_numbers(RmAction *action, const gchar **numbers)
 {
-	action->numbers = g_strdupv((gchar**)numbers);
-	g_settings_set_string(action->settings, "numbers", action->numbers);
+	g_settings_set_strv(action, "numbers", (const gchar * const *) numbers);
 }
 
 /**
@@ -261,7 +288,7 @@ void rm_action_set_numbers(RmAction *action, const gchar **numbers)
  */
 gchar **rm_action_get_numbers(RmAction *action)
 {
-	return g_strdupv(action->numbers);
+	return g_settings_get_strv(action, "numbers");
 }
 
 /**
@@ -293,7 +320,7 @@ static void rm_action_save(RmProfile *profile)
 	for (list = profile->action_list; list; list = list->next) {
 		RmAction *current_action = list->data;
 
-		actions[counter++] = g_strdup(current_action->name);
+		actions[counter++] = rm_action_get_path(current_action);
 	}
 	actions[counter] = NULL;
 
@@ -305,58 +332,53 @@ static void rm_action_save(RmProfile *profile)
 }
 
 /**
- * rm_action_free:
- * @data: pointer to a #RmAction
-
- * \brief Free action data
+ * rm_action_load:
+ * @profile: a #RmProfile
+ * @name: name of action to load from @profile
+ *
+ * Load action @name of selected @profile.
+ *
+ * Returns: loaded #RmAction
  */
-static void rm_action_free(gpointer data)
+static RmAction *rm_action_load(RmProfile *profile, const gchar *name)
 {
-	RmAction *action = data;
+	RmAction *action;
+	gchar *settings_path;
 
-	/* Free action data */
-	if (action->name) {
-		g_free(action->name);
-		action->name = NULL;
-	}
-	if (action->description) {
-		g_free(action->description);
-		action->description = NULL;
-	}
-	if (action->exec) {
-		g_free(action->exec);
-		action->exec = NULL;
-	}
+	/* concat the settings path */
+	settings_path = g_strconcat("/org/tabos/routermanager/profile/", profile->name, "/", name, "/", NULL);
 
-	if (action->numbers) {
-		g_strfreev(action->numbers);
-		action->numbers = NULL;
-	}
+	/* Create/Read settings from path */
+	action = rm_settings_new_with_path(RM_SCHEME_PROFILE_ACTION, settings_path);
+	rm_action_set_path(action, name);
 
-	g_slice_free(RmAction, action);
+	/* Free settings path */
+	g_free(settings_path);
+
+	/* Add action to list */
+	profile->action_list = g_slist_prepend(profile->action_list, action);
+
+	return action;
 }
 
 /**
- * rm_action_add:
+ * rm_action_new:
  * @profile: a #RmProfile
- * @action_name: a name for new #RmAction
  *
- * Creates and adds action with given @action_name to @profile's internal action list, afterwards writes actions to @profile settings.
+ * Creates and adds new action to @profile's action list.
  *
  * Returns: the new #RmAction
  */
-RmAction *rm_action_add(RmProfile *profile, const gchar *action_name)
+RmAction *rm_action_new(RmProfile *profile)
 {
 	RmAction *action;
+	uuid_t u;
+	gchar uuidstr[37];
 
-	/* Allocate fixed struct */
-	action = g_slice_new0(RmAction);
+	uuid_generate(u);
+	uuid_unparse(u, uuidstr);
 
-	/* Set name */
-	action->name = g_strdup(action_name);
-
-	/* Add action to profile action list */
-	profile->action_list = g_slist_prepend(profile->action_list, action);
+	action = rm_action_load(profile, uuidstr);
 
 	/* Save all actions to profile */
 	rm_action_save(profile);
@@ -379,46 +401,19 @@ void rm_action_remove(RmProfile *profile, RmAction *action)
 	/* Save all actions to profile */
 	rm_action_save(profile);
 
+	if (rm_settings_backend_is_dconf()) {
+		gchar *path;
+		DConfClient *client;
+
+		path = g_strconcat("/org/tabos/routermanager/profile/", profile->name, "/", rm_action_get_path(action), "/", NULL);
+		client = dconf_client_new ();
+		dconf_client_write_sync (client, path, NULL, NULL, NULL, NULL);
+		g_free(path);
+		g_object_unref(client);
+	}
+
 	/* Free internal action data */
-	rm_action_free(action);
-}
-
-/**
- * rm_action_load:
- * @profile: a #RmProfile
- * @name: name of action to load from @profile
- *
- * Load action @name of selected @profile.
- */
-static void rm_action_load(RmProfile *profile, const gchar *name)
-{
-	RmAction *action;
-	gchar *settings_path;
-	gchar *filename;
-
-	/* Allocate fixed struct */
-	action = g_slice_new0(RmAction);
-
-	/* concat the settings path */
-	settings_path = g_strconcat("/org/tabos/routermanager/profile/", profile->name, "/", name, "/", NULL);
-
-	/* Create/Read settings from path */
-	filename = g_strconcat("actions/", profile->name, "-", name, NULL);
-	action->settings = rm_settings_new_with_path(RM_SCHEME_PROFILE_ACTION, settings_path, filename);
-	g_free(filename);
-
-	/* Read internal data */
-	action->name = g_settings_get_string(action->settings, "name");
-	action->description = g_settings_get_string(action->settings, "description");
-	action->exec = g_settings_get_string(action->settings, "exec");
-	action->flags = g_settings_get_int(action->settings, "flags");
-	action->numbers = g_settings_get_strv(action->settings, "numbers");
-
-	/* Free settings path */
-	g_free(settings_path);
-
-	/* Add action to list */
-	profile->action_list = g_slist_prepend(profile->action_list, action);
+	g_object_unref(action);
 }
 
 /**
@@ -465,6 +460,6 @@ void rm_action_shutdown(RmProfile *profile)
 	g_signal_handlers_disconnect_by_func(G_OBJECT(rm_object), G_CALLBACK(rm_action_connection_notify_cb), profile);
 
 	/* Clear action list */
-	g_slist_free_full(profile->action_list, rm_action_free);
+	g_slist_free_full(profile->action_list, g_object_unref);
 	profile->action_list = NULL;
 }

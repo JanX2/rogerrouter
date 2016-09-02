@@ -10,8 +10,8 @@ fritzbox_sources += 'fritzbox.c'
 
 libfritzbox = shared_library('fritzbox',
                         fritzbox_sources,
-                        include_directories : routermanager_inc,
-                        dependencies : routermanager_dep,
+                        include_directories : rm_inc,
+                        dependencies : rm_dep,
                         link_with : libroutermanager,
                         install : true,
                         install_dir : get_option('prefix') + '/' + get_option('libdir') + '/routermanager/fritzbox/')

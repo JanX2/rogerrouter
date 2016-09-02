@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,6 +22,15 @@
 #include <gio/gio.h>
 
 #include <libroutermanager/rmfile.h>
+
+/**
+ * SECTION:rmfile
+ * @title: RmFile
+ * @short_description: File loading and storing
+ * @stability: Stable
+ *
+ * Offers convenient file loading and storing functionallity
+ */
 
 /**
  * rm_file_save:
@@ -84,6 +93,7 @@ gchar *rm_file_load(gchar *name, gsize *size)
 
 	file = g_file_new_for_path(name);
 	if (!g_file_query_exists(file, NULL)) {
+		g_object_unref(file);
 		return NULL;
 	}
 

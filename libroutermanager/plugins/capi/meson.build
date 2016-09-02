@@ -7,13 +7,13 @@ capi_sources += 'ringtone.c'
 capi_sources += 'sff.c'
 
 capi_dep = []
-capi_dep += routermanager_dep
+capi_dep += rm_dep
 capi_dep += dependency('sndfile')
 capi_dep += dependency('capi20')
 
 libcapi = shared_library('capi',
                         capi_sources,
-                        include_directories : routermanager_inc,
+                        include_directories : rm_inc,
                         dependencies : capi_dep,
                         link_with : libroutermanager,
                         install : true,

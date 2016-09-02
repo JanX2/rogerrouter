@@ -65,7 +65,7 @@ typedef struct rm_filter {
 gboolean rm_filter_rule_match(RmFilter *filter, RmCall *call);
 void rm_filter_rule_add(RmFilter *filter, gint type, gint sub_type, gchar *entry);
 
-struct rm_filter *filter_new(const gchar *name);
+struct rm_filter *rm_filter_new(const gchar *name);
 void rm_filter_free(gpointer data);
 GSList *rm_filter_get_list(void);
 void rm_filter_init(void);

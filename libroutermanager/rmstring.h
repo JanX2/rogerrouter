@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +23,7 @@
 G_BEGIN_DECLS
 
 #ifndef RM_EMPTY_STRING
+/** Convenient function to check for an empty string (either NULL or with a len of 0) */
 #define RM_EMPTY_STRING(x) (!(x) || !strlen(x))
 #endif
 

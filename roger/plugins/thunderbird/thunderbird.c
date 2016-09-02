@@ -993,7 +993,7 @@ void impl_activate(PeasActivatable *plugin)
 {
 	//RouterManagerThunderbirdPlugin *thunderbird_plugin = ROUTERMANAGER_THUNDERBIRD_PLUGIN(plugin);
 
-	thunderbird_settings = rm_settings_plugin_new("org.tabos.roger.plugins.thunderbird", "thunderbird");
+	thunderbird_settings = rm_settings_new("org.tabos.roger.plugins.thunderbird");
 
 	table = g_hash_table_new(g_str_hash, g_str_equal);
 
@@ -1013,7 +1013,7 @@ void impl_deactivate(PeasActivatable *plugin)
 	}
 
 	rm_addressbook_unregister(&thunderbird_book);
-	g_object_unref(thunderbird_settings);
+	g_clear_object(&thunderbird_settings);
 
 	if (table) {
 		g_hash_table_destroy(table);

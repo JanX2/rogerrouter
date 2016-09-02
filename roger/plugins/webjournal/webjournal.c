@@ -212,7 +212,7 @@ static void impl_activate(PeasActivatable *plugin)
 	webjournal_plugin->priv->styling = rm_file_load(file, NULL);
 	g_free(file);
 
-	webjournal_settings = rm_settings_plugin_new("org.tabos.roger.plugins.webjournal", "webjournal");
+	webjournal_settings = rm_settings_new("org.tabos.roger.plugins.webjournal");
 
 	file = g_settings_get_string(webjournal_settings, "filename");
 	if (RM_EMPTY_STRING(file)) {
@@ -236,6 +236,8 @@ static void impl_deactivate(PeasActivatable *plugin)
 	if (g_signal_handler_is_connected(G_OBJECT(rm_object), webjournal_plugin->priv->signal_id)) {
 		g_signal_handler_disconnect(G_OBJECT(rm_object), webjournal_plugin->priv->signal_id);
 	}
+
+	g_clear_object(&webjournal_settings);
 }
 
 void filename_button_clicked_cb(GtkButton *button, gpointer user_data)

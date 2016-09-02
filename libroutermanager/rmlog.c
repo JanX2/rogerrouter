@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,6 +26,15 @@
 #include <libroutermanager/rmlog.h>
 #include <libroutermanager/rmfile.h>
 
+/**
+ * SECTION:rmlog
+ * @title: RmLog
+ * @short_description: Log output utility
+ * @stability: Stable
+ *
+ * Sets a new log output handler to redirect output to console and debug file for further user assistence.
+ */
+
 /** Internal minium log level, starting with DEBUG */
 static GLogLevelFlags rm_log_level = G_LOG_LEVEL_DEBUG;
 static GFileOutputStream *rm_file_stream = NULL;
@@ -36,7 +45,7 @@ static GFileOutputStream *rm_file_stream = NULL;
  * @data: data pointer
  * @len: length of data
  *
- * Save log data to temp directory (if log level is set to DEBUG).
+ * Save log data to temp directory (only if #rm_log_set_level() is set to #G_LOG_LEVEL_DEBUG).
  */
 void rm_log_save_data(gchar *name, const gchar *data, gsize len)
 {
@@ -72,12 +81,11 @@ static void rm_log_func(const gchar *log_domain, GLogLevelFlags log_level, const
 	g_free(time);
 	g_date_time_unref(datetime);
 
-#if GLIB_CHECK_VERSION(2,50,0)
+#if GLIB_CHECK_VERSION(2,49,0)
 	g_string_append_printf(output, " %s\n", message);
 
-	const GLogField fields[] = {
-		{ "MESSAGE", output->str, -1 }};
-	gchar *fmt_str = g_log_writer_format_fields(log_level, fields, G_N_ELEMENTS (fields), TRUE);
+	const GLogField fields[] = {{"MESSAGE", output->str, -1}};
+	gchar *fmt_str = g_log_writer_format_fields(log_level, fields, G_N_ELEMENTS(fields), TRUE);
 
 	g_string_free(output, TRUE);
 
@@ -152,7 +160,7 @@ void rm_log_init(gboolean debug)
  */
 void rm_log_shutdown(void)
 {
-	g_debug("Shutdown logging");
+	g_debug("%s(): Shutdown logging", __FUNCTION__);
 
 	if (rm_file_stream) {
 		g_output_stream_close(G_OUTPUT_STREAM(rm_file_stream), NULL, NULL);

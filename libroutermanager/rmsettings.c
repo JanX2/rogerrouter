@@ -17,51 +17,96 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-//#define USE_KEYFILE 1
+#define USE_KEYFILE 1
+
+#include <string.h>
 
 #include <glib.h>
 #include <gio/gio.h>
 
-#ifdef USE_KEYFILE
 #define G_SETTINGS_ENABLE_BACKEND
 #include <gio/gsettingsbackend.h>
-#endif
 
-#include <libroutermanager/rmsettings.h>
-#include <libroutermanager/rmmain.h>
-#include <libroutermanager/rmprofile.h>
+/**
+ * SECTION:rmsettings
+ * @title: RmSettings
+ * @short_description: Settings wrapper (either uses default GSettings backend or keyfile backend depending on compilation)
+ * @stability: Stable
+ *
+ * Settings keeps track of application/user preferences and stores them in the selected backend.
+ */
+
+/**
+ * rm_settings_replace_dots:
+ * @str: input string
+ *
+ * Replaces every '.' char with G_DIR_SEPARATOR.
+ *
+ * Returns: modified input string
+ */
+static void rm_settings_replace_dots(gchar *str) {
+	while (*str) {
+		if (*str == '.') {
+			*str = G_DIR_SEPARATOR;
+		}
+		++str;
+	}
+}
+
+/**
+ * rm_settings_remove_prefix:
+ * @str: input string
+ *
+ * Remove leading prefix /a/b/c/
+ *
+ * Returns: modified input string
+ */
+static void rm_settings_remove_prefix(gchar *str) {
+	gchar *pos;
+	gchar *end;
+
+	pos = strchr(str, '/');
+	g_assert(pos != NULL);
+
+	end = strchr(pos + 1, '/');
+
+	if (end) {
+		gint len = strlen(end + 1);
+		strncpy(str, end + 1, len);
+
+		str[len] = '\0';
+	} else {
+		*str = '\0';
+	}
+}
 
 /**
  * rm_settings_new:
  * @scheme: scheme name
- * @path: root path or %NULL%
- * @file: filename (used in keyfile case)
  *
- * Create new gsettings configuration (either keyfile based, or system based).
+ * Creates new #GSettings configuration (either keyfile based, or system based (default)).
  *
  * Returns: newly create gsettings
  */
-GSettings *rm_settings_new(gchar *scheme, gchar *root_path, gchar *file)
+GSettings *rm_settings_new(gchar *scheme)
 {
 	GSettings *settings = NULL;
 
 #ifdef USE_KEYFILE
 	GSettingsBackend *keyfile;
 	gchar *filename;
+	gchar *file = g_strdup(scheme);
 
-	filename = g_build_filename(g_get_user_config_dir(), "routermanager", file, NULL);
-	g_debug("%s(): filename: '%s'", __FUNCTION__, filename);
-	//keyfile = g_keyfile_settings_backend_new(filename, ROUTERMANAGER_PATH, "General");
-	if (!root_path) {
-		root_path = "/";
-	}
-	if (root_path) {
-		g_debug("%s(): root_path: '%s'", __FUNCTION__, root_path);
-	}
-	keyfile = g_keyfile_settings_backend_new(filename, root_path, "General");
-	g_debug("%s(): keyfile: '%p'", __FUNCTION__, keyfile);
+	rm_settings_replace_dots(file);
+	rm_settings_remove_prefix(file);
+
+	filename = g_build_filename(g_get_user_config_dir(), G_DIR_SEPARATOR_S, file, G_DIR_SEPARATOR_S, "config", NULL);
+
+	keyfile = g_keyfile_settings_backend_new(filename, "/", NULL);
 	settings = g_settings_new_with_backend(scheme, keyfile);
-	g_debug("%s(): settings: '%p'", __FUNCTION__, settings);
+	g_object_unref(keyfile);
+
+	g_free(file);
 	g_free(filename);
 #else
 	settings = g_settings_new(scheme);
@@ -74,24 +119,28 @@ GSettings *rm_settings_new(gchar *scheme, gchar *root_path, gchar *file)
  * rm_settings_new_with_path:
  * @scheme: scheme name
  * @settings_path: settings path name
- * @file: filename (used in keyfile case)
  *
- * Create new gsettings configuration (either keyfile based, or system based).
+ * Creates new #GSettings configuration with settings path (either keyfile based, or system based (default)).
  *
  * Returns: newly create gsettings
  */
-GSettings *rm_settings_new_with_path(gchar *scheme, gchar *settings_path, gchar *file)
+GSettings *rm_settings_new_with_path(gchar *scheme, gchar *settings_path)
 {
 	GSettings *settings = NULL;
 
 #ifdef USE_KEYFILE
 	GSettingsBackend *keyfile;
 	gchar *filename;
+	gchar *file = g_strdup(settings_path + 1);
 
-	filename = g_build_filename(g_get_user_config_dir(), "routermanager/", file, NULL);
-	//keyfile = g_keyfile_settings_backend_new(filename, ROUTERMANAGER_PATH, NULL);
+	rm_settings_remove_prefix(file);
+
+	filename = g_build_filename(g_get_user_config_dir(), G_DIR_SEPARATOR_S, file, G_DIR_SEPARATOR_S, "config", NULL);
 	keyfile = g_keyfile_settings_backend_new(filename, "/", NULL);
 	settings = g_settings_new_with_backend_and_path(scheme, keyfile, settings_path);
+	g_object_unref(keyfile);
+
+	g_free(file);
 	g_free(filename);
 #else
 	settings = g_settings_new_with_path(scheme, settings_path);
@@ -101,23 +150,21 @@ GSettings *rm_settings_new_with_path(gchar *scheme, gchar *settings_path, gchar 
 }
 
 /**
- * rm_settings_plugin_new:
- * @scheme: scheme name
- * @name: plugin name
+ * rm_settings_backend_is_dconf:
  *
- * Create new plugin gsettings configuration (either keyfile based, or system based).
+ * Checks whether backend is dconf.
  *
- * Returns: newly create gsettings
+ * Returns: %TRUE if dconf settings is used, otherwise %FALSE
  */
-GSettings *rm_settings_plugin_new(gchar *scheme, gchar *name)
+gboolean rm_settings_backend_is_dconf(void)
 {
-	GSettings *settings = NULL;
-	RmProfile *profile = rm_profile_get_active();
-	gchar *filename;
+	GSettingsBackend *backend;
+	gboolean res;
 
-	filename = g_strconcat(profile->name, "/plugin-", name, ".conf", NULL);
-	settings = rm_settings_new(scheme, NULL, filename);
-	g_free(filename);
+	backend = g_settings_backend_get_default();
 
-	return settings;
+	res = g_str_equal(G_OBJECT_TYPE_NAME(backend), "DConfSettingsBackend");
+	g_object_unref(backend);
+
+	return res;
 }

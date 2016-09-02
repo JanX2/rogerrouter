@@ -26,7 +26,7 @@
 
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmnetwork.h>
-#include <libroutermanager/ftp.h>
+#include <libroutermanager/rmftp.h>
 
 //#define FTP_DEBUG 1
 
@@ -36,7 +36,7 @@
  * \param port port number
  * \return io channel for given server:port
  */
-static GIOChannel *ftp_open_port(gchar *server, gint port)
+static GIOChannel *rm_ftp_open_port(gchar *server, gint port)
 {
 	GSocket *socket = NULL;
 	GInetAddress *inet_address = NULL;
@@ -102,7 +102,7 @@ static GIOChannel *ftp_open_port(gchar *server, gint port)
 	g_io_channel_set_buffered(io_channel, TRUE);
 
 #ifdef FTP_DEBUG
-	g_debug("ftp_open_port(): connected on port %d", port);
+	g_debug("%s(): connected on port %d", __FUNCTION__, port);
 #endif
 
 	return io_channel;
@@ -114,7 +114,7 @@ static GIOChannel *ftp_open_port(gchar *server, gint port)
  * \param len pointer to store the data length to
  * \return data response message or NULL on error
  */
-gboolean ftp_read_control_response(struct ftp *client)
+gboolean rm_ftp_read_control_response(RmFtp *client)
 {
 	GError *error = NULL;
 	GIOStatus io_status;
@@ -181,7 +181,7 @@ gboolean ftp_read_control_response(struct ftp *client)
  * \param len pointer to store the data length to
  * \return data response message or NULL on error
  */
-gchar *ftp_read_data_response(GIOChannel *channel, gsize *len)
+gchar *rm_ftp_read_data_response(GIOChannel *channel, gsize *len)
 {
 	GError *error = NULL;
 	GIOStatus io_status;
@@ -223,7 +223,7 @@ gchar *ftp_read_data_response(GIOChannel *channel, gsize *len)
  * \param command FTP command
  * \return TRUE if data is available, FALSE on error
  */
-gboolean ftp_send_command(struct ftp *client, gchar *command)
+gboolean rm_ftp_send_command(RmFtp *client, gchar *command)
 {
 	gchar *ftp_command;
 	GIOStatus io_status;
@@ -240,7 +240,7 @@ gboolean ftp_send_command(struct ftp *client, gchar *command)
 	}
 	g_io_channel_flush(client->control, NULL);
 
-	return ftp_read_control_response(client);
+	return rm_ftp_read_control_response(client);
 }
 
 /**
@@ -250,7 +250,7 @@ gboolean ftp_send_command(struct ftp *client, gchar *command)
  * \param password user password
  * \return TRUE if login was successfull, otherwise FALSE
  */
-gboolean ftp_login(struct ftp *client, const gchar *user, const gchar *password)
+gboolean rm_ftp_login(RmFtp *client, const gchar *user, const gchar *password)
 {
 	gchar *cmd;
 	gboolean login = FALSE;
@@ -259,7 +259,7 @@ gboolean ftp_login(struct ftp *client, const gchar *user, const gchar *password)
 #ifdef FTP_DEBUG
 	g_debug("ftp_login(): %s", cmd);
 #endif
-	ftp_send_command(client, cmd);
+	rm_ftp_send_command(client, cmd);
 	g_free(cmd);
 
 	if (client->code == 331) {
@@ -267,7 +267,7 @@ gboolean ftp_login(struct ftp *client, const gchar *user, const gchar *password)
 #ifdef FTP_DEBUG
 		g_debug("ftp_login(): PASS <xxxx>");
 #endif
-		ftp_send_command(client, cmd);
+		rm_ftp_send_command(client, cmd);
 		g_free(cmd);
 
 		if (client->code == 230) {
@@ -286,7 +286,7 @@ gboolean ftp_login(struct ftp *client, const gchar *user, const gchar *password)
  * \param client ftp client structure
  * \return result, TRUE for success, FALSE on error
  */
-gboolean ftp_passive(struct ftp *client)
+gboolean rm_ftp_passive(RmFtp *client)
 {
 	gchar *pos;
 	gint data_port;
@@ -311,7 +311,7 @@ gboolean ftp_passive(struct ftp *client)
 #ifdef FTP_DEBUG
 	g_debug("ftp_passive(): EPSV");
 #endif
-	ftp_send_command(client, "EPSV");
+	rm_ftp_send_command(client, "EPSV");
 
 	if (client->code == 229) {
 		pos = strchr(client->response, '|');
@@ -325,7 +325,7 @@ gboolean ftp_passive(struct ftp *client)
 #ifdef FTP_DEBUG
 		g_debug("ftp_passive(): PASV");
 #endif
-		ftp_send_command(client, "PASV");
+		rm_ftp_send_command(client, "PASV");
 
 		if (client->code != 227) {
 			return FALSE;
@@ -348,7 +348,7 @@ gboolean ftp_passive(struct ftp *client)
 	g_debug("ftp_passive(): data_port: %d", data_port);
 #endif
 
-	client->data = ftp_open_port(client->server, data_port);
+	client->data = rm_ftp_open_port(client->server, data_port);
 
 	return client->data != NULL;
 }
@@ -359,7 +359,7 @@ gboolean ftp_passive(struct ftp *client)
  * \param dir directory name
  * \return directory listing
  */
-gchar *ftp_list_dir(struct ftp *client, const gchar *dir)
+gchar *rm_ftp_list_dir(RmFtp *client, const gchar *dir)
 {
 	gchar *cmd = g_strconcat("CWD ", dir, NULL);
 	gchar *response = NULL;
@@ -367,16 +367,16 @@ gchar *ftp_list_dir(struct ftp *client, const gchar *dir)
 #ifdef FTP_DEBUG
 	g_debug("ftp_list_dir(): %s", cmd);
 #endif
-	ftp_send_command(client, cmd);
+	rm_ftp_send_command(client, cmd);
 	g_free(cmd);
 
 #ifdef FTP_DEBUG
 	g_debug("ftp_list_dir(): NLST");
 #endif
-	ftp_send_command(client, "NLST");
+	rm_ftp_send_command(client, "NLST");
 
 	if (client->code == 150) {
-		response = ftp_read_data_response(client->data, NULL);
+		response = rm_ftp_read_data_response(client->data, NULL);
 	}
 
 	return response;
@@ -389,7 +389,7 @@ gchar *ftp_list_dir(struct ftp *client, const gchar *dir)
  * \param len pointer to store the file size to
  * \return file data or NULL on error
  */
-gchar *ftp_get_file(struct ftp *client, const gchar *file, gsize *len)
+gchar *rm_ftp_get_file(RmFtp *client, const gchar *file, gsize *len)
 {
 	gchar *cmd = g_strconcat("RETR ", file, NULL);
 	gchar *response = NULL;
@@ -401,17 +401,17 @@ gchar *ftp_get_file(struct ftp *client, const gchar *file, gsize *len)
 #ifdef FTP_DEBUG
 	g_debug("ftp_get_file(): TYPE I");
 #endif
-	ftp_send_command(client, "TYPE I");
+	rm_ftp_send_command(client, "TYPE I");
 
 #ifdef FTP_DEBUG
 	g_debug("ftp_get_file(): %s", cmd);
 #endif
-	ftp_send_command(client, cmd);
+	rm_ftp_send_command(client, cmd);
 	g_free(cmd);
 
 	if (client->code == 150) {
-		response = ftp_read_data_response(client->data, len);
-		ftp_read_control_response(client);
+		response = rm_ftp_read_data_response(client->data, len);
+		rm_ftp_read_control_response(client);
 	}
 
 	return response;
@@ -426,7 +426,7 @@ gchar *ftp_get_file(struct ftp *client, const gchar *file, gsize *len)
  * \param size file size
  * \return TRUE on success, otherwise FALSE
  */
-gboolean ftp_put_file(struct ftp *client, const gchar *file, const gchar *path, gchar *data, gsize size)
+gboolean rm_ftp_put_file(RmFtp *client, const gchar *file, const gchar *path, gchar *data, gsize size)
 {
 	gchar *cmd;
 	gboolean passive;
@@ -434,7 +434,7 @@ gboolean ftp_put_file(struct ftp *client, const gchar *file, const gchar *path, 
 #ifdef FTP_DEBUG
 	g_debug("ftp_get_file(): TYPE I");
 #endif
-	ftp_send_command(client, "TYPE I");
+	rm_ftp_send_command(client, "TYPE I");
 #ifdef FTP_DEBUG
 	g_debug("ftp_put_file(): code=%d", client->code);
 #endif
@@ -442,7 +442,7 @@ gboolean ftp_put_file(struct ftp *client, const gchar *file, const gchar *path, 
 		return FALSE;
 	}
 
-	passive = ftp_passive(client);
+	passive = rm_ftp_passive(client);
 #ifdef FTP_DEBUG
 	g_debug("ftp_put_file(): passive=%d", passive);
 #endif
@@ -454,7 +454,7 @@ gboolean ftp_put_file(struct ftp *client, const gchar *file, const gchar *path, 
 #ifdef FTP_DEBUG
 	g_debug("ftp_put_file(): %s", cmd);
 #endif
-	ftp_send_command(client, cmd);
+	rm_ftp_send_command(client, cmd);
 	g_free(cmd);
 #ifdef FTP_DEBUG
 	g_debug("ftp_put_file(): code=%d", client->code);
@@ -492,7 +492,7 @@ gboolean ftp_put_file(struct ftp *client, const gchar *file, const gchar *path, 
 	g_io_channel_shutdown(client->data, TRUE, &error);
 	client->data = NULL;
 
-	ftp_read_control_response(client);
+	rm_ftp_read_control_response(client);
 
 	return TRUE;
 }
@@ -502,23 +502,23 @@ gboolean ftp_put_file(struct ftp *client, const gchar *file, const gchar *path, 
  * \param server server host name
  * \return ftp structure or NULL on error
  */
-struct ftp *ftp_init(const gchar *server)
+RmFtp *rm_ftp_init(const gchar *server)
 {
-	struct ftp *client = g_slice_new0(struct ftp);
+	RmFtp *client = g_slice_new0(RmFtp);
 
 	client->server = g_strdup(server);
-	client->control = ftp_open_port(client->server, 21);
+	client->control = rm_ftp_open_port(client->server, 21);
 	if (!client->control) {
 		g_warning("Could not connect to FTP-Port 21");
 		g_free(client->server);
-		g_slice_free(struct ftp, client);
+		g_slice_free(RmFtp, client);
 		return NULL;
 	}
 
 	client->timer = g_timer_new();
 
 	/* Read welcome message */
-	ftp_read_control_response(client);
+	rm_ftp_read_control_response(client);
 
 #ifdef FTP_DEBUG
 	g_debug("ftp_init() done");
@@ -532,7 +532,7 @@ struct ftp *ftp_init(const gchar *server)
  * \param client ftp client structure
  * \return TRUE on success, otherwise FALSE
  */
-gboolean ftp_shutdown(struct ftp *client)
+gboolean rm_ftp_shutdown(RmFtp *client)
 {
 #ifdef FTP_DEBUG
 	g_debug("ftp_shutdown(): start");
@@ -565,7 +565,7 @@ gboolean ftp_shutdown(struct ftp *client)
 #ifdef FTP_DEBUG
 	g_debug("ftp_shutdown(): free");
 #endif
-	g_slice_free(struct ftp, client);
+	g_slice_free(RmFtp, client);
 
 #ifdef FTP_DEBUG
 	g_debug("ftp_shutdown(): done");
@@ -580,14 +580,14 @@ gboolean ftp_shutdown(struct ftp *client)
  * \param filename file to delete
  * \return TRUE on success, otherwise FALSE
  */
-gboolean ftp_delete_file(struct ftp *client, const gchar *filename)
+gboolean rm_ftp_delete_file(RmFtp *client, const gchar *filename)
 {
 	gchar *cmd = g_strconcat("DELE ", filename, NULL);
 
 #ifdef FTP_DEBUG
 	g_debug("ftp_delete_file(): %s", cmd);
 #endif
-	ftp_send_command(client, cmd);
+	rm_ftp_send_command(client, cmd);
 	g_free(cmd);
 
 	if (client->code != 250) {

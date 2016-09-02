@@ -35,8 +35,8 @@ libroutermanager_la_SOURCES = \
 	rmfile.h\
 	rmfilter.c\
 	rmfilter.h\
-	ftp.c\
-	ftp.h\
+	rmftp.c\
+	rmftp.h\
 	rmstring.c\
 	rmstring.h\
 	rmlog.c\

@@ -30,7 +30,7 @@
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmnetwork.h>
 #include <libroutermanager/rmstring.h>
-#include <libroutermanager/ftp.h>
+#include <libroutermanager/rmftp.h>
 #include <libroutermanager/xml.h>
 #include <libroutermanager/rmlog.h>
 #include <libroutermanager/rmfile.h>
@@ -91,7 +91,7 @@ static void parse_person(struct contact *contact, xmlnode *person)
 				gchar *url = strstr(image_ptr, "/ftp/");
 				gsize len;
 				guchar *buffer;
-				struct ftp *client;
+				RmFtp *client;
 				GdkPixbufLoader *loader;
 
 				if (!url) {
@@ -100,11 +100,11 @@ static void parse_person(struct contact *contact, xmlnode *person)
 					url += 5;
 				}
 
-				client = ftp_init(router_get_host(rm_profile_get_active()));
-				ftp_login(client, router_get_ftp_user(profile), router_get_ftp_password(profile));
-				ftp_passive(client);
-				buffer = (guchar *) ftp_get_file(client, url, &len);
-				ftp_shutdown(client);
+				client = rm_ftp_init(router_get_host(rm_profile_get_active()));
+				rm_ftp_login(client, router_get_ftp_user(profile), router_get_ftp_password(profile));
+				rm_ftp_passive(client);
+				buffer = (guchar *) rm_ftp_get_file(client, url, &len);
+				rm_ftp_shutdown(client);
 
 				loader = gdk_pixbuf_loader_new();
 				if (gdk_pixbuf_loader_write(loader, buffer, len, NULL)) {
@@ -596,7 +596,7 @@ void fritzfon_set_image(struct contact *contact)
 {
 	struct fritzfon_priv *priv = g_slice_new0(struct fritzfon_priv);
 	struct profile *profile = rm_profile_get_active();
-	struct ftp *client = ftp_init(router_get_host(profile));
+	RmFtp *client = rm_ftp_init(router_get_host(profile));
 	gchar *volume_path;
 	gchar *path;
 	gchar *file_name;
@@ -605,7 +605,7 @@ void fritzfon_set_image(struct contact *contact)
 	gsize size;
 
 	contact->priv = priv;
-	ftp_login(client, router_get_ftp_user(profile), router_get_ftp_password(profile));
+	rm_ftp_login(client, router_get_ftp_user(profile), router_get_ftp_password(profile));
 
 	volume_path = g_settings_get_string(profile->settings, "fax-volume");
 	hash = g_strdup_printf("%s%s", volume_path, contact->image_uri);
@@ -615,8 +615,8 @@ void fritzfon_set_image(struct contact *contact)
 	g_free(volume_path);
 
 	data = rm_file_load(contact->image_uri, &size);
-	ftp_put_file(client, file_name, path, data, size);
-	ftp_shutdown(client);
+	rm_ftp_put_file(client, file_name, path, data, size);
+	rm_ftp_shutdown(client);
 
 	priv->image_url = g_strdup_printf("file:///var/media/ftp/%s%s", path, file_name);
 	g_free(path);
@@ -654,7 +654,7 @@ RmAddressBook fritzfon_book = {
 
 void impl_activate(PeasActivatable *plugin)
 {
-	fritzfon_settings = rm_settings_plugin_new("org.tabos.roger.plugins.fritzfon", "fritzfon");
+	fritzfon_settings = rm_settings_new("org.tabos.roger.plugins.fritzfon");
 
 	fritzfon_get_books();
 	fritzfon_read_book();
@@ -665,7 +665,7 @@ void impl_activate(PeasActivatable *plugin)
 void impl_deactivate(PeasActivatable *plugin)
 {
 	rm_addressbook_unregister(&fritzfon_book);
-	g_object_unref(fritzfon_settings);
+	g_clear_object(&fritzfon_settings);
 }
 
 GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)

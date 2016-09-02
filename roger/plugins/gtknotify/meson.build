@@ -2,13 +2,13 @@ gtknotify_sources = []
 gtknotify_sources += 'gtknotify.c'
 
 gtknotify_dep = []
-gtknotify_dep += routermanager_dep
+gtknotify_dep += rm_dep
 gtknotify_dep += roger_dep
 gtknotify_dep += dependency('libebook-1.2')
 
 libgtknotify = shared_library('gtknotify',
                         gtknotify_sources,
-                        include_directories : routermanager_inc,
+                        include_directories : rm_inc,
                         dependencies : gtknotify_dep,
                         link_with : libroutermanager,
                         install : true,

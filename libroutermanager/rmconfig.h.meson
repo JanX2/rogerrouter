@@ -1,0 +1,4 @@
+/* rmconfig.h.meson.  Generated from meson.  */
+
+/* Define whether ssdp is available. */
+#mesondefine HAVE_SSDP

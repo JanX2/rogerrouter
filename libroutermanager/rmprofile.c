@@ -94,6 +94,12 @@ void rm_profile_remove(RmProfile *profile)
 {
 	rm_profile_list = g_slist_remove(rm_profile_list, profile);
 
+	g_object_unref(profile->settings);
+
+	router_info_free(profile->router_info);
+
+	g_free(profile->name);
+
 	/* Remove gsettings entry */
 	rm_profile_save();
 }
@@ -134,7 +140,6 @@ RmProfile *rm_profile_add(const gchar *name)
 {
 	RmProfile *profile;
 	gchar *settings_path;
-	gchar *filename;
 
 	/* Create new profile structure */
 	profile = g_slice_new0(RmProfile);
@@ -144,10 +149,8 @@ RmProfile *rm_profile_add(const gchar *name)
 	profile->router_info = g_slice_new0(struct router_info);
 
 	/* Setup profiles settings */
-	filename = g_build_filename(name, "profile.conf", NULL);
 	settings_path = g_strconcat("/org/tabos/routermanager/profile/", name, "/", NULL);
-	profile->settings = rm_settings_new_with_path(RM_SCHEME_PROFILE, settings_path, filename);
-	g_free(filename);
+	profile->settings = rm_settings_new_with_path(RM_SCHEME_PROFILE, settings_path);
 
 	g_free(settings_path);
 
@@ -169,16 +172,13 @@ static void rm_profile_load(const gchar *name)
 {
 	RmProfile *profile;
 	gchar *settings_path;
-	gchar *filename;
 
 	profile = g_slice_new0(RmProfile);
 
 	profile->name = g_strdup(name);
 
-	filename = g_build_filename(name, "profile.conf", NULL);
 	settings_path = g_strconcat("/org/tabos/routermanager/profile/", name, "/", NULL);
-	profile->settings = rm_settings_new_with_path(RM_SCHEME_PROFILE, settings_path, filename);
-	g_free(filename);
+	profile->settings = rm_settings_new_with_path(RM_SCHEME_PROFILE, settings_path);
 
 	profile->router_info = g_slice_new0(struct router_info);
 	profile->router_info->host = g_settings_get_string(profile->settings, "host");
@@ -285,7 +285,7 @@ gboolean rm_profile_detect_active(void)
  */
 gboolean rm_profile_init(void)
 {
-	rm_settings = rm_settings_new(RM_SCHEME, RM_PATH, "routermanager.conf");
+	rm_settings = rm_settings_new(RM_SCHEME);
 
 	gchar **profiles = g_settings_get_strv(rm_settings, "profiles");
 	gint count;

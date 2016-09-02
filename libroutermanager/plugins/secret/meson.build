@@ -2,12 +2,12 @@ secret_sources = []
 secret_sources += 'secret.c'
 
 secret_dep = []
-secret_dep += routermanager_dep
+secret_dep += rm_dep
 secret_dep += dependency('libsecret-1')
 
 libsecret = shared_library('secret',
                         secret_sources,
-                        include_directories : routermanager_inc,
+                        include_directories : rm_inc,
                         dependencies : secret_dep,
                         link_with : libroutermanager,
                         install : true,

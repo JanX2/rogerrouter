@@ -74,7 +74,7 @@ static void auth_uri_link_button_clicked_cb(GtkButton *button, gpointer data)
 {
 	struct auth_code_data *auth_code_data = data;
 
-	os_execute(auth_code_data->auth_uri);
+	rm_os_execute(auth_code_data->auth_uri);
 
 	gtk_widget_grab_focus(auth_code_data->entry);
 }
@@ -206,9 +206,9 @@ static int google_init(void)
 			return 0;
 		}
 
-		c1 = (gchar*)password_decode(CLIENT_1);
-		c2 = (gchar*)password_decode(CLIENT_2);
-		c3 = (gchar*)password_decode(CLIENT_3);
+		c1 = (gchar*)rm_password_decode(CLIENT_1);
+		c2 = (gchar*)rm_password_decode(CLIENT_2);
+		c3 = (gchar*)rm_password_decode(CLIENT_3);
 		authorizer = gdata_oauth2_authorizer_new(c1, c2, c3, GDATA_TYPE_CONTACTS_SERVICE);
 		g_free(c3);
 		g_free(c2);
@@ -860,7 +860,7 @@ void impl_activate(PeasActivatable *plugin)
 {
 	//RouterManagerGooglePlugin *google_plugin = ROUTERMANAGER_GOOGLE_PLUGIN(plugin);
 
-	google_settings = rm_settings_plugin_new("org.tabos.roger.plugins.google", "google");
+	google_settings = rm_settings_new("org.tabos.roger.plugins.google");
 
 	table = g_hash_table_new(g_str_hash, g_str_equal);
 
@@ -883,7 +883,7 @@ void impl_deactivate(PeasActivatable *plugin)
 
 	google_shutdown();
 
-	g_object_unref(google_settings);
+	g_clear_object(&google_settings);
 
 	if (table) {
 		g_hash_table_destroy(table);

@@ -2,11 +2,11 @@ reverselookup_sources = []
 reverselookup_sources += 'reverselookup.c'
 
 reverselookup_dep = []
-reverselookup_dep += routermanager_dep
+reverselookup_dep += rm_dep
 
 libreverselookup = shared_library('reverselookup',
                         reverselookup_sources,
-                        include_directories : routermanager_inc,
+                        include_directories : rm_inc,
                         dependencies : reverselookup_dep,
                         link_with : libroutermanager,
                         install : true,

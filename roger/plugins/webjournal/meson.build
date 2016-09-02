@@ -2,12 +2,12 @@ webjournal_sources = []
 webjournal_sources += 'webjournal.c'
 
 webjournal_dep = []
-webjournal_dep += routermanager_dep
+webjournal_dep += rm_dep
 webjournal_dep += roger_dep
 
 libwebjournal = shared_library('webjournal',
                         webjournal_sources,
-                        include_directories : routermanager_inc,
+                        include_directories : rm_inc,
                         dependencies : webjournal_dep,
                         link_with : libroutermanager,
                         install : true,

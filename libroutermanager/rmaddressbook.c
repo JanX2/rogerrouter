@@ -36,7 +36,7 @@
  * @title: RmAddressBook
  * @short_description: Address book handling functions
  *
- * Address book handling contains handling of plugins and common address book functions.
+ * Address book handles plugins and common address book functions.
  */
 
 static guint rm_addressbook_signal_id = 0;

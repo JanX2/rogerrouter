@@ -304,7 +304,7 @@ void impl_activate(PeasActivatable *plugin)
 {
 	RouterManagerNotificationPlugin *notify_plugin = ROUTERMANAGER_NOTIFICATION_PLUGIN(plugin);
 
-	notification_settings = rm_settings_plugin_new("org.tabos.roger.plugins.notification", "notification");
+	notification_settings = rm_settings_new("org.tabos.roger.plugins.notification");
 
 	gchar **incoming_numbers = g_settings_get_strv(notification_settings, "incoming-numbers");
 	gchar **outgoing_numbers = g_settings_get_strv(notification_settings, "outgoing-numbers");
@@ -333,6 +333,8 @@ void impl_deactivate(PeasActivatable *plugin)
 	if (g_signal_handler_is_connected(G_OBJECT(rm_object), notify_plugin->priv->signal_id)) {
 		g_signal_handler_disconnect(G_OBJECT(rm_object), notify_plugin->priv->signal_id);
 	}
+
+	g_clear_object(&notification_settings);
 
 	/* Uninit notify */
 	notify_uninit();

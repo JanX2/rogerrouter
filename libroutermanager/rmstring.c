@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,17 @@
 #include <string.h>
 
 #include <glib.h>
-#include <glib/gprintf.h>
 
 #include <libroutermanager/rmstring.h>
+
+/**
+ * SECTION:rmstring
+ * @title: RmString
+ * @short_description: String helper functions
+ * @stability: Stable
+ *
+ * Adds string helper functions to simplify the code.
+ */
 
 /**
  * rm_strcasestr:
@@ -103,7 +111,7 @@ gchar *rm_convert_utf8(const gchar *text, gssize len)
  *
  * Checks if @strv contains @str
  *
- * Returns: %TRUE% if @str is found in @strv, otherwise FALSE
+ * Returns: %TRUE if @str is found in @strv, otherwise %FALSE
  */
 gboolean rm_strv_contains(const gchar * const *strv, const gchar *str)
 {

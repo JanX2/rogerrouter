@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -75,32 +75,20 @@ G_BEGIN_DECLS
  */
 #define RM_ACTION_OUTGOING_END    0x40
 
+/** Scheme for action */
+#define RM_SCHEME_PROFILE_ACTION "org.tabos.routermanager.profile.action"
+
 /**
  * RmAction:
  *
  * Keeps track of internal action information.
  */
-typedef struct rm_action {
-	/*< private >*/
-	/** name */
-	gchar *name;
-	/** description */
-	gchar *description;
-	/** execution line */
-	gchar *exec;
-	/** flags - contains RM_ACTION_XXXX_YYYY values */
-	guchar flags;
-	/** list of numbers used within this action */
-	gchar **numbers;
-
-	/** settings storage of this action */
-	GSettings *settings;
-} RmAction;
+typedef GSettings RmAction;
 
 void rm_action_init(RmProfile *profile);
 void rm_action_shutdown(RmProfile *profile);
 GSList *rm_action_get_list(RmProfile *profile);
-RmAction *rm_action_add(RmProfile *profile, const gchar *action_name);
+RmAction *rm_action_new(RmProfile *profile);
 void rm_action_remove(RmProfile *profile, RmAction *action);
 void rm_action_set_name(RmAction *action, const gchar *name);
 gchar *rm_action_get_name(RmAction *action);
@@ -110,6 +98,8 @@ void rm_action_set_exec(RmAction *action, const gchar *exec);
 gchar *rm_action_get_exec(RmAction *action);
 void rm_action_set_numbers(RmAction *action, const gchar **numbers);
 gchar **rm_action_get_numbers(RmAction *action);
+guchar rm_action_get_flags(RmAction *action);
+void rm_action_set_flags(RmAction *action, guchar flags);
 
 G_END_DECLS
 

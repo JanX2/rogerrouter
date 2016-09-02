@@ -3,11 +3,11 @@ areacodes_global_sources += 'areacodes_global.c'
 areacodes_global_sources += 'csv.c'
 
 areacodes_global_dep = []
-areacodes_global_dep += routermanager_dep
+areacodes_global_dep += rm_dep
 
 libareacodes_global = shared_library('areacodes_global',
                         areacodes_global_sources,
-                        include_directories : routermanager_inc,
+                        include_directories : rm_inc,
                         dependencies : areacodes_global_dep,
                         link_with : libroutermanager,
                         install : true,

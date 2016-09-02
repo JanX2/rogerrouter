@@ -29,7 +29,7 @@
 #include <libroutermanager/rmlog.h>
 #include <libroutermanager/rmnetwork.h>
 #include <libroutermanager/rmcsv.h>
-#include <libroutermanager/ftp.h>
+#include <libroutermanager/rmftp.h>
 #include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmstring.h>
 

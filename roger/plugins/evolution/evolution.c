@@ -630,7 +630,7 @@ RmAddressBook evolution_book = {
 
 void impl_activate(PeasActivatable *plugin)
 {
-	ebook_settings = rm_settings_plugin_new("org.tabos.roger.plugins.evolution", "evolution");
+	ebook_settings = rm_settings_new("org.tabos.roger.plugins.evolution");
 
 	ebook_read_book();
 
@@ -640,7 +640,7 @@ void impl_activate(PeasActivatable *plugin)
 void impl_deactivate(PeasActivatable *plugin)
 {
 	rm_addressbook_unregister(&evolution_book);
-	g_object_unref(ebook_settings);
+	g_clear_object(&ebook_settings);
 }
 
 GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)

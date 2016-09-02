@@ -334,7 +334,7 @@ void impl_activate(PeasActivatable *plugin)
 
 	journal_set_hide_on_quit(TRUE);
 
-	statusicon_settings = rm_settings_plugin_new("org.tabos.roger.plugins.statusicon", "statusicon");
+	statusicon_settings = rm_settings_new("org.tabos.roger.plugins.statusicon");
 
 	/* Connect to "call-notify" signal */
 	statusicon_plugin = ROUTERMANAGER_STATUSICON_PLUGIN(plugin);
@@ -366,7 +366,7 @@ void impl_deactivate(PeasActivatable *plugin)
 	}
 
 	gtk_status_icon_set_visible(statusicon, FALSE);
-	g_object_unref(statusicon);
+	g_clear_object(statusicon);
 
 	statusicon = NULL;
 }

@@ -67,11 +67,11 @@ struct phone_state {
 struct phone_device {
 	gchar *(*get_title)(void);
 	gboolean (*init)(struct contact *contact, struct connection *connection);
-	void (*terminated)(struct phone_state *state, struct capi_connection *connection);
+	void (*terminated)(struct phone_state *state, struct connection *connection);
 	GtkWidget *(*create_menu)(struct profile *profile, struct phone_state *state);
 	GtkWidget *(*create_child)(struct phone_state *state, GtkWidget *grid);
 	void (*delete)(struct phone_state *state);
-	void (*status)(struct phone_state *state, struct capi_connection *connection);
+	void (*status)(struct phone_state *state, struct connection *connection);
 };
 
 void app_show_phone_window(struct contact *contact, struct connection *connection);

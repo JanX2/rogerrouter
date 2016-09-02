@@ -17,30 +17,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_FTP_H
-#define LIBROUTERMANAGER_FTP_H
+#ifndef LIBROUTERMANAGER_RMFTP_H
+#define LIBROUTERMANAGER_RMFTP_H
 
 G_BEGIN_DECLS
 
-struct ftp {
+typedef struct rm_ftp {
 	gchar *server;
 	gint code;
 	gchar *response;
 	GIOChannel *control;
 	GIOChannel *data;
 	GTimer *timer;
-};
+} RmFtp;
 
-gchar *ftp_read_response(GIOChannel *channel, gsize *len);
-gboolean ftp_send_command(struct ftp *client, gchar *command);
-gboolean ftp_login(struct ftp *client, const gchar *user, const gchar *password);
-gboolean ftp_passive(struct ftp *client);
-gchar *ftp_list_dir(struct ftp *client, const gchar *dir);
-gchar *ftp_get_file(struct ftp *client, const gchar *file, gsize *len);
-gboolean ftp_put_file(struct ftp *client, const gchar *file, const gchar *path, gchar *data, gsize size);
-struct ftp *ftp_init(const gchar *server);
-gboolean ftp_delete_file(struct ftp *client, const gchar *file);
-gboolean ftp_shutdown(struct ftp *client);
+gchar *rm_ftp_read_response(GIOChannel *channel, gsize *len);
+gboolean rm_ftp_send_command(RmFtp *client, gchar *command);
+gboolean rm_ftp_login(RmFtp *client, const gchar *user, const gchar *password);
+gboolean rm_ftp_passive(RmFtp *client);
+gchar *rm_ftp_list_dir(RmFtp *client, const gchar *dir);
+gchar *rm_ftp_get_file(RmFtp *client, const gchar *file, gsize *len);
+gboolean rm_ftp_put_file(RmFtp *client, const gchar *file, const gchar *path, gchar *data, gsize size);
+RmFtp *rm_ftp_init(const gchar *server);
+gboolean rm_ftp_delete_file(RmFtp *client, const gchar *file);
+gboolean rm_ftp_shutdown(RmFtp *client);
 
 G_END_DECLS
 

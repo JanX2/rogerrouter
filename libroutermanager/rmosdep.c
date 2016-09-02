@@ -19,11 +19,6 @@
 
 #include <glib.h>
 
-#ifdef G_OS_WIN32
-#include <windows.h>
-#include <shellapi.h>
-#endif
-
 #include <libroutermanager/rmosdep.h>
 
 /**
@@ -35,19 +30,18 @@
  * Covers os execute function for opening urls or other apps with their default applications depending on the platform.
  */
 
-
 /**
  * rm_os_execute:
  * @uri: uri to open
  *
- * Execute URI (e.g. opens web browser for specifc url)
+ * Execute URI (e.g. opens web browser for specific url)
  */
 void rm_os_execute(const gchar *uri)
 {
 	gchar *exec;
 
 	/* create execution command line for g_spawn */
-	exec = g_strdup_printf("%s %s", OS_OPEN, uri);
+	exec = g_strdup_printf("%s %s", RM_OS_OPEN, uri);
 
 #ifdef G_OS_WIN32
 	ShellExecute(0, "open", uri, 0, 0, SW_SHOW);

@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,9 +22,9 @@
 
 G_BEGIN_DECLS
 
-GSettings *rm_settings_new(gchar *scheme, gchar *root_path, gchar *file);
-GSettings *rm_settings_plugin_new(gchar *scheme, gchar *file);
-GSettings *rm_settings_new_with_path(gchar *scheme, gchar *path, gchar *file);
+GSettings *rm_settings_new(gchar *scheme);
+GSettings *rm_settings_new_with_path(gchar *scheme, gchar *path);
+gboolean rm_settings_backend_is_dconf(void);
 
 G_END_DECLS
 

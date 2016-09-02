@@ -2,11 +2,11 @@ simple_pwd_sources = []
 simple_pwd_sources += 'simple_pwd.c'
 
 simple_pwd_dep = []
-simple_pwd_dep += routermanager_dep
+simple_pwd_dep += rm_dep
 
 libsimple_pwd = shared_library('simple_pwd',
                         simple_pwd_sources,
-                        include_directories : routermanager_inc,
+                        include_directories : rm_inc,
                         dependencies : simple_pwd_dep,
                         link_with : libroutermanager,
                         install : true,

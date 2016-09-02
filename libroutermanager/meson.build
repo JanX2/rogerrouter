@@ -1,59 +1,107 @@
-routermanager_sources = []
-routermanager_sources += 'rmaction.c'
-routermanager_sources += 'rmaddressbook.c'
-routermanager_sources += 'rmaudio.c'
-routermanager_sources += 'rmcall.c'
-routermanager_sources += 'rmcontact.c'
-routermanager_sources += 'rmconnection.c'
-routermanager_sources += 'rmcsv.c'
-routermanager_sources += 'rmdevice.c'
-routermanager_sources += 'rmdevicefax.c'
-routermanager_sources += 'rmfaxspooler.c'
-routermanager_sources += 'rmfaxserver.c'
-routermanager_sources += 'rmfile.c'
-routermanager_sources += 'rmfilter.c'
-routermanager_sources += 'ftp.c'
-routermanager_sources += 'rmstring.c'
-routermanager_sources += 'rmlog.c'
-routermanager_sources += 'rmlookup.c'
-routermanager_sources += 'rmnetmonitor.c'
-routermanager_sources += 'rmnetwork.c'
-routermanager_sources += 'rmobject.c'
-routermanager_sources += 'rmobjectemit.c'
-routermanager_sources += 'rmprofile.c'
-routermanager_sources += 'rmmain.c'
-routermanager_sources += 'rmosdep.c'
-routermanager_sources += 'rmpassword.c'
-routermanager_sources += 'rmplugins.c'
-routermanager_sources += 'rmprofile.c'
-routermanager_sources += 'rmphone.c'
-routermanager_sources += 'router.c'
-routermanager_sources += 'rmsettings.c'
-routermanager_sources += 'rmssdp.c'
-routermanager_sources += 'rmvox.c'
-routermanager_sources += 'xml.c'
+rmconf_data = configuration_data()
 
-routermanager_inc = include_directories('..')
-#include_directories('libroutermanager')
+rm_dep = []
+rm_dep += dependency('glib-2.0')
+rm_dep += dependency('libpeas-1.0')
+rm_dep += dependency('libsoup-2.4')
+rm_dep += dependency('speex')
+rm_dep += dependency('libpeas-1.0')
+rm_dep += dependency('libxml-2.0')
+rm_dep += dependency('spandsp')
+rm_dep += dependency('json-glib-1.0')
+rm_dep += dependency('dconf')
 
-routermanager_dep = []
-routermanager_dep += dependency('glib-2.0')
-routermanager_dep += dependency('libpeas-1.0')
-routermanager_dep += dependency('libsoup-2.4')
-routermanager_dep += dependency('gupnp-1.0')
-routermanager_dep += dependency('gssdp-1.0')
-routermanager_dep += dependency('speex')
-routermanager_dep += dependency('libpeas-1.0')
-routermanager_dep += dependency('libxml-2.0')
-routermanager_dep += dependency('spandsp')
-routermanager_dep += dependency('json-glib-1.0')
+# Check for UPnP support
+upnp_dep = dependency('gupnp-1.0', required : false)
+rm_dep += upnp_dep
+
+# Check for SSDP support
+ssdp_dep = dependency('gssdp-1.0', required : false)
+rm_dep += ssdp_dep
+
+rmconf_data.set10('HAVE_SSDP', ssdp_dep.found())
+configure_file(input : 'rmconfig.h.meson', output : 'rmconfig.h', configuration : rmconf_data)
+
+rm_sources = []
+rm_sources += 'rmaction.c'
+rm_sources += 'rmaddressbook.c'
+rm_sources += 'rmaudio.c'
+rm_sources += 'rmcall.c'
+rm_sources += 'rmcontact.c'
+rm_sources += 'rmconnection.c'
+rm_sources += 'rmcsv.c'
+rm_sources += 'rmdevice.c'
+rm_sources += 'rmdevicefax.c'
+rm_sources += 'rmfaxspooler.c'
+rm_sources += 'rmfaxserver.c'
+rm_sources += 'rmfile.c'
+rm_sources += 'rmfilter.c'
+rm_sources += 'rmftp.c'
+rm_sources += 'rmstring.c'
+rm_sources += 'rmlog.c'
+rm_sources += 'rmlookup.c'
+rm_sources += 'rmnetmonitor.c'
+rm_sources += 'rmnetwork.c'
+rm_sources += 'rmobject.c'
+rm_sources += 'rmobjectemit.c'
+rm_sources += 'rmprofile.c'
+rm_sources += 'rmmain.c'
+rm_sources += 'rmosdep.c'
+rm_sources += 'rmpassword.c'
+rm_sources += 'rmplugins.c'
+rm_sources += 'rmprofile.c'
+rm_sources += 'rmphone.c'
+rm_sources += 'router.c'
+rm_sources += 'rmsettings.c'
+if ssdp_dep.found()
+	rm_sources += 'rmssdp.c'
+endif
+rm_sources += 'rmvox.c'
+rm_sources += 'xml.c'
+
+rm_inc = include_directories('..')
 
 libroutermanager = shared_library('routermanager',
-                        routermanager_sources,
-                        include_directories : routermanager_inc,
-                        dependencies : routermanager_dep,
+                        rm_sources,
+                        include_directories : rm_inc,
+                        dependencies : rm_dep,
                         install : true,
                         link_args : '-lcrypt')
+
+headers = [
+	'rmaction.h',
+	'rmaddressbook.h',
+	'rmaudio.h',
+	'rmcall.h',
+	'rmconnection.h',
+	'rmcontact.h',
+	'rmcsv.h',
+	'rmdevicefax.h',
+	'rmdevice.h',
+	'rmfaxprinter.h',
+	'rmfile.h',
+	'rmfilter.h',
+	'rmftp.h',
+	'rmlog.h',
+	'rmlookup.h',
+	'rmmain.h',
+	'rmnetmonitor.h',
+	'rmnetwork.h',
+	'rmobjectemit.h',
+	'rmobject.h',
+	'rmosdep.h',
+	'rmpassword.h',
+	'rmphone.h',
+	'rmplugins.h',
+	'rmprofile.h',
+	'rmsettings.h',
+	'rmssdp.h',
+	'rmstring.h',
+	'rmvox.h',
+	'router.h',
+	'xml.h'
+]
+install_headers(headers, subdir : 'libroutermanager')
 
 pkg_mod = import('pkgconfig')
 pkg_mod.generate(libraries : libroutermanager,

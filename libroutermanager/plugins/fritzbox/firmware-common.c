@@ -30,7 +30,7 @@
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmnetwork.h>
 #include <libroutermanager/rmcall.h>
-#include <libroutermanager/ftp.h>
+#include <libroutermanager/rmftp.h>
 #include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/rmobjectemit.h>
@@ -619,34 +619,34 @@ gint fritzbox_get_dialport(gint type)
 GSList *fritzbox_load_faxbox(GSList *journal)
 {
 	RmProfile *profile = rm_profile_get_active();
-	struct ftp *client;
+	RmFtp *client;
 	gchar *user = router_get_ftp_user(profile);
 	gchar *response;
 	gchar *path;
 	gchar *volume_path;
 
-	client = ftp_init(router_get_host(profile));
+	client = rm_ftp_init(router_get_host(profile));
 	if (!client) {
 		return journal;
 	}
 
-	if (!ftp_login(client, user, router_get_ftp_password(profile))) {
+	if (!rm_ftp_login(client, user, router_get_ftp_password(profile))) {
 		g_warning("Could not login to router ftp");
 		rm_object_emit_message(_("FTP Login failed"), _("Please check your ftp credentials"));
-		ftp_shutdown(client);
+		rm_ftp_shutdown(client);
 		return journal;
 	}
 
-	if (!ftp_passive(client)) {
+	if (!rm_ftp_passive(client)) {
 		g_warning("Could not switch to passive mode");
-		ftp_shutdown(client);
+		rm_ftp_shutdown(client);
 		return journal;
 	}
 
 	volume_path = g_settings_get_string(profile->settings, "fax-volume");
 	path = g_build_filename(volume_path, "FRITZ/faxbox/", NULL);
 	g_free(volume_path);
-	response = ftp_list_dir(client, path);
+	response = rm_ftp_list_dir(client, path);
 	if (response) {
 		gchar **split;
 		gint index;
@@ -695,7 +695,7 @@ GSList *fritzbox_load_faxbox(GSList *journal)
 	}
 	g_free(path);
 
-	ftp_shutdown(client);
+	rm_ftp_shutdown(client);
 
 	return journal;
 }
@@ -744,23 +744,23 @@ static GSList *fritzbox_parse_voice_data(GSList *journal, const gchar *data, gsi
  */
 GSList *fritzbox_load_voicebox(GSList *journal)
 {
-	struct ftp *client;
+	RmFtp *client;
 	gchar *path;
 	gint index;
 	RmProfile *profile = rm_profile_get_active();
 	gchar *user = router_get_ftp_user(profile);
 	gchar *volume_path;
 
-	client = ftp_init(router_get_host(profile));
+	client = rm_ftp_init(router_get_host(profile));
 	if (!client) {
 		g_warning("Could not init ftp connection. Please check that ftp is enabled");
 		return journal;
 	}
 
-	if (!ftp_login(client, user, router_get_ftp_password(profile))) {
+	if (!rm_ftp_login(client, user, router_get_ftp_password(profile))) {
 		g_warning("Could not login to router ftp");
 		rm_object_emit_message(_("FTP Login failed"), _("Please check your ftp credentials"));
-		ftp_shutdown(client);
+		rm_ftp_shutdown(client);
 		return journal;
 	}
 
@@ -773,12 +773,12 @@ GSList *fritzbox_load_voicebox(GSList *journal)
 		gchar *file_data;
 		gsize file_size = 0;
 
-		if (!ftp_passive(client)) {
+		if (!rm_ftp_passive(client)) {
 			g_warning("Could not switch to passive mode");
 			break;
 		}
 
-		file_data = ftp_get_file(client, file, &file_size);
+		file_data = rm_ftp_get_file(client, file, &file_size);
 		g_free(file);
 
 		if (file_data && file_size) {
@@ -794,7 +794,7 @@ GSList *fritzbox_load_voicebox(GSList *journal)
 	}
 	g_free(path);
 
-	ftp_shutdown(client);
+	rm_ftp_shutdown(client);
 
 	return journal;
 }
@@ -808,17 +808,17 @@ GSList *fritzbox_load_voicebox(GSList *journal)
  */
 gchar *fritzbox_load_fax(struct profile *profile, const gchar *filename, gsize *len)
 {
-	struct ftp *client;
+	RmFtp *client;
 	gchar *user = router_get_ftp_user(profile);
 	gchar *ret;
 
-	client = ftp_init(router_get_host(profile));
-	ftp_login(client, user, router_get_ftp_password(profile));
+	client = rm_ftp_init(router_get_host(profile));
+	rm_ftp_login(client, user, router_get_ftp_password(profile));
 
-	ftp_passive(client);
+	rm_ftp_passive(client);
 
-	ret = ftp_get_file(client, filename, len);
-	ftp_shutdown(client);
+	ret = rm_ftp_get_file(client, filename, len);
+	rm_ftp_shutdown(client);
 
 	return ret;
 }
@@ -832,24 +832,24 @@ gchar *fritzbox_load_fax(struct profile *profile, const gchar *filename, gsize *
  */
 gchar *fritzbox_load_voice(struct profile *profile, const gchar *name, gsize *len)
 {
-	struct ftp *client;
+	RmFtp *client;
 	gchar *filename = g_strconcat("/", g_settings_get_string(profile->settings, "fax-volume"), "/FRITZ/voicebox/rec/", name, NULL);
 	gchar *user = router_get_ftp_user(profile);
 	gchar *ret = NULL;
 
-	client = ftp_init(router_get_host(profile));
+	client = rm_ftp_init(router_get_host(profile));
 	if (!client) {
 		g_debug("Could not init ftp connection");
 		return ret;
 	}
 
-	ftp_login(client, user, router_get_ftp_password(profile));
+	rm_ftp_login(client, user, router_get_ftp_password(profile));
 
-	ftp_passive(client);
+	rm_ftp_passive(client);
 
-	ret = ftp_get_file(client, filename, len);
+	ret = rm_ftp_get_file(client, filename, len);
 
-	ftp_shutdown(client);
+	rm_ftp_shutdown(client);
 
 	g_free(filename);
 
@@ -1044,17 +1044,17 @@ gboolean fritzbox_reconnect(struct profile *profile)
  */
 gboolean fritzbox_delete_fax(struct profile *profile, const gchar *filename)
 {
-	struct ftp *client;
+	RmFtp *client;
 	gchar *user = router_get_ftp_user(profile);
 	gboolean ret;
 
-	client = ftp_init(router_get_host(profile));
-	ftp_login(client, user, router_get_ftp_password(profile));
+	client = rm_ftp_init(router_get_host(profile));
+	rm_ftp_login(client, user, router_get_ftp_password(profile));
 
-	ftp_passive(client);
+	rm_ftp_passive(client);
 
-	ret = ftp_delete_file(client, filename);
-	ftp_shutdown(client);
+	ret = rm_ftp_delete_file(client, filename);
+	rm_ftp_shutdown(client);
 
 	return ret;
 }
@@ -1067,7 +1067,7 @@ gboolean fritzbox_delete_fax(struct profile *profile, const gchar *filename)
  */
 gboolean fritzbox_delete_voice(struct profile *profile, const gchar *filename)
 {
-	struct ftp *client;
+	RmFtp *client;
 	struct voice_data *voice_data;
 	gpointer modified_data;
 	gint nr;
@@ -1094,16 +1094,16 @@ gboolean fritzbox_delete_voice(struct profile *profile, const gchar *filename)
 	}
 
 	/* Write data to router */
-	client = ftp_init(router_get_host(profile));
-	ftp_login(client, router_get_ftp_user(profile), router_get_ftp_password(profile));
+	client = rm_ftp_init(router_get_host(profile));
+	rm_ftp_login(client, router_get_ftp_user(profile), router_get_ftp_password(profile));
 
 	gchar *path = g_build_filename(g_settings_get_string(profile->settings, "fax-volume"), "FRITZ/voicebox/", NULL);
 	gchar *remote_file = g_strdup_printf("meta%d", nr);
-	if (!ftp_put_file(client, remote_file, path, modified_data, offset)) {
+	if (!rm_ftp_put_file(client, remote_file, path, modified_data, offset)) {
 		g_free(modified_data);
 		g_free(remote_file);
 		g_free(path);
-		ftp_shutdown(client);
+		rm_ftp_shutdown(client);
 		return FALSE;
 	}
 
@@ -1117,13 +1117,13 @@ gboolean fritzbox_delete_voice(struct profile *profile, const gchar *filename)
 
 	/* Delete voice file */
 	name = g_build_filename(g_settings_get_string(profile->settings, "fax-volume"), "FRITZ/voicebox/rec", filename, NULL);
-	if (!ftp_delete_file(client, name)) {
+	if (!rm_ftp_delete_file(client, name)) {
 		g_free(name);
-		ftp_shutdown(client);
+		rm_ftp_shutdown(client);
 		return FALSE;
 	}
 
-	ftp_shutdown(client);
+	rm_ftp_shutdown(client);
 
 	g_free(name);
 

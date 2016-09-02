@@ -169,6 +169,9 @@ void app_authenticate_cb(RmObject *app, struct auth_data *auth_data)
 static void application_shutdown(GObject *object)
 {
 	rm_shutdown();
+
+	g_object_unref(app_settings);
+	app_settings = NULL;
 }
 
 static void addressbook_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
@@ -545,7 +548,7 @@ GtkApplication *application_new(void)
 
 	roger_app = gtk_application_new("org.tabos.roger", G_APPLICATION_HANDLES_COMMAND_LINE);
 
-	app_settings = rm_settings_new(APP_GSETTINGS_SCHEMA, NULL, "roger.conf");
+	app_settings = rm_settings_new(APP_GSETTINGS_SCHEMA);
 	g_signal_connect(roger_app, "activate", G_CALLBACK(application_activated), roger_app);
 	g_signal_connect(roger_app, "startup", G_CALLBACK(application_startup), roger_app);
 	g_signal_connect(roger_app, "shutdown", G_CALLBACK(application_shutdown), roger_app);

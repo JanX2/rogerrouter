@@ -402,7 +402,7 @@ static void impl_activate(PeasActivatable *plugin)
 
 	g_debug("%s(): sip", __FUNCTION__);
 
-	sip_settings = rm_settings_plugin_new("org.tabos.roger.plugins.sip", "sip");
+	sip_settings = rm_settings_new("org.tabos.roger.plugins.sip");
 
 	/* Add network event */
 	sip_plugin->priv->net_event_id = rm_netmonitor_add_event(sip_connect, sip_disconnect, sip_plugin);
@@ -422,7 +422,7 @@ static void impl_deactivate(PeasActivatable *plugin)
 	/* Remove network event */
 	rm_netmonitor_remove_event(sip_plugin->priv->net_event_id);
 
-	g_object_unref(sip_settings);
+	g_clear_object(&sip_settings);
 }
 
 GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)

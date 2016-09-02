@@ -17,25 +17,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_OSDEP_H
-#define LIBROUTERMANAGER_OSDEP_H
+#ifndef LIBROUTERMANAGER_RMOSDEP_H
+#define LIBROUTERMANAGER_RMOSDEP_H
 
 #ifdef G_OS_WIN32
-#define OS_OPEN "start"
-#define APP_USER_DIR APP_NAME
-#endif
+#include <windows.h>
+#include <shellapi.h>
 
-#ifdef G_OS_UNIX
-#ifdef __APPLE__
-#define OS_OPEN "open"
-#define APP_USER_DIR "." APP_NAME
-/* work around for warnings where gtk-mac-integration expects a label to have an accel closure */
-/* we simply use an accel label instead of the normal label */
-#define gtk_label_new(text) gtk_accel_label_new(text)
+#define RM_OS_OPEN "start"
+#elseif __APPLE__
+#define RM_OS_OPEN "open"
 #else
-#define OS_OPEN "xdg-open"
-#define APP_USER_DIR ".config/" APP_NAME
-#endif
+#define RM_OS_OPEN "xdg-open"
 #endif
 
 G_BEGIN_DECLS

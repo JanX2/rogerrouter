@@ -2,13 +2,13 @@ evolution_sources = []
 evolution_sources += 'evolution.c'
 
 evolution_dep = []
-evolution_dep += routermanager_dep
+evolution_dep += rm_dep
 evolution_dep += roger_dep
 evolution_dep += dependency('libebook-1.2')
 
 libevolution = shared_library('evolution',
                         evolution_sources,
-                        include_directories : routermanager_inc,
+                        include_directories : rm_inc,
                         dependencies : evolution_dep,
                         link_with : libroutermanager,
                         install : true,

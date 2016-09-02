@@ -116,7 +116,7 @@ void impl_activate(PeasActivatable *plugin)
 	dir = g_build_filename(g_get_user_config_dir(), "routermanager", NULL);
 	g_mkdir_with_parents(dir, 0700);
 
-	simple_pwd_file = g_build_filename(dir, "rogermanager.keys", NULL);
+	simple_pwd_file = g_build_filename(dir, "simple_pwd.keys", NULL);
 	g_free(dir);
 	simple_pwd_group = g_strdup("passwords");
 

@@ -257,7 +257,7 @@ void impl_activate(PeasActivatable *plugin)
 {
 	RouterManagerGNotificationPlugin *notify_plugin = ROUTERMANAGER_GNOTIFICATION_PLUGIN(plugin);
 
-	gnotification_settings = rm_settings_plugin_new("org.tabos.roger.plugins.gnotification", "gnotification");
+	gnotification_settings = rm_settings_new("org.tabos.roger.plugins.gnotification");
 
 	gchar **incoming_numbers = g_settings_get_strv(gnotification_settings, "incoming-numbers");
 	gchar **outgoing_numbers = g_settings_get_strv(gnotification_settings, "outgoing-numbers");
@@ -285,6 +285,8 @@ void impl_deactivate(PeasActivatable *plugin)
 	if (g_signal_handler_is_connected(G_OBJECT(rm_object), notify_plugin->priv->signal_id)) {
 		g_signal_handler_disconnect(G_OBJECT(rm_object), notify_plugin->priv->signal_id);
 	}
+
+	g_clear_object(&gnotification_settings);
 }
 
 void gnotification_settings_refresh_list(GtkListStore *list_store)

@@ -1176,7 +1176,7 @@ void impl_activate(PeasActivatable *plugin)
 {
 	gchar *name;
 
-	vcard_settings = rm_settings_plugin_new("org.tabos.roger.plugins.vcard", "vcard");
+	vcard_settings = rm_settings_new("org.tabos.roger.plugins.vcard");
 
 	name = g_settings_get_string(vcard_settings, "filename");
 	if (RM_EMPTY_STRING(name)) {
@@ -1192,7 +1192,7 @@ void impl_activate(PeasActivatable *plugin)
 void impl_deactivate(PeasActivatable *plugin)
 {
 	rm_addressbook_unregister(&vcard_book);
-	g_object_unref(vcard_settings);
+	g_clear_object(&vcard_settings);
 }
 
 void filename_button_clicked_cb(GtkButton *button, gpointer user_data)
