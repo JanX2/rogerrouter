@@ -22,6 +22,9 @@
 
 #include <gio/gio.h>
 
+#include <libroutermanager/rmaddressbook.h>
+#include <libroutermanager/rmaudio.h>
+
 G_BEGIN_DECLS
 
 typedef struct profile {
@@ -49,6 +52,8 @@ const gchar *rm_profile_get_name(RmProfile *profile);
 void rm_profile_set_host(RmProfile *profile, const gchar *host);
 void rm_profile_set_login_user(RmProfile *profile, const gchar *user);
 void rm_profile_set_login_password(RmProfile *profile, const gchar *password);
+RmAddressBook *rm_profile_get_addressbook(RmProfile *profile);
+RmAudio *rm_profile_get_audio(RmProfile *profile);
 
 G_END_DECLS
 

@@ -43,7 +43,7 @@ struct vox_playback {
 	/** Speex structure */
 	gpointer speex;
 	/** audio device */
-	struct audio *audio;
+	RmAudio *audio;
 	/** audio private data */
 	gpointer audio_priv;
 	/** cancellable object for playback thread */
@@ -363,7 +363,7 @@ gpointer rm_vox_init(gchar *data, gsize len, GError **error)
 	playback->len = len;
 
 	/* Get default audio device */
-	playback->audio = rm_audio_get_default();
+	playback->audio = rm_profile_get_audio(rm_profile_get_active());
 	if (!playback->audio) {
 		g_warning("No audio device");
 		g_slice_free(struct vox_playback, playback);

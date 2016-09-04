@@ -17,25 +17,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_RMDEVICEFAX_H
-#define LIBROUTERMANAGER_RMDEVICEFAX_H
+#ifndef LIBROUTERMANAGER_RMNOTIFICATION_H
+#define LIBROUTERMANAGER_RMNOTIFICATION_H
 
-#include <libroutermanager/rmconnection.h>
+#include <glib.h>
 
 G_BEGIN_DECLS
 
-typedef struct device_fax {
-	gchar *name;
-	RmConnection *(*send)(gchar *tiff, const gchar *target, gboolean anonymous);
-	gboolean (*get_status)(struct fax_status *status);
-	gint (*pickup)(RmConnection *connection);
-	void (*hangup)(RmConnection *connection);
+typedef struct {
+	gpointer priv;
+	RmConnection *connection;
+} RmNotification;
 
-	gboolean (*number_is_handled)(gchar *number);
-} RmDeviceFax;
+typedef struct {
+	void (*show)(RmNotification *notification);
+	void (*update)(RmNotification *notification);
+	void (*close)(RmNotification *notification);
+} RmNotificationPlugin;
 
-void rm_device_fax_register(RmDeviceFax *fax);
-GSList *rm_device_fax_get_plugins(void);
+RmNotification *rm_notification_new(void);
+void rm_notification_remove(RmNotification *notification);
+void rm_notification_add_connection(RmNotification *notification, RmConnection *connection);
+void rm_notification_set_uid(RmNotification *notification, gpointer uid);
+
+void rm_notification_register(RmNotificationPlugin *plugin);
+void rm_notification_unregister(RmNotificationPlugin *plugin);
 
 G_END_DECLS
 

@@ -110,7 +110,7 @@ gboolean fax_update_ui(gpointer user_data)
 	return FALSE;
 }
 
-void phone_fax_status(struct phone_state *state, struct connection *connection)
+void phone_fax_status(struct phone_state *state, RmConnection *connection)
 {
 	/*struct fax_ui *fax_ui = state->priv;
 
@@ -366,7 +366,7 @@ gchar *phone_fax_get_title(void)
 	return _("Fax");
 }
 
-gboolean phone_fax_init(struct contact *contact, struct connection *connection)
+gboolean phone_fax_init(struct contact *contact, RmConnection *connection)
 {
 	return TRUE;
 }
@@ -379,7 +379,7 @@ GtkWidget *phone_fax_create_child(struct phone_state *state, GtkWidget *grid)
 	return state->child_frame;
 }
 
-void phone_fax_terminated(struct phone_state *state, struct connection *connection)
+void phone_fax_terminated(struct phone_state *state, RmConnection *connection)
 {
 /*
 #ifdef FAX_SFF

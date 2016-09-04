@@ -185,7 +185,7 @@ static gpointer ringtone_thread(gpointer user_data)
 	unsigned int snd_count = 0;
 	unsigned long effect_pos = 0;
 	void *priv = NULL;
-	struct audio *audio = rm_audio_get_default();
+	RmAudio *audio = rm_profile_get_audio(rm_profile_get_active());
 	int counter = 0;
 
 	if (audio == NULL) {

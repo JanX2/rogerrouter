@@ -860,7 +860,9 @@ static int capi_indication(_cmsg capi_message)
 
 			connection->state = STATE_CONNECT_ACTIVE;
 			if (connection->type == SESSION_PHONE) {
-				connection->audio = session->handlers->audio_open();
+				RmAudio *audio = rm_profile_get_audio(rm_profile_get_active());
+
+				connection->audio = rm_audio_open(audio);
 				if (!connection->audio) {
 					g_warning("Could not open audio. Hangup");
 					capi_hangup(connection);
@@ -883,7 +885,9 @@ static int capi_indication(_cmsg capi_message)
 
 				connection->state = STATE_CONNECT_ACTIVE;
 				if (connection->type == SESSION_PHONE) {
-					connection->audio = session->handlers->audio_open();
+					RmAudio *audio = rm_profile_get_audio(rm_profile_get_active());
+
+					connection->audio = rm_audio_open(audio);
 					if (!connection->audio) {
 						g_warning("Could not open audio. Hangup");
 						rm_object_emit_message(0, "Could not open audio. Hangup");
@@ -1251,7 +1255,9 @@ static int capi_indication(_cmsg capi_message)
 
 				connection->connect_time = time(NULL);
 				if (connection->type == SESSION_PHONE) {
-					connection->audio = session->handlers->audio_open();
+					RmAudio *audio = rm_profile_get_audio(rm_profile_get_active());
+
+					connection->audio = rm_audio_open(audio);
 					if (!connection->audio) {
 						g_warning("Could not open audio. Hangup");
 						rm_object_emit_message(0, "Could not open audio. Hangup");
@@ -1332,15 +1338,18 @@ static int capi_indication(_cmsg capi_message)
 		connection->plci = 0;
 
 		switch (connection->type) {
-		case SESSION_PHONE:
+		case SESSION_PHONE: {
+			RmAudio *audio = rm_profile_get_audio(rm_profile_get_active());
+
 			if (session->input_thread_state == 1) {
 				session->input_thread_state++;
 				do {
 					g_usleep(10);
 				} while (session->input_thread_state != 0);
 			}
-			session->handlers->audio_close(connection->audio);
+			rm_audio_close(audio, connection->audio);
 			break;
+		}
 		case SESSION_FAX:
 			/* Fax workaround */
 			fax_spandsp_workaround(connection);
@@ -1871,7 +1880,7 @@ struct capi_connection *phone_dial(const gchar *trg_no, gboolean suppress)
  */
 void connection_established(struct capi_connection *capi_connection)
 {
-	struct connection *connection = rm_connection_find_by_id(capi_connection->id);
+	RmConnection *connection = rm_connection_find_by_id(capi_connection->id);
 
 	if (connection) {
 		rm_object_emit_connection_established(connection);
@@ -1884,7 +1893,7 @@ void connection_established(struct capi_connection *capi_connection)
  */
 void connection_terminated(struct capi_connection *capi_connection)
 {
-	struct connection *connection = rm_connection_find_by_id(capi_connection->id);
+	RmConnection *connection = rm_connection_find_by_id(capi_connection->id);
 
 	if (connection) {
 		rm_object_emit_connection_terminated(connection);
@@ -1897,7 +1906,7 @@ void connection_terminated(struct capi_connection *capi_connection)
  */
 void connection_ring(struct capi_connection *capi_connection)
 {
-	struct connection *connection;
+	RmConnection *connection;
 
 	active_capi_connection = capi_connection;
 
@@ -1935,7 +1944,7 @@ void connection_code(struct capi_connection *connection, gint code)
  */
 void connection_status(struct capi_connection *capi_connection, gint status)
 {
-	struct connection *connection = rm_connection_find_by_id(capi_connection->id);
+	RmConnection *connection = rm_connection_find_by_id(capi_connection->id);
 
 	if (connection) {
 		rm_object_emit_connection_status(status, connection);
@@ -1943,11 +1952,6 @@ void connection_status(struct capi_connection *capi_connection, gint status)
 }
 
 struct session_handlers session_handlers = {
-	rm_audio_open, /* audio_open */
-	rm_audio_read, /* audio_read */
-	rm_audio_write, /* audio_write */
-	rm_audio_close, /* audio_close */
-
 	connection_established, /* connection_established */
 	connection_terminated, /* connection_terminated */
 	connection_ring, /* connection_ring */

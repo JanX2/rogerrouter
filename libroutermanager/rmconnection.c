@@ -172,7 +172,7 @@ RmConnection *rm_connection_find_by_id(gint id)
  *
  * Returns: a #RmConnection, or NULL if not found.
  */
-struct connection *rm_connection_find_by_remote_number(const gchar *remote_number)
+RmConnection *rm_connection_find_by_remote_number(const gchar *remote_number)
 {
 	GSList *list = rm_connection_list;
 	RmConnection *connection;
@@ -207,7 +207,7 @@ void rm_connection_remove(RmConnection *connection)
 	g_free(connection->local_number);
 	g_free(connection->remote_number);
 
-	g_slice_free(struct connection, connection);
+	g_slice_free(RmConnection, connection);
 }
 
 /**

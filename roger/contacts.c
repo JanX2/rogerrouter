@@ -100,7 +100,7 @@ static void contacts_update_details(struct contact *contact)
 	gtk_label_set_text(GTK_LABEL(contacts->header_bar_title), "");
 
 	/* Check for an active address book */
-	if (rm_addressbook_available()) {
+	if (rm_profile_get_addressbook(rm_profile_get_active())) {
 		if (contact) {
 			gtk_widget_set_margin(grid, 18, 18, 18, 18);
 
@@ -309,7 +309,8 @@ static struct contact *contacts_get_selected_contact(void)
 static void contacts_update_list(void)
 {
 	GSList *list;
-	GSList *contact_list = rm_addressbook_get_contacts();
+	RmAddressBook *book = rm_profile_get_addressbook(rm_profile_get_active());
+	GSList *contact_list = rm_addressbook_get_contacts(book);
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(contacts->search_entry));
 	gint pos = 0;
 	struct contact *selected_contact;
@@ -801,6 +802,7 @@ void contacts_cancel_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 
 void contacts_save_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 {
+	RmAddressBook *book = rm_profile_get_addressbook(rm_profile_get_active());
 	struct contact *contact;
 	gboolean ok = g_settings_get_boolean(app_settings, "contacts-hide-warning");
 
@@ -834,12 +836,12 @@ void contacts_save_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 	if (ok) {
 		if (contact) {
 			rm_contact_copy(contacts->tmp_contact, contact);
-			rm_addressbook_save_contact(contact);
+			rm_addressbook_save_contact(book, contact);
 		} else {
-			rm_addressbook_save_contact(contacts->tmp_contact);
+			rm_addressbook_save_contact(book, contacts->tmp_contact);
 		}
 
-		rm_addressbook_reload_contacts();
+		rm_addressbook_reload_contacts(book);
 	}
 
 	if (contacts->tmp_contact) {
@@ -954,8 +956,10 @@ void remove_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	gtk_widget_destroy(dialog);
 
 	if (result == GTK_RESPONSE_OK) {
+		RmAddressBook *book = rm_profile_get_addressbook(rm_profile_get_active());
+
 		/* Remove selected contact */
-		rm_addressbook_remove_contact(contact);
+		rm_addressbook_remove_contact(book, contact);
 
 		/* Update contact list */
 		contacts_update_list();
@@ -1008,6 +1012,8 @@ void app_contacts(struct contact *contact)
 	GtkWidget *contacts_header_bar_left;
 	GtkWidget *parent;
 	GtkWidget *placeholder_image;
+	gchar *name;
+	RmAddressBook *book;
 
 	/* Only allow one contact window at a time */
 	if (contacts) {
@@ -1020,6 +1026,8 @@ void app_contacts(struct contact *contact)
 		g_warning("Could not load contacts ui");
 		return;
 	}
+
+	book = rm_profile_get_addressbook(rm_profile_get_active());
 
 	contacts = g_malloc0(sizeof(struct contacts));
 	contacts_set_contact(contacts, contact);
@@ -1040,7 +1048,9 @@ void app_contacts(struct contact *contact)
 	contacts->remove_button = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_remove_button"));
 	contacts->view_port = GTK_WIDGET(gtk_builder_get_object(builder, "view_port"));
 	contacts_header_bar_left = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_header_bar_left"));
-	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(contacts_header_bar_left), rm_addressbook_get_name());
+	name = rm_addressbook_get_name(book);
+	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(contacts_header_bar_left), name);
+	g_free(name);
 
 	contacts->header_bar_title = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_header_bar_label"));
 	placeholder_image = GTK_WIDGET(gtk_builder_get_object(builder, "placeholder_image"));
@@ -1071,7 +1081,7 @@ void app_contacts(struct contact *contact)
 	}
 
 	/* Only set buttons to sensitive if we can write to the selected book */
-	if (!rm_addressbook_can_save()) {
+	if (!rm_addressbook_can_save(book)) {
 		gtk_widget_set_sensitive(contacts->add_button, FALSE);
 		gtk_widget_set_sensitive(contacts->remove_button, FALSE);
 		gtk_widget_set_sensitive(contacts->edit_button, FALSE);

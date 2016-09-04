@@ -112,73 +112,73 @@ struct router_info {
 struct router {
 	const gchar *name;
 	gboolean (*present)(struct router_info *router_info);
-	gboolean (*login)(struct profile *profile);
-	gboolean (*logout)(struct profile *profile, gboolean force);
-	gboolean (*get_settings)(struct profile *profile);
-	gboolean (*load_journal)(struct profile *profile, gchar **data);
-	gboolean (*clear_journal)(struct profile *profile);
-	gboolean (*dial_number)(struct profile *profile, gint port, const gchar *number);
-	gboolean (*hangup)(struct profile *profile, gint port, const gchar *number);
-	gchar *(*load_fax)(struct profile *profile, const gchar *filename, gsize *len);
-	gchar *(*load_voice)(struct profile *profile, const gchar *filename, gsize *len);
-	gchar *(*get_ip)(struct profile *profile);
-	gboolean (*reconnect)(struct profile *profile);
-	gboolean (*delete_fax)(struct profile *profile, const gchar *filename);
-	gboolean (*delete_voice)(struct profile *profile, const gchar *filename);
+	gboolean (*login)(RmProfile *profile);
+	gboolean (*logout)(RmProfile *profile, gboolean force);
+	gboolean (*get_settings)(RmProfile *profile);
+	gboolean (*load_journal)(RmProfile *profile, gchar **data);
+	gboolean (*clear_journal)(RmProfile *profile);
+	gboolean (*dial_number)(RmProfile *profile, gint port, const gchar *number);
+	gboolean (*hangup)(RmProfile *profile, gint port, const gchar *number);
+	gchar *(*load_fax)(RmProfile *profile, const gchar *filename, gsize *len);
+	gchar *(*load_voice)(RmProfile *profile, const gchar *filename, gsize *len);
+	gchar *(*get_ip)(RmProfile *profile);
+	gboolean (*reconnect)(RmProfile *profile);
+	gboolean (*delete_fax)(RmProfile *profile, const gchar *filename);
+	gboolean (*delete_voice)(RmProfile *profile, const gchar *filename);
 };
 
 extern struct phone_port router_phone_ports[PORT_MAX];
 
 gboolean router_present(struct router_info *router_info);
-gboolean router_login(struct profile *profile);
-gboolean router_logout(struct profile *profile);
-gboolean router_get_settings(struct profile *profile);
-const gchar *router_get_name(struct profile *profile);
-const gchar *router_get_version(struct profile *profile);
-gchar *router_get_host(struct profile *profile);
-gchar *router_get_login_password(struct profile *profile);
-gchar *router_get_login_user(struct profile *profile);
-gchar *router_get_ftp_password(struct profile *profile);
-gchar *router_get_ftp_user(struct profile *profile);
-gboolean router_load_journal(struct profile *profile);
-gboolean router_clear_journal(struct profile *profile);
-gboolean router_dial_number(struct profile *profile, gint port, const gchar *number);
-gboolean router_hangup(struct profile *profile, gint port, const gchar *number);
-gchar *router_get_ip(struct profile *profile);
-gboolean router_reconnect(struct profile *profile);
-gboolean router_delete_fax(struct profile *profile, const gchar *filename);
-gboolean router_delete_voice(struct profile *profile, const gchar *filename);
+gboolean router_login(RmProfile *profile);
+gboolean router_logout(RmProfile *profile);
+gboolean router_get_settings(RmProfile *profile);
+const gchar *router_get_name(RmProfile *profile);
+const gchar *router_get_version(RmProfile *profile);
+gchar *router_get_host(RmProfile *profile);
+gchar *router_get_login_password(RmProfile *profile);
+gchar *router_get_login_user(RmProfile *profile);
+gchar *router_get_ftp_password(RmProfile *profile);
+gchar *router_get_ftp_user(RmProfile *profile);
+gboolean router_load_journal(RmProfile *profile);
+gboolean router_clear_journal(RmProfile *profile);
+gboolean router_dial_number(RmProfile *profile, gint port, const gchar *number);
+gboolean router_hangup(RmProfile *profile, gint port, const gchar *number);
+gchar *router_get_ip(RmProfile *profile);
+gboolean router_reconnect(RmProfile *profile);
+gboolean router_delete_fax(RmProfile *profile, const gchar *filename);
+gboolean router_delete_voice(RmProfile *profile, const gchar *filename);
 
-gchar *router_get_area_code(struct profile *profile);
-gchar *router_get_country_code(struct profile *profile);
-gchar *router_get_international_prefix(struct profile *profile);
-gchar *router_get_national_prefix(struct profile *profile);
+gchar *router_get_area_code(RmProfile *profile);
+gchar *router_get_country_code(RmProfile *profile);
+gchar *router_get_international_prefix(RmProfile *profile);
+gchar *router_get_national_prefix(RmProfile *profile);
 
 gboolean router_init(void);
 void router_shutdown(void);
 
-GSList *router_get_phone_list(struct profile *profile);
-gchar **router_get_numbers(struct profile *profile);
+GSList *router_get_phone_list(RmProfile *profile);
+gchar **router_get_numbers(RmProfile *profile);
 
 void router_process_journal(GSList *journal);
 
 gboolean routermanager_router_register(struct router *router_new);
 
-gchar *router_load_fax(struct profile *profile, const gchar *filename, gsize *len);
-gchar *router_load_voice(struct profile *profile, const gchar *filename, gsize *len);
+gchar *router_load_fax(RmProfile *profile, const gchar *filename, gsize *len);
+gchar *router_load_voice(RmProfile *profile, const gchar *filename, gsize *len);
 
 gboolean router_info_free(struct router_info *info);
-gboolean router_is_cable(struct profile *profile);
+gboolean router_is_cable(RmProfile *profile);
 
-GSList *router_load_fax_reports(struct profile *profile, GSList *journal);
-GSList *router_load_voice_records(struct profile *profile, GSList *journal);
+GSList *router_load_fax_reports(RmProfile *profile, GSList *journal);
+GSList *router_load_voice_records(RmProfile *profile, GSList *journal);
 
 void router_free_phone_list(GSList *phone_list);
 
-gint router_get_phone_port(struct profile *profile);
-void router_set_phone_port(struct profile *profile, gint port);
+gint router_get_phone_port(RmProfile *profile);
+void router_set_phone_port(RmProfile *profile, gint port);
 
-gboolean router_get_suppress_state(struct profile *profile);
+gboolean router_get_suppress_state(RmProfile *profile);
 
 void router_release_lock(void);
 gboolean router_is_locked(void);

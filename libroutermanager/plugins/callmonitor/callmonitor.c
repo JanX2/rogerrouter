@@ -56,7 +56,7 @@ ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_CALLMONITOR_PLUGIN, RouterManag
 static inline void callmonitor_convert(gchar *text)
 {
 	gchar **fields = g_strsplit(text, ";", -1);
-	struct connection *connection;
+	RmConnection *connection;
 	gchar *number = NULL;
 	gint type = -1;
 
@@ -133,7 +133,8 @@ gboolean callmonitor_io_cb(GIOChannel *source, GIOCondition condition, gpointer 
 	if (condition & (G_IO_HUP | G_IO_ERR | G_IO_NVAL)) {
 		/* A big problem occurred and we've lost the connection */
 		//callmonitor_reconnect(data);
-		g_warning("Error in callmonitor io cb, abort");
+		g_warning("%s(): Connection lost, abort", __FUNCTION__);
+
 		return FALSE;
 	}
 
@@ -142,8 +143,8 @@ gboolean callmonitor_io_cb(GIOChannel *source, GIOCondition condition, gpointer 
 	case G_IO_PRI:
 		ret = g_io_channel_read_line(source, &msg, &len, NULL, &error);
 		if (ret != G_IO_STATUS_NORMAL) {
-			g_warning("Error reading: %s, ret = %d", error ? error->message : "?", ret);
-			break;
+			g_warning("%s(): Error reading '%s', ret = %d", __FUNCTION__, error ? error->message : "?", ret);
+			return FALSE;
 		}
 
 		gchar **lines = g_strsplit(msg, "\n", -1);
@@ -159,10 +160,10 @@ gboolean callmonitor_io_cb(GIOChannel *source, GIOCondition condition, gpointer 
 		break;
 	case G_IO_ERR:
 	case G_IO_HUP:
-		g_error("Read end of pipe died!");
+		g_error("%s(): Read end of pipe died!", __FUNCTION__);
 		break;
 	default:
-		g_debug("Unhandled case: %d", condition);
+		g_debug("%s(): Unhandled case: %d", __FUNCTION__, condition);
 		break;
 	}
 

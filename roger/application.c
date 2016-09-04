@@ -243,7 +243,7 @@ static void pickup_activated(GSimpleAction *action, GVariant *parameter, gpointe
 
 	/* Close notifications */
 	//notify_gnotification_close(connection->notification, NULL);
-	connection->notification = NULL;
+	//connection->notification = NULL;
 
 	/* Show phone window */
 	app_show_phone_window(contact, connection);
@@ -257,7 +257,7 @@ static void hangup_activated(GSimpleAction *action, GVariant *parameter, gpointe
 	g_assert(connection != NULL);
 
 	//notify_gnotification_close(connection->notification, NULL);
-	connection->notification = NULL;
+	//connection->notification = NULL;
 
 	//if (!connection->priv) {
 		//connection->priv = active_capi_connection;

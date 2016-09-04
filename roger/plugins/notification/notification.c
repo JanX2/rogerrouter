@@ -64,7 +64,7 @@ static gchar **selected_incoming_numbers = NULL;
  */
 static void notify_accept_clicked_cb(NotifyNotification *notify, gchar *action, gpointer user_data)
 {
-	struct connection *connection = user_data;
+	RmConnection *connection = user_data;
 	struct contact *contact;
 
 	g_assert(connection != NULL);
@@ -86,7 +86,7 @@ static void notify_accept_clicked_cb(NotifyNotification *notify, gchar *action, 
  */
 static void notify_deny_clicked_cb(NotifyNotification *notify, gchar *action, gpointer user_data)
 {
-	struct connection *connection = user_data;
+	RmConnection *connection = user_data;
 
 	g_assert(connection != NULL);
 
@@ -109,7 +109,7 @@ static gboolean notification_close(gpointer window)
 
 gboolean notification_update(gpointer data) {
 	struct contact *contact = data;
-	struct connection *connection;
+	RmConnection *connection;
 
 	g_assert(contact != NULL);
 	g_assert(contact->priv != NULL);
@@ -144,7 +144,7 @@ gboolean notification_update(gpointer data) {
  */
 static gpointer notification_reverse_lookup_thread(gpointer data)
 {
-	struct connection *connection = data;
+	RmConnection *connection = data;
 	struct contact *contact;
 
 	contact = g_slice_new0(struct contact);
@@ -166,7 +166,7 @@ static gpointer notification_reverse_lookup_thread(gpointer data)
  * \param connection connection structure
  * \param unused_pointer unused user pointer
  */
-void notifications_connection_notify_cb(RmObject *obj, struct connection *connection, gpointer unused_pointer)
+void notifications_connection_notify_cb(RmObject *obj, RmConnection *connection, gpointer unused_pointer)
 {
 	NotifyNotification *notify = NULL;
 	gchar *text = NULL;

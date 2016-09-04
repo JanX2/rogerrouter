@@ -320,7 +320,7 @@ long pa_util_read_ring_buffer(pa_util_ring_buffer *ring_buffer, void *data, long
 static GSList *port_audio_detect_devices(void)
 {
 	GSList *list = NULL;
-	struct audio_device *device;
+	RmAudioDevice *device;
 	gint num_devices;
 	gint index;
 	const PaDeviceInfo *info;
@@ -333,7 +333,7 @@ static GSList *port_audio_detect_devices(void)
 		info = Pa_GetDeviceInfo(index);
 
 		if (info->maxOutputChannels > 0) {
-			device = g_slice_new0(struct audio_device);
+			device = g_slice_new0(RmAudioDevice);
 			device->internal_name = g_strdup(info->name);
 			device->name = g_strdup(info->name);
 			device->type = AUDIO_OUTPUT;
@@ -341,7 +341,7 @@ static GSList *port_audio_detect_devices(void)
 		}
 
 		if (info->maxInputChannels > 0) {
-			device = g_slice_new0(struct audio_device);
+			device = g_slice_new0(RmAudioDevice);
 			device->internal_name = g_strdup(info->name);
 			device->name = g_strdup(info->name);
 			device->type = AUDIO_INPUT;
@@ -835,7 +835,7 @@ int port_audio_shutdown(void)
 }
 
 /** audio definition */
-struct audio port_audio = {
+RmAudio port_audio = {
 	"PortAudio",
 	port_audio_init,
 	port_audio_open,
@@ -852,7 +852,7 @@ struct audio port_audio = {
  */
 static void impl_activate(PeasActivatable *plugin)
 {
-	routermanager_audio_register(&port_audio);
+	rm_audio_register(&port_audio);
 }
 
 /**
@@ -861,4 +861,5 @@ static void impl_activate(PeasActivatable *plugin)
  */
 static void impl_deactivate(PeasActivatable *plugin)
 {
+	rm_audio_unregister(&port_audio);
 }

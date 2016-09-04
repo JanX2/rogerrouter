@@ -268,7 +268,7 @@ void statusicon_popup_menu_cb(GtkStatusIcon *statusicon, guint button, guint act
  * \param connection connection structure
  * \param unused_pointer unused user pointer
  */
-void statusicon_connection_notify_cb(RmObject *obj, struct connection *connection, gpointer unused_pointer)
+void statusicon_connection_notify_cb(RmObject *obj, RmConnection *connection, gpointer unused_pointer)
 {
 	g_debug("Called: '%d/%d", connection->type, CONNECTION_TYPE_MISSED);
 	if (connection->type == CONNECTION_TYPE_MISSED) {

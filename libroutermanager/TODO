@@ -10,3 +10,11 @@
 * Update versions / years
 
 * ftplib
+
+* addressbook:
+  - optimize contact lookup
+  - set plugin directly to profile to remove lookup?
+  
+* rmcall
+  - split into number and journal
+  - simplify structure

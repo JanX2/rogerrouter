@@ -32,6 +32,7 @@
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/rmsettings.h>
 #include <libroutermanager/rmstring.h>
+#include <libroutermanager/rmcall.h>
 
 #include <roger/settings.h>
 #include <roger/uitools.h>

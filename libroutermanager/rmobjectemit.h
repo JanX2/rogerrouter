@@ -20,8 +20,11 @@
 #ifndef LIBROUTERMANAGER_RMOBJECTEMIT_H
 #define LIBROUTERMANAGER_RMOBJECTEMIT_H
 
+#include <glib.h>
+
 #include <libroutermanager/rmconnection.h>
 #include <libroutermanager/rmnetwork.h>
+#include <libroutermanager/rmcontact.h>
 
 G_BEGIN_DECLS
 

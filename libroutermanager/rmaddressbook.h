@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,7 +24,8 @@
 
 G_BEGIN_DECLS
 
-typedef struct rm_address_book {
+typedef struct {
+	/** Address book plugin name */
 	gchar *name;
 	gchar *(*get_active_book_name)(void);
 	GSList *(*get_contacts)(void);
@@ -33,15 +34,15 @@ typedef struct rm_address_book {
 	gboolean (*save_contact)(RmContact *contact);
 } RmAddressBook;
 
-gboolean rm_addressbook_available(void);
-GSList *rm_addressbook_get_contacts(void);
-gboolean rm_addressbook_reload_contacts(void);
-gboolean rm_addressbook_remove_contact(RmContact *contact);
-gboolean rm_addressbook_save_contact(RmContact *contact);
-gboolean rm_addressbook_can_save(void);
+RmAddressBook *rm_addressbook_get(gchar *name);
+GSList *rm_addressbook_get_contacts(RmAddressBook *book);
+gboolean rm_addressbook_reload_contacts(RmAddressBook *book);
+gboolean rm_addressbook_remove_contact(RmAddressBook *book, RmContact *contact);
+gboolean rm_addressbook_save_contact(RmAddressBook *book, RmContact *contact);
+gboolean rm_addressbook_can_save(RmAddressBook *book);
 void rm_addressbook_register(RmAddressBook *book);
 void rm_addressbook_unregister(RmAddressBook *book);
-gchar *rm_addressbook_get_name(void);
+gchar *rm_addressbook_get_name(RmAddressBook *book);
 GSList *rm_addressbook_get_plugins(void);
 
 G_END_DECLS

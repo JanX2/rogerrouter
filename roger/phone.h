@@ -22,6 +22,7 @@
 
 #include <libroutermanager/rmcontact.h>
 #include <libroutermanager/rmconnection.h>
+#include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmobject.h>
 
 G_BEGIN_DECLS
@@ -57,7 +58,7 @@ struct phone_state {
 	gint status_timer_id;
 
 	const gchar *number;
-	struct connection *connection;
+	RmConnection *connection;
 
 	gpointer priv;
 
@@ -66,22 +67,22 @@ struct phone_state {
 
 struct phone_device {
 	gchar *(*get_title)(void);
-	gboolean (*init)(struct contact *contact, struct connection *connection);
-	void (*terminated)(struct phone_state *state, struct connection *connection);
+	gboolean (*init)(struct contact *contact, RmConnection *connection);
+	void (*terminated)(struct phone_state *state, RmConnection *connection);
 	GtkWidget *(*create_menu)(struct profile *profile, struct phone_state *state);
 	GtkWidget *(*create_child)(struct phone_state *state, GtkWidget *grid);
 	void (*delete)(struct phone_state *state);
-	void (*status)(struct phone_state *state, struct connection *connection);
+	void (*status)(struct phone_state *state, RmConnection *connection);
 };
 
-void app_show_phone_window(struct contact *contact, struct connection *connection);
+void app_show_phone_window(struct contact *contact, RmConnection *connection);
 GtkWidget *phone_search_entry_new(GtkWidget *window, struct contact *contact, struct phone_state *state);
 void phone_call_notify_cb(RmObject *object, RmCall *call, gint connection, gchar *medium, gpointer user_data);
 void phone_setup_timer();
 void phone_remove_timer();
 GtkWidget *phone_dial_buttons_new(GtkWidget *window, struct phone_state *state);
 void phone_dial_buttons_set_dial(gboolean allow);
-GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, struct connection *connection, gpointer priv);
+GtkWidget *phone_window_new(enum phone_type type, struct contact *contact, RmConnection *connection, gpointer priv);
 
 G_END_DECLS
 

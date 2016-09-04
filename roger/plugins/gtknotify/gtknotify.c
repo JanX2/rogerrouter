@@ -1,3 +1,5 @@
+#if 0
+
 /**
  * Roger Router
  * Copyright (c) 2012-2014 Jan-Michael Brummer
@@ -63,7 +65,7 @@ static gchar **selected_incoming_numbers = NULL;
  */
 static void notify_accept_clicked_cb(GtkWidget *notify, gpointer user_data)
 {
-	struct connection *connection = user_data;
+	RmConnection *connection = user_data;
 	struct contact *contact;
 
 	g_assert(connection != NULL);
@@ -84,7 +86,7 @@ static void notify_accept_clicked_cb(GtkWidget *notify, gpointer user_data)
  */
 static void notify_deny_clicked_cb(GtkWidget *notify, gpointer user_data)
 {
-	struct connection *connection = user_data;
+	RmConnection *connection = user_data;
 
 	g_assert(connection != NULL);
 
@@ -111,7 +113,7 @@ static gboolean notification_gtk_close(gpointer window)
  */
 static gpointer notification_reverse_lookup_thread(gpointer data)
 {
-	struct connection *connection = data;
+	RmConnection *connection = data;
 	gchar *name;
 	gchar *address;
 	gchar *zip;
@@ -145,7 +147,7 @@ static gpointer notification_reverse_lookup_thread(gpointer data)
  * \param connection connection structure
  * \param unused_pointer unused user pointer
  */
-void notification_gtk_connection_notify_cb(RmObject *obj, struct connection *connection, gpointer unused_pointer)
+void notification_gtk_connection_notify_cb(RmObject *obj, RmConnection *connection, gpointer unused_pointer)
 {
 	GtkWidget *notify = NULL;
 	GtkWidget *main_frame;
@@ -679,3 +681,5 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 
 	return settings_grid;
 }
+
+#endif

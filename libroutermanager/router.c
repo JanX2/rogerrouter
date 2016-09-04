@@ -27,6 +27,7 @@
 #include <libroutermanager/rmcsv.h>
 #include <libroutermanager/rmpassword.h>
 #include <libroutermanager/rmmain.h>
+#include <libroutermanager/rmcall.h>
 
 /** Active router structure */
 static struct router *active_router = NULL;

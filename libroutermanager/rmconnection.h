@@ -17,10 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_CONNECTION_H
-#define LIBROUTERMANAGER_CONNECTION_H
-
-#include <libroutermanager/rmcall.h>
+#ifndef LIBROUTERMANAGER_RMCONNECTION_H
+#define LIBROUTERMANAGER_RMCONNECTION_H
 
 G_BEGIN_DECLS
 
@@ -34,7 +32,7 @@ typedef enum {
 } RmConnectionType;
 
 /** connection structure */
-typedef struct connection {
+typedef struct {
 	/* Unique ID */
 	guint id;
 	/* Type */
@@ -43,12 +41,10 @@ typedef struct connection {
 	gchar *local_number;
 	/* Remote number */
 	gchar *remote_number;
-	/* Notification widget */
-	void *notification;
-	/* Private data */
-	void *priv;
 	/* Connection time */
 	GTimer *duration_timer;
+	/* Private data */
+	void *priv;
 } RmConnection;
 
 RmConnection *rm_connection_add(gint id, RmConnectionType type, const gchar *local_number, const gchar *remote_number);

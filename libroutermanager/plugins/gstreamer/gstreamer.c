@@ -81,18 +81,18 @@ static gboolean pipeline_cleaner(GstBus *bus, GstMessage *message, gpointer pipe
 static GSList *gstreamer_detect_devices(void)
 {
 	GSList *devices = NULL;
-	struct audio_device *audio_device;
+	RmAudioDevice *audio_device;
 	GList *gst_devices = NULL;
 
 	if (!use_gst_device_monitor) {
-		audio_device = g_slice_new0(struct audio_device);
+		audio_device = g_slice_new0(RmAudioDevice);
 
 		audio_device->internal_name = g_strdup("autoaudiosink");
 		audio_device->name = g_strdup("Standard");
 		audio_device->type = RM_AUDIO_OUTPUT;
 		devices = g_slist_prepend(devices, audio_device);
  
-		audio_device = g_slice_new0(struct audio_device);
+		audio_device = g_slice_new0(RmAudioDevice);
 		audio_device->internal_name = g_strdup("autoaudiosrc");
 		audio_device->name = g_strdup("Standard");
 		audio_device->type = RM_AUDIO_INPUT;
@@ -116,13 +116,13 @@ static GSList *gstreamer_detect_devices(void)
 		class = gst_device_get_device_class(device);
 
 		if (!strcmp(class, "Audio/Sink")) {
-			audio_device = g_slice_new0(struct audio_device);
+			audio_device = g_slice_new0(RmAudioDevice);
 			audio_device->internal_name = g_strdup(name);
 			audio_device->name = g_strdup(name);
 			audio_device->type = RM_AUDIO_OUTPUT;
 			devices = g_slist_prepend(devices, audio_device);
 		} else if (!strcmp(class, "Audio/Source")) {
-			audio_device = g_slice_new0(struct audio_device);
+			audio_device = g_slice_new0(RmAudioDevice);
 			audio_device->internal_name = g_strdup(name);
 			audio_device->name = g_strdup(name);
 			audio_device->type = RM_AUDIO_INPUT;
@@ -456,7 +456,7 @@ int gstreamer_shutdown(void)
 }
 
 /** audio definition */
-struct audio gstreamer = {
+RmAudio gstreamer = {
 	"GStreamer",
 	gstreamer_init,
 	gstreamer_open,
@@ -487,4 +487,5 @@ static void impl_activate(PeasActivatable *plugin)
  */
 static void impl_deactivate(PeasActivatable *plugin)
 {
+	rm_audio_unregister(&gstreamer);
 }

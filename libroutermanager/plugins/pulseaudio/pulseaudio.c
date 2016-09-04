@@ -258,7 +258,7 @@ GSList *pulse_audio_detect_devices(void)
 	int found_out = 0;
 	int index;
 	GSList *list = NULL;
-	struct audio_device *device;
+	RmAudioDevice *device;
 
 	if (pulse_get_device_list(input_device_list, output_device_list) < 0) {
 		g_warning("failed to get device list");
@@ -271,7 +271,7 @@ GSList *pulse_audio_detect_devices(void)
 		}
 		found_out++;
 
-		device = g_slice_new0(struct audio_device);
+		device = g_slice_new0(RmAudioDevice);
 		device->internal_name = g_strdup(output_device_list[index].name);
 		device->name = g_strdup(output_device_list[index].description);
 		device->type = AUDIO_OUTPUT;
@@ -283,7 +283,7 @@ GSList *pulse_audio_detect_devices(void)
 			continue;
 		}
 
-		device = g_slice_new0(struct audio_device);
+		device = g_slice_new0(RmAudioDevice);
 		device->internal_name = g_strdup(input_device_list[index].name);
 		device->name = g_strdup(input_device_list[index].description);
 		device->type = AUDIO_INPUT;
@@ -459,7 +459,7 @@ static int pulse_audio_shutdown(void)
 }
 
 /** audio definition */
-struct audio pulse_audio = {
+RmAudio pulse_audio = {
 	"PulseAudio",
 	pulse_audio_init,
 	pulse_audio_open,
@@ -482,7 +482,7 @@ static void impl_activate(PeasActivatable *plugin)
 	g_setenv("PULSE_PROP_media.role", "phone", TRUE);
 	g_setenv("PULSE_PROP_filter.want", "echo-cancel", TRUE);
 
-	routermanager_audio_register(&pulse_audio);
+	rm_audio_register(&pulse_audio);
 }
 
 /**
@@ -492,4 +492,6 @@ static void impl_activate(PeasActivatable *plugin)
 static void impl_deactivate(PeasActivatable *plugin)
 {
 	//RouterManagerPulseAudioPlugin *pulseaudio_plugin = ROUTERMANAGER_PULSEAUDIO_PLUGIN(plugin);
+
+	rm_audio_unregister(&pulse_audio);
 }

@@ -79,7 +79,7 @@ struct sip_call *call_init_tonegen(pjsua_call_id call_id)
   return cd;
 }
 
-void call_play_digit(struct connection *connection, const char *digits)
+void call_play_digit(RmConnection *connection, const char *digits)
 {
   pjmedia_tone_digit d[16];
   unsigned i, count = strlen(digits);
@@ -191,9 +191,9 @@ void sip_g722_state(gboolean state)
 	pjsua_codec_set_priority(pj_cstr(&tmp, "G722"), state == TRUE ? 128 : 0);
 }
 
-static struct connection *sip_phone_dial(const char *trg_no, gboolean anonymous)
+static RmConnection *sip_phone_dial(const char *trg_no, gboolean anonymous)
 {
-	struct connection *connection;
+	RmConnection *connection;
 	struct profile *profile = rm_profile_get_active();
 	pj_status_t status;
 	pjsua_acc_id acc_id = 0;
@@ -225,17 +225,17 @@ static struct connection *sip_phone_dial(const char *trg_no, gboolean anonymous)
 	return connection;
 }
 
-static gint sip_phone_pickup(struct connection *connection)
+static gint sip_phone_pickup(RmConnection *connection)
 {
 	return pjsua_call_answer(connection->id, 200, NULL, NULL);
 }
 
-void sip_phone_hangup(struct connection *connection)
+void sip_phone_hangup(RmConnection *connection)
 {
 	pjsua_call_hangup(connection->id, 0, NULL, NULL);
 }
 
-void sip_phone_hold(struct connection *connection, gboolean hold)
+void sip_phone_hold(RmConnection *connection, gboolean hold)
 {
 	if (hold) {
 		pjsua_call_set_hold(connection->id, NULL);
@@ -244,7 +244,7 @@ void sip_phone_hold(struct connection *connection, gboolean hold)
 	}
 }
 
-void sip_phone_send_dtmf_code(struct connection *connection, guchar code)
+void sip_phone_send_dtmf_code(RmConnection *connection, guchar code)
 {
 	gchar *dtmf = g_strdup_printf("%c", code);
 

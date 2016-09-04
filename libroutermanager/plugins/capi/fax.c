@@ -35,6 +35,7 @@
 #include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmdevicefax.h>
+#include <libroutermanager/rmprofile.h>
 #include <sff.h>
 
 static int8_t *_linear16_2_law = (int8_t *) &linear16_2_law[32768];
@@ -638,7 +639,7 @@ void fax_clean(struct capi_connection *connection)
  * \param suppress suppress number flag
  * \return capi connection pointer
  */
-struct connection *capi_fax_dial(gchar *tiff, const gchar *trg_no, gboolean suppress)
+RmConnection *capi_fax_dial(gchar *tiff, const gchar *trg_no, gboolean suppress)
 {
 	RmProfile *profile = rm_profile_get_active();
 	gint modem = g_settings_get_int(profile->settings, "fax-bitrate");
@@ -649,7 +650,7 @@ struct connection *capi_fax_dial(gchar *tiff, const gchar *trg_no, gboolean supp
 	const gchar *header = g_settings_get_string(profile->settings, "fax-header");
 	const gchar *ident = g_settings_get_string(profile->settings, "fax-ident");
 	struct capi_connection *capi_connection = NULL;
-	struct connection *connection = NULL;
+	RmConnection *connection = NULL;
 	gchar *target;
 
 	if (RM_EMPTY_STRING(src_no)) {

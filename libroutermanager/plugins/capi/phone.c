@@ -54,11 +54,12 @@ gpointer capi_phone_input_thread(gpointer data)
 	guint audio_buf_len;
 	short rec_buffer[CAPI_PACKETS];
 	_cmsg cmsg;
+	RmAudio *audio = rm_profile_get_audio(rm_profile_get_active());
 
 	while (session->input_thread_state == 1) {
 		int len;
 
-		len = session->handlers->audio_input(connection->audio, (guchar *) audio_buffer_rx, sizeof(audio_buffer_rx));
+		len = rm_audio_read(audio, connection->audio, (guchar *) audio_buffer_rx, sizeof(audio_buffer_rx));
 
 		/* Check if we have some audio data to process */
 		if (len > 0) {
@@ -80,7 +81,7 @@ gpointer capi_phone_input_thread(gpointer data)
 	return NULL;
 }
 
-void capi_phone_init_data(struct connection *connection)
+void capi_phone_init_data(RmConnection *connection)
 {
 	struct session *session = capi_get_session();
 
@@ -105,6 +106,7 @@ void capi_phone_transfer(struct capi_connection *connection, _cmsg capi_message)
 	guint len = DATA_B3_IND_DATALENGTH(&capi_message);
 	guint audio_buf_len;
 	short rec_buffer[8192];
+	RmAudio *audio = rm_profile_get_audio(rm_profile_get_active());
 
 	/* convert isdn to audio format */
 	convert_isdn_to_audio(connection, DATA_B3_IND_DATA(&capi_message), len, audio_buffer, &audio_buf_len, rec_buffer);
@@ -121,10 +123,10 @@ void capi_phone_transfer(struct capi_connection *connection, _cmsg capi_message)
 	}
 
 	/* Send data to soundcard */
-	session->handlers->audio_output(connection->audio, audio_buffer, audio_buf_len);
+	rm_audio_write(audio, connection->audio, audio_buffer, audio_buf_len);
 
 	guchar audio_buffer_rx[CAPI_PACKETS];
-	len = session->handlers->audio_input(connection->audio, (guchar *) audio_buffer_rx, sizeof(audio_buffer_rx));
+	len = rm_audio_read(audio, connection->audio, (guchar *) audio_buffer_rx, sizeof(audio_buffer_rx));
 
 	/* Check if we have some audio data to process */
 	if (len > 0) {
@@ -145,13 +147,13 @@ void capi_phone_transfer(struct capi_connection *connection, _cmsg capi_message)
  * \param anonymous anonymous flag (suppress number)
  * \return connection structure or NULL on error
  */
-static struct connection *capi_phone_dial(const char *trg_no, gboolean anonymous)
+static RmConnection *capi_phone_dial(const char *trg_no, gboolean anonymous)
 {
 	RmProfile *profile = rm_profile_get_active();
 	gint controller = g_settings_get_int(profile->settings, "phone-controller") + 1;
 	const gchar *src_no = g_settings_get_string(profile->settings, "phone-number");
 	struct capi_connection *capi_connection;
-	struct connection *connection = NULL;
+	RmConnection *connection = NULL;
 	gchar *target;
 
 	if (RM_EMPTY_STRING(src_no)) {
@@ -178,7 +180,7 @@ static struct connection *capi_phone_dial(const char *trg_no, gboolean anonymous
  * \param connection active connection
  * \param mute mute flag
  */
-void capi_phone_mute(struct connection *connection, gboolean mute)
+void capi_phone_mute(RmConnection *connection, gboolean mute)
 {
 	struct capi_connection *capi_connection = connection->priv;
 
@@ -417,7 +419,7 @@ int recording_close(struct recorder *recorder)
  * \brief Flush connection recorder
  * \param connection capi connection
  */
-void capi_phone_flush(struct connection *connection)
+void capi_phone_flush(RmConnection *connection)
 {
 	if (connection != NULL) {
 		struct capi_connection *capi_connection = connection->priv;
@@ -462,7 +464,7 @@ void capi_phone_record(struct capi_connection *connection, guchar record, const 
  * \param connection active capi connection
  * \param hold hold flag
  */
-void capi_phone_hold(struct connection *connection, gboolean hold)
+void capi_phone_hold(RmConnection *connection, gboolean hold)
 {
 	struct session *session = capi_get_session();
 	struct capi_connection *capi_connection = connection->priv;
@@ -494,7 +496,7 @@ void capi_phone_hold(struct connection *connection, gboolean hold)
  * \param connection active capi connection
  * \param code DTMF code
  */
-void capi_phone_send_dtmf_code(struct connection *connection, guchar code)
+void capi_phone_send_dtmf_code(RmConnection *connection, guchar code)
 {
 	capi_send_dtmf_code(connection->priv, code);
 }
@@ -503,7 +505,7 @@ void capi_phone_send_dtmf_code(struct connection *connection, guchar code)
  * \brief Hangup phone connection
  * \param connection active connection
  */
-void capi_phone_hangup(struct connection *connection)
+void capi_phone_hangup(RmConnection *connection)
 {
 	if (connection == NULL) {
 		return;
@@ -518,7 +520,7 @@ void capi_phone_hangup(struct connection *connection)
  * \param connection active capi connection
  * \return see capiPickup
  */
-int capi_phone_pickup(struct connection *connection)
+int capi_phone_pickup(RmConnection *connection)
 {
 	if (connection == NULL) {
 		return -1;
@@ -528,7 +530,7 @@ int capi_phone_pickup(struct connection *connection)
 	return capi_pickup(connection->priv, SESSION_PHONE);
 }
 
-void capi_phone_conference(struct connection *connection_active, struct connection *connection_hold)
+void capi_phone_conference(RmConnection *connection_active, RmConnection *connection_hold)
 {
 	struct session *session = capi_get_session();
 	struct capi_connection *active = connection_active->priv;

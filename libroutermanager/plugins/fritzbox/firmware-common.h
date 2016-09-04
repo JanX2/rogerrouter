@@ -23,6 +23,7 @@
 #include <string.h>
 
 #include <libroutermanager/router.h>
+#include <libroutermanager/rmcall.h>
 
 G_BEGIN_DECLS
 

@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,16 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/**
- * \TODO List
- * - Move audio plugin information into audio private data, in order to switch device while playing
- */
-
 #include <string.h>
 
 #include <glib.h>
 
-#include <libroutermanager/rmprofile.h>
 #include <libroutermanager/rmaudio.h>
 
 /**
@@ -37,29 +31,57 @@
  * Audio contains handling of plugins and common audio functions.
  */
 
-/** global pointer to current used audio plugin */
-static struct audio *rm_internal_audio = NULL;
+static GSList *rm_audio_plugins = NULL;
 
-static GSList *rm_audio_list = NULL;
+/**
+ * rm_audio_get:
+ * @name: name of audio to lookup
+ *
+ * Find audio as requested by name.
+ *
+ * Returns: a #RmAudio, or %NULL on error
+ */
+RmAudio *rm_audio_get(gchar *name)
+{
+	GSList *list;
+	RmAudio *audio;
+
+	for (list = rm_audio_plugins; list != NULL; list = list->next) {
+		audio = list->data;
+
+		if (audio && audio->name && name && !strcmp(audio->name, name)) {
+			return audio;
+		}
+	}
+
+	/* In case no internal audio is set yet, set it to the first one */
+	if (rm_audio_plugins) {
+		audio = rm_audio_plugins->data;
+
+		g_warning("%s(): Using fallback audio plugin '%s'", __FUNCTION__, audio->name);
+
+		return audio;
+	}
+
+	return NULL;
+}
 
 /**
  * rm_audio_open:
+ * @audio: a #RmAudio
  *
  * Open current audio plugin.
  *
  * Returns: private audio data pointer or %NULL% on error
  */
-gpointer rm_audio_open(void)
+gpointer rm_audio_open(RmAudio *audio)
 {
-	if (!rm_internal_audio) {
-		return NULL;
-	}
-
-	return rm_internal_audio->open();
+	return audio->open();
 }
 
 /**
  * rm_audio_read:
+ * @audio: a #RmAudio
  * @audio_priv: private audio data (see #rm_audio_open)
  * @data: data pointer
  * @size: number of bytes to read
@@ -68,17 +90,14 @@ gpointer rm_audio_open(void)
  *
  * Returns: number of bytes read or -1 on error
  */
-gsize rm_audio_read(gpointer audio_priv, guchar *data, gsize size)
+gsize rm_audio_read(RmAudio *audio, gpointer audio_priv, guchar *data, gsize size)
 {
-	if (!rm_internal_audio) {
-		return -1;
-	}
-
-	return rm_internal_audio->read(audio_priv, data, size);
+	return audio->read(audio_priv, data, size);
 }
 
 /**
  * rm_audio_write:
+ * @audio: a #RmAudio
  * @audio_priv: private audio data (see #audio_open)
  * @data: data to write to audio device
  * @size: number of bytes to write
@@ -87,30 +106,23 @@ gsize rm_audio_read(gpointer audio_priv, guchar *data, gsize size)
  *
  * Returns: number of bytes written or -1 on error
  */
-gsize rm_audio_write(gpointer audio_priv, guchar *data, gsize size)
+gsize rm_audio_write(RmAudio *audio, gpointer audio_priv, guchar *data, gsize size)
 {
-	if (!rm_internal_audio) {
-		return -1;
-	}
-
-	return rm_internal_audio->write(audio_priv, data, size);
+	return audio->write(audio_priv, data, size);
 }
 
 /**
  * rm_audio_close:
+ * @audio: a #RmAudio
  * @audio_priv: private audio data (see audio_open)
  *
  * Close current audio device
  *
  * Returns: %TRUE% on success, otherwise %FALSE%
  */
-gboolean rm_audio_close(gpointer audio_priv)
+gboolean rm_audio_close(RmAudio *audio, gpointer audio_priv)
 {
-	if (!rm_internal_audio) {
-		return FALSE;
-	}
-
-	return rm_internal_audio->close(audio_priv);
+	return audio->close(audio_priv);
 }
 
 /**
@@ -123,19 +135,18 @@ void rm_audio_register(RmAudio *audio)
 {
 	audio->init(1, 8000, 16);
 
-	rm_audio_list = g_slist_prepend(rm_audio_list, audio);
+	rm_audio_plugins = g_slist_prepend(rm_audio_plugins, audio);
 }
 
 /**
- * rm_audio_get_default:
+ * rm_audio_unregister:
+ * @audio: a #RmAudio
  *
- * Get default audio device plugin.
- *
- * Returns: default audio device plugin
+ * Unregister audio plugin
  */
-RmAudio *rm_audio_get_default(void)
+void rm_audio_unregister(RmAudio *audio)
 {
-	return rm_internal_audio;
+	rm_audio_plugins = g_slist_remove(rm_audio_plugins, audio);
 }
 
 /**
@@ -147,42 +158,18 @@ RmAudio *rm_audio_get_default(void)
  */
 GSList *rm_audio_get_plugins(void)
 {
-	return rm_audio_list;
+	return rm_audio_plugins;
 }
 
 /**
- * rm_audio_set_default:
- * @name: audio plugin name
+ * rm_audio_get_name:
+ * @audio: a #RmAudio
  *
- * Select default audio plugin.
- */
-void rm_audio_set_default(gchar *name)
-{
-	GSList *list;
-
-	for (list = rm_audio_list; list != NULL; list = list->next) {
-		struct audio *audio = list->data;
-
-		if (!strcmp(audio->name, name)) {
-			rm_internal_audio = audio;
-		}
-	}
-}
-
-/**
- * rm_audio_init:
- * @profile: a #RmProfile
+ * Get audio name of @audio.
  *
- * Initialize audio subsystem.
+ * Returns: audio name
  */
-void rm_audio_init(RmProfile *profile)
+gchar *rm_audio_get_name(RmAudio *audio)
 {
-	gchar *name = g_settings_get_string(profile->settings, "audio-plugin");
-
-	rm_audio_set_default(name);
-
-	/* In case no internal audio is set yet, set it to the first one */
-	if (!rm_internal_audio && rm_audio_list) {
-		rm_internal_audio = rm_audio_list->data;
-	}
+	return g_strdup(audio->name);
 }

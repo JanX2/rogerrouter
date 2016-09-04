@@ -128,7 +128,7 @@ void phone_dial_buttons_set_dial(gboolean allow_dial)
  * \param connection connection pointer
  * \param user_data phone state pointer
  */
-static void phone_connection_established_cb(RmObject *object, struct connection *connection, gpointer user_data)
+static void phone_connection_established_cb(RmObject *object, RmConnection *connection, gpointer user_data)
 {
 	if (!phone_state->status_timer_id) {
 		phone_state->status_timer_id = g_timeout_add(250, phone_status_timer_cb, NULL);
@@ -141,7 +141,7 @@ static void phone_connection_established_cb(RmObject *object, struct connection 
  * \param connection connection pointer
  * \param user_data phone state pointer
  */
-static void phone_connection_terminated_cb(RmObject *object, struct connection *connection, gpointer user_data)
+static void phone_connection_terminated_cb(RmObject *object, RmConnection *connection, gpointer user_data)
 {
 	g_debug("%s(): connection = %p", __FUNCTION__, connection);
 
@@ -398,6 +398,7 @@ void phone_search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_d
 	GtkWidget *label;
 	GSList *contacts = NULL;
 	GSList *list;
+	RmAddressBook *book;
 
 	/* Get current filter text */
 	phone_state->filter = gtk_entry_get_text(GTK_ENTRY(entry));
@@ -463,7 +464,8 @@ void phone_search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_d
 	phone_state->filter = gtk_entry_get_text(GTK_ENTRY(entry));
 
 	/* Add contacts to entry completion */
-	contacts = rm_addressbook_get_contacts();
+	book = rm_profile_get_addressbook(rm_profile_get_active());
+	contacts = rm_addressbook_get_contacts(book);
 
 	for (list = contacts; list; list = list->next) {
 		struct contact *contact = list->data;
@@ -842,7 +844,7 @@ void phone_clear_button_clicked_cb(GtkWidget *widget, gpointer user_data)
  * \brief Pick up incoming connection
  * \param connection incoming connection
  */
-static void phone_pickup(struct connection *connection)
+static void phone_pickup(RmConnection *connection)
 {
 	/* Pick up */
 	if (!rm_phone_pickup(connection)) {
@@ -885,7 +887,7 @@ gboolean phone_window_delete_event_cb(GtkWidget *window, GdkEvent *event, gpoint
 }
 
 
-void app_show_phone_window(struct contact *contact, struct connection *connection)
+void app_show_phone_window(struct contact *contact, RmConnection *connection)
 {
 	GtkBuilder *builder;
 

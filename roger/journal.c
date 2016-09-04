@@ -432,7 +432,7 @@ void journal_loaded_cb(RmObject *obj, GSList *journal, gpointer unused)
 	g_thread_new("Reverse Lookup Journal", lookup_journal, journal_list);
 }
 
-static void journal_connection_notify_cb(RmObject *obj, struct connection *connection, gpointer user_data)
+static void journal_connection_notify_cb(RmObject *obj, RmConnection *connection, gpointer user_data)
 {
 	if (connection->type & RM_CONNECTION_TYPE_DISCONNECT) {
 		router_load_journal(rm_profile_get_active());

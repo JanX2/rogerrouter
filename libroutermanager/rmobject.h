@@ -24,6 +24,7 @@
 #include <glib-object.h>
 
 #include <libroutermanager/rmconnection.h>
+#include <libroutermanager/rmcontact.h>
 #include <libroutermanager/rmnetwork.h>
 
 G_BEGIN_DECLS
@@ -60,7 +61,7 @@ struct _RmObjectClass {
 	GObjectClass parent_class;
 	void (*journal_loaded)(GSList *journal);
 	void (*connection_notify)(RmConnection *connection);
-	void (*contact_process)(struct contact *contact);
+	void (*contact_process)(RmContact *contact);
 	void (*fax_process)(const gchar *filename);
 	void (*connection_established)(RmConnection *connection);
 	void (*connection_terminated)(RmConnection *connection);

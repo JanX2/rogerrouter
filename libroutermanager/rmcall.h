@@ -47,7 +47,7 @@ enum rm_number_format {
 	RM_NUMBER_FORMAT_INTERNATIONAL_PLUS
 };
 
-typedef struct rm_call {
+typedef struct {
 	enum rm_call_types type;
 	gchar *date_time;
 	gchar *duration;
@@ -70,7 +70,7 @@ void rm_call_free(gpointer data);
 gchar *rm_call_scramble_number(const gchar *number);
 gchar *rm_call_full_number(const gchar *number, gboolean country_code_prefix);
 gint rm_call_sort_by_date(gconstpointer a, gconstpointer b);
-gchar *rm_call_format_number(struct profile *profile, const gchar *number, enum rm_number_format output_format);
+gchar *rm_call_format_number(RmProfile *profile, const gchar *number, enum rm_number_format output_format);
 gchar *rm_call_canonize_number(const gchar *number);
 
 G_END_DECLS

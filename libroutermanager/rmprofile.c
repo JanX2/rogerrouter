@@ -219,9 +219,6 @@ void rm_profile_set_active(RmProfile *profile)
 
 	rm_plugins_bind_loaded_plugins();
 
-	/* Init audio */
-	rm_audio_init(profile);
-
 	/* Load and initialize action */
 	rm_action_init(profile);
 
@@ -368,7 +365,7 @@ void rm_profile_set_host(RmProfile *profile, const gchar *host)
  * rm_profile_set_login_user:
  * @profile: a #RmProfile
  * @user: new user name for @profile
-*
+ *
  * Set login user used in profile.
  */
 void rm_profile_set_login_user(RmProfile *profile, const gchar *user)
@@ -380,10 +377,46 @@ void rm_profile_set_login_user(RmProfile *profile, const gchar *user)
  * rm_profile_set_login_password:
  * @profile: a #RmProfile
  * @password: new password for @profile
-*
+ *
  * Set login password used in profile.
  */
 void rm_profile_set_login_password(RmProfile *profile, const gchar *password)
 {
 	rm_password_set(profile, "login-password", password);
+}
+
+/**
+ * rm_profile_get_addressbook:
+ * @profile: a #RmProfile
+*
+ * Get address book for selected profile.
+ */
+RmAddressBook *rm_profile_get_addressbook(RmProfile *profile)
+{
+	RmAddressBook *book;
+	gchar *name = g_settings_get_string(profile->settings, "address-book");
+
+	book = rm_addressbook_get(name);
+
+	g_free(name);
+
+	return book;
+}
+
+/**
+ * rm_profile_get_audio:
+ * @profile: a #RmProfile
+*
+ * Get audio for selected profile.
+ */
+RmAudio *rm_profile_get_audio(RmProfile *profile)
+{
+	RmAudio *audio;
+	gchar *name = g_settings_get_string(profile->settings, "audio-plugin");
+
+	audio = rm_audio_get(name);
+
+	g_free(name);
+
+	return audio;
 }

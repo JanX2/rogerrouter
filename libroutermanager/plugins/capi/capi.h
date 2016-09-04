@@ -156,11 +156,6 @@ struct capi_connection {
 };
 
 struct session_handlers {
-	gpointer (*audio_open)(void);
-	gsize (*audio_input)(gpointer audio, guchar *buf, gsize len);
-	gsize (*audio_output)(gpointer audio, guchar *buf, gsize len);
-	gboolean (*audio_close)(gpointer audio);
-
 	void (*connected)(struct capi_connection *connection);
 	void (*disconnected)(struct capi_connection *connection);
 	void (*ring)(struct capi_connection *connection);

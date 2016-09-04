@@ -28,7 +28,7 @@
 /** Internal phone list */
 static GSList *rm_phone_plugins = NULL;
 
-struct connection *rm_phone_dial(const gchar *target, gboolean anonymous)
+RmConnection *rm_phone_dial(const gchar *target, gboolean anonymous)
 {
 	struct device_phone *phone = NULL;
 
@@ -50,7 +50,7 @@ struct connection *rm_phone_dial(const gchar *target, gboolean anonymous)
 	return phone->dial(target, anonymous);
 }
 
-gint rm_phone_pickup(struct connection *connection)
+gint rm_phone_pickup(RmConnection *connection)
 {
 	struct device_phone *phone = rm_phone_plugins->data;
 
@@ -62,7 +62,7 @@ gint rm_phone_pickup(struct connection *connection)
 	return phone->pickup(connection);
 }
 
-void rm_phone_hangup(struct connection *connection)
+void rm_phone_hangup(RmConnection *connection)
 {
 	struct device_phone *phone = rm_phone_plugins->data;
 
@@ -74,7 +74,7 @@ void rm_phone_hangup(struct connection *connection)
 	phone->hangup(connection);
 }
 
-void rm_phone_hold(struct connection *connection, gboolean hold)
+void rm_phone_hold(RmConnection *connection, gboolean hold)
 {
 	struct device_phone *phone = rm_phone_plugins->data;
 
@@ -86,7 +86,7 @@ void rm_phone_hold(struct connection *connection, gboolean hold)
 	phone->hold(connection, hold);
 }
 
-void rm_phone_dtmf(struct connection *connection, guchar chr)
+void rm_phone_dtmf(RmConnection *connection, guchar chr)
 {
 	struct device_phone *phone = rm_phone_plugins->data;
 
@@ -98,7 +98,7 @@ void rm_phone_dtmf(struct connection *connection, guchar chr)
 	phone->send_dtmf_code(connection, chr);
 }
 
-void rm_phone_mute(struct connection *connection, gboolean mute)
+void rm_phone_mute(RmConnection *connection, gboolean mute)
 {
 	struct device_phone *phone = rm_phone_plugins->data;
 
@@ -110,7 +110,7 @@ void rm_phone_mute(struct connection *connection, gboolean mute)
 	phone->mute(connection, mute);
 }
 
-void rm_phone_record(struct connection *connection, guchar record, const char *dir)
+void rm_phone_record(RmConnection *connection, guchar record, const char *dir)
 {
 }
 

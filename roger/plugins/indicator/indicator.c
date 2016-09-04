@@ -288,7 +288,7 @@ GtkWidget *indicator_menu(void)
  * \param connection connection structure
  * \param unused_pointer unused user pointer
  */
-void indicator_connection_notify_cb(RmObject *obj, struct connection *connection, gpointer unused_pointer)
+void indicator_connection_notify_cb(RmObject *obj, RmConnection *connection, gpointer unused_pointer)
 {
 	g_debug("Called: '%d/%d", connection->type, CONNECTION_TYPE_MISSED);
 	if (connection->type == CONNECTION_TYPE_MISSED) {

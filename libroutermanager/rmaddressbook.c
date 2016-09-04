@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,18 +17,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/**
- * \TODO List:
- *  - Support multiple books
- */
-
 #include <string.h>
 
 #include <glib.h>
 
 #include <libroutermanager/rmaddressbook.h>
-#include <libroutermanager/router.h>
 #include <libroutermanager/rmobject.h>
+#include <libroutermanager/rmcontact.h>
+#include <libroutermanager/router.h>
 #include <libroutermanager/rmstring.h>
 
 /**
@@ -39,23 +35,23 @@
  * Address book handles plugins and common address book functions.
  */
 
-static guint rm_addressbook_signal_id = 0;
+static guint rm_addressbook_contact_process_id = 0;
+static guint rm_addressbook_contacts_changed_id = 0;
 static GHashTable *rm_addressbook_table = NULL;
 
 /** Internal address book list */
 static GSList *rm_addressbook_plugins = NULL;
 
 /**
- * rm_addressbook_find:
- * @profile: a #RmProfile
+ * rm_addressbook_get:
+ * @name: name of address book to lookup
  *
- * Find address book as requested by profile.
+ * Find address book as requested by name.
  *
  * Returns: a #RmAddressBook, or %NULL on error
  */
-RmAddressBook *rm_addressbook_find(RmProfile *profile)
+RmAddressBook *rm_addressbook_get(gchar *name)
 {
-	gchar *name = g_settings_get_string(profile->settings, "address-book");
 	GSList *list;
 
 	for (list = rm_addressbook_plugins; list != NULL; list = list->next) {
@@ -66,116 +62,94 @@ RmAddressBook *rm_addressbook_find(RmProfile *profile)
 		}
 	}
 
-	return rm_addressbook_plugins ? rm_addressbook_plugins->data : NULL;
+	return NULL;
 }
 
 /**
  * rm_addressbook_get_contacts:
+ * @book: a #RmAddressBook
  *
  * Get all contacts within the main internal address book.
  *
- * Returns: contact list
+ * Returns: contact list or %NULL if no address book is set.
  */
-GSList *rm_addressbook_get_contacts(void)
+GSList *rm_addressbook_get_contacts(RmAddressBook *book)
 {
-	GSList *list = NULL;
-	RmAddressBook *ab = rm_addressbook_find(rm_profile_get_active());
-
-	if (ab) {
-		list = ab->get_contacts();
+	if (book) {
+		return book->get_contacts();
 	}
 
-	return list;
-}
-
-/**
- * rm_addressbook_available:
- *
- * Returns: %TRUE if address book is available, %FALSE if not
- */
-gboolean rm_addressbook_available(void)
-{
-	RmAddressBook *ab = rm_addressbook_find(rm_profile_get_active());
-
-	return ab != NULL;
+	return NULL;
 }
 
 /**
  * rm_addressbook_remove_contact:
+ * @book: a #RmAddressBook
  * @contact: a #RmContact
  *
  * Remove given contact from address book
  *
  * Returns: %TRUE when contacts have been successfully removed, %FALSE on error
  */
-gboolean rm_addressbook_remove_contact(RmContact *contact)
+gboolean rm_addressbook_remove_contact(RmAddressBook *book, RmContact *contact)
 {
-	RmAddressBook *ab = rm_addressbook_find(rm_profile_get_active());
-	gboolean ret = FALSE;
-
-	if (ab && ab->remove_contact) {
-		ret = ab->remove_contact(contact);
+	if (book && book->remove_contact) {
+		return book->remove_contact(contact);
 	}
 
-	return ret;
+	return FALSE;
 }
 
 /**
  * rm_addressbook_save_contact:
+ * @book: a #RmAddressBook
  * @contact: a #RmContact
  *
  * Try to save contact to address book
  *
  * Returns: %TRUE when contacts have been successfully written, %FALSE on error
  */
-gboolean rm_addressbook_save_contact(RmContact *contact)
+gboolean rm_addressbook_save_contact(RmAddressBook *book, RmContact *contact)
 {
-	RmAddressBook *ab = rm_addressbook_find(rm_profile_get_active());
-	gboolean ret = FALSE;
-
-	if (ab && ab->save_contact) {
-		ret = ab->save_contact(contact);
+	if (book && book->save_contact) {
+		return book->save_contact(contact);
 	}
 
-	return ret;
+	return FALSE;
 }
 
 /**
  * rm_addressbook_reload_contacts:
+ * @book: a #RmAddressBook
  *
  * Reloads contacts of address book
  *
  * Returns: %TRUE if contacts have been reloaded, %FALSE on error
  */
-gboolean rm_addressbook_reload_contacts(void)
+gboolean rm_addressbook_reload_contacts(RmAddressBook *book)
 {
-	RmAddressBook *ab = rm_addressbook_find(rm_profile_get_active());
-	gboolean ret = FALSE;
-
-	if (ab && ab->reload_contacts) {
-		ret = ab->reload_contacts();
+	if (book && book->reload_contacts) {
+		return book->reload_contacts();
 	}
 
-	return ret;
+	return FALSE;
 }
 
 /**
  * rm_addressbook_can_save:
+ * @book: a #RmAddressBook
  *
  * Checks wether current address book can save data
  *
  * Returns: %TRUE if address book can save data, %FALSE if not.
  */
-gboolean rm_addressbook_can_save(void)
+gboolean rm_addressbook_can_save(RmAddressBook *book)
 {
-	RmAddressBook *ab = rm_addressbook_find(rm_profile_get_active());
-	gboolean ret = FALSE;
-
-	if (ab && ab->save_contact && ab->remove_contact) {
-		ret = TRUE;
+	if (book && book->save_contact && book->remove_contact) {
+		return TRUE;
 	}
 
-	return ret;
+	return FALSE;
 }
 
 /**
@@ -195,6 +169,7 @@ static gint rm_addressbook_number_in_contact(gconstpointer a, gconstpointer b)
 
 	while (list) {
 		struct phone_number *phone_number = list->data;
+
 		if (g_strcmp0(phone_number->number, number) == 0) {
 			return 0;
 		}
@@ -213,6 +188,7 @@ static gint rm_addressbook_number_in_contact(gconstpointer a, gconstpointer b)
  */
 static void rm_addressbook_contact_process_cb(RmObject *obj, RmContact *contact, gpointer user_data)
 {
+	RmAddressBook *book = rm_profile_get_addressbook(rm_profile_get_active());
 	RmContact *tmp_contact;
 	GSList *contacts;
 
@@ -221,7 +197,7 @@ static void rm_addressbook_contact_process_cb(RmObject *obj, RmContact *contact,
 		return;
 	}
 
-	contacts = rm_addressbook_get_contacts();
+	contacts = rm_addressbook_get_contacts(book);
 	if (!contacts) {
 		return;
 	}
@@ -242,17 +218,40 @@ static void rm_addressbook_contact_process_cb(RmObject *obj, RmContact *contact,
 		if (list) {
 			tmp_contact = list->data;
 
-			g_hash_table_insert(rm_addressbook_table, contact->number, tmp_contact);
+			g_hash_table_insert(rm_addressbook_table, g_strdup(contact->number), rm_contact_dup(tmp_contact));
 
 			rm_contact_copy(tmp_contact, contact);
 		} else {
 			/* We have found no entry, mark it in rm_addressbook_table to speedup further lookup */
 			tmp_contact = g_slice_alloc0(sizeof(struct contact));
-			g_hash_table_insert(rm_addressbook_table, contact->number, tmp_contact);
+			g_hash_table_insert(rm_addressbook_table, g_strdup(contact->number), tmp_contact);
 		}
 
 		g_free(full_number);
 	}
+}
+
+/**
+ * rm_addressbook_contacts_changed_cb:
+ * @obj: a #RmObject
+ * @user_data: user data
+ *
+ * Contacts have changed (new, deleted contacts or new address book). Clear address book hash table.
+ */
+static void rm_addressbook_contacts_changed_cb(RmObject *obj, gpointer user_data)
+{
+	g_hash_table_remove_all(rm_addressbook_table);
+}
+
+/**
+ * rm_addressbook_table_free:
+ * @data: a #RmContact
+ *
+ * Frees contact data.
+ */
+static void rm_addressbook_table_free(void *data)
+{
+	rm_contact_free(data);
 }
 
 /**
@@ -265,9 +264,10 @@ void rm_addressbook_register(RmAddressBook *book)
 {
 	rm_addressbook_plugins = g_slist_prepend(rm_addressbook_plugins, book);
 
-	if (!rm_addressbook_signal_id) {
-		rm_addressbook_table = g_hash_table_new(g_str_hash, g_str_equal);
-		rm_addressbook_signal_id = g_signal_connect(G_OBJECT(rm_object), "contact-process", G_CALLBACK(rm_addressbook_contact_process_cb), NULL);
+	if (!rm_addressbook_contact_process_id) {
+		rm_addressbook_table = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, rm_addressbook_table_free);
+		rm_addressbook_contact_process_id = g_signal_connect(G_OBJECT(rm_object), "contact-process", G_CALLBACK(rm_addressbook_contact_process_cb), NULL);
+		rm_addressbook_contacts_changed_id = g_signal_connect(G_OBJECT(rm_object), "contacts-changed", G_CALLBACK(rm_addressbook_contacts_changed_cb), NULL);
 	}
 }
 
@@ -280,20 +280,25 @@ void rm_addressbook_register(RmAddressBook *book)
 void rm_addressbook_unregister(RmAddressBook *book)
 {
 	rm_addressbook_plugins = g_slist_remove(rm_addressbook_plugins, book);
+
+	if (g_slist_length(rm_addressbook_plugins) < 1) {
+		g_signal_handler_disconnect(G_OBJECT(rm_object), rm_addressbook_contact_process_id);
+		g_signal_handler_disconnect(G_OBJECT(rm_object), rm_addressbook_contacts_changed_id);
+		g_hash_table_destroy(rm_addressbook_table);
+	}
 }
 
 /**
  * rm_addresbook_get_name:
+ * @book: a #RmAddressBook
  *
  * Retrieve name of current address book.
  *
  * Returns: current address book name
  */
-gchar *rm_addressbook_get_name(void)
+gchar *rm_addressbook_get_name(RmAddressBook *book)
 {
-	RmAddressBook *ab = rm_addressbook_find(rm_profile_get_active());
-
-	return ab ? ab->name : g_strdup("");
+	return book ? g_strdup(book->name) : g_strdup("");
 }
 
 /**

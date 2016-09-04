@@ -23,6 +23,7 @@
 #include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmnetwork.h>
 #include <libroutermanager/rmobjectemit.h>
+#include <libroutermanager/rmprofile.h>
 
 /** Soup session */
 SoupSession *rm_soup_session = NULL;

@@ -20,15 +20,13 @@
 #ifndef LIBROUTERMANAGER_RMAUDIO_H
 #define LIBROUTERMANAGER_RMAUDIO_H
 
-#include <libroutermanager/rmprofile.h>
-
 G_BEGIN_DECLS
 
 #define RM_AUDIO_OUTPUT 0
 #define RM_AUDIO_INPUT  1
 
 /** Audio device structure */
-typedef struct audio {
+typedef struct {
 	/* Name of plugin */
 	const gchar *name;
 	/* Initialize function */
@@ -47,21 +45,21 @@ typedef struct audio {
 	GSList *(*get_devices)(void);
 } RmAudio;
 
-typedef struct audio_device {
+typedef struct {
 	gchar *name;
 	gchar *internal_name;
 	gchar type;
 } RmAudioDevice;
 
 void rm_audio_register(RmAudio *audio);
-RmAudio *rm_audio_get_default(void);
-gpointer rm_audio_open(void);
-gsize rm_audio_read(gpointer audio_priv, guchar *data, gsize size);
-gsize rm_audio_write(gpointer audio_priv, guchar *data, gsize size);
-gboolean rm_audio_close(gpointer audio_priv);
+void rm_audio_unregister(RmAudio *audio);
+RmAudio *rm_audio_get(gchar *name);
+gpointer rm_audio_open(RmAudio *audio);
+gsize rm_audio_read(RmAudio *audio, gpointer audio_priv, guchar *data, gsize size);
+gsize rm_audio_write(RmAudio *audio, gpointer audio_priv, guchar *data, gsize size);
+gboolean rm_audio_close(RmAudio *audio, gpointer audio_priv);
 GSList *rm_audio_get_plugins(void);
-void rm_audio_set_default(gchar *name);
-void rm_audio_init(RmProfile *profile);
+gchar *rm_audio_get_name(RmAudio *audio);
 
 G_END_DECLS
 

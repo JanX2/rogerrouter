@@ -1208,7 +1208,7 @@ void action_checkbutton_toggled_cb(GtkToggleButton *button, gpointer user_data)
 void audio_plugin_combobox_changed_cb(GtkComboBox *box, gpointer user_data) {
 	GSList *devices;
 	gchar *active;
-	struct audio *audio = NULL;
+	RmAudio *audio = NULL;
 	GSList *audio_plugins;
 	GSList *list;
 	gchar *input_name;
@@ -1241,7 +1241,7 @@ void audio_plugin_combobox_changed_cb(GtkComboBox *box, gpointer user_data) {
 	/* Fill device comboboxes */
 	devices = audio->get_devices();
 	for (list = devices; list; list = list->next) {
-		struct audio_device *device = list->data;
+		RmAudioDevice *device = list->data;
 
 		if (device->type == RM_AUDIO_INPUT) {
 			gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->audio_input_combobox), device->internal_name, device->name);
@@ -1271,8 +1271,6 @@ void audio_plugin_combobox_changed_cb(GtkComboBox *box, gpointer user_data) {
 			gtk_combo_box_set_active(GTK_COMBO_BOX(settings->audio_output_combobox), 0);
 		}
 	}
-
-	rm_audio_set_default(active);
 }
 
 void view_call_type_icons_combobox_changed_cb(GtkComboBox *widget, gpointer user_data)
@@ -1491,11 +1489,16 @@ void app_show_settings(void)
 
 	audio_plugins = rm_audio_get_plugins();
 	for (list = audio_plugins; list != NULL; list = list->next) {
-		struct audio *audio = list->data;
+		RmAudio *audio = list->data;
+		gchar *name;
 
 		g_assert(audio != NULL);
 
-		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->audio_plugin_combobox), audio->name, audio->name);
+		name = rm_audio_get_name(audio);
+
+		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->audio_plugin_combobox), name, name);
+		g_debug("%s(): Appending '%s'", __FUNCTION__, name);
+		g_free(name);
 	}
 
 	g_signal_connect(settings->audio_plugin_combobox, "changed", G_CALLBACK(audio_plugin_combobox_changed_cb), NULL);

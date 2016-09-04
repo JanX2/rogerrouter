@@ -106,7 +106,7 @@ void rm_object_emit_connection_terminated(RmConnection *connection)
  *
  * Emit signal: connection-status.
  */
-void rm_object_emit_connection_status(gint status, struct connection *connection)
+void rm_object_emit_connection_status(gint status, RmConnection *connection)
 {
 	g_signal_emit(rm_object, rm_object_signals[RM_ACB_CONNECTION_STATUS], 0, status, connection);
 }
