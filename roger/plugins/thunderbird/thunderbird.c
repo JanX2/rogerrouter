@@ -30,7 +30,7 @@
 #include <libroutermanager/rmobject.h>
 #include <libroutermanager/rmaddressbook.h>
 #include <libroutermanager/rmcall.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmfile.h>
 #include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmsettings.h>
@@ -717,7 +717,7 @@ static void parse_person(GHashTable *map, gpointer pId) {
 	GHashTableIter iter5;
 	gpointer key5, value5;
 	RmContact *contact = NULL;
-	struct phone_number *number;
+	RmPhoneNumber *number;
 	const gchar *thunderbird_dir = thunderbird_get_selected_book();
 
 	if (thunderbird_dir) {
@@ -744,22 +744,22 @@ static void parse_person(GHashTable *map, gpointer pId) {
 #endif
 
 		if (!strcmp(column, "HomePhone")) {
-			number = g_slice_new(struct phone_number);
+			number = g_slice_new(RmPhoneNumber);
 			number->number = rm_number_full(value, FALSE);
 			number->type = PHONE_NUMBER_HOME;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
 		} else if (!strcmp(column, "WorkPhone")) {
-			number = g_slice_new(struct phone_number);
+			number = g_slice_new(RmPhoneNumber);
 			number->number = rm_number_full(value, FALSE);
 			number->type = PHONE_NUMBER_WORK;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
 		} else if (!strcmp(column, "FaxNumber")) {
-			number = g_slice_new(struct phone_number);
+			number = g_slice_new(RmPhoneNumber);
 			number->number = rm_number_full(value, FALSE);
 			number->type = PHONE_NUMBER_FAX_HOME;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
 		} else if (!strcmp(column, "CellularNumber")) {
-			number = g_slice_new(struct phone_number);
+			number = g_slice_new(RmPhoneNumber);
 			number->number = rm_number_full(value, FALSE);
 			number->type = PHONE_NUMBER_MOBILE;
 			contact->numbers = g_slist_prepend(contact->numbers, number);

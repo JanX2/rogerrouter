@@ -40,7 +40,7 @@ ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_WINCRED_PLUGIN, RouterManagerWi
  * \param name password name
  * \param password password
  */
-static void wincred_store_password(struct profile *profile, const gchar *name, const gchar *password)
+static void wincred_store_password(RmProfile *profile, const gchar *name, const gchar *password)
 {
 	CREDENTIALA cred = { 0 };
 	WCHAR *wide_password = NULL;
@@ -77,7 +77,7 @@ static void wincred_store_password(struct profile *profile, const gchar *name, c
  * \param name password name
  * \return password
  */
-static gchar *wincred_get_password(struct profile *profile, const gchar *name)
+static gchar *wincred_get_password(RmProfile *profile, const gchar *name)
 {
 	PCREDENTIALA cred;
 	BOOL result;
@@ -111,7 +111,7 @@ static gchar *wincred_get_password(struct profile *profile, const gchar *name)
  * \param name password name
  * \return TRUE on success, otherwise FALSE
  */
-static gboolean wincred_remove_password(struct profile *profile, const gchar *name)
+static gboolean wincred_remove_password(RmProfile *profile, const gchar *name)
 {
 	PCREDENTIALA cred;
 	BOOL result;

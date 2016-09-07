@@ -39,7 +39,7 @@
 #include "firmware-common.h"
 #include "firmware-query.h"
 
-gboolean fritzbox_get_settings_query(struct profile *profile)
+gboolean fritzbox_get_settings_query(RmProfile *profile)
 {
 	JsonParser *parser;
 	JsonReader *reader;
@@ -53,14 +53,14 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 	g_debug("Get settings");
 
 	/* Login */
-	if (!router_login(profile)) {
+	if (!rm_router_login(profile)) {
 		return FALSE;
 	}
 
 	g_test_timer_start();
 
 	/* Extract data */
-	url = g_strdup_printf("http://%s/query.lua", router_get_host(profile));
+	url = g_strdup_printf("http://%s/query.lua", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
 								"LKZPrefix", "telcfg:settings/Location/LKZPrefix",
 								"LKZ", "telcfg:settings/Location/LKZ",
@@ -281,7 +281,7 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 	port = atoi(dialport);
 	gint phone_port = fritzbox_find_phone_port(port);
 	g_debug("Dial port: %s, phone_port: %d", dialport, phone_port);
-	router_set_phone_port(profile, phone_port);
+	rm_router_set_phone_port(profile, phone_port);
 	json_reader_end_member(reader);
 
 	json_reader_read_member(reader, "TamStick");

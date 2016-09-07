@@ -23,6 +23,7 @@
 G_BEGIN_DECLS
 
 void crash_main(const char *arg);
+void crash_install_handlers(void);
 
 G_END_DECLS
 

@@ -28,12 +28,13 @@
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmosdep.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmnetmonitor.h>
 #include <libroutermanager/rmsettings.h>
 #include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmphone.h>
+#include <libroutermanager/rmnumber.h>
 
 #include <roger/journal.h>
 #include <roger/assistant.h>
@@ -86,10 +87,10 @@ void app_quit(void)
 
 void app_copy_ip(void)
 {
-	struct profile *profile = rm_profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	gchar *ip;
 
-	ip = router_get_ip(profile);
+	ip = rm_router_get_ip(profile);
 	if (ip) {
 		g_debug("IP: '%s'", ip);
 		gtk_clipboard_set_text(gtk_clipboard_get(GDK_NONE), ip, -1);
@@ -101,9 +102,9 @@ void app_copy_ip(void)
 
 void app_reconnect(void)
 {
-	struct profile *profile = rm_profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 
-	router_reconnect(profile);
+	rm_router_reconnect(profile);
 }
 
 static void auth_response_callback(GtkDialog *dialog, gint response_id, gpointer user_data)

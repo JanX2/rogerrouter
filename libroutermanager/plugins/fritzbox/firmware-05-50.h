@@ -22,11 +22,11 @@
 
 G_BEGIN_DECLS
 
-gboolean fritzbox_login_05_50(struct profile *profile);
-gboolean fritzbox_get_settings_05_50(struct profile *profile);
+gboolean fritzbox_login_05_50(RmProfile *profile);
+gboolean fritzbox_get_settings_05_50(RmProfile *profile);
 void fritzbox_journal_cb(SoupSession *session, SoupMessage *msg, gpointer user_data);
-gboolean fritzbox_load_journal_05_50(struct profile *profile, gchar **data_ptr);
-gboolean fritzbox_clear_journal_05_50(struct profile *profile);
+gboolean fritzbox_load_journal_05_50(RmProfile *profile, gchar **data_ptr);
+gboolean fritzbox_clear_journal_05_50(RmProfile *profile);
 
 G_END_DECLS
 

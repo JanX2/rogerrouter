@@ -32,7 +32,7 @@
 #include <libroutermanager/plugins/capi/phone.h>
 #include <libroutermanager/plugins/capi/ringtone.h>
 #include <libroutermanager/rmphone.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/rmlookup.h>
 #include <libroutermanager/rmstring.h>

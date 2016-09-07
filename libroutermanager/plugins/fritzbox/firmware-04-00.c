@@ -43,7 +43,7 @@
  * \param router_info router information structure
  * \return TRUE if FRITZ!Box is detected, otherwise FALSE on error
  */
-gboolean fritzbox_present_04_00(struct router_info *router_info)
+gboolean fritzbox_present_04_00(RmRouterInfo *router_info)
 {
 	SoupMessage *msg;
 	const gchar *data;
@@ -92,7 +92,7 @@ gboolean fritzbox_present_04_00(struct router_info *router_info)
 	return ret;
 }
 
-gboolean fritzbox_login_04_00(struct profile *profile)
+gboolean fritzbox_login_04_00(RmProfile *profile)
 {
 	SoupMessage *msg;
 	const gchar *data;
@@ -101,9 +101,9 @@ gboolean fritzbox_login_04_00(struct profile *profile)
 	gsize read;
 	gchar *password;
 
-	url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
+	url = g_strdup_printf("http://%s/cgi-bin/webcm", rm_router_get_host(profile));
 
-	password = router_get_login_password(profile);
+	password = rm_router_get_login_password(profile);
 	msg = soup_form_request_new(SOUP_METHOD_POST, url,
 				    "login:command/password", password,
 				    "var:loginDone", "1",
@@ -139,7 +139,7 @@ gboolean fritzbox_login_04_00(struct profile *profile)
  * \param number remote number
  * \return TRUE on success, otherwise FALSE
  */
-gboolean fritzbox_dial_number_04_00(struct profile *profile, gint port, const gchar *number)
+gboolean fritzbox_dial_number_04_00(RmProfile *profile, gint port, const gchar *number)
 {
 	SoupMessage *msg;
 	gchar *port_str;
@@ -147,12 +147,12 @@ gboolean fritzbox_dial_number_04_00(struct profile *profile, gint port, const gc
 	gboolean ret = FALSE;
 
 	/* Login to box */
-	if (!router_login(profile)) {
+	if (!rm_router_login(profile)) {
 		return FALSE;
 	}
 
 	/* Create POST message */
-	gchar *url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
+	gchar *url = g_strdup_printf("http://%s/cgi-bin/webcm", rm_router_get_host(profile));
 	port_str = g_strdup_printf("%d", fritzbox_get_dialport(port));
 
 	scramble = rm_number_scramble(number);
@@ -186,18 +186,18 @@ gboolean fritzbox_dial_number_04_00(struct profile *profile, gint port, const gc
  * \param number remote number
  * \return TRUE on success, otherwise FALSE
  */
-gboolean fritzbox_hangup_04_00(struct profile *profile, gint port, const gchar *number)
+gboolean fritzbox_hangup_04_00(RmProfile *profile, gint port, const gchar *number)
 {
 	SoupMessage *msg;
 	gchar *port_str;
 
 	/* Login to box */
-	if (!router_login(profile)) {
+	if (!rm_router_login(profile)) {
 		return FALSE;
 	}
 
 	/* Create POST message */
-	gchar *url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
+	gchar *url = g_strdup_printf("http://%s/cgi-bin/webcm", rm_router_get_host(profile));
 	port_str = g_strdup_printf("%d", fritzbox_get_dialport(port));
 
 	g_debug("Hangup on port %s...", port_str);

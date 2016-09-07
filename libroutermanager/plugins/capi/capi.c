@@ -35,8 +35,9 @@
 #include <libroutermanager/rmstring.h>
 
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmcall.h>
+#include <libroutermanager/rmnumber.h>
 
 
 #include <capi.h>
@@ -1972,10 +1973,10 @@ gboolean capi_session_connect(gpointer user_data)
 
 again:
 	g_debug("%s(): called", __FUNCTION__);
-	session = capi_session_init(&session_handlers, router_get_host(profile), g_settings_get_int(profile->settings, "phone-controller") + 1);
+	session = capi_session_init(&session_handlers, rm_router_get_host(profile), g_settings_get_int(profile->settings, "phone-controller") + 1);
 	if (!session && retry) {
 		/* Maybe the port is closed, try to activate it and try again */
-		router_dial_number(profile, PORT_ISDN1, "#96*3*");
+		rm_router_dial_number(profile, PORT_ISDN1, "#96*3*");
 		g_usleep(G_USEC_PER_SEC * 2);
 		retry = FALSE;
 		goto again;

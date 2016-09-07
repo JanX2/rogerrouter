@@ -32,7 +32,7 @@
 #include <libroutermanager/rmaddressbook.h>
 #include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmcontact.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmfile.h>
 #include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmsettings.h>
@@ -142,7 +142,7 @@ static int osxab_read_book(void) {
 			for (int j = 0; j < ABMultiValueCount((ABMultiValueRef)phones); j++) {
 				CFStringRef an_phone = ABMultiValueCopyValueAtIndex(phones, j);
 				CFStringRef label = ABMultiValueCopyLabelAtIndex(phones, j);
-				struct phone_number *number = g_slice_new0(struct phone_number);
+				RmPhoneNumber *number = g_slice_new0(RmPhoneNumber);
 
 				if (!CFStringCompare(label, kABPhoneHomeLabel, 0)) {
 					number->type = PHONE_NUMBER_HOME;
@@ -253,7 +253,7 @@ static gboolean osxab_save_contact(RmContact *contact)
     	GSList *list;
 	
 		for (list = contact->numbers; list != NULL; list = list->next) {
-			struct phone_number *number = list->data;
+			RmPhoneNumber *number = list->data;
 			CFTypeRef type;
 
 			switch (number->type) {

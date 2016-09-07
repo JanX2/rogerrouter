@@ -19,16 +19,19 @@
 
 #include <config.h>
 
+#include <ctype.h>
 #include <string.h>
 
 #include <gtk/gtk.h>
 
 #include <libroutermanager/rmobject.h>
 #include <libroutermanager/rmobjectemit.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmphone.h>
 #include <libroutermanager/rmaddressbook.h>
 #include <libroutermanager/rmstring.h>
+#include <libroutermanager/rmnumber.h>
+#include <libroutermanager/rmphone.h>
 
 #include <roger/main.h>
 #include <roger/journal.h>
@@ -43,17 +46,17 @@ static struct phone_state *phone_state = NULL;
 static gchar *phone_get_active_name(void)
 {
 	GSList *phone_list;
-	struct profile *profile = rm_profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	gchar *name = NULL;
 	gint type;
 
 	/* Get phone list and active phone port */
-	phone_list = router_get_phone_list(profile);
-	type = router_get_phone_port(profile);
+	phone_list = rm_router_get_phone_list(profile);
+	type = rm_router_get_phone_port(profile);
 
 	/* Traverse phone list and add each phone */
 	for (; phone_list != NULL; phone_list = phone_list->next) {
-		struct phone *phone = phone_list->data;
+		RmPhone *phone = phone_list->data;
 
 		if (type == phone->type) {
 			name = g_strdup(phone->name);
@@ -109,13 +112,13 @@ static void phone_control_buttons_set_sensitive(gboolean sensitive)
  */
 void phone_dial_buttons_set_dial(gboolean allow_dial)
 {
-	struct profile *profile = rm_profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 
 	gtk_widget_set_sensitive(phone_state->pickup_button, allow_dial);
 	gtk_widget_set_sensitive(phone_state->hangup_button, !allow_dial);
 
 	/* Toggle control buttons sensitive value */
-	if (router_get_phone_port(profile) == PORT_SOFTPHONE) {
+	if (rm_router_get_phone_port(profile) == PORT_SOFTPHONE) {
 		phone_control_buttons_set_sensitive(!allow_dial);
 	} else {
 		phone_control_buttons_set_sensitive(FALSE);
@@ -205,7 +208,7 @@ static void phone_control_buttons_reset(void)
  */
 void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 {
-	struct profile *profile = rm_profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	gchar *scramble;
 
 	/* Get selected number (either number format or based on the selected name) */
@@ -222,7 +225,7 @@ void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	g_debug("%s(): Dialing '%s'", __FUNCTION__, scramble);
 	g_free(scramble);
 
-	phone_state->connection = rm_phone_dial(phone_state->number, router_get_suppress_state(profile));
+	phone_state->connection = rm_phone_dial(phone_state->number, rm_router_get_suppress_state(profile));
 	if (phone_state->connection) {
 		phone_dial_buttons_set_dial(FALSE);
 	}
@@ -235,8 +238,8 @@ void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
  */
 void hangup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 {
-	struct profile *profile = rm_profile_get_active();
-	const gchar *number = gtk_entry_get_text(GTK_ENTRY(phone_state->search_entry));
+	//RmProfile *profile = rm_profile_get_active();
+	//const gchar *number = gtk_entry_get_text(GTK_ENTRY(phone_state->search_entry));
 
 	if (!phone_state->connection) {
 		return;
@@ -485,7 +488,7 @@ void phone_search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_d
 		name = g_strdup_printf("<b>%s</b>", contact->name);
 
 		for (numbers = contact->numbers; numbers != NULL; numbers = numbers->next) {
-			struct phone_number *number = numbers->data;
+			RmPhoneNumber *number = numbers->data;
 			GtkWidget *image;
 			gchar *num_str;
 			gchar *type;
@@ -678,9 +681,9 @@ gboolean phone_search_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event
 void phone_item_toggled_cb(GtkCheckMenuItem *item, gpointer user_data)
 {
 	/* If item is active, adjust phone port accordingly and set sensitivity of phone buttons */
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(item))) {
-		gint type = GPOINTER_TO_INT(user_data);
-		gchar *name;
+	//if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(item))) {
+		//gint type = GPOINTER_TO_INT(user_data);
+		//gchar *name;
 
 		/* Set active phone port */
 		//rm_phone_set_port(type);
@@ -689,7 +692,7 @@ void phone_item_toggled_cb(GtkCheckMenuItem *item, gpointer user_data)
 		//name = rm_phone_get_active_name();
 		//gtk_window_set_title(GTK_WINDOW(phone_state->window), name);
 		//g_free(name);
-	}
+	//}
 }
 
 /**
@@ -697,14 +700,14 @@ void phone_item_toggled_cb(GtkCheckMenuItem *item, gpointer user_data)
  * \param profile pointer to current profile
  * \return newly create phone menu
  */
-static GtkWidget *phone_window_create_menu(struct profile *profile)
+static GtkWidget *phone_window_create_menu(RmProfile *profile)
 {
 	GtkWidget *menu;
 	GtkWidget *item;
 	GtkWidget *box;
 	GSList *phone_radio_list = NULL;
 	GSList *phone_list = NULL;
-	struct phone *phone = NULL;
+	RmPhone *phone = NULL;
 	gint type = 0;
 
 	/* Create vertical box */

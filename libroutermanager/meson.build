@@ -54,7 +54,7 @@ rm_sources += 'rmpassword.c'
 rm_sources += 'rmplugins.c'
 rm_sources += 'rmprofile.c'
 rm_sources += 'rmphone.c'
-rm_sources += 'router.c'
+rm_sources += 'rmrouter.c'
 rm_sources += 'rmsettings.c'
 if ssdp_dep.found()
 	rm_sources += 'rmssdp.c'
@@ -102,7 +102,7 @@ headers = [
 	'rmssdp.h',
 	'rmstring.h',
 	'rmvox.h',
-	'router.h',
+	'rmrouter.h',
 	'xml.h'
 ]
 install_headers(headers, subdir : 'libroutermanager')

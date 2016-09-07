@@ -29,11 +29,21 @@
 #include <libroutermanager/rmaudio.h>
 #include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmmain.h>
+#include <libroutermanager/rmprofile.h>
+
+/**
+ * SECTION:rmvox
+ * @title: RmVox
+ * @short_description: Vox playback
+ * @stability: Stable
+ *
+ * FRITZ!Box voice box playback function (speex)
+ */
 
 #define MAX_FRAME_SIZE 2000
 
 /** Private vox playback structure */
-struct vox_playback {
+typedef struct {
 	/** Vox data buffer */
 	gchar *data;
 	/** Length of vox data */
@@ -60,7 +70,7 @@ struct vox_playback {
 	gint fraction;
 	/** Current seconds */
 	gfloat seconds;
-};
+} RmVoxPlayback;
 
 /**
  * rm_vox_playback_thread:
@@ -72,7 +82,7 @@ struct vox_playback {
  */
 static gpointer rm_vox_playback_thread(gpointer user_data)
 {
-	struct vox_playback *playback = user_data;
+	RmVoxPlayback *playback = user_data;
 	spx_int32_t frame_size;
 	SpeexBits bits;
 	gshort output[MAX_FRAME_SIZE];
@@ -102,8 +112,7 @@ static gpointer rm_vox_playback_thread(gpointer user_data)
 	playback->num_cnt = playback->cnt;
 
 #ifdef VOX_DEBUG
-	g_debug("cnt: %d", playback->num_cnt);
-	g_debug("Seconds: %f", (float)(frame_size * playback->cnt) / (float)8000);
+	g_debug("%s(): cnt = %d, seconds = %f", __FUNCTION__, playback->num_cnt, (float)(frame_size * playback->cnt) / (float)8000);
 #endif
 
 	max_cnt = playback->cnt;
@@ -138,12 +147,12 @@ static gpointer rm_vox_playback_thread(gpointer user_data)
 			if (ret == -1) {
 				break;
 			} else if (ret == -2) {
-				g_warning("Decoding error: corrupted stream?");
+				g_warning("%s(): Decoding error: corrupted stream?", __FUNCTION__);
 				break;
 			}
 
 			if (speex_bits_remaining(&bits) < 0) {
-				g_warning("Decoding overflow: corrupted stream?");
+				g_warning("%s(): Decoding overflow: corrupted stream?", __FUNCTION__);
 				break;
 			}
 		}
@@ -159,7 +168,7 @@ static gpointer rm_vox_playback_thread(gpointer user_data)
 
 	}
 #ifdef VOX_DEBUG
-	g_debug("End of vox");
+	g_debug("%s(): End of vox", __FUNCTION__);
 #endif
 
 	speex_bits_destroy(&bits);
@@ -177,7 +186,7 @@ static gpointer rm_vox_playback_thread(gpointer user_data)
  */
 gboolean rm_vox_play(gpointer vox_data)
 {
-	struct vox_playback *playback = vox_data;
+	RmVoxPlayback *playback = vox_data;
 
 	if (!playback) {
 		return FALSE;
@@ -204,7 +213,7 @@ gboolean rm_vox_play(gpointer vox_data)
  */
 gboolean rm_vox_playpause(gpointer vox_data)
 {
-	struct vox_playback *playback = vox_data;
+	RmVoxPlayback *playback = vox_data;
 
 	if (!playback) {
 		return FALSE;
@@ -225,7 +234,7 @@ gboolean rm_vox_playpause(gpointer vox_data)
  */
 gboolean rm_vox_stop(gpointer vox_data)
 {
-	struct vox_playback *playback = vox_data;
+	RmVoxPlayback *playback = vox_data;
 
 	/* Safety check */
 	if (!playback) {
@@ -246,7 +255,7 @@ gboolean rm_vox_stop(gpointer vox_data)
 
 	/* Unref cancellable and free structure */
 	g_object_unref(playback->cancel);
-	g_slice_free(struct vox_playback, playback);
+	g_slice_free(RmVoxPlayback, playback);
 
 	return TRUE;
 }
@@ -262,7 +271,7 @@ gboolean rm_vox_stop(gpointer vox_data)
  */
 gboolean rm_vox_seek(gpointer vox_data, gdouble pos)
 {
-	struct vox_playback *playback = vox_data;
+	RmVoxPlayback *playback = vox_data;
 	spx_int32_t frame_size;
 	gint cnt;
 	gint cur_cnt = 0;
@@ -270,7 +279,7 @@ gboolean rm_vox_seek(gpointer vox_data, gdouble pos)
 	guchar bytes = 0;
 
 #ifdef VOX_DEBUG
-	g_debug("seek called");
+	g_debug("%s(): seek called", __FUNCTION__);
 #endif
 
 	if (!playback) {
@@ -284,7 +293,6 @@ gboolean rm_vox_seek(gpointer vox_data, gdouble pos)
 	cnt = playback->num_cnt * pos;
 
 	/* Loop through data in order to calculate frame counts */
-	//g_debug("loop %d < %d; cancel %d", offset, playback->len, g_cancellable_is_cancelled(playback->cancel));
 	while (offset < playback->len && !g_cancellable_is_cancelled(playback->cancel)) {
 		bytes = playback->data[offset];
 		offset++;
@@ -297,7 +305,7 @@ gboolean rm_vox_seek(gpointer vox_data, gdouble pos)
 		cur_cnt++;
 
 #ifdef VOX_DEBUG
-		g_debug("cur_cnt: %d cnt: %d", cur_cnt, cnt);
+		g_debug("%s(): cur_cnt = %d, cnt = %d", __FUNCTION__, cur_cnt, cnt);
 #endif
 		/* If we have the requested count, overwrite playback data */
 		if (cur_cnt == cnt) {
@@ -321,7 +329,7 @@ gboolean rm_vox_seek(gpointer vox_data, gdouble pos)
  */
 gint rm_vox_get_fraction(gpointer vox_data)
 {
-	struct vox_playback *playback = vox_data;
+	RmVoxPlayback *playback = vox_data;
 
 	return playback->fraction;
 }
@@ -336,7 +344,7 @@ gint rm_vox_get_fraction(gpointer vox_data)
  */
 gfloat rm_vox_get_seconds(gpointer vox_data)
 {
-	struct vox_playback *playback = vox_data;
+	RmVoxPlayback *playback = vox_data;
 
 	return playback->seconds;
 }
@@ -353,20 +361,20 @@ gfloat rm_vox_get_seconds(gpointer vox_data)
  */
 gpointer rm_vox_init(gchar *data, gsize len, GError **error)
 {
-	struct vox_playback *playback;
+	RmVoxPlayback *playback;
 	const SpeexMode *mode;
 	spx_int32_t rate = 0;
 
 	/* Create internal structue and store data pointer and data length */
-	playback = g_slice_new(struct vox_playback);
+	playback = g_slice_new(RmVoxPlayback);
 	playback->data = data;
 	playback->len = len;
 
 	/* Get default audio device */
 	playback->audio = rm_profile_get_audio(rm_profile_get_active());
 	if (!playback->audio) {
-		g_warning("No audio device");
-		g_slice_free(struct vox_playback, playback);
+		g_warning("%s(): No audio device", __FUNCTION__);
+		g_slice_free(RmVoxPlayback, playback);
 
 		g_set_error(error, RM_ERROR, RM_ERROR_AUDIO, "%s", "No audio device");
 
@@ -377,8 +385,8 @@ gpointer rm_vox_init(gchar *data, gsize len, GError **error)
 	/* open audio device */
 	playback->audio_priv = playback->audio->open();
 	if (!playback->audio_priv) {
-		g_debug("Could not open audio device");
-		g_slice_free(struct vox_playback, playback);
+		g_debug("%s(): Could not open audio device", __FUNCTION__);
+		g_slice_free(RmVoxPlayback, playback);
 
 		g_set_error(error, RM_ERROR, RM_ERROR_AUDIO, "%s", "Could not open audio device");
 
@@ -391,10 +399,10 @@ gpointer rm_vox_init(gchar *data, gsize len, GError **error)
 
 	playback->speex = speex_decoder_init(mode);
 	if (!playback->speex) {
-		g_warning("Decoder initialization failed.");
+		g_warning("%s(): Decoder initialization failed.", __FUNCTION__);
 		playback->audio->close(playback->audio_priv);
 
-		g_slice_free(struct vox_playback, playback);
+		g_slice_free(RmVoxPlayback, playback);
 
 		g_set_error(error, RM_ERROR, RM_ERROR_AUDIO, "%s", "Decoder initialization failed.");
 

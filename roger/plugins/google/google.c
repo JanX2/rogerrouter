@@ -28,12 +28,13 @@
 #include <libroutermanager/rmobject.h>
 #include <libroutermanager/rmaddressbook.h>
 #include <libroutermanager/rmcall.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmsettings.h>
 #include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmosdep.h>
 #include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmpassword.h>
+#include <libroutermanager/rmnumber.h>
 
 #include <roger/main.h>
 #include <roger/uitools.h>
@@ -375,7 +376,7 @@ static int google_read_book(void) {
 				GDataGDPhoneNumber *number = number_list->data;
 				const gchar *type = gdata_gd_phone_number_get_relation_type(number);
 				const gchar *num = gdata_gd_phone_number_get_number(number);
-				struct phone_number *phone_number;
+				RmPhoneNumber *phone_number;
 
 				if (type == NULL) {
 					g_warning("type == NULL");
@@ -386,7 +387,7 @@ static int google_read_book(void) {
 					break;
 				}
 
-				phone_number = g_slice_new(struct phone_number);
+				phone_number = g_slice_new(RmPhoneNumber);
 				if (strcmp(type, GDATA_GD_PHONE_NUMBER_WORK) == 0) {
 					phone_number->type = PHONE_NUMBER_WORK;
 				} else if (strcmp(type, GDATA_GD_PHONE_NUMBER_HOME) == 0) {
@@ -478,7 +479,7 @@ void google_set_image(GDataContactsContact *gcontact, struct sPerson *contact) {
 int googleSaveBook(void) {
 	GList *list;
 	GError *error = NULL;
-	struct profile *profile = rm_profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 
 	g_debug("started");
 	if (google_init()) {

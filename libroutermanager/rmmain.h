@@ -53,6 +53,10 @@ gchar *rm_get_directory(gchar *type);
 void rm_set_requested_profile(gchar *name);
 gchar *rm_get_requested_profile(void);
 
+gchar *rm_get_user_config_dir(void);
+gchar *rm_get_user_cache_dir(void);
+gchar *rm_get_user_data_dir(void);
+
 G_END_DECLS
 
 #endif

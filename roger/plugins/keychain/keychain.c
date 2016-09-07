@@ -41,7 +41,7 @@ ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_KEYCHAIN_PLUGIN, RouterManagerK
 
 #define SERVICE_NAME "roger"
 
-static gboolean keychain_remove_password(struct profile *profile, const gchar *type);
+static gboolean keychain_remove_password(RmProfile *profile, const gchar *type);
 
 OSStatus keychain_get(gchar *pwd_name, void **password, UInt32 *pwd_len, SecKeychainItemRef *item_ref)
 {
@@ -66,7 +66,7 @@ OSStatus keychain_get(gchar *pwd_name, void **password, UInt32 *pwd_len, SecKeyc
  * \param type password type
  * \return password or NULL on error
  */
-static gchar *keychain_get_password(struct profile *profile, const gchar *type)
+static gchar *keychain_get_password(RmProfile *profile, const gchar *type)
 {
 	OSStatus status;
 	UInt32 pwd_length;
@@ -102,7 +102,7 @@ static gchar *keychain_get_password(struct profile *profile, const gchar *type)
  * \param type password type
  * \param password password text
  */
-static void keychain_store_password(struct profile *profile, const gchar *type, const gchar *password) {
+static void keychain_store_password(RmProfile *profile, const gchar *type, const gchar *password) {
 	OSStatus status;
 	SecKeychainItemRef item_ref = NULL;
 	gchar *pwd_name;
@@ -153,7 +153,7 @@ static void keychain_store_password(struct profile *profile, const gchar *type, 
  * \param type type indicating which password to remove
  * \return TRUE on success, otherwise FALSE on error
  */
-static gboolean keychain_remove_password(struct profile *profile, const gchar *type) {
+static gboolean keychain_remove_password(RmProfile *profile, const gchar *type) {
 	OSStatus status;
 	SecKeychainItemRef item_ref = NULL;
 	gchar *pwd_name;

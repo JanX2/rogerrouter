@@ -48,7 +48,7 @@
 
 #include <libroutermanager/rmfile.h>
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 
 #define DEBUGGERRC "debuggerrc"
 #define BUGZILLA_URI "https://www.tabos.org/forum"
@@ -98,8 +98,8 @@ static void crash_handler(int sig)
 	if (0 == (pid = fork())) {
 		char buf[128];
 		char *args[5];
-		const gchar *name = router_get_name(profile);
-		const gchar *firmware = router_get_version(profile);
+		const gchar *name = rm_router_get_name(profile);
+		const gchar *firmware = rm_router_get_version(profile);
 
 		/*
 		 * probably also some other parameters (like GTK+ ones).
@@ -353,7 +353,7 @@ static GtkWidget *crash_dialog_show(const gchar *text, const gchar *name, const 
 	    (g_strdup_printf(_("%s.\nPlease file a bug report and include the information below\nand the debug log (~/.cache/routermanager/debug.log)."), text));
 	gtk_widget_show(label1);
 	gtk_box_pack_start(GTK_BOX(hbox1), label1, TRUE, TRUE, 0);
-	gtk_misc_set_alignment(GTK_MISC(label1), 7.45058e-09, 0.5);
+	gtk_widget_set_halign(label1, GTK_ALIGN_START);
 
 	frame1 = gtk_frame_new(_("Debug log"));
 	gtk_widget_show(frame1);

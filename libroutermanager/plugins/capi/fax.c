@@ -36,6 +36,7 @@
 #include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmdevicefax.h>
 #include <libroutermanager/rmprofile.h>
+#include <libroutermanager/rmnumber.h>
 #include <sff.h>
 
 static int8_t *_linear16_2_law = (int8_t *) &linear16_2_law[32768];

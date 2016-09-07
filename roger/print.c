@@ -28,7 +28,8 @@
 #include <tiff.h>
 
 #include <libroutermanager/rmobjectemit.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
+#include <libroutermanager/rmnumber.h>
 //#include <libroutermanager/libfaxophone/faxophone.h>
 #include <libroutermanager/plugins/capi/fax.h>
 
@@ -570,7 +571,7 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	char *status_code = status->error_code == 0 ? _("SUCCESS") : _("FAILED");
 	int pages = status->page_current;
 	int bitrate = status->bitrate;
-	struct profile *profile = rm_profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	TIFF *tiff;
 	GdkPixbuf *scale;
 
@@ -617,7 +618,7 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	cairo_set_font_size(cairo, 20);
 
 	cairo_move_to(cairo, 60, 60);
-	buffer = g_strconcat(_("Fax Transfer Protocol"), " (", router_get_name(profile), ")", NULL);
+	buffer = g_strconcat(_("Fax Transfer Protocol"), " (", rm_router_get_name(profile), ")", NULL);
 	cairo_show_text(cairo, buffer);
 	g_free(buffer);
 

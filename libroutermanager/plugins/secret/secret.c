@@ -58,7 +58,7 @@ const SecretSchema *secret_get_schema(void)
  * \param name password name
  * \param password password
  */
-static void secret_store_password(struct profile *profile, const gchar *name, const gchar *password)
+static void secret_store_password(RmProfile *profile, const gchar *name, const gchar *password)
 {
 	GError *error = NULL;
 
@@ -83,7 +83,7 @@ static void secret_store_password(struct profile *profile, const gchar *name, co
  * \param name password name
  * \return password
  */
-static gchar *secret_get_password(struct profile *profile, const gchar *name)
+static gchar *secret_get_password(RmProfile *profile, const gchar *name)
 {
 	GError *error = NULL;
 	gchar *password = secret_password_lookup_sync(SECRET_SCHEMA, NULL, &error,
@@ -108,7 +108,7 @@ static gchar *secret_get_password(struct profile *profile, const gchar *name)
  * \param name password name
  * \return TRUE on success, otherwise FALSE
  */
-static gboolean secret_remove_password(struct profile *profile, const gchar *name)
+static gboolean secret_remove_password(RmProfile *profile, const gchar *name)
 {
 	GError *error = NULL;
 	gboolean removed = secret_password_clear_sync(SECRET_SCHEMA, NULL, &error,

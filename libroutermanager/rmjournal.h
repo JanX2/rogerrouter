@@ -23,9 +23,10 @@
 G_BEGIN_DECLS
 
 GSList *rm_journal_add_call(GSList *journal, RmCall *call);
-gboolean rm_journal_savel_as(GSList *journal, gchar *file_name);
+gboolean rm_journal_save_as(GSList *journal, gchar *file_name);
 gboolean rm_journal_save(GSList *journal);
 GSList *rm_journal_load(GSList *journal);
+gint rm_journal_sort_by_date(gconstpointer a, gconstpointer b);
 
 G_END_DECLS
 

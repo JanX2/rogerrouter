@@ -27,7 +27,7 @@
 #include <libpeas-gtk/peas-gtk.h>
 
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmnetmonitor.h>
 #include <libroutermanager/rmftp.h>
 #include <libroutermanager/rmfilter.h>
@@ -98,14 +98,14 @@ static struct settings *settings = NULL;
 void login_check_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
 	GtkWidget *dialog;
-	struct profile *profile = rm_profile_get_active();
-	gboolean locked = router_is_locked();
+	RmProfile *profile = rm_profile_get_active();
+	gboolean locked = rm_router_is_locked();
 	gboolean log_in = FALSE;
 
-	router_logout(profile);
+	rm_router_logout(profile);
 
-	router_release_lock();
-	log_in = router_login(profile);
+	rm_router_release_lock();
+	log_in = rm_router_login(profile);
 	if (log_in == TRUE) {
 		dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE, _("Login password is valid"));
 
@@ -131,13 +131,13 @@ void ftp_login_check_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
 	GtkWidget *dialog = NULL;
 	RmFtp *client;
-	struct profile *profile = rm_profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 
-	client = rm_ftp_init(router_get_host(profile));
+	client = rm_ftp_init(rm_router_get_host(profile));
 	if (!client) {
 		dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("Could not connect to FTP. Missing USB storage?"));
 	} else {
-		if (rm_ftp_login(client, router_get_ftp_user(profile), router_get_ftp_password(profile)) == TRUE) {
+		if (rm_ftp_login(client, rm_router_get_ftp_user(profile), rm_router_get_ftp_password(profile)) == TRUE) {
 			dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE, _("FTP password is valid"));
 		} else {
 			rm_object_emit_message(_("FTP password is invalid"), _("Please check your FTP credentials"));
@@ -169,7 +169,7 @@ void reload_button_clicked_cb(GtkButton *button, gpointer user_data)
 		return;
 	}
 
-	router_get_settings(rm_profile_get_active());
+	rm_router_get_settings(rm_profile_get_active());
 }
 
 /**
@@ -179,7 +179,7 @@ void reload_button_clicked_cb(GtkButton *button, gpointer user_data)
  */
 void login_password_entry_changed_cb(GtkEntry *entry, gpointer user_data)
 {
-	struct profile *profile = rm_profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 
 	rm_password_set(profile, "login-password", gtk_entry_get_text(GTK_ENTRY(entry)));
 }
@@ -191,7 +191,7 @@ void login_password_entry_changed_cb(GtkEntry *entry, gpointer user_data)
  */
 void ftp_password_entry_changed_cb(GtkEntry *entry, gpointer user_data)
 {
-	struct profile *profile = rm_profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 
 	rm_password_set(profile, "ftp-password", gtk_entry_get_text(GTK_ENTRY(entry)));
 }
@@ -766,7 +766,7 @@ void settings_destroy_cb(GtkWidget *widget, gpointer user_data)
 
 void settings_refresh_list(GtkListStore *list_store)
 {
-	gchar **numbers = router_get_numbers(rm_profile_get_active());
+	gchar **numbers = rm_router_get_numbers(rm_profile_get_active());
 	GtkTreeIter iter;
 	gint count;
 	gint index;
@@ -1302,7 +1302,7 @@ void settings_fill_address_book_plugin_combobox(struct settings *settings)
 static void settings_notification_refresh_list(GtkListStore *list_store)
 {
 	RmProfile *profile = rm_profile_get_active();
-	gchar **numbers = router_get_numbers(profile);
+	gchar **numbers = rm_router_get_numbers(profile);
 	GtkTreeIter iter;
 	gint count;
 	gint index;
@@ -1432,7 +1432,7 @@ void settings_notification_incoming_toggled_cb(GtkCellRendererToggle *toggle, gc
 
 void settings_notebook_switch_page_cb(GtkNotebook *notebook, GtkWidget *page, guint page_num, gpointer user_data)
 {
-	struct profile *profile;
+	RmProfile *profile;
 
 	if (page_num != 5) {
 		return;
@@ -1456,7 +1456,7 @@ void app_show_settings(void)
 	const gchar *box_name;
 	const gchar *firmware_name;
 	gchar *box_string;
-	struct profile *profile;
+	RmProfile *profile;
 	gboolean is_cable;
 	gchar **numbers;
 	gint idx;
@@ -1509,16 +1509,16 @@ void app_show_settings(void)
 	g_settings_bind(profile->settings, "login-user", settings->login_user_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
 	settings->login_password_entry = GTK_WIDGET(gtk_builder_get_object(builder, "login_password_entry"));
-	gtk_entry_set_text(GTK_ENTRY(settings->login_password_entry), router_get_login_password(profile));
+	gtk_entry_set_text(GTK_ENTRY(settings->login_password_entry), rm_router_get_login_password(profile));
 
 	settings->ftp_user_entry = GTK_WIDGET(gtk_builder_get_object(builder, "ftp_user_entry"));
 	g_settings_bind(profile->settings, "ftp-user", settings->ftp_user_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
 	settings->ftp_password_entry = GTK_WIDGET(gtk_builder_get_object(builder, "ftp_password_entry"));
-	gtk_entry_set_text(GTK_ENTRY(settings->ftp_password_entry), router_get_ftp_password(profile));
+	gtk_entry_set_text(GTK_ENTRY(settings->ftp_password_entry), rm_router_get_ftp_password(profile));
 
 	/* Prefix group */
-	is_cable = router_is_cable(profile);
+	is_cable = rm_router_is_cable(profile);
 
 	settings->line_access_code_entry = GTK_WIDGET(gtk_builder_get_object(builder, "line_access_code_entry"));
 	settings->international_call_prefix_entry = GTK_WIDGET(gtk_builder_get_object(builder, "international_call_prefix_entry"));
@@ -1544,7 +1544,7 @@ void app_show_settings(void)
 
 	/* Devices group */
 	settings->softphone_msn_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "softphone_msn_combobox"));
-	numbers = router_get_numbers(profile);
+	numbers = rm_router_get_numbers(profile);
 	for (idx = 0; idx < g_strv_length(numbers); idx++) {
 		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->softphone_msn_combobox), numbers[idx], numbers[idx]);
 	}
@@ -1560,7 +1560,7 @@ void app_show_settings(void)
 	g_settings_bind(profile->settings, "fax-ident", settings->fax_ident_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
 	settings->fax_msn_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "fax_msn_combobox"));
-	numbers = router_get_numbers(profile);
+	numbers = rm_router_get_numbers(profile);
 	for (idx = 0; idx < g_strv_length(numbers); idx++) {
 		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->fax_msn_combobox), numbers[idx], numbers[idx]);
 	}
@@ -1692,8 +1692,8 @@ void app_show_settings(void)
 	settings_notification_refresh_list(settings->notification_liststore);
 
 	/* Header bar information */
-	box_name = router_get_name(profile);
-	firmware_name = router_get_version(profile);
+	box_name = rm_router_get_name(profile);
+	firmware_name = rm_router_get_version(profile);
 	box_string = g_strdup_printf(_("%s (Firmware: %s)"), box_name, firmware_name);
 
 	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(settings->headerbar), box_string);

@@ -22,7 +22,7 @@
 #include <gtk/gtk.h>
 
 #include <libroutermanager/rmvox.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 
 #include <roger/journal.h>
 #include <roger/main.h>
@@ -104,7 +104,7 @@ void answeringmachine_play(const gchar *name)
 {
 	GtkWidget *window;
 	gsize len = 0;
-	gchar *data = router_load_voice(rm_profile_get_active(), name, &len);
+	gchar *data = rm_router_load_voice(rm_profile_get_active(), name, &len);
 	guint update_id;
 	GError *error = NULL;
 	gpointer vox;

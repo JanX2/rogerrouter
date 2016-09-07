@@ -30,10 +30,12 @@
 #include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmaddressbook.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmsettings.h>
+#include <libroutermanager/rmnumber.h>
 
 #include <roger/main.h>
+#include <roger/settings.h>
 #include "config.h"
 
 #include <libebook/libebook.h>
@@ -247,7 +249,7 @@ void ebook_read_data(EClient *e_client)
 	for (list = ebook_contacts; list != NULL; list = list->next) {
 		const gchar *display_name;
 		RmContact *contact;
-		struct phone_number *phone_number;
+		RmPhoneNumber *phone_number;
 		const gchar *number;
 		const gchar *company;
 		EContactAddress *address;
@@ -315,7 +317,7 @@ void ebook_read_data(EClient *e_client)
 
 		number = e_contact_get_const(e_contact, E_CONTACT_PHONE_HOME);
 		if (!RM_EMPTY_STRING(number)) {
-			phone_number = g_slice_new(struct phone_number);
+			phone_number = g_slice_new(RmPhoneNumber);
 			phone_number->type = PHONE_NUMBER_HOME;
 			phone_number->number = rm_number_full(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
@@ -323,7 +325,7 @@ void ebook_read_data(EClient *e_client)
 
 		number = e_contact_get_const(e_contact, E_CONTACT_PHONE_BUSINESS);
 		if (!RM_EMPTY_STRING(number)) {
-			phone_number = g_slice_new(struct phone_number);
+			phone_number = g_slice_new(RmPhoneNumber);
 			phone_number->type = PHONE_NUMBER_WORK;
 			phone_number->number = rm_number_full(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
@@ -331,7 +333,7 @@ void ebook_read_data(EClient *e_client)
 
 		number = e_contact_get_const(e_contact, E_CONTACT_PHONE_MOBILE);
 		if (!RM_EMPTY_STRING(number)) {
-			phone_number = g_slice_new(struct phone_number);
+			phone_number = g_slice_new(RmPhoneNumber);
 			phone_number->type = PHONE_NUMBER_MOBILE;
 			phone_number->number = rm_number_full(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
@@ -339,7 +341,7 @@ void ebook_read_data(EClient *e_client)
 
 		number = e_contact_get_const(e_contact, E_CONTACT_PHONE_HOME_FAX);
 		if (!RM_EMPTY_STRING(number)) {
-			phone_number = g_slice_new(struct phone_number);
+			phone_number = g_slice_new(RmPhoneNumber);
 			phone_number->type = PHONE_NUMBER_FAX_HOME;
 			phone_number->number = rm_number_full(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
@@ -347,7 +349,7 @@ void ebook_read_data(EClient *e_client)
 
 		number = e_contact_get_const(e_contact, E_CONTACT_PHONE_BUSINESS_FAX);
 		if (!RM_EMPTY_STRING(number)) {
-			phone_number = g_slice_new(struct phone_number);
+			phone_number = g_slice_new(RmPhoneNumber);
 			phone_number->type = PHONE_NUMBER_FAX_WORK;
 			phone_number->number = rm_number_full(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
@@ -544,7 +546,7 @@ gboolean evolution_save_contact(RmContact *contact)
 	e_contact_set(e_contact, E_CONTACT_FULL_NAME, contact->name ? contact->name : "");
 
 	for (numbers = contact->numbers; numbers != NULL; numbers = numbers->next) {
-		struct phone_number *number = numbers->data;
+		RmPhoneNumber *number = numbers->data;
 		gint type;
 
 		switch (number->type) {

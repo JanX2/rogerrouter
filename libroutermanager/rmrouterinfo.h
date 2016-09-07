@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,15 +17,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef FIRMWARE_04_00_H
-#define FIRMWARE_04_00_H
+#ifndef LIBROUTERMANAGER_RMROUTERINFO_H
+#define LIBROUTERMANAGER_RMROUTERINFO_H
+
+#include <gio/gio.h>
 
 G_BEGIN_DECLS
 
-gboolean fritzbox_present_04_00(RmRouterInfo *router_info);
-gboolean fritzbox_login_04_00(RmProfile *profile);
-gboolean fritzbox_dial_number_04_00(RmProfile *profile, gint port, const gchar *number);
-gboolean fritzbox_hangup_04_00(RmProfile *profile, gint port, const gchar *number);
+typedef struct {
+	gchar *host;
+	gchar *user;
+	gchar *password;
+	gchar *name;
+	gchar *version;
+	gchar *serial;
+	gchar *session_id;
+	gchar *lang;
+	gchar *annex;
+
+	/* Extend */
+	gint box_id;
+	gint maj_ver_id;
+	gint min_ver_id;
+	GTimer *session_timer;
+} RmRouterInfo;
 
 G_END_DECLS
 

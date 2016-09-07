@@ -8,7 +8,7 @@
 #include <libroutermanager/rmobject.h>
 
 typedef struct {
-	struct profile *profile;
+	RmProfile *profile;
 } action_fixture;
 
 static void test_action_init(action_fixture *af, gconstpointer user_data)

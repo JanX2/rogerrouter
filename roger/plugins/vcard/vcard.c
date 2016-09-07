@@ -34,7 +34,7 @@
 #include <libroutermanager/rmobject.h>
 #include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmfile.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmsettings.h>
 
 #include <roger/main.h>
@@ -365,14 +365,14 @@ static void process_address(struct vcard_data *card_data, RmContact *contact)
 static void process_telephone(struct vcard_data *card_data, RmContact *contact)
 {
 	gchar *tmp = card_data->entry;
-	struct phone_number *number;
+	RmPhoneNumber *number;
 
 	if (card_data->options == NULL) {
 		g_warning("No option field in telephone entry");
 		return;
 	}
 
-	number = g_slice_new(struct phone_number);
+	number = g_slice_new(RmPhoneNumber);
 
 	if (rm_strcasestr(card_data->options, "FAX") != NULL) {
 		/*if (rm_strcasestr(card_data->options, "WORK") != NULL) {
@@ -1001,7 +1001,7 @@ void vcard_write_file(char *file_name)
 		/* telephone */
 		entry = vcard_remove_data(entry, "TEL");
 		for (numbers = contact->numbers; numbers != NULL; numbers = numbers->next) {
-			struct phone_number *number = numbers->data;
+			RmPhoneNumber *number = numbers->data;
 			struct vcard_data *card_data;
 
 			card_data = g_malloc0(sizeof(struct vcard_data));

@@ -22,10 +22,10 @@
 
 G_BEGIN_DECLS
 
-gboolean fritzbox_login_04_74(struct profile *profile);
-gboolean fritzbox_get_settings_04_74(struct profile *profile);
-gboolean fritzbox_load_journal_04_74(struct profile *profile, gchar **data_ptr);
-gboolean fritzbox_clear_journal_04_74(struct profile *profile);
+gboolean fritzbox_login_04_74(RmProfile *profile);
+gboolean fritzbox_get_settings_04_74(RmProfile *profile);
+gboolean fritzbox_load_journal_04_74(RmProfile *profile, gchar **data_ptr);
+gboolean fritzbox_clear_journal_04_74(RmProfile *profile);
 
 G_END_DECLS
 

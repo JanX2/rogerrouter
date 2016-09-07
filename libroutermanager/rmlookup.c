@@ -22,18 +22,49 @@
  *  - Asynchronous lookup
  */
 
+#include <string.h>
+
 #include <glib.h>
 
 #include <libroutermanager/rmlookup.h>
 
-/** Pointer to internal lookup function */
-static RmLookup rm_lookup_active = NULL;
+/**
+ * SECTION:rmlookup
+ * @title: RmLookup
+ * @short_description: Reverse lookup
+ * @stability: Stable
+ *
+ * Reverse lookup of telephone numbers using online services
+ */
 
 /** Lookup function list */
-static GSList *rm_lookup_list = NULL;
+static GSList *rm_lookup_plugins = NULL;
 
 /**
- * rm_lookup:
+ * rm_lookup_get:
+ * @name: name of address book to lookup
+ *
+ * Find address book as requested by name.
+ *
+ * Returns: a #RmLookup, or %NULL on error
+ */
+RmLookup *rm_lookup_get(gchar *name)
+{
+	GSList *list;
+
+	for (list = rm_lookup_plugins; list != NULL; list = list->next) {
+		RmLookup *lookup = list->data;
+
+		if (lookup && lookup->name && name && !strcmp(lookup->name, name)) {
+			return lookup;
+		}
+	}
+
+	return NULL;
+}
+
+/**
+ * rm_lookup_search:
  * @number: number to lookup
  * @name: pointer to store name to
  * @address: pointer to store address to
@@ -44,10 +75,10 @@ static GSList *rm_lookup_list = NULL;
  *
  * Returns: %TRUE is lookup data has been found, otherwise %FALSE
  */
-gboolean rm_lookup(gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city)
+gboolean rm_lookup_search(RmLookup *lookup, gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city)
 {
-	if (rm_lookup_active) {
-		return rm_lookup_active(number, name, address, zip, city);
+	if (lookup) {
+		return lookup->search(number, name, address, zip, city);
 	}
 
 	return FALSE;
@@ -61,10 +92,24 @@ gboolean rm_lookup(gchar *number, gchar **name, gchar **address, gchar **zip, gc
  *
  * Returns: %TRUE
  */
-gboolean rm_lookup_register(RmLookup lookup)
+gboolean rm_lookup_register(RmLookup *lookup)
 {
-	rm_lookup_list = g_slist_prepend(rm_lookup_list, lookup);
-	rm_lookup_active = lookup;
+	rm_lookup_plugins = g_slist_prepend(rm_lookup_plugins, lookup);
+
+	return TRUE;
+}
+
+/**
+ * rm_lookup_unregister:
+ * @lookup: a #RmLookup
+ *
+ * Unregister lookup routine.
+ *
+ * Returns: %TRUE
+ */
+gboolean rm_lookup_unregister(RmLookup *lookup)
+{
+	rm_lookup_plugins = g_slist_remove(rm_lookup_plugins, lookup);
 
 	return TRUE;
 }

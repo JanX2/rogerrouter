@@ -20,6 +20,7 @@
 #include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmpassword.h>
+#include <libroutermanager/rmmain.h>
 
 #define ROUTERMANAGER_TYPE_SIMPLE_PWD_PLUGIN        (routermanager_simple_pwd_plugin_get_type ())
 #define ROUTERMANAGER_SIMPLE_PWD_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_SIMPLE_PWD_PLUGIN, RouterManagerSimplePwdPlugin))
@@ -40,7 +41,7 @@ ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_SIMPLE_PWD_PLUGIN, RouterManage
  * \param name password name
  * \param password password
  */
-static void simple_pwd_store_password(struct profile *profile, const gchar *name, const gchar *password)
+static void simple_pwd_store_password(RmProfile *profile, const gchar *name, const gchar *password)
 {
 	GError *error = NULL;
 	gchar *enc_password = rm_password_encode(password);
@@ -63,7 +64,7 @@ static void simple_pwd_store_password(struct profile *profile, const gchar *name
  * \param name password name
  * \return password
  */
-static gchar *simple_pwd_get_password(struct profile *profile, const gchar *name)
+static gchar *simple_pwd_get_password(RmProfile *profile, const gchar *name)
 {
 	GError *error = NULL;
 	gchar *enc_password;
@@ -88,7 +89,7 @@ static gchar *simple_pwd_get_password(struct profile *profile, const gchar *name
  * \param name password name
  * \return TRUE on success, otherwise FALSE
  */
-static gboolean simple_pwd_remove_password(struct profile *profile, const gchar *name)
+static gboolean simple_pwd_remove_password(RmProfile *profile, const gchar *name)
 {
 	g_key_file_remove_key(simple_pwd_keyfile, simple_pwd_group, name, NULL);
 
@@ -110,14 +111,10 @@ struct password_manager simple_pwd = {
 void impl_activate(PeasActivatable *plugin)
 {
 	GError *error = NULL;
-	gchar *dir;
 
 	simple_pwd_keyfile = g_key_file_new();
-	dir = g_build_filename(g_get_user_config_dir(), "routermanager", NULL);
-	g_mkdir_with_parents(dir, 0700);
 
-	simple_pwd_file = g_build_filename(dir, "simple_pwd.keys", NULL);
-	g_free(dir);
+	simple_pwd_file = g_build_filename(rm_get_user_config_dir(), G_DIR_SEPARATOR_S, "simple_pwd.keys", NULL);
 	simple_pwd_group = g_strdup("passwords");
 
 	if (!g_key_file_load_from_file(simple_pwd_keyfile, simple_pwd_file, G_KEY_FILE_NONE, &error)) {

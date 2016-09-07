@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_ROUTER_H
-#define LIBROUTERMANAGER_ROUTER_H
+#ifndef LIBROUTERMANAGER_RMROUTER_H
+#define LIBROUTERMANAGER_RMROUTER_H
 
 #include <gio/gio.h>
 
@@ -71,27 +71,28 @@ enum phone_number_type {
 	PHONE_NUMBER_PAGER,
 };
 
-enum router_dial_port {
+enum rm_router_dial_port {
 	ROUTER_DIAL_PORT_AUTO = -1,
 };
 
-struct phone {
+typedef struct {
 	gchar *name;
 	gint type;
-};
+} RmPhone;
 
-struct phone_number {
+typedef struct {
 	enum phone_number_type type;
 	gchar *number;
-};
+} RmPhoneNumber;
 
-struct phone_port {
+typedef struct {
 	gchar *name;
 	gint type;
 	gint number;
-};
+} RmPhonePort;
 
-struct router_info {
+#if 0
+typedef struct {
 	gchar *host;
 	gchar *user;
 	gchar *password;
@@ -107,11 +108,12 @@ struct router_info {
 	gint maj_ver_id;
 	gint min_ver_id;
 	GTimer *session_timer;
-};
+} RmRouterInfo;
+#endif
 
-struct router {
+typedef struct {
 	const gchar *name;
-	gboolean (*present)(struct router_info *router_info);
+	gboolean (*present)(RmRouterInfo *router_info);
 	gboolean (*login)(RmProfile *profile);
 	gboolean (*logout)(RmProfile *profile, gboolean force);
 	gboolean (*get_settings)(RmProfile *profile);
@@ -125,63 +127,63 @@ struct router {
 	gboolean (*reconnect)(RmProfile *profile);
 	gboolean (*delete_fax)(RmProfile *profile, const gchar *filename);
 	gboolean (*delete_voice)(RmProfile *profile, const gchar *filename);
-};
+} RmRouter;
 
-extern struct phone_port router_phone_ports[PORT_MAX];
+extern RmPhonePort rm_router_phone_ports[PORT_MAX];
 
-gboolean router_present(struct router_info *router_info);
-gboolean router_login(RmProfile *profile);
-gboolean router_logout(RmProfile *profile);
-gboolean router_get_settings(RmProfile *profile);
-const gchar *router_get_name(RmProfile *profile);
-const gchar *router_get_version(RmProfile *profile);
-gchar *router_get_host(RmProfile *profile);
-gchar *router_get_login_password(RmProfile *profile);
-gchar *router_get_login_user(RmProfile *profile);
-gchar *router_get_ftp_password(RmProfile *profile);
-gchar *router_get_ftp_user(RmProfile *profile);
-gboolean router_load_journal(RmProfile *profile);
-gboolean router_clear_journal(RmProfile *profile);
-gboolean router_dial_number(RmProfile *profile, gint port, const gchar *number);
-gboolean router_hangup(RmProfile *profile, gint port, const gchar *number);
-gchar *router_get_ip(RmProfile *profile);
-gboolean router_reconnect(RmProfile *profile);
-gboolean router_delete_fax(RmProfile *profile, const gchar *filename);
-gboolean router_delete_voice(RmProfile *profile, const gchar *filename);
+gboolean rm_router_present(RmRouterInfo *router_info);
+gboolean rm_router_login(RmProfile *profile);
+gboolean rm_router_logout(RmProfile *profile);
+gboolean rm_router_get_settings(RmProfile *profile);
+const gchar *rm_router_get_name(RmProfile *profile);
+const gchar *rm_router_get_version(RmProfile *profile);
+gchar *rm_router_get_host(RmProfile *profile);
+gchar *rm_router_get_login_password(RmProfile *profile);
+gchar *rm_router_get_login_user(RmProfile *profile);
+gchar *rm_router_get_ftp_password(RmProfile *profile);
+gchar *rm_router_get_ftp_user(RmProfile *profile);
+gboolean rm_router_load_journal(RmProfile *profile);
+gboolean rm_router_clear_journal(RmProfile *profile);
+gboolean rm_router_dial_number(RmProfile *profile, gint port, const gchar *number);
+gboolean rm_router_hangup(RmProfile *profile, gint port, const gchar *number);
+gchar *rm_router_get_ip(RmProfile *profile);
+gboolean rm_router_reconnect(RmProfile *profile);
+gboolean rm_router_delete_fax(RmProfile *profile, const gchar *filename);
+gboolean rm_router_delete_voice(RmProfile *profile, const gchar *filename);
 
-gchar *router_get_area_code(RmProfile *profile);
-gchar *router_get_country_code(RmProfile *profile);
-gchar *router_get_international_prefix(RmProfile *profile);
-gchar *router_get_national_prefix(RmProfile *profile);
+gchar *rm_router_get_area_code(RmProfile *profile);
+gchar *rm_router_get_country_code(RmProfile *profile);
+gchar *rm_router_get_international_prefix(RmProfile *profile);
+gchar *rm_router_get_national_prefix(RmProfile *profile);
 
-gboolean router_init(void);
-void router_shutdown(void);
+gboolean rm_router_init(void);
+void rm_router_shutdown(void);
 
-GSList *router_get_phone_list(RmProfile *profile);
-gchar **router_get_numbers(RmProfile *profile);
+GSList *rm_router_get_phone_list(RmProfile *profile);
+gchar **rm_router_get_numbers(RmProfile *profile);
 
-void router_process_journal(GSList *journal);
+void rm_router_process_journal(GSList *journal);
 
-gboolean routermanager_router_register(struct router *router_new);
+gboolean rm_router_register(RmRouter *router);
 
-gchar *router_load_fax(RmProfile *profile, const gchar *filename, gsize *len);
-gchar *router_load_voice(RmProfile *profile, const gchar *filename, gsize *len);
+gchar *rm_router_load_fax(RmProfile *profile, const gchar *filename, gsize *len);
+gchar *rm_router_load_voice(RmProfile *profile, const gchar *filename, gsize *len);
 
-gboolean router_info_free(struct router_info *info);
-gboolean router_is_cable(RmProfile *profile);
+gboolean rm_router_info_free(RmRouterInfo *info);
+gboolean rm_router_is_cable(RmProfile *profile);
 
-GSList *router_load_fax_reports(RmProfile *profile, GSList *journal);
-GSList *router_load_voice_records(RmProfile *profile, GSList *journal);
+GSList *rm_router_load_fax_reports(RmProfile *profile, GSList *journal);
+GSList *rm_router_load_voice_records(RmProfile *profile, GSList *journal);
 
-void router_free_phone_list(GSList *phone_list);
+void rm_router_free_phone_list(GSList *phone_list);
 
-gint router_get_phone_port(RmProfile *profile);
-void router_set_phone_port(RmProfile *profile, gint port);
+gint rm_router_get_phone_port(RmProfile *profile);
+void rm_router_set_phone_port(RmProfile *profile, gint port);
 
-gboolean router_get_suppress_state(RmProfile *profile);
+gboolean rm_router_get_suppress_state(RmProfile *profile);
 
-void router_release_lock(void);
-gboolean router_is_locked(void);
+void rm_router_release_lock(void);
+gboolean rm_router_is_locked(void);
 
 
 G_END_DECLS

@@ -25,6 +25,8 @@
 #ifndef FAX_H
 #define FAX_H
 
+#include <libroutermanager/rmconnection.h>
+
 #define SPANDSP_EXPOSE_INTERNAL_STRUCTURES
 #include <spandsp.h>
 
@@ -67,7 +69,7 @@ struct fax_status {
 	gboolean done;
 	gboolean progress_status;
 
-	struct capi_connection *connection;
+	RmConnection *connection;
 
 	fax_state_t *fax_state;
 };

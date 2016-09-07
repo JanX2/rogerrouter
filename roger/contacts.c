@@ -24,7 +24,8 @@
 
 #include <libroutermanager/rmaddressbook.h>
 #include <libroutermanager/rmstring.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
+#include <libroutermanager/rmnumber.h>
 #include <roger/contacts.h>
 #include <roger/main.h>
 #include <roger/uitools.h>
@@ -138,7 +139,7 @@ static void contacts_update_details(RmContact *contact)
 				GtkWidget *number;
 				GtkWidget *dial;
 				GtkWidget *phone_image;
-				struct phone_number *phone_number = numbers->data;
+				RmPhoneNumber *phone_number = numbers->data;
 
 				switch (phone_number->type) {
 				case PHONE_NUMBER_HOME:
@@ -419,7 +420,7 @@ void refresh_edit_dialog(RmContact *contact);
 void remove_phone_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 	RmContact *contact = user_data;
-	struct phone_number *number = (struct phone_number *) g_object_get_data(G_OBJECT(button), "number");
+	RmPhoneNumber *number = (RmPhoneNumber *) g_object_get_data(G_OBJECT(button), "number");
 
 	contact->numbers = g_slist_remove(contact->numbers, number);
 	refresh_edit_dialog(contact);
@@ -447,7 +448,7 @@ void name_entry_changed_cb(GtkWidget *entry, gpointer user_data)
 
 void number_entry_changed_cb(GtkWidget *entry, gpointer user_data)
 {
-	struct phone_number *number = user_data;
+	RmPhoneNumber *number = user_data;
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 
 	g_free(number->number);
@@ -483,7 +484,7 @@ void city_entry_changed_cb(GtkWidget *entry, gpointer user_data)
 
 void number_type_changed_cb(GtkWidget *combobox, gpointer user_data)
 {
-	struct phone_number *number = user_data;
+	RmPhoneNumber *number = user_data;
 
 	number->type = gtk_combo_box_get_active(GTK_COMBO_BOX(combobox));
 }
@@ -539,9 +540,9 @@ void photo_button_clicked_cb(GtkWidget *button, gpointer user_data)
 void contact_add_number(RmContact *contact, gchar *number)
 {
 	/* Add phone number */
-	struct phone_number *phone_number;
+	RmPhoneNumber *phone_number;
 
-	phone_number = g_slice_new(struct phone_number);
+	phone_number = g_slice_new(RmPhoneNumber);
 	phone_number->type = PHONE_NUMBER_HOME;
 	phone_number->number = g_strdup(number);
 
@@ -566,9 +567,9 @@ void contacts_add_detail(gchar *detail)
 {
 	if (!strncmp(detail, "phone-", 6)) {
 		/* Add phone number */
-		struct phone_number *phone_number;
+		RmPhoneNumber *phone_number;
 
-		phone_number = g_slice_new(struct phone_number);
+		phone_number = g_slice_new(RmPhoneNumber);
 
 		if (!strcmp(detail, "phone-home")) {
 			phone_number->type = PHONE_NUMBER_HOME;
@@ -665,7 +666,7 @@ void refresh_edit_dialog(RmContact *contact)
 		GtkWidget *number;
 		GtkWidget *remove;
 		GtkWidget *phone_image;
-		struct phone_number *phone_number = numbers->data;
+		RmPhoneNumber *phone_number = numbers->data;
 		GtkWidget *type_box;
 
 		type_box = gtk_combo_box_text_new();
@@ -862,7 +863,7 @@ void contact_editor(RmContact *contact)
 	gtk_widget_set_visible(contacts->edit_button, FALSE);
 
 	if (contacts->new_contact) {
-		struct phone_number *phone_number = g_malloc0(sizeof(struct phone_number));
+		RmPhoneNumber *phone_number = g_malloc0(sizeof(RmPhoneNumber));
 
 		phone_number->number = g_strdup(contacts->new_contact->number);
 

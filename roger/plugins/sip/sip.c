@@ -26,7 +26,7 @@
 #include <libroutermanager/rmconnection.h>
 #include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmnetmonitor.h>
 #include <libroutermanager/rmaudio.h>
 #include <libroutermanager/rmstring.h>
@@ -194,7 +194,7 @@ void sip_g722_state(gboolean state)
 static RmConnection *sip_phone_dial(const char *trg_no, gboolean anonymous)
 {
 	RmConnection *connection;
-	struct profile *profile = rm_profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	pj_status_t status;
 	pjsua_acc_id acc_id = 0;
 	pjsua_call_id call_id;
@@ -259,7 +259,7 @@ void sip_phone_send_dtmf_code(RmConnection *connection, guchar code)
 gboolean sip_connect(gpointer user_data)
 {
 	//RouterManagerSipPlugin *sip_plugin = user_data;
-	struct profile *profile = rm_profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	pj_status_t status;
 	pj_thread_desc rtpdesc;
 	pj_thread_t *thread = 0;

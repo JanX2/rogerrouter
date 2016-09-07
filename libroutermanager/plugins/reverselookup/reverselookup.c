@@ -26,7 +26,7 @@
 #include <glib.h>
 
 #include <libroutermanager/rmcall.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmobject.h>
 #include <libroutermanager/rmfile.h>
 #include <libroutermanager/rmplugins.h>
@@ -224,7 +224,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 		rl_contact->zip,
 		rl_contact->city);
 
-	file = g_build_filename(g_get_user_cache_dir(), "routermanager", "reverselookup", number, NULL);
+	file = g_build_filename(rm_get_user_cache_dir(), "reverselookup", number, NULL);
 	rm_file_save(file, rl_tmp, strlen(rl_tmp));
 	g_free(file);
 	g_free(rl_tmp);
@@ -363,7 +363,7 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **street, gcha
 	country_code = get_country_code(full_number);
 	g_free(full_number);
 
-	international_prefix_len = strlen(router_get_international_prefix(profile));
+	international_prefix_len = strlen(rm_router_get_international_prefix(profile));
 #ifdef RL_DEBUG
 	if (!country_code) {
 		g_debug("Warning: Could not get country code!!");
@@ -376,12 +376,12 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **street, gcha
 		return FALSE;
 	}
 
-	if (strcmp(country_code + international_prefix_len, router_get_country_code(rm_profile_get_active()))) {
+	if (strcmp(country_code + international_prefix_len, rm_router_get_country_code(rm_profile_get_active()))) {
 		/* if country code is not the same as the router country code, loop through country list */
 		list = get_lookup_list(country_code + international_prefix_len);
 	} else {
 		/* if country code is the same as the router country code, use default plugin */
-		list = get_lookup_list(router_get_country_code(rm_profile_get_active()));
+		list = get_lookup_list(rm_router_get_country_code(rm_profile_get_active()));
 	}
 
 	g_free(country_code);
@@ -540,6 +540,11 @@ static void lookup_read_cache(gchar *dir_name)
 #endif
 }
 
+RmLookup rl = {
+	"Reverse Lookup",
+	reverse_lookup
+};
+
 /**
  * \brief Activate plugin
  * \param plugin peas plugin
@@ -577,14 +582,14 @@ static void impl_activate(PeasActivatable *plugin)
 		country_code_add(child);
 	}
 
-	file = g_build_filename(g_get_user_cache_dir(), "routermanager", "reverselookup", NULL);
+	file = g_build_filename(rm_get_user_cache_dir(), "reverselookup", NULL);
 	g_mkdir_with_parents(file, 0770);
 	lookup_read_cache(file);
 	g_free(file);
 
 	xmlnode_free(node);
 
-	rm_lookup_register(reverse_lookup);
+	rm_lookup_register(&rl);
 }
 
 /**
@@ -599,4 +604,6 @@ static void impl_deactivate(PeasActivatable *plugin)
 	if (g_signal_handler_is_connected(G_OBJECT(rm_object), reverselookup_plugin->priv->signal_id)) {
 		g_signal_handler_disconnect(G_OBJECT(rm_object), reverselookup_plugin->priv->signal_id);
 	}
+
+	rm_lookup_unregister(&rl);
 }

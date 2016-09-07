@@ -26,7 +26,7 @@
 #include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 
 /**
  * SECTION:rmcall

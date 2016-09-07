@@ -22,10 +22,15 @@
 
 G_BEGIN_DECLS
 
-typedef gboolean (*RmLookup)(gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city);
+typedef struct {
+	gchar *name;
+	gboolean (*search)(gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city);
+} RmLookup;
 
-gboolean rm_lookup(gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city);
-gboolean rm_lookup_register(RmLookup func);
+RmLookup *rm_lookup_get(gchar *name);
+gboolean rm_lookup_search(RmLookup *lookup, gchar *number, gchar **name, gchar **address, gchar **zip, gchar **city);
+gboolean rm_lookup_register(RmLookup *lookup);
+gboolean rm_lookup_unregister(RmLookup *lookup);
 
 G_END_DECLS
 

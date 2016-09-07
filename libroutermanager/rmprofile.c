@@ -24,13 +24,14 @@
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmmain.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmnetmonitor.h>
 #include <libroutermanager/rmpassword.h>
 #include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmaudio.h>
 #include <libroutermanager/rmsettings.h>
 #include <libroutermanager/rmnotification.h>
+#include <libroutermanager/rmfilter.h>
 
 /**
  * SECTION:rmprofile
@@ -43,7 +44,7 @@
 /** Internal profile list */
 static GSList *rm_profile_list = NULL;
 /** Internal pointer to active profile */
-static struct profile *rm_profile_active = NULL;
+static RmProfile *rm_profile_active = NULL;
 /** Global application settings */
 static GSettings *rm_settings = NULL;
 
@@ -97,7 +98,7 @@ void rm_profile_remove(RmProfile *profile)
 
 	g_object_unref(profile->settings);
 
-	router_info_free(profile->router_info);
+	rm_router_info_free(profile->router_info);
 
 	g_free(profile->name);
 
@@ -147,7 +148,7 @@ RmProfile *rm_profile_add(const gchar *name)
 
 	/* Add entries */
 	profile->name = g_strdup(name);
-	profile->router_info = g_slice_new0(struct router_info);
+	profile->router_info = g_slice_new0(RmRouterInfo);
 
 	/* Setup profiles settings */
 	settings_path = g_strconcat("/org/tabos/routermanager/profile/", name, "/", NULL);
@@ -181,7 +182,7 @@ static void rm_profile_load(const gchar *name)
 	settings_path = g_strconcat("/org/tabos/routermanager/profile/", name, "/", NULL);
 	profile->settings = rm_settings_new_with_path(RM_SCHEME_PROFILE, settings_path);
 
-	profile->router_info = g_slice_new0(struct router_info);
+	profile->router_info = g_slice_new0(RmRouterInfo);
 	profile->router_info->host = g_settings_get_string(profile->settings, "host");
 	profile->router_info->user = g_settings_get_string(profile->settings, "login-user");
 	profile->router_info->password = rm_password_get(profile, "login-password");
@@ -219,7 +220,7 @@ void rm_profile_set_active(RmProfile *profile)
 		return;
 	}
 
-	router_present(profile->router_info);
+	rm_router_present(profile->router_info);
 
 	rm_plugins_bind_loaded_plugins();
 
@@ -230,7 +231,7 @@ void rm_profile_set_active(RmProfile *profile)
 	rm_filter_init(profile);
 
 	/* Load journal list */
-	router_load_journal(profile);
+	rm_router_load_journal(profile);
 }
 
 /**
@@ -244,7 +245,7 @@ gboolean rm_profile_detect_active(void)
 {
 	GSList *list = rm_profile_get_list();
 	RmProfile *profile;
-	struct router_info *router_info;
+	RmRouterInfo *router_info;
 	gchar *requested_profile = rm_get_requested_profile();
 
 	/* Compare our profile list against available routers */
@@ -257,21 +258,21 @@ gboolean rm_profile_detect_active(void)
 			continue;
 		}
 
-		router_info = g_slice_new0(struct router_info);
+		router_info = g_slice_new0(RmRouterInfo);
 		router_info->host = g_settings_get_string(profile->settings, "host");
 
 		/* Check if router is present */
-		if (router_present(router_info) == TRUE && !strcmp(router_info->serial, g_settings_get_string(profile->settings, "serial"))) {
+		if (rm_router_present(router_info) == TRUE && !strcmp(router_info->serial, g_settings_get_string(profile->settings, "serial"))) {
 			g_debug("Configured router found: %s", router_info->name);
 			g_debug("Current router firmware: %d.%d.%d", router_info->box_id, router_info->maj_ver_id, router_info->min_ver_id);
 
-			router_info_free(router_info);
+			rm_router_info_free(router_info);
 
 			rm_profile_set_active(profile);
 			return TRUE;
 		}
 
-		router_info_free(router_info);
+		rm_router_info_free(router_info);
 
 		list = list->next;
 	}
@@ -318,7 +319,7 @@ static void rm_profile_free_entry(gpointer data)
 	g_free(profile->name);
 
 	/* Free router information structure */
-	router_info_free(profile->router_info);
+	rm_router_info_free(profile->router_info);
 
 	/* Free actions */
 	rm_action_shutdown(profile);
@@ -327,7 +328,7 @@ static void rm_profile_free_entry(gpointer data)
 	g_clear_object(&profile->settings);
 
 	/* Free structure */
-	g_slice_free(struct profile, profile);
+	g_slice_free(RmProfile, profile);
 }
 
 /**
@@ -440,7 +441,6 @@ RmNotification *rm_profile_get_notification(RmProfile *profile)
 	gchar *name = g_settings_get_string(profile->settings, "notification-plugin");
 
 	notification = rm_notification_get(name);
-	g_debug("%s(): notification = %p (%s)", __FUNCTION__, notification, name);
 
 	g_free(name);
 
@@ -503,4 +503,22 @@ void rm_profile_set_notification_incoming_numbers(RmProfile *profile, const gcha
 void rm_profile_set_notification_outgoing_numbers(RmProfile *profile, const gchar * const* numbers)
 {
 	g_settings_set_strv(profile->settings, "notification-outgoing-numbers", numbers);
+}
+
+/**
+ * rm_profile_get_lookup:
+ * @profile: a #RmProfile
+ *
+ * Get lookup for selected profile.
+ */
+RmLookup *rm_profile_get_lookup(RmProfile *profile)
+{
+	RmLookup *lookup;
+	gchar *name = g_settings_get_string(profile->settings, "lookup-plugin");
+
+	lookup = rm_lookup_get(name);
+
+	g_free(name);
+
+	return lookup;
 }

@@ -20,11 +20,11 @@
 #ifndef FRITZBOX_H
 #define FRITZBOX_H
 
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 
 G_BEGIN_DECLS
 
-gboolean fritzbox_get_settings_query(struct profile *profile);
+gboolean fritzbox_get_settings_query(RmProfile *profile);
 
 G_END_DECLS
 

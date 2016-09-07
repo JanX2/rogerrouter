@@ -23,6 +23,7 @@
 #include <glib.h>
 
 #include <libroutermanager/rmconnection.h>
+#include <libroutermanager/rmnumber.h>
 
 /**
  * SECTION:rmconnection

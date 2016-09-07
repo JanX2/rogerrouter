@@ -26,7 +26,7 @@
 #include <libroutermanager/rmnumber.h>
 #include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 
 /**
  * SECTION:rmnumber
@@ -91,7 +91,7 @@ gchar *rm_number_scramble(const gchar *number)
  */
 gint rm_call_by_call_prefix_length(const gchar *number)
 {
-	gchar *my_country_code = router_get_country_code(rm_profile_get_active());
+	gchar *my_country_code = rm_router_get_country_code(rm_profile_get_active());
 	struct rm_call_by_call_entry *entry;
 
 	if (RM_EMPTY_STRING(my_country_code)) {
@@ -128,7 +128,7 @@ gchar *rm_number_canonize(const gchar *number)
 		if (isdigit(*number) || *number == '*' || *number == '#') {
 			g_string_append_c(new_number, *number);
 		} else if (*number == '+') {
-			g_string_append(new_number, router_get_international_prefix(rm_profile_get_active()));
+			g_string_append(new_number, rm_router_get_international_prefix(rm_profile_get_active()));
 		}
 
 		number++;
@@ -166,10 +166,10 @@ gchar *rm_number_format(RmProfile *profile, const gchar *number, enum rm_number_
 
 	canonized = tmp = rm_number_canonize(number);
 
-	international_prefix = router_get_international_prefix(profile);
-	national_prefix = router_get_national_prefix(profile);
-	my_country_code = router_get_country_code(profile);
-	my_area_code = router_get_area_code(profile);
+	international_prefix = rm_router_get_international_prefix(profile);
+	national_prefix = rm_router_get_national_prefix(profile);
+	my_country_code = rm_router_get_country_code(profile);
+	my_area_code = rm_router_get_area_code(profile);
 
 	/* we only need to check for international prefix, as rm_number_canonize() already replaced '+'
 	 * Example of the following:
@@ -314,7 +314,7 @@ gchar *rm_number_full(const gchar *number, gboolean country_code_prefix)
 			return g_strdup(number);
 		}
 
-		my_country_code = router_get_country_code(rm_profile_get_active());
+		my_country_code = rm_router_get_country_code(rm_profile_get_active());
 		if (!strncmp(number + 2, my_country_code, strlen(my_country_code)))  {
 			out = g_strdup_printf("0%s", number + 4);
 		} else {

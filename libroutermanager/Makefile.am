@@ -39,6 +39,8 @@ libroutermanager_la_SOURCES = \
 	rmftp.h\
 	rmstring.c\
 	rmstring.h\
+	rmjournal.c\
+	rmjournal.h\
 	rmlog.c\
 	rmlog.h\
 	rmlookup.c\
@@ -49,6 +51,8 @@ libroutermanager_la_SOURCES = \
 	rmnetwork.h\
 	rmnotification.c\
 	rmnotification.h\
+	rmnumber.c\
+	rmnumber.h\
 	rmmain.c\
 	rmmain.h\
 	rmobjectemit.c\

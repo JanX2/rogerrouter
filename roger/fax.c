@@ -28,6 +28,7 @@
 #include <libroutermanager/plugins/capi/phone.h>
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/rmstring.h>
+#include <libroutermanager/rmphone.h>
 
 #include <roger/phone.h>
 #include <roger/main.h>
@@ -129,7 +130,7 @@ void phone_fax_status(struct phone_state *state, RmConnection *connection)
  * \param state phone state pointer
  * \return newly create phone menu
  */
-GtkWidget *phone_fax_create_menu(struct profile *profile, struct phone_state *state)
+GtkWidget *phone_fax_create_menu(RmProfile *profile, struct phone_state *state)
 {
 	GtkWidget *menu;
 	GtkWidget *item;
@@ -244,7 +245,7 @@ void app_show_fax_window(gchar *fax_file)
 {
 	GtkWidget *window;
 	struct fax_ui *fax_ui;
-	struct profile *profile = rm_profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 
 	if (!profile) {
 		return;
@@ -275,7 +276,7 @@ gchar *convert_to_fax(gchar *file_name)
 	gchar *args[13];
 	gchar *output;
 	gchar *out_file;
-	struct profile *profile = rm_profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 
 	/* convert ps to fax */
 #ifdef G_OS_WIN32
@@ -384,7 +385,7 @@ void phone_fax_terminated(struct phone_state *state, RmConnection *connection)
 /*
 #ifdef FAX_SFF
 	struct fax_ui *fax_ui = state->priv;
-	struct profile *profile = rm_profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 
 	if (g_settings_get_boolean(profile->settings, "fax-sff")) {
 		int reason;

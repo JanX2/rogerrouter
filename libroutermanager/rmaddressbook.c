@@ -24,9 +24,10 @@
 #include <libroutermanager/rmaddressbook.h>
 #include <libroutermanager/rmobject.h>
 #include <libroutermanager/rmcontact.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmcall.h>
+#include <libroutermanager/rmnumber.h>
 
 /**
  * SECTION:rmaddressbook
@@ -169,7 +170,7 @@ static gint rm_addressbook_number_in_contact(gconstpointer a, gconstpointer b)
 	GSList *list = contact->numbers;
 
 	while (list) {
-		struct phone_number *phone_number = list->data;
+		RmPhoneNumber *phone_number = list->data;
 
 		if (g_strcmp0(phone_number->number, number) == 0) {
 			return 0;

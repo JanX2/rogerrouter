@@ -31,9 +31,10 @@
 #include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmplugins.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/rmnetmonitor.h>
+#include <libroutermanager/rmdevice.h>
 
 #define ROUTERMANAGER_TYPE_CALLMONITOR_PLUGIN (routermanager_callmonitor_plugin_get_type ())
 #define ROUTERMANAGER_CALLMONITOR_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_CALLMONITOR_PLUGIN, RouterManagerCallMonitorPlugin))
@@ -185,7 +186,7 @@ gboolean callmonitor_connect(gpointer user_data)
 	GResolver *resolver;
 	GList *list;
 	GList *iter;
-	struct profile *profile;
+	RmProfile *profile;
 	gint sock = -1;
 	const gchar *hostname;
 	gint tcp_keepalive_time = 600;
@@ -197,7 +198,7 @@ gboolean callmonitor_connect(gpointer user_data)
 		return FALSE;
 	}
 
-	hostname = router_get_host(profile);
+	hostname = rm_router_get_host(profile);
 	if (!hostname || strlen(hostname) <= 0) {
 		g_debug("Invalid hostname");
 		return FALSE;
@@ -260,7 +261,7 @@ again:
 		g_resolver_free_addresses(list);
 
 		if (retry) {
-			router_dial_number(profile, ROUTER_DIAL_PORT_AUTO, "#96*5*");
+			rm_router_dial_number(profile, ROUTER_DIAL_PORT_AUTO, "#96*5*");
 			g_usleep(G_USEC_PER_SEC * 2);
 			retry = FALSE;
 			error = NULL;

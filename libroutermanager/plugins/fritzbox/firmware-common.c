@@ -27,7 +27,7 @@
 #include <libsoup/soup.h>
 
 #include <libroutermanager/rmlog.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmnetwork.h>
 #include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmftp.h>
@@ -35,13 +35,14 @@
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmfile.h>
+#include <libroutermanager/rmjournal.h>
 
 #include "fritzbox.h"
 #include "firmware-common.h"
 #include "firmware-04-00.h"
 
 /** phone port names */
-struct phone_port fritzbox_phone_ports[PORT_MAX] = {
+RmPhonePort fritzbox_phone_ports[PORT_MAX] = {
 	/* Analog */
 	{"telcfg:settings/MSN/Port0/Name", PORT_ANALOG1, 1},
 	{"telcfg:settings/MSN/Port1/Name", PORT_ANALOG2, 2},
@@ -362,7 +363,7 @@ gchar **strv_remove_duplicates(gchar **numbers)
  * \param router_info - router information structure
  * \return true if fritzbox and type could be retrieved, otherwise false
  */
-gboolean fritzbox_present(struct router_info *router_info)
+gboolean fritzbox_present(RmRouterInfo *router_info)
 {
 	SoupMessage *msg;
 	gsize read;
@@ -457,7 +458,7 @@ gboolean fritzbox_present(struct router_info *router_info)
  * \param force force logout
  * \return error code
  */
-gboolean fritzbox_logout(struct profile *profile, gboolean force)
+gboolean fritzbox_logout(RmProfile *profile, gboolean force)
 {
 	SoupMessage *msg;
 	gchar *url;
@@ -472,7 +473,7 @@ gboolean fritzbox_logout(struct profile *profile, gboolean force)
 	//                            "security:command/logout", "",
 	//                            "getpage", "../html/confirm_logout.html",
 	//                            NULL);
-	url = g_strdup_printf("http://%s/home/home.lua", router_get_host(profile));
+	url = g_strdup_printf("http://%s/home/home.lua", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_POST, url,
 	                            "sid", profile->router_info->session_id,
 	                            "logout", "1",
@@ -502,7 +503,7 @@ gboolean fritzbox_logout(struct profile *profile, gboolean force)
  * \param profile profile information structure
  * \param data data to parse for MSNs
  */
-void fritzbox_read_msn(struct profile *profile, const gchar *data)
+void fritzbox_read_msn(RmProfile *profile, const gchar *data)
 {
 	gchar *func;
 	gchar *pots_start;
@@ -620,17 +621,17 @@ GSList *fritzbox_load_faxbox(GSList *journal)
 {
 	RmProfile *profile = rm_profile_get_active();
 	RmFtp *client;
-	gchar *user = router_get_ftp_user(profile);
+	gchar *user = rm_router_get_ftp_user(profile);
 	gchar *response;
 	gchar *path;
 	gchar *volume_path;
 
-	client = rm_ftp_init(router_get_host(profile));
+	client = rm_ftp_init(rm_router_get_host(profile));
 	if (!client) {
 		return journal;
 	}
 
-	if (!rm_ftp_login(client, user, router_get_ftp_password(profile))) {
+	if (!rm_ftp_login(client, user, rm_router_get_ftp_password(profile))) {
 		g_warning("Could not login to router ftp");
 		rm_object_emit_message(_("FTP Login failed"), _("Please check your ftp credentials"));
 		rm_ftp_shutdown(client);
@@ -752,16 +753,16 @@ GSList *fritzbox_load_voicebox(GSList *journal)
 	gchar *path;
 	gint index;
 	RmProfile *profile = rm_profile_get_active();
-	gchar *user = router_get_ftp_user(profile);
+	gchar *user = rm_router_get_ftp_user(profile);
 	gchar *volume_path;
 
-	client = rm_ftp_init(router_get_host(profile));
+	client = rm_ftp_init(rm_router_get_host(profile));
 	if (!client) {
 		g_warning("Could not init ftp connection. Please check that ftp is enabled");
 		return journal;
 	}
 
-	if (!rm_ftp_login(client, user, router_get_ftp_password(profile))) {
+	if (!rm_ftp_login(client, user, rm_router_get_ftp_password(profile))) {
 		g_warning("Could not login to router ftp");
 		rm_object_emit_message(_("FTP Login failed"), _("Please check your ftp credentials"));
 		rm_ftp_shutdown(client);
@@ -810,14 +811,14 @@ GSList *fritzbox_load_voicebox(GSList *journal)
  * \param len pointer to store the data length to
  * \return fax data
  */
-gchar *fritzbox_load_fax(struct profile *profile, const gchar *filename, gsize *len)
+gchar *fritzbox_load_fax(RmProfile *profile, const gchar *filename, gsize *len)
 {
 	RmFtp *client;
-	gchar *user = router_get_ftp_user(profile);
+	gchar *user = rm_router_get_ftp_user(profile);
 	gchar *ret;
 
-	client = rm_ftp_init(router_get_host(profile));
-	rm_ftp_login(client, user, router_get_ftp_password(profile));
+	client = rm_ftp_init(rm_router_get_host(profile));
+	rm_ftp_login(client, user, rm_router_get_ftp_password(profile));
 
 	rm_ftp_passive(client);
 
@@ -834,20 +835,20 @@ gchar *fritzbox_load_fax(struct profile *profile, const gchar *filename, gsize *
  * \param len pointer to store the data length to
  * \return voice data
  */
-gchar *fritzbox_load_voice(struct profile *profile, const gchar *name, gsize *len)
+gchar *fritzbox_load_voice(RmProfile *profile, const gchar *name, gsize *len)
 {
 	RmFtp *client;
 	gchar *filename = g_strconcat("/", g_settings_get_string(profile->settings, "fax-volume"), "/FRITZ/voicebox/rec/", name, NULL);
-	gchar *user = router_get_ftp_user(profile);
+	gchar *user = rm_router_get_ftp_user(profile);
 	gchar *ret = NULL;
 
-	client = rm_ftp_init(router_get_host(profile));
+	client = rm_ftp_init(rm_router_get_host(profile));
 	if (!client) {
 		g_debug("Could not init ftp connection");
 		return ret;
 	}
 
-	rm_ftp_login(client, user, router_get_ftp_password(profile));
+	rm_ftp_login(client, user, rm_router_get_ftp_password(profile));
 
 	rm_ftp_passive(client);
 
@@ -879,7 +880,7 @@ gint fritzbox_find_phone_port(gint dial_port)
 }
 
 
-gchar *fritzbox_new1(struct profile *profile)
+gchar *fritzbox_new1(RmProfile *profile)
 {
 	SoupMessage *msg;
 	SoupURI *uri;
@@ -888,13 +889,13 @@ gchar *fritzbox_new1(struct profile *profile)
 	SoupMessageHeaders *headers;
 	gchar *url;
 
-	router_login(profile);
+	rm_router_login(profile);
 
 	/* Create POST message */
 	if (FIRMWARE_IS(6, 6)) {
-		url = g_strdup_printf("http://%s/upnp/control/x_contact", router_get_host(profile));
+		url = g_strdup_printf("http://%s/upnp/control/x_contact", rm_router_get_host(profile));
 	} else {
-		url = g_strdup_printf("http://%s/upnp/control/x_contact", router_get_host(profile));
+		url = g_strdup_printf("http://%s/upnp/control/x_contact", rm_router_get_host(profile));
 	}
 
 	uri = soup_uri_new(url);
@@ -938,7 +939,7 @@ gchar *fritzbox_new1(struct profile *profile)
  * \param profile profile pointer
  * \return current IP address or NULL on error
  */
-gchar *fritzbox_get_ip(struct profile *profile)
+gchar *fritzbox_get_ip(RmProfile *profile)
 {
 	SoupMessage *msg;
 	SoupURI *uri;
@@ -951,9 +952,9 @@ gchar *fritzbox_get_ip(struct profile *profile)
 
 	/* Create POST message */
 	if (FIRMWARE_IS(6, 6)) {
-		url = g_strdup_printf("http://%s/igdupnp/control/WANIPConn1", router_get_host(profile));
+		url = g_strdup_printf("http://%s/igdupnp/control/WANIPConn1", rm_router_get_host(profile));
 	} else {
-		url = g_strdup_printf("http://%s/upnp/control/WANIPConn1", router_get_host(profile));
+		url = g_strdup_printf("http://%s/upnp/control/WANIPConn1", rm_router_get_host(profile));
 	}
 
 	uri = soup_uri_new(url);
@@ -995,7 +996,7 @@ gchar *fritzbox_get_ip(struct profile *profile)
  * \param profile profile pointer
  * \return TRUE on success, otherwise FALSE
  */
-gboolean fritzbox_reconnect(struct profile *profile)
+gboolean fritzbox_reconnect(RmProfile *profile)
 {
 	SoupMessage *msg;
 	SoupURI *uri;
@@ -1005,9 +1006,9 @@ gboolean fritzbox_reconnect(struct profile *profile)
 
 	/* Create POST message */
 	if (FIRMWARE_IS(6, 6)) {
-		url = g_strdup_printf("http://%s:49000/igdupnp/control/WANIPConn1", router_get_host(profile));
+		url = g_strdup_printf("http://%s:49000/igdupnp/control/WANIPConn1", rm_router_get_host(profile));
 	} else {
-		url = g_strdup_printf("http://%s:49000/upnp/control/WANIPConn1", router_get_host(profile));
+		url = g_strdup_printf("http://%s:49000/upnp/control/WANIPConn1", rm_router_get_host(profile));
 	}
 
 	uri = soup_uri_new(url);
@@ -1046,14 +1047,14 @@ gboolean fritzbox_reconnect(struct profile *profile)
  * \param filename fax filename to delete
  * \return TRUE on success, otherwise FALSE
  */
-gboolean fritzbox_delete_fax(struct profile *profile, const gchar *filename)
+gboolean fritzbox_delete_fax(RmProfile *profile, const gchar *filename)
 {
 	RmFtp *client;
-	gchar *user = router_get_ftp_user(profile);
+	gchar *user = rm_router_get_ftp_user(profile);
 	gboolean ret;
 
-	client = rm_ftp_init(router_get_host(profile));
-	rm_ftp_login(client, user, router_get_ftp_password(profile));
+	client = rm_ftp_init(rm_router_get_host(profile));
+	rm_ftp_login(client, user, rm_router_get_ftp_password(profile));
 
 	rm_ftp_passive(client);
 
@@ -1069,7 +1070,7 @@ gboolean fritzbox_delete_fax(struct profile *profile, const gchar *filename)
  * \param filename voice filename to delete
  * \return TRUE on success, otherwise FALSE
  */
-gboolean fritzbox_delete_voice(struct profile *profile, const gchar *filename)
+gboolean fritzbox_delete_voice(RmProfile *profile, const gchar *filename)
 {
 	RmFtp *client;
 	struct voice_data *voice_data;
@@ -1098,8 +1099,8 @@ gboolean fritzbox_delete_voice(struct profile *profile, const gchar *filename)
 	}
 
 	/* Write data to router */
-	client = rm_ftp_init(router_get_host(profile));
-	rm_ftp_login(client, router_get_ftp_user(profile), router_get_ftp_password(profile));
+	client = rm_ftp_init(rm_router_get_host(profile));
+	rm_ftp_login(client, rm_router_get_ftp_user(profile), rm_router_get_ftp_password(profile));
 
 	gchar *path = g_build_filename(g_settings_get_string(profile->settings, "fax-volume"), "FRITZ/voicebox/", NULL);
 	gchar *remote_file = g_strdup_printf("meta%d", nr);

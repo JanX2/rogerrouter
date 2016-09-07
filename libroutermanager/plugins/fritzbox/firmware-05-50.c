@@ -38,7 +38,7 @@
 #include "firmware-common.h"
 #include "firmware-05-50.h"
 
-static gboolean fritzbox_check_login_blocked(const gchar *data, struct profile *profile)
+static gboolean fritzbox_check_login_blocked(const gchar *data, RmProfile *profile)
 {
 	gboolean result;
 
@@ -68,7 +68,7 @@ static gboolean fritzbox_check_login_blocked(const gchar *data, struct profile *
  * \param profile profile information structure
  * \return error code
  */
-gboolean fritzbox_login_05_50(struct profile *profile)
+gboolean fritzbox_login_05_50(RmProfile *profile)
 {
 	SoupMessage *msg;
 	gchar *response = NULL;
@@ -92,7 +92,7 @@ gboolean fritzbox_login_05_50(struct profile *profile)
 		}
 	}
 
-	url = g_strdup_printf("http://%s/login_sid.lua", router_get_host(profile));
+	url = g_strdup_printf("http://%s/login_sid.lua", rm_router_get_host(profile));
 	msg = soup_message_new(SOUP_METHOD_GET, url);
 	g_free(url);
 
@@ -117,8 +117,8 @@ gboolean fritzbox_login_05_50(struct profile *profile)
 	result = fritzbox_check_login_blocked(data, profile);
 
 	if (!strcmp(profile->router_info->session_id, "0000000000000000")) {
-		gchar *user = router_get_login_user(profile);
-		gchar *password = router_get_login_password(profile);
+		gchar *user = rm_router_get_login_user(profile);
+		gchar *password = rm_router_get_login_password(profile);
 
 		challenge = xml_extract_tag(data, "Challenge");
 		g_object_unref(msg);
@@ -135,7 +135,7 @@ gboolean fritzbox_login_05_50(struct profile *profile)
 		g_free(dots);
 		g_free(challenge);
 
-		url = g_strdup_printf("http://%s/login_sid.lua", router_get_host(profile));
+		url = g_strdup_printf("http://%s/login_sid.lua", rm_router_get_host(profile));
 		msg = soup_form_request_new(SOUP_METHOD_POST, url,
 		                            "username", user,
 		                            "response", response,
@@ -214,7 +214,7 @@ gboolean extract_number_05_50(GSList **number_list, const gchar *data, gchar *ms
  * \param profile profile structure
  * \param data webpage data
  */
-static void fritzbox_detect_controller_05_50(struct profile *profile, const gchar *data)
+static void fritzbox_detect_controller_05_50(RmProfile *profile, const gchar *data)
 {
 	gint index;
 	gint type = -1;
@@ -289,7 +289,7 @@ set:
  * \param profile profile pointer
  * \param data incoming page data
  */
-static void fritzbox_extract_dect_05_50(struct profile *profile, const gchar *data)
+static void fritzbox_extract_dect_05_50(RmProfile *profile, const gchar *data)
 {
 	const gchar *start = data;
 	gchar *pos;
@@ -330,7 +330,7 @@ static void fritzbox_extract_dect_05_50(struct profile *profile, const gchar *da
 	} while (count < 7);
 }
 
-gboolean fritzbox_get_fax_information_05_50(struct profile *profile)
+gboolean fritzbox_get_fax_information_05_50(RmProfile *profile)
 {
 	SoupMessage *msg;
 	const gchar *data;
@@ -338,7 +338,7 @@ gboolean fritzbox_get_fax_information_05_50(struct profile *profile)
 	gchar *url;
 	gchar *scramble;
 
-	url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
+	url = g_strdup_printf("http://%s/cgi-bin/webcm", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_POST, url,
 	                            "getpage", "../html/de/menus/menu2.html",
 	                            "var:lang", profile->router_info->lang,
@@ -416,7 +416,7 @@ gboolean fritzbox_get_fax_information_05_50(struct profile *profile)
 	return TRUE;
 }
 
-gboolean fritzbox_get_fax_information_06_00(struct profile *profile)
+gboolean fritzbox_get_fax_information_06_00(RmProfile *profile)
 {
 	SoupMessage *msg;
 	const gchar *data;
@@ -424,7 +424,7 @@ gboolean fritzbox_get_fax_information_06_00(struct profile *profile)
 	gchar *url;
 	gchar *scramble;
 
-	url = g_strdup_printf("http://%s/fon_devices/fax_send.lua", router_get_host(profile));
+	url = g_strdup_printf("http://%s/fon_devices/fax_send.lua", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
 	                            "sid", profile->router_info->session_id,
 	                            NULL);
@@ -484,7 +484,7 @@ gboolean fritzbox_get_fax_information_06_00(struct profile *profile)
 			g_object_unref(msg);
 
 
-			url = g_strdup_printf("http://%s/usb/show_usb_devices.lua", router_get_host(profile));
+			url = g_strdup_printf("http://%s/usb/show_usb_devices.lua", rm_router_get_host(profile));
 			msg = soup_form_request_new(SOUP_METHOD_GET, url,
 				                    "sid", profile->router_info->session_id,
 				                    NULL);
@@ -524,7 +524,7 @@ gboolean fritzbox_get_fax_information_06_00(struct profile *profile)
  * \param profile profile information structure
  * \return error code
  */
-gboolean fritzbox_get_settings_05_50(struct profile *profile)
+gboolean fritzbox_get_settings_05_50(RmProfile *profile)
 {
 	SoupMessage *msg;
 	const gchar *data;
@@ -535,12 +535,12 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 	g_debug("Get settings");
 
 	/* Login */
-	if (!router_login(profile)) {
+	if (!rm_router_login(profile)) {
 		return FALSE;
 	}
 
 	/* Extract phone numbers */
-	url = g_strdup_printf("http://%s/fon_num/fon_num_list.lua", router_get_host(profile));
+	url = g_strdup_printf("http://%s/fon_num/fon_num_list.lua", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
 	                            "sid", profile->router_info->session_id,
 	                            NULL);
@@ -578,7 +578,7 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 	g_object_unref(msg);
 
 	/* Extract phone names, default controller */
-	url = g_strdup_printf("http://%s/fon_devices/fondevices_list.lua", router_get_host(profile));
+	url = g_strdup_printf("http://%s/fon_devices/fondevices_list.lua", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
 	                            "sid", profile->router_info->session_id,
 	                            NULL);
@@ -608,7 +608,7 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 			if (!RM_EMPTY_STRING(value)) {
 				g_debug("Port %d: '%s'", index, value);
 			}
-			g_settings_set_string(profile->settings, router_phone_ports[index].name, value);
+			g_settings_set_string(profile->settings, rm_router_phone_ports[index].name, value);
 			g_free(value);
 		}
 	}
@@ -628,7 +628,7 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 	g_object_unref(msg);
 
 	/* Extract city/country/area prefix */
-	url = g_strdup_printf("http://%s/fon_num/sip_option.lua", router_get_host(profile));
+	url = g_strdup_printf("http://%s/fon_num/sip_option.lua", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
 	                            "sid", profile->router_info->session_id,
 	                            NULL);
@@ -686,7 +686,7 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 	}
 
 	/* Extract default dial port */
-	url = g_strdup_printf("http://%s/fon_num/dial_foncalls.lua", router_get_host(profile));
+	url = g_strdup_printf("http://%s/fon_num/dial_foncalls.lua", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
 	                            "sid", profile->router_info->session_id,
 	                            NULL);
@@ -709,7 +709,7 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 		gint port = atoi(dialport);
 		gint phone_port = fritzbox_find_phone_port(port);
 		g_debug("Dial port: %s, phone_port: %d", dialport, phone_port);
-		router_set_phone_port(profile, phone_port);
+		rm_router_set_phone_port(profile, phone_port);
 	}
 	g_free(dialport);
 
@@ -730,7 +730,7 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 void fritzbox_journal_05_50_cb(SoupSession *session, SoupMessage *msg, gpointer user_data)
 {
 	GSList *journal = NULL;
-	struct profile *profile = user_data;
+	RmProfile *profile = user_data;
 
 	/* Parse online journal */
 	journal = csv_parse_fritzbox_journal_data(journal, msg->response_body->data);
@@ -742,16 +742,16 @@ void fritzbox_journal_05_50_cb(SoupSession *session, SoupMessage *msg, gpointer 
 	journal = fritzbox_load_voicebox(journal);
 
 	/* Load fax reports */
-	journal = router_load_fax_reports(profile, journal);
+	journal = rm_router_load_fax_reports(profile, journal);
 
 	/* Load voice records */
-	journal = router_load_voice_records(profile, journal);
+	journal = rm_router_load_voice_records(profile, journal);
 
 	/* Process journal list */
-	router_process_journal(journal);
+	rm_router_process_journal(journal);
 
 	/* Logout */
-	router_logout(profile);
+	rm_router_logout(profile);
 }
 
 /**
@@ -760,18 +760,18 @@ void fritzbox_journal_05_50_cb(SoupSession *session, SoupMessage *msg, gpointer 
  * \param data_ptr data pointer to optional store journal to
  * \return error code
  */
-gboolean fritzbox_load_journal_05_50(struct profile *profile, gchar **data_ptr)
+gboolean fritzbox_load_journal_05_50(RmProfile *profile, gchar **data_ptr)
 {
 	SoupMessage *msg;
 
 	/* Login to box */
-	if (!router_login(profile)) {
+	if (!rm_router_login(profile)) {
 		g_debug("Login failed");
 		return FALSE;
 	}
 
 	/* Create GET request */
-	gchar *url = g_strdup_printf("http://%s/fon_num/foncalls_list.lua", router_get_host(profile));
+	gchar *url = g_strdup_printf("http://%s/fon_num/foncalls_list.lua", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
 	                            "sid", profile->router_info->session_id,
 	                            "csv", "",
@@ -789,17 +789,17 @@ gboolean fritzbox_load_journal_05_50(struct profile *profile, gchar **data_ptr)
  * \param profile profile pointer
  * \return TRUE on success, otherwise FALSE
  */
-gboolean fritzbox_clear_journal_05_50(struct profile *profile)
+gboolean fritzbox_clear_journal_05_50(RmProfile *profile)
 {
 	SoupMessage *msg;
 	gchar *url;
 
 	/* Login to box */
-	if (!router_login(profile)) {
+	if (!rm_router_login(profile)) {
 		return FALSE;
 	}
 
-	url = g_strdup_printf("http://%s/fon_num/foncalls_list.lua", router_get_host(profile));
+	url = g_strdup_printf("http://%s/fon_num/foncalls_list.lua", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_POST, url,
 	                            "sid", profile->router_info->session_id,
 	                            "usejournal", "on",
@@ -819,7 +819,7 @@ gboolean fritzbox_clear_journal_05_50(struct profile *profile)
 
 	g_object_unref(msg);
 
-	router_logout(profile);
+	rm_router_logout(profile);
 
 	return TRUE;
 }

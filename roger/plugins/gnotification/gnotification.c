@@ -30,7 +30,7 @@
 #include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmphone.h>
 #include <libroutermanager/plugins/capi/ringtone.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/rmlookup.h>
 #include <libroutermanager/rmstring.h>
@@ -60,6 +60,13 @@ void gnotification_close(gpointer priv)
 	g_application_withdraw_notification(G_APPLICATION(roger_app), priv);
 }
 
+gboolean gnotification_timeout_close(gpointer priv)
+{
+	gnotification_close(priv);
+
+	return G_SOURCE_REMOVE;
+}
+
 void gnotification_show_missed_calls(void)
 {
 	GNotification *notify = NULL;
@@ -83,6 +90,7 @@ void gnotification_show_missed_calls(void)
 gpointer gnotification_show(RmConnection *connection)
 {
 	GNotification *notify = NULL;
+	RmLookup *lookup = rm_profile_get_lookup(rm_profile_get_active());
 	GIcon *icon;
 	gchar *title;
 	gchar *text;
@@ -93,13 +101,13 @@ gpointer gnotification_show(RmConnection *connection)
 	RmContact *contact = rm_contact_find_by_number(connection->remote_number);
 
 	if (RM_EMPTY_STRING(contact->name)) {
-		rm_lookup(contact->number, &contact->name, &contact->street, &contact->zip, &contact->city);
+		rm_lookup_search(lookup, contact->number, &contact->name, &contact->street, &contact->zip, &contact->city);
 	}
 
 	if (connection->type != RM_CONNECTION_TYPE_INCOMING && connection->type != RM_CONNECTION_TYPE_OUTGOING) {
 		g_warning("Unhandled case in connection notify - gnotification!");
 
-		return;
+		return NULL;
 	}
 	/* Create notification message */
 	text = g_markup_printf_escaped(_("Name:\t\t%s\nNumber:\t\t%s\nCompany:\t%s\nStreet:\t\t%s\nCity:\t\t\t%s%s%s\n"),
@@ -132,7 +140,7 @@ gpointer gnotification_show(RmConnection *connection)
 	} else if (connection->type == RM_CONNECTION_TYPE_OUTGOING) {
 		gint duration = 5;
 
-		g_timeout_add_seconds(duration, gnotification_close, uid);
+		g_timeout_add_seconds(duration, gnotification_timeout_close, uid);
 	}
 
 	if (contact->image) {

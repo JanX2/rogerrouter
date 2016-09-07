@@ -26,6 +26,7 @@
 #include <libroutermanager/rmnotification.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/rmcall.h>
+#include <libroutermanager/rmnumber.h>
 
 /**
  * SECTION:rmnotification

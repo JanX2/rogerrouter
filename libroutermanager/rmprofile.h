@@ -25,13 +25,15 @@
 #include <libroutermanager/rmaddressbook.h>
 #include <libroutermanager/rmnotification.h>
 #include <libroutermanager/rmaudio.h>
+#include <libroutermanager/rmlookup.h>
+#include <libroutermanager/rmrouterinfo.h>
 
 G_BEGIN_DECLS
 
-typedef struct profile {
+typedef struct {
 	/*< private >*/
 	gchar *name;
-	struct router_info *router_info;
+	RmRouterInfo *router_info;
 
 	GSettings *settings;
 
@@ -62,6 +64,7 @@ gchar **rm_profile_get_notification_outgoing_numbers(RmProfile *profile);
 void rm_profile_set_notification_incoming_numbers(RmProfile *profile, const gchar * const* numbers);
 void rm_profile_set_notification_outgoing_numbers(RmProfile *profile, const gchar * const* numbers);
 gboolean rm_profile_get_notification_ringtone(RmProfile *profile);
+RmLookup *rm_profile_get_lookup(RmProfile *profile);
 
 G_END_DECLS
 

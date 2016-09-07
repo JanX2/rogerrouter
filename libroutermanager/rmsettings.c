@@ -36,6 +36,7 @@
  * Settings keeps track of application/user preferences and stores them in the selected backend.
  */
 
+#ifdef USE_KEYFILE
 /**
  * rm_settings_replace_dots:
  * @str: input string
@@ -79,6 +80,7 @@ static void rm_settings_remove_prefix(gchar *str) {
 		*str = '\0';
 	}
 }
+#endif
 
 /**
  * rm_settings_new:

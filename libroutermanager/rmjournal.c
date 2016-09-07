@@ -28,6 +28,7 @@
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/rmfile.h>
 #include <libroutermanager/rmjournal.h>
+#include <libroutermanager/rmmain.h>
 
 #include <libroutermanager/plugins/fritzbox/csv.h>
 
@@ -109,7 +110,7 @@ gboolean rm_journal_save(GSList *journal)
 	gboolean ret;
 
 	/* Build directory name and create it (if needed) */
-	dir = g_build_filename(g_get_user_data_dir(), "routermanager", profile->name, NULL);
+	dir = g_build_filename(rm_get_user_data_dir(), profile->name, NULL);
 	g_mkdir_with_parents(dir, 0700);
 
 	file_name = g_build_filename(dir, "journal.csv", NULL);
@@ -176,7 +177,7 @@ GSList *rm_journal_load(GSList *journal)
 	GSList *list = journal;
 	RmProfile *profile = rm_profile_get_active();
 
-	file_name = g_build_filename(g_get_user_data_dir(), "routermanager", profile->name, "journal.csv", NULL);
+	file_name = g_build_filename(rm_get_user_data_dir(), profile->name, "journal.csv", NULL);
 	file_data = rm_file_load(file_name, NULL);
 	g_free(file_name);
 

@@ -43,6 +43,7 @@ struct device_phone {
 void rm_phone_register(struct device_phone *phone);
 GSList *rm_phone_get_plugins(void);
 void rm_phone_mute(RmConnection *connection, gboolean mute);
+void rm_phone_record(RmConnection *connection, guchar record, const char *dir);
 void rm_phone_hold(RmConnection *connection, gboolean hold);
 void rm_phone_dtmf(RmConnection *connection, guchar code);
 void rm_phone_hangup(RmConnection *connection);

@@ -41,7 +41,7 @@
  * \param profile profile information structure
  * \return error code
  */
-gboolean fritzbox_login_04_74(struct profile *profile)
+gboolean fritzbox_login_04_74(RmProfile *profile)
 {
 	SoupMessage *msg;
 	gchar *response = NULL;
@@ -65,7 +65,7 @@ gboolean fritzbox_login_04_74(struct profile *profile)
 		}
 	}
 
-	url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
+	url = g_strdup_printf("http://%s/cgi-bin/webcm", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_POST, url,
 	                            "getpage", "../html/login_sid.xml",
 	                            NULL);
@@ -118,7 +118,7 @@ gboolean fritzbox_login_04_74(struct profile *profile)
 		/* Currently not logged in */
 		g_debug("Currently not logged in");
 
-		dots = make_dots(router_get_login_password(profile));
+		dots = make_dots(rm_router_get_login_password(profile));
 		str = g_strconcat(challenge, "-", dots, NULL);
 		md5_str = md5(str);
 
@@ -128,7 +128,7 @@ gboolean fritzbox_login_04_74(struct profile *profile)
 		g_free(str);
 		g_free(dots);
 
-		url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
+		url = g_strdup_printf("http://%s/cgi-bin/webcm", rm_router_get_host(profile));
 		msg = soup_form_request_new(SOUP_METHOD_POST, url,
 		                            "login:command/response", response,
 		                            "getpage", "../html/login_sid.xml",
@@ -253,7 +253,7 @@ gboolean copy_number_04_74(GSList **number_list, const gchar *data, gsize len)
  * \param profile profile information structure
  * \param data data to parse for MSNs
  */
-void fritzbox_extract_numbers_04_74(struct profile *profile, const gchar *data)
+void fritzbox_extract_numbers_04_74(RmProfile *profile, const gchar *data)
 {
 	gint index;
 	gint type = -1;
@@ -409,7 +409,7 @@ void fritzbox_extract_numbers_04_74(struct profile *profile, const gchar *data)
  * \param profile profile information structure
  * \return error code
  */
-gboolean fritzbox_get_settings_04_74(struct profile *profile)
+gboolean fritzbox_get_settings_04_74(RmProfile *profile)
 {
 	SoupMessage *msg;
 	const gchar *data;
@@ -418,7 +418,7 @@ gboolean fritzbox_get_settings_04_74(struct profile *profile)
 	gchar *url;
 	gchar *volume = NULL;
 
-	if (!router_login(profile)) {
+	if (!rm_router_login(profile)) {
 		return FALSE;
 	}
 
@@ -426,7 +426,7 @@ gboolean fritzbox_get_settings_04_74(struct profile *profile)
 	                             profile->router_info->lang,
 	                             "/menus/menu2.html", NULL);
 
-	url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
+	url = g_strdup_printf("http://%s/cgi-bin/webcm", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
 	                            "getpage", request,
 	                            "var:lang", profile->router_info->lang,
@@ -457,13 +457,13 @@ gboolean fritzbox_get_settings_04_74(struct profile *profile)
 		value = xml_extract_input_value(data, fritzbox_phone_ports[index].name);
 		if (value != NULL && strlen(value) > 0) {
 			g_debug("port %d: '%s'", index, value);
-			g_settings_set_string(profile->settings, router_phone_ports[index].name, value);
+			g_settings_set_string(profile->settings, rm_router_phone_ports[index].name, value);
 		}
 		g_free(value);
 	}
 	g_object_unref(msg);
 
-	url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
+	url = g_strdup_printf("http://%s/cgi-bin/webcm", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
 	                            "getpage", "../html/de/menus/menu2.html",
 	                            "var:lang", profile->router_info->lang,
@@ -518,7 +518,7 @@ gboolean fritzbox_get_settings_04_74(struct profile *profile)
 	g_object_unref(msg);
 
 	/* Extract Fax information */
-	url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
+	url = g_strdup_printf("http://%s/cgi-bin/webcm", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_POST, url,
 	                            "getpage", "../html/de/menus/menu2.html",
 	                            "var:lang", profile->router_info->lang,
@@ -579,7 +579,7 @@ gboolean fritzbox_get_settings_04_74(struct profile *profile)
 	g_object_unref(msg);
 
 	/* Extract default dial port */
-	url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
+	url = g_strdup_printf("http://%s/cgi-bin/webcm", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_POST, url,
 	                            "getpage", "../html/de/menus/menu2.html",
 	                            "var:lang", profile->router_info->lang,
@@ -606,7 +606,7 @@ gboolean fritzbox_get_settings_04_74(struct profile *profile)
 		gint port = atoi(dialport);
 		gint phone_port = fritzbox_find_phone_port(port);
 		g_debug("Dial port: %s, phone_port: %d", dialport, phone_port);
-		router_set_phone_port(profile, phone_port);
+		rm_router_set_phone_port(profile, phone_port);
 	}
 	g_free(dialport);
 
@@ -629,7 +629,7 @@ gboolean fritzbox_get_settings_04_74(struct profile *profile)
 void fritzbox_journal_04_74_cb(SoupSession *session, SoupMessage *msg, gpointer user_data)
 {
 	GSList *journal = NULL;
-	struct profile *profile = user_data;
+	RmProfile *profile = user_data;
 
 	/* Parse journal */
 	journal = csv_parse_fritzbox_journal_data(journal, msg->response_body->data);
@@ -641,12 +641,12 @@ void fritzbox_journal_04_74_cb(SoupSession *session, SoupMessage *msg, gpointer 
 	journal = fritzbox_load_voicebox(journal);
 
 	/* Load fax reports */
-	journal = router_load_fax_reports(profile, journal);
+	journal = rm_router_load_fax_reports(profile, journal);
 
 	/* Load voice records */
-	journal = router_load_voice_records(profile, journal);
+	journal = rm_router_load_voice_records(profile, journal);
 
-	router_process_journal(journal);
+	rm_router_process_journal(journal);
 
 	/* Logout */
 	fritzbox_logout(profile, FALSE);
@@ -658,19 +658,19 @@ void fritzbox_journal_04_74_cb(SoupSession *session, SoupMessage *msg, gpointer 
  * \param data_ptr data pointer to optional store journal to
  * \return error code
  */
-gboolean fritzbox_load_journal_04_74(struct profile *profile, gchar **data_ptr)
+gboolean fritzbox_load_journal_04_74(RmProfile *profile, gchar **data_ptr)
 {
 	SoupMessage *msg;
 	gchar *url;
 
 	/* Login to box */
-	if (!router_login(profile)) {
+	if (!rm_router_login(profile)) {
 		g_debug("Login failed");
 		return FALSE;
 	}
 
 	/* Create POST request */
-	url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
+	url = g_strdup_printf("http://%s/cgi-bin/webcm", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_POST, url,
 	                            "getpage", "../html/de/menus/menu2.html",
 	                            "var:lang", profile->router_info->lang,
@@ -689,7 +689,7 @@ gboolean fritzbox_load_journal_04_74(struct profile *profile, gchar **data_ptr)
 	g_object_unref(msg);
 
 	/* Create POST request */
-	url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
+	url = g_strdup_printf("http://%s/cgi-bin/webcm", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_POST, url,
 	                            "getpage", "../html/de/FRITZ!Box_Anrufliste.csv",
 	                            "sid", profile->router_info->session_id,
@@ -707,17 +707,17 @@ gboolean fritzbox_load_journal_04_74(struct profile *profile, gchar **data_ptr)
  * \param profile profile pointer
  * \return TRUE on success, otherwise FALSE
  */
-gboolean fritzbox_clear_journal_04_74(struct profile *profile)
+gboolean fritzbox_clear_journal_04_74(RmProfile *profile)
 {
 	SoupMessage *msg;
 	gchar *url;
 
 	/* Login to box */
-	if (!router_login(profile)) {
+	if (!rm_router_login(profile)) {
 		return FALSE;
 	}
 
-	url = g_strdup_printf("http://%s/cgi-bin/webcm", router_get_host(profile));
+	url = g_strdup_printf("http://%s/cgi-bin/webcm", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_POST, url,
 	                            "sid", profile->router_info->session_id,
 	                            "getpage", "../html/de/menus/menu2.html",

@@ -24,6 +24,15 @@
 #include <libroutermanager/rmnetwork.h>
 #include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmprofile.h>
+#include <libroutermanager/rmrouter.h>
+
+/**
+ * SECTION:rmnetwork
+ * @Title: RmNetwork
+ * @Short_description: Network - Handle network access
+ *
+ * A network wrapper with authentication support
+ */
 
 /** Soup session */
 SoupSession *rm_soup_session = NULL;
@@ -122,10 +131,10 @@ static void network_authenticate_cb(SoupSession *session, SoupMessage *msg, Soup
 	password = g_settings_get_string(profile->settings, "auth-password");
 
 	if (RM_EMPTY_STRING(user) && RM_EMPTY_STRING(password)) {
-		user = router_get_login_user(profile);
+		user = rm_router_get_login_user(profile);
 		g_settings_set_string(profile->settings, "auth-user", user);
 
-		password = router_get_login_password(profile);
+		password = rm_router_get_login_password(profile);
 		g_settings_set_string(profile->settings, "auth-password", password);
 	}
 

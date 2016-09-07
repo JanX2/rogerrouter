@@ -20,7 +20,7 @@
 #ifndef PRINT_H
 #define PRINT_H
 
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 //#include <libroutermanager/libfaxophone/faxophone.h>
 //#include <libroutermanager/libfaxophone/fax.h>
 

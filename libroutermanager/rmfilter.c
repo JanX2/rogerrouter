@@ -399,10 +399,14 @@ void rm_filter_remove(RmProfile *profile, RmFilter *filter)
  *
  * Get filter list.
  *
- * Returns: filter list
+ * Returns: filter list or %NULL if profile is not set
  */
 GSList *rm_filter_get_list(RmProfile *profile)
 {
+	if (!profile) {
+		return NULL;
+	}
+
 	return profile->filter_list;
 }
 
@@ -418,7 +422,7 @@ static void rm_filter_load(RmProfile *profile)
 	GFileEnumerator *enumerator;
 	GFileInfo *info;
 	GError *error = NULL;
-	gchar *path = g_build_filename(g_get_user_config_dir(), "routermanager/profile", G_DIR_SEPARATOR_S, profile->name, G_DIR_SEPARATOR_S, "filters", G_DIR_SEPARATOR_S, NULL);
+	gchar *path = g_build_filename(rm_get_user_config_dir(), G_DIR_SEPARATOR_S, "profile", G_DIR_SEPARATOR_S, profile->name, G_DIR_SEPARATOR_S, "filters", G_DIR_SEPARATOR_S, NULL);
 
 	dir = g_file_new_for_path(path);
 
@@ -502,7 +506,7 @@ static void rm_filter_save(RmProfile *profile)
 	gchar *path;
 
 	list = profile->filter_list;
-	path = g_build_filename(g_get_user_config_dir(), "routermanager/profile", G_DIR_SEPARATOR_S, profile->name, G_DIR_SEPARATOR_S, "filters", G_DIR_SEPARATOR_S, NULL);
+	path = g_build_filename(rm_get_user_config_dir(), G_DIR_SEPARATOR_S, "profile", G_DIR_SEPARATOR_S, profile->name, G_DIR_SEPARATOR_S, "filters", G_DIR_SEPARATOR_S, NULL);
 
 	g_mkdir_with_parents(path, 0700);
 

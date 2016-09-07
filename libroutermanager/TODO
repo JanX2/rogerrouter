@@ -14,10 +14,6 @@
 * addressbook:
   - optimize contact lookup
   - set plugin directly to profile to remove lookup?
-  
-* rmcall
-  - split into number and journal
-  - simplify structure
 
 * rmcontact
   - copy needs to be deep

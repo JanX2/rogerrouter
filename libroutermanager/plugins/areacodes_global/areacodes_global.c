@@ -26,11 +26,12 @@
 
 #include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmmain.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmobject.h>
 #include <libroutermanager/rmfile.h>
 #include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmstring.h>
+#include <libroutermanager/rmnumber.h>
 
 #include "csv.h"
 

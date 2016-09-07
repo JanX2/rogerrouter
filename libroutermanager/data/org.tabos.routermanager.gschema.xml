@@ -258,6 +258,11 @@
 		<key name="notification-play-ringtone" type="b">
 			<default>true</default>
 		</key>
+
+		<!-- Lookup plugin -->
+		<key name="lookup-plugin" type="s">
+			<default>''</default>
+		</key>
 	</schema>
 
 	<schema id="org.tabos.routermanager.profile.action">

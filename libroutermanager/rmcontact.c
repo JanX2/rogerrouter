@@ -23,7 +23,7 @@
 
 #include <libroutermanager/rmcontact.h>
 #include <libroutermanager/rmobjectemit.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 
 /**
  * SECTION:rmcontact
@@ -129,7 +129,7 @@ RmContact *rm_contact_find_by_number(gchar *number)
 
 	/* Depending on the number set the active address */
 	for (numbers = contact->numbers; numbers != NULL; numbers = numbers->next) {
-		struct phone_number *phone_number = numbers->data;
+		RmPhoneNumber *phone_number = numbers->data;
 
 		if (!strcmp(number, phone_number->number)) {
 			type = phone_number->type;
@@ -203,14 +203,14 @@ static void rm_contact_free_address(gpointer data)
  */
 static void rm_contact_free_number(gpointer data)
 {
-	struct phone_number *number = data;
+	RmPhoneNumber *number = data;
 
 	if (number->number) {
 		g_free(number->number);
 		number->number = NULL;
 	}
 
-	g_slice_free(struct phone_number, number);
+	g_slice_free(RmPhoneNumber, number);
 }
 
 /**

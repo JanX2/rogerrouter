@@ -23,7 +23,7 @@
 
 #include <gtk/gtk.h>
 
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmpassword.h>
 #include <libroutermanager/rmftp.h>
 #include <libroutermanager/rmmain.h>
@@ -70,7 +70,7 @@ struct assistant {
 	GtkWidget *router_listbox;
 
 	/** New assistant created profile */
-	struct profile *profile;
+	RmProfile *profile;
 };
 
 /** Assistant page structure, holding name and pre/post functions */
@@ -102,7 +102,7 @@ void profile_entry_changed(GtkEditable *entry, gpointer user_data)
 {
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 	GSList *profile_list = rm_profile_get_list();
-	struct profile *profile;
+	RmProfile *profile;
 
 	/* Loop through all known profiles and check for duplicate profile name */
 	while (profile_list != NULL) {
@@ -184,7 +184,7 @@ static gboolean scan(gpointer user_data)
 
 	for (list = routers; list != NULL; list = list->next) {
 		GtkWidget *new_device;
-		struct router_info *router_info = list->data;
+		RmRouterInfo *router_info = list->data;
 		gchar *tmp;
 
 		tmp = g_strdup_printf("<b>%s</b>\n<small>on %s</small>", router_info->name, router_info->host);
@@ -323,7 +323,7 @@ static gboolean router_post(struct assistant *assistant)
 	rm_profile_set_host(assistant->profile, server);
 
 	/* Check if router is present */
-	present = router_present(assistant->profile->router_info);
+	present = rm_router_present(assistant->profile->router_info);
 	if (!present) {
 		rm_object_emit_message(_("Login failed"), _("Please change the router ip and try again"));
 	}
@@ -357,10 +357,10 @@ static gboolean password_post(struct assistant *assistant)
 	rm_profile_set_login_password(assistant->profile, password);
 
 	/* Release any previous lock */
-	router_release_lock();
+	rm_router_release_lock();
 
 	/* Get settings */
-	if (!router_login(assistant->profile) || !router_get_settings(assistant->profile)) {
+	if (!rm_router_login(assistant->profile) || !rm_router_get_settings(assistant->profile)) {
 		return FALSE;
 	}
 
@@ -369,7 +369,7 @@ static gboolean password_post(struct assistant *assistant)
 	/* Set initial fax report dir */
 	g_settings_set_string(assistant->profile->settings, "fax-report-dir", g_get_home_dir());
 	/* Set initial softphone number */
-	numbers = router_get_numbers(assistant->profile);
+	numbers = rm_router_get_numbers(assistant->profile);
 	if (numbers && numbers[0]) {
 		g_settings_set_string(assistant->profile->settings, "phone-number", numbers[0]);
 	}
@@ -445,11 +445,11 @@ static void finish_pre(struct assistant *assistant)
 static gboolean finish_post(struct assistant *assistant)
 {
 	/* Enable telnet & capi port */
-	if (router_dial_number(assistant->profile, ROUTER_DIAL_PORT_AUTO, ROUTER_ENABLE_TELNET)) {
-		router_hangup(assistant->profile, ROUTER_DIAL_PORT_AUTO, ROUTER_ENABLE_TELNET);
+	if (rm_router_dial_number(assistant->profile, ROUTER_DIAL_PORT_AUTO, ROUTER_ENABLE_TELNET)) {
+		rm_router_hangup(assistant->profile, ROUTER_DIAL_PORT_AUTO, ROUTER_ENABLE_TELNET);
 	}
-	if (router_dial_number(assistant->profile, ROUTER_DIAL_PORT_AUTO, ROUTER_ENABLE_CAPI)) {
-		router_hangup(assistant->profile, ROUTER_DIAL_PORT_AUTO, ROUTER_ENABLE_CAPI);
+	if (rm_router_dial_number(assistant->profile, ROUTER_DIAL_PORT_AUTO, ROUTER_ENABLE_CAPI)) {
+		rm_router_hangup(assistant->profile, ROUTER_DIAL_PORT_AUTO, ROUTER_ENABLE_CAPI);
 	}
 
 	/* Trigger network reconnect */

@@ -27,7 +27,7 @@
 #include <libroutermanager/rmobject.h>
 #include <libroutermanager/rmaddressbook.h>
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmnetwork.h>
 #include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmftp.h>
@@ -35,6 +35,7 @@
 #include <libroutermanager/rmlog.h>
 #include <libroutermanager/rmfile.h>
 #include <libroutermanager/rmsettings.h>
+#include <libroutermanager/rmnumber.h>
 
 #include <roger/main.h>
 
@@ -87,7 +88,7 @@ static void parse_person(RmContact *contact, xmlnode *person)
 		if (image_ptr != NULL) {
 			/* file:///var/InternerSpeicher/FRITZ/fonpix/946684999-0.jpg */
 			if (!strncmp(image_ptr, "file://", 7) && strlen(image_ptr) > 28) {
-				struct profile *profile = rm_profile_get_active();
+				RmProfile *profile = rm_profile_get_active();
 				gchar *url = strstr(image_ptr, "/ftp/");
 				gsize len;
 				guchar *buffer;
@@ -100,8 +101,8 @@ static void parse_person(RmContact *contact, xmlnode *person)
 					url += 5;
 				}
 
-				client = rm_ftp_init(router_get_host(rm_profile_get_active()));
-				rm_ftp_login(client, router_get_ftp_user(profile), router_get_ftp_password(profile));
+				client = rm_ftp_init(rm_router_get_host(rm_profile_get_active()));
+				rm_ftp_login(client, rm_router_get_ftp_user(profile), rm_router_get_ftp_password(profile));
 				rm_ftp_passive(client);
 				buffer = (guchar *) rm_ftp_get_file(client, url, &len);
 				rm_ftp_shutdown(client);
@@ -133,9 +134,9 @@ static void parse_telephony(RmContact *contact, xmlnode *telephony)
 
 		number = xmlnode_get_data(child);
 		if (!RM_EMPTY_STRING(number)) {
-			struct phone_number *phone_number;
+			RmPhoneNumber *phone_number;
 
-			phone_number = g_slice_new(struct phone_number);
+			phone_number = g_slice_new(RmPhoneNumber);
 			if (strcmp(type, "mobile") == 0) {
 				phone_number->type = PHONE_NUMBER_MOBILE;
 			} else if (strcmp(type, "home") == 0) {
@@ -160,7 +161,7 @@ static void parse_telephony(RmContact *contact, xmlnode *telephony)
 	}
 }
 
-static void contact_add(struct profile *profile, xmlnode *node, gint count)
+static void contact_add(RmProfile *profile, xmlnode *node, gint count)
 {
 	xmlnode *tmp;
 	RmContact *contact;
@@ -192,7 +193,7 @@ static void contact_add(struct profile *profile, xmlnode *node, gint count)
 	contacts = g_slist_insert_sorted(contacts, contact, rm_contact_name_compare);
 }
 
-static void phonebook_add(struct profile *profile, xmlnode *node)
+static void phonebook_add(RmProfile *profile, xmlnode *node)
 {
 	xmlnode *child;
 	gint count = 0;
@@ -207,20 +208,20 @@ static gint fritzfon_read_book(void)
 	gchar uri[1024];
 	xmlnode *node = NULL;
 	xmlnode *child;
-	struct profile *profile = rm_profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	gchar *owner;
 	gchar *name;
 
 	contacts = NULL;
 
-	if (!router_login(profile)) {
+	if (!rm_router_login(profile)) {
 		return -1;
 	}
 
 	owner = g_settings_get_string(fritzfon_settings, "book-owner");
 	name = g_settings_get_string(fritzfon_settings, "book-name");
 
-	snprintf(uri, sizeof(uri), "http://%s/cgi-bin/firmwarecfg", router_get_host(profile));
+	snprintf(uri, sizeof(uri), "http://%s/cgi-bin/firmwarecfg", rm_router_get_host(profile));
 
 	SoupMultipart *multipart = soup_multipart_new(SOUP_FORM_MIME_TYPE_MULTIPART);
 	soup_multipart_append_form_string(multipart, "sid", profile->router_info->session_id);
@@ -264,7 +265,7 @@ static gint fritzfon_read_book(void)
 
 	g_object_unref(msg);
 
-	//router_logout(profile);
+	//rm_router_logout(profile);
 
 	return 0;
 }
@@ -279,15 +280,15 @@ GSList *fritzfon_get_contacts(void)
 static gint fritzfon_get_books(void)
 {
 	gchar *url;
-	struct profile *profile = rm_profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	SoupMessage *msg;
 	struct fritzfon_book *book = NULL;
 
-	if (!router_login(profile)) {
+	if (!rm_router_login(profile)) {
 		return -1;
 	}
 
-	url = g_strdup_printf("http://%s/fon_num/fonbook_select.lua", router_get_host(profile));
+	url = g_strdup_printf("http://%s/fon_num/fonbook_select.lua", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
 	                            "sid", profile->router_info->session_id,
 	                            NULL);
@@ -350,7 +351,7 @@ end:
 		fritzfon_books = g_slist_prepend(fritzfon_books, book);
 	}
 
-	//router_logout(profile);
+	//rm_router_logout(profile);
 
 	return 0;
 }
@@ -435,7 +436,7 @@ static xmlnode *contact_to_xmlnode(RmContact *contact)
 		g_free(tmp);
 
 		for (list = contact->numbers; list != NULL; list = list->next) {
-			struct phone_number *number = list->data;
+			RmPhoneNumber *number = list->data;
 			xmlnode *number_node;
 
 			number_node = xmlnode_new("number");
@@ -533,7 +534,7 @@ xmlnode *phonebook_to_xmlnode(void)
 gboolean fritzfon_save(void)
 {
 	xmlnode *node;
-	struct profile *profile = rm_profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 	gchar *data;
 	gint len;
 	SoupBuffer *buffer;
@@ -543,7 +544,7 @@ gboolean fritzfon_save(void)
 		return FALSE;
 	}
 
-	if (!router_login(profile)) {
+	if (!rm_router_login(profile)) {
 		return FALSE;
 	}
 
@@ -565,7 +566,7 @@ gboolean fritzfon_save(void)
 	buffer = soup_buffer_new(SOUP_MEMORY_TAKE, data, len);
 
 	/* Create POST message */
-	gchar *url = g_strdup_printf("http://%s/cgi-bin/firmwarecfg", router_get_host(profile));
+	gchar *url = g_strdup_printf("http://%s/cgi-bin/firmwarecfg", rm_router_get_host(profile));
 	SoupMultipart *multipart = soup_multipart_new(SOUP_FORM_MIME_TYPE_MULTIPART);
 	soup_multipart_append_form_string(multipart, "sid", profile->router_info->session_id);
 	soup_multipart_append_form_string(multipart, "PhonebookId", g_settings_get_string(fritzfon_settings, "book-owner"));
@@ -595,8 +596,8 @@ gboolean fritzfon_remove_contact(RmContact *contact)
 void fritzfon_set_image(RmContact *contact)
 {
 	struct fritzfon_priv *priv = g_slice_new0(struct fritzfon_priv);
-	struct profile *profile = rm_profile_get_active();
-	RmFtp *client = rm_ftp_init(router_get_host(profile));
+	RmProfile *profile = rm_profile_get_active();
+	RmFtp *client = rm_ftp_init(rm_router_get_host(profile));
 	gchar *volume_path;
 	gchar *path;
 	gchar *file_name;
@@ -605,7 +606,7 @@ void fritzfon_set_image(RmContact *contact)
 	gsize size;
 
 	contact->priv = priv;
-	rm_ftp_login(client, router_get_ftp_user(profile), router_get_ftp_password(profile));
+	rm_ftp_login(client, rm_router_get_ftp_user(profile), rm_router_get_ftp_password(profile));
 
 	volume_path = g_settings_get_string(profile->settings, "fax-volume");
 	hash = g_strdup_printf("%s%s", volume_path, contact->image_uri);

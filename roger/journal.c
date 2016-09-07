@@ -29,7 +29,7 @@
 #include <glib/gstdio.h>
 
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/rmfilter.h>
@@ -40,6 +40,7 @@
 #include <libroutermanager/rmlookup.h>
 #include <libroutermanager/rmcsv.h>
 #include <libroutermanager/rmstring.h>
+#include <libroutermanager/rmjournal.h>
 
 #include <roger/main.h>
 #include <roger/phone.h>
@@ -243,7 +244,7 @@ void journal_redraw(void)
 	GtkWidget *status;
 	gchar *text = NULL;
 	gint count = 0;
-	struct profile *profile;
+	RmProfile *profile;
 	GtkListStore *list_store;
 
 	if (!journal_win) {
@@ -379,6 +380,7 @@ gpointer lookup_journal(gpointer user_data)
 
 	for (list = journal; list; list = list->next) {
 		RmCall *call = list->data;
+		RmLookup *lookup = rm_profile_get_lookup(rm_profile_get_active());
 		gchar *name = NULL;
 		gchar *street = NULL;
 		gchar *zip = NULL;
@@ -388,7 +390,7 @@ gpointer lookup_journal(gpointer user_data)
 			continue;
 		}
 
-		if (rm_lookup(call->remote->number, &name, &street, &zip, &city)) {
+		if (rm_lookup_search(lookup, call->remote->number, &name, &street, &zip, &city)) {
 			call->remote->name = name;
 			call->remote->street = street;
 			call->remote->zip = zip;
@@ -435,19 +437,19 @@ void journal_loaded_cb(RmObject *obj, GSList *journal, gpointer unused)
 static void journal_connection_notify_cb(RmObject *obj, RmConnection *connection, gpointer user_data)
 {
 	if (connection->type & RM_CONNECTION_TYPE_DISCONNECT) {
-		router_load_journal(rm_profile_get_active());
+		rm_router_load_journal(rm_profile_get_active());
 	}
 }
 
 gboolean journal_button_refresh_idle(gpointer data)
 {
-	struct profile *profile = rm_profile_get_active();
+	RmProfile *profile = rm_profile_get_active();
 
 	if (!profile) {
 		return FALSE;
 	}
 
-	if (router_load_journal(profile) == FALSE) {
+	if (rm_router_load_journal(profile) == FALSE) {
 		gtk_spinner_stop(GTK_SPINNER(spinner));
 		gtk_widget_hide(spinner);
 	}
@@ -489,7 +491,7 @@ void journal_button_clear_clicked_cb(GtkWidget *button, GtkWidget *view)
 		return;
 	}
 
-	router_clear_journal(rm_profile_get_active());
+	rm_router_clear_journal(rm_profile_get_active());
 }
 
 void delete_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
@@ -506,10 +508,10 @@ void delete_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, g
 		g_unlink(call->priv);
 		break;
 	case RM_CALL_TYPE_VOICE:
-		router_delete_voice(rm_profile_get_active(), call->priv);
+		rm_router_delete_voice(rm_profile_get_active(), call->priv);
 		break;
 	case RM_CALL_TYPE_FAX:
-		router_delete_fax(rm_profile_get_active(), call->priv);
+		rm_router_delete_fax(rm_profile_get_active(), call->priv);
 		break;
 	case RM_CALL_TYPE_FAX_REPORT:
 		g_unlink(call->priv);
@@ -547,7 +549,7 @@ void journal_button_delete_clicked_cb(GtkWidget *button, GtkWidget *view)
 
 	gtk_tree_selection_selected_foreach(selection, delete_foreach, NULL);
 
-	router_load_journal(rm_profile_get_active());
+	rm_router_load_journal(rm_profile_get_active());
 }
 
 void journal_add_contact(RmCall *call)
@@ -584,12 +586,12 @@ void search_entry_changed(GtkEditable *entry, GtkTreeView *view)
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 
 	if (journal_search_filter) {
-		rm_filter_free(journal_search_filter);
+		rm_filter_remove(rm_profile_get_active(), journal_search_filter);
 		journal_search_filter = NULL;
 	}
 
 	if (strlen(text)) {
-		journal_search_filter = rm_filter_new(rm_profile_add, "internal_search");
+		journal_search_filter = rm_filter_new(rm_profile_get_active(), "internal_search");
 
 		if (g_ascii_isdigit(text[0])) {
 			rm_filter_rule_add(journal_search_filter, RM_FILTER_REMOTE_NUMBER, RM_FILTER_CONTAINS, (gchar *)text);
@@ -666,7 +668,7 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 	case RM_CALL_TYPE_FAX_REPORT:
 	case RM_CALL_TYPE_FAX: {
 		gsize len = 0;
-		gchar *data = router_load_fax(rm_profile_get_active(), call->priv, &len);
+		gchar *data = rm_router_load_fax(rm_profile_get_active(), call->priv, &len);
 
 		if (data && len) {
 			gchar *path = g_build_filename(g_get_user_cache_dir(), G_DIR_SEPARATOR_S, "fax.pdf", NULL);

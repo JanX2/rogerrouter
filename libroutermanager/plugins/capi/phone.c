@@ -34,6 +34,7 @@
 #include <libroutermanager/rmphone.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/rmstring.h>
+#include <libroutermanager/rmnumber.h>
 #include <libroutermanager/rmobjectemit.h>
 
 

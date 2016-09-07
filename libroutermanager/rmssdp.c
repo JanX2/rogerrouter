@@ -19,12 +19,20 @@
 
 #include <libroutermanager/rmconfig.h>
 
+/**
+ * SECTION:rmssdp
+ * @Title: RmSsdp
+ * @Short_description: SSDP - Scans for router using SSDP
+ *
+ * SSDP scans for routers within the network using UPnP SSDP.
+ */
+
 #ifdef HAVE_SSDP
 
 #include <libgupnp/gupnp.h>
 #include <libgupnp/gupnp-device-info.h>
 
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmssdp.h>
 
 static GUPnPContextManager *rm_context_manager;
@@ -40,7 +48,7 @@ static GList *rm_routers = NULL;
  */
 static void rm_device_proxy_available_cb(GUPnPControlPoint *cp, GUPnPDeviceProxy *proxy)
 {
-	struct router_info *router_info = g_slice_new0(struct router_info);
+	RmRouterInfo *router_info = g_slice_new0(RmRouterInfo);
 	GUPnPDeviceInfo *info = GUPNP_DEVICE_INFO(proxy);
 	const SoupURI *uri;
 
@@ -48,7 +56,7 @@ static void rm_device_proxy_available_cb(GUPnPControlPoint *cp, GUPnPDeviceProxy
 	router_info->host = g_strdup(soup_uri_get_host((SoupURI*)uri));
 
 	/* Scan for router and add detected devices */
-	if (router_present(router_info) == TRUE) {
+	if (rm_router_present(router_info) == TRUE) {
 		rm_routers = g_list_append(rm_routers, router_info);
 	}
 }
@@ -73,13 +81,13 @@ static void rm_device_proxy_unavailable_cb(GUPnPControlPoint *cp, GUPnPDevicePro
 GList *rm_ssdp_get_routers(void)
 {
 	if (!rm_routers) {
-		struct router_info *router_info = g_slice_new0(struct router_info);
+		RmRouterInfo *router_info = g_slice_new0(RmRouterInfo);
 
 		/* Fallback - In case no rm_routers have been detected, try at least fritz.box manually */
 		router_info->host = g_strdup("fritz.box");
 
 		/* Scan for router and add detected devices */
-		if (router_present(router_info) == TRUE) {
+		if (rm_router_present(router_info) == TRUE) {
 			rm_routers = g_list_append(rm_routers, router_info);
 		}
 	}

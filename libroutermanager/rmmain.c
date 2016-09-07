@@ -26,7 +26,7 @@
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/rmfilter.h>
 #include <libroutermanager/rmprofile.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmobject.h>
 #include <libroutermanager/rmobjectemit.h>
@@ -52,6 +52,12 @@
 
 /** Private data pointing to the plugin directory */
 static gchar *rm_plugin_dir = NULL;
+/** Private data pointing to the config directory */
+static gchar *rm_user_config_dir = NULL;
+/** Private data pointing to the cache directory */
+static gchar *rm_user_cache_dir = NULL;
+/** Private data pointing to the data directory */
+static gchar *rm_user_data_dir = NULL;
 /** Requested user profile */
 static gchar *rm_requested_profile = NULL;
 
@@ -117,6 +123,9 @@ gchar *rm_get_directory(gchar *type)
 void rm_init_directory_paths(void)
 {
 	rm_plugin_dir = rm_get_directory(RM_PLUGINS);
+	rm_user_config_dir = g_build_filename(g_get_user_config_dir(), "routermanager", NULL);
+	rm_user_cache_dir = g_build_filename(g_get_user_cache_dir(), "routermanager", NULL);
+	rm_user_data_dir = g_build_filename(g_get_user_data_dir(), "routermanager", NULL);
 }
 
 /**
@@ -126,10 +135,45 @@ void rm_init_directory_paths(void)
  *
  * Returns: plugin directory string
  */
-static gchar *rm_get_plugin_dir(void)
+gchar *rm_get_plugin_dir(void)
 {
-	g_debug("plugin_dir = %s", rm_plugin_dir);
 	return rm_plugin_dir;
+}
+
+/**
+ * rm_get_user_config_dir:
+ *
+ * Return user config directory.
+ *
+ * Returns: user config directory string
+ */
+gchar *rm_get_user_config_dir(void)
+{
+	return rm_user_config_dir;
+}
+
+/**
+ * rm_get_user_cache_dir:
+ *
+ * Return user cache directory.
+ *
+ * Returns: user cache directory string
+ */
+gchar *rm_get_user_cache_dir(void)
+{
+	return rm_user_cache_dir;
+}
+
+/**
+ * rm_get_user_data_dir:
+ *
+ * Return user data directory.
+ *
+ * Returns: user data directory string
+ */
+gchar *rm_get_user_data_dir(void)
+{
+	return rm_user_data_dir;
 }
 
 /**
@@ -148,8 +192,11 @@ void rm_set_requested_profile(gchar *name)
 }
 
 /**
- * \brief Get requested profile
- * \return requested profile name
+ * rm_get_requested_profile:
+ *
+ * Get requested profile.
+ *
+ * Returns: requested profile name
  */
 gchar *rm_get_requested_profile(void)
 {
@@ -157,14 +204,16 @@ gchar *rm_get_requested_profile(void)
 }
 
 /**
- * \brief Create routermanager
- * \param debug enable debug output
- * \return TRUE on success, FALSE on error
+ * rm_new:
+ * @debug: enable debug output
+ * @error: a #GError
+ *
+ * Create routermanager.
+ *
+ * Returns: %TRUE on success, %FALSE on error
  */
 gboolean rm_new(gboolean debug, GError **error)
 {
-	gchar *dir;
-
 	/* Init directory path */
 	rm_init_directory_paths();
 
@@ -174,14 +223,10 @@ gboolean rm_new(gboolean debug, GError **error)
 	/* Say hello */
 	g_info("%s %s", PACKAGE_NAME, PACKAGE_VERSION);
 
-	/* Create routermanager data & cache directory */
-	dir = g_build_filename(g_get_user_data_dir(), "routermanager", NULL);
-	g_mkdir_with_parents(dir, 0700);
-	g_free(dir);
-
-	dir = g_build_filename(g_get_user_cache_dir(), "routermanager", NULL);
-	g_mkdir_with_parents(dir, 0700);
-	g_free(dir);
+	/* Create routermanager data & cache & config directory */
+	g_mkdir_with_parents(rm_get_user_config_dir(), 0700);
+	g_mkdir_with_parents(rm_get_user_cache_dir(), 0700);
+	g_mkdir_with_parents(rm_get_user_data_dir(), 0700);
 
 	/* Create main app object (signals) */
 	rm_object = rm_object_new();
@@ -196,7 +241,7 @@ gboolean rm_new(gboolean debug, GError **error)
  *
  * Initialize routermanager.
  *
- * Returns: TRUE on success, FALSE on error
+ * Returns: %TRUE on success, %FALSE on error
  */
 gboolean rm_init(GError **error)
 {
@@ -221,7 +266,7 @@ gboolean rm_init(GError **error)
 	}
 
 	/* Initialize router */
-	if (!router_init()) {
+	if (!rm_router_init()) {
 		g_set_error(error, RM_ERROR, RM_ERROR_ROUTER, "%s", "Failed to initialize router");
 		return FALSE;
 	}
@@ -247,7 +292,6 @@ gboolean rm_init(GError **error)
  * - Router
  * - Plugins
  * - Network
- * - Filter
  * - AppObject
  * - Log
  */
@@ -263,7 +307,7 @@ void rm_shutdown(void)
 	rm_profile_shutdown();
 
 	/* Shutdown router */
-	router_shutdown();
+	rm_router_shutdown();
 
 	/* Shutdown plugins */
 	rm_plugins_shutdown();

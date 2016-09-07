@@ -27,7 +27,7 @@
 #include <libroutermanager/rmcsv.h>
 #include <libroutermanager/rmlog.h>
 #include <libroutermanager/rmnetwork.h>
-#include <libroutermanager/router.h>
+#include <libroutermanager/rmrouter.h>
 #include <libroutermanager/rmplugins.h>
 
 #include <libsoup/soup.h>
@@ -54,7 +54,7 @@ ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_FRITZBOX_PLUGIN, RouterManagerF
  * \param profile profile information structure
  * \return error code
  */
-gboolean fritzbox_login(struct profile *profile)
+gboolean fritzbox_login(RmProfile *profile)
 {
 	if (FIRMWARE_IS(5, 50)) {
 		/* Session-ID based on login_sid.lua */
@@ -79,7 +79,7 @@ gboolean fritzbox_login(struct profile *profile)
  * \param profile profile information structure
  * \return error code
  */
-gboolean fritzbox_get_settings(struct profile *profile)
+gboolean fritzbox_get_settings(RmProfile *profile)
 {
 	if (fritzbox_get_settings_query(profile)) {
 		return TRUE;
@@ -106,7 +106,7 @@ gboolean fritzbox_get_settings(struct profile *profile)
  * \param data_ptr data pointer to optional store journal to
  * \return error code
  */
-gboolean fritzbox_load_journal(struct profile *profile, gchar **data_ptr)
+gboolean fritzbox_load_journal(RmProfile *profile, gchar **data_ptr)
 {
 	gboolean ret = FALSE;
 
@@ -124,7 +124,7 @@ gboolean fritzbox_load_journal(struct profile *profile, gchar **data_ptr)
  * \param profile profile info structure
  * \return error code
  */
-gboolean fritzbox_clear_journal(struct profile *profile)
+gboolean fritzbox_clear_journal(RmProfile *profile)
 {
 	if (!profile) {
 		return FALSE;
@@ -148,7 +148,7 @@ gboolean fritzbox_clear_journal(struct profile *profile)
  * \param number remote number
  * \return TRUE on success, otherwise FALSE
  */
-gboolean fritzbox_dial_number(struct profile *profile, gint port, const gchar *number)
+gboolean fritzbox_dial_number(RmProfile *profile, gint port, const gchar *number)
 {
 	if (!profile) {
 		return FALSE;
@@ -172,7 +172,7 @@ gboolean fritzbox_dial_number(struct profile *profile, gint port, const gchar *n
  * \param number remote number
  * \return TRUE on success, otherwise FALSE
  */
-gboolean fritzbox_hangup(struct profile *profile, gint port, const gchar *number)
+gboolean fritzbox_hangup(RmProfile *profile, gint port, const gchar *number)
 {
 	if (!profile) {
 		return FALSE;
@@ -190,7 +190,7 @@ gboolean fritzbox_hangup(struct profile *profile, gint port, const gchar *number
 }
 
 /** FRITZ!Box router functions */
-static struct router fritzbox = {
+static RmRouter fritzbox = {
 	"FRITZ!Box",
 	fritzbox_present,
 	fritzbox_login,
@@ -215,7 +215,7 @@ static struct router fritzbox = {
 static void impl_activate(PeasActivatable *plugin)
 {
 	/* Register router structure */
-	routermanager_router_register(&fritzbox);
+	rm_router_register(&fritzbox);
 }
 
 /**

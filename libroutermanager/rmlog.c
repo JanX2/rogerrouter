@@ -25,6 +25,7 @@
 
 #include <libroutermanager/rmlog.h>
 #include <libroutermanager/rmfile.h>
+#include <libroutermanager/rmmain.h>
 
 /**
  * SECTION:rmlog
@@ -55,7 +56,7 @@ void rm_log_save_data(gchar *name, const gchar *data, gsize len)
 		return;
 	}
 
-	file = g_build_filename(g_get_user_cache_dir(), "routermanager", name, NULL);
+	file = g_build_filename(rm_get_user_cache_dir(), name, NULL);
 	rm_file_save(file, data, len);
 
 	g_free(file);
@@ -137,7 +138,7 @@ void rm_log_init(gboolean debug)
 		return;
 	}
 
-	filename = g_build_filename(g_get_user_cache_dir(), "routermanager", "debug.log", NULL);
+	filename = g_build_filename(rm_get_user_cache_dir(), "debug.log", NULL);
 
 	gchar *dirname = g_path_get_dirname(filename);
 	g_mkdir_with_parents(dirname, 0700);
