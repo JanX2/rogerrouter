@@ -25,6 +25,14 @@
 #include <libroutermanager/rmdevicefax.h>
 #include <libroutermanager/rmstring.h>
 
+/**
+ * SECTION:rmdevicefax
+ * @title: RmDeviceFax
+ * @short_description: Fax device implementation
+ *
+ * Wrapper for fax device functions.
+ */
+
 /** Internal fax list */
 static GSList *rm_fax_plugins = NULL;
 

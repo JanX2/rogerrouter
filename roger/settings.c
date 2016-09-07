@@ -82,6 +82,9 @@ struct settings {
 	GtkWidget *audio_input_combobox;
 	GtkWidget *security_plugin_combobox;
 	GtkWidget *address_book_plugin_combobox;
+	GtkWidget *notification_plugin_combobox;
+	GtkWidget *notification_play_ringtone_switch;
+	GtkListStore *notification_liststore;
 };
 
 static struct settings *settings = NULL;
@@ -220,7 +223,7 @@ void filter_refresh_list(GtkListStore *list_store)
 {
 	GSList *list;
 
-	for (list = rm_filter_get_list(); list != NULL; list = list->next) {
+	for (list = rm_filter_get_list(rm_profile_get_active()); list != NULL; list = list->next) {
 		GtkTreeIter iter;
 		RmFilter *filter = list->data;
 
@@ -583,7 +586,6 @@ void filter_edit_button_clicked_cb(GtkWidget *widget, gpointer data)
 	filter_refresh_list(list_store);
 
 	journal_update_filter();
-	rm_filter_save();
 }
 
 /**
@@ -619,7 +621,7 @@ void filter_remove_button_clicked_cb(GtkWidget *widget, gpointer data)
 		return;
 	}
 
-	rm_filter_remove(filter);
+	rm_filter_remove(rm_profile_get_active(), filter);
 
 	g_value_unset(&ptr);
 
@@ -628,7 +630,6 @@ void filter_remove_button_clicked_cb(GtkWidget *widget, gpointer data)
 	filter_refresh_list(list_store);
 
 	journal_update_filter();
-	rm_filter_save();
 }
 
 
@@ -705,9 +706,8 @@ void filter_add_button_clicked_cb(GtkWidget *widget, gpointer data)
 
 	const gchar *name = gtk_entry_get_text(GTK_ENTRY(entry));
 
-	filter = rm_filter_new(name);
+	filter = rm_filter_new(rm_profile_get_active(), name);
 	filter->rules = pref_filters_current_rules;
-	rm_filter_add(filter);
 
 	gtk_widget_destroy(dialog);
 
@@ -717,7 +717,6 @@ void filter_add_button_clicked_cb(GtkWidget *widget, gpointer data)
 	filter_refresh_list(list_store);
 
 	journal_update_filter();
-	rm_filter_save();
 }
 
 static RmAction *selected_action = NULL;
@@ -1300,6 +1299,137 @@ void settings_fill_address_book_plugin_combobox(struct settings *settings)
 	}
 }
 
+static void settings_notification_refresh_list(GtkListStore *list_store)
+{
+	RmProfile *profile = rm_profile_get_active();
+	gchar **numbers = router_get_numbers(profile);
+	GtkTreeIter iter;
+	gint count;
+	gint index;
+	gchar **selected_outgoing_numbers;
+	gchar **selected_incoming_numbers;
+
+	selected_outgoing_numbers = rm_profile_get_notification_outgoing_numbers(profile);
+	selected_incoming_numbers = rm_profile_get_notification_incoming_numbers(profile);
+
+	for (index = 0; index < g_strv_length(numbers); index++) {
+		gtk_list_store_append(list_store, &iter);
+		gtk_list_store_set(list_store, &iter, 0, numbers[index], -1);
+		gtk_list_store_set(list_store, &iter, 1, FALSE, -1);
+		gtk_list_store_set(list_store, &iter, 2, FALSE, -1);
+
+		if (selected_outgoing_numbers) {
+			for (count = 0; count < g_strv_length(selected_outgoing_numbers); count++) {
+				if (!strcmp(numbers[index], selected_outgoing_numbers[count])) {
+					gtk_list_store_set(list_store, &iter, 1, TRUE, -1);
+					break;
+				}
+			}
+		}
+
+		if (selected_incoming_numbers) {
+			for (count = 0; count < g_strv_length(selected_incoming_numbers); count++) {
+				if (!strcmp(numbers[index], selected_incoming_numbers[count])) {
+					gtk_list_store_set(list_store, &iter, 2, TRUE, -1);
+					break;
+				}
+			}
+		}
+	}
+}
+
+void settings_notification_outgoing_toggled_cb(GtkCellRendererToggle *toggle, gchar *path_str, gpointer user_data)
+{
+	GtkListStore *liststore = user_data;
+	GtkTreeModel *model = GTK_TREE_MODEL(liststore);
+	GtkTreePath *path = gtk_tree_path_new_from_string(path_str);
+	GtkTreeIter iter;
+	GValue iter_value = {0};
+	GValue name_value = {0};
+	gboolean dial;
+	gint count = 0;
+	gchar **selected_outgoing_numbers = NULL;
+
+	gtk_tree_model_get_iter(model, &iter, path);
+	gtk_tree_model_get(model, &iter, 1, &dial, -1);
+
+	dial ^= 1;
+	gtk_list_store_set(GTK_LIST_STORE(model), &iter, 1, dial, -1);
+
+	if (gtk_tree_model_get_iter_first(model, &iter)) {
+		do {
+			gtk_tree_model_get_value(model, &iter, 1, &iter_value);
+			gtk_tree_model_get_value(model, &iter, 0, &name_value);
+
+			if (g_value_get_boolean(&iter_value)) {
+				selected_outgoing_numbers = g_realloc(selected_outgoing_numbers, (count + 1) * sizeof(char *));
+				selected_outgoing_numbers[count] = g_strdup(g_value_get_string(&name_value));
+				count++;
+			}
+
+			g_value_unset(&iter_value);
+			g_value_unset(&name_value);
+		} while (gtk_tree_model_iter_next(model, &iter));
+	} else {
+		g_debug("FAILED");
+	}
+
+	/* Terminate array */
+	selected_outgoing_numbers = g_realloc(selected_outgoing_numbers, (count + 1) * sizeof(char *));
+	selected_outgoing_numbers[count] = NULL;
+
+	gtk_tree_path_free(path);
+
+	//g_settings_set_strv(notification_gtk_settings, "outgoing-numbers", (const gchar * const *) selected_outgoing_numbers);
+	rm_profile_set_notification_outgoing_numbers(rm_profile_get_active(), (const gchar * const *) selected_outgoing_numbers);
+}
+
+void settings_notification_incoming_toggled_cb(GtkCellRendererToggle *toggle, gchar *path_str, gpointer user_data)
+{
+	GtkListStore *liststore = user_data;
+	GtkTreeModel *model = GTK_TREE_MODEL(liststore);
+	GtkTreePath *path = gtk_tree_path_new_from_string(path_str);
+	GtkTreeIter iter;
+	GValue iter_value = {0};
+	GValue name_value = {0};
+	gboolean dial;
+	gint count = 0;
+	gchar **selected_incoming_numbers = NULL;
+
+	gtk_tree_model_get_iter(model, &iter, path);
+	gtk_tree_model_get(model, &iter, 2, &dial, -1);
+
+	dial ^= 1;
+	gtk_list_store_set(GTK_LIST_STORE(model), &iter, 2, dial, -1);
+
+	if (gtk_tree_model_get_iter_first(model, &iter)) {
+		do {
+			gtk_tree_model_get_value(model, &iter, 2, &iter_value);
+			gtk_tree_model_get_value(model, &iter, 0, &name_value);
+
+			if (g_value_get_boolean(&iter_value)) {
+				selected_incoming_numbers = g_realloc(selected_incoming_numbers, (count + 1) * sizeof(char *));
+				selected_incoming_numbers[count] = g_strdup(g_value_get_string(&name_value));
+				count++;
+			}
+
+			g_value_unset(&iter_value);
+			g_value_unset(&name_value);
+		} while (gtk_tree_model_iter_next(model, &iter));
+	} else {
+		g_debug("FAILED");
+	}
+
+	/* Terminate array */
+	selected_incoming_numbers = g_realloc(selected_incoming_numbers, (count + 1) * sizeof(char *));
+	selected_incoming_numbers[count] = NULL;
+
+	gtk_tree_path_free(path);
+
+	//g_settings_set_strv(notification_gtk_settings, "incoming-numbers", (const gchar * const *) selected_incoming_numbers);
+	rm_profile_set_notification_incoming_numbers(rm_profile_get_active(), (const gchar * const *) selected_incoming_numbers);
+}
+
 void settings_notebook_switch_page_cb(GtkNotebook *notebook, GtkWidget *page, guint page_num, gpointer user_data)
 {
 	struct profile *profile;
@@ -1331,6 +1461,7 @@ void app_show_settings(void)
 	gchar **numbers;
 	gint idx;
 	GSList *audio_plugins;
+	GSList *notification_plugins;
 	GSList *list;
 
 	if (settings) {
@@ -1535,6 +1666,30 @@ void app_show_settings(void)
 	settings->address_book_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "address_book_plugin_combobox"));
 	//settings_fill_address_book_plugin_combobox(settings);
 	//g_settings_bind(profile->settings, "address-book", settings->address_book_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+
+	/* Notification group */
+	settings->notification_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "notification_plugin_combobox"));
+
+	notification_plugins = rm_notification_get_plugins();
+	for (list = notification_plugins; list != NULL; list = list->next) {
+		RmNotification *notification = list->data;
+		gchar *name;
+
+		g_assert(notification != NULL);
+
+		name = rm_notification_get_name(notification);
+
+		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->notification_plugin_combobox), name, name);
+		g_free(name);
+	}
+
+	g_settings_bind(profile->settings, "notification-plugin", settings->notification_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+
+	settings->notification_play_ringtone_switch = GTK_WIDGET(gtk_builder_get_object(builder, "notification_play_ringtone_switch"));
+	g_settings_bind(profile->settings, "notification-play-ringtone", settings->notification_play_ringtone_switch, "active", G_SETTINGS_BIND_DEFAULT);
+
+	settings->notification_liststore = GTK_LIST_STORE(gtk_builder_get_object(builder, "notification_liststore"));
+	settings_notification_refresh_list(settings->notification_liststore);
 
 	/* Header bar information */
 	box_name = router_get_name(profile);

@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -389,7 +389,7 @@ gboolean router_clear_journal(struct profile *profile)
  */
 gboolean router_dial_number(struct profile *profile, gint port, const gchar *number)
 {
-	gchar *target = rm_call_canonize_number(number);
+	gchar *target = rm_number_canonize(number);
 	gboolean ret;
 
 	ret = active_router->dial_number(profile, port, target);
@@ -460,10 +460,10 @@ void router_process_journal(GSList *journal)
 	GSList *list;
 
 	/* Parse offline journal and combine new entries */
-	journal = rm_csv_load_journal(journal);
+	journal = rm_journal_load(journal);
 
 	/* Store it back to disk */
-	rm_csv_save_journal(journal);
+	rm_journal_save(journal);
 
 	/* Try to lookup entries in address book */
 	for (list = journal; list; list = list->next) {
@@ -614,6 +614,7 @@ GSList *router_load_fax_reports(struct profile *profile, GSList *journal)
 	}
 
 	while ((file_name = g_dir_read_name(dir))) {
+		RmCall *call;
 		gchar *uri;
 		gchar **split;
 		gchar *date_time;
@@ -631,7 +632,9 @@ GSList *router_load_fax_reports(struct profile *profile, GSList *journal)
 		uri = g_build_filename(dir_name, file_name, NULL);
 
 		date_time = g_strdup_printf("%s.%s.%s %2.2s:%2.2s", split[3], split[4], split[5] + 2, split[6], split[7]);
-		journal = rm_call_add(journal, RM_CALL_TYPE_FAX_REPORT, date_time, "", split[2], ("Fax-Report"), split[1], "0:01", g_strdup(uri));
+
+		call = rm_call_new(RM_CALL_TYPE_FAX_REPORT, date_time, "", split[2], ("Fax-Report"), split[1], "0:01", g_strdup(uri));
+		journal = rm_journal_add_call(journal, call);
 
 		g_free(uri);
 		g_strfreev(split);
@@ -665,6 +668,7 @@ GSList *router_load_voice_records(struct profile *profile, GSList *journal)
 	}
 
 	while ((file_name = g_dir_read_name(dir))) {
+		RmCall *call;
 		gchar *uri;
 		gchar **split;
 		gchar *date_time;
@@ -691,7 +695,9 @@ GSList *router_load_voice_records(struct profile *profile, GSList *journal)
 
 		//date_time = g_strdup_printf("%s.%s.%s %2.2s:%2.2s", split[3], split[4], split[5] + 2, split[6], split[7]);
 		date_time = g_strdup_printf("%s %2.2s:%2.2s", split[0], split[1], split[2]);
-		journal = rm_call_add(journal, RM_CALL_TYPE_RECORD, date_time, "", num, ("Record"), split[3], "0:01", g_strdup(uri));
+
+		call = rm_call_new(RM_CALL_TYPE_RECORD, date_time, "", num, ("Record"), split[3], "0:01", g_strdup(uri));
+		journal = rm_journal_add_call(journal, call);
 
 		g_free(uri);
 		g_strfreev(split);

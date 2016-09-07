@@ -30,6 +30,7 @@
 #include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/rmaudio.h>
 #include <libroutermanager/rmsettings.h>
+#include <libroutermanager/rmnotification.h>
 
 /**
  * SECTION:rmprofile
@@ -206,6 +207,9 @@ void rm_profile_set_active(RmProfile *profile)
 	/* Shut profile actions down */
 	rm_action_shutdown(rm_profile_active);
 
+	/* Shut profile filter down */
+	rm_filter_shutdown(rm_profile_active);
+
 	rm_profile_active = profile;
 
 	/* If we have no active profile, exit */
@@ -222,8 +226,11 @@ void rm_profile_set_active(RmProfile *profile)
 	/* Load and initialize action */
 	rm_action_init(profile);
 
+	/* Load and initialize filters */
+	rm_filter_init(profile);
+
 	/* Load journal list */
-	router_load_journal(rm_profile_active);
+	router_load_journal(profile);
 }
 
 /**
@@ -419,4 +426,81 @@ RmAudio *rm_profile_get_audio(RmProfile *profile)
 	g_free(name);
 
 	return audio;
+}
+
+/**
+ * rm_profile_get_notification:
+ * @profile: a #RmProfile
+ *
+ * Get notification for selected profile.
+ */
+RmNotification *rm_profile_get_notification(RmProfile *profile)
+{
+	RmNotification *notification;
+	gchar *name = g_settings_get_string(profile->settings, "notification-plugin");
+
+	notification = rm_notification_get(name);
+	g_debug("%s(): notification = %p (%s)", __FUNCTION__, notification, name);
+
+	g_free(name);
+
+	return notification;
+}
+
+/**
+ * rm_profile_get_notification_ringtone:
+ * @profile: a #RmProfile
+ *
+ * Get notification ringtone setting for selected profile.
+ */
+gboolean rm_profile_get_notification_ringtone(RmProfile *profile)
+{
+	//return g_settings_get_boolean(profile->settings, "notification-ringtone");
+	return FALSE;
+}
+
+/**
+ * rm_profile_get_notification_incoming_numbers:
+ * @profile: a #RmProfile
+ *
+ * Get notification incoming numbers for selected profile.
+ */
+gchar **rm_profile_get_notification_incoming_numbers(RmProfile *profile)
+{
+	return g_settings_get_strv(profile->settings, "notification-incoming-numbers");
+}
+
+/**
+ * rm_profile_get_notification_outgoing_numbers:
+ * @profile: a #RmProfile
+ *
+ * Get notification outgoing numbers for selected profile.
+ */
+gchar **rm_profile_get_notification_outgoing_numbers(RmProfile *profile)
+{
+	return g_settings_get_strv(profile->settings, "notification-outgoing-numbers");
+}
+
+/**
+ * rm_profile_set_notification_incoming_numbers:
+ * @profile: a #RmProfile
+ * @numbers: numbers to set
+ *
+ * Set notification incoming numbers for selected profile.
+ */
+void rm_profile_set_notification_incoming_numbers(RmProfile *profile, const gchar * const* numbers)
+{
+	g_settings_set_strv(profile->settings, "notification-incoming-numbers", numbers);
+}
+
+/**
+ * rm_profile_get_notification_outgoing_numbers:
+ * @profile: a #RmProfile
+ * @numbers: numbers to set
+ *
+ * Set notification outgoing numbers for selected profile.
+ */
+void rm_profile_set_notification_outgoing_numbers(RmProfile *profile, const gchar * const* numbers)
+{
+	g_settings_set_strv(profile->settings, "notification-outgoing-numbers", numbers);
 }

@@ -96,7 +96,7 @@ static int osxab_read_book(void) {
 		CFTypeRef phones = ABRecordCopyValue(person, kABPhoneProperty);
 		CFTypeRef uid = ABRecordCopyUniqueId(person);
 		gchar *lastname_cstr;
-		struct contact *contact;
+		RmContact *contact;
 
 		if (!firstName && !lastName) {
 			/* Company... */
@@ -106,7 +106,7 @@ static int osxab_read_book(void) {
 			firstName = company;
 		}
 
-		contact = g_slice_new0(struct contact);
+		contact = g_slice_new0(RmContact);
 		contact->priv = (gpointer)uid;
 		g_debug("Uid: %s", cstring(contact->priv));
 
@@ -123,7 +123,7 @@ static int osxab_read_book(void) {
 				CFStringRef street = CFDictionaryGetValue(an_address, kABAddressStreetKey);
 				CFStringRef city = CFDictionaryGetValue(an_address, kABAddressCityKey);
 				CFStringRef zip = CFDictionaryGetValue(an_address, kABAddressZIPKey);
-				struct contact_address *address = g_slice_new0(struct contact_address);
+				RmContactAddress *address = g_slice_new0(RmContactAddress);
 				gchar *tmp;
 
 				address->type = CFStringCompare(label, kABHomeLabel, 0);
@@ -200,7 +200,7 @@ gboolean osxab_reload_contacts(void)
 	return TRUE;
 }
 
-static gboolean osxab_remove_contact(struct contact *contact)
+static gboolean osxab_remove_contact(RmContact *contact)
 {
 	ABAddressBookRef ab = ABGetSharedAddressBook();
 	ABPersonRef ref;
@@ -219,7 +219,7 @@ static gboolean osxab_remove_contact(struct contact *contact)
 	return ret;
 }
 
-static gboolean osxab_save_contact(struct contact *contact)
+static gboolean osxab_save_contact(RmContact *contact)
 {
 	ABAddressBookRef ab = ABGetSharedAddressBook();
 	ABPersonRef ref;
@@ -290,7 +290,7 @@ static gboolean osxab_save_contact(struct contact *contact)
 		for (list = contact->addresses; list != NULL; list = list->next) {
 			CFMutableDictionaryRef dic;
 			CFTypeRef type;
-			struct contact_address *address = list->data;
+			RmContactAddress *address = list->data;
 
 			switch (address->type) {
 			case 0:

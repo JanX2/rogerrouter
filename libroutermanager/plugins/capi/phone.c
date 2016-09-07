@@ -161,7 +161,7 @@ static RmConnection *capi_phone_dial(const char *trg_no, gboolean anonymous)
 		return NULL;
 	}
 
-	target = rm_call_canonize_number(trg_no);
+	target = rm_number_canonize(trg_no);
 
 	capi_connection = capi_call(controller, src_no, target, anonymous, SESSION_PHONE, PHONE_CIP, 1, 1, 0, NULL, NULL, NULL);
 

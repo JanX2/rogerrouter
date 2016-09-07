@@ -125,10 +125,10 @@ RmConnection *rm_connection_add(gint id, RmConnectionType type, const gchar *loc
 		gchar *scramble_local;
 		gchar *scramble_remote;
 
-		scramble_local = rm_call_scramble_number(connection->local_number);
-		scramble_remote = rm_call_scramble_number(connection->remote_number);
+		scramble_local = rm_number_scramble(connection->local_number);
+		scramble_remote = rm_number_scramble(connection->remote_number);
 
-		g_debug("Adding connection: type %d, local %s, remote %s", connection->type, scramble_local, scramble_remote);
+		g_debug("%s(): type = %d, local = %s, remote = %s", __FUNCTION__, connection->type, scramble_local, scramble_remote);
 
 		g_free(scramble_local);
 		g_free(scramble_remote);

@@ -32,6 +32,7 @@
 #include <libroutermanager/rmcsv.h>
 #include <libroutermanager/rmftp.h>
 #include <libroutermanager/rmcall.h>
+#include <libroutermanager/rmnumber.h>
 #include <libroutermanager/rmstring.h>
 
 #include "fritzbox.h"
@@ -146,7 +147,7 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 
 	json_reader_read_member(reader, "FaxKennung");
 	const gchar *fax_ident = json_reader_get_string_value(reader);
-	scramble = rm_call_scramble_number(fax_ident);
+	scramble = rm_number_scramble(fax_ident);
 	g_debug("FaxKennung: %s", scramble);
 	g_free(scramble);
 	g_settings_set_string(profile->settings, "fax-header", fax_ident);
@@ -160,13 +161,13 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 
 	json_reader_read_member(reader, "FaxMSN0");
 	const gchar *fax_msn = json_reader_get_string_value(reader);
-	scramble = rm_call_scramble_number(fax_msn);
+	scramble = rm_number_scramble(fax_msn);
 	g_debug("FaxMSN0: %s", scramble);
 	g_free(scramble);
 	g_settings_set_string(profile->settings, "fax-number", fax_msn);
 	json_reader_end_member(reader);
 
-	gchar *formated_number = rm_call_format_number(profile, fax_msn, RM_NUMBER_FORMAT_INTERNATIONAL_PLUS);
+	gchar *formated_number = rm_number_format(profile, fax_msn, RM_NUMBER_FORMAT_INTERNATIONAL_PLUS);
 	g_settings_set_string(profile->settings, "fax-ident", formated_number);
 	g_free(formated_number);
 
@@ -255,7 +256,7 @@ gboolean fritzbox_get_settings_query(struct profile *profile)
 		json_reader_end_member(reader);
 
 		if (!RM_EMPTY_STRING(tmp)) {
-			scramble = rm_call_scramble_number(tmp);
+			scramble = rm_number_scramble(tmp);
 			g_debug(" MSN: %s", scramble);
 			g_free(scramble);
 			phones++;

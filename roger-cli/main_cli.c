@@ -29,6 +29,7 @@
 #include <libroutermanager/rmlog.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmstring.h>
+#include <libroutermanager/rmcall.h>
 
 //#include <libroutermanager/libfaxophone/faxophone.h>
 #include <libroutermanager/plugins/capi/fax.h>

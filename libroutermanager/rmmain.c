@@ -165,11 +165,6 @@ gboolean rm_new(gboolean debug, GError **error)
 {
 	gchar *dir;
 
-#if !GLIB_CHECK_VERSION(2, 36, 0)
-	/* Init g_type */
-	g_type_init();
-#endif
-
 	/* Init directory path */
 	rm_init_directory_paths();
 
@@ -177,7 +172,7 @@ gboolean rm_new(gboolean debug, GError **error)
 	rm_log_init(debug);
 
 	/* Say hello */
-	g_debug("%s %s", PACKAGE_NAME, PACKAGE_VERSION);
+	g_info("%s %s", PACKAGE_NAME, PACKAGE_VERSION);
 
 	/* Create routermanager data & cache directory */
 	dir = g_build_filename(g_get_user_data_dir(), "routermanager", NULL);
@@ -205,9 +200,6 @@ gboolean rm_new(gboolean debug, GError **error)
  */
 gboolean rm_init(GError **error)
 {
-	/* Init filter */
-	rm_filter_init();
-
 	/* Init fax printer */
 	if (!rm_faxprinter_init(error)) {
 		return FALSE;
@@ -240,6 +232,9 @@ gboolean rm_init(GError **error)
 	/* Initialize network monitor */
 	rm_netmonitor_init();
 
+	/* Initialize notifications */
+	rm_notification_init();
+
 	return TRUE;
 }
 
@@ -258,6 +253,9 @@ gboolean rm_init(GError **error)
  */
 void rm_shutdown(void)
 {
+	/* Shutdown notifications */
+	rm_notification_shutdown();
+
 	/* Shutdown network monitor */
 	rm_netmonitor_shutdown();
 
@@ -272,9 +270,6 @@ void rm_shutdown(void)
 
 	/* Shutdown network */
 	rm_network_shutdown();
-
-	/* Shutdown filter */
-	rm_filter_shutdown();
 
 	/* Destroy rm_object */
 	g_clear_object(&rm_object);

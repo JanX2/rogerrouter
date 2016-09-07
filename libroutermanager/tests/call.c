@@ -11,22 +11,22 @@ static void test_scramble_call(void)
 	gchar *result;
 
 	/* Check full number */
-	result = rm_call_scramble_number(number);
+	result = rm_number_scramble(number);
 	g_assert_cmpstr(result, ==, "01XXXXXX8");
 	g_free(result);
 
 	/* Check for empty string */
-	result = rm_call_scramble_number("");
+	result = rm_number_scramble("");
 	g_assert_cmpstr(result, ==, "");
 	g_free(result);
 
 	/* Check for short number */
-	result = rm_call_scramble_number("12");
+	result = rm_number_scramble("12");
 	g_assert_cmpstr(result, ==, "12");
 	g_free(result);
 
 	/* Check for invalid argument */
-	result = rm_call_scramble_number(NULL);
+	result = rm_number_scramble(NULL);
 	g_assert_cmpstr(result, ==, "");
 	g_free(result);
 }
@@ -35,14 +35,14 @@ static void test_rm_call_canonize_number(void)
 {
 	gchar *number = "0123akjhdsg\"=\"§)(/!4567§/(!&(/&!ÄÖX;AS  8\n\r\"";
 
-	g_assert_cmpstr(rm_call_canonize_number(number), ==, "012345678");
+	g_assert_cmpstr(rm_number_canonize(number), ==, "012345678");
 }
 
 static void test_rm_call_full_number(void)
 {
 	gchar *number = "040123456";
 
-	g_assert_cmpstr(rm_call_full_number(number, FALSE), ==, "040123456");
+	g_assert_cmpstr(rm_number_full(number, FALSE), ==, "040123456");
 }
 
 int main(int argc, char **argv)

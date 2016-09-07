@@ -487,12 +487,12 @@ void back_button_clicked_cb(GtkWidget *next, gpointer user_data)
 
 		gtk_widget_destroy(assistant->window);
 
-		g_slice_free(struct assistant, assistant);
-		assistant = NULL;
-
 		if (assistant->profile) {
 			rm_profile_remove(assistant->profile);
 		}
+
+		g_slice_free(struct assistant, assistant);
+		assistant = NULL;
 
 		/* In case no profile is active and assistant is aborted, exit application */
 		if (!profile) {

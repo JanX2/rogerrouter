@@ -148,7 +148,7 @@ static void process_first_last_name(struct vcard_data *card_data)
  * \brief Process formatted name structure
  * \param card_data pointer to card structure
  */
-static void process_formatted_name(struct vcard_data *card_data, struct contact *contact)
+static void process_formatted_name(struct vcard_data *card_data, RmContact *contact)
 {
 	GString *str;
 	gint len = 0;
@@ -241,7 +241,7 @@ static void process_title(struct vcard_data *card_data)
  * \param card_data pointer to card structure
  * \param contact contact structure
  */
-static void process_uid(struct vcard_data *card_data, struct contact *contact)
+static void process_uid(struct vcard_data *card_data, RmContact *contact)
 {
 	gint len = 0;
 	gint index = 0;
@@ -274,9 +274,9 @@ static void process_uid(struct vcard_data *card_data, struct contact *contact)
  * \brief Process address structure
  * \param card_data pointer to card structure
  */
-static void process_address(struct vcard_data *card_data, struct contact *contact)
+static void process_address(struct vcard_data *card_data, RmContact *contact)
 {
-	struct contact_address *address;
+	RmContactAddress *address;
 	GString *tmp_str;
 	gchar *tmp = NULL;
 
@@ -289,7 +289,7 @@ static void process_address(struct vcard_data *card_data, struct contact *contac
 		return;
 	}
 
-	address = g_slice_new0(struct contact_address);
+	address = g_slice_new0(RmContactAddress);
 
 	tmp = card_data->entry;
 
@@ -362,7 +362,7 @@ static void process_address(struct vcard_data *card_data, struct contact *contac
  * \brief Process telephone structure
  * \param card_data pointer to card structure
  */
-static void process_telephone(struct vcard_data *card_data, struct contact *contact)
+static void process_telephone(struct vcard_data *card_data, RmContact *contact)
 {
 	gchar *tmp = card_data->entry;
 	struct phone_number *number;
@@ -409,7 +409,7 @@ static void process_telephone(struct vcard_data *card_data, struct contact *cont
 		tmp++;
 	}
 
-	number->number = rm_call_full_number(number_str->str, FALSE);
+	number->number = rm_number_full(number_str->str, FALSE);
 	g_string_free(number_str, FALSE);
 
 	contact->numbers = g_slist_prepend(contact->numbers, number);
@@ -420,7 +420,7 @@ static void process_telephone(struct vcard_data *card_data, struct contact *cont
  * \param card_data pointer to card structure
  * \param contact contact structure
  */
-static void process_photo(struct vcard_data *card_data, struct contact *contact)
+static void process_photo(struct vcard_data *card_data, RmContact *contact)
 {
 	GdkPixbufLoader *loader;
 	guchar *image_ptr;
@@ -476,7 +476,7 @@ GString *vcard_create_uid(void)
 /**
  * \brief Parse end of vcard, check for valid entry and add person
  */
-static void process_card_end(struct contact *contact)
+static void process_card_end(RmContact *contact)
 {
 	if (!contact) {
 		return;
@@ -541,7 +541,7 @@ static void process_card_end(struct contact *contact)
  */
 static void process_data(struct vcard_data *card_data)
 {
-	static struct contact *contact;
+	static RmContact *contact;
 
 	if (!card_data->header || !card_data->entry) {
 		return;
@@ -551,7 +551,7 @@ static void process_data(struct vcard_data *card_data)
 		/* Begin of vcard */
 		vcard = g_list_append(NULL, card_data);
 		vcard_list = g_list_append(vcard_list, vcard);
-		contact = g_slice_new0(struct contact);
+		contact = g_slice_new0(RmContact);
 
 		return;
 	} else {
@@ -954,7 +954,7 @@ void vcard_write_file(char *file_name)
 {
 	GString *data = NULL;
 	GSList *list = NULL;
-	struct contact *contact = NULL;
+	RmContact *contact = NULL;
 	GList *entry = NULL;
 	GList *list2 = NULL;
 	GSList *numbers;
@@ -1031,7 +1031,7 @@ void vcard_write_file(char *file_name)
 		/* address */
 		entry = vcard_remove_data(entry, "ADR");
 		for (addresses = contact->addresses; addresses != NULL; addresses = addresses->next) {
-			struct contact_address *address = addresses->data;
+			RmContactAddress *address = addresses->data;
 			struct vcard_data *card_data;
 
 			card_data = g_malloc0(sizeof(struct vcard_data));
@@ -1132,7 +1132,7 @@ gboolean vcard_reload_contacts(void)
 	return TRUE;
 }
 
-gboolean vcard_remove_contact(struct contact *contact)
+gboolean vcard_remove_contact(RmContact *contact)
 {
 	gchar *name;
 
@@ -1144,7 +1144,7 @@ gboolean vcard_remove_contact(struct contact *contact)
 	return TRUE;
 }
 
-gboolean vcard_save_contact(struct contact *contact)
+gboolean vcard_save_contact(RmContact *contact)
 {
 	gchar *name;
 

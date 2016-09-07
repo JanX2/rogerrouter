@@ -68,7 +68,7 @@ struct fritzfon_priv {
 
 static GSList *fritzfon_books = NULL;
 
-static void parse_person(struct contact *contact, xmlnode *person)
+static void parse_person(RmContact *contact, xmlnode *person)
 {
 	xmlnode *name;
 	xmlnode *image;
@@ -117,7 +117,7 @@ static void parse_person(struct contact *contact, xmlnode *person)
 	}
 }
 
-static void parse_telephony(struct contact *contact, xmlnode *telephony)
+static void parse_telephony(RmContact *contact, xmlnode *telephony)
 {
 	xmlnode *child;
 	gchar *number = NULL;
@@ -152,7 +152,7 @@ static void parse_telephony(struct contact *contact, xmlnode *telephony)
 				phone_number->type = -1;
 				g_debug("Unhandled phone number type: '%s'", type);
 			}
-			phone_number->number = rm_call_full_number(number, FALSE);
+			phone_number->number = rm_number_full(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 		}
 
@@ -163,10 +163,10 @@ static void parse_telephony(struct contact *contact, xmlnode *telephony)
 static void contact_add(struct profile *profile, xmlnode *node, gint count)
 {
 	xmlnode *tmp;
-	struct contact *contact;
+	RmContact *contact;
 	struct fritzfon_priv *priv;
 
-	contact = g_slice_new0(struct contact);
+	contact = g_slice_new0(RmContact);
 	priv = g_slice_new0(struct fritzfon_priv);
 	contact->priv = priv;
 
@@ -392,7 +392,7 @@ xmlnode *create_phone(char *type, char *number)
  * \param contact person structure
  * \return xml node
  */
-static xmlnode *contact_to_xmlnode(struct contact *contact)
+static xmlnode *contact_to_xmlnode(RmContact *contact)
 {
 	xmlnode *node;
 	xmlnode *contact_node;
@@ -520,7 +520,7 @@ xmlnode *phonebook_to_xmlnode(void)
 
 	/* Loop through persons list and add only non-deleted entries */
 	for (list = contacts; list != NULL; list = list->next) {
-		struct contact *contact = list->data;
+		RmContact *contact = list->data;
 
 		/* Convert each contact and add it to current phone book */
 		child = contact_to_xmlnode(contact);
@@ -586,13 +586,13 @@ gboolean fritzfon_save(void)
 	return TRUE;
 }
 
-gboolean fritzfon_remove_contact(struct contact *contact)
+gboolean fritzfon_remove_contact(RmContact *contact)
 {
 	contacts = g_slist_remove(contacts, contact);
 	return fritzfon_save();
 }
 
-void fritzfon_set_image(struct contact *contact)
+void fritzfon_set_image(RmContact *contact)
 {
 	struct fritzfon_priv *priv = g_slice_new0(struct fritzfon_priv);
 	struct profile *profile = rm_profile_get_active();
@@ -623,7 +623,7 @@ void fritzfon_set_image(struct contact *contact)
 	g_free(file_name);
 }
 
-gboolean fritzfon_save_contact(struct contact *contact)
+gboolean fritzfon_save_contact(RmContact *contact)
 {
 	if (!contact->priv) {
 		if (contact->image_uri) {

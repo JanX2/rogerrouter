@@ -218,7 +218,7 @@ void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 		return;
 	}
 
-	scramble = rm_call_scramble_number(phone_state->number);
+	scramble = rm_number_scramble(phone_state->number);
 	g_debug("%s(): Dialing '%s'", __FUNCTION__, scramble);
 	g_free(scramble);
 
@@ -286,9 +286,9 @@ static gchar *phone_number_type_to_string(enum phone_number_type type)
  * \param contact contact structure
  * \param identify flag indicating if we want to identify contact
  */
-static void phone_search_entry_set_contact(struct phone_state *state, struct contact *contact, gboolean identify)
+static void phone_search_entry_set_contact(struct phone_state *state, RmContact *contact, gboolean identify)
 {
-	struct contact *search_contact;
+	RmContact *search_contact;
 
 	if (!state || !contact) {
 		return;
@@ -302,12 +302,16 @@ static void phone_search_entry_set_contact(struct phone_state *state, struct con
 		search_contact = contact;
 	}
 
-	g_object_set_data(G_OBJECT(state->search_entry), "number", search_contact->number);
+	g_object_set_data(G_OBJECT(state->search_entry), "number", g_strdup(search_contact->number));
 
 	if (!RM_EMPTY_STRING(search_contact->name)) {
 		gtk_entry_set_text(GTK_ENTRY(state->search_entry), search_contact->name);
 	} else {
 		gtk_entry_set_text(GTK_ENTRY(state->search_entry), search_contact->number);
+	}
+
+	if (identify) {
+		rm_contact_free(search_contact);
 	}
 }
 
@@ -319,7 +323,7 @@ static void phone_search_entry_set_contact(struct phone_state *state, struct con
 static void phone_search_entry_set_contact_by_row(struct phone_state *state, GtkListBoxRow *row)
 {
 	GtkWidget *grid = gtk_bin_get_child(GTK_BIN(row));
-	struct contact *contact;
+	RmContact *contact;
 	gchar *number = g_object_get_data(G_OBJECT(grid), "number");
 
 	contact = g_object_get_data(G_OBJECT(grid), "contact");
@@ -376,7 +380,7 @@ static void phone_list_box_activated_cb(GtkListBox *box, GtkListBoxRow *row, gpo
 static gboolean phone_search_entry_filter_cb(GtkListBoxRow *row, gpointer user_data)
 {
 	GtkWidget *grid = gtk_bin_get_child(GTK_BIN(row));
-	struct contact *contact = g_object_get_data(G_OBJECT(grid), "contact");
+	RmContact *contact = g_object_get_data(G_OBJECT(grid), "contact");
 
 	g_assert(phone_state != NULL);
 	g_assert(contact != NULL);
@@ -468,7 +472,7 @@ void phone_search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_d
 	contacts = rm_addressbook_get_contacts(book);
 
 	for (list = contacts; list; list = list->next) {
-		struct contact *contact = list->data;
+		RmContact *contact = list->data;
 		GSList *numbers;
 		GtkWidget *num;
 		GtkWidget *grid;
@@ -887,7 +891,7 @@ gboolean phone_window_delete_event_cb(GtkWidget *window, GdkEvent *event, gpoint
 }
 
 
-void app_show_phone_window(struct contact *contact, RmConnection *connection)
+void app_show_phone_window(RmContact *contact, RmConnection *connection)
 {
 	GtkBuilder *builder;
 

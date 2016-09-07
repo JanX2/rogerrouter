@@ -564,7 +564,7 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	char *buffer;
 	GdkPixbuf *pixbuf;
 	char *file = status->tiff_file;
-	struct contact *contact = NULL;
+	RmContact *contact = NULL;
 	char *remote = status->trg_no;
 	char *local = status->src_no;
 	char *status_code = status->error_code == 0 ? _("SUCCESS") : _("FAILED");
@@ -665,7 +665,7 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	cairo_move_to(cairo, 1000, 145);
 	cairo_show_text(cairo, _("Recipient number:"));
 	cairo_move_to(cairo, 1220, 145);
-	buffer = rm_call_full_number(remote, FALSE);
+	buffer = rm_number_full(remote, FALSE);
 	cairo_show_text(cairo, buffer);
 	g_free(buffer);
 
@@ -681,7 +681,7 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	cairo_move_to(cairo, 1000, 170);
 	cairo_show_text(cairo, _("Sender number:"));
 	cairo_move_to(cairo, 1220, 170);
-	buffer = rm_call_full_number(local, FALSE);
+	buffer = rm_number_full(local, FALSE);
 	cairo_show_text(cairo, buffer);
 	g_free(buffer);
 

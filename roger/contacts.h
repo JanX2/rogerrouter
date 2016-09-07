@@ -24,7 +24,7 @@ G_BEGIN_DECLS
 
 #define AVATAR_DEFAULT "avatar-default-symbolic"
 
-void app_contacts(struct contact *contact);
+void app_contacts(RmContact *contact);
 void contacts_add_detail(gchar *detail);
 
 G_END_DECLS

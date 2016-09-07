@@ -63,12 +63,6 @@
 		<key name="numbers" type="as">
 			<default>[]</default>
 		</key>
-		<key name="notification-incoming-numbers" type="as">
-			<default>[]</default>
-		</key>
-		<key name="notification-outgoing-numbers" type="as">
-			<default>[]</default>
-		</key>
 
 		<!-- Name: Analog -->
 		<key name="name-analog1" type="s">
@@ -249,6 +243,20 @@
 		<!-- Address book -->
 		<key name="address-book" type="s">
 			<default>''</default>
+		</key>
+
+		<!-- Notification plugin -->
+		<key name="notification-plugin" type="s">
+			<default>''</default>
+		</key>
+		<key name="notification-incoming-numbers" type="as">
+			<default>[]</default>
+		</key>
+		<key name="notification-outgoing-numbers" type="as">
+			<default>[]</default>
+		</key>
+		<key name="notification-play-ringtone" type="b">
+			<default>true</default>
 		</key>
 	</schema>
 

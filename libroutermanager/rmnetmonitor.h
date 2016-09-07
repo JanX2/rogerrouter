@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,6 +26,7 @@ typedef gboolean (*RmNetConnect)(gpointer user_data);
 typedef gboolean (*RmNetDisconnect)(gpointer user_data);
 
 typedef struct net_event {
+	gchar *name;
 	RmNetConnect connect;
 	RmNetDisconnect disconnect;
 	gboolean is_connected;
@@ -36,7 +37,7 @@ gboolean rm_netmonitor_init(void);
 void rm_netmonitor_shutdown(void);
 
 //void rm_netmonitor_state_changed(gboolean state);
-RmNetEvent *rm_netmonitor_add_event(RmNetConnect connect, RmNetDisconnect disconnect, gpointer user_data);
+RmNetEvent *rm_netmonitor_add_event(gchar *name, RmNetConnect connect, RmNetDisconnect disconnect, gpointer user_data);
 void rm_netmonitor_remove_event(RmNetEvent *net_event);
 gboolean rm_netmonitor_is_online(void);
 void rm_netmonitor_reconnect(void);

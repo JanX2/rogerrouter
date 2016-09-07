@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,14 +24,15 @@
 
 G_BEGIN_DECLS
 
-typedef struct contact_address {
+typedef struct {
 	gint type;
 	gchar *street;
 	gchar *zip;
 	gchar *city;
+	gboolean lookup;
 } RmContactAddress;
 
-typedef struct contact {
+typedef struct {
 	/* Name */
 	gchar *name;
 	/* Picture */
@@ -40,21 +41,22 @@ typedef struct contact {
 	gsize image_len;
 	/* Picture URI for online services */
 	gchar *image_uri;
-
-#if 1
-	/* currently active number */
-	gchar *number;
+	/* Company */
 	gchar *company;
-	gchar *street;
-	gchar *zip;
-	gchar *city;
-	gboolean lookup;
-#endif
 
 	/* Phone numbers */
 	GSList *numbers;
 	/* Addresses */
 	GSList *addresses;
+
+	/* currently active number */
+	gchar *number;
+
+	/* Identified data based on active number */
+	gchar *street;
+	gchar *zip;
+	gchar *city;
+	gboolean lookup;
 
 	/* Private data */
 	gpointer priv;

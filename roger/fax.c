@@ -366,7 +366,7 @@ gchar *phone_fax_get_title(void)
 	return _("Fax");
 }
 
-gboolean phone_fax_init(struct contact *contact, RmConnection *connection)
+gboolean phone_fax_init(RmContact *contact, RmConnection *connection)
 {
 	return TRUE;
 }

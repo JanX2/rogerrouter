@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -49,30 +49,28 @@ enum {
 	RM_FILTER_CALL_FAX,
 };
 
-typedef struct rm_filter_rule {
+typedef struct {
 	gint type;
 	gint sub_type;
 	gchar *entry;
 } RmFilterRule;
 
-typedef struct rm_filter {
+typedef struct {
 	gchar *name;
 	gchar *file;
 	gboolean compare_or;
 	GSList *rules;
 } RmFilter;
 
+void rm_filter_init(RmProfile *profile);
+void rm_filter_shutdown(RmProfile *profile);
+GSList *rm_filter_get_list(RmProfile *profile);
+
+RmFilter *rm_filter_new(RmProfile *profile, const gchar *name);
+void rm_filter_remove(RmProfile *profile, RmFilter *filter);
+
 gboolean rm_filter_rule_match(RmFilter *filter, RmCall *call);
 void rm_filter_rule_add(RmFilter *filter, gint type, gint sub_type, gchar *entry);
-
-struct rm_filter *rm_filter_new(const gchar *name);
-void rm_filter_free(gpointer data);
-GSList *rm_filter_get_list(void);
-void rm_filter_init(void);
-void rm_filter_shutdown(void);
-void rm_filter_add(RmFilter *filter);
-void rm_filter_remove(RmFilter *filter);
-void rm_filter_save(void);
 
 G_END_DECLS
 

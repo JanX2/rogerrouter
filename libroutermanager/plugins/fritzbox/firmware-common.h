@@ -24,6 +24,7 @@
 
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmcall.h>
+#include <libroutermanager/rmnumber.h>
 
 G_BEGIN_DECLS
 

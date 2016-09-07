@@ -716,7 +716,7 @@ static void parse_person(GHashTable *map, gpointer pId) {
 	const gchar *business_zip = NULL;
 	GHashTableIter iter5;
 	gpointer key5, value5;
-	struct contact *contact = NULL;
+	RmContact *contact = NULL;
 	struct phone_number *number;
 	const gchar *thunderbird_dir = thunderbird_get_selected_book();
 
@@ -730,7 +730,7 @@ static void parse_person(GHashTable *map, gpointer pId) {
 	g_debug("***** possible: %d", num_possible);
 #endif
 
-	contact = g_slice_new0(struct contact);
+	contact = g_slice_new0(RmContact);
 
 	g_hash_table_iter_init(&iter5, map);
 	while (g_hash_table_iter_next(&iter5, &key5, &value5))  {
@@ -745,22 +745,22 @@ static void parse_person(GHashTable *map, gpointer pId) {
 
 		if (!strcmp(column, "HomePhone")) {
 			number = g_slice_new(struct phone_number);
-			number->number = rm_call_full_number(value, FALSE);
+			number->number = rm_number_full(value, FALSE);
 			number->type = PHONE_NUMBER_HOME;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
 		} else if (!strcmp(column, "WorkPhone")) {
 			number = g_slice_new(struct phone_number);
-			number->number = rm_call_full_number(value, FALSE);
+			number->number = rm_number_full(value, FALSE);
 			number->type = PHONE_NUMBER_WORK;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
 		} else if (!strcmp(column, "FaxNumber")) {
 			number = g_slice_new(struct phone_number);
-			number->number = rm_call_full_number(value, FALSE);
+			number->number = rm_number_full(value, FALSE);
 			number->type = PHONE_NUMBER_FAX_HOME;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
 		} else if (!strcmp(column, "CellularNumber")) {
 			number = g_slice_new(struct phone_number);
-			number->number = rm_call_full_number(value, FALSE);
+			number->number = rm_number_full(value, FALSE);
 			number->type = PHONE_NUMBER_MOBILE;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
 		} else if (!strcmp(column, "DisplayName")) {
@@ -791,7 +791,7 @@ static void parse_person(GHashTable *map, gpointer pId) {
 	}
 
 	if (home_city || home_zip || home_street) {
-		struct contact_address *address = g_slice_new0(struct contact_address);
+		RmContactAddress *address = g_slice_new0(RmContactAddress);
 
 		address->city = g_strdup(home_city ? home_city : "");
 		address->zip = g_strdup(home_zip ? home_zip : "");
@@ -802,7 +802,7 @@ static void parse_person(GHashTable *map, gpointer pId) {
 	}
 
 	if (business_city || business_zip || business_street) {
-		struct contact_address *address = g_slice_new0(struct contact_address);
+		RmContactAddress *address = g_slice_new0(RmContactAddress);
 
 		address->city = g_strdup(business_city ? business_city : "");
 		address->zip = g_strdup(business_zip ? business_zip : "");

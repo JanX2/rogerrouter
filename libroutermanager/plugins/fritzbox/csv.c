@@ -26,6 +26,7 @@
 #include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmcsv.h>
 #include <libroutermanager/rmlog.h>
+#include <libroutermanager/rmjournal.h>
 
 #include "csv.h"
 #include "firmware-common.h"
@@ -41,6 +42,7 @@ static inline gpointer csv_parse_fritzbox(gpointer ptr, gchar **split)
 	GSList *list = ptr;
 
 	if (g_strv_length(split) == 7) {
+		RmCall *call;
 		gint call_type = 0;
 
 		switch (atoi(split[0])) {
@@ -65,7 +67,8 @@ static inline gpointer csv_parse_fritzbox(gpointer ptr, gchar **split)
 			break;
 		}
 
-		list = rm_call_add(list, call_type, split[1], split[2], split[3], split[4], split[5], split[6], NULL);
+		call = rm_call_new(call_type, split[1], split[2], split[3], split[4], split[5], split[6], NULL);
+		list = rm_journal_add_call(list, call);
 	}
 
 	return list;

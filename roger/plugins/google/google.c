@@ -330,7 +330,7 @@ static int google_read_book(void) {
 			guint8 *photo;
 			gsize photo_len;
 			gchar *photo_type;
-			struct contact *contact;
+			RmContact *contact;
 
 			if (list->data == NULL) {
 				g_warning("Strange... data == NULL");
@@ -361,7 +361,7 @@ static int google_read_book(void) {
 				continue;
 			}
 
-			contact = g_slice_new0(struct contact);
+			contact = g_slice_new0(RmContact);
 			contact->priv = g_strdup(id);
 
 			contact->name = g_strdup(gdata_gd_name_get_full_name(name));
@@ -398,7 +398,7 @@ static int google_read_book(void) {
 				} else if (strcmp(type, GDATA_GD_PHONE_NUMBER_WORK_FAX) == 0) {
 					phone_number->type = PHONE_NUMBER_FAX_WORK;
 				}
-				phone_number->number = rm_call_full_number(num, FALSE);
+				phone_number->number = rm_number_full(num, FALSE);
 				contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 
 				number_list = number_list->next;
@@ -408,14 +408,14 @@ static int google_read_book(void) {
 			while (address_list != NULL && address_list->data != NULL) {
 				GDataGDPostalAddress *gaddress = address_list->data;
 				const gchar *type = gdata_gd_postal_address_get_relation_type(gaddress);
-				struct contact_address *address;
+				RmContactAddress *address;
 
 				if (type == NULL) {
 					g_warning("type == NULL");
 					break;
 				}
 
-				address = g_slice_new0(struct contact_address);
+				address = g_slice_new0(RmContactAddress);
 				if (!strcmp(type, GDATA_GD_POSTAL_ADDRESS_WORK)) {
 					address->type = 1;
 				} else {

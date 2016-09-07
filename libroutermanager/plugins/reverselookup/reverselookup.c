@@ -36,6 +36,7 @@
 #include <libroutermanager/rmlookup.h>
 #include <libroutermanager/xml.h>
 #include <libroutermanager/rmmain.h>
+#include <libroutermanager/rmnumber.h>
 
 #include <libxml/HTMLparser.h>
 #include <libxml/tree.h>
@@ -122,7 +123,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 	GRegex *reg = NULL;
 	GMatchInfo *info = NULL;
 	gchar *rl_tmp;
-	struct contact *rl_contact;
+	RmContact *rl_contact;
 	gboolean result = FALSE;
 	gchar *full_number;
 	gchar *rdata = NULL;
@@ -130,7 +131,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 	gsize len;
 
 	/* get full number according to service preferences */
-	full_number = rm_call_full_number(number, lookup->prefix);
+	full_number = rm_number_full(number, lookup->prefix);
 
 #ifdef RL_DEBUG
 	g_debug("New lookup for '%s'", full_number);
@@ -208,7 +209,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, gchar **
 		memmove(*city, *city + lookup->zip_len + 1, strlen(*city) - lookup->zip_len + 1);
 	}
 
-	rl_contact = g_slice_new0(struct contact);
+	rl_contact = g_slice_new0(RmContact);
 	rl_contact->name = g_strdup(*name);
 	rl_contact->street = g_strdup(*street);
 	rl_contact->zip = g_strdup(*zip);
@@ -321,7 +322,7 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **street, gcha
 	gboolean found = FALSE;
 	gint international_prefix_len;
 	RmProfile *profile = rm_profile_get_active();
-	struct contact *rl_contact;
+	RmContact *rl_contact;
 
 	if (!profile) {
 		return FALSE;
@@ -350,7 +351,7 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **street, gcha
 	}
 
 	/* Get full number and extract country code if possible */
-	full_number = rm_call_full_number(number, TRUE);
+	full_number = rm_number_full(number, TRUE);
 	if (!full_number) {
 		return FALSE;
 	}
@@ -400,7 +401,7 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **street, gcha
 	}
 
 	if (!found) {
-		rl_contact = g_slice_new0(struct contact);
+		rl_contact = g_slice_new0(RmContact);
 
 		g_hash_table_insert(table, number, rl_contact);
 	}
@@ -514,7 +515,7 @@ static void lookup_read_cache(gchar *dir_name)
 		gchar *data;
 		gchar *uri;
 		gchar **split;
-		struct contact *contact;
+		RmContact *contact;
 
 		uri = g_build_filename(dir_name, file_name, NULL);
 		data = rm_file_load(uri, NULL);
@@ -524,7 +525,7 @@ static void lookup_read_cache(gchar *dir_name)
 
 		split = g_strsplit(data, ";", -1);
 
-		contact = g_slice_new0(struct contact);
+		contact = g_slice_new0(RmContact);
 
 		contact->name = g_strdup(split[1]);
 		contact->street = g_strdup(split[2]);
@@ -533,6 +534,7 @@ static void lookup_read_cache(gchar *dir_name)
 
 		g_hash_table_insert(table, g_strdup(split[0]), contact);
 
+		g_free(data);
 		g_strfreev(split);
 	}
 #endif

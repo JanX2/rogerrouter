@@ -517,7 +517,7 @@ void delete_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, g
 	default:
 		journal_list = g_slist_remove(journal_list, call);
 		g_debug("Deleting: '%s'", call->date_time);
-		rm_csv_save_journal(journal_list);
+		rm_journal_save(journal_list);
 		break;
 	}
 }
@@ -589,7 +589,7 @@ void search_entry_changed(GtkEditable *entry, GtkTreeView *view)
 	}
 
 	if (strlen(text)) {
-		journal_search_filter = rm_filter_new("internal_search");
+		journal_search_filter = rm_filter_new(rm_profile_add, "internal_search");
 
 		if (g_ascii_isdigit(text[0])) {
 			rm_filter_rule_add(journal_search_filter, RM_FILTER_REMOTE_NUMBER, RM_FILTER_CONTAINS, (gchar *)text);
@@ -616,7 +616,7 @@ void entry_icon_released(GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEven
 void filter_box_changed(GtkComboBox *box, gpointer user_data)
 {
 	const gchar *text = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(box));
-	GSList *filter_list = rm_filter_get_list();
+	GSList *filter_list = rm_filter_get_list(rm_profile_get_active());
 
 	if (!text) {
 		journal_filter = NULL;
@@ -643,7 +643,7 @@ void journal_update_filter(void)
 {
 	GSList *filter_list;
 
-	filter_list = rm_filter_get_list();
+	filter_list = rm_filter_get_list(rm_profile_get_active());
 
 	gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(journal_filter_box));
 
@@ -736,7 +736,7 @@ gint journal_sort_by_date(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, g
 	gtk_tree_model_get(model, a, JOURNAL_COL_CALL_PTR, &call_a, -1);
 	gtk_tree_model_get(model, b, JOURNAL_COL_CALL_PTR, &call_b, -1);
 
-	return rm_call_sort_by_date(call_a, call_b);
+	return rm_journal_sort_by_date(call_a, call_b);
 }
 
 gint journal_sort_by_type(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer data)
@@ -983,7 +983,7 @@ static void journal_export_cb(GtkWidget *dialog, gint response, gpointer user_da
 		gchar *file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
 
 		g_debug("file: %s", file);
-		rm_csv_save_journal_as(journal_list, file);
+		rm_journal_save_as(journal_list, file);
 	}
 
 	gtk_widget_destroy(dialog);

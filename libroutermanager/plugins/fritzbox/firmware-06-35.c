@@ -143,7 +143,7 @@ gboolean fritzbox_get_fax_information_06_35(struct profile *profile)
 		gchar *name = g_match_info_fetch_named(match_info, "name");
 
 		if (name) {
-			gchar *scramble = rm_call_scramble_number(name);
+			gchar *scramble = rm_number_scramble(name);
 			g_debug("Fax-Header: '%s'", scramble);
 			g_free(scramble);
 			g_settings_set_string(profile->settings, "fax-header", name);
@@ -272,9 +272,9 @@ gboolean fritzbox_get_fax_information_06_35(struct profile *profile)
 			gchar *formated_number;
 			gchar *scramble;
 
-			formated_number = rm_call_format_number(profile, msn, RM_NUMBER_FORMAT_INTERNATIONAL_PLUS);
+			formated_number = rm_number_format(profile, msn, RM_NUMBER_FORMAT_INTERNATIONAL_PLUS);
 
-			scramble = rm_call_scramble_number(msn);
+			scramble = rm_number_scramble(msn);
 			g_debug("Fax number: '%s'", scramble);
 			g_free(scramble);
 
@@ -382,7 +382,7 @@ gboolean fritzbox_get_settings_06_35(struct profile *profile)
 
 		if (g_strv_length(profile_numbers)) {
 			for (idx = 0; idx < g_strv_length(profile_numbers); idx++) {
-				gchar *scramble = rm_call_scramble_number(profile_numbers[idx]);
+				gchar *scramble = rm_number_scramble(profile_numbers[idx]);
 				g_debug("Adding MSN '%s'", scramble);
 				g_free(scramble);
 			}
@@ -583,7 +583,7 @@ gboolean fritzbox_dial_number_06_35(struct profile *profile, gint port, const gc
 	}
 
 	/* Create GET message */
-	scramble = rm_call_scramble_number(number);
+	scramble = rm_number_scramble(number);
 	g_debug("Call number '%s' on port %d...", scramble, current_port);
 	g_free(scramble);
 
@@ -623,7 +623,7 @@ gboolean fritzbox_hangup_06_35(struct profile *profile, gint port, const gchar *
 	/* Create GET message */
 	port_str = g_strdup_printf("%d", fritzbox_get_dialport(port));
 
-	scramble = rm_call_scramble_number(number);
+	scramble = rm_number_scramble(number);
 	g_debug("Hangup call '%s' on port %s...", scramble, port_str);
 	g_free(scramble);
 

@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,6 +24,14 @@
 #include <libroutermanager/rmcontact.h>
 #include <libroutermanager/rmobjectemit.h>
 #include <libroutermanager/router.h>
+
+/**
+ * SECTION:rmcontact
+ * @title: RmContact
+ * @short_description: Contact handling functions
+ *
+ * Contacts represents entries within an address book.
+ */
 
 /**
  * rm_contact_copy:
@@ -57,30 +65,11 @@ void rm_contact_copy(RmContact *src, RmContact *dst)
 		dst->addresses = NULL;
 	}
 
-	if (src->number) {
-		dst->number = g_strdup(src->number);
-	}
-
-	if (src->company) {
-		dst->company = g_strdup(src->company);
-	} else {
-		dst->company = NULL;
-	}
-	if (src->street) {
-		dst->street = g_strdup(src->street);
-	} else {
-		dst->street = NULL;
-	}
-	if (src->zip) {
-		dst->zip = g_strdup(src->zip);
-	} else {
-		dst->zip = NULL;
-	}
-	if (src->city) {
-		dst->city = g_strdup(src->city);
-	} else {
-		dst->city = NULL;
-	}
+	dst->number = g_strdup(src->number);
+	dst->company = g_strdup(src->company);
+	dst->street = g_strdup(src->street);
+	dst->zip = g_strdup(src->zip);
+	dst->city = g_strdup(src->city);
 
 	dst->priv = src->priv;
 }
@@ -170,14 +159,58 @@ RmContact *rm_contact_find_by_number(gchar *number)
 		RmContactAddress *contact_address = addresses->data;
 
 		if (contact_address->type == type) {
-			contact->street = contact_address->street;
-			contact->city = contact_address->city;
-			contact->zip = contact_address->zip;
+			contact->street = g_strdup(contact_address->street);
+			contact->city = g_strdup(contact_address->city);
+			contact->zip = g_strdup(contact_address->zip);
 			break;
 		}
 	}
 
 	return contact;
+}
+
+/**
+ * rm_contact_free_address:
+ * @data: pointer to #RmContactAddress
+ *
+ * Frees #RmContactAddress.
+ */
+static void rm_contact_free_address(gpointer data)
+{
+	RmContactAddress *address = data;
+
+	if (address->street) {
+		g_free(address->street);
+		address->street = NULL;
+	}
+	if (address->zip) {
+		g_free(address->zip);
+		address->zip = NULL;
+	}
+	if (address->city) {
+		g_free(address->city);
+		address->city = NULL;
+	}
+
+	g_slice_free(RmContactAddress, address);
+}
+
+/**
+ * rm_contact_free_number:
+ * @data: pointer to #RmPhoneNumber
+ *
+ * Frees #RmPhoneNumber.
+ */
+static void rm_contact_free_number(gpointer data)
+{
+	struct phone_number *number = data;
+
+	if (number->number) {
+		g_free(number->number);
+		number->number = NULL;
+	}
+
+	g_slice_free(struct phone_number, number);
 }
 
 /**
@@ -188,9 +221,19 @@ RmContact *rm_contact_find_by_number(gchar *number)
  */
 void rm_contact_free(RmContact *contact)
 {
-	if (contact->name) {
-		g_free(contact->name);
-		contact->name = NULL;
+	g_free(contact->name);
+	g_free(contact->company);
+	g_free(contact->number);
+	g_free(contact->street);
+	g_free(contact->zip);
+	g_free(contact->city);
+	g_free(contact->image);
+
+	if (contact->addresses) {
+		g_slist_free_full(contact->addresses, rm_contact_free_address);
+	}
+	if (contact->numbers) {
+		g_slist_free_full(contact->numbers, rm_contact_free_number);
 	}
 
 	g_slice_free(RmContact, contact);

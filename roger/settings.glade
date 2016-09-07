@@ -328,6 +328,16 @@ Caller company</property>
     <property name="can_focus">False</property>
     <property name="icon_name">view-refresh-symbolic</property>
   </object>
+  <object class="GtkListStore" id="notification_liststore">
+    <columns>
+      <!-- column-name Number -->
+      <column type="gchararray"/>
+      <!-- column-name Outgoing -->
+      <column type="gboolean"/>
+      <!-- column-name Incoming -->
+      <column type="gboolean"/>
+    </columns>
+  </object>
   <object class="GtkWindow" id="settings">
     <property name="can_focus">False</property>
     <property name="resizable">False</property>
@@ -1832,6 +1842,182 @@ Caller company</property>
               </object>
               <packing>
                 <property name="position">5</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkGrid">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_left">18</property>
+                <property name="margin_right">18</property>
+                <property name="margin_top">18</property>
+                <property name="margin_bottom">18</property>
+                <property name="row_spacing">6</property>
+                <property name="column_spacing">12</property>
+                <child>
+                  <object class="GtkLabel" id="label3">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="margin_top">12</property>
+                    <property name="label" translatable="yes">MSNs</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">3</property>
+                    <property name="width">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkScrolledWindow">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="hexpand">True</property>
+                    <property name="shadow_type">in</property>
+                    <child>
+                      <object class="GtkTreeView" id="notification_treeview">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="model">notification_liststore</property>
+                        <property name="rules_hint">True</property>
+                        <property name="enable_grid_lines">both</property>
+                        <child internal-child="selection">
+                          <object class="GtkTreeSelection"/>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn">
+                            <property name="sizing">autosize</property>
+                            <property name="title" translatable="yes">Number</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="notification_number_renderer">
+                                <property name="xpad">1</property>
+                              </object>
+                              <attributes>
+                                <attribute name="sensitive">2</attribute>
+                                <attribute name="text">0</attribute>
+                              </attributes>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn">
+                            <property name="sizing">autosize</property>
+                            <property name="title" translatable="yes">Outgoing</property>
+                            <child>
+                              <object class="GtkCellRendererToggle" id="notification_outgoing_renderer">
+                                <signal name="toggled" handler="settings_notification_outgoing_toggled_cb" object="notification_liststore" swapped="no"/>
+                              </object>
+                              <attributes>
+                                <attribute name="active">1</attribute>
+                              </attributes>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn">
+                            <property name="sizing">autosize</property>
+                            <property name="title" translatable="yes">Incoming</property>
+                            <child>
+                              <object class="GtkCellRendererToggle" id="notification_incoming_renderer">
+                                <signal name="toggled" handler="settings_notification_incoming_toggled_cb" object="notification_liststore" swapped="no"/>
+                              </object>
+                              <attributes>
+                                <attribute name="active">2</attribute>
+                              </attributes>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">4</property>
+                    <property name="width">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label6">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">General</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
+                    <property name="width">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="sensitive">False</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">end</property>
+                    <property name="label" translatable="yes">Plugin</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="sensitive">False</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">end</property>
+                    <property name="label" translatable="yes">Play ringtones</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSwitch" id="notification_play_ringtone_switch">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="halign">start</property>
+                    <property name="hexpand">False</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText" id="notification_plugin_combobox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="hexpand">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">6</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Notifications</property>
+              </object>
+              <packing>
+                <property name="position">6</property>
                 <property name="tab_fill">False</property>
               </packing>
             </child>

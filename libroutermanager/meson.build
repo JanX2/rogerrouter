@@ -37,6 +37,7 @@ rm_sources += 'rmfaxserver.c'
 rm_sources += 'rmfile.c'
 rm_sources += 'rmfilter.c'
 rm_sources += 'rmftp.c'
+rm_sources += 'rmjournal.c'
 rm_sources += 'rmstring.c'
 rm_sources += 'rmlog.c'
 rm_sources += 'rmlookup.c'
@@ -47,6 +48,7 @@ rm_sources += 'rmobjectemit.c'
 rm_sources += 'rmprofile.c'
 rm_sources += 'rmmain.c'
 rm_sources += 'rmnotification.c'
+rm_sources += 'rmnumber.c'
 rm_sources += 'rmosdep.c'
 rm_sources += 'rmpassword.c'
 rm_sources += 'rmplugins.c'
@@ -83,6 +85,7 @@ headers = [
 	'rmfile.h',
 	'rmfilter.h',
 	'rmftp.h',
+	'rmjournal.h',
 	'rmlog.h',
 	'rmlookup.h',
 	'rmmain.h',
@@ -112,3 +115,4 @@ pkg_mod.generate(libraries : libroutermanager,
                  description : 'A library to handle AVM FRITZ!Box routers.')
 
 subdir('plugins')
+subdir('data')

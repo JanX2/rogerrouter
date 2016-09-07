@@ -234,7 +234,7 @@ static void pickup_activated(GSimpleAction *action, GVariant *parameter, gpointe
 {
 	gint32 id = g_variant_get_int32(parameter);
 	RmConnection *connection = rm_connection_find_by_id(id);
-	struct contact *contact;
+	RmContact *contact;
 
 	g_assert(connection != NULL);
 
@@ -510,11 +510,11 @@ static gint application_command_line_cb(GtkApplication *app, GApplicationCommand
 
 	if (!option_state.start_hidden) {
 		if (option_state.number) {
-			struct contact *contact;
+			RmContact *contact;
 			gchar *full_number;
 
 			g_debug("number: %s", option_state.number);
-			full_number = rm_call_full_number(option_state.number, FALSE);
+			full_number = rm_number_full(option_state.number, FALSE);
 
 			/** Ask for contact information */
 			contact = rm_contact_find_by_number(full_number);

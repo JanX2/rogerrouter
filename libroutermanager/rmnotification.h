@@ -22,26 +22,32 @@
 
 #include <glib.h>
 
+#include <libroutermanager/rmconnection.h>
+
 G_BEGIN_DECLS
 
 typedef struct {
 	gpointer priv;
 	RmConnection *connection;
-} RmNotification;
+} RmNotificationMessage;
 
 typedef struct {
-	void (*show)(RmNotification *notification);
-	void (*update)(RmNotification *notification);
-	void (*close)(RmNotification *notification);
-} RmNotificationPlugin;
+	gchar *name;
+	gpointer (*show)(RmConnection *connection);
+	void (*update)(RmConnection *connection);
+	void (*close)(gpointer priv);
+} RmNotification;
 
-RmNotification *rm_notification_new(void);
-void rm_notification_remove(RmNotification *notification);
-void rm_notification_add_connection(RmNotification *notification, RmConnection *connection);
-void rm_notification_set_uid(RmNotification *notification, gpointer uid);
+RmNotification *rm_notification_get(gchar *name);
 
-void rm_notification_register(RmNotificationPlugin *plugin);
-void rm_notification_unregister(RmNotificationPlugin *plugin);
+void rm_notification_init(void);
+void rm_notification_shutdown(void);
+
+void rm_notification_register(RmNotification *notification);
+void rm_notification_unregister(RmNotification *notification);
+
+GSList *rm_notification_get_plugins(void);
+gchar *rm_notification_get_name(RmNotification *notification);
 
 G_END_DECLS
 

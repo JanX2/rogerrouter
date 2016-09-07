@@ -246,7 +246,7 @@ void ebook_read_data(EClient *e_client)
 	}
 	for (list = ebook_contacts; list != NULL; list = list->next) {
 		const gchar *display_name;
-		struct contact *contact;
+		RmContact *contact;
 		struct phone_number *phone_number;
 		const gchar *number;
 		const gchar *company;
@@ -261,7 +261,7 @@ void ebook_read_data(EClient *e_client)
 			continue;
 		}
 
-		contact = g_slice_new0(struct contact);
+		contact = g_slice_new0(RmContact);
 
 		contact->priv = (gpointer) e_contact_get_const(e_contact, E_CONTACT_UID);
 
@@ -317,7 +317,7 @@ void ebook_read_data(EClient *e_client)
 		if (!RM_EMPTY_STRING(number)) {
 			phone_number = g_slice_new(struct phone_number);
 			phone_number->type = PHONE_NUMBER_HOME;
-			phone_number->number = rm_call_full_number(number, FALSE);
+			phone_number->number = rm_number_full(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 		}
 
@@ -325,7 +325,7 @@ void ebook_read_data(EClient *e_client)
 		if (!RM_EMPTY_STRING(number)) {
 			phone_number = g_slice_new(struct phone_number);
 			phone_number->type = PHONE_NUMBER_WORK;
-			phone_number->number = rm_call_full_number(number, FALSE);
+			phone_number->number = rm_number_full(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 		}
 
@@ -333,7 +333,7 @@ void ebook_read_data(EClient *e_client)
 		if (!RM_EMPTY_STRING(number)) {
 			phone_number = g_slice_new(struct phone_number);
 			phone_number->type = PHONE_NUMBER_MOBILE;
-			phone_number->number = rm_call_full_number(number, FALSE);
+			phone_number->number = rm_number_full(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 		}
 
@@ -341,7 +341,7 @@ void ebook_read_data(EClient *e_client)
 		if (!RM_EMPTY_STRING(number)) {
 			phone_number = g_slice_new(struct phone_number);
 			phone_number->type = PHONE_NUMBER_FAX_HOME;
-			phone_number->number = rm_call_full_number(number, FALSE);
+			phone_number->number = rm_number_full(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 		}
 
@@ -349,7 +349,7 @@ void ebook_read_data(EClient *e_client)
 		if (!RM_EMPTY_STRING(number)) {
 			phone_number = g_slice_new(struct phone_number);
 			phone_number->type = PHONE_NUMBER_FAX_WORK;
-			phone_number->number = rm_call_full_number(number, FALSE);
+			phone_number->number = rm_number_full(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 		}
 
@@ -360,7 +360,7 @@ void ebook_read_data(EClient *e_client)
 
 		address = e_contact_get(e_contact, E_CONTACT_ADDRESS_HOME);
 		if (address) {
-			struct contact_address *c_address = g_slice_new(struct contact_address);
+			RmContactAddress *c_address = g_slice_new(RmContactAddress);
 			c_address->type = 0;
 			c_address->street = g_strdup(address->street);
 			c_address->zip = g_strdup(address->code);
@@ -370,7 +370,7 @@ void ebook_read_data(EClient *e_client)
 
 		address = e_contact_get(e_contact, E_CONTACT_ADDRESS_WORK);
 		if (address) {
-			struct contact_address *c_address = g_slice_new(struct contact_address);
+			RmContactAddress *c_address = g_slice_new(RmContactAddress);
 			c_address->type = 1;
 			c_address->street = g_strdup(address->street);
 			c_address->zip = g_strdup(address->code);
@@ -469,7 +469,7 @@ gboolean evolution_reload(void)
 	return TRUE;
 }
 
-gboolean evolution_remove_contact(struct contact *contact)
+gboolean evolution_remove_contact(RmContact *contact)
 {
 	EBookClient *client;
 	gboolean ret = FALSE;
@@ -488,7 +488,7 @@ gboolean evolution_remove_contact(struct contact *contact)
 	return ret;
 }
 
-static void evolution_set_image(EContact *e_contact, struct contact *contact)
+static void evolution_set_image(EContact *e_contact, RmContact *contact)
 {
 	if (contact -> image_uri != NULL) {
 		EContactPhoto photo;
@@ -507,7 +507,7 @@ static void evolution_set_image(EContact *e_contact, struct contact *contact)
 	}
 }
 
-gboolean evolution_save_contact(struct contact *contact)
+gboolean evolution_save_contact(RmContact *contact)
 {
 	EBookClient *client;
 	EContact *e_contact;
@@ -570,7 +570,7 @@ gboolean evolution_save_contact(struct contact *contact)
 	}
 
 	for (addresses = contact->addresses; addresses != NULL; addresses = addresses->next) {
-		struct contact_address *address = addresses->data;
+		RmContactAddress *address = addresses->data;
 		EContactAddress e_address;
 		EContactAddress *ep_address = &e_address;
 		gint type;

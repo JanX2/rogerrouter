@@ -23,6 +23,7 @@
 #include <gio/gio.h>
 
 #include <libroutermanager/rmaddressbook.h>
+#include <libroutermanager/rmnotification.h>
 #include <libroutermanager/rmaudio.h>
 
 G_BEGIN_DECLS
@@ -35,6 +36,7 @@ typedef struct profile {
 	GSettings *settings;
 
 	GSList *action_list;
+	GSList *filter_list;
 } RmProfile;
 
 gboolean rm_profile_init(void);
@@ -54,6 +56,12 @@ void rm_profile_set_login_user(RmProfile *profile, const gchar *user);
 void rm_profile_set_login_password(RmProfile *profile, const gchar *password);
 RmAddressBook *rm_profile_get_addressbook(RmProfile *profile);
 RmAudio *rm_profile_get_audio(RmProfile *profile);
+RmNotification *rm_profile_get_notification(RmProfile *profile);
+gchar **rm_profile_get_notification_incoming_numbers(RmProfile *profile);
+gchar **rm_profile_get_notification_outgoing_numbers(RmProfile *profile);
+void rm_profile_set_notification_incoming_numbers(RmProfile *profile, const gchar * const* numbers);
+void rm_profile_set_notification_outgoing_numbers(RmProfile *profile, const gchar * const* numbers);
+gboolean rm_profile_get_notification_ringtone(RmProfile *profile);
 
 G_END_DECLS
 

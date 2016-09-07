@@ -1,3 +1,4 @@
+#if 0
 /**
  * Roger Router
  * Copyright (c) 2012-2014 Jan-Michael Brummer
@@ -65,7 +66,7 @@ static gchar **selected_incoming_numbers = NULL;
 static void notify_accept_clicked_cb(NotifyNotification *notify, gchar *action, gpointer user_data)
 {
 	RmConnection *connection = user_data;
-	struct contact *contact;
+	RmContact *contact;
 
 	g_assert(connection != NULL);
 
@@ -108,7 +109,7 @@ static gboolean notification_close(gpointer window)
 }
 
 gboolean notification_update(gpointer data) {
-	struct contact *contact = data;
+	RmContact *contact = data;
 	RmConnection *connection;
 
 	g_assert(contact != NULL);
@@ -145,9 +146,9 @@ gboolean notification_update(gpointer data) {
 static gpointer notification_reverse_lookup_thread(gpointer data)
 {
 	RmConnection *connection = data;
-	struct contact *contact;
+	RmContact *contact;
 
-	contact = g_slice_new0(struct contact);
+	contact = g_slice_new0(RmContact);
 
 	contact->number = g_strdup(connection->remote_number);
 	contact->priv = data;
@@ -170,7 +171,7 @@ void notifications_connection_notify_cb(RmObject *obj, RmConnection *connection,
 {
 	NotifyNotification *notify = NULL;
 	gchar *text = NULL;
-	struct contact *contact;
+	RmContact *contact;
 	gchar **numbers = NULL;
 	gint count;
 	gboolean found = FALSE;
@@ -197,13 +198,13 @@ void notifications_connection_notify_cb(RmObject *obj, RmConnection *connection,
 	}
 
 	if (!found && connection->local_number[0] != '0') {
-		g_debug("type: %d, number '%s' not found", connection->type, rm_call_scramble_number(connection->local_number));
+		g_debug("type: %d, number '%s' not found", connection->type, rm_number_scramble(connection->local_number));
 
-		gchar *tmp = rm_call_full_number(connection->local_number, FALSE);
+		gchar *tmp = rm_number_full(connection->local_number, FALSE);
 
 		/* Match numbers against local number and check if we should show a notification */
 		for (count = 0; count < g_strv_length(numbers); count++) {
-			g_debug("type: %d, number '%s'/'%s' <-> '%s'", connection->type, rm_call_scramble_number(connection->local_number), rm_call_scramble_number(tmp), rm_call_scramble_number(numbers[count]));
+			g_debug("type: %d, number '%s'/'%s' <-> '%s'", connection->type, rm_number_scramble(connection->local_number), rm_number_scramble(tmp), rm_number_scramble(numbers[count]));
 			if (!strcmp(tmp, numbers[count])) {
 				found = TRUE;
 				break;
@@ -545,3 +546,4 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 
 	return settings_grid;
 }
+#endif

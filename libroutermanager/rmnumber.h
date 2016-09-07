@@ -17,30 +17,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_RMPASSWORD_H
-#define LIBROUTERMANAGER_RMPASSWORD_H
+#ifndef LIBROUTERMANAGER_RMNUMBER_H
+#define LIBROUTERMANAGER_RMNUMBER_H
 
-#include <glib.h>
-
+#include <libroutermanager/rmcontact.h>
 #include <libroutermanager/rmprofile.h>
 
 G_BEGIN_DECLS
+/* current number format */
+enum rm_number_format {
+	RM_NUMBER_FORMAT_UNKNOWN,
+	RM_NUMBER_FORMAT_LOCAL,
+	RM_NUMBER_FORMAT_NATIONAL,
+	RM_NUMBER_FORMAT_INTERNATIONAL,
+	RM_NUMBER_FORMAT_INTERNATIONAL_PLUS
+};
+struct rm_call_by_call_entry {
+	gchar *country_code;
+	gchar *prefix;
+	gint prefix_length;
+};
 
-typedef struct password_manager {
-	const gchar *name;
-	void (*set)(RmProfile *profile, const gchar *name, const gchar *password);
-	gchar *(*get)(RmProfile *profile, const gchar *name);
-	gboolean (*remove)(RmProfile *profile, const gchar *name);
-} RmPasswordManager;
-
-void rm_password_set(RmProfile *profile, const gchar *name, const gchar *password);
-gchar *rm_password_get(RmProfile *profile, const gchar *name);
-gboolean rm_password_remove(RmProfile *profile, const gchar *name);
-void rm_password_register(RmPasswordManager *manager);
-GSList *rm_password_get_plugins(void);
-void rm_password_init(void);
-gchar *rm_password_encode(const gchar *in);
-guchar *rm_password_decode(const gchar *in);
+gchar *rm_number_scramble(const gchar *number);
+gchar *rm_number_full(const gchar *number, gboolean country_code_prefix);
+gchar *rm_number_format(RmProfile *profile, const gchar *number, enum rm_number_format output_format);
+gchar *rm_number_canonize(const gchar *number);
 
 G_END_DECLS
 

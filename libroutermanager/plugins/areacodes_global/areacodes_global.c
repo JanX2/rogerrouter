@@ -92,7 +92,7 @@ static gchar *areacodes_get_city(RouterManagerGlobalAreaCodesPlugin *areacodes_p
 		return g_strdup("");
 	}
 
-	full_number = rm_call_full_number(number, TRUE);
+	full_number = rm_number_full(number, TRUE);
 	//g_debug("full_number: '%s'", full_number);
 
 	/* Find area code */
@@ -157,7 +157,7 @@ static gchar *areacodes_get_city(RouterManagerGlobalAreaCodesPlugin *areacodes_p
  * \param contact contact structure
  * \param user_data pointer to areacodes plugin structure
  */
-static void global_areacodes_contact_process_cb(RmObject *obj, struct contact *contact, gpointer user_data)
+static void global_areacodes_contact_process_cb(RmObject *obj, RmContact *contact, gpointer user_data)
 {
 	RouterManagerGlobalAreaCodesPlugin *areacodes_plugin = user_data;
 

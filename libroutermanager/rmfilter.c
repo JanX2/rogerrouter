@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,6 +15,14 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+/**
+ * SECTION:rmfilter
+ * @title: RmFilter
+ * @short_description: Filter handling functions
+ *
+ * Filtering of calls based on logical and connections
  */
 
 /**
@@ -34,9 +42,6 @@
 #include <libroutermanager/rmmain.h>
 #include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmfilter.h>
-
-/** Internal filter list in memory */
-static GSList *rm_filter_list = NULL;
 
 /**
  * rm_filter_compare:
@@ -347,25 +352,15 @@ void rm_filter_free(gpointer data)
 }
 
 /**
- * rm_filter_add:
- * @filter: a #RmFilter
- *
- * Add filter structure to list.
- */
-void rm_filter_add(RmFilter *filter)
-{
-	rm_filter_list = g_slist_insert_sorted(rm_filter_list, filter, rm_filter_sort_by_name);
-}
-
-/**
  * rm_filter_new:
+ * @profile: a #RmProfile
  * @name: filter name
  *
  * Create new filter structure with given name.
  *
  * Returns: filter structure pointer
  */
-RmFilter *rm_filter_new(const gchar *name)
+RmFilter *rm_filter_new(RmProfile *profile, const gchar *name)
 {
 	RmFilter *filter = g_slice_new0(RmFilter);
 
@@ -373,33 +368,57 @@ RmFilter *rm_filter_new(const gchar *name)
 	filter->compare_or = FALSE;
 	filter->rules = NULL;
 
+	profile->filter_list = g_slist_insert_sorted(profile->filter_list, filter, rm_filter_sort_by_name);
+
 	return filter;
 }
 
 /**
+ * rm_filter_remove:
+ * @profile: a #RmProfile
+ * @filter: a #RmFilter
+ *
+ * Remove filter from list.
+ */
+void rm_filter_remove(RmProfile *profile, RmFilter *filter)
+{
+	profile->filter_list = g_slist_remove(profile->filter_list, filter);
+
+	if (filter->file) {
+		g_remove(filter->file);
+	}
+
+	g_free(filter->name);
+
+	g_slice_free(RmFilter, filter);
+}
+
+/**
  * rm_filter_get_list:
+ * @profile: a #RmProfile
  *
  * Get filter list.
  *
  * Returns: filter list
  */
-GSList *rm_filter_get_list(void)
+GSList *rm_filter_get_list(RmProfile *profile)
 {
-	return rm_filter_list;
+	return profile->filter_list;
 }
 
 /**
  * rm_filter_load:
+ * @profile: a #RmProfile
  *
  * Load filter from storage - INTERNAL -
  */
-static void rm_filter_load(void)
+static void rm_filter_load(RmProfile *profile)
 {
 	GFile *dir;
 	GFileEnumerator *enumerator;
 	GFileInfo *info;
 	GError *error = NULL;
-	gchar *path = g_build_filename(g_get_user_config_dir(), "routermanager/filters", G_DIR_SEPARATOR_S, NULL);
+	gchar *path = g_build_filename(g_get_user_config_dir(), "routermanager/profile", G_DIR_SEPARATOR_S, profile->name, G_DIR_SEPARATOR_S, "filters", G_DIR_SEPARATOR_S, NULL);
 
 	dir = g_file_new_for_path(path);
 
@@ -419,7 +438,8 @@ static void rm_filter_load(void)
 
 		g_key_file_load_from_file(keyfile, tmp, G_KEY_FILE_NONE, NULL);
 		groups = g_key_file_get_groups(keyfile, &cnt);
-		filter = rm_filter_new(name);
+
+		filter = rm_filter_new(profile, name);
 		for (idx = 0; idx < cnt; idx++) {
 			gint type;
 			gint subtype;
@@ -433,7 +453,6 @@ static void rm_filter_load(void)
 			filter->file = g_strdup(tmp);
 			g_free(entry);
 		}
-		rm_filter_add(filter);
 
 		g_key_file_unref(keyfile);
 
@@ -441,70 +460,6 @@ static void rm_filter_load(void)
 	}
 
 	g_object_unref(enumerator);
-}
-
-/**
- * rm_filter_init:
- *
- * Initialize filter and add default filters.
- */
-void rm_filter_init(void)
-{
-	RmFilter *filter;
-
-	rm_filter_load();
-
-	if (rm_filter_list) {
-		return;
-	}
-
-	/* No self-made filters available, create standard filters */
-
-	/* All calls */
-	filter = rm_filter_new(_("All calls"));
-	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_ALL, NULL);
-	rm_filter_add(filter);
-
-	/* Incoming calls */
-	filter = rm_filter_new(_("Incoming calls"));
-	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_INCOMING, NULL);
-	rm_filter_add(filter);
-
-	/* Missed calls */
-	filter = rm_filter_new(_("Missed calls"));
-	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_MISSED, NULL);
-	rm_filter_add(filter);
-
-	/* Outgoing calls */
-	filter = rm_filter_new(_("Outgoing calls"));
-	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_OUTGOING, NULL);
-	rm_filter_add(filter);
-
-	/* Fax */
-	filter = rm_filter_new(_("Fax"));
-	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_FAX, NULL);
-	rm_filter_add(filter);
-
-	/* Answering machine */
-	filter = rm_filter_new(_("Answering machine"));
-	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_VOICE, NULL);
-	rm_filter_add(filter);
-
-	/* Fax Report */
-	filter = rm_filter_new(_("Fax Report"));
-	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_FAX_REPORT, NULL);
-	rm_filter_add(filter);
-
-	/* Voice Record */
-	filter = rm_filter_new(_("Record"));
-	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_RECORD, NULL);
-	rm_filter_add(filter);
-
-	/* Blocked calls */
-	filter = rm_filter_new(_("Blocked"));
-	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_BLOCKED, NULL);
-	rm_filter_add(filter);
-
 }
 
 /**
@@ -537,13 +492,17 @@ static inline gchar *rm_filter_to_data(RmFilter *filter)
 
 /**
  * rm_filter_save:
+ * @profile: a #RmProfile
  *
  * Save filters to keyfiles.
  */
-void rm_filter_save(void)
+static void rm_filter_save(RmProfile *profile)
 {
-	GSList *list = rm_filter_list;
-	gchar *path = g_build_filename(g_get_user_config_dir(), "routermanager/filters", G_DIR_SEPARATOR_S, NULL);
+	GSList *list;
+	gchar *path;
+
+	list = profile->filter_list;
+	path = g_build_filename(g_get_user_config_dir(), "routermanager/profile", G_DIR_SEPARATOR_S, profile->name, G_DIR_SEPARATOR_S, "filters", G_DIR_SEPARATOR_S, NULL);
 
 	g_mkdir_with_parents(path, 0700);
 
@@ -564,26 +523,73 @@ void rm_filter_save(void)
 }
 
 /**
- * rm_filter_shutdown:
+ * rm_filter_init:
+ * @profile: a #RmProfile
  *
- * Shutdown filter (free list and entries).
+ * Initialize filter and add default filters if needed.
  */
-void rm_filter_shutdown(void)
+void rm_filter_init(RmProfile *profile)
 {
-	g_slist_free_full(rm_filter_list, rm_filter_free);
+	RmFilter *filter;
+
+	rm_filter_load(profile);
+
+	if (rm_filter_get_list(profile)) {
+		return;
+	}
+
+	/* No self-made filters available, create standard filters */
+
+	/* All calls */
+	filter = rm_filter_new(profile, _("All calls"));
+	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_ALL, NULL);
+
+	/* Incoming calls */
+	filter = rm_filter_new(profile, _("Incoming calls"));
+	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_INCOMING, NULL);
+
+	/* Missed calls */
+	filter = rm_filter_new(profile, _("Missed calls"));
+	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_MISSED, NULL);
+
+	/* Outgoing calls */
+	filter = rm_filter_new(profile, _("Outgoing calls"));
+	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_OUTGOING, NULL);
+
+	/* Fax */
+	filter = rm_filter_new(profile, _("Fax"));
+	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_FAX, NULL);
+
+	/* Answering machine */
+	filter = rm_filter_new(profile, _("Answering machine"));
+	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_VOICE, NULL);
+
+	/* Fax Report */
+	filter = rm_filter_new(profile, _("Fax Report"));
+	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_FAX_REPORT, NULL);
+
+	/* Voice Record */
+	filter = rm_filter_new(profile, _("Record"));
+	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_RECORD, NULL);
+
+	/* Blocked calls */
+	filter = rm_filter_new(profile, _("Blocked"));
+	rm_filter_rule_add(filter, 0, RM_CALL_TYPE_BLOCKED, NULL);
 }
 
 /**
- * rm_filter_remove:
- * @filter: a #RmFilter
+ * rm_filter_shutdown:
+ * @profile: a #RmProfile
  *
- * Remove filter from list.
+ * Shutdown filter (free list and entries).
  */
-void rm_filter_remove(RmFilter *filter)
+void rm_filter_shutdown(RmProfile *profile)
 {
-	rm_filter_list = g_slist_remove(rm_filter_list, filter);
-
-	if (filter->file) {
-		g_remove(filter->file);
+	if (!profile) {
+		return;
 	}
+
+	rm_filter_save(profile);
+	g_slist_free_full(profile->filter_list, rm_filter_free);
+	profile->filter_list = NULL;
 }

@@ -55,9 +55,9 @@ ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_GNOTIFICATION_PLUGIN, RouterMan
 /**
  * \brief Close gnotification window
  */
-void gnotification_close(RmNotification *notification)
+void gnotification_close(gpointer priv)
 {
-	g_application_withdraw_notification(G_APPLICATION(roger_app), notification->priv);
+	g_application_withdraw_notification(G_APPLICATION(roger_app), priv);
 }
 
 void gnotification_show_missed_calls(void)
@@ -80,17 +80,17 @@ void gnotification_show_missed_calls(void)
 	g_object_unref(notify);
 }
 
-void gnotification_show(RmNotification *notification)
+gpointer gnotification_show(RmConnection *connection)
 {
 	GNotification *notify = NULL;
-	RmConnection *connection = notification->connection;
 	GIcon *icon;
 	gchar *title;
 	gchar *text;
 	gchar *uid;
 
+	g_debug("%s(): called", __FUNCTION__);
 	/** Ask for contact information */
-	RmContact *contact = rm_contact_find_by_number(notification->connection->remote_number);
+	RmContact *contact = rm_contact_find_by_number(connection->remote_number);
 
 	if (RM_EMPTY_STRING(contact->name)) {
 		rm_lookup(contact->number, &contact->name, &contact->street, &contact->zip, &contact->city);
@@ -144,14 +144,15 @@ void gnotification_show(RmNotification *notification)
 	g_application_send_notification(G_APPLICATION(roger_app), uid, notify);
 	g_object_unref(notify);
 
-	rm_notification_set_uid(notification, uid);
+	return uid;
 }
 
-void gnotification_update(RmNotification *notification)
+void gnotification_update(RmConnection *connection)
 {
 }
 
-RmNotificationPlugin gnotification = {
+RmNotification gnotification = {
+	"GNotification",
 	gnotification_show,
 	gnotification_update,
 	gnotification_close,
@@ -163,6 +164,7 @@ RmNotificationPlugin gnotification = {
  */
 void impl_activate(PeasActivatable *plugin)
 {
+	g_debug("%s(): gnotification", __FUNCTION__);
 	rm_notification_register(&gnotification);
 }
 
@@ -172,6 +174,7 @@ void impl_activate(PeasActivatable *plugin)
  */
 void impl_deactivate(PeasActivatable *plugin)
 {
+	g_debug("%s(): gnotification", __FUNCTION__);
 	g_application_withdraw_notification(G_APPLICATION(roger_app), "missed-calls");
 
 	rm_notification_unregister(&gnotification);

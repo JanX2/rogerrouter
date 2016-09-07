@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,9 +25,6 @@ G_BEGIN_DECLS
 typedef gpointer (*rm_csv_parse_line_func)(gpointer ptr, gchar **split);
 
 gpointer rm_csv_parse_data(const gchar *data, const gchar *header, rm_csv_parse_line_func csv_parse_line, gpointer ptr);
-gboolean rm_csv_save_journal_as(GSList *journal, gchar *file_name);
-gboolean rm_csv_save_journal(GSList *journal);
-GSList *rm_csv_load_journal(GSList *journal);
 
 G_END_DECLS
 

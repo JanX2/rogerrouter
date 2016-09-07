@@ -26,6 +26,7 @@
 #include <libroutermanager/rmcontact.h>
 #include <libroutermanager/router.h>
 #include <libroutermanager/rmstring.h>
+#include <libroutermanager/rmcall.h>
 
 /**
  * SECTION:rmaddressbook
@@ -163,7 +164,7 @@ gboolean rm_addressbook_can_save(RmAddressBook *book)
 */
 static gint rm_addressbook_number_in_contact(gconstpointer a, gconstpointer b)
 {
-	RmContact *contact = (struct contact *)a;
+	RmContact *contact = (RmContact *)a;
 	gchar *number = (gchar *)b;
 	GSList *list = contact->numbers;
 
@@ -212,7 +213,7 @@ static void rm_addressbook_contact_process_cb(RmObject *obj, RmContact *contact,
 		}
 	} else {
 		GSList *list;
-		gchar *full_number = rm_call_full_number(contact->number, FALSE);
+		gchar *full_number = rm_number_full(contact->number, FALSE);
 
 		list = g_slist_find_custom(contacts, full_number, rm_addressbook_number_in_contact);
 		if (list) {
@@ -223,7 +224,7 @@ static void rm_addressbook_contact_process_cb(RmObject *obj, RmContact *contact,
 			rm_contact_copy(tmp_contact, contact);
 		} else {
 			/* We have found no entry, mark it in rm_addressbook_table to speedup further lookup */
-			tmp_contact = g_slice_alloc0(sizeof(struct contact));
+			tmp_contact = g_slice_alloc0(sizeof(RmContact));
 			g_hash_table_insert(rm_addressbook_table, g_strdup(contact->number), tmp_contact);
 		}
 

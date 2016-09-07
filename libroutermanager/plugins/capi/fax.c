@@ -658,7 +658,7 @@ RmConnection *capi_fax_dial(gchar *tiff, const gchar *trg_no, gboolean suppress)
 		return NULL;
 	}
 
-	target = rm_call_canonize_number(trg_no);
+	target = rm_number_canonize(trg_no);
 
 	if (cip == 1) {
 		cip = FAX_CIP;

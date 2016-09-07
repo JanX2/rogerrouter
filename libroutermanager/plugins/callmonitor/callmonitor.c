@@ -338,7 +338,7 @@ static void impl_activate(PeasActivatable *plugin)
 	RouterManagerCallMonitorPlugin *callmonitor_plugin = ROUTERMANAGER_CALLMONITOR_PLUGIN(plugin);
 
 	/* Add network event */
-	callmonitor_plugin->priv->net_event = rm_netmonitor_add_event(callmonitor_connect, callmonitor_disconnect, callmonitor_plugin);
+	callmonitor_plugin->priv->net_event = rm_netmonitor_add_event("Call Monitor", callmonitor_connect, callmonitor_disconnect, callmonitor_plugin);
 }
 
 /**

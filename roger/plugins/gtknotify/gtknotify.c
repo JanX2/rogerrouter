@@ -66,7 +66,7 @@ static gchar **selected_incoming_numbers = NULL;
 static void notify_accept_clicked_cb(GtkWidget *notify, gpointer user_data)
 {
 	RmConnection *connection = user_data;
-	struct contact *contact;
+	RmContact *contact;
 
 	g_assert(connection != NULL);
 
@@ -167,7 +167,7 @@ void notification_gtk_connection_notify_cb(RmObject *obj, RmConnection *connecti
 	GtkWidget *contact_street_label;
 	GtkWidget *city_label;
 	GtkWidget *contact_city_label;
-	struct contact *contact;
+	RmContact *contact;
 	gchar **numbers = NULL;
 	gchar *tmp;
 	gint count;
@@ -199,15 +199,15 @@ void notification_gtk_connection_notify_cb(RmObject *obj, RmConnection *connecti
 	}
 
 	if (!found && connection->local_number[0] != '0') {
-		gchar *scramble_local = rm_call_scramble_number(connection->local_number);
-		gchar *tmp = rm_call_full_number(connection->local_number, FALSE);
-		gchar *scramble_tmp = rm_call_scramble_number(tmp);
+		gchar *scramble_local = rm_number_scramble(connection->local_number);
+		gchar *tmp = rm_number_full(connection->local_number, FALSE);
+		gchar *scramble_tmp = rm_number_scramble(tmp);
 
 		g_debug("type: %d, number '%s' not found", connection->type, scramble_local);
 
 		/* Match numbers against local number and check if we should show a notification */
 		for (count = 0; count < g_strv_length(numbers); count++) {
-			gchar *scramble_number = rm_call_scramble_number(numbers[count]);
+			gchar *scramble_number = rm_number_scramble(numbers[count]);
 
 			g_debug("type: %d, number '%s'/'%s' <-> '%s'", connection->type, scramble_local, scramble_tmp, scramble_number);
 			g_free(scramble_number);

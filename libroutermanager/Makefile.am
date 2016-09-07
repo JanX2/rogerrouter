@@ -47,6 +47,8 @@ libroutermanager_la_SOURCES = \
 	rmnetmonitor.h\
 	rmnetwork.c\
 	rmnetwork.h\
+	rmnotification.c\
+	rmnotification.h\
 	rmmain.c\
 	rmmain.h\
 	rmobjectemit.c\

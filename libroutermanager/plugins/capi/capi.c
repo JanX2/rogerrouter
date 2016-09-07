@@ -1823,7 +1823,7 @@ struct capi_connection *fax_dial(gchar *tiff, const gchar *trg_no, gboolean supp
 		return NULL;
 	}
 
-	target = rm_call_canonize_number(trg_no);
+	target = rm_number_canonize(trg_no);
 
 	if (cip == 1) {
 		cip = FAX_CIP;
@@ -1864,7 +1864,7 @@ struct capi_connection *phone_dial(const gchar *trg_no, gboolean suppress)
 		return NULL;
 	}
 
-	target = rm_call_canonize_number(trg_no);
+	target = rm_number_canonize(trg_no);
 
 	g_warning("%s(): TODO", __FUNCTION__);
 	//connection = phone_call(controller, src_no, target, suppress);
@@ -1998,7 +1998,7 @@ static void impl_activate(PeasActivatable *plugin)
 	RouterManagerCapiPlugin *capi_plugin = ROUTERMANAGER_CAPI_PLUGIN(plugin);
 
 	/* Add network event */
-	capi_plugin->priv->net_event = rm_netmonitor_add_event(capi_session_connect, capi_session_disconnect, capi_plugin);
+	capi_plugin->priv->net_event = rm_netmonitor_add_event("CAPI", capi_session_connect, capi_session_disconnect, capi_plugin);
 
 	capi_phone_init();
 }

@@ -47,8 +47,8 @@ struct contacts {
 
 	GtkWidget *details_placeholder_box;
 
-	struct contact *tmp_contact;
-	struct contact *new_contact;
+	RmContact *tmp_contact;
+	RmContact *new_contact;
 };
 
 static struct contacts *contacts = NULL;
@@ -60,12 +60,12 @@ static struct contacts *contacts = NULL;
  */
 static void dial_clicked_cb(GtkWidget *button, gpointer user_data)
 {
-	struct contact *contact;
+	RmContact *contact;
 	gchar *full_number;
 	gchar *number = user_data;
 
 	/* Create full number including prefixes */
-	full_number = rm_call_full_number(number, FALSE);
+	full_number = rm_number_full(number, FALSE);
 	g_assert(full_number != NULL);
 
 	/* Find matching contact */
@@ -83,7 +83,7 @@ static void dial_clicked_cb(GtkWidget *button, gpointer user_data)
  * \brief Update contact detail page
  * \param contact contact structure
  */
-static void contacts_update_details(struct contact *contact)
+static void contacts_update_details(RmContact *contact)
 {
 	GtkWidget *detail_photo_image = NULL;
 	GtkWidget *detail_name_label = NULL;
@@ -192,7 +192,7 @@ static void contacts_update_details(struct contact *contact)
 			}
 
 			for (addresses = contact->addresses; addresses != NULL; addresses = addresses->next) {
-				struct contact_address *address = addresses->data;
+				RmContactAddress *address = addresses->data;
 				GtkWidget *type;
 				GString *addr_str = g_string_new("");
 				GtkWidget *label;
@@ -278,11 +278,11 @@ static void contacts_destroy_child(GtkWidget *widget, gpointer user_data)
 	gtk_widget_destroy(widget);
 }
 
-static struct contact *contacts_get_selected_contact(void)
+static RmContact *contacts_get_selected_contact(void)
 {
 	GtkListBoxRow *row = gtk_list_box_get_selected_row(GTK_LIST_BOX(contacts->list_box));
 	GtkWidget *child;
-	struct contact *contact;
+	RmContact *contact;
 
 	/* Sanity check #1 */
 	if (!row) {
@@ -313,7 +313,7 @@ static void contacts_update_list(void)
 	GSList *contact_list = rm_addressbook_get_contacts(book);
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(contacts->search_entry));
 	gint pos = 0;
-	struct contact *selected_contact;
+	RmContact *selected_contact;
 
 	selected_contact = contacts_get_selected_contact();
 
@@ -321,7 +321,7 @@ static void contacts_update_list(void)
 	gtk_container_foreach(GTK_CONTAINER(contacts->list_box), contacts_destroy_child, NULL);
 
 	for (list = contact_list; list != NULL; list = list->next, pos++) {
-		struct contact *contact = list->data;
+		RmContact *contact = list->data;
 		GtkWidget *child_box;
 		GtkWidget *img;
 		GtkWidget *txt;
@@ -383,7 +383,7 @@ void search_entry_search_changed_cb(GtkSearchEntry *entry, gpointer user_data)
 void contacts_list_box_row_selected_cb(GtkListBox *box, GtkListBoxRow *row, gpointer user_data)
 {
 	GList *childrens;
-	struct contact *contact = NULL;
+	RmContact *contact = NULL;
 
 	if (!contacts) {
 		return;
@@ -414,11 +414,11 @@ void contacts_list_box_row_selected_cb(GtkListBox *box, GtkListBoxRow *row, gpoi
 	contacts_update_details(contact);
 }
 
-void refresh_edit_dialog(struct contact *contact);
+void refresh_edit_dialog(RmContact *contact);
 
 void remove_phone_clicked_cb(GtkWidget *button, gpointer user_data)
 {
-	struct contact *contact = user_data;
+	RmContact *contact = user_data;
 	struct phone_number *number = (struct phone_number *) g_object_get_data(G_OBJECT(button), "number");
 
 	contact->numbers = g_slist_remove(contact->numbers, number);
@@ -427,8 +427,8 @@ void remove_phone_clicked_cb(GtkWidget *button, gpointer user_data)
 
 void remove_address_clicked_cb(GtkWidget *button, gpointer user_data)
 {
-	struct contact *contact = user_data;
-	struct contact_address *address = (struct contact_address *) g_object_get_data(G_OBJECT(button), "address");
+	RmContact *contact = user_data;
+	RmContactAddress *address = (RmContactAddress *) g_object_get_data(G_OBJECT(button), "address");
 
 	contact->addresses = g_slist_remove(contact->addresses, address);
 	refresh_edit_dialog(contact);
@@ -436,7 +436,7 @@ void remove_address_clicked_cb(GtkWidget *button, gpointer user_data)
 
 void name_entry_changed_cb(GtkWidget *entry, gpointer user_data)
 {
-	struct contact *contact = user_data;
+	RmContact *contact = user_data;
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 
 	gtk_widget_set_sensitive(contacts->save_button, strlen(text) > 0);
@@ -456,7 +456,7 @@ void number_entry_changed_cb(GtkWidget *entry, gpointer user_data)
 
 void street_entry_changed_cb(GtkWidget *entry, gpointer user_data)
 {
-	struct contact_address *address = user_data;
+	RmContactAddress *address = user_data;
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 
 	g_free(address->street);
@@ -465,7 +465,7 @@ void street_entry_changed_cb(GtkWidget *entry, gpointer user_data)
 
 void zip_entry_changed_cb(GtkWidget *entry, gpointer user_data)
 {
-	struct contact_address *address = user_data;
+	RmContactAddress *address = user_data;
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 
 	g_free(address->zip);
@@ -474,7 +474,7 @@ void zip_entry_changed_cb(GtkWidget *entry, gpointer user_data)
 
 void city_entry_changed_cb(GtkWidget *entry, gpointer user_data)
 {
-	struct contact_address *address = user_data;
+	RmContactAddress *address = user_data;
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 
 	g_free(address->city);
@@ -490,7 +490,7 @@ void number_type_changed_cb(GtkWidget *combobox, gpointer user_data)
 
 void address_type_changed_cb(GtkWidget *combobox, gpointer user_data)
 {
-	struct contact_address *address = user_data;
+	RmContactAddress *address = user_data;
 
 	address->type = gtk_combo_box_get_active(GTK_COMBO_BOX(combobox));
 }
@@ -500,7 +500,7 @@ void photo_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	GtkWidget *file_chooser;
 	GtkFileFilter *filter;
 	gint result;
-	struct contact *contact = user_data;
+	RmContact *contact = user_data;
 
 	file_chooser = gtk_file_chooser_dialog_new(_("Open image"), (GtkWindow *) gtk_widget_get_ancestor(button, GTK_TYPE_WINDOW),
 	               GTK_FILE_CHOOSER_ACTION_OPEN, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Open"), GTK_RESPONSE_ACCEPT, _("_No image"), 1, NULL);
@@ -536,7 +536,7 @@ void photo_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	gtk_widget_destroy(file_chooser);
 }
 
-void contact_add_number(struct contact *contact, gchar *number)
+void contact_add_number(RmContact *contact, gchar *number)
 {
 	/* Add phone number */
 	struct phone_number *phone_number;
@@ -548,12 +548,12 @@ void contact_add_number(struct contact *contact, gchar *number)
 	contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 }
 
-void contact_add_address(struct contact *contact, gchar *street, gchar *zip, gchar *city)
+void contact_add_address(RmContact *contact, gchar *street, gchar *zip, gchar *city)
 {
 	/* Add address */
-	struct contact_address *address;
+	RmContactAddress *address;
 
-	address = g_slice_new(struct contact_address);
+	address = g_slice_new(RmContactAddress);
 	address->type = 0;
 	address->street = g_strdup(street);
 	address->zip = g_strdup(zip);
@@ -589,9 +589,9 @@ void contacts_add_detail(gchar *detail)
 		contacts->tmp_contact->numbers = g_slist_prepend(contacts->tmp_contact->numbers, phone_number);
 	} if (!strncmp(detail, "address-", 8)) {
 		/* Add address */
-		struct contact_address *address;
+		RmContactAddress *address;
 
-		address = g_slice_new(struct contact_address);
+		address = g_slice_new(RmContactAddress);
 
 		if (!strcmp(detail, "address-home")) {
 			address->type = 0;
@@ -610,7 +610,7 @@ void contacts_add_detail(gchar *detail)
 
 extern GSettings *app_settings;
 
-void refresh_edit_dialog(struct contact *contact)
+void refresh_edit_dialog(RmContact *contact)
 {
 	GSList *numbers;
 	GSList *addresses;
@@ -698,7 +698,7 @@ void refresh_edit_dialog(struct contact *contact)
 	}
 
 	for (addresses = contact ? contact->addresses : NULL; addresses != NULL; addresses = addresses->next) {
-		struct contact_address *address = addresses->data;
+		RmContactAddress *address = addresses->data;
 		GtkWidget *street = gtk_entry_new();
 		GtkWidget *zip = gtk_entry_new();
 		GtkWidget *city = gtk_entry_new();
@@ -783,7 +783,7 @@ void refresh_edit_dialog(struct contact *contact)
 
 void contacts_cancel_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 {
-	struct contact *contact;
+	RmContact *contact;
 
 	contact = contacts_get_selected_contact();
 
@@ -803,7 +803,7 @@ void contacts_cancel_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 void contacts_save_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 {
 	RmAddressBook *book = rm_profile_get_addressbook(rm_profile_get_active());
-	struct contact *contact;
+	RmContact *contact;
 	gboolean ok = g_settings_get_boolean(app_settings, "contacts-hide-warning");
 
 	contact = contacts_get_selected_contact();
@@ -853,7 +853,7 @@ void contacts_save_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 	contacts_update_list();
 }
 
-void contact_editor(struct contact *contact)
+void contact_editor(RmContact *contact)
 {
 	contacts->tmp_contact = rm_contact_dup(contact);
 
@@ -872,7 +872,7 @@ void contact_editor(struct contact *contact)
 			contacts->tmp_contact->name = g_strdup(contacts->new_contact->name);
 		}
 		if (!contacts->tmp_contact->addresses && !RM_EMPTY_STRING(contacts->new_contact->street)) {
-			struct contact_address *address = g_malloc(sizeof(struct contact_address));
+			RmContactAddress *address = g_malloc(sizeof(RmContactAddress));
 
 			address->type = 0;
 			address->street = g_strdup(contacts->new_contact->street);
@@ -893,10 +893,10 @@ void contact_editor(struct contact *contact)
  */
 void add_button_clicked_cb(GtkWidget *button, gpointer user_data)
 {
-	struct contact *contact;
+	RmContact *contact;
 
 	/* Create a new contact */
-	contact = g_slice_new0(struct contact);
+	contact = g_slice_new0(RmContact);
 	contact->name = g_strdup("");
 
 	gtk_label_set_text(GTK_LABEL(contacts->header_bar_title), _("New contact"));
@@ -912,7 +912,7 @@ void add_button_clicked_cb(GtkWidget *button, gpointer user_data)
  */
 void edit_button_clicked_cb(GtkWidget *button, gpointer user_data)
 {
-	struct contact *contact;
+	RmContact *contact;
 
 	contact = contacts_get_selected_contact();
 	if (!contact) {
@@ -932,7 +932,7 @@ void remove_button_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 	GtkWidget *dialog;
 	GtkWidget *remove_button;
-	struct contact *contact;
+	RmContact *contact;
 	gint result;
 
 	contact = contacts_get_selected_contact();
@@ -988,7 +988,7 @@ static void contacts_contacts_changed_cb(RmObject *object, gpointer user_data)
 	contacts_update_list();
 }
 
-void contacts_set_contact(struct contacts *contacts, struct contact *contact)
+void contacts_set_contact(struct contacts *contacts, RmContact *contact)
 {
 	if (contacts->new_contact) {
 		rm_contact_free(contacts->new_contact);
@@ -1005,7 +1005,7 @@ void contacts_set_contact(struct contacts *contacts, struct contact *contact)
 /**
  * \brief Contacts window
  */
-void app_contacts(struct contact *contact)
+void app_contacts(RmContact *contact)
 {
 	GtkWidget *header_bar;
 	GtkBuilder *builder;

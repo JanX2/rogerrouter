@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,6 +37,7 @@ static gboolean rm_net_online = FALSE;
 
 /**
  * rm_netmonitor_add_event:
+ * @name: name describing event
  * @connect: a #RmNetConnect
  * @disconnect: a #RmNetDisconnect
  * @user_data: additional user data pointer
@@ -45,7 +46,7 @@ static gboolean rm_net_online = FALSE;
  *
  * Returns: a #RmNetEvent
  */
-RmNetEvent *rm_netmonitor_add_event(RmNetConnect connect, RmNetDisconnect disconnect, gpointer user_data)
+RmNetEvent *rm_netmonitor_add_event(gchar *name, RmNetConnect connect, RmNetDisconnect disconnect, gpointer user_data)
 {
 	RmNetEvent *event;
 
@@ -57,6 +58,7 @@ RmNetEvent *rm_netmonitor_add_event(RmNetConnect connect, RmNetDisconnect discon
 	event = g_slice_new(RmNetEvent);
 
 	/* Set event functions */
+	event->name = g_strdup(name);
 	event->connect = connect;
 	event->disconnect = disconnect;
 	event->user_data = user_data;
@@ -87,6 +89,7 @@ void rm_netmonitor_remove_event(RmNetEvent *net_event)
 		net_event->is_connected = !net_event->disconnect(net_event->user_data);
 	}
 
+	g_free(net_event->name);
 	g_slice_free(RmNetEvent, net_event);
 }
 
@@ -137,6 +140,7 @@ static void rm_netmonitor_state_changed(gboolean state)
 			RmNetEvent *event = list->data;
 
 			if (event->is_connected) {
+				g_debug("%s(): Calling disconnect for '%s'", __FUNCTION__, event->name);
 				event->is_connected = !event->disconnect(event->user_data);
 			}
 		}
@@ -151,7 +155,7 @@ static void rm_netmonitor_state_changed(gboolean state)
 				RmNetEvent *event = list->data;
 
 				if (!event->is_connected) {
-					g_debug("%s(): Calling connect", __FUNCTION__);
+					g_debug("%s(): Calling connect for '%s'", __FUNCTION__, event->name);
 					event->is_connected = event->connect(event->user_data);
 				}
 			}
@@ -173,11 +177,7 @@ void rm_netmonitor_reconnect(void)
 #ifdef G_OS_UNIX
 	GNetworkMonitor *monitor = g_network_monitor_get_default();
 
-#if GLIB_CHECK_VERSION(2,44,0)
-	state = g_network_monitor_get_connectivity(monitor) != G_NETWORK_CONNECTIVITY_LOCAL;
-#else
 	state = g_network_monitor_get_network_available(monitor);
-#endif
 #endif
 
 	rm_netmonitor_state_changed(state);
@@ -216,11 +216,7 @@ gboolean rm_netmonitor_init(void)
 
 	rm_ssdp_init();
 
-#if GLIB_CHECK_VERSION(2,44,0)
-	state = g_network_monitor_get_connectivity(monitor) != G_NETWORK_CONNECTIVITY_LOCAL;
-#else
 	state = g_network_monitor_get_network_available(monitor);
-#endif
 
 	rm_netmonitor_state_changed(state);
 #endif
@@ -240,5 +236,7 @@ void rm_netmonitor_shutdown(void)
 
 	/* Disconnect signal handler */
 	g_signal_handlers_disconnect_by_func(monitor, G_CALLBACK(rm_netmonitor_changed_cb), NULL);
+
+	rm_netmonitor_state_changed(FALSE);
 #endif
 }

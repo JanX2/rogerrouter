@@ -1,6 +1,6 @@
 /**
  * The libroutermanager project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -118,7 +118,7 @@ gboolean rm_faxprinter_init(GError **error)
 		return FALSE;
 	}
 
-	inet_address = g_inet_address_new_from_string("127.0.0.1");
+	inet_address = g_inet_address_new_loopback(G_SOCKET_FAMILY_IPV4);
 
 	sock_address = g_inet_socket_address_new(inet_address, 9100);
 	if (sock_address == NULL) {

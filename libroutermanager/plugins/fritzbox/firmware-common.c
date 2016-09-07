@@ -654,6 +654,7 @@ GSList *fritzbox_load_faxbox(GSList *journal)
 		split = g_strsplit(response, "\n", -1);
 
 		for (index = 0; index < g_strv_length(split); index++) {
+			RmCall *call;
 			gchar date[9];
 			gchar time[6];
 			gchar remote_number[32];
@@ -685,7 +686,8 @@ GSList *fritzbox_load_faxbox(GSList *journal)
 				number = "";
 			}
 
-			journal = rm_call_add(journal, RM_CALL_TYPE_FAX, g_strdup_printf("%s %s", date, time), "", number, ("Telefax"), "", "0:01", g_strdup(full));
+			call = rm_call_new(RM_CALL_TYPE_FAX, g_strdup_printf("%s %s", date, time), "", number, ("Telefax"), "", "0:01", g_strdup(full));
+			journal = rm_journal_add_call(journal, call);
 			g_free(full);
 		}
 
@@ -712,6 +714,7 @@ static GSList *fritzbox_parse_voice_data(GSList *journal, const gchar *data, gsi
 	gint index;
 
 	for (index = 0; index < len / sizeof(struct voice_data); index++) {
+		RmCall *call;
 		struct voice_data *voice_data = (struct voice_data *)(data + index * sizeof(struct voice_data));
 		gchar date_time[15];
 
@@ -731,7 +734,8 @@ static GSList *fritzbox_parse_voice_data(GSList *journal, const gchar *data, gsi
 
 		snprintf(date_time, sizeof(date_time), "%2.2d.%2.2d.%2.2d %2.2d:%2.2d", voice_data->day, voice_data->month, voice_data->year,
 		         voice_data->hour, voice_data->minute);
-		journal = rm_call_add(journal, RM_CALL_TYPE_VOICE, date_time, "", voice_data->remote_number, "", voice_data->local_number, "0:01", g_strdup(voice_data->file));
+		call = rm_call_new(RM_CALL_TYPE_VOICE, date_time, "", voice_data->remote_number, "", voice_data->local_number, "0:01", g_strdup(voice_data->file));
+		journal = rm_journal_add_call(journal, call);
 	}
 
 	return journal;

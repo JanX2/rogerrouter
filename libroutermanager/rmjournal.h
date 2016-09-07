@@ -17,30 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_RMPASSWORD_H
-#define LIBROUTERMANAGER_RMPASSWORD_H
-
-#include <glib.h>
-
-#include <libroutermanager/rmprofile.h>
+#ifndef LIBROUTERMANAGER_RMJOURNAL_H
+#define LIBROUTERMANAGER_RMJOURNAL_H
 
 G_BEGIN_DECLS
 
-typedef struct password_manager {
-	const gchar *name;
-	void (*set)(RmProfile *profile, const gchar *name, const gchar *password);
-	gchar *(*get)(RmProfile *profile, const gchar *name);
-	gboolean (*remove)(RmProfile *profile, const gchar *name);
-} RmPasswordManager;
-
-void rm_password_set(RmProfile *profile, const gchar *name, const gchar *password);
-gchar *rm_password_get(RmProfile *profile, const gchar *name);
-gboolean rm_password_remove(RmProfile *profile, const gchar *name);
-void rm_password_register(RmPasswordManager *manager);
-GSList *rm_password_get_plugins(void);
-void rm_password_init(void);
-gchar *rm_password_encode(const gchar *in);
-guchar *rm_password_decode(const gchar *in);
+GSList *rm_journal_add_call(GSList *journal, RmCall *call);
+gboolean rm_journal_savel_as(GSList *journal, gchar *file_name);
+gboolean rm_journal_save(GSList *journal);
+GSList *rm_journal_load(GSList *journal);
 
 G_END_DECLS
 

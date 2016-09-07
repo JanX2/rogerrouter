@@ -363,7 +363,7 @@ gboolean fritzbox_get_fax_information_05_50(struct profile *profile)
 
 	gchar *header = xml_extract_input_value(data, "telcfg:settings/FaxKennung");
 	if (header) {
-		scramble = rm_call_scramble_number(header);
+		scramble = rm_number_scramble(header);
 		g_debug("Fax-Header: '%s'", scramble);
 		g_free(scramble);
 		g_settings_set_string(profile->settings, "fax-header", header);
@@ -379,9 +379,9 @@ gboolean fritzbox_get_fax_information_05_50(struct profile *profile)
 		}
 		gchar *formated_number;
 
-		formated_number = rm_call_format_number(profile, fax_msn, RM_NUMBER_FORMAT_INTERNATIONAL_PLUS);
+		formated_number = rm_number_format(profile, fax_msn, RM_NUMBER_FORMAT_INTERNATIONAL_PLUS);
 
-		scramble = rm_call_scramble_number(fax_msn);
+		scramble = rm_number_scramble(fax_msn);
 		g_debug("Fax number: '%s'", scramble);
 		g_free(scramble);
 
@@ -445,7 +445,7 @@ gboolean fritzbox_get_fax_information_06_00(struct profile *profile)
 
 	gchar *header = xml_extract_list_value(data, "telcfg:settings/FaxKennung");
 	if (header) {
-		scramble = rm_call_scramble_number(header);
+		scramble = rm_number_scramble(header);
 		g_debug("Fax-Header: '%s'", scramble);
 		g_free(scramble);
 		g_settings_set_string(profile->settings, "fax-header", header);
@@ -461,9 +461,9 @@ gboolean fritzbox_get_fax_information_06_00(struct profile *profile)
 		}
 		gchar *formated_number;
 
-		formated_number = rm_call_format_number(profile, fax_msn, RM_NUMBER_FORMAT_INTERNATIONAL_PLUS);
+		formated_number = rm_number_format(profile, fax_msn, RM_NUMBER_FORMAT_INTERNATIONAL_PLUS);
 
-		scramble = rm_call_scramble_number(fax_msn);
+		scramble = rm_number_scramble(fax_msn);
 		g_debug("Fax number: '%s'", scramble);
 		g_free(scramble);
 
@@ -566,7 +566,7 @@ gboolean fritzbox_get_settings_05_50(struct profile *profile)
 
 		if (g_strv_length(profile_numbers)) {
 			for (idx = 0; idx < g_strv_length(profile_numbers); idx++) {
-				gchar *scramble = rm_call_scramble_number(profile_numbers[idx]);
+				gchar *scramble = rm_number_scramble(profile_numbers[idx]);
 				g_debug("Adding MSN '%s'", scramble);
 				g_free(scramble);
 			}
