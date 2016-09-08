@@ -29,14 +29,14 @@
 #include <libroutermanager/rmaudio.h>
 #include <libroutermanager/rmstring.h>
 
-#define ROUTERMANAGER_TYPE_GSTREAMER_PLUGIN (routermanager_gstreamer_plugin_get_type())
-#define ROUTERMANAGER_GSTREAMER_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_GSTREAMER_PLUGIN, RouterManagerGStreamerPlugin))
+#define RM_TYPE_GSTREAMER_PLUGIN (routermanager_gstreamer_plugin_get_type())
+#define RM_GSTREAMER_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_GSTREAMER_PLUGIN, RmGStreamerPlugin))
 
 typedef struct {
 	guint id;
-} RouterManagerGStreamerPluginPrivate;
+} RmGStreamerPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_GSTREAMER_PLUGIN, RouterManagerGStreamerPlugin, routermanager_gstreamer_plugin)
+RM_PLUGIN_REGISTER(RM_TYPE_GSTREAMER_PLUGIN, RmGStreamerPlugin, routermanager_gstreamer_plugin)
 
 /** predefined backup values */
 static gint gstreamer_channels = 2;
@@ -224,8 +224,6 @@ static void *gstreamer_open(void)
 	/* Get devices */
 	if (use_gst_device_monitor) {
 		gst_devices = gst_device_monitor_get_devices(monitor);
-
-		g_debug("%s(): Using device monitor based audio src/sink", __FUNCTION__);
 
 		/* Get preferred input/output device names */
 		output_name = g_settings_get_string(profile->settings, "audio-output");
@@ -416,14 +414,12 @@ int gstreamer_close(void *priv)
 {
 	struct pipes *pipes = priv;
 
-	g_debug("close");
 	if (pipes == NULL) {
 		return 0;
 	}
 
 	GstElement *src = pipes->out_bin;
 	if (src != NULL) {
-		g_debug("src close");
 		GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(pipes->out_pipe));
 		gst_bus_add_watch(bus, pipeline_cleaner, pipes->out_pipe);
 		gst_app_src_end_of_stream(GST_APP_SRC(src));
@@ -434,7 +430,6 @@ int gstreamer_close(void *priv)
 	}
 
 	if (pipes->in_pipe != NULL) {
-		g_debug("in close");
 		gst_element_set_state(pipes->in_pipe, GST_STATE_NULL);
 		gst_object_unref(pipes->in_pipe);
 		pipes->out_pipe = NULL;
@@ -442,7 +437,6 @@ int gstreamer_close(void *priv)
 
 	g_slice_free(struct pipes, pipes);
 	pipes = NULL;
-	g_debug("done");
 
 	return 0;
 }

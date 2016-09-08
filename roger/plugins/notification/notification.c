@@ -44,14 +44,14 @@
 #include <roger/uitools.h>
 #include <roger/settings.h>
 
-#define ROUTERMANAGER_TYPE_NOTIFICATION_PLUGIN (routermanager_notification_plugin_get_type ())
-#define ROUTERMANAGER_NOTIFICATION_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_NOTIFICATION_PLUGIN, RouterManagerNotificationPlugin))
+#define RM_TYPE_NOTIFICATION_PLUGIN (routermanager_notification_plugin_get_type ())
+#define RM_NOTIFICATION_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_NOTIFICATION_PLUGIN, RmNotificationPlugin))
 
 typedef struct {
 	guint signal_id;
-} RouterManagerNotificationPluginPrivate;
+} RmNotificationPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_NOTIFICATION_PLUGIN, RouterManagerNotificationPlugin, routermanager_notification_plugin)
+RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_NOTIFICATION_PLUGIN, RmNotificationPlugin, routermanager_notification_plugin)
 
 static GSettings *notification_settings = NULL;
 static gchar **selected_outgoing_numbers = NULL;
@@ -303,7 +303,7 @@ void notifications_connection_notify_cb(RmObject *obj, RmConnection *connection,
  */
 void impl_activate(PeasActivatable *plugin)
 {
-	RouterManagerNotificationPlugin *notify_plugin = ROUTERMANAGER_NOTIFICATION_PLUGIN(plugin);
+	RmNotificationPlugin *notify_plugin = RM_NOTIFICATION_PLUGIN(plugin);
 
 	notification_settings = rm_settings_new("org.tabos.roger.plugins.notification");
 
@@ -328,7 +328,7 @@ void impl_activate(PeasActivatable *plugin)
  */
 void impl_deactivate(PeasActivatable *plugin)
 {
-	RouterManagerNotificationPlugin *notify_plugin = ROUTERMANAGER_NOTIFICATION_PLUGIN(plugin);
+	RmNotificationPlugin *notify_plugin = RM_NOTIFICATION_PLUGIN(plugin);
 
 	/* If signal handler is connected: disconnect */
 	if (g_signal_handler_is_connected(G_OBJECT(rm_object), notify_plugin->priv->signal_id)) {

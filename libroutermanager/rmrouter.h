@@ -78,7 +78,7 @@ enum rm_router_dial_port {
 typedef struct {
 	gchar *name;
 	gint type;
-} RmPhone;
+} RmPhoneInfo;
 
 typedef struct {
 	enum phone_number_type type;

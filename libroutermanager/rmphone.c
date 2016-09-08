@@ -28,14 +28,8 @@
 /** Internal phone list */
 static GSList *rm_phone_plugins = NULL;
 
-RmConnection *rm_phone_dial(const gchar *target, gboolean anonymous)
+RmConnection *rm_phone_dial(RmPhone *phone, const gchar *target, gboolean anonymous)
 {
-	struct device_phone *phone = NULL;
-
-	if (rm_phone_plugins) {
-		phone = rm_phone_plugins->data;
-	}
-
 	if (!phone) {
 		g_warning("%s(): No phone plugin", __FUNCTION__);
 		return NULL;
@@ -50,10 +44,8 @@ RmConnection *rm_phone_dial(const gchar *target, gboolean anonymous)
 	return phone->dial(target, anonymous);
 }
 
-gint rm_phone_pickup(RmConnection *connection)
+gint rm_phone_pickup(RmPhone *phone, RmConnection *connection)
 {
-	struct device_phone *phone = rm_phone_plugins->data;
-
 	if (!phone || !phone->pickup) {
 		g_warning("%s(): No phone or pickup function", __FUNCTION__);
 		return -1;
@@ -62,10 +54,8 @@ gint rm_phone_pickup(RmConnection *connection)
 	return phone->pickup(connection);
 }
 
-void rm_phone_hangup(RmConnection *connection)
+void rm_phone_hangup(RmPhone *phone, RmConnection *connection)
 {
-	struct device_phone *phone = rm_phone_plugins->data;
-
 	if (!phone || !phone->hangup) {
 		g_warning("%s(): No phone or hangup function", __FUNCTION__);
 		return;
@@ -74,10 +64,8 @@ void rm_phone_hangup(RmConnection *connection)
 	phone->hangup(connection);
 }
 
-void rm_phone_hold(RmConnection *connection, gboolean hold)
+void rm_phone_hold(RmPhone *phone, RmConnection *connection, gboolean hold)
 {
-	struct device_phone *phone = rm_phone_plugins->data;
-
 	if (!phone || !phone->hold) {
 		g_warning("%s(): No phone or hold function", __FUNCTION__);
 		return;
@@ -86,10 +74,8 @@ void rm_phone_hold(RmConnection *connection, gboolean hold)
 	phone->hold(connection, hold);
 }
 
-void rm_phone_dtmf(RmConnection *connection, guchar chr)
+void rm_phone_dtmf(RmPhone *phone, RmConnection *connection, guchar chr)
 {
-	struct device_phone *phone = rm_phone_plugins->data;
-
 	if (!phone || !phone->send_dtmf_code) {
 		g_warning("%s(): No phone or send dtmf code function", __FUNCTION__);
 		return;
@@ -98,10 +84,8 @@ void rm_phone_dtmf(RmConnection *connection, guchar chr)
 	phone->send_dtmf_code(connection, chr);
 }
 
-void rm_phone_mute(RmConnection *connection, gboolean mute)
+void rm_phone_mute(RmPhone *phone, RmConnection *connection, gboolean mute)
 {
-	struct device_phone *phone = rm_phone_plugins->data;
-
 	if (!phone || !phone->mute) {
 		g_warning("%s(): No phone or mute function", __FUNCTION__);
 		return;
@@ -110,7 +94,7 @@ void rm_phone_mute(RmConnection *connection, gboolean mute)
 	phone->mute(connection, mute);
 }
 
-void rm_phone_record(RmConnection *connection, guchar record, const char *dir)
+void rm_phone_record(RmPhone *phone, RmConnection *connection, guchar record, const char *dir)
 {
 }
 
@@ -118,7 +102,7 @@ void rm_phone_record(RmConnection *connection, guchar record, const char *dir)
  * \brief Register phone plugin
  * \param phone phone plugin
  */
-void rm_phone_register(struct device_phone *phone)
+void rm_phone_register(RmPhone *phone)
 {
 	g_debug("%s(): Registering %s", __FUNCTION__, phone->name);
 	rm_phone_plugins = g_slist_prepend(rm_phone_plugins, phone);

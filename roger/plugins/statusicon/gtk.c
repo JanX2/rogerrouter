@@ -39,14 +39,14 @@ G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 
 #define MAX_LASTCALLS 5
 
-#define ROUTERMANAGER_TYPE_STATUSICON_PLUGIN        (routermanager_statusicon_plugin_get_type ())
-#define ROUTERMANAGER_STATUSICON_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_STATUSICON_PLUGIN, RouterManagerStatusIconPlugin))
+#define RM_TYPE_STATUSICON_PLUGIN        (routermanager_statusicon_plugin_get_type ())
+#define RM_STATUSICON_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_STATUSICON_PLUGIN, RmStatusIconPlugin))
 
 typedef struct {
 	guint signal_id;
-} RouterManagerStatusIconPluginPrivate;
+} RmStatusIconPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_STATUSICON_PLUGIN, RouterManagerStatusIconPlugin, routermanager_statusicon_plugin)
+RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_STATUSICON_PLUGIN, RmStatusIconPlugin, routermanager_statusicon_plugin)
 
 extern GList *journal_list;
 extern GtkWidget *journal_win;
@@ -330,14 +330,14 @@ static gboolean add_statusicon(gpointer user_data)
 
 void impl_activate(PeasActivatable *plugin)
 {
-	RouterManagerStatusIconPlugin *statusicon_plugin;
+	RmStatusIconPlugin *statusicon_plugin;
 
 	journal_set_hide_on_quit(TRUE);
 
 	statusicon_settings = rm_settings_new("org.tabos.roger.plugins.statusicon");
 
 	/* Connect to "call-notify" signal */
-	statusicon_plugin = ROUTERMANAGER_STATUSICON_PLUGIN(plugin);
+	statusicon_plugin = RM_STATUSICON_PLUGIN(plugin);
 	statusicon_plugin->priv->signal_id = g_signal_connect(G_OBJECT(rm_object), "connection-notify", G_CALLBACK(statusicon_connection_notify_cb), NULL);
 
 	if (g_settings_get_boolean(statusicon_settings, "hide-journal-on-startup")) {
@@ -349,13 +349,13 @@ void impl_activate(PeasActivatable *plugin)
 
 void impl_deactivate(PeasActivatable *plugin)
 {
-	RouterManagerStatusIconPlugin *statusicon_plugin;
+	RmStatusIconPlugin *statusicon_plugin;
 
 	/* Unregister delete handler */
 	journal_set_hide_on_quit(FALSE);
 
 	/* If signal handler is connected: disconnect */
-	statusicon_plugin = ROUTERMANAGER_STATUSICON_PLUGIN(plugin);
+	statusicon_plugin = RM_STATUSICON_PLUGIN(plugin);
 	if (g_signal_handler_is_connected(G_OBJECT(rm_object), statusicon_plugin->priv->signal_id)) {
 		g_signal_handler_disconnect(G_OBJECT(rm_object), statusicon_plugin->priv->signal_id);
 	}

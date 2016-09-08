@@ -38,14 +38,14 @@
 #include <libroutermanager/rmaudio.h>
 #include <libroutermanager/rmstring.h>
 
-#define ROUTERMANAGER_TYPE_PORTAUDIO_PLUGIN (routermanager_portaudio_plugin_get_type())
-#define ROUTERMANAGER_PORTAUDIO_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_PORTAUDIO_PLUGIN, RouterManagerPortAudioPlugin))
+#define RM_TYPE_PORTAUDIO_PLUGIN (routermanager_portaudio_plugin_get_type())
+#define RM_PORTAUDIO_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_PORTAUDIO_PLUGIN, RmPortAudioPlugin))
 
 typedef struct {
 	guint id;
-} RouterManagerPortAudioPluginPrivate;
+} RmPortAudioPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_PORTAUDIO_PLUGIN, RouterManagerPortAudioPlugin, routermanager_portaudio_plugin)
+RM_PLUGIN_REGISTER(RM_TYPE_PORTAUDIO_PLUGIN, RmPortAudioPlugin, routermanager_portaudio_plugin)
 
 /* Does not work at the moment */
 #define USE_SPEEX 1

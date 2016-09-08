@@ -45,18 +45,14 @@
 #include <roger/icons.h>
 #include <roger/settings.h>
 
-#define ROUTERMANAGER_TYPE_NOTIFICATION_GTK_PLUGIN (routermanager_notification_gtk_plugin_get_type ())
-#define ROUTERMANAGER_NOTIFICATION_GTK_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_NOTIFICATION_GTK_PLUGIN, RouterManagerNotificationGtkPlugin))
+#define RM_TYPE_NOTIFICATION_GTK_PLUGIN (routermanager_notification_gtk_plugin_get_type ())
+#define RM_NOTIFICATION_GTK_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_NOTIFICATION_GTK_PLUGIN, RmNotificationGtkPlugin))
 
 typedef struct {
 	guint signal_id;
-} RouterManagerNotificationGtkPluginPrivate;
+} RmNotificationGtkPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_NOTIFICATION_GTK_PLUGIN, RouterManagerNotificationGtkPlugin, routermanager_notification_gtk_plugin)
-
-static GSettings *notification_gtk_settings = NULL;
-static gchar **selected_outgoing_numbers = NULL;
-static gchar **selected_incoming_numbers = NULL;
+RM_PLUGIN_REGISTER(RM_TYPE_NOTIFICATION_GTK_PLUGIN, RmNotificationGtkPlugin, routermanager_notification_gtk_plugin)
 
 /**
  * \brief Notify accept clicked
@@ -430,20 +426,6 @@ void notification_gtk_connection_notify_cb(RmObject *obj, RmConnection *connecti
  */
 void impl_activate(PeasActivatable *plugin)
 {
-	RouterManagerNotificationGtkPlugin *notify_plugin = ROUTERMANAGER_NOTIFICATION_GTK_PLUGIN(plugin);
-
-	notification_gtk_settings = rm_settings_new("org.tabos.roger.plugins.gtknotify");
-
-	gchar **incoming_numbers = g_settings_get_strv(notification_gtk_settings, "incoming-numbers");
-	gchar **outgoing_numbers = g_settings_get_strv(notification_gtk_settings, "outgoing-numbers");
-
-	if ((!incoming_numbers || !g_strv_length(incoming_numbers)) && (!outgoing_numbers || !g_strv_length(outgoing_numbers))) {
-		g_settings_set_strv(notification_gtk_settings, "incoming-numbers", (const gchar * const *) router_get_numbers(rm_profile_get_active()));
-		g_settings_set_strv(notification_gtk_settings, "outgoing-numbers", (const gchar * const *) router_get_numbers(rm_profile_get_active()));
-	}
-
-	/* Connect to "call-notify" signal */
-	notify_plugin->priv->signal_id = g_signal_connect(G_OBJECT(rm_object), "connection-notify", G_CALLBACK(notification_gtk_connection_notify_cb), NULL);
 }
 
 /**
@@ -452,234 +434,6 @@ void impl_activate(PeasActivatable *plugin)
  */
 void impl_deactivate(PeasActivatable *plugin)
 {
-	RouterManagerNotificationGtkPlugin *notify_plugin = ROUTERMANAGER_NOTIFICATION_GTK_PLUGIN(plugin);
-
-	/* If signal handler is connected: disconnect */
-	if (g_signal_handler_is_connected(G_OBJECT(rm_object), notify_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(rm_object), notify_plugin->priv->signal_id);
-	}
-
-	g_clear_object(&notification_gtk_settings);
-}
-
-void notification_gtk_settings_refresh_list(GtkListStore *list_store)
-{
-	gchar **numbers = router_get_numbers(rm_profile_get_active());
-	GtkTreeIter iter;
-	gint count;
-	gint index;
-
-	selected_outgoing_numbers = g_settings_get_strv(notification_gtk_settings, "outgoing-numbers");
-	selected_incoming_numbers = g_settings_get_strv(notification_gtk_settings, "incoming-numbers");
-
-	for (index = 0; index < g_strv_length(numbers); index++) {
-		gtk_list_store_append(list_store, &iter);
-		gtk_list_store_set(list_store, &iter, 0, numbers[index], -1);
-		gtk_list_store_set(list_store, &iter, 1, FALSE, -1);
-		gtk_list_store_set(list_store, &iter, 2, FALSE, -1);
-
-		if (selected_outgoing_numbers) {
-			for (count = 0; count < g_strv_length(selected_outgoing_numbers); count++) {
-				if (!strcmp(numbers[index], selected_outgoing_numbers[count])) {
-					gtk_list_store_set(list_store, &iter, 1, TRUE, -1);
-					break;
-				}
-			}
-		}
-
-		if (selected_incoming_numbers) {
-			for (count = 0; count < g_strv_length(selected_incoming_numbers); count++) {
-				if (!strcmp(numbers[index], selected_incoming_numbers[count])) {
-					gtk_list_store_set(list_store, &iter, 2, TRUE, -1);
-					break;
-				}
-			}
-		}
-	}
-}
-
-static void notification_gtk_outgoing_toggle_cb(GtkCellRendererToggle *toggle, gchar *path_str, gpointer user_data)
-{
-	GtkTreeModel *model = user_data;
-	GtkTreePath *path = gtk_tree_path_new_from_string(path_str);
-	GtkTreeIter iter;
-	GValue iter_value = {0};
-	GValue name_value = {0};
-	gboolean dial;
-	gint count = 0;
-
-	gtk_tree_model_get_iter(model, &iter, path);
-	gtk_tree_model_get(model, &iter, 1, &dial, -1);
-
-	dial ^= 1;
-	gtk_list_store_set(GTK_LIST_STORE(model), &iter, 1, dial, -1);
-
-	if (gtk_tree_model_get_iter_first(model, &iter)) {
-		do {
-			gtk_tree_model_get_value(model, &iter, 1, &iter_value);
-			gtk_tree_model_get_value(model, &iter, 0, &name_value);
-
-			if (g_value_get_boolean(&iter_value)) {
-				selected_outgoing_numbers = g_realloc(selected_outgoing_numbers, (count + 1) * sizeof(char *));
-				selected_outgoing_numbers[count] = g_strdup(g_value_get_string(&name_value));
-				count++;
-			}
-
-			g_value_unset(&iter_value);
-			g_value_unset(&name_value);
-		} while (gtk_tree_model_iter_next(model, &iter));
-	} else {
-		g_debug("FAILED");
-	}
-
-	/* Terminate array */
-	selected_outgoing_numbers = g_realloc(selected_outgoing_numbers, (count + 1) * sizeof(char *));
-	selected_outgoing_numbers[count] = NULL;
-
-	gtk_tree_path_free(path);
-
-	g_settings_set_strv(notification_gtk_settings, "outgoing-numbers", (const gchar * const *) selected_outgoing_numbers);
-}
-
-static void notification_gtk_incoming_toggle_cb(GtkCellRendererToggle *toggle, gchar *path_str, gpointer user_data)
-{
-	GtkTreeModel *model = user_data;
-	GtkTreePath *path = gtk_tree_path_new_from_string(path_str);
-	GtkTreeIter iter;
-	GValue iter_value = {0};
-	GValue name_value = {0};
-	gboolean dial;
-	gint count = 0;
-
-	gtk_tree_model_get_iter(model, &iter, path);
-	gtk_tree_model_get(model, &iter, 2, &dial, -1);
-
-	dial ^= 1;
-	gtk_list_store_set(GTK_LIST_STORE(model), &iter, 2, dial, -1);
-
-	if (gtk_tree_model_get_iter_first(model, &iter)) {
-		do {
-			gtk_tree_model_get_value(model, &iter, 2, &iter_value);
-			gtk_tree_model_get_value(model, &iter, 0, &name_value);
-
-			if (g_value_get_boolean(&iter_value)) {
-				selected_incoming_numbers = g_realloc(selected_incoming_numbers, (count + 1) * sizeof(char *));
-				selected_incoming_numbers[count] = g_strdup(g_value_get_string(&name_value));
-				count++;
-			}
-
-			g_value_unset(&iter_value);
-			g_value_unset(&name_value);
-		} while (gtk_tree_model_iter_next(model, &iter));
-	} else {
-		g_debug("FAILED");
-	}
-
-	/* Terminate array */
-	selected_incoming_numbers = g_realloc(selected_incoming_numbers, (count + 1) * sizeof(char *));
-	selected_incoming_numbers[count] = NULL;
-
-	gtk_tree_path_free(path);
-
-	g_settings_set_strv(notification_gtk_settings, "incoming-numbers", (const gchar * const *) selected_incoming_numbers);
-}
-
-GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
-{
-	GtkWidget *settings_grid;
-	GtkWidget *scroll_window;
-	GtkWidget *view;
-	GtkListStore *list_store;
-	GtkTreeModel *tree_model;
-	GtkCellRenderer *renderer;
-	GtkTreeViewColumn *enable_column;
-	GtkTreeViewColumn *number_column;
-	GtkWidget *position_label;
-	GtkWidget *position_combobox;
-	GtkWidget *play_ringtones_label;
-	GtkWidget *play_ringtones_switch;
-	GtkWidget *popup_grid;
-	GtkWidget *duration_label;
-	GtkWidget *duration_spinbutton;
-	GtkAdjustment *adjustment;
-
-	/* Settings grid */
-	settings_grid = gtk_grid_new();
-
-	/* Scrolled window */
-	scroll_window = gtk_scrolled_window_new(NULL, NULL);
-	gtk_scrolled_window_set_min_content_height(GTK_SCROLLED_WINDOW(scroll_window), 200);
-	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(scroll_window), GTK_SHADOW_IN);
-	gtk_widget_set_vexpand(scroll_window, TRUE);
-
-	/* Treeview */
-	view = gtk_tree_view_new();
-
-	gtk_widget_set_hexpand(view, TRUE);
-	gtk_widget_set_vexpand(view, TRUE);
-	gtk_container_add(GTK_CONTAINER(scroll_window), view);
-
-	list_store = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN);
-
-	notification_gtk_settings_refresh_list(list_store);
-
-	tree_model = GTK_TREE_MODEL(list_store);
-
-	gtk_tree_view_set_model(GTK_TREE_VIEW(view), GTK_TREE_MODEL(tree_model));
-
-	renderer = gtk_cell_renderer_text_new();
-	number_column = gtk_tree_view_column_new_with_attributes(_("Number"), renderer, "text", 0, NULL);
-	gtk_tree_view_append_column(GTK_TREE_VIEW(view), number_column);
-
-	renderer = gtk_cell_renderer_toggle_new();
-	enable_column = gtk_tree_view_column_new_with_attributes(_("Outgoing"), renderer, "active", 1, NULL);
-	gtk_tree_view_append_column(GTK_TREE_VIEW(view), enable_column);
-	g_signal_connect(G_OBJECT(renderer), "toggled", G_CALLBACK(notification_gtk_outgoing_toggle_cb), tree_model);
-
-	renderer = gtk_cell_renderer_toggle_new();
-	enable_column = gtk_tree_view_column_new_with_attributes(_("Incoming"), renderer, "active", 2, NULL);
-	gtk_tree_view_append_column(GTK_TREE_VIEW(view), enable_column);
-	g_signal_connect(G_OBJECT(renderer), "toggled", G_CALLBACK(notification_gtk_incoming_toggle_cb), tree_model);
-
-	gtk_grid_attach(GTK_GRID(settings_grid), pref_group_create(scroll_window, _("Choose for which MSNs you want notifications"), TRUE, TRUE), 0, 0, 1, 1);
-
-	popup_grid = gtk_grid_new();
-
-	/* Set standard spacing to 5 */
-	gtk_grid_set_row_spacing(GTK_GRID(popup_grid), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(popup_grid), 15);
-
-	position_label = ui_label_new(_("Position"));
-	gtk_grid_attach(GTK_GRID(popup_grid), position_label, 0, 0, 1, 1);
-
-	position_combobox = gtk_combo_box_text_new();
-	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(position_combobox), _("Top left"));
-	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(position_combobox), _("Top right"));
-	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(position_combobox), _("Bottom left"));
-	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(position_combobox), _("Bottom right"));
-	g_settings_bind(notification_gtk_settings, "position", position_combobox, "active", G_SETTINGS_BIND_DEFAULT);
-	gtk_grid_attach(GTK_GRID(popup_grid), position_combobox, 1, 0, 1, 1);
-
-	duration_label = ui_label_new(_("Duration (outgoing)"));
-	gtk_grid_attach(GTK_GRID(popup_grid), duration_label, 0, 1, 1, 1);
-
-	adjustment = gtk_adjustment_new(0, 1, 60, 1, 10, 0);
-	duration_spinbutton = gtk_spin_button_new(adjustment, 1, 0);
-	gtk_widget_set_hexpand(duration_spinbutton, TRUE);
-	g_settings_bind(notification_gtk_settings, "duration", duration_spinbutton, "value", G_SETTINGS_BIND_DEFAULT);
-	gtk_grid_attach(GTK_GRID(popup_grid), duration_spinbutton, 1, 1, 1, 1);
-
-	play_ringtones_label = ui_label_new(_("Play ringtones"));
-	gtk_grid_attach(GTK_GRID(popup_grid), play_ringtones_label, 0, 2, 1, 1);
-
-	play_ringtones_switch = gtk_switch_new();
-	gtk_widget_set_halign(play_ringtones_switch, GTK_ALIGN_START);
-	g_settings_bind(notification_gtk_settings, "play-ringtones", play_ringtones_switch, "active", G_SETTINGS_BIND_DEFAULT);
-	gtk_grid_attach(GTK_GRID(popup_grid), play_ringtones_switch, 1, 2, 1, 1);
-
-	gtk_grid_attach(GTK_GRID(settings_grid), pref_group_create(popup_grid, _("Popup"), TRUE, TRUE), 0, 1, 1, 1);
-
-	return settings_grid;
 }
 
 #endif

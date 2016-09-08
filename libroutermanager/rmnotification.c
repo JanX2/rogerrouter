@@ -93,6 +93,10 @@ static void rm_notification_close_message(RmNotification *notification, RmConnec
 {
 	RmNotificationMessage *message = rm_notification_message_get(connection);
 
+	if (!message) {
+		return;
+	}
+
 	notification->close(message->priv);
 
 	rm_notification_messages = g_slist_remove(rm_notification_messages, message);

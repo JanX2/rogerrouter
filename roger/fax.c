@@ -99,7 +99,7 @@ gboolean fax_update_ui(gpointer user_data)
 			if (g_settings_get_boolean(rm_profile_get_active()->settings, "fax-report")) {
 				create_fax_report(fax_status, g_settings_get_string(rm_profile_get_active()->settings, "fax-report-dir"));
 			}
-			rm_phone_hangup(fax_status->connection);
+			//rm_phone_hangup(fax_status->connection);
 			fax_status->done = TRUE;
 			break;
 		default:

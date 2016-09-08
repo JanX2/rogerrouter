@@ -119,8 +119,6 @@ void capi_phone_transfer(struct capi_connection *connection, _cmsg capi_message)
 	if (!connection->audio) {
 		g_warning("%s(): No audio yet", __FUNCTION__);
 		return;
-	} else {
-		return;
 	}
 
 	/* Send data to soundcard */
@@ -564,7 +562,7 @@ gboolean capi_number_is_handled(gchar *number)
 	return TRUE;
 }
 
-struct device_phone capi_phone = {
+RmPhone capi_phone = {
 	"CAPI Phone",
 	capi_phone_dial,
 	NULL,
@@ -578,4 +576,9 @@ struct device_phone capi_phone = {
 void capi_phone_init(void)
 {
 	rm_phone_register(&capi_phone);
+}
+
+void capi_phone_shutdown(void)
+{
+	rm_phone_unregister(&capi_phone);
 }

@@ -40,14 +40,14 @@
 #include "firmware-query.h"
 #include "csv.h"
 
-#define ROUTERMANAGER_TYPE_FRITZBOX_PLUGIN        (routermanager_fritzbox_plugin_get_type ())
-#define ROUTERMANAGER_FRITZBOX_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_FRITZBOX_PLUGIN, RouterManagerFritzboxPlugin))
+#define RM_TYPE_FRITZBOX_PLUGIN        (routermanager_fritzbox_plugin_get_type ())
+#define RM_FRITZBOX_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_FRITZBOX_PLUGIN, RmFritzboxPlugin))
 
 typedef struct {
 	guint dummy;
-} RouterManagerFritzBoxPluginPrivate;
+} RmFritzBoxPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_FRITZBOX_PLUGIN, RouterManagerFritzBoxPlugin, routermanager_fritzbox_plugin)
+RM_PLUGIN_REGISTER(RM_TYPE_FRITZBOX_PLUGIN, RmFritzBoxPlugin, routermanager_fritzbox_plugin)
 
 /**
  * \brief Main login function (depending on box type)

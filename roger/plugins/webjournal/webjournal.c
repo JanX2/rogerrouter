@@ -39,8 +39,8 @@
 
 #include <webjournal.h>
 
-#define ROUTERMANAGER_TYPE_WEBJOURNAL_PLUGIN (routermanager_webjournal_plugin_get_type ())
-#define ROUTERMANAGER_WEBJOURNAL_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_WEBJOURNAL_PLUGIN, RouterManagerWebJournalPlugin))
+#define RM_TYPE_WEBJOURNAL_PLUGIN (routermanager_webjournal_plugin_get_type ())
+#define RM_WEBJOURNAL_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_WEBJOURNAL_PLUGIN, RmWebJournalPlugin))
 
 typedef struct {
 	guint signal_id;
@@ -50,9 +50,9 @@ typedef struct {
 	gchar *dragtable;
 	gchar *sortable;
 	gchar *styling;
-} RouterManagerWebJournalPluginPrivate;
+} RmWebJournalPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_WEBJOURNAL_PLUGIN, RouterManagerWebJournalPlugin, routermanager_webjournal_plugin)
+RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_WEBJOURNAL_PLUGIN, RmWebJournalPlugin, routermanager_webjournal_plugin)
 
 static GSettings *webjournal_settings = NULL;
 
@@ -93,7 +93,7 @@ static gchar *convert_date_time(gchar *date_time)
 
 void webjournal_journal_loaded_cb(RmObject *obj, GSList *journal, gpointer user_data)
 {
-	RouterManagerWebJournalPlugin *webjournal_plugin = user_data;
+	RmWebJournalPlugin *webjournal_plugin = user_data;
 	gchar *file;
 	GString *string;
 	GSList *list;
@@ -186,7 +186,7 @@ void webjournal_journal_loaded_cb(RmObject *obj, GSList *journal, gpointer user_
  */
 static void impl_activate(PeasActivatable *plugin)
 {
-	RouterManagerWebJournalPlugin *webjournal_plugin = ROUTERMANAGER_WEBJOURNAL_PLUGIN(plugin);
+	RmWebJournalPlugin *webjournal_plugin = RM_WEBJOURNAL_PLUGIN(plugin);
 	gchar *file;
 
 	file = g_strconcat(rm_get_directory(RM_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "header.html", NULL);
@@ -231,7 +231,7 @@ static void impl_activate(PeasActivatable *plugin)
  */
 static void impl_deactivate(PeasActivatable *plugin)
 {
-	RouterManagerWebJournalPlugin *webjournal_plugin = ROUTERMANAGER_WEBJOURNAL_PLUGIN(plugin);
+	RmWebJournalPlugin *webjournal_plugin = RM_WEBJOURNAL_PLUGIN(plugin);
 
 	/* If signal handler is connected: disconnect */
 	if (g_signal_handler_is_connected(G_OBJECT(rm_object), webjournal_plugin->priv->signal_id)) {

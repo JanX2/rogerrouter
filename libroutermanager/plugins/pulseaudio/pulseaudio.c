@@ -32,14 +32,14 @@
 #include <libroutermanager/rmaudio.h>
 #include <libroutermanager/rmstring.h>
 
-#define ROUTERMANAGER_TYPE_PULSEAUDIO_PLUGIN (routermanager_pulseaudio_plugin_get_type())
-#define ROUTERMANAGER_PULSEAUDIO_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_PULSEAUDIO_PLUGIN, RouterManagerPulseAudioPlugin))
+#define RM_TYPE_PULSEAUDIO_PLUGIN (routermanager_pulseaudio_plugin_get_type())
+#define RM_PULSEAUDIO_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_PULSEAUDIO_PLUGIN, RmPulseAudioPlugin))
 
 typedef struct {
 	guint id;
-} RouterManagerPulseAudioPluginPrivate;
+} RmPulseAudioPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_PULSEAUDIO_PLUGIN, RouterManagerPulseAudioPlugin, routermanager_pulseaudio_plugin)
+RM_PLUGIN_REGISTER(RM_TYPE_PULSEAUDIO_PLUGIN, RmPulseAudioPlugin, routermanager_pulseaudio_plugin)
 
 struct pulse_pipes {
 	pa_simple *simple_in;
@@ -476,7 +476,7 @@ RmAudio pulse_audio = {
  */
 static void impl_activate(PeasActivatable *plugin)
 {
-	//RouterManagerPulseAudioPlugin *pulseaudio_plugin = ROUTERMANAGER_PULSEAUDIO_PLUGIN(plugin);
+	//RmPulseAudioPlugin *pulseaudio_plugin = RM_PULSEAUDIO_PLUGIN(plugin);
 
 	/* Set media role */
 	g_setenv("PULSE_PROP_media.role", "phone", TRUE);
@@ -491,7 +491,7 @@ static void impl_activate(PeasActivatable *plugin)
  */
 static void impl_deactivate(PeasActivatable *plugin)
 {
-	//RouterManagerPulseAudioPlugin *pulseaudio_plugin = ROUTERMANAGER_PULSEAUDIO_PLUGIN(plugin);
+	//RmPulseAudioPlugin *pulseaudio_plugin = RM_PULSEAUDIO_PLUGIN(plugin);
 
 	rm_audio_unregister(&pulse_audio);
 }

@@ -29,7 +29,7 @@
 G_BEGIN_DECLS
 
 /**
- * _ROUTERMANAGER_PLUGIN_REGISTER:
+ * _RM_PLUGIN_REGISTER:
  * \param TYPE_NAME: the name of the plugin type, in UPPER_CASE
  * \param TypeName: the name of the plugin type, in CamelCase
  * \param type_name: the name of the plugin type, in lower_case
@@ -39,7 +39,7 @@ G_BEGIN_DECLS
  * Registers a plugin with the RouterManager plugin system, including registering the type specified in the parameters and declaring its activate and
  * deactivate functions.
  **/
-#define _ROUTERMANAGER_PLUGIN_REGISTER(TYPE_NAME, TypeName, type_name, TYPE_CODE, REGISTER_CODE)	\
+#define _RM_PLUGIN_REGISTER(TYPE_NAME, TypeName, type_name, TYPE_CODE, REGISTER_CODE)	\
 	typedef struct {							\
 		PeasExtensionBaseClass parent_class;				\
 	} TypeName##Class;							\
@@ -132,7 +132,7 @@ G_BEGIN_DECLS
 	}
 
 /**
- * ROUTERMANAGER_PLUGIN_REGISTER:
+ * RM_PLUGIN_REGISTER:
  * \param TYPE_NAME: the name of the plugin type, in UPPER_CASE
  * \param TypeName: the name of the plugin type, in CamelCase
  * \param type_name: the name of the plugin type, in lower_case
@@ -140,11 +140,11 @@ G_BEGIN_DECLS
  * Registers a plugin with the RouterManager plugin system, including registering the type specified in the parameters and declaring its activate and
  * deactivate functions.
  **/
-#define ROUTERMANAGER_PLUGIN_REGISTER(TYPE_NAME, TypeName, type_name)			\
-	_ROUTERMANAGER_PLUGIN_REGISTER(TYPE_NAME, TypeName, type_name,,)
+#define RM_PLUGIN_REGISTER(TYPE_NAME, TypeName, type_name)			\
+	_RM_PLUGIN_REGISTER(TYPE_NAME, TypeName, type_name,,)
 
 /**
- * ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE:
+ * RM_PLUGIN_REGISTER_CONFIGURABLE:
  * \param TYPE_NAME: the name of the plugin type, in UPPER_CASE
  * \param TypeName: the name of the plugin type, in CamelCase
  * \param type_name: the name of the plugin type, in lower_case
@@ -152,10 +152,10 @@ G_BEGIN_DECLS
  * Registers a configurable plugin with the RouterManager plugin system, including registering the type specified in the parameters and declaring its activate
  * and deactivate and widget creation functions.
  **/
-#define ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(TYPE_NAME, TypeName, type_name)	\
+#define RM_PLUGIN_REGISTER_CONFIGURABLE(TYPE_NAME, TypeName, type_name)	\
 	static GtkWidget *impl_create_configure_widget (PeasGtkConfigurable *configurable); \
 	static void peas_gtk_configurable_iface_init (PeasGtkConfigurableInterface *iface); \
-	_ROUTERMANAGER_PLUGIN_REGISTER(TYPE_NAME, TypeName, type_name,			\
+	_RM_PLUGIN_REGISTER(TYPE_NAME, TypeName, type_name,			\
 		(G_IMPLEMENT_INTERFACE_DYNAMIC (PEAS_GTK_TYPE_CONFIGURABLE, peas_gtk_configurable_iface_init)), \
 		peas_object_module_register_extension_type (module, PEAS_GTK_TYPE_CONFIGURABLE, TYPE_NAME);) \
 	static void								\

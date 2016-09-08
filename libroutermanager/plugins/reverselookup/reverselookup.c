@@ -44,17 +44,17 @@
 
 #include "reverselookup.h"
 
-#define ROUTERMANAGER_TYPE_REVERSE_LOOKUP_PLUGIN (routermanager_reverse_lookup_plugin_get_type ())
-#define ROUTERMANAGER_REVERSE_LOOKUP_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_REVERSE_LOOKUP_PLUGIN, RouterManagerReverseLookupPlugin))
+#define RM_TYPE_REVERSE_LOOKUP_PLUGIN (routermanager_reverse_lookup_plugin_get_type ())
+#define RM_REVERSE_LOOKUP_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_REVERSE_LOOKUP_PLUGIN, RmReverseLookupPlugin))
 
 //#define RL_DEBUG 1
 
 typedef struct {
 	guint signal_id;
 	GHashTable *table;
-} RouterManagerReverseLookupPluginPrivate;
+} RmReverseLookupPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_REVERSE_LOOKUP_PLUGIN, RouterManagerReverseLookupPlugin, routermanager_reverse_lookup_plugin)
+RM_PLUGIN_REGISTER(RM_TYPE_REVERSE_LOOKUP_PLUGIN, RmReverseLookupPlugin, routermanager_reverse_lookup_plugin)
 
 static GHashTable *table = NULL;
 /** Global lookup list */
@@ -551,7 +551,7 @@ RmLookup rl = {
  */
 static void impl_activate(PeasActivatable *plugin)
 {
-	RouterManagerReverseLookupPlugin *reverselookup_plugin = ROUTERMANAGER_REVERSE_LOOKUP_PLUGIN(plugin);
+	RmReverseLookupPlugin *reverselookup_plugin = RM_REVERSE_LOOKUP_PLUGIN(plugin);
 	xmlnode *node, *child;
 	gchar *file;
 
@@ -598,7 +598,7 @@ static void impl_activate(PeasActivatable *plugin)
  */
 static void impl_deactivate(PeasActivatable *plugin)
 {
-	RouterManagerReverseLookupPlugin *reverselookup_plugin = ROUTERMANAGER_REVERSE_LOOKUP_PLUGIN(plugin);
+	RmReverseLookupPlugin *reverselookup_plugin = RM_REVERSE_LOOKUP_PLUGIN(plugin);
 
 	/* If signal handler is connected: disconnect */
 	if (g_signal_handler_is_connected(G_OBJECT(rm_object), reverselookup_plugin->priv->signal_id)) {

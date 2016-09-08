@@ -36,8 +36,8 @@
 #include <libroutermanager/rmnetmonitor.h>
 #include <libroutermanager/rmdevice.h>
 
-#define ROUTERMANAGER_TYPE_CALLMONITOR_PLUGIN (routermanager_callmonitor_plugin_get_type ())
-#define ROUTERMANAGER_CALLMONITOR_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_CALLMONITOR_PLUGIN, RouterManagerCallMonitorPlugin))
+#define RM_TYPE_CALLMONITOR_PLUGIN (routermanager_callmonitor_plugin_get_type ())
+#define RM_CALLMONITOR_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_CALLMONITOR_PLUGIN, RmCallMonitorPlugin))
 
 #define CALLMONITOR_DEBUG 1
 
@@ -46,9 +46,9 @@ typedef struct {
 
 	GIOChannel *channel;
 	guint id;
-} RouterManagerCallMonitorPluginPrivate;
+} RmCallMonitorPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_CALLMONITOR_PLUGIN, RouterManagerCallMonitorPlugin, routermanager_callmonitor_plugin)
+RM_PLUGIN_REGISTER(RM_TYPE_CALLMONITOR_PLUGIN, RmCallMonitorPlugin, routermanager_callmonitor_plugin)
 
 /**
  * \brief Convert text line and emit connection-notify signal
@@ -178,7 +178,7 @@ gboolean callmonitor_io_cb(GIOChannel *source, GIOCondition condition, gpointer 
  */
 gboolean callmonitor_connect(gpointer user_data)
 {
-	RouterManagerCallMonitorPlugin *callmonitor_plugin = user_data;
+	RmCallMonitorPlugin *callmonitor_plugin = user_data;
 	GSocket *socket;
 	GInetAddress *inet_address = NULL;
 	GSocketAddress *sock_address;
@@ -310,7 +310,7 @@ again:
  */
 gboolean callmonitor_disconnect(gpointer user_data)
 {
-	RouterManagerCallMonitorPlugin *callmonitor_plugin = user_data;
+	RmCallMonitorPlugin *callmonitor_plugin = user_data;
 	GError *error = NULL;
 
 	if (callmonitor_plugin->priv->id > 0) {
@@ -336,7 +336,7 @@ gboolean callmonitor_disconnect(gpointer user_data)
  */
 static void impl_activate(PeasActivatable *plugin)
 {
-	RouterManagerCallMonitorPlugin *callmonitor_plugin = ROUTERMANAGER_CALLMONITOR_PLUGIN(plugin);
+	RmCallMonitorPlugin *callmonitor_plugin = RM_CALLMONITOR_PLUGIN(plugin);
 
 	/* Add network event */
 	callmonitor_plugin->priv->net_event = rm_netmonitor_add_event("Call Monitor", callmonitor_connect, callmonitor_disconnect, callmonitor_plugin);
@@ -348,7 +348,7 @@ static void impl_activate(PeasActivatable *plugin)
  */
 static void impl_deactivate(PeasActivatable *plugin)
 {
-	RouterManagerCallMonitorPlugin *callmonitor_plugin = ROUTERMANAGER_CALLMONITOR_PLUGIN(plugin);
+	RmCallMonitorPlugin *callmonitor_plugin = RM_CALLMONITOR_PLUGIN(plugin);
 
 	g_debug("%s(): callmonitor", __FUNCTION__);
 	/* Remove network event */

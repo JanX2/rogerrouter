@@ -22,18 +22,18 @@
 #include <libroutermanager/rmpassword.h>
 #include <libroutermanager/rmmain.h>
 
-#define ROUTERMANAGER_TYPE_SIMPLE_PWD_PLUGIN        (routermanager_simple_pwd_plugin_get_type ())
-#define ROUTERMANAGER_SIMPLE_PWD_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_SIMPLE_PWD_PLUGIN, RouterManagerSimplePwdPlugin))
+#define RM_TYPE_SIMPLE_PWD_PLUGIN        (routermanager_simple_pwd_plugin_get_type ())
+#define RM_SIMPLE_PWD_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_SIMPLE_PWD_PLUGIN, RmSimplePwdPlugin))
 
 typedef struct {
 	guint dummy;
-} RouterManagerSimplePwdPluginPrivate;
+} RmSimplePwdPluginPrivate;
 
 static GKeyFile *simple_pwd_keyfile = NULL;
 static gchar *simple_pwd_file = NULL;
 static gchar *simple_pwd_group = NULL;
 
-ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_SIMPLE_PWD_PLUGIN, RouterManagerSimplePwdPlugin, routermanager_simple_pwd_plugin)
+RM_PLUGIN_REGISTER(RM_TYPE_SIMPLE_PWD_PLUGIN, RmSimplePwdPlugin, routermanager_simple_pwd_plugin)
 
 /**
  * \brief Store password

@@ -43,14 +43,14 @@
 #include <roger/settings.h>
 #include <roger/uitools.h>
 
-#define ROUTERMANAGER_TYPE_GNOTIFICATION_PLUGIN (routermanager_gnotification_plugin_get_type ())
-#define ROUTERMANAGER_GNOTIFICATION_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_GNOTIFICATION_PLUGIN, RouterManagerGNotificationPlugin))
+#define RM_TYPE_GNOTIFICATION_PLUGIN (routermanager_gnotification_plugin_get_type ())
+#define RM_GNOTIFICATION_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_GNOTIFICATION_PLUGIN, RmGNotificationPlugin))
 
 typedef struct {
 	guint signal_id;
-} RouterManagerGNotificationPluginPrivate;
+} RmGNotificationPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_GNOTIFICATION_PLUGIN, RouterManagerGNotificationPlugin, routermanager_gnotification_plugin)
+RM_PLUGIN_REGISTER(RM_TYPE_GNOTIFICATION_PLUGIN, RmGNotificationPlugin, routermanager_gnotification_plugin)
 
 /**
  * \brief Close gnotification window

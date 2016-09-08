@@ -286,7 +286,9 @@ void rm_addressbook_unregister(RmAddressBook *book)
 	if (g_slist_length(rm_addressbook_plugins) < 1) {
 		g_signal_handler_disconnect(G_OBJECT(rm_object), rm_addressbook_contact_process_id);
 		g_signal_handler_disconnect(G_OBJECT(rm_object), rm_addressbook_contacts_changed_id);
+
 		g_hash_table_destroy(rm_addressbook_table);
+		rm_addressbook_table = NULL;
 	}
 }
 

@@ -25,14 +25,14 @@
 
 #include <secret.h>
 
-#define ROUTERMANAGER_TYPE_SECRET_PLUGIN        (routermanager_secret_plugin_get_type ())
-#define ROUTERMANAGER_SECRET_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_SECRET_PLUGIN, RouterManagerSecretPlugin))
+#define RM_TYPE_SECRET_PLUGIN        (routermanager_secret_plugin_get_type ())
+#define RM_SECRET_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_SECRET_PLUGIN, RmSecretPlugin))
 
 typedef struct {
 	guint signal_id;
-} RouterManagerSecretPluginPrivate;
+} RmSecretPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_SECRET_PLUGIN, RouterManagerSecretPlugin, routermanager_secret_plugin)
+RM_PLUGIN_REGISTER(RM_TYPE_SECRET_PLUGIN, RmSecretPlugin, routermanager_secret_plugin)
 
 /**
  * \brief Get secret schema for this plugin

@@ -35,15 +35,15 @@
 
 #include "csv.h"
 
-#define ROUTERMANAGER_TYPE_GLOBAL_AREACODES_PLUGIN (routermanager_global_areacodes_plugin_get_type ())
-#define ROUTERMANAGER_GLOBAL_AREACODES_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_GLOBAL_AREACODES_PLUGIN, RouterManagerGlobalAreaCodesPlugin))
+#define RM_TYPE_GLOBAL_AREACODES_PLUGIN (routermanager_global_areacodes_plugin_get_type ())
+#define RM_GLOBAL_AREACODES_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_GLOBAL_AREACODES_PLUGIN, RmGlobalAreaCodesPlugin))
 
 typedef struct {
 	guint signal_id;
 	GHashTable *table;
-} RouterManagerGlobalAreaCodesPluginPrivate;
+} RmGlobalAreaCodesPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_GLOBAL_AREACODES_PLUGIN, RouterManagerGlobalAreaCodesPlugin, routermanager_global_areacodes_plugin)
+RM_PLUGIN_REGISTER(RM_TYPE_GLOBAL_AREACODES_PLUGIN, RmGlobalAreaCodesPlugin, routermanager_global_areacodes_plugin)
 
 /**
  * \brief Get area code pointer based on full_number
@@ -51,7 +51,7 @@ ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_GLOBAL_AREACODES_PLUGIN, Router
  * \param full_number full phone number
  * \return pointer to areacode entry
  */
-struct areacode *areacodes_get_area_code(RouterManagerGlobalAreaCodesPlugin *areacodes_plugin, const gchar *full_number)
+struct areacode *areacodes_get_area_code(RmGlobalAreaCodesPlugin *areacodes_plugin, const gchar *full_number)
 {
 	gchar sub_string[6];
 	gint index;
@@ -80,7 +80,7 @@ struct areacode *areacodes_get_area_code(RouterManagerGlobalAreaCodesPlugin *are
  * \param number remote caller number
  * \return city name or empty string
  */
-static gchar *areacodes_get_city(RouterManagerGlobalAreaCodesPlugin *areacodes_plugin, gchar *number)
+static gchar *areacodes_get_city(RmGlobalAreaCodesPlugin *areacodes_plugin, gchar *number)
 {
 	gchar *full_number;
 	gchar *ret = NULL;
@@ -160,7 +160,7 @@ static gchar *areacodes_get_city(RouterManagerGlobalAreaCodesPlugin *areacodes_p
  */
 static void global_areacodes_contact_process_cb(RmObject *obj, RmContact *contact, gpointer user_data)
 {
-	RouterManagerGlobalAreaCodesPlugin *areacodes_plugin = user_data;
+	RmGlobalAreaCodesPlugin *areacodes_plugin = user_data;
 
 	if (RM_EMPTY_STRING(contact->number)) {
 		return;
@@ -179,7 +179,7 @@ static void global_areacodes_contact_process_cb(RmObject *obj, RmContact *contac
  */
 static void impl_activate(PeasActivatable *plugin)
 {
-	RouterManagerGlobalAreaCodesPlugin *areacodes_plugin = ROUTERMANAGER_GLOBAL_AREACODES_PLUGIN(plugin);
+	RmGlobalAreaCodesPlugin *areacodes_plugin = RM_GLOBAL_AREACODES_PLUGIN(plugin);
 	gchar *areacodes = g_build_filename(rm_get_directory(RM_PLUGINS), "areacodes_global", "globalareacodes.csv", NULL);
 	gchar *data;
 	gsize read;
@@ -216,7 +216,7 @@ static void impl_activate(PeasActivatable *plugin)
  */
 static void impl_deactivate(PeasActivatable *plugin)
 {
-	RouterManagerGlobalAreaCodesPlugin *areacodes_plugin = ROUTERMANAGER_GLOBAL_AREACODES_PLUGIN(plugin);
+	RmGlobalAreaCodesPlugin *areacodes_plugin = RM_GLOBAL_AREACODES_PLUGIN(plugin);
 
 	/* If signal handler is connected: disconnect */
 	if (g_signal_handler_is_connected(G_OBJECT(rm_object), areacodes_plugin->priv->signal_id)) {

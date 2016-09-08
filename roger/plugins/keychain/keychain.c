@@ -31,13 +31,13 @@
 #include <libroutermanager/rmpassword.h>
 
 #define ROUTERMANAGER_TYPE_KEYCHAIN_PLUGIN        (routermanager_keychain_plugin_get_type ())
-#define ROUTERMANAGER_KEYCHAIN_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_KEYCHAIN_PLUGIN, RouterManagerKeyChainPlugin))
+#define RM_KEYCHAIN_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_KEYCHAIN_PLUGIN, RmKeyChainPlugin))
 
 typedef struct {
 	guint signal_id;
-} RouterManagerKeyChainPluginPrivate;
+} RmKeyChainPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_KEYCHAIN_PLUGIN, RouterManagerKeyChainPlugin, routermanager_keychain_plugin)
+RM_PLUGIN_REGISTER(RM_TYPE_KEYCHAIN_PLUGIN, RmKeyChainPlugin, routermanager_keychain_plugin)
 
 #define SERVICE_NAME "roger"
 

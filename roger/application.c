@@ -264,7 +264,7 @@ static void hangup_activated(GSimpleAction *action, GVariant *parameter, gpointe
 		//connection->priv = active_capi_connection;
 	//}
 
-	rm_phone_hangup(connection->priv);
+	//rm_phone_hangup(connection->priv);
 }
 
 static void journal_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)

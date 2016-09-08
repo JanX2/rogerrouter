@@ -42,14 +42,14 @@
 #include <gdata/gdata.h>
 #include <gdata/gdata-oauth1-authorizer.h>
 
-#define ROUTERMANAGER_TYPE_GOOGLE_PLUGIN        (routermanager_google_plugin_get_type ())
-#define ROUTERMANAGER_GOOGLE_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_GOOGLE_PLUGIN, RouterManagerGooglePlugin))
+#define RM_TYPE_GOOGLE_PLUGIN        (routermanager_google_plugin_get_type ())
+#define RM_GOOGLE_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_GOOGLE_PLUGIN, RmGooglePlugin))
 
 typedef struct {
 	guint signal_id;
-} RouterManagerGooglePluginPrivate;
+} RmGooglePluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_GOOGLE_PLUGIN, RouterManagerGooglePlugin, routermanager_google_plugin)
+RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_GOOGLE_PLUGIN, RmGooglePlugin, routermanager_google_plugin)
 
 void pref_notebook_add_page(GtkWidget *notebook, GtkWidget *page, gchar *title);
 GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand, gboolean vexpand);
@@ -859,7 +859,7 @@ RmAddressBook google_book = {
 
 void impl_activate(PeasActivatable *plugin)
 {
-	//RouterManagerGooglePlugin *google_plugin = ROUTERMANAGER_GOOGLE_PLUGIN(plugin);
+	//RmGooglePlugin *google_plugin = RM_GOOGLE_PLUGIN(plugin);
 
 	google_settings = rm_settings_new("org.tabos.roger.plugins.google");
 
@@ -874,7 +874,7 @@ void impl_activate(PeasActivatable *plugin)
 
 void impl_deactivate(PeasActivatable *plugin)
 {
-	RouterManagerGooglePlugin *google_plugin = ROUTERMANAGER_GOOGLE_PLUGIN(plugin);
+	RmGooglePlugin *google_plugin = RM_GOOGLE_PLUGIN(plugin);
 
 	rm_addressbook_unregister(&google_book);
 

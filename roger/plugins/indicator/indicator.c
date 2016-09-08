@@ -45,14 +45,14 @@
 
 #define MAX_LASTCALLS 5
 
-#define ROUTERMANAGER_TYPE_INDICATOR_PLUGIN        (routermanager_indicator_plugin_get_type ())
-#define ROUTERMANAGER_INDICATOR_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_INDICATOR_PLUGIN, RouterManagerIndicatorPlugin))
+#define RM_TYPE_INDICATOR_PLUGIN        (routermanager_indicator_plugin_get_type ())
+#define RM_INDICATOR_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_INDICATOR_PLUGIN, RmIndicatorPlugin))
 
 typedef struct {
 	guint signal_id;
-} RouterManagerIndicatorPluginPrivate;
+} RmIndicatorPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_INDICATOR_PLUGIN, RouterManagerIndicatorPlugin, routermanager_indicator_plugin)
+RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_INDICATOR_PLUGIN, RmIndicatorPlugin, routermanager_indicator_plugin)
 
 extern GList *journal_list;
 extern GtkWidget *journal_win;
@@ -335,7 +335,7 @@ void indicator_combobox_notify_changed_cb(GtkComboBox *widget, gpointer user_dat
 
 void impl_activate(PeasActivatable *plugin)
 {
-	RouterManagerIndicatorPlugin *indicator_plugin;
+	RmIndicatorPlugin *indicator_plugin;
 	GtkWidget *menu;
 
 	journal_set_hide_on_quit(TRUE);
@@ -355,7 +355,7 @@ void impl_activate(PeasActivatable *plugin)
 	app_indicator_set_status(indicator, APP_INDICATOR_STATUS_ACTIVE);
 
 	/* Connect to "call-notify" signal */
-	indicator_plugin = ROUTERMANAGER_INDICATOR_PLUGIN(plugin);
+	indicator_plugin = RM_INDICATOR_PLUGIN(plugin);
 	indicator_plugin->priv->signal_id = g_signal_connect(G_OBJECT(rm_object), "connection-notify", G_CALLBACK(indicator_connection_notify_cb), NULL);
 
 	if (g_settings_get_boolean(indicator_settings, "hide-journal-on-startup")) {
@@ -365,13 +365,13 @@ void impl_activate(PeasActivatable *plugin)
 
 void impl_deactivate(PeasActivatable *plugin)
 {
-	RouterManagerIndicatorPlugin *indicator_plugin;
+	RmIndicatorPlugin *indicator_plugin;
 
 	/* Unregister delete handler */
 	journal_set_hide_on_quit(FALSE);
 
 	/* If signal handler is connected: disconnect */
-	indicator_plugin = ROUTERMANAGER_INDICATOR_PLUGIN(plugin);
+	indicator_plugin = RM_INDICATOR_PLUGIN(plugin);
 	if (g_signal_handler_is_connected(G_OBJECT(rm_object), indicator_plugin->priv->signal_id)) {
 		g_signal_handler_disconnect(G_OBJECT(rm_object), indicator_plugin->priv->signal_id);
 	}

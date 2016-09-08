@@ -38,16 +38,16 @@
 #include <roger/uitools.h>
 #include <roger/settings.h>
 
-#define ROUTERMANAGER_TYPE_SIP_PLUGIN (routermanager_sip_plugin_get_type ())
-#define ROUTERMANAGER_SIP_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_SIP_PLUGIN, RouterManagerSipPlugin))
+#define RM_TYPE_SIP_PLUGIN (routermanager_sip_plugin_get_type ())
+#define RM_SIP_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_SIP_PLUGIN, RmSipPlugin))
 
 typedef struct {
 	gconstpointer net_event_id;
 
 	guint id;
-} RouterManagerSipPluginPrivate;
+} RmSipPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_SIP_PLUGIN, RouterManagerSipPlugin, routermanager_sip_plugin)
+RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_SIP_PLUGIN, RmSipPlugin, routermanager_sip_plugin)
 
 struct sip_call {
 	gint id;
@@ -258,7 +258,7 @@ void sip_phone_send_dtmf_code(RmConnection *connection, guchar code)
 
 gboolean sip_connect(gpointer user_data)
 {
-	//RouterManagerSipPlugin *sip_plugin = user_data;
+	//RmSipPlugin *sip_plugin = user_data;
 	RmProfile *profile = rm_profile_get_active();
 	pj_status_t status;
 	pj_thread_desc rtpdesc;
@@ -382,7 +382,7 @@ gboolean sip_phone_number_is_handled(gchar *number)
 	return FALSE;
 }
 
-struct device_phone sip_phone = {
+RmPhone sip_phone = {
 	"SIP Phone",
 	sip_phone_dial,
 	sip_phone_pickup,
@@ -398,7 +398,7 @@ struct device_phone sip_phone = {
  */
 static void impl_activate(PeasActivatable *plugin)
 {
-	RouterManagerSipPlugin *sip_plugin = ROUTERMANAGER_SIP_PLUGIN(plugin);
+	RmSipPlugin *sip_plugin = RM_SIP_PLUGIN(plugin);
 
 	g_debug("%s(): sip", __FUNCTION__);
 
@@ -416,7 +416,7 @@ static void impl_activate(PeasActivatable *plugin)
  */
 static void impl_deactivate(PeasActivatable *plugin)
 {
-	RouterManagerSipPlugin *sip_plugin = ROUTERMANAGER_SIP_PLUGIN(plugin);
+	RmSipPlugin *sip_plugin = RM_SIP_PLUGIN(plugin);
 
 	g_debug("%s(): sip", __FUNCTION__);
 	/* Remove network event */

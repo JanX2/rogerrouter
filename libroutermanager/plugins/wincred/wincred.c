@@ -25,14 +25,14 @@
 #include <libroutermanager/rmplugins.h>
 #include <libroutermanager/rmpassword.h>
 
-#define ROUTERMANAGER_TYPE_WINCRED_PLUGIN        (routermanager_wincred_plugin_get_type ())
-#define ROUTERMANAGER_WINCRED_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_WINCRED_PLUGIN, RouterManagerWinCredPlugin))
+#define RM_TYPE_WINCRED_PLUGIN        (routermanager_wincred_plugin_get_type ())
+#define RM_WINCRED_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_WINCRED_PLUGIN, RmWinCredPlugin))
 
 typedef struct {
 	guint signal_id;
-} RouterManagerWinCredPluginPrivate;
+} RmWinCredPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_WINCRED_PLUGIN, RouterManagerWinCredPlugin, routermanager_wincred_plugin)
+RM_PLUGIN_REGISTER(RM_TYPE_WINCRED_PLUGIN, RmWinCredPlugin, routermanager_wincred_plugin)
 
 /**
  * \brief Store password

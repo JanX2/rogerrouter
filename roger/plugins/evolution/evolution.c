@@ -42,14 +42,14 @@
 
 #include "ebook-sources.h"
 
-#define ROUTERMANAGER_TYPE_EVOLUTION_PLUGIN        (routermanager_evolution_plugin_get_type ())
-#define ROUTERMANAGER_EVOLUTION_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_EVOLUTION_PLUGIN, RouterManagerEvolutionPlugin))
+#define RM_TYPE_EVOLUTION_PLUGIN        (routermanager_evolution_plugin_get_type ())
+#define RM_EVOLUTION_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_EVOLUTION_PLUGIN, RmEvolutionPlugin))
 
 typedef struct {
 	guint signal_id;
-} RouterManagerEvolutionPluginPrivate;
+} RmEvolutionPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_EVOLUTION_PLUGIN, RouterManagerEvolutionPlugin, routermanager_evolution_plugin)
+RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_EVOLUTION_PLUGIN, RmEvolutionPlugin, routermanager_evolution_plugin)
 
 void pref_notebook_add_page(GtkWidget *notebook, GtkWidget *page, gchar *title);
 

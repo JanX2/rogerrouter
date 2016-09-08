@@ -26,7 +26,7 @@
 
 G_BEGIN_DECLS
 
-struct device_phone {
+typedef struct {
 	gchar *name;
 	RmConnection *(*dial)(const gchar *target, gboolean anonymous);
 	gint (*pickup)(RmConnection *connection);
@@ -38,17 +38,22 @@ struct device_phone {
 
 	void (*mute)(RmConnection *connection, gboolean mute);
 	/*void (*record)(gpointer connection, guchar hold, const gchar *dir);*/
-};
+} RmPhone;
 
-void rm_phone_register(struct device_phone *phone);
+void rm_phone_register(RmPhone *phone);
+void rm_phone_unregister(RmPhone *phone);
+
 GSList *rm_phone_get_plugins(void);
-void rm_phone_mute(RmConnection *connection, gboolean mute);
-void rm_phone_record(RmConnection *connection, guchar record, const char *dir);
-void rm_phone_hold(RmConnection *connection, gboolean hold);
-void rm_phone_dtmf(RmConnection *connection, guchar code);
-void rm_phone_hangup(RmConnection *connection);
-gint rm_phone_pickup(RmConnection *connection);
-RmConnection *rm_phone_dial(const gchar *target, gboolean anonymous);
+GSList *rm_phone_get_devices(RmPhone *phone);
+void rm_phone_set_device(RmPhone *phone, gchar *name);
+
+void rm_phone_mute(RmPhone *phone, RmConnection *connection, gboolean mute);
+void rm_phone_record(RmPhone *phone, RmConnection *connection, guchar record, const char *dir);
+void rm_phone_hold(RmPhone *phone, RmConnection *connection, gboolean hold);
+void rm_phone_dtmf(RmPhone *phone, RmConnection *connection, guchar code);
+void rm_phone_hangup(RmPhone *phone, RmConnection *connection);
+gint rm_phone_pickup(RmPhone *phone, RmConnection *connection);
+RmConnection *rm_phone_dial(RmPhone *phone, const gchar *target, gboolean anonymous);
 
 G_END_DECLS
 

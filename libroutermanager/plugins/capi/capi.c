@@ -46,17 +46,17 @@
 #include <phone.h>
 #include <isdn-convert.h>
 
-#define ROUTERMANAGER_TYPE_CAPI_PLUGIN (routermanager_capi_plugin_get_type ())
-#define ROUTERMANAGER_CAPI_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_CAPI_PLUGIN, RouterManagerCapiPlugin))
+#define RM_TYPE_CAPI_PLUGIN (routermanager_capi_plugin_get_type ())
+#define RM_CAPI_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_CAPI_PLUGIN, RmCapiPlugin))
 
 typedef struct {
 	RmNetEvent *net_event;
 
 	GIOChannel *channel;
 	guint id;
-} RouterManagerCapiPluginPrivate;
+} RmCapiPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_CAPI_PLUGIN, RouterManagerCapiPlugin, routermanager_capi_plugin)
+RM_PLUGIN_REGISTER(RM_TYPE_CAPI_PLUGIN, RmCapiPlugin, routermanager_capi_plugin)
 
 //#define CAPI_DEBUG 1
 
@@ -1996,7 +1996,7 @@ gboolean capi_session_disconnect(gpointer user_data)
  */
 static void impl_activate(PeasActivatable *plugin)
 {
-	RouterManagerCapiPlugin *capi_plugin = ROUTERMANAGER_CAPI_PLUGIN(plugin);
+	RmCapiPlugin *capi_plugin = RM_CAPI_PLUGIN(plugin);
 
 	/* Add network event */
 	capi_plugin->priv->net_event = rm_netmonitor_add_event("CAPI", capi_session_connect, capi_session_disconnect, capi_plugin);
@@ -2010,10 +2010,12 @@ static void impl_activate(PeasActivatable *plugin)
  */
 static void impl_deactivate(PeasActivatable *plugin)
 {
-	RouterManagerCapiPlugin *capi_plugin = ROUTERMANAGER_CAPI_PLUGIN(plugin);
+	RmCapiPlugin *capi_plugin = RM_CAPI_PLUGIN(plugin);
 
 	g_debug("%s(): capi", __FUNCTION__);
-	/* Remove network event */
 
+	capi_phone_shutdown();
+
+	/* Remove network event */
 	rm_netmonitor_remove_event(capi_plugin->priv->net_event);
 }

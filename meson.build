@@ -30,3 +30,7 @@ subdir('roger')
 if get_option('enable-gtk-doc')
 	subdir('docs')
 endif
+
+if get_option('do-post-install')
+	meson.add_install_script('meson_post_install.sh')
+endif

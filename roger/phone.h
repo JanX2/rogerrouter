@@ -24,6 +24,7 @@
 #include <libroutermanager/rmconnection.h>
 #include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmobject.h>
+#include <libroutermanager/rmphone.h>
 
 G_BEGIN_DECLS
 
@@ -58,6 +59,7 @@ struct phone_state {
 	gint status_timer_id;
 
 	const gchar *number;
+	RmPhone *phone;
 	RmConnection *connection;
 
 	gpointer priv;

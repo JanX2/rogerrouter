@@ -39,14 +39,14 @@
 #include <roger/settings.h>
 #include <roger/uitools.h>
 
-#define ROUTERMANAGER_TYPE_THUNDERBIRD_PLUGIN        (routermanager_thunderbird_plugin_get_type ())
-#define ROUTERMANAGER_THUNDERBIRD_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_THUNDERBIRD_PLUGIN, RouterManagerThunderbirdPlugin))
+#define RM_TYPE_THUNDERBIRD_PLUGIN        (routermanager_thunderbird_plugin_get_type ())
+#define RM_THUNDERBIRD_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_THUNDERBIRD_PLUGIN, RmThunderbirdPlugin))
 
 typedef struct {
 	guint signal_id;
-} RouterManagerThunderbirdPluginPrivate;
+} RmThunderbirdPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER_CONFIGURABLE(ROUTERMANAGER_TYPE_THUNDERBIRD_PLUGIN, RouterManagerThunderbirdPlugin, routermanager_thunderbird_plugin)
+RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_THUNDERBIRD_PLUGIN, RmThunderbirdPlugin, routermanager_thunderbird_plugin)
 
 void pref_notebook_add_page(GtkWidget *notebook, GtkWidget *page, gchar *title);
 GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand, gboolean vexpand);
@@ -991,7 +991,7 @@ RmAddressBook thunderbird_book = {
 
 void impl_activate(PeasActivatable *plugin)
 {
-	//RouterManagerThunderbirdPlugin *thunderbird_plugin = ROUTERMANAGER_THUNDERBIRD_PLUGIN(plugin);
+	//RmThunderbirdPlugin *thunderbird_plugin = RM_THUNDERBIRD_PLUGIN(plugin);
 
 	thunderbird_settings = rm_settings_new("org.tabos.roger.plugins.thunderbird");
 
@@ -1006,7 +1006,7 @@ void impl_activate(PeasActivatable *plugin)
 
 void impl_deactivate(PeasActivatable *plugin)
 {
-	RouterManagerThunderbirdPlugin *thunderbird_plugin = ROUTERMANAGER_THUNDERBIRD_PLUGIN(plugin);
+	RmThunderbirdPlugin *thunderbird_plugin = RM_THUNDERBIRD_PLUGIN(plugin);
 
 	if (g_signal_handler_is_connected(G_OBJECT(rm_object), thunderbird_plugin->priv->signal_id)) {
 		g_signal_handler_disconnect(G_OBJECT(rm_object), thunderbird_plugin->priv->signal_id);

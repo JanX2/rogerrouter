@@ -37,14 +37,14 @@
 #include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmsettings.h>
 
-#define ROUTERMANAGER_TYPE_OSXAB_PLUGIN        (routermanager_osxab_plugin_get_type ())
-#define ROUTERMANAGER_OSXAB_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_OSXAB_PLUGIN, RouterManagerOSXAbPlugin))
+#define RM_TYPE_OSXAB_PLUGIN        (routermanager_osxab_plugin_get_type ())
+#define RM_OSXAB_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_OSXAB_PLUGIN, RmOSXAbPlugin))
 
 typedef struct {
 	guint signal_id;
-} RouterManagerOSXAbPluginPrivate;
+} RmOSXAbPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_OSXAB_PLUGIN, RouterManagerOSXAbPlugin, routermanager_osxab_plugin)
+RM_PLUGIN_REGISTER(RM_TYPE_OSXAB_PLUGIN, RmOSXAbPlugin, routermanager_osxab_plugin)
 
 static GSList *contacts = NULL;
 
@@ -349,7 +349,7 @@ void impl_activate(PeasActivatable *plugin)
 
 void impl_deactivate(PeasActivatable *plugin)
 {
-	RouterManagerOSXAbPlugin *osxab_plugin = ROUTERMANAGER_OSXAB_PLUGIN(plugin);
+	RmOSXAbPlugin *osxab_plugin = RM_OSXAB_PLUGIN(plugin);
 
 	rm_addressbook_unregister(&osxab_book);
 

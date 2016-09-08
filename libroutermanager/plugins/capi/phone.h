@@ -45,6 +45,7 @@ void capi_phone_flush(RmConnection *connection);
 gint recording_write(struct recorder *recorder, short *buf, gint size, gint channel);
 
 void capi_phone_init(void);
+void capi_phone_shutdown(void);
 void capi_phone_init_data(RmConnection *connection);
 
 #endif

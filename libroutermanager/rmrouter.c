@@ -79,13 +79,13 @@ GSList *rm_router_get_phone_list(RmProfile *profile)
 	GSList *list = NULL;
 	gchar *fon;
 	gint index;
-	RmPhone *phone;
+	RmPhoneInfo *phone;
 
 	if (!profile) {
 		return list;
 	}
 
-	phone = g_slice_new(RmPhone);
+	phone = g_slice_new(RmPhoneInfo);
 
 	phone->name = g_strdup("Softphone");
 	phone->type = PORT_SOFTPHONE;
@@ -95,7 +95,7 @@ GSList *rm_router_get_phone_list(RmProfile *profile)
 	for (index = 0; index < PORT_MAX - 2; index++) {
 		fon = g_settings_get_string(profile->settings, rm_router_phone_ports[index].name);
 		if (!RM_EMPTY_STRING(fon)) {
-			phone = g_slice_new(RmPhone);
+			phone = g_slice_new(RmPhoneInfo);
 
 			phone->name = g_strdup(fon);
 			phone->type = rm_router_phone_ports[index].type;
@@ -113,7 +113,7 @@ GSList *rm_router_get_phone_list(RmProfile *profile)
  */
 static void free_phone_list(gpointer data)
 {
-	RmPhone *phone = data;
+	RmPhoneInfo *phone = data;
 
 	g_free(phone->name);
 }
