@@ -28,6 +28,29 @@
 /** Internal phone list */
 static GSList *rm_phone_plugins = NULL;
 
+/**
+ * rm_phone_get:
+ * @name: name of phone to lookup
+ *
+ * Find phone as requested by name.
+ *
+ * Returns: a #RmPhone, or %NULL on error
+ */
+RmPhone *rm_phone_get(gchar *name)
+{
+	GSList *list;
+
+	for (list = rm_phone_plugins; list != NULL; list = list->next) {
+		RmPhone *phone = list->data;
+
+		if (phone && phone->name && name && !strcmp(phone->name, name)) {
+			return phone;
+		}
+	}
+
+	return NULL;
+}
+
 RmConnection *rm_phone_dial(RmPhone *phone, const gchar *target, gboolean anonymous)
 {
 	if (!phone) {
@@ -108,7 +131,18 @@ void rm_phone_register(RmPhone *phone)
 	rm_phone_plugins = g_slist_prepend(rm_phone_plugins, phone);
 }
 
+/**
+ * \brief Unregister phone plugin
+ * \param phone phone plugin
+ */
+void rm_phone_unregister(RmPhone *phone)
+{
+	g_debug("%s(): Unregister %s", __FUNCTION__, phone->name);
+	rm_phone_plugins = g_slist_remove(rm_phone_plugins, phone);
+}
+
 GSList *rm_phone_get_plugins(void)
 {
 	return rm_phone_plugins;
 }
+>

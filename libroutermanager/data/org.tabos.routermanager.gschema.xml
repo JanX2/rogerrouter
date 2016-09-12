@@ -263,6 +263,10 @@
 		<key name="lookup-plugin" type="s">
 			<default>''</default>
 		</key>
+
+		<key name="phone-plugin" type="s">
+			<default>''</default>
+		</key>
 	</schema>
 
 	<schema id="org.tabos.routermanager.profile.action">

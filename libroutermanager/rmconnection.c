@@ -87,7 +87,7 @@ gchar *rm_connection_get_duration_time(RmConnection *connection)
 	gdouble time;
 
 	/* In case we do not have a duration timer, return predefined string */
-	if (!connection->duration_timer) {
+	if (!connection || !connection->duration_timer) {
 		return g_strdup("00:00:00");
 	}
 
@@ -156,6 +156,21 @@ RmConnection *rm_connection_find_by_id(gint id)
 		connection = list->data;
 
 		if (connection && connection->id == id) {
+
+#ifdef RM_CONNECTION_DEBUG
+	{
+		gchar *scramble_local;
+		gchar *scramble_remote;
+
+		scramble_local = rm_number_scramble(connection->local_number);
+		scramble_remote = rm_number_scramble(connection->remote_number);
+
+		g_debug("%s(): type = %d, local = %s, remote = %s", __FUNCTION__, connection->type, scramble_local, scramble_remote);
+
+		g_free(scramble_local);
+		g_free(scramble_remote);
+	}
+#endif
 			return connection;
 		}
 
@@ -179,11 +194,26 @@ RmConnection *rm_connection_find_by_remote_number(const gchar *remote_number)
 	RmConnection *connection;
 
 	g_return_val_if_fail(remote_number != NULL, NULL);
-
 	while (list != NULL) {
 		connection = list->data;
 
 		if (connection && connection->remote_number && !strcmp(connection->remote_number, remote_number)) {
+
+#ifdef RM_CONNECTION_DEBUG
+	{
+		gchar *scramble_local;
+		gchar *scramble_remote;
+
+		scramble_local = rm_number_scramble(connection->local_number);
+		scramble_remote = rm_number_scramble(connection->remote_number);
+
+		g_debug("%s(): type = %d, local = %s, remote = %s", __FUNCTION__, connection->type, scramble_local, scramble_remote);
+
+		g_free(scramble_local);
+		g_free(scramble_remote);
+	}
+#endif
+
 			return connection;
 		}
 
@@ -201,6 +231,21 @@ RmConnection *rm_connection_find_by_remote_number(const gchar *remote_number)
  */
 void rm_connection_remove(RmConnection *connection)
 {
+#ifdef RM_CONNECTION_DEBUG
+	{
+		gchar *scramble_local;
+		gchar *scramble_remote;
+
+		scramble_local = rm_number_scramble(connection->local_number);
+		scramble_remote = rm_number_scramble(connection->remote_number);
+
+		g_debug("%s(): type = %d, local = %s, remote = %s", __FUNCTION__, connection->type, scramble_local, scramble_remote);
+
+		g_free(scramble_local);
+		g_free(scramble_remote);
+	}
+#endif
+
 	g_assert(rm_connection_list != NULL);
 	g_assert(connection != NULL);
 

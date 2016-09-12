@@ -522,3 +522,26 @@ RmLookup *rm_profile_get_lookup(RmProfile *profile)
 
 	return lookup;
 }
+
+/**
+ * rm_profile_get_phone:
+ * @profile: a #RmProfile
+ *
+ * Get phone for selected profile.
+ */
+RmPhone *rm_profile_get_phone(RmProfile *profile)
+{
+	RmPhone *phone;
+	gchar *name = g_settings_get_string(profile->settings, "phone-plugin");
+
+	phone = rm_phone_get(name);
+
+	g_free(name);
+
+	return phone;
+}
+
+void rm_profile_set_phone(RmProfile *profile, gchar *name)
+{
+	g_settings_set_string(profile->settings, "phone-plugin", name);
+}

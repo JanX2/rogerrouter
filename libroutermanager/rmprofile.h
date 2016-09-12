@@ -27,6 +27,7 @@
 #include <libroutermanager/rmaudio.h>
 #include <libroutermanager/rmlookup.h>
 #include <libroutermanager/rmrouterinfo.h>
+#include <libroutermanager/rmphone.h>
 
 G_BEGIN_DECLS
 
@@ -65,6 +66,8 @@ void rm_profile_set_notification_incoming_numbers(RmProfile *profile, const gcha
 void rm_profile_set_notification_outgoing_numbers(RmProfile *profile, const gchar * const* numbers);
 gboolean rm_profile_get_notification_ringtone(RmProfile *profile);
 RmLookup *rm_profile_get_lookup(RmProfile *profile);
+RmPhone *rm_profile_get_phone(RmProfile *profile);
+void rm_profile_set_phone(RmProfile *profile, gchar *name);
 
 G_END_DECLS
 

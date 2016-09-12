@@ -45,26 +45,11 @@ static struct phone_state *phone_state = NULL;
 
 static gchar *phone_get_active_name(void)
 {
-	GSList *phone_list;
+	//GSList *phone_list;
 	RmProfile *profile = rm_profile_get_active();
-	gchar *name = NULL;
-	gint type;
+	RmPhone *phone = rm_profile_get_phone(profile);
 
-	/* Get phone list and active phone port */
-	phone_list = rm_router_get_phone_list(profile);
-	type = rm_router_get_phone_port(profile);
-
-	/* Traverse phone list and add each phone */
-	for (; phone_list != NULL; phone_list = phone_list->next) {
-		RmPhoneInfo *phone = phone_list->data;
-
-		if (type == phone->type) {
-			name = g_strdup(phone->name);
-			break;
-		}
-	}
-
-	return name ? name : g_strdup(_("Phone"));
+	return phone ? phone->name : g_strdup(_("Phone"));
 }
 
 /**
@@ -74,9 +59,14 @@ static gchar *phone_get_active_name(void)
  */
 static gboolean phone_status_timer_cb(gpointer data)
 {
-	gchar *time_diff = rm_connection_get_duration_time(phone_state->connection);
+	gchar *time_diff;
 	gchar *buf;
 
+	if (!data) {
+		return FALSE;
+	}
+
+	time_diff = rm_connection_get_duration_time(phone_state->connection);
 	buf = g_strdup_printf(_("Time: %s"), time_diff);
 	g_free(time_diff);
 
@@ -225,6 +215,7 @@ void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	g_debug("%s(): Dialing '%s'", __FUNCTION__, scramble);
 	g_free(scramble);
 
+	phone_state->phone = rm_profile_get_phone(rm_profile_get_active());
 	phone_state->connection = rm_phone_dial(phone_state->phone, phone_state->number, rm_router_get_suppress_state(profile));
 	if (phone_state->connection) {
 		phone_dial_buttons_set_dial(FALSE);
@@ -680,19 +671,17 @@ gboolean phone_search_entry_key_press_event_cb(GtkWidget *entry, GdkEvent *event
  */
 void phone_item_toggled_cb(GtkCheckMenuItem *item, gpointer user_data)
 {
-	/* If item is active, adjust phone port accordingly and set sensitivity of phone buttons */
-	//if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(item))) {
-		//gint type = GPOINTER_TO_INT(user_data);
-		//gchar *name;
+	g_debug("%s(): called, %s", __FUNCTION__, (gchar *) user_data);
 
-		/* Set active phone port */
-		//rm_phone_set_port(type);
+	/* If item is active, adjust phone port accordingly and set sensitivity of phone buttons */
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(item))) {
+		gchar *name = user_data;
+
+		rm_profile_set_phone(rm_profile_get_active(), name);
 
 		/* Get active name and set window title */
-		//name = rm_phone_get_active_name();
-		//gtk_window_set_title(GTK_WINDOW(phone_state->window), name);
-		//g_free(name);
-	//}
+		gtk_window_set_title(GTK_WINDOW(phone_state->window), name);
+	}
 }
 
 /**
@@ -922,7 +911,7 @@ void app_show_phone_window(RmContact *contact, RmConnection *connection)
 	/* Allocate phone state structure */
 	phone_state = g_slice_alloc0(sizeof(struct phone_state));
 
-	phone_state->phone = rm_phone_get_plugins()->data;
+	phone_state->phone = rm_profile_get_phone(rm_profile_get_active());
 
 	/* Connect to builder objects */
 	phone_state->window = GTK_WIDGET(gtk_builder_get_object(builder, "phone_window"));
@@ -966,6 +955,12 @@ void app_show_phone_window(RmContact *contact, RmConnection *connection)
 	/* Connect connection signals */
 	g_signal_connect(rm_object, "connection-established", G_CALLBACK(phone_connection_established_cb), NULL);
 	g_signal_connect(rm_object, "connection-terminated", G_CALLBACK(phone_connection_terminated_cb), NULL);
+
+	if (contact) {
+		/* Set contact name */
+		phone_state->discard = TRUE;
+		phone_search_entry_set_contact(phone_state, contact, TRUE);
+	}
 
 	/* In case there is an incoming connection, pick it up */
 	if (connection) {

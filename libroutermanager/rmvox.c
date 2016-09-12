@@ -158,7 +158,7 @@ static gpointer rm_vox_playback_thread(gpointer user_data)
 		}
 
 		/* Write data to audio device */
-		playback->audio->write(playback->audio_priv, (guchar *) output, frame_size * sizeof(gshort));
+		rm_audio_write(playback->audio, playback->audio_priv, (guchar *) output, frame_size * sizeof(gshort));
 
 		/* Increment current frame count and update ui */
 		playback->cnt++;
@@ -250,7 +250,7 @@ gboolean rm_vox_stop(gpointer vox_data)
 	speex_decoder_destroy(playback->speex);
 
 	/* Close audio device */
-	playback->audio->close(playback->audio_priv);
+	rm_audio_close(playback->audio, playback->audio_priv);
 	playback->audio = NULL;
 
 	/* Unref cancellable and free structure */
@@ -383,7 +383,7 @@ gpointer rm_vox_init(gchar *data, gsize len, GError **error)
 	}
 
 	/* open audio device */
-	playback->audio_priv = playback->audio->open();
+	playback->audio_priv = rm_audio_open(playback->audio);
 	if (!playback->audio_priv) {
 		g_debug("%s(): Could not open audio device", __FUNCTION__);
 		g_slice_free(RmVoxPlayback, playback);
@@ -400,7 +400,7 @@ gpointer rm_vox_init(gchar *data, gsize len, GError **error)
 	playback->speex = speex_decoder_init(mode);
 	if (!playback->speex) {
 		g_warning("%s(): Decoder initialization failed.", __FUNCTION__);
-		playback->audio->close(playback->audio_priv);
+		rm_audio_close(playback->audio, playback->audio_priv);
 
 		g_slice_free(RmVoxPlayback, playback);
 

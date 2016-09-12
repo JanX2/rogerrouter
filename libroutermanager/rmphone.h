@@ -46,6 +46,7 @@ void rm_phone_unregister(RmPhone *phone);
 GSList *rm_phone_get_plugins(void);
 GSList *rm_phone_get_devices(RmPhone *phone);
 void rm_phone_set_device(RmPhone *phone, gchar *name);
+RmPhone *rm_phone_get(gchar *name);
 
 void rm_phone_mute(RmPhone *phone, RmConnection *connection, gboolean mute);
 void rm_phone_record(RmPhone *phone, RmConnection *connection, guchar record, const char *dir);
