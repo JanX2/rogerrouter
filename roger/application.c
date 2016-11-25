@@ -196,6 +196,26 @@ static void preferences_activated(GSimpleAction *action, GVariant *parameter, gp
 	app_show_settings();
 }
 
+#include <libpeas/peas.h>
+#include <libpeas-gtk/peas-gtk.h>
+
+
+static void extensions_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+{
+	GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	PeasEngine *peas = peas_engine_get_default();
+
+	gtk_window_set_default_size(GTK_WINDOW(window), 450, 600);
+	gtk_window_set_title(GTK_WINDOW(window), _("Extensions"));
+	gtk_window_set_modal(GTK_WINDOW(window), TRUE);
+
+	gtk_window_set_transient_for(GTK_WINDOW(window), GTK_WINDOW(journal_get_window()));
+	GtkWidget *manager = peas_gtk_plugin_manager_new(peas);
+	gtk_container_add(GTK_CONTAINER(window), manager);
+
+	gtk_widget_show_all(window);
+}
+
 static void donate_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
 	rm_os_execute("http://www.tabos.org/");
@@ -281,6 +301,7 @@ static void journal_activated(GSimpleAction *action, GVariant *parameter, gpoint
 static GActionEntry apps_entries[] = {
 	{"addressbook", addressbook_activated, NULL, NULL, NULL},
 	{"assistant", assistant_activated, NULL, NULL, NULL},
+	{"extensions", extensions_activated, NULL, NULL, NULL},
 	{"preferences", preferences_activated, NULL, NULL, NULL},
 	{"phone", dialnumber_activated, NULL, NULL, NULL},
 	{"copy_ip", copy_ip_activated, NULL, NULL, NULL},
@@ -366,6 +387,7 @@ static void app_init(GtkApplication *app)
 	g_menu_append(menu, _("Assistant"), "app.assistant");
 
 	section = g_menu_new();
+	g_menu_append(section, _("Extensions"), "app.extensions");
 	g_menu_append(section, _("Preferences"), "app.preferences");
 	g_menu_append_section(menu, NULL, G_MENU_MODEL(section));
 
@@ -375,10 +397,10 @@ static void app_init(GtkApplication *app)
 	g_menu_append(section, _("Keyboard Shortcuts"), "app.shortcuts");
 #endif
 
-	sub_section = g_menu_new();
+	/*sub_section = g_menu_new();
 	g_menu_append(sub_section, _("Donate"), "app.donate");
 	g_menu_append(sub_section, _("Forum"), "app.forum");
-	g_menu_append_submenu(section, _("Help"), G_MENU_MODEL(sub_section));
+	g_menu_append_submenu(section, _("Help"), G_MENU_MODEL(sub_section));*/
 
 	g_menu_append(section, _("About"), "app.about");
 	g_menu_append(section, _("Quit"), "app.quit");

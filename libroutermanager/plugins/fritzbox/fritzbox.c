@@ -208,6 +208,45 @@ static RmRouter fritzbox = {
 	fritzbox_delete_voice,
 };
 
+static RmConnection *dialer_connection = NULL;
+
+RmConnection *fritzbox_phone_dialer_get_connection(void)
+{
+	return dialer_connection;
+}
+
+RmConnection *dialer_dial(const gchar *target, gboolean anonymous)
+{
+	RmConnection *connection = NULL;
+
+	if (fritzbox_dial_number(rm_profile_get_active(), -1, target)) {
+		connection = rm_connection_add(0, RM_CONNECTION_TYPE_OUTGOING, "", target);
+	}
+
+	dialer_connection = connection;
+
+	return connection;
+}
+
+void dialer_hangup(RmConnection *connection)
+{
+	fritzbox_hangup(rm_profile_get_active(), -1, connection->remote_number);
+
+	dialer_connection = NULL;
+}
+
+static RmPhone dialer_phone = {
+    "Phone dialer",
+    dialer_dial,
+    NULL,
+    dialer_hangup,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+};
+
 /**
  * \brief Activate plugin (register fritzbox router)
  * \param plugin peas plugin
@@ -216,6 +255,15 @@ static void impl_activate(PeasActivatable *plugin)
 {
 	/* Register router structure */
 	rm_router_register(&fritzbox);
+
+	fritzbox_init_callmonitor();
+
+	rm_phone_register(&dialer_phone);
+
+	/*RmPhone *phone = g_malloc0(sizeof(RmPhone));
+
+	phone->name = g_strdup("MOEP");
+	rm_phone_register(phone);*/
 }
 
 /**
@@ -224,5 +272,7 @@ static void impl_activate(PeasActivatable *plugin)
  */
 static void impl_deactivate(PeasActivatable *plugin)
 {
-	/* Currently does nothing */
+	fritzbox_shutdown_callmonitor();
+
+	rm_phone_unregister(&dialer_phone);
 }

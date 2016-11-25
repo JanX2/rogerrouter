@@ -1,5 +1,4 @@
 subdir('areacodes_global')
-subdir('callmonitor')
 subdir('capi')
 subdir('fritzbox')
 

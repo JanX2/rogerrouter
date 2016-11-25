@@ -64,9 +64,7 @@ static inline void sff_transfer(struct capi_connection *connection, _cmsg capi_m
 	status->bytes_sent = sff_pos;
 
 	status->progress_status = 1;
-	if (session->handlers && session->handlers->status) {
-		session->handlers->status(connection, 1);
-	}
+	connection_status(connection, 1);
 
 	if (sff_pos == sff_len) {
 		g_debug("EOF");

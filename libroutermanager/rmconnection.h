@@ -53,8 +53,6 @@ RmConnection *rm_connection_find_by_remote_number(const gchar *number);
 void rm_connection_set_type(RmConnection *connection, RmConnectionType type);
 void rm_connection_remove(RmConnection *connection);
 
-void rm_connection_init_duration_timer(RmConnection *connection);
-void rm_connection_shutdown_duration_timer(RmConnection *connection);
 gchar *rm_connection_get_duration_time(RmConnection *connection);
 
 G_END_DECLS

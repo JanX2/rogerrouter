@@ -155,16 +155,6 @@ struct capi_connection {
 	void (*clean)(struct capi_connection *connection);
 };
 
-struct session_handlers {
-	void (*connected)(struct capi_connection *connection);
-	void (*disconnected)(struct capi_connection *connection);
-	void (*ring)(struct capi_connection *connection);
-
-	void (*code)(struct capi_connection *connection, int code);
-
-	void (*status)(struct capi_connection *connection, int error_code);
-};
-
 struct session {
 	GMutex isdn_mutex;
 
@@ -172,8 +162,6 @@ struct session {
 	int appl_id;
 	int message_number;
 	int input_thread_state;
-
-	struct session_handlers *handlers;
 };
 
 struct capi_connection *capi_get_free_connection(void);
@@ -183,7 +171,7 @@ void capi_hangup(struct capi_connection *connection);
 int capi_pickup(struct capi_connection *connection, int type);
 
 struct session *capi_get_session(void);
-struct session *capi_session_init(struct session_handlers *handlers, const char *host, gint controller);
+struct session *capi_session_init(const char *host, gint controller);
 int capi_session_close(int force);
 
 #endif

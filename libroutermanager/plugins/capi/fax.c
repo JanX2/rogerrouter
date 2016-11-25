@@ -34,7 +34,7 @@
 #include <libroutermanager/rmconnection.h>
 #include <libroutermanager/rmstring.h>
 #include <libroutermanager/rmobjectemit.h>
-#include <libroutermanager/rmdevicefax.h>
+#include <libroutermanager/rmfax.h>
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/rmnumber.h>
 #include <sff.h>
@@ -68,7 +68,6 @@ static void real_time_frame_handler(t30_state_t *state, void *user_data, gint di
 {
 	struct capi_connection *connection = user_data;
 	struct fax_status *status = connection->priv;
-	struct session *session = capi_get_session();
 	t30_stats_t stats;
 
 	//g_debug("real_time_frame_handler() called (%d/%d/%d)", direction, len, msg[2]);
@@ -84,7 +83,6 @@ static void real_time_frame_handler(t30_state_t *state, void *user_data, gint di
 		}
 
 		status->progress_status = 1;
-		session->handlers->status(connection, 1);
 	}
 }
 
@@ -99,7 +97,6 @@ static gint phase_handler_b(t30_state_t *state, void *user_data, gint result)
 {
 	struct capi_connection *connection = user_data;
 	struct fax_status *status = connection->priv;
-	struct session *session = capi_get_session();
 	t30_stats_t stats;
 	t30_state_t *t30;
 	const gchar *ident;
@@ -139,12 +136,9 @@ static gint phase_handler_b(t30_state_t *state, void *user_data, gint result)
 	status->bad_rows = stats.bad_rows;
 	status->encoding = stats.encoding;
 	status->bitrate = stats.bit_rate;
-	//status->page_total = stats.pages_in_file;
 	status->progress_status = 0;
 
 	status->page_current = status->sending ? stats.pages_tx + 1 : stats.pages_rx + 1;
-
-	session->handlers->status(connection, 0);
 
 	return 0;
 }
@@ -160,7 +154,6 @@ static gint phase_handler_d(t30_state_t *state, void *user_data, gint result)
 {
 	struct capi_connection *connection = user_data;
 	struct fax_status *status = connection->priv;
-	struct session *session = capi_get_session();
 	t30_stats_t stats;
 
 	t30_get_transfer_statistics(state, &stats);
@@ -185,11 +178,9 @@ static gint phase_handler_d(t30_state_t *state, void *user_data, gint result)
 	}
 
 	//status->page_total = stats.pages_in_file;
-	status->bytes_received = 0;
-	status->bytes_sent = 0;
-	status->progress_status = 0;
-
-	session->handlers->status(connection, 0);
+	//status->bytes_received = 0;
+	//status->bytes_sent = 0;
+	//status->progress_status = 0;
 
 	return 0;
 }
@@ -204,7 +195,6 @@ static void phase_handler_e(t30_state_t *state, void *user_data, gint result)
 {
 	struct capi_connection *connection = user_data;
 	struct fax_status *status = connection->priv;
-	struct session *session = capi_get_session();
 	gint transferred = 0;
 	t30_stats_t stats;
 	t30_state_t *t30;
@@ -239,9 +229,13 @@ static void phase_handler_e(t30_state_t *state, void *user_data, gint result)
 	status->progress_status = 0;
 
 	snprintf(status->remote_ident, sizeof(status->remote_ident), "%s", ident ? ident : "");
-	g_debug("Remote station id: %s", status->remote_ident);
 
-	session->handlers->status(connection, 0);
+#if 1
+	g_debug("%s(): Ident = '%s'", __FUNCTION__, status->remote_ident);
+	g_debug("%s(): bytes sent = %d, bytes total = %d", __FUNCTION__, status->bytes_sent, status->bytes_total);
+	g_debug("%s(): page current = %d, page total = %d", __FUNCTION__, status->page_current, status->page_total);
+	g_debug("%s(): error code = %d", __FUNCTION__, status->error_code);
+#endif
 }
 
 /**
@@ -531,7 +525,6 @@ struct capi_connection *fax_send(gchar *tiff_file, gint modem, gint ecm, gint co
 
 	connection = capi_call(controller, src_no, trg_no, (guint) call_anonymous, SESSION_FAX, cip, 1, 1, 0, NULL, NULL, NULL);
 	if (connection) {
-		status->connection = connection;
 		connection->priv = status;
 		spandsp_init(status->tiff_file, TRUE, status->modem, status->ecm, status->ident, status->header, connection);
 	}
@@ -686,14 +679,77 @@ RmConnection *capi_fax_dial(gchar *tiff, const gchar *trg_no, gboolean suppress)
 	return connection;
 }
 
-struct device_fax capi_fax = {
+gboolean capi_fax_get_status(RmConnection *connection, RmFaxStatus *status)
+{
+	struct capi_connection *capi_connection = connection->priv;
+	struct fax_status *fax_status = capi_connection->priv;
+
+	switch (fax_status->phase) {
+	case PHASE_B:
+		status->phase = PHASE_IDENTIFY;
+		break;
+	case PHASE_D:
+		status->phase = PHASE_SIGNALLING;
+		break;
+	case PHASE_E:
+		status->phase = PHASE_RELEASE;
+		break;
+	default:
+		status->phase = PHASE_CALL;
+		break;
+	}
+
+	status->remote_ident = rm_convert_utf8(fax_status->remote_ident, -1);
+	status->page_current = fax_status->page_current;
+	status->page_total = fax_status->page_total;
+	status->error_code = fax_status->error_code;
+
+	status->remote_number = g_strdup(fax_status->trg_no);
+	status->local_ident = rm_convert_utf8(fax_status->header, -1);
+	status->local_number = g_strdup(fax_status->src_no);
+	status->bitrate = fax_status->bitrate;
+
+	/* Percentage of current page */
+	status->percentage = (float) fax_status->bytes_sent / (float) fax_status->bytes_total;
+
+	/* Percentage of complete fax */
+	status->percentage *= fax_status->page_current;
+	status->percentage /= fax_status->page_total;
+
+	if (isnan(status->percentage)) {
+		status->percentage = 0.0f;
+	} else if (status->percentage > 1.0f) {
+		status->percentage = 1.0f;
+	}
+
+#if 0
+	g_debug("%s(): Ident = '%s'", __FUNCTION__, status->remote_ident);
+	g_debug("%s(): bytes sent = %d, bytes total = %d", __FUNCTION__, fax_status->bytes_sent, fax_status->bytes_total);
+	g_debug("%s(): page current = %d, page total = %d", __FUNCTION__, status->page_current, status->page_total);
+	g_debug("%s(): error code = %d, percentage = %f", __FUNCTION__, status->error_code, status->percentage);
+#endif
+
+	return TRUE;
+}
+
+void capi_fax_hangup(RmConnection *connection)
+{
+	struct capi_connection *capi_connection = connection->priv;
+
+	capi_hangup(capi_connection);
+}
+
+RmFax capi_fax = {
 	"CAPI Fax",
 	capi_fax_dial,
+	capi_fax_get_status,
 	NULL,
-	//capi_number_is_handled,
+	capi_fax_hangup,
+	NULL,
 };
 
 void capi_fax_init(void)
 {
-	rm_device_fax_register(&capi_fax);
+	g_debug("%s(): called", __FUNCTION__);
+	rm_fax_register(&capi_fax);
 }

@@ -145,4 +145,8 @@ GSList *rm_phone_get_plugins(void)
 {
 	return rm_phone_plugins;
 }
->
+
+gchar *rm_phone_get_name(RmPhone *phone)
+{
+	return g_strdup(phone->name);
+}

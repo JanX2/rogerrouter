@@ -102,12 +102,13 @@ gchar *rm_action_regex(gchar *str, RmConnection *connection)
 /**
  * rm_action_connection_notify_cb:
  * @object: an #RmObject
+ * @event: a #RmConnectionType
  * @connection: a #RmConnection
  * @user_data: user data pointer to #RmProfile
  *
  * \brief connection-notify callback - based on connection type execute actions
  */
-static void rm_action_connection_notify_cb(RmObject *object, RmConnection *connection, gpointer user_data)
+static void rm_action_connection_changed_cb(RmObject *object, gint event, RmConnection *connection, gpointer user_data)
 {
 	GSList *list;
 	RmProfile *profile = user_data;
@@ -440,8 +441,8 @@ void rm_action_init(RmProfile *profile)
 	/* Free actions */
 	g_strfreev(actions);
 
-	/* Connect to ::connection-notify signal */
-	g_signal_connect(G_OBJECT(rm_object), "connection-notify", G_CALLBACK(rm_action_connection_notify_cb), profile);
+	/* Connect to ::connection-changed signal */
+	g_signal_connect(G_OBJECT(rm_object), "connection-changed", G_CALLBACK(rm_action_connection_changed_cb), profile);
 }
 
 /**
@@ -457,7 +458,7 @@ void rm_action_shutdown(RmProfile *profile)
 	}
 
 	/* Disconnect connection-notify signal */
-	g_signal_handlers_disconnect_by_func(G_OBJECT(rm_object), G_CALLBACK(rm_action_connection_notify_cb), profile);
+	g_signal_handlers_disconnect_by_func(G_OBJECT(rm_object), G_CALLBACK(rm_action_connection_changed_cb), profile);
 
 	/* Clear action list */
 	g_slist_free_full(profile->action_list, g_object_unref);

@@ -82,9 +82,11 @@ static void rm_plugins_extension_removed_cb(PeasExtensionSet *set, PeasPluginInf
 	/* Remove 'non-builtin' plugin now */
 	if (!peas_plugin_info_is_builtin(info)) {
 		g_debug(" - %s (%s) deactivated", peas_plugin_info_get_name(info), peas_plugin_info_get_module_name(info));
-	}
 
-	peas_activatable_deactivate(PEAS_ACTIVATABLE(extension));
+		peas_activatable_deactivate(PEAS_ACTIVATABLE(extension));
+	} else {
+		g_debug(" - %s (%s) built-in, skipped", peas_plugin_info_get_name(info), peas_plugin_info_get_module_name(info));
+	}
 }
 
 /**
@@ -103,10 +105,6 @@ void rm_plugins_init(void)
 	/* Set app object as object to rm_engine */
 	rm_extension = peas_extension_set_new(rm_engine, PEAS_TYPE_ACTIVATABLE, "object", rm_object, NULL);
 
-	/* Connect rm_extensionsion added/removed signals */
-	g_signal_connect(rm_extension, "extension-added", G_CALLBACK(rm_plugins_extension_added_cb), NULL);
-	g_signal_connect(rm_extension, "extension-removed", G_CALLBACK(rm_plugins_extension_removed_cb), NULL);
-
 	/* Look for plugins in plugin_dir */
 	peas_engine_add_search_path(rm_engine, RM_PLUGINS, RM_PLUGINS);
 
@@ -119,6 +117,10 @@ void rm_plugins_init(void)
 
 	/* In addition to C we want to support python plugins */
 	peas_engine_enable_loader(rm_engine, "python3");
+
+	/* Connect rm_extensionsion added/removed signals */
+	g_signal_connect(rm_extension, "extension-added", G_CALLBACK(rm_plugins_extension_added_cb), NULL);
+	g_signal_connect(rm_extension, "extension-removed", G_CALLBACK(rm_plugins_extension_removed_cb), NULL);
 
 	/* Traverse through detected plugins and loaded builtin plugins now */
 	for (list = peas_engine_get_plugin_list(rm_engine); list != NULL; list = list->next) {
@@ -137,7 +139,7 @@ void rm_plugins_init(void)
  */
 void rm_plugins_bind_loaded_plugins(void)
 {
-	g_settings_bind(rm_profile_get_active()->settings, "active-plugins", rm_engine, "loaded-plugins", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(rm_profile_get_active()->settings, "active-plugins", rm_engine, "loaded-plugins", G_SETTINGS_BIND_DEFAULT | G_SETTINGS_BIND_NO_SENSITIVITY);
 }
 
 /**

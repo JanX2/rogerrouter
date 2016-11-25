@@ -15,6 +15,8 @@ sourcelist += 'assistant.c'
 sourcelist += 'assistant.h'
 sourcelist += 'contacts.c'
 sourcelist += 'contacts.h'
+sourcelist += 'contactsearch.c'
+sourcelist += 'contactsearch.h'
 sourcelist += 'crash.c'
 sourcelist += 'crash.h'
 sourcelist += 'fax.c'
@@ -38,7 +40,7 @@ sourcelist += 'uitools.h'
 sourcelist += roger_gresources
 
 roger_dep = []
-roger_dep += dependency('gtk+-3.0')
+roger_dep += dependency('gtk+-3.0', version : '>=3.12.0')
 roger_dep += dependency('libpeas-gtk-1.0')
 roger_dep += dependency('libsoup-2.4')
 roger_dep += dependency('libtiff-4')
@@ -84,3 +86,4 @@ images += 'images/roger-record-symbolic.svg'
 install_data(images, install_dir : get_option('datadir') + '/roger/')
 
 subdir('plugins')
+subdir('data')

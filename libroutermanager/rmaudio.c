@@ -76,7 +76,7 @@ RmAudio *rm_audio_get(gchar *name)
  */
 gpointer rm_audio_open(RmAudio *audio)
 {
-	return audio->open();
+	return audio ? audio->open() : NULL;
 }
 
 /**
@@ -92,7 +92,7 @@ gpointer rm_audio_open(RmAudio *audio)
  */
 gsize rm_audio_read(RmAudio *audio, gpointer audio_priv, guchar *data, gsize size)
 {
-	return audio->read(audio_priv, data, size);
+	return audio ? audio->read(audio_priv, data, size) : -1;
 }
 
 /**
@@ -108,7 +108,7 @@ gsize rm_audio_read(RmAudio *audio, gpointer audio_priv, guchar *data, gsize siz
  */
 gsize rm_audio_write(RmAudio *audio, gpointer audio_priv, guchar *data, gsize size)
 {
-	return audio->write(audio_priv, data, size);
+	return audio ? audio->write(audio_priv, data, size) : -1;
 }
 
 /**
@@ -122,7 +122,7 @@ gsize rm_audio_write(RmAudio *audio, gpointer audio_priv, guchar *data, gsize si
  */
 gboolean rm_audio_close(RmAudio *audio, gpointer audio_priv)
 {
-	return audio->close(audio_priv);
+	return audio ? audio->close(audio_priv) : TRUE;
 }
 
 /**

@@ -69,8 +69,8 @@ libroutermanager_la_SOURCES = \
 	rmprofile.h\
 	rmphone.c\
 	rmphone.h\
-	router.c\
-	router.h\
+	rmrouter.c\
+	rmrouter.h\
 	rmsettings.c\
 	rmsettings.h\
 	rmssdp.c\
@@ -80,7 +80,7 @@ libroutermanager_la_SOURCES = \
 	xml.c\
 	xml.h
 
-libroutermanager_la_LDFLAGS = -rdynamic
+libroutermanager_la_LDFLAGS = -rdynamic -version-info 1:0:0
 libroutermanager_la_LIBADD = -lc $(EXTRA_LIBS) $(PEAS_LIBS) $(SOUP_LIBS) $(CAPI_LIBS) $(SPANDSP_LIBS) $(DBUS_LIBS) $(OS_LIBS)
 libroutermanager_la_CFLAGS = -I. -fno-strict-aliasing -I.. $(EXTRA_CFLAGS) $(APP_CFLAGS) $(PEAS_CFLAGS) -Wall $(SOUP_CFLAGS) $(CAPI_CFLAGS) $(SPANDSP_CFLAGS) $(AM_CFLAGS) $(DBUS_CFLAGS) $(OS_CFLAGS) $(GTK_CFLAGS)
 

@@ -46,6 +46,11 @@ void rm_file_save(gchar *name, const gchar *data, gsize len)
 	GError *error = NULL;
 	GFileOutputStream *stream;
 
+	if (!data) {
+		g_warning("%s(): data is NULL", __FUNCTION__);
+		return;
+	}
+
 	if (len == -1) {
 		len = strlen(data);
 	}

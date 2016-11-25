@@ -57,7 +57,7 @@ RM_PLUGIN_REGISTER(RM_TYPE_GNOTIFICATION_PLUGIN, RmGNotificationPlugin, routerma
  */
 void gnotification_close(gpointer priv)
 {
-	g_application_withdraw_notification(G_APPLICATION(roger_app), priv);
+	g_application_withdraw_notification(G_APPLICATION(g_application_get_default()), priv);
 }
 
 gboolean gnotification_timeout_close(gpointer priv)
@@ -72,7 +72,7 @@ void gnotification_show_missed_calls(void)
 	GNotification *notify = NULL;
 	gchar *text = NULL;
 
-	g_application_withdraw_notification(G_APPLICATION(roger_app), "missed-calls");
+	g_application_withdraw_notification(G_APPLICATION(g_application_get_default()), "missed-calls");
 
 	/* Create notification message */
 	text = g_strdup_printf(_("You have missed calls"));
@@ -83,7 +83,7 @@ void gnotification_show_missed_calls(void)
 	g_free(text);
 
 	g_notification_add_button_with_target(notify, _("Open journal"), "app.journal", NULL);
-	g_application_send_notification(G_APPLICATION(roger_app), "missed-calls", notify);
+	g_application_send_notification(G_APPLICATION(g_application_get_default()), "missed-calls", notify);
 	g_object_unref(notify);
 }
 
@@ -149,7 +149,7 @@ gpointer gnotification_show(RmConnection *connection)
 	}
 
 	g_notification_set_priority(notify, G_NOTIFICATION_PRIORITY_URGENT);
-	g_application_send_notification(G_APPLICATION(roger_app), uid, notify);
+	g_application_send_notification(G_APPLICATION(g_application_get_default()), uid, notify);
 	g_object_unref(notify);
 
 	return uid;
@@ -183,7 +183,7 @@ void impl_activate(PeasActivatable *plugin)
 void impl_deactivate(PeasActivatable *plugin)
 {
 	g_debug("%s(): gnotification", __FUNCTION__);
-	g_application_withdraw_notification(G_APPLICATION(roger_app), "missed-calls");
+	g_application_withdraw_notification(G_APPLICATION(g_application_get_default()), "missed-calls");
 
 	rm_notification_unregister(&gnotification);
 }

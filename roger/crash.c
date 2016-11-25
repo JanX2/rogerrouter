@@ -17,9 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef HAVE_CONFIG_H
-#	include <config.h>
-#endif
+#include <config.h>
 
 #include <glib.h>
 #include <glib/gi18n.h>
@@ -71,7 +69,6 @@ static void crash_handler(int sig)
 {
 	pid_t pid;
 	static volatile unsigned long crashed_ = 0;
-	RmProfile *profile = rm_profile_get_active();
 
 	/*
 	 * let's hope argv0 aren't trashed.
@@ -98,8 +95,6 @@ static void crash_handler(int sig)
 	if (0 == (pid = fork())) {
 		char buf[128];
 		char *args[5];
-		const gchar *name = rm_router_get_name(profile);
-		const gchar *firmware = rm_router_get_version(profile);
 
 		/*
 		 * probably also some other parameters (like GTK+ ones).
@@ -109,7 +104,7 @@ static void crash_handler(int sig)
 		args[0] = argv0;
 		args[1] = "--debug";
 		args[2] = "--crash";
-		sprintf(buf, "%d,%d,%s,%s,%s", getppid(), sig, argv0, name ? name : "", firmware ? firmware : "");
+		sprintf(buf, "%d,%d,%s", getppid(), sig, argv0);
 		args[3] = buf;
 		args[4] = NULL;
 
@@ -277,7 +272,6 @@ static const gchar *get_operating_system(void)
 			       utsbuf.machine);
 #else
 	return g_strdup(_("Unknown"));
-	
 #endif
 }
 
@@ -316,7 +310,7 @@ void crash_exit_clicked_cb(GtkWidget *widget, gpointer user_data)
  * \param debug_output Output text by gdb
  * \return GtkWidget *Dialog widget
  */
-static GtkWidget *crash_dialog_show(const gchar *text, const gchar *name, const gchar *firmware, const gchar *debug_output)
+static GtkWidget *crash_dialog_show(const gchar *text, const gchar *debug_output)
 {
 	GtkWidget *window1;
 	GtkWidget *vbox1;
@@ -376,14 +370,12 @@ static GtkWidget *crash_dialog_show(const gchar *text, const gchar *name, const 
 		"GTK+ version %d.%d.%d / GLib %d.%d.%d\n"
 		"Operating system: %s\n"
 		"C Library: %s\n"
-		"Router: %s (%s)\n"
 		"Message: %s\n--\n%s",
-		"",//VERSION,
+		PACKAGE_VERSION,
 		gtk_major_version, gtk_minor_version, gtk_micro_version,
 		glib_major_version, glib_minor_version, glib_micro_version,
 		get_operating_system(),
 		get_lib_version(),
-		name, firmware,
 		text,
 		debug_output);
 
@@ -417,7 +409,6 @@ static GtkWidget *crash_dialog_show(const gchar *text, const gchar *name, const 
 
 	gtk_widget_show(window1);
 
-	gtk_main();
 	return window1;
 }
 
@@ -443,7 +434,7 @@ void crash_main(const char *arg)
 	output = g_string_new("");
 	crash_debug(pid, tokens[2], output);
 
-	crash_dialog_show(text, tokens[3], tokens[4], output->str);
+	crash_dialog_show(text, output->str);
 	g_string_free(output, TRUE);
 	g_free(text);
 	g_strfreev(tokens);

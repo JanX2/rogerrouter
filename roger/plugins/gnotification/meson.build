@@ -4,7 +4,6 @@ gnotification_sources += 'gnotification.c'
 gnotification_dep = []
 gnotification_dep += rm_dep
 gnotification_dep += roger_dep
-gnotification_dep += dependency('libebook-1.2')
 
 libgnotification = shared_library('gnotification',
                         gnotification_sources,

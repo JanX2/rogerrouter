@@ -44,7 +44,7 @@ static GSList *rm_connection_list = NULL;
  *
  * Setup connection duration timer.
  */
-void rm_connection_init_duration_timer(RmConnection *connection)
+static void rm_connection_init_duration_timer(RmConnection *connection)
 {
 	if (connection->duration_timer) {
 		g_warning("%s(): Skip duration timer setup, already active", __FUNCTION__);
@@ -129,12 +129,14 @@ RmConnection *rm_connection_add(gint id, RmConnectionType type, const gchar *loc
 		scramble_local = rm_number_scramble(connection->local_number);
 		scramble_remote = rm_number_scramble(connection->remote_number);
 
-		g_debug("%s(): type = %d, local = %s, remote = %s", __FUNCTION__, connection->type, scramble_local, scramble_remote);
+		g_debug("%s(): id = %d, type = %d, local = %s, remote = %s", __FUNCTION__, connection->id, connection->type, scramble_local, scramble_remote);
 
 		g_free(scramble_local);
 		g_free(scramble_remote);
 	}
 #endif
+
+	rm_connection_init_duration_timer(connection);
 
 	return connection;
 }
@@ -151,6 +153,8 @@ RmConnection *rm_connection_find_by_id(gint id)
 {
 	GSList *list = rm_connection_list;
 	RmConnection *connection;
+
+	g_debug("%s(): id = %d", __FUNCTION__, id);
 
 	while (list != NULL) {
 		connection = list->data;
@@ -207,7 +211,7 @@ RmConnection *rm_connection_find_by_remote_number(const gchar *remote_number)
 		scramble_local = rm_number_scramble(connection->local_number);
 		scramble_remote = rm_number_scramble(connection->remote_number);
 
-		g_debug("%s(): type = %d, local = %s, remote = %s", __FUNCTION__, connection->type, scramble_local, scramble_remote);
+		g_debug("%s(): id = %d, type = %d, local = %s, remote = %s", __FUNCTION__, connection->id, connection->type, scramble_local, scramble_remote);
 
 		g_free(scramble_local);
 		g_free(scramble_remote);
@@ -239,17 +243,19 @@ void rm_connection_remove(RmConnection *connection)
 		scramble_local = rm_number_scramble(connection->local_number);
 		scramble_remote = rm_number_scramble(connection->remote_number);
 
-		g_debug("%s(): type = %d, local = %s, remote = %s", __FUNCTION__, connection->type, scramble_local, scramble_remote);
+		g_debug("%s(): id = %d, type = %d, local = %s, remote = %s", __FUNCTION__, connection->id, connection->type, scramble_local, scramble_remote);
 
 		g_free(scramble_local);
 		g_free(scramble_remote);
 	}
 #endif
-
 	g_assert(rm_connection_list != NULL);
 	g_assert(connection != NULL);
 
 	rm_connection_list = g_slist_remove(rm_connection_list, connection);
+
+	rm_connection_shutdown_duration_timer(connection);
+
 	g_free(connection->local_number);
 	g_free(connection->remote_number);
 
@@ -266,4 +272,5 @@ void rm_connection_remove(RmConnection *connection)
 void rm_connection_set_type(RmConnection *connection, RmConnectionType type)
 {
 	connection->type |= type;
+	g_debug("%s(): id = %d, type = %d", __FUNCTION__, connection->id, connection->type);
 }

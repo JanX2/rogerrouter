@@ -298,7 +298,7 @@ int main(int argc, char **argv)
 		g_signal_connect(G_OBJECT(rm_object), "journal-loaded", G_CALLBACK(journal_loaded_cb), NULL);
 
 		/* Request router journal */
-		router_load_journal(rm_profile_get_active());
+		rm_router_load_journal(rm_profile_get_active());
 	}
 
 	if (sendfax && file_name && number) {
@@ -323,10 +323,11 @@ int main(int argc, char **argv)
 	}
 
 	if (call && number) {
+		RmPhone *phone = rm_profile_get_phone(rm_profile_get_active());
 		g_signal_connect(rm_object, "connection-established", G_CALLBACK(capi_connection_established_cb), NULL);
 		g_signal_connect(rm_object, "connection-terminated", G_CALLBACK(capi_connection_terminated_cb), NULL);
 
-		rm_phone_dial(number, FALSE);
+		rm_phone_dial(phone, number, FALSE);
 	}
 
 	/* Create and start g_main_loop */

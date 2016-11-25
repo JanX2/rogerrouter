@@ -63,9 +63,87 @@ RM_PLUGIN_REGISTER(RM_TYPE_CAPI_PLUGIN, RmCapiPlugin, routermanager_capi_plugin)
 /** The current active session */
 static struct session *session = NULL;
 /** Unique connection id */
-static unsigned int id = 0;
+static unsigned int id = 1024;
 /** cancellable capi loop */
 static GCancellable *capi_loop_cancel = NULL;
+
+#define RM_ERROR 
+
+/**
+ * \brief Connection ring handler - emit connection-established signal
+ * \param connection capi connection structure
+ */
+void capi_connection_connect(struct capi_connection *capi_connection)
+{
+	RmConnection *connection = rm_connection_find_by_id(capi_connection->id);
+
+	if (connection) {
+		rm_object_emit_connection_connect(connection);
+	}
+}
+
+/**
+ * \brief Connection ring handler - emit connection-terminated signal
+ * \param connection capi connection structure
+ */
+void capi_connection_disconnect(struct capi_connection *capi_connection)
+{
+	RmConnection *connection = rm_connection_find_by_id(capi_connection->id);
+
+	if (connection) {
+		rm_object_emit_connection_disconnect(connection);
+	}
+}
+
+/**
+ * \brief Connection ring handler
+ * \param connection capi connection structure
+ */
+void connection_ring(struct capi_connection *capi_connection)
+{
+	RmConnection *connection;
+
+	g_debug("connection_ring() src %s trg %s", capi_connection->source, capi_connection->target);
+	connection = rm_connection_find_by_remote_number(capi_connection->source);
+#if ACCEPT_INTERN
+	if (!connection && !strncmp(capi_connection->source, "**", 2)) {
+		connection = connection_add_call(981, CONNECTION_TYPE_INCOMING, capi_connection->source, capi_connection->target);
+	}
+#endif
+
+	g_debug("connection_ring() connection %p", connection);
+	if (connection) {
+		g_debug("connection_ring() set capi_connection %p", capi_connection);
+		connection->priv = capi_connection;
+
+		rm_object_emit_connection_incoming(connection);
+	}
+}
+
+/**
+ * \brief Connection code handler
+ * \param connection capi connection structure
+ * \param code dtmf code
+ */
+void connection_code(struct capi_connection *connection, gint code)
+{
+	g_debug("connection_code(): code 0x%x", code);
+}
+
+/**
+ * \brief Connection status handlers - emits connection-status signal
+ * \param connection capi connection structure
+ * \param status status code
+ */
+void connection_status(struct capi_connection *capi_connection, gint status)
+{
+	RmConnection *connection = rm_connection_find_by_id(capi_connection->id);
+
+	if (connection) {
+		rm_object_emit_connection_status(status, connection);
+	}
+}
+
 
 /**
  * \brief Dump capi error (UNUSED)
@@ -81,7 +159,7 @@ static void capi_error(long error)
 			g_warning("Message not supported in current state");
 		}
 		if (session) {
-			session->handlers->status(NULL, error);
+			connection_status(NULL, error);
 		}
 	}
 }
@@ -200,7 +278,7 @@ void capi_hangup(struct capi_connection *connection)
 
 		if (info != 0) {
 			connection->state = STATE_IDLE;
-			session->handlers->status(connection, info);
+			connection_status(connection, info);
 		} else {
 			connection->state = STATE_DISCONNECT_ACTIVE;
 		}
@@ -220,7 +298,7 @@ void capi_hangup(struct capi_connection *connection)
 			isdn_unlock();
 			if (info != 0) {
 				connection->state = STATE_IDLE;
-				session->handlers->status(connection, info);
+				connection_status(connection, info);
 			} else {
 				connection->state = STATE_DISCONNECT_ACTIVE;
 			}
@@ -237,7 +315,7 @@ void capi_hangup(struct capi_connection *connection)
 		isdn_unlock();
 		connection->state = STATE_IDLE;
 		if (info != 0) {
-			session->handlers->status(connection, info);
+			connection_status(connection, info);
 		}
 
 		break;
@@ -702,7 +780,7 @@ static void capi_get_dtmf_code(struct capi_connection *connection, unsigned char
 		}
 	}
 
-	session->handlers->code(connection, dtmf);
+	connection_code(connection, dtmf);
 }
 
 /**
@@ -795,6 +873,7 @@ static int capi_indication(_cmsg capi_message)
 	char info_element[128];
 	int index;
 	int nTmp;
+	unsigned char *ncpi;
 
 	switch (capi_message.Command) {
 	case CAPI_CONNECT:
@@ -877,7 +956,7 @@ static int capi_indication(_cmsg capi_message)
 			isdn_unlock();
 
 			if (info != 0) {
-				session->handlers->status(connection, info);
+				connection_status(connection, info);
 				/* initiate hangup on PLCI */
 				capi_hangup(connection);
 			} else {
@@ -891,7 +970,7 @@ static int capi_indication(_cmsg capi_message)
 					connection->audio = rm_audio_open(audio);
 					if (!connection->audio) {
 						g_warning("Could not open audio. Hangup");
-						rm_object_emit_message(0, "Could not open audio. Hangup");
+						rm_object_emit_message("Audio error", "Could not open audio. Hangup");
 						capi_hangup(connection);
 						connection->audio = NULL;
 					}
@@ -931,7 +1010,7 @@ static int capi_indication(_cmsg capi_message)
 		g_debug("IND: CAPI_CONNECT_B3_ACTIVE");
 		ncci = CONNECT_B3_ACTIVE_IND_NCCI(&capi_message);
 		plci = ncci & 0x0000ffff;
-		_cstruct ncpi = capi_message.NCPI;
+		ncpi = capi_message.NCPI;
 
 		connection = capi_find_plci(plci);
 		if (connection == NULL) {
@@ -963,7 +1042,7 @@ static int capi_indication(_cmsg capi_message)
 		}
 
 		/* notify application about successful call establishment */
-		session->handlers->connected(connection);
+		capi_connection_connect(connection);
 		break;
 
 	/* CAPI_DATA_B3 - data - receive/send */
@@ -979,7 +1058,7 @@ static int capi_indication(_cmsg capi_message)
 		}
 
 #ifdef CAPI_DEBUG
-		g_debug("IND: CAPI_DATA_B3 - nConnection: %d, plci: %ld, ncci: %ld", connection->id, connection->plci, connection->ncci);
+		g_debug("IND: CAPI_DATA_B3 - connection: %d, plci: %ld, ncci: %ld", connection->id, connection->plci, connection->ncci);
 #endif
 		connection->data(connection, capi_message);
 
@@ -1024,7 +1103,7 @@ static int capi_indication(_cmsg capi_message)
 				isdn_unlock();
 
 				if (info != 0) {
-					session->handlers->status(connection, info);
+					connection_status(connection, info);
 					/* initiate hangup on PLCI */
 					capi_hangup(connection);
 				} else {
@@ -1208,10 +1287,16 @@ static int capi_indication(_cmsg capi_message)
 			/* Disconnect */
 			connection = capi_find_plci(plci);
 
+			g_debug("CAPI_INFO - DISCONNECT");
+
 			if (connection == NULL) {
 				break;
 			}
-			g_debug("CAPI_INFO information indicated disconnect, so terminate connection");
+
+			if (connection->state == STATE_CONNECTED && connection->type == SESSION_FAX) {
+				g_debug("CAPI_INFO - Fax mode and we are connected, wait for DISCONNECT_B3_IND");
+				break;
+			}
 
 			capi_hangup(connection);
 			break;
@@ -1261,7 +1346,7 @@ static int capi_indication(_cmsg capi_message)
 					connection->audio = rm_audio_open(audio);
 					if (!connection->audio) {
 						g_warning("Could not open audio. Hangup");
-						rm_object_emit_message(0, "Could not open audio. Hangup");
+						rm_object_emit_message("Audio error", "Could not open audio. Hangup");
 						capi_hangup(connection);
 						connection->audio = NULL;
 					} else {
@@ -1279,7 +1364,14 @@ static int capi_indication(_cmsg capi_message)
 		g_debug("IND: DISCONNECT_B3");
 		ncci = DISCONNECT_B3_IND_NCCI(&capi_message);
 		plci = ncci & 0x0000ffff;
-		ncpi = capi_message.NCPI;
+		ncpi = (unsigned char *)DISCONNECT_B3_IND_NCPI(&capi_message);
+
+		/*if (ncpi) {
+			g_debug("rate: %d", get_word(&ncpi[1]));
+			g_debug("resolution: %d", get_word(&ncpi[3]) & 1);
+		} else {
+			g_debug("no ncpi");
+		}*/
 
 		isdn_lock();
 		DISCONNECT_B3_RESP(&cmsg1, session->appl_id, session->message_number++, ncci);
@@ -1287,18 +1379,8 @@ static int capi_indication(_cmsg capi_message)
 
 		connection = capi_find_ncci(ncci);
 		if (connection == NULL) {
+			g_debug("connection not found");
 			break;
-		}
-
-		if (1) {
-			int len = ncpi[0] + 1;
-			int tmp;
-			g_debug("NCPI len: %d", len);
-			connection->ncpi = g_malloc0(len);
-			memcpy(connection->ncpi, ncpi, len);
-			for (tmp = 0; tmp < len; tmp++) {
-				g_debug("%2.2x <-> %c", connection->ncpi[tmp], connection->ncpi[tmp]);
-			}
 		}
 
 		connection->reason_b3 = DISCONNECT_B3_IND_REASON_B3(&capi_message);
@@ -1359,7 +1441,7 @@ static int capi_indication(_cmsg capi_message)
 			break;
 		}
 
-		session->handlers->disconnected(connection);
+		capi_connection_disconnect(connection);
 
 		capi_set_free(connection);
 		break;
@@ -1412,7 +1494,7 @@ static void capi_confirmation(_cmsg capi_message)
 				connection->state = STATE_IDLE;
 			}
 		} else {
-			session->handlers->ring(connection);
+			connection_ring(connection);
 		}
 		break;
 	case CAPI_DATA_B3:
@@ -1453,7 +1535,7 @@ static void capi_confirmation(_cmsg capi_message)
 			/* Connection error */
 			connection->state = STATE_IDLE;
 
-			session->handlers->status(connection, info);
+			connection_status(connection, info);
 
 			capi_set_free(connection);
 		} else {
@@ -1714,12 +1796,11 @@ void setHostName(const char *);
 
 /**
  * \brief Initialize capi structure
- * \param handlers session handlers
  * \param host host name of router
  * \param controller listen controller or -1 for all
  * \return session pointer or NULL on error
  */
-struct session *capi_session_init(struct session_handlers *handlers, const char *host, gint controller)
+struct session *capi_session_init(const char *host, gint controller)
 {
 	int appl_id = -1;
 
@@ -1750,8 +1831,6 @@ struct session *capi_session_init(struct session_handlers *handlers, const char 
 	session = g_slice_alloc0(sizeof(struct session));
 
 	g_mutex_init(&session->isdn_mutex);
-
-	session->handlers = handlers;
 
 	session->appl_id = appl_id;
 
@@ -1792,13 +1871,6 @@ struct session *capi_get_session(void)
 {
 	return session;
 }
-
-#define RM_ERROR 
-
-//static gconstpointer net_event;
-
-struct capi_connection *active_capi_connection = NULL;
-
 /**
  * \brief Dial number via fax
  * \param tiff tiff file name
@@ -1876,92 +1948,6 @@ struct capi_connection *phone_dial(const gchar *trg_no, gboolean suppress)
 }
 
 /**
- * \brief Connection ring handler - emit connection-established signal
- * \param connection capi connection structure
- */
-void connection_established(struct capi_connection *capi_connection)
-{
-	RmConnection *connection = rm_connection_find_by_id(capi_connection->id);
-
-	if (connection) {
-		rm_object_emit_connection_established(connection);
-	}
-}
-
-/**
- * \brief Connection ring handler - emit connection-terminated signal
- * \param connection capi connection structure
- */
-void connection_terminated(struct capi_connection *capi_connection)
-{
-	RmConnection *connection = rm_connection_find_by_id(capi_connection->id);
-
-	if (connection) {
-		rm_object_emit_connection_terminated(connection);
-	}
-}
-
-/**
- * \brief Connection ring handler
- * \param connection capi connection structure
- */
-void connection_ring(struct capi_connection *capi_connection)
-{
-	RmConnection *connection;
-
-	active_capi_connection = capi_connection;
-
-	g_debug("connection_ring() src %s trg %s", capi_connection->source, capi_connection->target);
-	connection = rm_connection_find_by_remote_number(capi_connection->source);
-#if ACCEPT_INTERN
-	if (!connection && !strncmp(capi_connection->source, "**", 2)) {
-		connection = connection_add_call(981, CONNECTION_TYPE_INCOMING, capi_connection->source, capi_connection->target);
-	}
-#endif
-
-	g_debug("connection_ring() connection %p", connection);
-	if (connection) {
-		g_debug("connection_ring() set capi_connection %p", capi_connection);
-		connection->priv = capi_connection;
-
-		rm_object_emit_connection_notify(connection);
-	}
-}
-
-/**
- * \brief Connection code handler
- * \param connection capi connection structure
- * \param code dtmf code
- */
-void connection_code(struct capi_connection *connection, gint code)
-{
-	g_debug("connection_code(): code 0x%x", code);
-}
-
-/**
- * \brief Connection status handlers - emits connection-status signal
- * \param connection capi connection structure
- * \param status status code
- */
-void connection_status(struct capi_connection *capi_connection, gint status)
-{
-	RmConnection *connection = rm_connection_find_by_id(capi_connection->id);
-
-	if (connection) {
-		rm_object_emit_connection_status(status, connection);
-	}
-}
-
-struct session_handlers session_handlers = {
-	connection_established, /* connection_established */
-	connection_terminated, /* connection_terminated */
-	connection_ring, /* connection_ring */
-	connection_code, /* connection_code */
-	connection_status, /* connection_status */
-};
-
-
-/**
  * \brief Capi connect
  * \param user_data capi plugin pointer
  * \return error code
@@ -1973,7 +1959,7 @@ gboolean capi_session_connect(gpointer user_data)
 
 again:
 	g_debug("%s(): called", __FUNCTION__);
-	session = capi_session_init(&session_handlers, rm_router_get_host(profile), g_settings_get_int(profile->settings, "phone-controller") + 1);
+	session = capi_session_init(rm_router_get_host(profile), g_settings_get_int(profile->settings, "phone-controller") + 1);
 	if (!session && retry) {
 		/* Maybe the port is closed, try to activate it and try again */
 		rm_router_dial_number(profile, PORT_ISDN1, "#96*3*");
@@ -2002,6 +1988,7 @@ static void impl_activate(PeasActivatable *plugin)
 	capi_plugin->priv->net_event = rm_netmonitor_add_event("CAPI", capi_session_connect, capi_session_disconnect, capi_plugin);
 
 	capi_phone_init();
+	capi_fax_init();
 }
 
 /**

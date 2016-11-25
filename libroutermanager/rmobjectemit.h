@@ -28,12 +28,14 @@
 
 G_BEGIN_DECLS
 
-void rm_object_emit_connection_notify(RmConnection *connection);
+void rm_object_emit_connection_changed(gint event, RmConnection *connection);
 void rm_object_emit_contact_process(RmContact *contact);
 void rm_object_emit_journal_loaded(GSList *journal);
 void rm_object_emit_fax_process(const gchar *filename);
-void rm_object_emit_connection_established(RmConnection *connection);
-void rm_object_emit_connection_terminated(RmConnection *connection);
+void rm_object_emit_connection_incoming(RmConnection *connection);
+void rm_object_emit_connection_outgoing(RmConnection *connection);
+void rm_object_emit_connection_connect(RmConnection *connection);
+void rm_object_emit_connection_disconnect(RmConnection *connection);
 void rm_object_emit_connection_status(gint status, RmConnection *connection);
 void rm_object_emit_message(gchar *title, gchar *message);
 void rm_object_emit_contacts_changed(void);

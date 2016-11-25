@@ -27,14 +27,17 @@
 #include <libroutermanager/rmconnection.h>
 
 /**
- * rm_object_emit_connection_notify:
+ * rm_object_emit_connection_changed:
+ * @event: a #RmConnectionType
  * @connection: a #RmConnection
  *
  * Emit signal: connection-notify.
  */
-void rm_object_emit_connection_notify(RmConnection *connection)
+void rm_object_emit_connection_changed(gint event, RmConnection *connection)
 {
-	g_signal_emit(rm_object, rm_object_signals[RM_ACB_CONNECTION_NOTIFY], 0, connection);
+	rm_connection_set_type(connection, event);
+
+	g_signal_emit(rm_object, rm_object_signals[RM_ACB_CONNECTION_CHANGED], 0, event, connection);
 }
 
 /**
@@ -65,7 +68,7 @@ void rm_object_emit_contact_process(RmContact *contact)
  * rm_object_emit_fax_process:
  * @filename: fax filename in spooler directory
  *
- * Emit signal: process-fax.
+ * Emit signal: process-fax
  */
 void rm_object_emit_fax_process(const gchar *filename)
 {
@@ -73,30 +76,42 @@ void rm_object_emit_fax_process(const gchar *filename)
 }
 
 /**
- * rm_object_emit_connection_established:
+ * rm_object_emit_connection_incoming:
  * @connection: a #RmConnection
- *
- * Emit signal: connection-established.
  */
-void rm_object_emit_connection_established(RmConnection *connection)
+void rm_object_emit_connection_incoming(RmConnection *connection)
 {
-	rm_connection_init_duration_timer(connection);
-
-	g_signal_emit(rm_object, rm_object_signals[RM_ACB_CONNECTION_ESTABLISHED], 0, connection);
+	rm_object_emit_connection_changed(RM_CONNECTION_TYPE_INCOMING, connection);
 }
 
 /**
- * rm_object_emit_connection_terminated:
+ * rm_object_emit_connection_outgoing:
  * @connection: a #RmConnection
- *
- * Emit signal: connection-terminated.
  */
-void rm_object_emit_connection_terminated(RmConnection *connection)
+void rm_object_emit_connection_outgoing(RmConnection *connection)
+{
+	rm_object_emit_connection_changed(RM_CONNECTION_TYPE_OUTGOING, connection);
+}
+
+/**
+ * rm_object_emit_connection_connect:
+ * @connection: a #RmConnection
+ */
+void rm_object_emit_connection_connect(RmConnection *connection)
+{
+	rm_object_emit_connection_changed(RM_CONNECTION_TYPE_CONNECT, connection);
+}
+
+/**
+ * rm_object_emit_connection_disconnect:
+ * @connection: a #RmConnection
+ */
+void rm_object_emit_connection_disconnect(RmConnection *connection)
 {
 	/* Remove timer */
 	rm_connection_shutdown_duration_timer(connection);
 
-	g_signal_emit(rm_object, rm_object_signals[RM_ACB_CONNECTION_TERMINATED], 0, connection);
+ 	rm_object_emit_connection_changed(RM_CONNECTION_TYPE_DISCONNECT, connection);
 }
 
 /**

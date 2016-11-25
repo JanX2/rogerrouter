@@ -96,7 +96,9 @@ void rm_profile_remove(RmProfile *profile)
 {
 	rm_profile_list = g_slist_remove(rm_profile_list, profile);
 
-	g_object_unref(profile->settings);
+	if (profile->settings) {
+		g_object_unref(profile->settings);
+	}
 
 	rm_router_info_free(profile->router_info);
 
@@ -544,4 +546,27 @@ RmPhone *rm_profile_get_phone(RmProfile *profile)
 void rm_profile_set_phone(RmProfile *profile, gchar *name)
 {
 	g_settings_set_string(profile->settings, "phone-plugin", name);
+}
+
+/**
+ * rm_profile_get_fax:
+ * @profile: a #RmProfile
+ *
+ * Get fax for selected profile.
+ */
+RmFax *rm_profile_get_fax(RmProfile *profile)
+{
+	RmFax *fax;
+	gchar *name = g_settings_get_string(profile->settings, "fax-plugin");
+
+	fax = rm_fax_get(name);
+
+	g_free(name);
+
+	return fax;
+}
+
+void rm_profile_set_fax(RmProfile *profile, gchar *name)
+{
+	g_settings_set_string(profile->settings, "fax-plugin", name);
 }

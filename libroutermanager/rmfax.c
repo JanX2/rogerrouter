@@ -22,12 +22,12 @@
 #include <string.h>
 #include <glib.h>
 
-#include <libroutermanager/rmdevicefax.h>
+#include <libroutermanager/rmfax.h>
 #include <libroutermanager/rmstring.h>
 
 /**
- * SECTION:rmdevicefax
- * @title: RmDeviceFax
+ * SECTION:rmfax
+ * @title: RmFax
  * @short_description: Fax device implementation
  *
  * Wrapper for fax device functions.
@@ -37,14 +37,55 @@
 static GSList *rm_fax_plugins = NULL;
 
 /**
- * rm_device_fax_register:
- * @fax: a #RmDeviceFax
+ * rm_fax_register:
+ * @fax: a #RmFax
  *
  * Register fax plugin.
  */
-void rm_device_fax_register(RmDeviceFax *fax)
+void rm_fax_register(RmFax *fax)
 {
 	g_debug("%s(): Registering %s", __FUNCTION__, fax->name);
 	rm_fax_plugins = g_slist_prepend(rm_fax_plugins, fax);
 }
 
+GSList *rm_fax_get_plugins(void)
+{
+	return rm_fax_plugins;
+}
+
+gchar *rm_fax_get_name(RmFax *fax)
+{
+	return g_strdup(fax ? fax->name : "");
+}
+
+gboolean rm_fax_get_status(RmFax *fax, RmConnection *connection, RmFaxStatus *fax_status)
+{
+	return fax ? fax->get_status(connection, fax_status) : FALSE;
+}
+
+RmConnection *rm_fax_send(RmFax *fax, gchar *file, const gchar *target, gboolean anonymous)
+{
+	return fax ? fax->send(file, target, anonymous) : NULL;
+}
+
+RmFax *rm_fax_get(gchar *name)
+{
+	GSList *list;
+
+	for (list = rm_fax_plugins; list != NULL; list = list->next) {
+		RmFax *fax = list->data;
+
+		if (fax && fax->name && name && !strcmp(fax->name, name)) {
+			return fax;
+		}
+	}
+
+	return NULL;
+}
+
+void rm_fax_hangup(RmFax *fax, RmConnection *connection)
+{
+	if (fax) {
+		fax->hangup(connection);
+	}
+}

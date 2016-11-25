@@ -21,6 +21,7 @@ libfritzbox_la_SOURCES = \
 	firmware-06-35.h \
 	firmware-query.c \
 	firmware-query.h \
+	callmonitor.c \
 	csv.c \
 	csv.h
 

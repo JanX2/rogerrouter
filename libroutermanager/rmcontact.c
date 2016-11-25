@@ -179,6 +179,11 @@ static void rm_contact_free_address(gpointer data)
 {
 	RmContactAddress *address = data;
 
+	if (!address) {
+		g_debug("%s(): No address at all, exit", __FUNCTION__);
+		return;
+	}
+
 	if (address->street) {
 		g_free(address->street);
 		address->street = NULL;

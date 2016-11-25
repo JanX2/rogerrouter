@@ -83,16 +83,17 @@ static void rm_object_create_signals(GObjectClass *g_object_class)
 	            1,
 	            G_TYPE_POINTER);
 
-	rm_object_signals[RM_ACB_CONNECTION_NOTIFY] = g_signal_new(
-	            "connection-notify",
+	rm_object_signals[RM_ACB_CONNECTION_CHANGED] = g_signal_new(
+	            "connection-changed",
 	            G_OBJECT_CLASS_TYPE(g_object_class),
 	            G_SIGNAL_RUN_FIRST,
-	            G_STRUCT_OFFSET(RmObjectClass, connection_notify),
+	            G_STRUCT_OFFSET(RmObjectClass, connection_changed),
 	            NULL,
 	            NULL,
-	            g_cclosure_marshal_VOID__POINTER,
+	            g_cclosure_marshal_VOID__UINT_POINTER,
 	            G_TYPE_NONE,
-	            1,
+	            2,
+	            G_TYPE_UINT,
 	            G_TYPE_POINTER);
 
 	rm_object_signals[RM_ACB_CONTACT_PROCESS] = g_signal_new(
@@ -118,30 +119,6 @@ static void rm_object_create_signals(GObjectClass *g_object_class)
 	        G_TYPE_NONE,
 	        1,
 	        G_TYPE_POINTER);
-
-	rm_object_signals[RM_ACB_CONNECTION_ESTABLISHED] = g_signal_new(
-	            "connection-established",
-	            G_OBJECT_CLASS_TYPE(g_object_class),
-	            G_SIGNAL_RUN_FIRST,
-	            G_STRUCT_OFFSET(RmObjectClass, connection_established),
-	            NULL,
-	            NULL,
-	            g_cclosure_marshal_VOID__POINTER,
-	            G_TYPE_NONE,
-	            1,
-	            G_TYPE_POINTER);
-
-	rm_object_signals[RM_ACB_CONNECTION_TERMINATED] = g_signal_new(
-	            "connection-terminated",
-	            G_OBJECT_CLASS_TYPE(g_object_class),
-	            G_SIGNAL_RUN_FIRST,
-	            G_STRUCT_OFFSET(RmObjectClass, connection_terminated),
-	            NULL,
-	            NULL,
-	            g_cclosure_marshal_VOID__POINTER,
-	            G_TYPE_NONE,
-	            1,
-	            G_TYPE_POINTER);
 
 	rm_object_signals[RM_ACB_CONNECTION_STATUS] = g_signal_new(
 	            "connection-status",

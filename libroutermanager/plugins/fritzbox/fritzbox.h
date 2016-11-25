@@ -30,6 +30,8 @@ gboolean fritzbox_load_journal(RmProfile *profile, gchar **data_ptr);
 gboolean fritzbox_dial_number(RmProfile *profile, gint port, const gchar *number);
 gboolean fritzbox_hangup(RmProfile *profile, gint port, const gchar *number);
 
+RmConnection *fritzbox_phone_dialer_get_connection();
+
 G_END_DECLS
 
 #endif

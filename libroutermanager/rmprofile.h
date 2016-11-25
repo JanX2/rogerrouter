@@ -28,6 +28,7 @@
 #include <libroutermanager/rmlookup.h>
 #include <libroutermanager/rmrouterinfo.h>
 #include <libroutermanager/rmphone.h>
+#include <libroutermanager/rmfax.h>
 
 G_BEGIN_DECLS
 
@@ -68,6 +69,8 @@ gboolean rm_profile_get_notification_ringtone(RmProfile *profile);
 RmLookup *rm_profile_get_lookup(RmProfile *profile);
 RmPhone *rm_profile_get_phone(RmProfile *profile);
 void rm_profile_set_phone(RmProfile *profile, gchar *name);
+RmFax *rm_profile_get_fax(RmProfile *profile);
+void rm_profile_set_fax(RmProfile *profile, gchar *name);
 
 G_END_DECLS
 

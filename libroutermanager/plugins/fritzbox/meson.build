@@ -1,4 +1,5 @@
 fritzbox_sources = []
+fritzbox_sources += 'callmonitor.c'
 fritzbox_sources += 'csv.c'
 fritzbox_sources += 'firmware-04-00.c'
 fritzbox_sources += 'firmware-04-74.c'
@@ -23,3 +24,6 @@ custom_target('fritzbox.plugin',
     install : true,
     install_dir : get_option('prefix') + '/' + get_option('libdir') + '/routermanager/fritzbox/')
 
+gnome.compile_schemas()
+install_data('org.tabos.routermanager.plugins.fritzbox.gschema.xml',
+install_dir : 'share/glib-2.0/schemas')

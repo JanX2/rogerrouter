@@ -36,6 +36,7 @@
 #include <libroutermanager/rmaction.h>
 #include <libroutermanager/rmaudio.h>
 #include <libroutermanager/rmaddressbook.h>
+#include <libroutermanager/rmfax.h>
 
 #include <roger/application.h>
 #include <roger/settings.h>
@@ -56,6 +57,10 @@ struct settings {
 	GtkWidget *line_access_code_entry;
 	GtkWidget *area_code_entry;
 	GtkWidget *country_code_entry;
+
+	GtkWidget *phone_plugin_combobox;
+	GtkWidget *fax_plugin_combobox;
+
 	GtkWidget *softphone_msn_combobox;
 	GtkWidget *softphone_controller_combobox;
 	GtkWidget *fax_header_entry;
@@ -85,6 +90,9 @@ struct settings {
 	GtkWidget *notification_plugin_combobox;
 	GtkWidget *notification_play_ringtone_switch;
 	GtkListStore *notification_liststore;
+
+	GtkWidget *phone_settings;
+	GtkWidget *phone_notification_plugin_combobox;
 };
 
 static struct settings *settings = NULL;
@@ -1450,6 +1458,47 @@ void settings_notebook_switch_page_cb(GtkNotebook *notebook, GtkWidget *page, gu
 	}
 }
 
+void phone_settings_close_button_cb(GtkWidget *button, gpointer user_data)
+{
+	gtk_widget_destroy(settings->phone_settings);
+}
+
+void phone_plugin_settings_button_clicked_cb(GtkWidget *button, gpointer user_data)
+{
+	gchar *name = gtk_combo_box_get_active_id(GTK_COMBO_BOX(settings->phone_plugin_combobox));
+
+	if (name && !strcmp(name, _("CAPI Phone"))) {
+		GtkBuilder *builder;
+
+		builder = gtk_builder_new_from_resource("/org/tabos/roger/settings.glade");
+		if (!builder) {
+			g_warning("Could not load settings ui");
+			return;
+		}
+		settings->phone_settings = GTK_WIDGET(gtk_builder_get_object(builder, "phone_settings"));
+
+		GtkWidget *number = GTK_WIDGET(gtk_builder_get_object(builder, "phone_settings_number_combobox"));
+		GtkWidget *controller = GTK_WIDGET(gtk_builder_get_object(builder, "phone_settings_controller_combobox"));
+		gchar **numbers;
+		gint idx;
+
+		RmProfile *profile = rm_profile_get_active();
+		numbers = rm_router_get_numbers(profile);
+		for (idx = 0; idx < g_strv_length(numbers); idx++) {
+			gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(number), numbers[idx], numbers[idx]);
+		}
+		g_settings_bind(profile->settings, "phone-number", number, "active-id", G_SETTINGS_BIND_DEFAULT);
+
+		g_settings_bind(profile->settings, "phone-controller", controller, "active", G_SETTINGS_BIND_DEFAULT);
+		gtk_builder_connect_signals(builder, NULL);
+
+		g_object_unref(G_OBJECT(builder));
+
+		gtk_window_set_transient_for(GTK_WINDOW(settings->phone_settings), GTK_WINDOW(settings->window));
+		gtk_dialog_run(GTK_DIALOG(settings->phone_settings));
+	}
+}
+
 void app_show_settings(void)
 {
 	GtkBuilder *builder;
@@ -1460,6 +1509,8 @@ void app_show_settings(void)
 	gboolean is_cable;
 	gchar **numbers;
 	gint idx;
+	GSList *phone_plugins;
+	GSList *fax_plugins;
 	GSList *audio_plugins;
 	GSList *notification_plugins;
 	GSList *list;
@@ -1542,16 +1593,64 @@ void app_show_settings(void)
 	gtk_editable_set_editable(GTK_EDITABLE(settings->national_call_prefix_entry), is_cable);
 	gtk_editable_set_editable(GTK_EDITABLE(settings->area_code_entry), is_cable);
 
-	/* Devices group */
-	settings->softphone_msn_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "softphone_msn_combobox"));
-	numbers = rm_router_get_numbers(profile);
-	for (idx = 0; idx < g_strv_length(numbers); idx++) {
-		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->softphone_msn_combobox), numbers[idx], numbers[idx]);
-	}
-	g_settings_bind(profile->settings, "phone-number", settings->softphone_msn_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+	/* Phone group */
+	settings->phone_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "phone_plugin_combobox"));
+	phone_plugins = rm_phone_get_plugins();
+	for (list = phone_plugins; list != NULL; list = list->next) {
+		RmPhone *phone = list->data;
+		gchar *name;
 
-	settings->softphone_controller_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "softphone_controller_combobox"));
-	g_settings_bind(profile->settings, "phone-controller", settings->softphone_controller_combobox, "active", G_SETTINGS_BIND_DEFAULT);
+		g_assert(phone != NULL);
+
+		name = rm_phone_get_name(phone);
+
+		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->phone_plugin_combobox), name, name);
+		g_free(name);
+	}
+	g_settings_bind(rm_profile_get_active()->settings, "phone-plugin", settings->phone_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+
+	settings->phone_notification_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "phone_notification_plugin_combobox"));
+	notification_plugins = rm_notification_get_plugins();
+	for (list = notification_plugins; list != NULL; list = list->next) {
+		RmNotification *notification = list->data;
+		gchar *name;
+
+		g_assert(notification != NULL);
+
+		name = rm_notification_get_name(notification);
+
+		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->phone_notification_plugin_combobox), name, name);
+		g_free(name);
+	}
+	g_settings_bind(rm_profile_get_active()->settings, "notification-plugin", settings->phone_notification_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+
+	/* Fax group */
+	settings->fax_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "fax_plugin_combobox"));
+	fax_plugins = rm_fax_get_plugins();
+	for (list = fax_plugins; list != NULL; list = list->next) {
+		RmFax *fax = list->data;
+		gchar *name;
+
+		g_assert(fax != NULL);
+
+		name = rm_fax_get_name(fax);
+		g_debug("Adding fax '%s'", name);
+
+		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->fax_plugin_combobox), name, name);
+		g_free(name);
+	}
+	g_settings_bind(rm_profile_get_active()->settings, "fax-plugin", settings->fax_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+
+	/* Devices group */
+	//settings->softphone_msn_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "softphone_msn_combobox"));
+	//numbers = rm_router_get_numbers(profile);
+	//for (idx = 0; idx < g_strv_length(numbers); idx++) {
+	//	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->softphone_msn_combobox), numbers[idx], numbers[idx]);
+	//}
+	//g_settings_bind(profile->settings, "phone-number", settings->softphone_msn_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+
+	//settings->softphone_controller_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "softphone_controller_combobox"));
+	//g_settings_bind(profile->settings, "phone-controller", settings->softphone_controller_combobox, "active", G_SETTINGS_BIND_DEFAULT);
 
 	settings->fax_header_entry = GTK_WIDGET(gtk_builder_get_object(builder, "fax_header_entry"));
 	g_settings_bind(profile->settings, "fax-header", settings->fax_header_entry, "text", G_SETTINGS_BIND_DEFAULT);
@@ -1559,12 +1658,12 @@ void app_show_settings(void)
 	settings->fax_ident_entry = GTK_WIDGET(gtk_builder_get_object(builder, "fax_ident_entry"));
 	g_settings_bind(profile->settings, "fax-ident", settings->fax_ident_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
-	settings->fax_msn_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "fax_msn_combobox"));
+	/*settings->fax_msn_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "fax_msn_combobox"));
 	numbers = rm_router_get_numbers(profile);
 	for (idx = 0; idx < g_strv_length(numbers); idx++) {
 		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->fax_msn_combobox), numbers[idx], numbers[idx]);
 	}
-	g_settings_bind(profile->settings, "fax-number", settings->fax_msn_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(profile->settings, "fax-number", settings->fax_msn_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);*/
 
 	settings->fax_controller_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "fax_controller_combobox"));
 	g_settings_bind(profile->settings, "fax-controller", settings->fax_controller_combobox, "active", G_SETTINGS_BIND_DEFAULT);
@@ -1608,10 +1707,10 @@ void app_show_settings(void)
 	action_refresh_list(settings->actions_liststore);
 
 	/* Plugins group - Workaround for Ubuntu 16.04 */
-	GtkWidget *tmp = GTK_WIDGET(gtk_builder_get_object(builder, "plugins_box"));
+	/*GtkWidget *tmp = GTK_WIDGET(gtk_builder_get_object(builder, "plugins_box"));
 	PeasEngine *peas = peas_engine_get_default();
 	GtkWidget *manager = peas_gtk_plugin_manager_new(peas);
-	gtk_box_pack_start(GTK_BOX(tmp), GTK_WIDGET(manager), TRUE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(tmp), GTK_WIDGET(manager), TRUE, TRUE, 0);*/
 
 	/* Extended group */
 	settings->audio_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "audio_plugin_combobox"));
@@ -1668,7 +1767,7 @@ void app_show_settings(void)
 	//g_settings_bind(profile->settings, "address-book", settings->address_book_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 
 	/* Notification group */
-	settings->notification_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "notification_plugin_combobox"));
+	/*settings->notification_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "notification_plugin_combobox"));
 
 	notification_plugins = rm_notification_get_plugins();
 	for (list = notification_plugins; list != NULL; list = list->next) {
@@ -1683,7 +1782,7 @@ void app_show_settings(void)
 		g_free(name);
 	}
 
-	g_settings_bind(profile->settings, "notification-plugin", settings->notification_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(profile->settings, "notification-plugin", settings->notification_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);*/
 
 	settings->notification_play_ringtone_switch = GTK_WIDGET(gtk_builder_get_object(builder, "notification_play_ringtone_switch"));
 	g_settings_bind(profile->settings, "notification-play-ringtone", settings->notification_play_ringtone_switch, "active", G_SETTINGS_BIND_DEFAULT);

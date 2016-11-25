@@ -1,5 +1,4 @@
 [Plugin]
-Depends=callmonitor
 Module=gnotification
 Name=Notifications (using GNotification)
 Description=Display notification about incoming/outgoing/missed calls and plays sounds

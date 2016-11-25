@@ -556,7 +556,7 @@ GdkPixbuf *load_tiff_page(TIFF *tiff_file)
  * \param status fax status structure
  * \param report_dir storage directory
  */
-void create_fax_report(struct fax_status *status, const char *report_dir)
+void create_fax_report(RmFaxStatus *status, gchar *file, const char *report_dir)
 {
 	cairo_t *cairo;
 	cairo_surface_t *out;
@@ -564,10 +564,9 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	struct tm *time_ptr = localtime(&time_s);
 	char *buffer;
 	GdkPixbuf *pixbuf;
-	char *file = status->tiff_file;
 	RmContact *contact = NULL;
-	char *remote = status->trg_no;
-	char *local = status->src_no;
+	char *remote = status->remote_number;
+	char *local = status->local_number;
 	char *status_code = status->error_code == 0 ? _("SUCCESS") : _("FAILED");
 	int pages = status->page_current;
 	int bitrate = status->bitrate;
@@ -575,8 +574,8 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	TIFF *tiff;
 	GdkPixbuf *scale;
 
-	if (file == NULL) {
-		g_warning("file is NULL\n");
+	if (file == NULL || !g_file_test(file, G_FILE_TEST_EXISTS)) {
+		g_warning("file is invalid\n");
 		return;
 	}
 
@@ -673,7 +672,7 @@ void create_fax_report(struct fax_status *status, const char *report_dir)
 	/* Local name */
 	cairo_move_to(cairo, 60, 170);
 	cairo_show_text(cairo, _("Sender name:"));
-	buffer = g_strdup_printf("%s", status->header);
+	buffer = g_strdup_printf("%s", status->local_ident);
 	cairo_move_to(cairo, 280, 170);
 	cairo_show_text(cairo, buffer);
 	g_free(buffer);

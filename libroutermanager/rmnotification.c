@@ -131,12 +131,13 @@ RmNotification *rm_notification_get(gchar *name)
 /**
  * rm_notification_connection_notify_cb:
  * @obj: a #RmObject
+ * @event: a #RmConnectionType
  * @connection: a #RmConnection
  * @unused_pointer: UNUSED pointer
  *
  * Notification handling based on ::conection-notify signal. Shows/Closes notifications for new connections.
  */
-static void rm_notification_connection_notify_cb(RmObject *obj, RmConnection *connection, gpointer unused_pointer)
+static void rm_notification_connection_changed_cb(RmObject *obj, gint event, RmConnection *connection, gpointer unused_pointer)
 {
 	RmProfile *profile = rm_profile_get_active();
 	RmNotification *notification;
@@ -250,8 +251,8 @@ void rm_notification_unregister(RmNotification *notification)
  */
 void rm_notification_init(void)
 {
-	/* Connect to "connection-notify" signal */
-	rm_notification_signal_id = g_signal_connect(G_OBJECT(rm_object), "connection-notify", G_CALLBACK(rm_notification_connection_notify_cb), NULL);
+	/* Connect to "connection-changed" signal */
+	rm_notification_signal_id = g_signal_connect(G_OBJECT(rm_object), "connection-changed", G_CALLBACK(rm_notification_connection_changed_cb), NULL);
 }
 
 /**

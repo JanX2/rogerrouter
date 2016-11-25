@@ -61,11 +61,7 @@ static gboolean phone_status_timer_cb(gpointer data)
 {
 	gchar *time_diff;
 	gchar *buf;
-
-	if (!data) {
-		return FALSE;
-	}
-
+ 
 	time_diff = rm_connection_get_duration_time(phone_state->connection);
 	buf = g_strdup_printf(_("Time: %s"), time_diff);
 	g_free(time_diff);
@@ -123,9 +119,6 @@ void phone_dial_buttons_set_dial(gboolean allow_dial)
  */
 static void phone_connection_established_cb(RmObject *object, RmConnection *connection, gpointer user_data)
 {
-	if (!phone_state->status_timer_id) {
-		phone_state->status_timer_id = g_timeout_add(250, phone_status_timer_cb, NULL);
-	}
 }
 
 /**
@@ -219,6 +212,10 @@ void pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	phone_state->connection = rm_phone_dial(phone_state->phone, phone_state->number, rm_router_get_suppress_state(profile));
 	if (phone_state->connection) {
 		phone_dial_buttons_set_dial(FALSE);
+
+		if (!phone_state->status_timer_id) {
+			phone_state->status_timer_id = g_timeout_add(250, phone_status_timer_cb, NULL);
+		}
 	}
 }
 
@@ -689,14 +686,13 @@ void phone_item_toggled_cb(GtkCheckMenuItem *item, gpointer user_data)
  * \param profile pointer to current profile
  * \return newly create phone menu
  */
-static GtkWidget *phone_window_create_menu(RmProfile *profile)
+static GtkWidget *phone_window_create_menu(RmProfile *profile, struct phone_state *state)
 {
 	GtkWidget *menu;
 	GtkWidget *item;
 	GtkWidget *box;
 	GSList *phone_radio_list = NULL;
 	GSList *phone_plugins = NULL;
-	gchar *name = NULL;
 
 	/* Create vertical box */
 	box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
@@ -722,7 +718,14 @@ static GtkWidget *phone_window_create_menu(RmProfile *profile)
 		item = gtk_radio_button_new_with_label(phone_radio_list, phone->name);
 
 		phone_radio_list = gtk_radio_button_get_group(GTK_RADIO_BUTTON(item));
-		if (name && phone->name && !strcmp(name, phone->name)) {
+
+		if (!state->phone) {
+			state->phone = phone;
+			g_debug("%s(): Setting default phone", __FUNCTION__);
+			rm_profile_set_phone(rm_profile_get_active(), phone->name);
+		}
+
+		if (phone == state->phone) {
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(item), TRUE);
 		}
 
@@ -862,6 +865,10 @@ static void phone_pickup(RmConnection *connection)
  */
 gboolean phone_window_delete_event_cb(GtkWidget *window, GdkEvent *event, gpointer data)
 {
+	if (!phone_state) {
+		return FALSE;
+	}
+
 	/* If there is an active connection, warn user and refuse to delete the window */
 	if (phone_state && phone_state->connection) {
 		phone_active_call_dialog(window);
@@ -932,7 +939,7 @@ void app_show_phone_window(RmContact *contact, RmConnection *connection)
 
 	phone_state->menu_button = GTK_WIDGET(gtk_builder_get_object(builder, "phone_menu_button"));
 
-	GtkWidget *menu = phone_window_create_menu(rm_profile_get_active());
+	GtkWidget *menu = phone_window_create_menu(rm_profile_get_active(), phone_state);
 	gtk_menu_button_set_popover(GTK_MENU_BUTTON(phone_state->menu_button), menu);
 
 	phone_state->header_bar = GTK_WIDGET(gtk_builder_get_object(builder, "phone_headerbar"));

@@ -34,11 +34,6 @@ GtkWidget *ui_label_new(gchar *text)
 	return label;
 }
 
-gchar *ui_bold_text(gchar *text)
-{
-	return g_strdup_printf("<b>%s</b>", text);
-}
-
 void gtk_widget_set_margin(GtkWidget *widget, gint x1, gint y1, gint x2, gint y2)
 {
 	gtk_widget_set_margin_top(widget, y1);
@@ -48,22 +43,3 @@ void gtk_widget_set_margin(GtkWidget *widget, gint x1, gint y1, gint x2, gint y2
 	gtk_widget_set_margin_end(widget, x2);
 }
 
-void ui_set_suggested_style(GtkWidget *widget)
-{
-#ifdef GTK_STYLE_CLASS_SUGGESTED_ACTION
-	gtk_style_context_add_class(gtk_widget_get_style_context(widget), GTK_STYLE_CLASS_SUGGESTED_ACTION);
-#endif
-}
-
-void ui_set_destructive_style(GtkWidget *widget)
-{
-#ifdef GTK_STYLE_CLASS_DESTRUCTIVE_ACTION
-	gtk_style_context_add_class(gtk_widget_get_style_context(widget), GTK_STYLE_CLASS_DESTRUCTIVE_ACTION);
-#endif
-}
-void ui_set_button_style(GtkWidget *widget)
-{
-#ifdef GTK_STYLE_CLASS_BUTTON_ACTION
-	gtk_style_context_add_class(gtk_widget_get_style_context(widget), GTK_STYLE_CLASS_BUTTON_ACTION);
-#endif
-}

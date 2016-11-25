@@ -307,7 +307,7 @@ void journal_redraw(void)
 		GSList *list = rm_profile_get_list();
 		gboolean selection = g_slist_length(list) > 1;
 
-		gtk_widget_set_hexpand(grid, TRUE);
+		//gtk_widget_set_hexpand(grid, TRUE);
 		markup = g_strdup_printf("<b>%s</b>", profile ? profile->name : _("<No profile>"));
 		
 		if (pango_parse_markup(markup, -1, 0, &attributes, &text, NULL, NULL)) {
@@ -317,7 +317,7 @@ void journal_redraw(void)
 			title = gtk_label_new(_("<No profile>"));
 		}
 
-		gtk_widget_set_hexpand(title, TRUE);
+		//gtk_widget_set_hexpand(title, TRUE);
 		gtk_grid_attach(GTK_GRID(grid), title, 0, 0, selection ? 1 : 2, 1);
 
 		if (selection) {
@@ -434,9 +434,9 @@ void journal_loaded_cb(RmObject *obj, GSList *journal, gpointer unused)
 	g_thread_new("Reverse Lookup Journal", lookup_journal, journal_list);
 }
 
-static void journal_connection_notify_cb(RmObject *obj, RmConnection *connection, gpointer user_data)
+static void journal_connection_changed_cb(RmObject *obj, gint type, RmConnection *connection, gpointer user_data)
 {
-	if (connection->type & RM_CONNECTION_TYPE_DISCONNECT) {
+	if (type == RM_CONNECTION_TYPE_DISCONNECT) {
 		rm_router_load_journal(rm_profile_get_active());
 	}
 }
@@ -1350,7 +1350,7 @@ void journal_window(GApplication *app)
 	g_signal_connect(journal_win, "delete-event", G_CALLBACK(journal_delete_event_cb), app);
 	g_signal_connect(G_OBJECT(rm_object), "journal-loaded", G_CALLBACK(journal_loaded_cb), NULL);
 
-	g_signal_connect(G_OBJECT(rm_object), "connection-notify", G_CALLBACK(journal_connection_notify_cb), NULL);
+	g_signal_connect(G_OBJECT(rm_object), "connection-changed", G_CALLBACK(journal_connection_changed_cb), NULL);
 
 	g_signal_connect(G_OBJECT(journal_win), "configure-event", G_CALLBACK(journal_configure_event_cb), NULL);
 	g_signal_connect(G_OBJECT(journal_win), "window-state-event", G_CALLBACK(journal_window_state_event_cb), NULL);
@@ -1367,8 +1367,8 @@ void journal_window(GApplication *app)
 		gtk_widget_show(GTK_WIDGET(window));
 	}
 
-#ifdef FAX_DBEUG
+//#ifdef FAX_DBEUG
 	extern gboolean app_show_fax_window_idle(gpointer data);
 	app_show_fax_window_idle(NULL);
-#endif
+//#endif
 }

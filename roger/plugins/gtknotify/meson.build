@@ -1,10 +1,16 @@
+gtknotify_gresources = gnome.compile_resources(
+  'gtknotify-gresources', 'gtknotify.gresource.xml',
+  source_dir : '.',
+  c_name : '')
+
+
 gtknotify_sources = []
 gtknotify_sources += 'gtknotify.c'
+gtknotify_sources += gtknotify_gresources
 
 gtknotify_dep = []
 gtknotify_dep += rm_dep
 gtknotify_dep += roger_dep
-gtknotify_dep += dependency('libebook-1.2')
 
 libgtknotify = shared_library('gtknotify',
                         gtknotify_sources,

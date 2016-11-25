@@ -69,8 +69,6 @@ struct fax_status {
 	gboolean done;
 	gboolean progress_status;
 
-	RmConnection *connection;
-
 	fax_state_t *fax_state;
 };
 

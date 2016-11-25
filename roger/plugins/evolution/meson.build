@@ -20,3 +20,7 @@ custom_target('evolution.plugin',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', podir, '-o', '@OUTPUT@'],
     install : true,
     install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/evolution/')
+
+gnome.compile_schemas()
+install_data('org.tabos.roger.plugins.evolution.gschema.xml',
+install_dir : 'share/glib-2.0/schemas')

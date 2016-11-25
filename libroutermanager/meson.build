@@ -10,6 +10,7 @@ rm_dep += dependency('libxml-2.0')
 rm_dep += dependency('spandsp')
 rm_dep += dependency('json-glib-1.0')
 rm_dep += dependency('dconf')
+rm_dep += dependency('uuid')
 
 # Check for UPnP support
 upnp_dep = dependency('gupnp-1.0', required : false)
@@ -31,7 +32,7 @@ rm_sources += 'rmcontact.c'
 rm_sources += 'rmconnection.c'
 rm_sources += 'rmcsv.c'
 rm_sources += 'rmdevice.c'
-rm_sources += 'rmdevicefax.c'
+rm_sources += 'rmfax.c'
 rm_sources += 'rmfaxspooler.c'
 rm_sources += 'rmfaxserver.c'
 rm_sources += 'rmfile.c'
@@ -79,7 +80,7 @@ headers = [
 	'rmconnection.h',
 	'rmcontact.h',
 	'rmcsv.h',
-	'rmdevicefax.h',
+	'rmfax.h',
 	'rmdevice.h',
 	'rmfaxprinter.h',
 	'rmfile.h',
@@ -91,6 +92,7 @@ headers = [
 	'rmmain.h',
 	'rmnetmonitor.h',
 	'rmnetwork.h',
+	'rmnotification.h',
 	'rmobjectemit.h',
 	'rmobject.h',
 	'rmosdep.h',
@@ -103,6 +105,7 @@ headers = [
 	'rmstring.h',
 	'rmvox.h',
 	'rmrouter.h',
+	'rmrouterinfo.h',
 	'xml.h'
 ]
 install_headers(headers, subdir : 'libroutermanager')
@@ -112,7 +115,8 @@ pkg_mod.generate(libraries : libroutermanager,
                  version : '1.2',
                  name : 'libroutermanager',
                  filebase : 'libroutermanager',
-                 description : 'A library to handle AVM FRITZ!Box routers.')
+                 description : 'A library to handle AVM FRITZ!Box routers.',
+                 requires: 'libsoup-2.4 gio-2.0 glib-2.0 gmodule-2.0 libxml-2.0')
 
 subdir('plugins')
 subdir('data')

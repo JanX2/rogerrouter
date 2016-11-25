@@ -17,25 +17,50 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBROUTERMANAGER_RMDEVICEFAX_H
-#define LIBROUTERMANAGER_RMDEVICEFAX_H
+#ifndef LIBROUTERMANAGER_RMFAX_H
+#define LIBROUTERMANAGER_RMFAX_H
 
 #include <libroutermanager/rmconnection.h>
 
 G_BEGIN_DECLS
 
-typedef struct device_fax {
+typedef enum {
+	PHASE_CALL,
+	PHASE_IDENTIFY,
+	PHASE_SIGNALLING,
+	PHASE_RELEASE,
+} RmFaxPhase;
+
+typedef struct {
+	RmFaxPhase phase;
+	gdouble percentage;
+	gchar *remote_ident;
+	gchar *local_ident;
+	gchar *remote_number;
+	gchar *local_number;
+	gint bitrate;
+	gint page_current;
+	gint page_total;
+	gint error_code;
+} RmFaxStatus;
+
+typedef struct {
 	gchar *name;
 	RmConnection *(*send)(gchar *tiff, const gchar *target, gboolean anonymous);
-	gboolean (*get_status)(struct fax_status *status);
+	gboolean (*get_status)(RmConnection *connection, RmFaxStatus *fax_status);
 	gint (*pickup)(RmConnection *connection);
 	void (*hangup)(RmConnection *connection);
 
 	gboolean (*number_is_handled)(gchar *number);
-} RmDeviceFax;
+} RmFax;
 
-void rm_device_fax_register(RmDeviceFax *fax);
-GSList *rm_device_fax_get_plugins(void);
+void rm_fax_register(RmFax *fax);
+GSList *rm_fax_get_plugins(void);
+gchar *rm_fax_get_name(RmFax *fax);
+gboolean rm_fax_get_status(RmFax *fax, RmConnection *connection, RmFaxStatus *status);
+RmConnection *rm_fax_send(RmFax *fax, gchar *tiff, const gchar *target, gboolean anonymous);
+RmFax *rm_fax_get(gchar *name);
+void rm_fax_hangup(RmFax *fax, RmConnection *connection);
 
 G_END_DECLS
 

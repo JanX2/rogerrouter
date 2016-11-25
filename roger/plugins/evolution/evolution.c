@@ -672,7 +672,8 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	g_settings_bind(ebook_settings, "book", combo_box, "active-id", G_SETTINGS_BIND_DEFAULT);
 	g_signal_connect(combo_box, "changed", G_CALLBACK(ebook_combobox_changed_cb), combo_box);
 
-	group = pref_group_create(box, _("Contact book"), TRUE, FALSE);
+	//group = pref_group_create(box, _("Contact book"), TRUE, FALSE);
+	group = box;
 
 	return group;
 }

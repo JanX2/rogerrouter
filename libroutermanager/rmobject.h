@@ -32,11 +32,9 @@ G_BEGIN_DECLS
 /**  Callbacks Signals */
 typedef enum {
 	RM_ACB_JOURNAL_LOADED,
-	RM_ACB_CONNECTION_NOTIFY,
+	RM_ACB_CONNECTION_CHANGED,
 	RM_ACB_CONTACT_PROCESS,
 	RM_ACB_FAX_PROCESS,
-	RM_ACB_CONNECTION_ESTABLISHED,
-	RM_ACB_CONNECTION_TERMINATED,
 	RM_ACB_CONNECTION_STATUS,
 	RM_ACB_MESSAGE,
 	RM_ACB_CONTACTS_CHANGED,
@@ -60,11 +58,9 @@ struct _RmObject {
 struct _RmObjectClass {
 	GObjectClass parent_class;
 	void (*journal_loaded)(GSList *journal);
-	void (*connection_notify)(RmConnection *connection);
+	void (*connection_changed)(gint event, RmConnection *connection);
 	void (*contact_process)(RmContact *contact);
 	void (*fax_process)(const gchar *filename);
-	void (*connection_established)(RmConnection *connection);
-	void (*connection_terminated)(RmConnection *connection);
 	void (*connection_status)(gint status, RmConnection *connection);
 	void (*message)(gchar *title, gchar *message);
 	void (*contacts_changed)(void);

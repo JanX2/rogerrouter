@@ -1,8 +1,9 @@
 subdir('evolution')
-subdir('fritzfon')
+#subdir('fritzfon')
 subdir('gnotification')
-subdir('google')
+#subdir('google')
 subdir('gtknotify')
+subdir('sip')
 
 if get_option('enable-indicator')
 	indicator = []
@@ -10,4 +11,4 @@ if get_option('enable-indicator')
 	subdir('indicator')
 endif
 
-subdir('webjournal')
+#subdir('webjournal')

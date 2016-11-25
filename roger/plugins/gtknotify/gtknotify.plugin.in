@@ -1,5 +1,4 @@
 [Plugin]
-Depends=callmonitor
 Module=gtknotify
 Name=Notifications (Fallback)
 Description=Display notification about incoming/outgoing/missed calls using GTK

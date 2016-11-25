@@ -135,7 +135,8 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
 	g_debug("Incoming call from %.*s!!", (int)ci.remote_info.slen, ci.remote_info.ptr);
 
 	connection = rm_connection_add(call_id, RM_CONNECTION_TYPE_INCOMING, ci.local_info.ptr, ci.remote_info.ptr);
-	rm_object_emit_connection_notify(connection);
+
+	rm_object_emit_connection_incoming(connection);
 }
 
 /* Callback called by the library when call's state has changed */
@@ -158,10 +159,10 @@ static void on_call_state(pjsua_call_id call_id, pjsip_event *e)
 	}
 
 	if (ci.state == PJSIP_INV_STATE_CONFIRMED) {
-		rm_object_emit_connection_established(connection);
+		rm_object_emit_connection_connect(connection);
 	} else if (ci.state == PJSIP_INV_STATE_DISCONNECTED) {
-		g_debug("%s(): Emitting terminated", __FUNCTION__);
-		rm_object_emit_connection_terminated(connection);
+		g_debug("%s(): Emitting disconnect", __FUNCTION__);
+		rm_object_emit_connection_disconnect(connection);
 		g_debug("%s(): Destroying connection", __FUNCTION__);
 		call_deinit_tonegen(call_id);
 		rm_connection_remove(connection);
@@ -284,6 +285,7 @@ gboolean sip_connect(gpointer user_data)
 		status = pj_thread_register("Threadname", rtpdesc, &thread );
 		if (status != PJ_SUCCESS) {
 			g_warning("SIP: Threadname Failed to register with PJLIB,exit = %d", status);
+			pjsua_destroy();
 			return FALSE;
 		}
 	}
@@ -300,6 +302,7 @@ gboolean sip_connect(gpointer user_data)
 	status = pjsua_init(&sua_cfg, &log_cfg, NULL);
 	if (status != PJ_SUCCESS) {
 		g_warning("SIP: Error in pjsua_init() = %d", status);
+		pjsua_destroy();
 		return FALSE;
 	}
 
@@ -309,6 +312,7 @@ gboolean sip_connect(gpointer user_data)
 	status = pjsua_transport_create(PJSIP_TRANSPORT_UDP, &transport_cfg, NULL);
 	if (status != PJ_SUCCESS) {
 		g_warning("SIP: Error creating transport = %d", status);
+		pjsua_destroy();
 		return FALSE;
 	}
 
@@ -316,6 +320,7 @@ gboolean sip_connect(gpointer user_data)
 	status = pjsua_start();
 	if (status != PJ_SUCCESS) {
 		g_warning("SIP: Error starting pjsua = %d", status);
+		pjsua_destroy();
 		return FALSE;
 	}
 
@@ -339,6 +344,7 @@ gboolean sip_connect(gpointer user_data)
 
 	if (status != PJ_SUCCESS) {
 		g_warning("SIP: Error adding account = %d", status);
+		pjsua_destroy();
 		return FALSE;
 	}
 
@@ -421,6 +427,7 @@ static void impl_deactivate(PeasActivatable *plugin)
 	g_debug("%s(): sip", __FUNCTION__);
 	/* Remove network event */
 	rm_netmonitor_remove_event(sip_plugin->priv->net_event_id);
+	rm_phone_unregister(&sip_phone);
 
 	g_clear_object(&sip_settings);
 }
@@ -435,7 +442,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	GtkWidget *group;
 
 	grid = gtk_grid_new();
-	gtk_widget_set_margin(grid, 18, 18, 18, 18);
+	//gtk_widget_set_margin(grid, 18, 18, 18, 18);
 	gtk_grid_set_row_spacing(GTK_GRID(grid), 6);
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 12);
 
@@ -464,7 +471,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	gtk_grid_attach(GTK_GRID(grid), msn_entry, 1, 2, 1, 1);
 	g_settings_bind(sip_settings, "msn", msn_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
-	group = pref_group_create(grid, _("Access data"), TRUE, FALSE);
+	//group = pref_group_create(grid, _("Access data"), TRUE, FALSE);
 
-	return group;
+	return grid;
 }

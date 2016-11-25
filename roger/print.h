@@ -27,7 +27,7 @@
 G_BEGIN_DECLS
 
 void journal_print(GtkWidget *view_widget);
-void create_fax_report(struct fax_status *status, const char *report_dir);
+void create_fax_report(RmFaxStatus *status, gchar *file, const char *report_dir);
 
 G_END_DECLS
 
