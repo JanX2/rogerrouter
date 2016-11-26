@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+	<gresource prefix="/org/tabos/roger/plugins/gtknotify">
+		<file preprocess="xml-stripblanks">gtknotify.glade</file>
+	</gresource>
+</gresources>
