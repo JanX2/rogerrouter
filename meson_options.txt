@@ -4,4 +4,3 @@ option('enable-pulseaudio', type : 'boolean', value : false, description : 'Enab
 option('enable-indicator', type : 'boolean', value : false, description : 'Enable app indicator plugin')
 option('enable-gtk-doc', type: 'boolean', value: true, description: 'Enable generating the API reference (depends on GTK-Doc)')
 option('do-post-install', type: 'boolean', value: true, description: 'Run post-install script')
-

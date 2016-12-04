@@ -1,5 +1,5 @@
 #!/bin/bash
-export PATH=/home/$USER/opt/bin/:$PATH
-export LD_LIBRARY_PATH=/home/$USER/opt/lib64/:$LD_LIBRARY_PATH
+export PATH=/home/$USER/.opt/bin/:$PATH
+export LD_LIBRARY_PATH=/home/$USER/.opt/lib64/:$LD_LIBRARY_PATH
 
-GSETTINGS_SCHEMA_DIR=/home/$USER/opt/share/glib-2.0/schemas/ roger -d
+GSETTINGS_SCHEMA_DIR=/home/$USER/.opt/share/glib-2.0/schemas/ roger -d

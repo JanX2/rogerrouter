@@ -217,7 +217,11 @@ static RmConnection *sip_phone_dial(const char *trg_no, gboolean anonymous)
 	g_free(target);
 
 	if (status != PJ_SUCCESS) {
-		g_warning("SIP: Error making call = %d", status);
+		gchar buf[256];
+
+		g_warning("%s(): Error making call = %d", __FUNCTION__, status);
+		pj_strerror(status, buf, 255);
+		g_warning("%s(): %s", __FUNCTION__, buf);
 		return NULL;
 	}
 
