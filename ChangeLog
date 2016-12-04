@@ -1,3 +1,9 @@
+roger - 1.9.3
+------------------------------------------------------------------------------------------------------------------
+- Reworked event handling for libfaxophone
+- Improve debug output in case of crashes
+- Removed NCPI handling of libfaxophone
+
 roger - 1.9.2
 ------------------------------------------------------------------------------------------------------------------
 - Fix network event handling (aka telnet plugin sometimes not working)

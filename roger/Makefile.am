@@ -4,6 +4,7 @@ AM_CFLAGS = -I$(top_srcdir)
 
 sharedir = $(datadir)/roger
 share_DATA = \
+	images/address-book.svg \
 	images/app.png \
 	images/roger-call-blocked.svg \
 	images/roger-call-blocked-symbolic.svg \

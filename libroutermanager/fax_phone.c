@@ -122,29 +122,12 @@ struct capi_connection *phone_dial(const gchar *trg_no, gboolean suppress)
 }
 
 /**
- * \brief Connection ring handler - emit connection-established signal
- * \param connection capi connection structure
- */
-void connection_established(struct capi_connection *connection)
-{
-	emit_connection_established(connection);
-}
-
-/**
- * \brief Connection ring handler - emit connection-terminated signal
- * \param connection capi connection structure
- */
-void connection_terminated(struct capi_connection *connection)
-{
-	emit_connection_terminated(connection);
-}
-
-/**
  * \brief Connection ring handler
  * \param connection capi connection structure
  */
-void connection_ring(struct capi_connection *capi_connection)
+gboolean connection_ring_idle(gpointer data)
 {
+	struct capi_connection *capi_connection = data;
 	struct connection *connection;
 
 	active_capi_connection = capi_connection;
@@ -164,7 +147,15 @@ void connection_ring(struct capi_connection *capi_connection)
 
 		emit_connection_notify(connection);
 	}
+
+	return G_SOURCE_REMOVE;
 }
+
+void connection_ring(struct capi_connection *capi_connection)
+{
+	g_idle_add(connection_ring_idle, capi_connection);
+}
+
 
 /**
  * \brief Connection code handler
@@ -186,14 +177,42 @@ void connection_status(struct capi_connection *connection, gint status)
 	emit_connection_status(status, connection);
 }
 
+gboolean connection_established_idle(gpointer data)
+{
+	struct capi_connection *connection = data;
+
+	emit_connection_established(connection);
+
+	return G_SOURCE_REMOVE;
+}
+
+void connection_established(struct capi_connection *connection)
+{
+	g_idle_add(connection_established_idle, connection);
+}
+
+gboolean connection_terminated_idle(gpointer data)
+{
+	struct capi_connection *connection = data;
+
+	emit_connection_terminated(connection);
+
+	return G_SOURCE_REMOVE;
+}
+
+void connection_terminated(struct capi_connection *connection)
+{
+	g_idle_add(connection_terminated_idle, connection);
+}
+
 struct session_handlers session_handlers = {
 	audio_open, /* audio_open */
 	audio_read, /* audio_read */
 	audio_write, /* audio_write */
 	audio_close, /* audio_close */
 
-	emit_connection_established, /* connection_established */
-	emit_connection_terminated, /* connection_terminated */
+	connection_established, /* connection_established */
+	connection_terminated, /* connection_terminated */
 	connection_ring, /* connection_ring */
 	connection_code, /* connection_code */
 	connection_status, /* connection_status */

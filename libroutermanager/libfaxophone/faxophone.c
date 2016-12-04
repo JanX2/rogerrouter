@@ -906,7 +906,6 @@ static int capi_indication(_cmsg capi_message)
 		g_debug("IND: CAPI_CONNECT_B3_ACTIVE");
 		ncci = CONNECT_B3_ACTIVE_IND_NCCI(&capi_message);
 		plci = ncci & 0x0000ffff;
-		_cstruct ncpi = capi_message.NCPI;
 
 		connection = capi_find_plci(plci);
 		if (connection == NULL) {
@@ -915,17 +914,6 @@ static int capi_indication(_cmsg capi_message)
 		}
 
 		connection->ncci = ncci;
-		if (1) {
-			int len = ncpi[0] + 1;
-			int tmp;
-			g_debug("NCPI len: %d", len);
-			connection->ncpi = g_malloc0(len);
-			memcpy(connection->ncpi, ncpi, len);
-			for (tmp = 0; tmp < len; tmp++) {
-				g_debug("%2.2x <-> %c", connection->ncpi[tmp], connection->ncpi[tmp]);
-			}
-		}
-
 		isdn_lock();
 		CONNECT_B3_ACTIVE_RESP(&cmsg1, session->appl_id, session->message_number++, ncci);
 		isdn_unlock();
@@ -1252,7 +1240,6 @@ static int capi_indication(_cmsg capi_message)
 		g_debug("IND: DISCONNECT_B3");
 		ncci = DISCONNECT_B3_IND_NCCI(&capi_message);
 		plci = ncci & 0x0000ffff;
-		ncpi = capi_message.NCPI;
 
 		isdn_lock();
 		DISCONNECT_B3_RESP(&cmsg1, session->appl_id, session->message_number++, ncci);
@@ -1261,17 +1248,6 @@ static int capi_indication(_cmsg capi_message)
 		connection = capi_find_ncci(ncci);
 		if (connection == NULL) {
 			break;
-		}
-
-		if (1) {
-			int len = ncpi[0] + 1;
-			int tmp;
-			g_debug("NCPI len: %d", len);
-			connection->ncpi = g_malloc0(len);
-			memcpy(connection->ncpi, ncpi, len);
-			for (tmp = 0; tmp < len; tmp++) {
-				g_debug("%2.2x <-> %c", connection->ncpi[tmp], connection->ncpi[tmp]);
-			}
 		}
 
 		connection->reason_b3 = DISCONNECT_B3_IND_REASON_B3(&capi_message);

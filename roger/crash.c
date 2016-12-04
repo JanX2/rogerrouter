@@ -53,7 +53,7 @@
 #define DEBUGGERRC "debuggerrc"
 #define BUGZILLA_URI "https://www.tabos.org/forum"
 
-static const gchar *DEBUG_SCRIPT = "thread all apply\nbt full\nkill\nq";
+static const gchar *DEBUG_SCRIPT = "thread apply all bt full\nkill\nq";
 extern gchar *argv0;
 
 /**
