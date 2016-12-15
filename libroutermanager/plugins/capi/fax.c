@@ -672,7 +672,7 @@ RmConnection *capi_fax_dial(gchar *tiff, const gchar *trg_no, gboolean suppress)
 	g_free(target);
 
 	if (capi_connection) {
-		connection = rm_connection_add(capi_connection->id, RM_CONNECTION_TYPE_OUTGOING, src_no, trg_no);
+		connection = rm_connection_add(capi_device, capi_connection->id, RM_CONNECTION_TYPE_OUTGOING, src_no, trg_no);
 		connection->priv = capi_connection;
 	}
 

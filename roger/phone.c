@@ -104,11 +104,12 @@ void phone_dial_buttons_set_dial(gboolean allow_dial)
 	gtk_widget_set_sensitive(phone_state->hangup_button, !allow_dial);
 
 	/* Toggle control buttons sensitive value */
-	if (rm_router_get_phone_port(profile) == PORT_SOFTPHONE) {
-		phone_control_buttons_set_sensitive(!allow_dial);
-	} else {
-		phone_control_buttons_set_sensitive(FALSE);
-	}
+	//if (rm_router_get_phone_port(profile) == PORT_SOFTPHONE) {
+	//	phone_control_buttons_set_sensitive(!allow_dial);
+	//} else {
+	//	phone_control_buttons_set_sensitive(FALSE);
+	//}
+	g_warning("%s(): TODO", __FUNCTION__);
 }
 
 /**

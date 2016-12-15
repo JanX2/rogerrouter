@@ -153,7 +153,7 @@ RmProfile *rm_profile_add(const gchar *name)
 	profile->router_info = g_slice_new0(RmRouterInfo);
 
 	/* Setup profiles settings */
-	settings_path = g_strconcat("/org/tabos/routermanager/profile/", name, "/", NULL);
+	settings_path = g_strconcat("/org/tabos/routermanager/", name, "/", NULL);
 	profile->settings = rm_settings_new_with_path(RM_SCHEME_PROFILE, settings_path);
 
 	g_free(settings_path);
@@ -181,7 +181,7 @@ static void rm_profile_load(const gchar *name)
 
 	profile->name = g_strdup(name);
 
-	settings_path = g_strconcat("/org/tabos/routermanager/profile/", name, "/", NULL);
+	settings_path = g_strconcat("/org/tabos/routermanager/", name, "/", NULL);
 	profile->settings = rm_settings_new_with_path(RM_SCHEME_PROFILE, settings_path);
 
 	profile->router_info = g_slice_new0(RmRouterInfo);
@@ -222,7 +222,7 @@ void rm_profile_set_active(RmProfile *profile)
 		return;
 	}
 
-	rm_router_present(profile->router_info);
+	rm_router_set_active(profile);
 
 	rm_plugins_bind_loaded_plugins();
 
@@ -237,13 +237,13 @@ void rm_profile_set_active(RmProfile *profile)
 }
 
 /**
- * rm_profile_detect_active:
+ * rm_profile_detect:
  *
- * Detect active profile (scan available routers and select correct profile).
+ * Detect profile (scan available routers).
  *
- * Returns: TRUE on success, otherwise FALSE
+ * Returns: #RmProfile or %NULL if none found
  */
-gboolean rm_profile_detect_active(void)
+RmProfile *rm_profile_detect(void)
 {
 	GSList *list = rm_profile_get_list();
 	RmProfile *profile;
@@ -264,14 +264,13 @@ gboolean rm_profile_detect_active(void)
 		router_info->host = g_settings_get_string(profile->settings, "host");
 
 		/* Check if router is present */
-		if (rm_router_present(router_info) == TRUE && !strcmp(router_info->serial, g_settings_get_string(profile->settings, "serial"))) {
+		if (rm_router_present(router_info) == TRUE && !strcmp(router_info->serial, g_settings_get_string(profile->settings, "serial-number"))) {
 			g_debug("Configured router found: %s", router_info->name);
 			g_debug("Current router firmware: %d.%d.%d", router_info->box_id, router_info->maj_ver_id, router_info->min_ver_id);
 
 			rm_router_info_free(router_info);
 
-			rm_profile_set_active(profile);
-			return TRUE;
+			return profile;
 		}
 
 		rm_router_info_free(router_info);
@@ -281,7 +280,7 @@ gboolean rm_profile_detect_active(void)
 
 	g_debug("No already configured router found!");
 
-	return FALSE;
+	return NULL;
 }
 
 /**
@@ -404,7 +403,7 @@ void rm_profile_set_login_password(RmProfile *profile, const gchar *password)
 RmAddressBook *rm_profile_get_addressbook(RmProfile *profile)
 {
 	RmAddressBook *book;
-	gchar *name = g_settings_get_string(profile->settings, "address-book");
+	gchar *name = g_settings_get_string(profile->settings, "address-book-plugin");
 
 	book = rm_addressbook_get(name);
 

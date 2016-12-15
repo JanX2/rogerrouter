@@ -3,4 +3,6 @@ option('enable-portaudio', type : 'boolean', value : false, description : 'Enabl
 option('enable-pulseaudio', type : 'boolean', value : false, description : 'Enable pulseaudio audio plugin')
 option('enable-indicator', type : 'boolean', value : false, description : 'Enable app indicator plugin')
 option('enable-gtk-doc', type: 'boolean', value: true, description: 'Enable generating the API reference (depends on GTK-Doc)')
+option('enable-libsecret', type: 'boolean', value: false, description: 'Enable libsecret support (GNOME Keyring)')
+option('enable-kwallet', type: 'boolean', value: false, description: 'Enable kwallet4 support')
 option('do-post-install', type: 'boolean', value: true, description: 'Run post-install script')

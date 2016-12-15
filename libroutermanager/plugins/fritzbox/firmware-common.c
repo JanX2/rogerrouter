@@ -644,7 +644,7 @@ GSList *fritzbox_load_faxbox(GSList *journal)
 		return journal;
 	}
 
-	volume_path = g_settings_get_string(profile->settings, "fax-volume");
+	volume_path = g_settings_get_string(fritzbox_settings, "fax-volume");
 	path = g_build_filename(volume_path, "FRITZ/faxbox/", NULL);
 	g_free(volume_path);
 	response = rm_ftp_list_dir(client, path);
@@ -769,7 +769,7 @@ GSList *fritzbox_load_voicebox(GSList *journal)
 		return journal;
 	}
 
-	volume_path = g_settings_get_string(profile->settings, "fax-volume");
+	volume_path = g_settings_get_string(fritzbox_settings, "fax-volume");
 	path = g_build_filename(volume_path, "FRITZ/voicebox/", NULL);
 	g_free(volume_path);
 
@@ -838,7 +838,7 @@ gchar *fritzbox_load_fax(RmProfile *profile, const gchar *filename, gsize *len)
 gchar *fritzbox_load_voice(RmProfile *profile, const gchar *name, gsize *len)
 {
 	RmFtp *client;
-	gchar *filename = g_strconcat("/", g_settings_get_string(profile->settings, "fax-volume"), "/FRITZ/voicebox/rec/", name, NULL);
+	gchar *filename = g_strconcat("/", g_settings_get_string(fritzbox_settings, "fax-volume"), "/FRITZ/voicebox/rec/", name, NULL);
 	gchar *user = rm_router_get_ftp_user(profile);
 	gchar *ret = NULL;
 
@@ -1102,7 +1102,7 @@ gboolean fritzbox_delete_voice(RmProfile *profile, const gchar *filename)
 	client = rm_ftp_init(rm_router_get_host(profile));
 	rm_ftp_login(client, rm_router_get_ftp_user(profile), rm_router_get_ftp_password(profile));
 
-	gchar *path = g_build_filename(g_settings_get_string(profile->settings, "fax-volume"), "FRITZ/voicebox/", NULL);
+	gchar *path = g_build_filename(g_settings_get_string(fritzbox_settings, "fax-volume"), "FRITZ/voicebox/", NULL);
 	gchar *remote_file = g_strdup_printf("meta%d", nr);
 	if (!rm_ftp_put_file(client, remote_file, path, modified_data, offset)) {
 		g_free(modified_data);
@@ -1121,7 +1121,7 @@ gboolean fritzbox_delete_voice(RmProfile *profile, const gchar *filename)
 	voice_boxes[nr].len = offset;
 
 	/* Delete voice file */
-	name = g_build_filename(g_settings_get_string(profile->settings, "fax-volume"), "FRITZ/voicebox/rec", filename, NULL);
+	name = g_build_filename(g_settings_get_string(fritzbox_settings, "fax-volume"), "FRITZ/voicebox/rec", filename, NULL);
 	if (!rm_ftp_delete_file(client, name)) {
 		g_free(name);
 		rm_ftp_shutdown(client);

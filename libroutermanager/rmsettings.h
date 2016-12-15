@@ -24,6 +24,7 @@ G_BEGIN_DECLS
 
 GSettings *rm_settings_new(gchar *scheme);
 GSettings *rm_settings_new_with_path(gchar *scheme, gchar *path);
+GSettings *rm_settings_new_profile(gchar *scheme, gchar *name, gchar *profile_name);
 gboolean rm_settings_backend_is_dconf(void);
 
 G_END_DECLS

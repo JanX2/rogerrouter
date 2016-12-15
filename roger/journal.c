@@ -146,7 +146,7 @@ void journal_init_call_icon(void)
 {
 	GtkIconTheme *icons;
 	gint width = 18;
-	gint icon_type = g_settings_get_uint(app_settings, "icon-type");
+	gchar * icon_type = g_settings_get_string(app_settings, "icon-type");
 
 	icons = gtk_icon_theme_get_default();
 
@@ -176,9 +176,8 @@ void journal_init_call_icon(void)
 		g_object_unref(icon_blocked);
 	}
 
-	switch (icon_type) {
-	default:
-	case 0:
+	g_debug("%s(): icon_type %s", __FUNCTION__, icon_type);
+	if (!strcmp(icon_type, "color")) {
 		icon_call_in = gtk_icon_theme_load_icon(icons, "roger-call-in", width, 0, NULL);
 		icon_call_missed = gtk_icon_theme_load_icon(icons, "roger-call-missed", width, 0, NULL);
 		icon_call_out = gtk_icon_theme_load_icon(icons, "roger-call-out", width, 0, NULL);
@@ -187,8 +186,7 @@ void journal_init_call_icon(void)
 		icon_voice = gtk_icon_theme_load_icon(icons, "roger-call-voice", width, 0, NULL);
 		icon_record = gtk_icon_theme_load_icon(icons, "roger-record", width, 0, NULL);
 		icon_blocked = gtk_icon_theme_load_icon(icons, "roger-call-blocked", width, 0, NULL);
-		break;
-	case 1:
+	} else {
 		icon_call_in = gtk_icon_theme_load_icon(icons, "roger-call-in-symbolic", width, 0, NULL);
 		icon_call_missed = gtk_icon_theme_load_icon(icons, "roger-call-missed-symbolic", width, 0, NULL);
 		icon_call_out = gtk_icon_theme_load_icon(icons, "roger-call-out-symbolic", width, 0, NULL);
@@ -197,7 +195,6 @@ void journal_init_call_icon(void)
 		icon_voice = gtk_icon_theme_load_icon(icons, "roger-call-voice-symbolic", width, 0, NULL);
 		icon_record = gtk_icon_theme_load_icon(icons, "roger-record-symbolic", width, 0, NULL);
 		icon_blocked = gtk_icon_theme_load_icon(icons, "roger-call-blocked-symbolic", width, 0, NULL);
-		break;
 	}
 
 	g_assert(icon_call_in != NULL);
@@ -1367,8 +1364,8 @@ void journal_window(GApplication *app)
 		gtk_widget_show(GTK_WIDGET(window));
 	}
 
-//#ifdef FAX_DBEUG
+#ifdef FAX_DBEUG
 	extern gboolean app_show_fax_window_idle(gpointer data);
 	app_show_fax_window_idle(NULL);
-//#endif
+#endif
 }

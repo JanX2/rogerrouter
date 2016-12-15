@@ -320,7 +320,7 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **street, gcha
 	gchar *full_number = NULL;
 	gchar *country_code = NULL;
 	gboolean found = FALSE;
-	gint international_prefix_len;
+	gint international_access_code_len;
 	RmProfile *profile = rm_profile_get_active();
 	RmContact *rl_contact;
 
@@ -363,12 +363,12 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **street, gcha
 	country_code = get_country_code(full_number);
 	g_free(full_number);
 
-	international_prefix_len = strlen(rm_router_get_international_prefix(profile));
+	international_access_code_len = strlen(rm_router_get_international_access_code(profile));
 #ifdef RL_DEBUG
 	if (!country_code) {
 		g_debug("Warning: Could not get country code!!");
 	} else {
-		g_debug("Country code: %s", country_code + international_prefix_len);
+		g_debug("Country code: %s", country_code + international_access_code_len);
 	}
 #endif
 
@@ -376,9 +376,9 @@ static gboolean reverse_lookup(gchar *number, gchar **name, gchar **street, gcha
 		return FALSE;
 	}
 
-	if (strcmp(country_code + international_prefix_len, rm_router_get_country_code(rm_profile_get_active()))) {
+	if (strcmp(country_code + international_access_code_len, rm_router_get_country_code(rm_profile_get_active()))) {
 		/* if country code is not the same as the router country code, loop through country list */
-		list = get_lookup_list(country_code + international_prefix_len);
+		list = get_lookup_list(country_code + international_access_code_len);
 	} else {
 		/* if country code is the same as the router country code, use default plugin */
 		list = get_lookup_list(rm_router_get_country_code(rm_profile_get_active()));

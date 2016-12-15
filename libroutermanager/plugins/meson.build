@@ -22,7 +22,11 @@ if get_option('enable-pulseaudio')
 endif
 
 subdir('reverselookup')
-subdir('secret')
+
+if get_option('enable-libsecret')
+    subdir('secret')
+endif
+
 subdir('simple_pwd')
 
 if meson.is_cross_build()

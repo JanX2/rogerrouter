@@ -45,6 +45,8 @@ typedef struct {
 	gconstpointer net_event_id;
 
 	guint id;
+
+	RmDevice *device;
 } RmSipPluginPrivate;
 
 RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_SIP_PLUGIN, RmSipPlugin, routermanager_sip_plugin)
@@ -134,7 +136,7 @@ static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_r
 
 	g_debug("Incoming call from %.*s!!", (int)ci.remote_info.slen, ci.remote_info.ptr);
 
-	connection = rm_connection_add(call_id, RM_CONNECTION_TYPE_INCOMING, ci.local_info.ptr, ci.remote_info.ptr);
+	connection = rm_connection_add(NULL, call_id, RM_CONNECTION_TYPE_INCOMING, ci.local_info.ptr, ci.remote_info.ptr);
 
 	rm_object_emit_connection_incoming(connection);
 }
@@ -225,7 +227,7 @@ static RmConnection *sip_phone_dial(const char *trg_no, gboolean anonymous)
 		return NULL;
 	}
 
-	connection = rm_connection_add(call_id, RM_CONNECTION_TYPE_OUTGOING, g_settings_get_string(sip_settings, "msn"), trg_no);
+	connection = rm_connection_add(NULL, call_id, RM_CONNECTION_TYPE_OUTGOING, g_settings_get_string(sip_settings, "msn"), trg_no);
 
 	return connection;
 }
@@ -412,10 +414,12 @@ static void impl_activate(PeasActivatable *plugin)
 
 	g_debug("%s(): sip", __FUNCTION__);
 
-	sip_settings = rm_settings_new("org.tabos.roger.plugins.sip");
+	sip_settings = rm_settings_new_profile("org.tabos.roger.plugins.sip", "sip", rm_profile_get_name(rm_profile_get_active()));
 
 	/* Add network event */
 	sip_plugin->priv->net_event_id = rm_netmonitor_add_event("SIP", sip_connect, sip_disconnect, sip_plugin);
+
+	sip_plugin->priv->device = rm_device_register("SIP");
 
 	rm_phone_register(&sip_phone);
 }

@@ -22,6 +22,8 @@
 
 G_BEGIN_DECLS
 
+#include <libroutermanager/rmdevice.h>
+
 typedef enum {
 	RM_CONNECTION_TYPE_INCOMING   = 0x01,
 	RM_CONNECTION_TYPE_OUTGOING   = 0x02,
@@ -33,6 +35,7 @@ typedef enum {
 
 /** connection structure */
 typedef struct {
+	RmDevice *device;
 	/* Unique ID */
 	guint id;
 	/* Type */
@@ -47,13 +50,14 @@ typedef struct {
 	void *priv;
 } RmConnection;
 
-RmConnection *rm_connection_add(gint id, RmConnectionType type, const gchar *local_number, const gchar *remote_number);
+RmConnection *rm_connection_add(RmDevice *device, gint id, RmConnectionType type, const gchar *local_number, const gchar *remote_number);
 RmConnection *rm_connection_find_by_id(gint id);
 RmConnection *rm_connection_find_by_remote_number(const gchar *number);
 void rm_connection_set_type(RmConnection *connection, RmConnectionType type);
 void rm_connection_remove(RmConnection *connection);
 
 gchar *rm_connection_get_duration_time(RmConnection *connection);
+void rm_connection_shutdown_duration_timer(RmConnection *connection);
 
 G_END_DECLS
 

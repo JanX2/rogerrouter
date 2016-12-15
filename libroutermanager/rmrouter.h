@@ -114,6 +114,7 @@ typedef struct {
 typedef struct {
 	const gchar *name;
 	gboolean (*present)(RmRouterInfo *router_info);
+	void (*set_active)(RmProfile *profile);
 	gboolean (*login)(RmProfile *profile);
 	gboolean (*logout)(RmProfile *profile, gboolean force);
 	gboolean (*get_settings)(RmProfile *profile);
@@ -153,13 +154,14 @@ gboolean rm_router_delete_voice(RmProfile *profile, const gchar *filename);
 
 gchar *rm_router_get_area_code(RmProfile *profile);
 gchar *rm_router_get_country_code(RmProfile *profile);
-gchar *rm_router_get_international_prefix(RmProfile *profile);
+gchar *rm_router_get_international_access_code(RmProfile *profile);
 gchar *rm_router_get_national_prefix(RmProfile *profile);
+
+void rm_router_set_active(RmProfile *profile);
 
 gboolean rm_router_init(void);
 void rm_router_shutdown(void);
 
-GSList *rm_router_get_phone_list(RmProfile *profile);
 gchar **rm_router_get_numbers(RmProfile *profile);
 
 void rm_router_process_journal(GSList *journal);

@@ -124,7 +124,7 @@ gboolean fritzbox_get_settings_query(RmProfile *profile)
 	json_reader_read_member(reader, "LKZPrefix");
 	const gchar *lkz_prefix = json_reader_get_string_value(reader);
 	g_debug("LKZPrefix: %s", lkz_prefix);
-	g_settings_set_string(profile->settings, "international-call-prefix", lkz_prefix);
+	g_settings_set_string(profile->settings, "international-access-code", lkz_prefix);
 	json_reader_end_member(reader);
 
 	json_reader_read_member(reader, "OKZ");
@@ -136,7 +136,7 @@ gboolean fritzbox_get_settings_query(RmProfile *profile)
 	json_reader_read_member(reader, "OKZPrefix");
 	const gchar *okz_prefix = json_reader_get_string_value(reader);
 	g_debug("OKZPrefix: %s", okz_prefix);
-	g_settings_set_string(profile->settings, "national-call-prefix", okz_prefix);
+	g_settings_set_string(profile->settings, "national-access-code", okz_prefix);
 	json_reader_end_member(reader);
 
 	json_reader_read_member(reader, "FaxMailActive");
@@ -156,7 +156,7 @@ gboolean fritzbox_get_settings_query(RmProfile *profile)
 	json_reader_read_member(reader, "storage");
 	const gchar *storage = json_reader_get_string_value(reader);
 	g_debug("Fax Storage: %s", storage);
-	g_settings_set_string(profile->settings, "fax-volume", storage);
+	g_settings_set_string(fritzbox_settings, "fax-volume", storage);
 	json_reader_end_member(reader);
 
 	json_reader_read_member(reader, "FaxMSN0");
@@ -164,7 +164,7 @@ gboolean fritzbox_get_settings_query(RmProfile *profile)
 	scramble = rm_number_scramble(fax_msn);
 	g_debug("FaxMSN0: %s", scramble);
 	g_free(scramble);
-	g_settings_set_string(profile->settings, "fax-number", fax_msn);
+	g_settings_set_string(fritzbox_settings, "fax-number", fax_msn);
 	json_reader_end_member(reader);
 
 	gchar *formated_number = rm_number_format(profile, fax_msn, RM_NUMBER_FORMAT_INTERNATIONAL_PLUS);
@@ -187,7 +187,7 @@ gboolean fritzbox_get_settings_query(RmProfile *profile)
 
 		memset(name_analog, 0, sizeof(name_analog));
 		g_snprintf(name_analog, sizeof(name_analog), "name-analog%d", i + 1);
-		g_settings_set_string(profile->settings, name_analog, name);
+		g_settings_set_string(fritzbox_settings, name_analog, name);
 		json_reader_end_member(reader);
 	}
 
@@ -206,7 +206,7 @@ gboolean fritzbox_get_settings_query(RmProfile *profile)
 
 		memset(name_isdn, 0, sizeof(name_isdn));
 		g_snprintf(name_isdn, sizeof(name_isdn), "name-isdn%d", i + 1);
-		g_settings_set_string(profile->settings, name_isdn, name);
+		g_settings_set_string(fritzbox_settings, name_isdn, name);
 		json_reader_end_member(reader);
 	}
 
@@ -232,7 +232,7 @@ gboolean fritzbox_get_settings_query(RmProfile *profile)
 
 		memset(name_dect, 0, sizeof(name_dect));
 		g_snprintf(name_dect, sizeof(name_dect), "name-dect%d", i);
-		g_settings_set_string(profile->settings, name_dect, tmp);
+		g_settings_set_string(fritzbox_settings, name_dect, tmp);
 
 		json_reader_end_element(reader);
 	}
@@ -281,16 +281,17 @@ gboolean fritzbox_get_settings_query(RmProfile *profile)
 	port = atoi(dialport);
 	gint phone_port = fritzbox_find_phone_port(port);
 	g_debug("Dial port: %s, phone_port: %d", dialport, phone_port);
-	rm_router_set_phone_port(profile, phone_port);
+	//rm_router_set_phone_port(profile, phone_port);
+	g_settings_set_uint(fritzbox_settings, "port", phone_port);
 	json_reader_end_member(reader);
 
 	json_reader_read_member(reader, "TamStick");
 	const gchar *tam_stick = json_reader_get_string_value(reader);
 	g_debug("TamStick: %s", tam_stick);
 	if (tam_stick && atoi(&tam_stick[0])) {
-		g_settings_set_int(profile->settings, "tam-stick", atoi(tam_stick));
+		g_settings_set_uint(fritzbox_settings, "tam-stick", atoi(tam_stick));
 	} else {
-		g_settings_set_int(profile->settings, "tam-stick", 0);
+		g_settings_set_uint(fritzbox_settings, "tam-stick", 0);
 	}
 	json_reader_end_member(reader);
 

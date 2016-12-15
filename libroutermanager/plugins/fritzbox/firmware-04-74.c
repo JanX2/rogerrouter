@@ -498,7 +498,7 @@ gboolean fritzbox_get_settings_04_74(RmProfile *profile)
 	if (value != NULL && strlen(value) > 0) {
 		g_debug("lkz prefix: '%s'", value);
 	}
-	g_settings_set_string(profile->settings, "international-call-prefix", value);
+	g_settings_set_string(profile->settings, "international-access-code", value);
 	g_free(value);
 
 	value = xml_extract_list_value(data, "telcfg:settings/Location/OKZ");
@@ -512,7 +512,7 @@ gboolean fritzbox_get_settings_04_74(RmProfile *profile)
 	if (value != NULL && strlen(value) > 0) {
 		g_debug("okz prefix: '%s'", value);
 	}
-	g_settings_set_string(profile->settings, "national-call-prefix", value);
+	g_settings_set_string(profile->settings, "national-access-code", value);
 	g_free(value);
 
 	g_object_unref(msg);
@@ -566,14 +566,14 @@ gboolean fritzbox_get_settings_04_74(RmProfile *profile)
 
 		if (volume) {
 			g_debug("Fax-Storage-Volume: '%s'", volume);
-			g_settings_set_string(profile->settings, "fax-volume", volume);
+			g_settings_set_string(fritzbox_settings, "fax-volume", volume);
 		} else {
-			g_settings_set_string(profile->settings, "fax-volume", "");
+			g_settings_set_string(fritzbox_settings, "fax-volume", "");
 		}
 
 		g_free(active);
 	} else {
-		g_settings_set_string(profile->settings, "fax-volume", "");
+		g_settings_set_string(fritzbox_settings, "fax-volume", "");
 	}
 
 	g_object_unref(msg);
@@ -606,7 +606,8 @@ gboolean fritzbox_get_settings_04_74(RmProfile *profile)
 		gint port = atoi(dialport);
 		gint phone_port = fritzbox_find_phone_port(port);
 		g_debug("Dial port: %s, phone_port: %d", dialport, phone_port);
-		rm_router_set_phone_port(profile, phone_port);
+		//rm_router_set_phone_port(profile, phone_port);
+		g_warning("%s(): TODO", __FUNCTION__);
 	}
 	g_free(dialport);
 

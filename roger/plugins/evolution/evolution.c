@@ -632,7 +632,7 @@ RmAddressBook evolution_book = {
 
 void impl_activate(PeasActivatable *plugin)
 {
-	ebook_settings = rm_settings_new("org.tabos.roger.plugins.evolution");
+	ebook_settings = rm_settings_new_profile("org.tabos.roger.plugins.evolution", "evolution", rm_profile_get_name(rm_profile_get_active()));
 
 	ebook_read_book();
 

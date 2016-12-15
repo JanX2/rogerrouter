@@ -27,6 +27,8 @@
 #define G_SETTINGS_ENABLE_BACKEND
 #include <gio/gsettingsbackend.h>
 
+#include <libroutermanager/rmprofile.h>
+
 /**
  * SECTION:rmsettings
  * @title: RmSettings
@@ -147,6 +149,28 @@ GSettings *rm_settings_new_with_path(gchar *scheme, gchar *settings_path)
 #else
 	settings = g_settings_new_with_path(scheme, settings_path);
 #endif
+
+	return settings;
+}
+
+/**
+ * rm_settings_new_profile:
+ * @scheme: scheme name
+ * @name: settings name
+ *
+ * Creates new #GSettings configuration with a profile specfic settings path (either keyfile based, or system based (default)).
+ *
+ * Returns: newly create gsettings
+ */
+GSettings *rm_settings_new_profile(gchar *scheme, gchar *name, gchar *profile_name)
+{
+	GSettings *settings;
+	gchar *settings_path;
+
+	settings_path = g_strconcat("/org/tabos/routermanager/", profile_name, "/", name, "/", NULL);
+
+	settings = rm_settings_new_with_path(scheme, settings_path);
+	g_free(settings_path);
 
 	return settings;
 }

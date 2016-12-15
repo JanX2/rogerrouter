@@ -49,6 +49,8 @@ typedef struct {
 
 RM_PLUGIN_REGISTER(RM_TYPE_FRITZBOX_PLUGIN, RmFritzBoxPlugin, routermanager_fritzbox_plugin)
 
+GSettings *fritzbox_settings = NULL;
+
 /**
  * \brief Main login function (depending on box type)
  * \param profile profile information structure
@@ -110,6 +112,7 @@ gboolean fritzbox_load_journal(RmProfile *profile, gchar **data_ptr)
 {
 	gboolean ret = FALSE;
 
+	g_debug("%s(): called (%d.%d.%d)", __FUNCTION__, profile->router_info->maj_ver_id, profile->router_info->min_ver_id, profile->router_info->maj_ver_id);
 	if (FIRMWARE_IS(5, 50)) {
 		ret = fritzbox_load_journal_05_50(profile, data_ptr);
 	} else if (FIRMWARE_IS(4, 0)) {
@@ -189,10 +192,17 @@ gboolean fritzbox_hangup(RmProfile *profile, gint port, const gchar *number)
 	return FALSE;
 }
 
+void fritzbox_set_active(RmProfile *profile)
+{
+	fritzbox_settings = rm_settings_new_profile("org.tabos.routermanager.plugins.fritzbox", "fritzbox", rm_profile_get_name(profile));
+	g_debug("%s(): Router set active, settings created", __FUNCTION__);
+}
+
 /** FRITZ!Box router functions */
 static RmRouter fritzbox = {
 	"FRITZ!Box",
 	fritzbox_present,
+	fritzbox_set_active,
 	fritzbox_login,
 	fritzbox_logout,
 	fritzbox_get_settings,
@@ -215,12 +225,14 @@ RmConnection *fritzbox_phone_dialer_get_connection(void)
 	return dialer_connection;
 }
 
+extern RmDevice *telnet_device;
+
 RmConnection *dialer_dial(const gchar *target, gboolean anonymous)
 {
 	RmConnection *connection = NULL;
 
 	if (fritzbox_dial_number(rm_profile_get_active(), -1, target)) {
-		connection = rm_connection_add(0, RM_CONNECTION_TYPE_OUTGOING, "", target);
+		connection = rm_connection_add(telnet_device, 0, RM_CONNECTION_TYPE_OUTGOING, "", target);
 	}
 
 	dialer_connection = connection;

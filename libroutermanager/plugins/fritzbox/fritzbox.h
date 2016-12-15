@@ -24,6 +24,8 @@
 
 G_BEGIN_DECLS
 
+extern GSettings *fritzbox_settings;
+
 gboolean fritzbox_login(RmProfile *profile);
 gboolean fritzbox_get_settings(RmProfile *profile);
 gboolean fritzbox_load_journal(RmProfile *profile, gchar **data_ptr);

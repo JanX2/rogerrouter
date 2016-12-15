@@ -22,7 +22,21 @@
 
 G_BEGIN_DECLS
 
-gboolean rm_device_number_is_handled(gchar *number);
+struct RmDevice {
+	gchar *name;
+	gchar *settings_name;
+};
+
+typedef struct RmDevice RmDevice;
+
+gboolean rm_device_handles_number(RmDevice *device, gchar *number);
+void rm_device_set_numbers(RmDevice *device, gchar **numbers);
+gchar **rm_device_get_numbers(RmDevice *device);
+RmDevice *rm_device_get(gchar *name);
+gchar *rm_device_get_name(RmDevice *device);
+RmDevice *rm_device_register(gchar *name);
+void rm_device_unregister(RmDevice *device);
+GSList *rm_device_get_plugins(void);
 
 G_END_DECLS
 

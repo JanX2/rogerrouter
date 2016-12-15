@@ -33,6 +33,9 @@ gchar *rm_strcasestr(const gchar *haystack, const gchar *needle);
 gchar *rm_convert_utf8(const gchar *text, gssize len);
 gboolean rm_strv_contains(const gchar * const *strv, const gchar *str);
 
+gchar **rm_strv_add(gchar **strv, const gchar *str);
+gchar **rm_strv_remove(gchar **strv, const gchar *str);
+
 G_END_DECLS
 
 #endif

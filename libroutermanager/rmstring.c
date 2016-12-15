@@ -130,3 +130,36 @@ gboolean rm_strv_contains(const gchar * const *strv, const gchar *str)
 	return FALSE;
 #endif
 }
+
+gchar **rm_strv_add(gchar **strv, const gchar *str)
+{
+	guint len = g_strv_length(strv);
+	gint i;
+	gchar **new_strv = g_malloc0(sizeof(gchar *) * (len + 2));
+
+	for (i = 0; i < len; i++) {
+		new_strv[i] = g_strdup(strv[i]);
+	}
+
+	new_strv[i] = g_strdup(str);
+	new_strv[i + 1] = NULL;
+
+	return new_strv;
+}
+
+gchar **rm_strv_remove(gchar **strv, const gchar *str)
+{
+	guint len = g_strv_length(strv);
+	gint i, cnt = 0;
+	gchar **new_strv = g_malloc0(sizeof(gchar *) * (len));
+
+	for (i = 0; i < len; i++) {
+		if (strcmp(strv[i], str)) {
+			new_strv[cnt++] = g_strdup(strv[i]);
+		}
+	}
+
+	new_strv[cnt] = NULL;
+
+	return new_strv;
+}

@@ -70,44 +70,6 @@ RmPhonePort rm_router_phone_ports[PORT_MAX] = {
 };
 
 /**
- * \brief Get list of phone names
- * \param profile profile structure
- * \return phone name list
- */
-GSList *rm_router_get_phone_list(RmProfile *profile)
-{
-	GSList *list = NULL;
-	gchar *fon;
-	gint index;
-	RmPhoneInfo *phone;
-
-	if (!profile) {
-		return list;
-	}
-
-	phone = g_slice_new(RmPhoneInfo);
-
-	phone->name = g_strdup("Softphone");
-	phone->type = PORT_SOFTPHONE;
-
-	list = g_slist_append(list, phone);
-
-	for (index = 0; index < PORT_MAX - 2; index++) {
-		fon = g_settings_get_string(profile->settings, rm_router_phone_ports[index].name);
-		if (!RM_EMPTY_STRING(fon)) {
-			phone = g_slice_new(RmPhoneInfo);
-
-			phone->name = g_strdup(fon);
-			phone->type = rm_router_phone_ports[index].type;
-
-			list = g_slist_append(list, phone);
-		}
-	}
-
-	return list;
-}
-
-/**
  * \brief Free one phone list entry
  * \param data pointer to phone structure
  */
@@ -161,6 +123,14 @@ gboolean rm_router_present(RmRouterInfo *router_info)
 	}
 
 	return FALSE;
+}
+
+void rm_router_set_active(RmProfile *profile)
+{
+	if (active_router) {
+		rm_router_present(profile->router_info);
+		active_router->set_active(profile);
+	}
 }
 
 /**
@@ -270,17 +240,17 @@ gchar *rm_router_get_ftp_user(RmProfile *profile)
 }
 
 /*
- * \brief Get international call prefix
+ * \brief Get international access code
  * \param profile router information structure
- * \return international call prefix
+ * \return international access code
  */
-gchar *rm_router_get_international_prefix(RmProfile *profile)
+gchar *rm_router_get_international_access_code(RmProfile *profile)
 {
 	if (!profile || !profile->settings) {
 		return NULL;
 	}
 
-	return g_settings_get_string(profile->settings, "international-call-prefix");
+	return g_settings_get_string(profile->settings, "international-access-code");
 }
 
 /*
@@ -294,7 +264,7 @@ gchar *rm_router_get_national_prefix(RmProfile *profile)
 		return NULL;
 	}
 
-	return g_settings_get_string(profile->settings, "national-call-prefix");
+	return g_settings_get_string(profile->settings, "national-access-code");
 }
 
 /*
@@ -370,6 +340,7 @@ const gchar *rm_router_get_version(RmProfile *profile)
  */
 gboolean rm_router_load_journal(RmProfile *profile)
 {
+	g_debug("%s(): %p", __FUNCTION__, active_router);
 	return active_router ? active_router->load_journal(profile, NULL) : FALSE;
 }
 /**
@@ -706,26 +677,6 @@ GSList *rm_router_load_voice_records(RmProfile *profile, GSList *journal)
 	}
 
 	return journal;
-}
-
-/**
- * \brief Get phone port
- * \param profile router information structure
- * \return phone port
- */
-gint rm_router_get_phone_port(RmProfile *profile)
-{
-	return g_settings_get_int(profile->settings, "port");
-}
-
-/**
- * \brief Set phone port
- * \param profile router information structure
- * \param port phone port
- */
-void rm_router_set_phone_port(RmProfile *profile, gint port)
-{
-	g_settings_set_int(profile->settings, "port", port);
 }
 
 /**

@@ -23,6 +23,7 @@
 #include <glib.h>
 
 #include <libroutermanager/rmconnection.h>
+#include <libroutermanager/rmdevice.h>
 
 G_BEGIN_DECLS
 
@@ -40,6 +41,7 @@ typedef struct {
 	/*void (*record)(gpointer connection, guchar hold, const gchar *dir);*/
 
 	gpointer priv;
+	RmDevice device;
 } RmPhone;
 
 void rm_phone_register(RmPhone *phone);

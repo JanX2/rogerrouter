@@ -28,6 +28,8 @@
             <property name="can_focus">False</property>
             <property name="hexpand">True</property>
             <property name="title">Extensions</property>
+            <property name="has_subtitle">False</property>
+            <property name="show_close_button">True</property>
             <child>
               <placeholder/>
             </child>

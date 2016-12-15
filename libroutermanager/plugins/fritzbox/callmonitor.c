@@ -43,6 +43,7 @@
 static RmNetEvent *net_event = NULL;
 static GIOChannel *channel = NULL;
 static guint id = 0;
+RmDevice *telnet_device = NULL;
 
 /**
  * \brief Convert text line and emit connection-notify signal
@@ -69,17 +70,12 @@ static inline void callmonitor_convert(gchar *text)
 		type = 3;
 	}
 
-	/* In case local number is handled by a phone/fax device, ignore it */
-	if (number && rm_device_number_is_handled(number)) {
-		return;
-	}
-
 	switch (type) {
 	case 0:
 		connection = fritzbox_phone_dialer_get_connection();
 
 		if (!connection || strcmp(connection->remote_number, fields[5])) {
-			connection = rm_connection_add(atoi(fields[2]), RM_CONNECTION_TYPE_OUTGOING, fields[4], fields[5]);
+			connection = rm_connection_add(telnet_device, atoi(fields[2]), RM_CONNECTION_TYPE_OUTGOING, fields[4], fields[5]);
 		} else {
 			connection->id = atoi(fields[2]);
 		}
@@ -87,7 +83,7 @@ static inline void callmonitor_convert(gchar *text)
 		rm_object_emit_connection_outgoing(connection);
 		break;
 	case 1:
-		connection = rm_connection_add(atoi(fields[2]), RM_CONNECTION_TYPE_INCOMING, fields[4], fields[3]);
+		connection = rm_connection_add(telnet_device, atoi(fields[2]), RM_CONNECTION_TYPE_INCOMING, fields[4], fields[3]);
 
 		rm_object_emit_connection_incoming(connection);
 		break;
@@ -332,8 +328,12 @@ void fritzbox_init_callmonitor(void)
 {
 	g_debug("%s(): called", __FUNCTION__);
 
+	//fritzbox_settings = rm_settings_new("org.tabos.routermanager.plugins.fritzbox");
+
 	/* Add network event */
 	net_event = rm_netmonitor_add_event("Call Monitor", callmonitor_connect, callmonitor_disconnect, NULL);
+
+	telnet_device = rm_device_register("Call Monitor");
 }
 
 /**
@@ -343,6 +343,8 @@ void fritzbox_init_callmonitor(void)
 void fritzbox_shutdown_callmonitor(void)
 {
 	g_debug("%s(): called", __FUNCTION__);
+
+	rm_device_unregister(telnet_device);
 
 	/* Remove network event */
 	rm_netmonitor_remove_event(net_event);

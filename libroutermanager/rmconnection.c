@@ -110,10 +110,11 @@ gchar *rm_connection_get_duration_time(RmConnection *connection)
  *
  * Create and add a new #RmConnection to connection list
  */
-RmConnection *rm_connection_add(gint id, RmConnectionType type, const gchar *local_number, const gchar *remote_number)
+RmConnection *rm_connection_add(RmDevice *device, gint id, RmConnectionType type, const gchar *local_number, const gchar *remote_number)
 {
 	RmConnection *connection = g_slice_new0(RmConnection);
 
+	connection->device = device;
 	connection->id = id;
 	connection->type = type;
 	connection->local_number = g_strdup(local_number);

@@ -21,6 +21,7 @@
 #define LIBROUTERMANAGER_RMFAX_H
 
 #include <libroutermanager/rmconnection.h>
+#include <libroutermanager/rmdevice.h>
 
 G_BEGIN_DECLS
 
@@ -52,6 +53,7 @@ typedef struct {
 	void (*hangup)(RmConnection *connection);
 
 	gboolean (*number_is_handled)(gchar *number);
+	RmDevice device;
 } RmFax;
 
 void rm_fax_register(RmFax *fax);

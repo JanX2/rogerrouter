@@ -128,7 +128,7 @@ gchar *rm_number_canonize(const gchar *number)
 		if (isdigit(*number) || *number == '*' || *number == '#') {
 			g_string_append_c(new_number, *number);
 		} else if (*number == '+') {
-			g_string_append(new_number, rm_router_get_international_prefix(rm_profile_get_active()));
+			g_string_append(new_number, rm_router_get_international_access_code(rm_profile_get_active()));
 		}
 
 		number++;
@@ -151,7 +151,7 @@ gchar *rm_number_format(RmProfile *profile, const gchar *number, enum rm_number_
 {
 	gchar *tmp;
 	gchar *canonized;
-	gchar *international_prefix;
+	gchar *international_access_code;
 	gchar *national_prefix;
 	gchar *my_country_code;
 	gchar *my_area_code;
@@ -166,19 +166,19 @@ gchar *rm_number_format(RmProfile *profile, const gchar *number, enum rm_number_
 
 	canonized = tmp = rm_number_canonize(number);
 
-	international_prefix = rm_router_get_international_prefix(profile);
+	international_access_code = rm_router_get_international_access_code(profile);
 	national_prefix = rm_router_get_national_prefix(profile);
 	my_country_code = rm_router_get_country_code(profile);
 	my_area_code = rm_router_get_area_code(profile);
 
 	/* we only need to check for international prefix, as rm_number_canonize() already replaced '+'
 	 * Example of the following:
-	 *    tmp = 00494012345678  with international_prefix 00 and my_country_code 49
+	 *    tmp = 00494012345678  with international_access_code 00 and my_country_code 49
 	 *    number_format = NUMBER_FORMAT_UNKNOWN
 	 */
-	if (!strncmp(tmp, international_prefix, strlen(international_prefix))) {
+	if (!strncmp(tmp, international_access_code, strlen(international_access_code))) {
 		/* International format number */
-		tmp += strlen(international_prefix);
+		tmp += strlen(international_access_code);
 		number_format = RM_NUMBER_FORMAT_INTERNATIONAL;
 
 		/* Example:
@@ -245,7 +245,7 @@ gchar *rm_number_format(RmProfile *profile, const gchar *number, enum rm_number_
 			result = g_strconcat(national_prefix, tmp, NULL);
 			break;
 		case RM_NUMBER_FORMAT_INTERNATIONAL:
-			result = g_strconcat(international_prefix, tmp, NULL);
+			result = g_strconcat(international_access_code, tmp, NULL);
 			break;
 		}
 		break;
@@ -253,7 +253,7 @@ gchar *rm_number_format(RmProfile *profile, const gchar *number, enum rm_number_
 	/* international prefix + international format */
 	case RM_NUMBER_FORMAT_INTERNATIONAL_PLUS:
 		/* international format prefixed by a + */
-		my_prefix = (output_format == RM_NUMBER_FORMAT_INTERNATIONAL_PLUS) ? "+" : international_prefix;
+		my_prefix = (output_format == RM_NUMBER_FORMAT_INTERNATIONAL_PLUS) ? "+" : international_access_code;
 		switch (number_format) {
 		case RM_NUMBER_FORMAT_LOCAL:
 			result = g_strconcat(my_prefix, my_country_code, my_area_code, tmp, NULL);
@@ -271,7 +271,7 @@ gchar *rm_number_format(RmProfile *profile, const gchar *number, enum rm_number_
 		break;
 	}
 
-	g_free(international_prefix);
+	g_free(international_access_code);
 	g_free(national_prefix);
 	g_free(my_country_code);
 	g_free(my_area_code);

@@ -60,6 +60,8 @@ RM_PLUGIN_REGISTER(RM_TYPE_CAPI_PLUGIN, RmCapiPlugin, routermanager_capi_plugin)
 
 //#define CAPI_DEBUG 1
 
+RmDevice *capi_device = NULL;
+
 /** The current active session */
 static struct session *session = NULL;
 /** Unique connection id */
@@ -102,14 +104,11 @@ void capi_connection_disconnect(struct capi_connection *capi_connection)
 void connection_ring(struct capi_connection *capi_connection)
 {
 	RmConnection *connection;
+	gchar *target = capi_connection->target;
+	gchar *trg = strchr(target, '#');
 
 	g_debug("connection_ring() src %s trg %s", capi_connection->source, capi_connection->target);
-	connection = rm_connection_find_by_remote_number(capi_connection->source);
-#if ACCEPT_INTERN
-	if (!connection && !strncmp(capi_connection->source, "**", 2)) {
-		connection = connection_add_call(981, CONNECTION_TYPE_INCOMING, capi_connection->source, capi_connection->target);
-	}
-#endif
+	connection = rm_connection_add(capi_device, capi_connection->id, RM_CONNECTION_TYPE_INCOMING, trg ? trg + 1 : target, capi_connection->source);
 
 	g_debug("connection_ring() connection %p", connection);
 	if (connection) {
@@ -1987,6 +1986,7 @@ static void impl_activate(PeasActivatable *plugin)
 	/* Add network event */
 	capi_plugin->priv->net_event = rm_netmonitor_add_event("CAPI", capi_session_connect, capi_session_disconnect, capi_plugin);
 
+	capi_device = rm_device_register("CAPI");
 	capi_phone_init();
 	capi_fax_init();
 }
@@ -2001,6 +2001,7 @@ static void impl_deactivate(PeasActivatable *plugin)
 
 	g_debug("%s(): capi", __FUNCTION__);
 
+	rm_device_unregister(capi_device);
 	capi_phone_shutdown();
 
 	/* Remove network event */

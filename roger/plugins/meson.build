@@ -11,4 +11,9 @@ if get_option('enable-indicator')
 	subdir('indicator')
 endif
 
+if get_option('enable-kwallet')
+	kwallet = []
+	subdir('kwallet')
+endif
+
 #subdir('webjournal')

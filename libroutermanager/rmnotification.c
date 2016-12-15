@@ -27,6 +27,7 @@
 #include <libroutermanager/rmprofile.h>
 #include <libroutermanager/rmcall.h>
 #include <libroutermanager/rmnumber.h>
+#include <libroutermanager/rmrouter.h>
 
 /**
  * SECTION:rmnotification
@@ -151,9 +152,13 @@ static void rm_notification_connection_changed_cb(RmObject *obj, gint event, RmC
 
 	notification = rm_profile_get_notification(profile);
 	if (!notification) {
-		return;
+		notification = rm_notification_plugins->data;
+		numbers = rm_router_get_numbers(profile);
+		g_warning("%s(): TODO", __FUNCTION__);
+		//return;
 	}
 
+#if DEBUG
 	/* Get notification numbers */
 	if (connection->type & RM_CONNECTION_TYPE_OUTGOING) {
 		numbers = rm_profile_get_notification_outgoing_numbers(profile);
@@ -166,6 +171,7 @@ static void rm_notification_connection_changed_cb(RmObject *obj, gint event, RmC
 		g_debug("%s(): type = %d, numbers is empty", __FUNCTION__, connection->type);
 		return;
 	}
+#endif
 
 	/* Match numbers against local number and check if we should show a notification */
 	for (count = 0; count < g_strv_length(numbers); count++) {

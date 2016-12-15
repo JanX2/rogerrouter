@@ -37,6 +37,7 @@
 #include <libroutermanager/rmaudio.h>
 #include <libroutermanager/rmaddressbook.h>
 #include <libroutermanager/rmfax.h>
+#include <libroutermanager/rmstring.h>
 
 #include <roger/application.h>
 #include <roger/settings.h>
@@ -52,14 +53,15 @@ struct settings {
 	GtkWidget *login_password_entry;
 	GtkWidget *ftp_user_entry;
 	GtkWidget *ftp_password_entry;
-	GtkWidget *international_call_prefix_entry;
-	GtkWidget *national_call_prefix_entry;
+	GtkWidget *international_access_code_entry;
+	GtkWidget *national_access_code_entry;
 	GtkWidget *line_access_code_entry;
 	GtkWidget *area_code_entry;
 	GtkWidget *country_code_entry;
 
 	GtkWidget *phone_plugin_combobox;
 	GtkWidget *fax_plugin_combobox;
+	GtkWidget *numbers_assign_listbox;
 
 	GtkWidget *softphone_msn_combobox;
 	GtkWidget *softphone_controller_combobox;
@@ -88,7 +90,7 @@ struct settings {
 	GtkWidget *security_plugin_combobox;
 	GtkWidget *address_book_plugin_combobox;
 	GtkWidget *notification_plugin_combobox;
-	GtkWidget *notification_play_ringtone_switch;
+	GtkWidget *notification_ringtone_switch;
 	GtkListStore *notification_liststore;
 
 	GtkWidget *phone_settings;
@@ -1280,9 +1282,9 @@ void audio_plugin_combobox_changed_cb(GtkComboBox *box, gpointer user_data) {
 	}
 }
 
-void view_call_type_icons_combobox_changed_cb(GtkComboBox *widget, gpointer user_data)
+void view_call_type_icons_combobox_changed_cb(GtkComboBoxText *widget, gpointer user_data)
 {
-	g_settings_set_uint(app_settings, "icon-type", gtk_combo_box_get_active(widget));
+	g_settings_set_string(app_settings, "icon-type", gtk_combo_box_get_active_id(widget));
 	journal_init_call_icon();
 	journal_clear();
 	journal_redraw();
@@ -1307,42 +1309,29 @@ void settings_fill_address_book_plugin_combobox(struct settings *settings)
 	}
 }
 
-static void settings_notification_refresh_list(GtkListStore *list_store)
+static void settings_numbers_refresh_list(GtkListStore *list_store)
 {
 	RmProfile *profile = rm_profile_get_active();
 	gchar **numbers = rm_router_get_numbers(profile);
 	GtkTreeIter iter;
 	gint count;
 	gint index;
-	gchar **selected_outgoing_numbers;
-	gchar **selected_incoming_numbers;
-
-	selected_outgoing_numbers = rm_profile_get_notification_outgoing_numbers(profile);
-	selected_incoming_numbers = rm_profile_get_notification_incoming_numbers(profile);
 
 	for (index = 0; index < g_strv_length(numbers); index++) {
 		gtk_list_store_append(list_store, &iter);
+		g_debug("%s(): %d = %s", __FUNCTION__, index, numbers[index]);
 		gtk_list_store_set(list_store, &iter, 0, numbers[index], -1);
-		gtk_list_store_set(list_store, &iter, 1, FALSE, -1);
+		//gtk_list_store_set(list_store, &iter, 1, 0, -1);
 		gtk_list_store_set(list_store, &iter, 2, FALSE, -1);
 
-		if (selected_outgoing_numbers) {
-			for (count = 0; count < g_strv_length(selected_outgoing_numbers); count++) {
-				if (!strcmp(numbers[index], selected_outgoing_numbers[count])) {
-					gtk_list_store_set(list_store, &iter, 1, TRUE, -1);
-					break;
-				}
-			}
-		}
-
-		if (selected_incoming_numbers) {
+		/*if (selected_incoming_numbers) {
 			for (count = 0; count < g_strv_length(selected_incoming_numbers); count++) {
 				if (!strcmp(numbers[index], selected_incoming_numbers[count])) {
 					gtk_list_store_set(list_store, &iter, 2, TRUE, -1);
 					break;
 				}
 			}
-		}
+		}*/
 	}
 }
 
@@ -1447,11 +1436,11 @@ void settings_notebook_switch_page_cb(GtkNotebook *notebook, GtkWidget *page, gu
 	}
 
 	profile = rm_profile_get_active();
-	g_settings_unbind(profile->settings, "address-book");
+	g_settings_unbind(profile->settings, "address-book-plugin");
 
 	gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(settings->address_book_plugin_combobox));
 	settings_fill_address_book_plugin_combobox(settings);
-	g_settings_bind(profile->settings, "address-book", settings->address_book_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(profile->settings, "address-book-plugin", settings->address_book_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 
 	if (!gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(settings->address_book_plugin_combobox))) {
 		gtk_combo_box_set_active(GTK_COMBO_BOX(settings->address_book_plugin_combobox), 0);
@@ -1499,6 +1488,134 @@ void phone_plugin_settings_button_clicked_cb(GtkWidget *button, gpointer user_da
 	}
 }
 
+void settings_numbers_device_combobox_changed_cb(GtkComboBox *box, gpointer user_data)
+{
+	GSList *devices = rm_device_get_plugins();
+	GSList *list;
+	RmDevice *new_device = rm_device_get(gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(box)));
+	RmDevice *old_device = NULL;
+	gchar *number = user_data;
+	gchar **numbers;
+
+	for (list = devices; list != NULL; list = list->next) {
+		RmDevice *device = list->data;
+
+		if (rm_device_handles_number(device, number)) {
+			old_device = device;
+			break;
+		}
+	}
+
+	//Remove number
+	if (old_device) {
+		numbers = rm_strv_remove(rm_device_get_numbers(old_device), number);
+
+		rm_device_set_numbers(old_device, numbers);
+	}
+
+	//Add number
+	if (new_device) {
+		numbers = rm_strv_add(rm_device_get_numbers(new_device), number);
+
+		rm_device_set_numbers(new_device, numbers);
+	}
+}
+
+void settings_numbers_populate(GtkWidget *listbox)
+{
+	RmProfile *profile;
+	gchar **numbers;
+	gint idx;
+
+	profile = rm_profile_get_active();
+
+	numbers = rm_router_get_numbers(profile);
+	for (idx = 0; idx < g_strv_length(numbers); idx++) {
+		gint dev_idx = 0;
+		GtkWidget *child = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
+
+		gtk_box_pack_start(GTK_BOX(child), gtk_label_new(numbers[idx]), TRUE, TRUE, 0);
+		GtkWidget *handle_label = gtk_label_new("handled by");
+		gtk_widget_set_sensitive(handle_label, FALSE);
+		gtk_box_pack_start(GTK_BOX(child), handle_label, FALSE, FALSE, 0);
+
+		GtkWidget *combobox = gtk_combo_box_text_new();
+		GSList *devices = rm_device_get_plugins();
+		GSList *list;
+
+		for (list = devices; list != NULL; list = list->next) {
+			RmDevice *device = list->data;
+			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combobox), rm_device_get_name(device));
+			if (rm_device_handles_number(device, numbers[idx])) {
+				gtk_combo_box_set_active(GTK_COMBO_BOX(combobox), dev_idx);
+			}
+			dev_idx++;
+		}
+
+		if (devices && gtk_combo_box_get_active(GTK_COMBO_BOX(combobox)) == -1) {
+			gtk_combo_box_set_active(GTK_COMBO_BOX(combobox), 0);
+		}
+
+		g_signal_connect(G_OBJECT(combobox), "changed", G_CALLBACK(settings_numbers_device_combobox_changed_cb), numbers[idx]);
+
+		gtk_box_pack_start(GTK_BOX(child), combobox, FALSE, FALSE, 0);
+
+		/*GtkWidget *notification_label = gtk_label_new("with notification for");
+		gtk_widget_set_sensitive(notification_label, FALSE);
+		gtk_box_pack_start(GTK_BOX(child), notification_label, FALSE, FALSE, 0);
+
+		GtkWidget *notification_combobox = gtk_combo_box_text_new();
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(notification_combobox), _("Incoming"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(notification_combobox), _("Outgoing"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(notification_combobox), _("Both"));
+		//g_signal_connect(G_OBJECT(combobox), "changed", G_CALLBACK(settings_numbers_device_combobox_changed_cb), numbers[idx]);
+
+		gtk_box_pack_start(GTK_BOX(child), notification_combobox, TRUE, TRUE, 0);*/
+
+		gtk_list_box_insert(GTK_LIST_BOX(listbox), child, -1);
+	}
+}
+
+void settings_notification_populate(GtkWidget *list_store)
+{
+	RmProfile *profile = rm_profile_get_active();
+	gchar **numbers = rm_router_get_numbers(profile);
+	GtkTreeIter iter;
+	gint count;
+	gint index;
+	gchar **selected_outgoing_numbers;
+	gchar **selected_incoming_numbers;
+
+	selected_outgoing_numbers = rm_profile_get_notification_outgoing_numbers(profile);
+	selected_incoming_numbers = rm_profile_get_notification_incoming_numbers(profile);
+
+	for (index = 0; index < g_strv_length(numbers); index++) {
+		gtk_list_store_append(list_store, &iter);
+
+		gtk_list_store_set(list_store, &iter, 0, numbers[index], -1);
+		gtk_list_store_set(list_store, &iter, 1, FALSE, -1);
+		gtk_list_store_set(list_store, &iter, 2, FALSE, -1);
+
+		if (selected_outgoing_numbers) {
+			for (count = 0; count < g_strv_length(selected_outgoing_numbers); count++) {
+				if (!strcmp(numbers[index], selected_outgoing_numbers[count])) {
+					gtk_list_store_set(list_store, &iter, 1, TRUE, -1);
+					break;
+				}
+			}
+		}
+
+		if (selected_incoming_numbers) {
+			for (count = 0; count < g_strv_length(selected_incoming_numbers); count++) {
+				if (!strcmp(numbers[index], selected_incoming_numbers[count])) {
+					gtk_list_store_set(list_store, &iter, 2, TRUE, -1);
+					break;
+				}
+			}
+		}
+	}
+}
+
 void app_show_settings(void)
 {
 	GtkBuilder *builder;
@@ -1540,19 +1657,7 @@ void app_show_settings(void)
 
 	settings->headerbar = GTK_WIDGET(gtk_builder_get_object(builder, "headerbar"));
 
-	if (roger_uses_headerbar()) {
-		gtk_window_set_titlebar(GTK_WINDOW(settings->window), settings->headerbar);
-		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(settings->headerbar), TRUE);
-	} else {
-		gtk_window_set_title(GTK_WINDOW(settings->window), _("Settings"));
-	}
-
 	/* Router group */
-	if (!roger_uses_headerbar()) {
-		GtkWidget *reload_button_ssd = GTK_WIDGET(gtk_builder_get_object(builder, "reload_button_ssd"));
-		gtk_widget_show(reload_button_ssd);
-	}
-
 	settings->host_entry = GTK_WIDGET(gtk_builder_get_object(builder, "host_entry"));
 	g_settings_bind(profile->settings, "host", settings->host_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
@@ -1571,61 +1676,45 @@ void app_show_settings(void)
 	/* Prefix group */
 	is_cable = rm_router_is_cable(profile);
 
-	settings->line_access_code_entry = GTK_WIDGET(gtk_builder_get_object(builder, "line_access_code_entry"));
-	settings->international_call_prefix_entry = GTK_WIDGET(gtk_builder_get_object(builder, "international_call_prefix_entry"));
-	settings->national_call_prefix_entry = GTK_WIDGET(gtk_builder_get_object(builder, "national_call_prefix_entry"));
+	settings->line_access_code_entry = GTK_WIDGET(gtk_builder_get_object(builder, "external_access_code_entry"));
+	settings->international_access_code_entry = GTK_WIDGET(gtk_builder_get_object(builder, "international_access_code_entry"));
+	settings->national_access_code_entry = GTK_WIDGET(gtk_builder_get_object(builder, "national_access_code_entry"));
 	settings->country_code_entry = GTK_WIDGET(gtk_builder_get_object(builder, "country_code_entry"));
 	settings->area_code_entry = GTK_WIDGET(gtk_builder_get_object(builder, "area_code_entry"));
 
-	g_settings_bind(profile->settings, "line-access-code", settings->line_access_code_entry, "text", G_SETTINGS_BIND_DEFAULT);
-	g_settings_bind(profile->settings, "international-call-prefix", settings->international_call_prefix_entry, "text", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(profile->settings, "external-access-code", settings->line_access_code_entry, "text", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(profile->settings, "international-access-code", settings->international_access_code_entry, "text", G_SETTINGS_BIND_DEFAULT);
 	g_settings_bind(profile->settings, "country-code", settings->country_code_entry, "text", G_SETTINGS_BIND_DEFAULT);
-	g_settings_bind(profile->settings, "national-call-prefix", settings->national_call_prefix_entry, "text", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(profile->settings, "national-access-code", settings->national_access_code_entry, "text", G_SETTINGS_BIND_DEFAULT);
 	g_settings_bind(profile->settings, "area-code", settings->area_code_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
-	gtk_widget_set_sensitive(settings->international_call_prefix_entry, is_cable);
+	gtk_widget_set_sensitive(settings->international_access_code_entry, is_cable);
 	gtk_widget_set_sensitive(settings->country_code_entry, is_cable);
-	gtk_widget_set_sensitive(settings->national_call_prefix_entry, is_cable);
+	gtk_widget_set_sensitive(settings->national_access_code_entry, is_cable);
 	gtk_widget_set_sensitive(settings->area_code_entry, is_cable);
 
-	gtk_editable_set_editable(GTK_EDITABLE(settings->international_call_prefix_entry), is_cable);
+	gtk_editable_set_editable(GTK_EDITABLE(settings->international_access_code_entry), is_cable);
 	gtk_editable_set_editable(GTK_EDITABLE(settings->country_code_entry), is_cable);
-	gtk_editable_set_editable(GTK_EDITABLE(settings->national_call_prefix_entry), is_cable);
+	gtk_editable_set_editable(GTK_EDITABLE(settings->national_access_code_entry), is_cable);
 	gtk_editable_set_editable(GTK_EDITABLE(settings->area_code_entry), is_cable);
 
-	/* Phone group */
-	settings->phone_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "phone_plugin_combobox"));
-	phone_plugins = rm_phone_get_plugins();
-	for (list = phone_plugins; list != NULL; list = list->next) {
-		RmPhone *phone = list->data;
-		gchar *name;
-
-		g_assert(phone != NULL);
-
-		name = rm_phone_get_name(phone);
-
-		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->phone_plugin_combobox), name, name);
-		g_free(name);
+	/* Numbers group */
+	settings->softphone_msn_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "softphone_number_combobox"));
+	numbers = rm_router_get_numbers(profile);
+	for (idx = 0; idx < g_strv_length(numbers); idx++) {
+		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->softphone_msn_combobox), numbers[idx], numbers[idx]);
 	}
-	g_settings_bind(rm_profile_get_active()->settings, "phone-plugin", settings->phone_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(profile->settings, "phone-number", settings->softphone_msn_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 
-	settings->phone_notification_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "phone_notification_plugin_combobox"));
-	notification_plugins = rm_notification_get_plugins();
-	for (list = notification_plugins; list != NULL; list = list->next) {
-		RmNotification *notification = list->data;
-		gchar *name;
+	settings->softphone_controller_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "softphone_controller_combobox"));
+	g_settings_bind(profile->settings, "phone-controller", settings->softphone_controller_combobox, "active", G_SETTINGS_BIND_DEFAULT);
 
-		g_assert(notification != NULL);
 
-		name = rm_notification_get_name(notification);
-
-		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->phone_notification_plugin_combobox), name, name);
-		g_free(name);
-	}
-	g_settings_bind(rm_profile_get_active()->settings, "notification-plugin", settings->phone_notification_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+	settings->numbers_assign_listbox = GTK_WIDGET(gtk_builder_get_object(builder, "numbers_assign_listbox"));
+	settings_numbers_populate(settings->numbers_assign_listbox);
 
 	/* Fax group */
-	settings->fax_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "fax_plugin_combobox"));
+	/*settings->fax_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "fax_plugin_combobox"));
 	fax_plugins = rm_fax_get_plugins();
 	for (list = fax_plugins; list != NULL; list = list->next) {
 		RmFax *fax = list->data;
@@ -1639,18 +1728,9 @@ void app_show_settings(void)
 		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->fax_plugin_combobox), name, name);
 		g_free(name);
 	}
-	g_settings_bind(rm_profile_get_active()->settings, "fax-plugin", settings->fax_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(rm_profile_get_active()->settings, "fax-plugin", settings->fax_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);*/
 
 	/* Devices group */
-	//settings->softphone_msn_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "softphone_msn_combobox"));
-	//numbers = rm_router_get_numbers(profile);
-	//for (idx = 0; idx < g_strv_length(numbers); idx++) {
-	//	gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->softphone_msn_combobox), numbers[idx], numbers[idx]);
-	//}
-	//g_settings_bind(profile->settings, "phone-number", settings->softphone_msn_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
-
-	//settings->softphone_controller_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "softphone_controller_combobox"));
-	//g_settings_bind(profile->settings, "phone-controller", settings->softphone_controller_combobox, "active", G_SETTINGS_BIND_DEFAULT);
 
 	settings->fax_header_entry = GTK_WIDGET(gtk_builder_get_object(builder, "fax_header_entry"));
 	g_settings_bind(profile->settings, "fax-header", settings->fax_header_entry, "text", G_SETTINGS_BIND_DEFAULT);
@@ -1658,12 +1738,12 @@ void app_show_settings(void)
 	settings->fax_ident_entry = GTK_WIDGET(gtk_builder_get_object(builder, "fax_ident_entry"));
 	g_settings_bind(profile->settings, "fax-ident", settings->fax_ident_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
-	/*settings->fax_msn_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "fax_msn_combobox"));
+	settings->fax_msn_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "fax_number_combobox"));
 	numbers = rm_router_get_numbers(profile);
 	for (idx = 0; idx < g_strv_length(numbers); idx++) {
 		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->fax_msn_combobox), numbers[idx], numbers[idx]);
 	}
-	g_settings_bind(profile->settings, "fax-number", settings->fax_msn_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);*/
+	g_settings_bind(profile->settings, "fax-number", settings->fax_msn_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 
 	settings->fax_controller_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "fax_controller_combobox"));
 	g_settings_bind(profile->settings, "fax-controller", settings->fax_controller_combobox, "active", G_SETTINGS_BIND_DEFAULT);
@@ -1690,7 +1770,7 @@ void app_show_settings(void)
 
 	/* Journal group */
 	settings->view_call_type_icons_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "view_call_type_icons_combobox"));
-	g_settings_bind(app_settings, "icon-type", settings->view_call_type_icons_combobox, "active", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(app_settings, "icon-type", settings->view_call_type_icons_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 
 	settings->filter_liststore = GTK_LIST_STORE(gtk_builder_get_object(builder, "filter_liststore"));
 	filter_refresh_list(settings->filter_liststore);
@@ -1727,7 +1807,6 @@ void app_show_settings(void)
 		name = rm_audio_get_name(audio);
 
 		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->audio_plugin_combobox), name, name);
-		g_debug("%s(): Appending '%s'", __FUNCTION__, name);
 		g_free(name);
 	}
 
@@ -1764,10 +1843,10 @@ void app_show_settings(void)
 	/* Address book group */
 	settings->address_book_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "address_book_plugin_combobox"));
 	//settings_fill_address_book_plugin_combobox(settings);
-	//g_settings_bind(profile->settings, "address-book", settings->address_book_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+	//g_settings_bind(profile->settings, "address-book-plugin", settings->address_book_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 
 	/* Notification group */
-	/*settings->notification_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "notification_plugin_combobox"));
+	settings->notification_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "notification_plugin_combobox"));
 
 	notification_plugins = rm_notification_get_plugins();
 	for (list = notification_plugins; list != NULL; list = list->next) {
@@ -1782,13 +1861,13 @@ void app_show_settings(void)
 		g_free(name);
 	}
 
-	g_settings_bind(profile->settings, "notification-plugin", settings->notification_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);*/
+	g_settings_bind(profile->settings, "notification-plugin", settings->notification_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 
-	settings->notification_play_ringtone_switch = GTK_WIDGET(gtk_builder_get_object(builder, "notification_play_ringtone_switch"));
-	g_settings_bind(profile->settings, "notification-play-ringtone", settings->notification_play_ringtone_switch, "active", G_SETTINGS_BIND_DEFAULT);
+	settings->notification_ringtone_switch = GTK_WIDGET(gtk_builder_get_object(builder, "notification_ringtone_switch"));
+	g_settings_bind(profile->settings, "notification-play-ringtone", settings->notification_ringtone_switch, "active", G_SETTINGS_BIND_DEFAULT);
 
 	settings->notification_liststore = GTK_LIST_STORE(gtk_builder_get_object(builder, "notification_liststore"));
-	settings_notification_refresh_list(settings->notification_liststore);
+	settings_notification_populate(settings->notification_liststore);
 
 	/* Header bar information */
 	box_name = rm_router_get_name(profile);

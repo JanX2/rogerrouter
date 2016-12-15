@@ -1,5 +1,5 @@
 <schemalist>
-	<schema id="org.tabos.roger.plugins.sip" path="/org/tabos/roger/plugins/sip/">
+	<schema id="org.tabos.roger.plugins.sip">
 		<key name="user" type="s">
 			<default>''</default>
 		</key>

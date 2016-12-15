@@ -1,16 +1,27 @@
 <schemalist>
+	<enum id='org.tabos.roger.journal.icon-type'>
+		<value nick="monochrome" value='0' />
+		<value nick="color" value='1' />
+	</enum>
+
 	<schema id="org.tabos.roger" path="/org/tabos/roger/">
 		<key name="debug" type="b">
 			<default>false</default>
+			<summary>Whether the application should print debug output</summary>
+			<description>Whether the application should print debug output to terminal</description>
 		</key>
 		<key name="width" type="u">
 			<default>1200</default>
+			<summary>Journal window width</summary>
 		</key>
 		<key name="height" type="u">
 			<default>600</default>
+			<summary>Journal window height</summary>
 		</key>
 		<key name="maximized" type="b">
 			<default>false</default>
+			<summary>Whether the journal window should be maximized</summary>
+			<description>Whether the journal window should be maximized by default.</description>
 		</key>
 
 		<key name="col-0-width" type="u">
@@ -71,10 +82,13 @@
 
 		<key name="contacts-hide-warning" type="b">
 			<default>false</default>
+			<summary>Show warning when saving a contact</summary>
 		</key>
 
-		<key name="icon-type" type="u">
-			<default>0</default>
+		<key name="icon-type" enum='org.tabos.roger.journal.icon-type'>
+			<default>"color"</default>
+			<summary>Type of icons shown in journal window</summary>
+			<description>Type of icons shown in journal window.</description>
 		</key>
 	</schema>
 </schemalist>

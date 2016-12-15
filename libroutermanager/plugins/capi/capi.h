@@ -56,6 +56,8 @@ typedef struct capi_profile {
 
 #include <sndfile.h>
 
+#include <libroutermanager/rmdevice.h>
+
 #define CAPI_CONNECTIONS 5
 /* Packet size */
 #define CAPI_PACKETS 160
@@ -163,6 +165,8 @@ struct session {
 	int message_number;
 	int input_thread_state;
 };
+
+extern RmDevice *capi_device;
 
 struct capi_connection *capi_get_free_connection(void);
 struct capi_connection *capi_call(unsigned, const char *, const char *, unsigned, unsigned, unsigned, _cword, _cword, _cword, _cstruct, _cstruct, _cstruct);

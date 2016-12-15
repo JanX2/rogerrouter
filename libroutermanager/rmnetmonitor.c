@@ -148,8 +148,13 @@ static void rm_netmonitor_state_changed(gboolean state)
 		/* Disable active profile */
 		rm_profile_set_active(NULL);
 	} else {
+		RmProfile *profile;
+
 		/* Online: Try to detect active profile */
-		if (rm_profile_detect_active()) {
+		profile = rm_profile_detect();
+		if (profile) {
+			rm_profile_set_active(profile);
+
 			/* We have an active profile: Connect to all network events */
 			for (list = rm_net_event_list; list != NULL; list = list->next) {
 				RmNetEvent *event = list->data;

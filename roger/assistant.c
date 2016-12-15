@@ -187,7 +187,7 @@ static gboolean scan(gpointer user_data)
 		RmRouterInfo *router_info = list->data;
 		gchar *tmp;
 
-		tmp = g_strdup_printf("<b>%s</b>\n<small>on %s</small>", router_info->name, router_info->host);
+		tmp = g_strdup_printf("<b>%s</b>\n<small>%s %s</small>", router_info->name, _("on"), router_info->host);
 
 		new_device = gtk_label_new("");
 		gtk_label_set_justify(GTK_LABEL(new_device), GTK_JUSTIFY_CENTER);
@@ -359,13 +359,15 @@ static gboolean password_post(struct assistant *assistant)
 	/* Release any previous lock */
 	rm_router_release_lock();
 
+	rm_router_set_active(assistant->profile);
+
 	/* Get settings */
 	if (!rm_router_login(assistant->profile) || !rm_router_get_settings(assistant->profile)) {
 		return FALSE;
 	}
 
 	/* Store router serial number for detection purpose */
-	g_settings_set_string(assistant->profile->settings, "serial", assistant->profile->router_info->serial);
+	g_settings_set_string(assistant->profile->settings, "serial-number", assistant->profile->router_info->serial);
 	/* Set initial fax report dir */
 	g_settings_set_string(assistant->profile->settings, "fax-report-dir", g_get_home_dir());
 	/* Set initial softphone number */
@@ -454,6 +456,9 @@ static gboolean finish_post(struct assistant *assistant)
 
 	/* Trigger network reconnect */
 	rm_netmonitor_reconnect();
+
+	/* Update filter */
+	journal_update_filter();
 
 	/* Set journal visible if needed */
 	journal_set_visible(TRUE);

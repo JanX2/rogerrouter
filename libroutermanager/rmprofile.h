@@ -52,7 +52,7 @@ void rm_profile_remove(RmProfile *profile);
 RmProfile *rm_profile_get_active(void);
 void rm_profile_set_active(RmProfile *profile);
 
-gboolean rm_profile_detect_active(void);
+RmProfile *rm_profile_detect(void);
 
 const gchar *rm_profile_get_name(RmProfile *profile);
 void rm_profile_set_host(RmProfile *profile, const gchar *host);
