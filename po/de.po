@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-17 21:37+0200\n"
+"POT-Creation-Date: 2016-12-30 15:55+0100\n"
 "PO-Revision-Date: 2016-09-17 21:39+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <>\n"
@@ -40,68 +40,59 @@ msgstr "Zeit: 00:00:00"
 msgid "A username and password are being requested by the site %s"
 msgstr "Ein Benutzername sowie Passwort werden von der Seite %s benötigt"
 
-#: roger/application.c:358 roger/contacts.c:1080
+#: roger/application.c:209 roger/application.c:390
+msgid "Extensions"
+msgstr "Nebenstellen"
+
+#: roger/application.c:379 roger/contacts.c:1080
 #: roger/plugins/statusicon/gtk.c:204 roger/plugins/indicator/indicator.c:226
 msgid "Contacts"
 msgstr "Kontakte"
 
-#: roger/application.c:359 roger/phone.c:52 roger/plugins/statusicon/gtk.c:209
-#: roger/plugins/indicator/indicator.c:231
+#: roger/application.c:380 roger/phone.c:52 roger/settings.glade:843
+#: roger/plugins/statusicon/gtk.c:209 roger/plugins/indicator/indicator.c:231
 msgid "Phone"
 msgstr "Telefon"
 
-#: roger/application.c:362 roger/plugins/statusicon/gtk.c:70
+#: roger/application.c:383 roger/plugins/statusicon/gtk.c:70
 #: roger/plugins/indicator/indicator.c:76
 msgid "Copy IP address"
 msgstr "IP-Adresse kopieren"
 
-#: roger/application.c:363 roger/plugins/statusicon/gtk.c:75
+#: roger/application.c:384 roger/plugins/statusicon/gtk.c:75
 #: roger/plugins/indicator/indicator.c:81
 msgid "Reconnect"
 msgstr "Neu verbinden"
 
-#: roger/application.c:364 roger/plugins/statusicon/gtk.c:220
+#: roger/application.c:385 roger/plugins/statusicon/gtk.c:220
 #: roger/plugins/indicator/indicator.c:243
 msgid "Functions"
 msgstr "Funktionen"
 
-#: roger/application.c:366
+#: roger/application.c:387
 msgid "Assistant"
 msgstr "Assistent"
 
-#: roger/application.c:369 roger/plugins/statusicon/gtk.c:230
+#: roger/application.c:391 roger/plugins/statusicon/gtk.c:230
 #: roger/plugins/indicator/indicator.c:253
 msgid "Preferences"
 msgstr "Einstellungen"
 
-#: roger/application.c:375
+#: roger/application.c:397
 msgid "Keyboard Shortcuts"
 msgstr "Tastenkürzel"
 
-#: roger/application.c:379
-msgid "Donate"
-msgstr "Spenden"
-
-#: roger/application.c:380
-msgid "Forum"
-msgstr "Forum"
-
-#: roger/application.c:381 roger/plugins/statusicon/gtk.c:239
-#: roger/plugins/indicator/indicator.c:262
-msgid "Help"
-msgstr "Hilfe"
-
-#: roger/application.c:383 roger/plugins/statusicon/gtk.c:244
+#: roger/application.c:405 roger/plugins/statusicon/gtk.c:244
 #: roger/plugins/indicator/indicator.c:267
 msgid "About"
 msgstr "Info"
 
-#: roger/application.c:384 roger/assistant.c:515 roger/assistant.c:642
+#: roger/application.c:406 roger/assistant.c:520 roger/assistant.c:647
 #: roger/plugins/statusicon/gtk.c:253 roger/plugins/indicator/indicator.c:276
 msgid "Quit"
 msgstr "Beenden"
 
-#: roger/assistant.c:93 roger/assistant.c:641 roger/assistant.glade:50
+#: roger/assistant.c:93 roger/assistant.c:646 roger/assistant.glade:50
 #: roger/assistant.glade:94
 msgid "Welcome"
 msgstr "Willkommen"
@@ -110,11 +101,15 @@ msgstr "Willkommen"
 msgid "Create a profile"
 msgstr "Erstelle ein Profil"
 
+#: roger/assistant.c:190
+msgid "on"
+msgstr "an"
+
 #: roger/assistant.c:300 roger/assistant.glade:217 roger/assistant.glade:343
 msgid "Select router"
 msgstr "Router auswählen"
 
-#: roger/assistant.c:328 roger/assistant.c:416 libroutermanager/rmrouter.c:187
+#: roger/assistant.c:328 roger/assistant.c:418 libroutermanager/rmrouter.c:157
 msgid "Login failed"
 msgstr "Anmeldung fehlgeschlagen"
 
@@ -126,32 +121,32 @@ msgstr "Bitte ändere die Router IP und probiere es erneut"
 msgid "Router password"
 msgstr "Router Passwort"
 
-#: roger/assistant.c:394 roger/assistant.glade:486 roger/assistant.glade:570
-#: roger/settings.glade:462
+#: roger/assistant.c:396 roger/assistant.glade:486 roger/assistant.glade:570
+#: roger/settings.glade:417
 msgid "FTP password"
 msgstr "FTP-Passwort"
 
-#: roger/assistant.c:415
+#: roger/assistant.c:417
 msgid "Please check your ftp user/password."
 msgstr "Bitte überprüfe Deine FTP-Zugangsdaten"
 
-#: roger/assistant.c:436
+#: roger/assistant.c:438
 msgid "Ready to go"
 msgstr "Es kann losgehen"
 
-#: roger/assistant.c:510 roger/assistant.glade:649
+#: roger/assistant.c:515 roger/assistant.glade:649
 msgid "Next"
 msgstr "Weiter"
 
-#: roger/assistant.c:541 roger/assistant.glade:640
+#: roger/assistant.c:546 roger/assistant.glade:640
 msgid "Back"
 msgstr "Zurück"
 
-#: roger/assistant.c:574
+#: roger/assistant.c:579
 msgid "Done"
 msgstr "Fertig"
 
-#: roger/assistant.c:616
+#: roger/assistant.c:621
 msgid "No router detected"
 msgstr "Kein Router erkannt"
 
@@ -207,7 +202,7 @@ msgid "Enter credentials you are using to login to routers webpage"
 msgstr "Gib die Zugangsdaten ein, die Du auf der Router Webseite verwendest"
 
 #: roger/assistant.glade:405 roger/assistant.glade:519
-#: roger/plugins/google/google.c:907 roger/plugins/sip/sip.c:442
+#: roger/plugins/google/google.c:907 roger/plugins/sip/sip.c:457
 msgid "User"
 msgstr "Benutzer"
 
@@ -217,7 +212,7 @@ msgstr "Optional"
 
 #: roger/assistant.glade:432 roger/assistant.glade:545
 #: roger/authenticate.glade:115 roger/plugins/google/google.c:915
-#: roger/plugins/sip/sip.c:450
+#: roger/plugins/sip/sip.c:465
 msgid "Password"
 msgstr "Passwort"
 
@@ -259,7 +254,7 @@ msgstr "Privat"
 msgid "Business"
 msgstr "Geschäftlich"
 
-#: roger/contacts.c:152 roger/contacts.c:675 roger/phone.c:261
+#: roger/contacts.c:152 roger/contacts.c:675 roger/fax.c:223 roger/phone.c:259
 msgid "Mobile"
 msgstr "Mobil"
 
@@ -275,7 +270,8 @@ msgstr "Geschäftliches Fax"
 msgid "Pager"
 msgstr "Pager"
 
-#: roger/contacts.c:164 roger/crash.c:262 roger/crash.c:279 roger/phone.c:270
+#: roger/contacts.c:164 roger/fax.c:232 roger/crash.c:257 roger/crash.c:274
+#: roger/phone.c:268
 msgid "Unknown"
 msgstr "Unbekannt"
 
@@ -295,7 +291,7 @@ msgstr "<b>Einen Kontakt auswählen</b>"
 msgid "Open image"
 msgstr "Bild öffnen"
 
-#: roger/contacts.c:507 roger/journal.c:998 roger/settings.c:922
+#: roger/contacts.c:507 roger/journal.c:995 roger/settings.c:933
 #: roger/plugins/vcard/vcard.c:1200 roger/plugins/google/google.c:108
 #: roger/plugins/thunderbird/thunderbird.c:1025
 #: roger/plugins/webjournal/webjournal.c:246
@@ -311,17 +307,17 @@ msgstr "_Öffnen"
 msgid "_No image"
 msgstr "_Kein Bild"
 
-#: roger/contacts.c:651 roger/journal.c:1079 roger/print.c:389
-#: roger/settings.c:433 roger/settings.c:951 roger/settings.glade:107
-#: roger/settings.glade:1173 roger/settings.glade:1475
+#: roger/contacts.c:651 roger/journal.c:1076 roger/print.c:389
+#: roger/settings.c:444 roger/settings.c:962 roger/settings.glade:92
+#: roger/settings.glade:1255 roger/settings.glade:1534
 msgid "Name"
 msgstr "Name"
 
-#: roger/contacts.c:673 roger/contacts.c:711 roger/phone.c:255
+#: roger/contacts.c:673 roger/contacts.c:711 roger/fax.c:217 roger/phone.c:253
 msgid "Home"
 msgstr "Zuhause"
 
-#: roger/contacts.c:674 roger/contacts.c:712 roger/phone.c:258
+#: roger/contacts.c:674 roger/contacts.c:712 roger/fax.c:220 roger/phone.c:256
 msgid "Work"
 msgstr "Arbeit"
 
@@ -333,9 +329,10 @@ msgstr "Zuhause Fax"
 msgid "Work Fax"
 msgstr "Arbeit Fax"
 
-#: roger/contacts.c:685 roger/journal.c:1081 roger/print.c:393
-#: roger/settings.c:434 roger/settings.c:1005 roger/settings.glade:202
-#: roger/settings.glade:1896 roger/plugins/notification/notification.c:508
+#: roger/contacts.c:685 roger/journal.c:1078 roger/print.c:393
+#: roger/settings.c:445 roger/settings.c:1016 roger/settings.glade:187
+#: roger/settings.glade:799 roger/settings.glade:990
+#: roger/plugins/notification/notification.c:508
 msgid "Number"
 msgstr "Nummer"
 
@@ -355,7 +352,7 @@ msgstr "Straße"
 msgid "ZIP"
 msgstr "PLZ"
 
-#: roger/contacts.c:728 roger/journal.c:1082
+#: roger/contacts.c:728 roger/journal.c:1079
 msgid "City"
 msgstr "Stadt"
 
@@ -403,12 +400,12 @@ msgstr "Neuer Kontakt"
 msgid "Do you want to delete contact '%s'?"
 msgstr "Wollen Sie den Kontakt '%s' löschen?"
 
-#: roger/contacts.c:950 roger/journal.c:484 roger/journal.c:538
-#: roger/settings.c:520 roger/settings.c:663
+#: roger/contacts.c:950 roger/journal.c:481 roger/journal.c:535
+#: roger/settings.c:531 roger/settings.c:674
 msgid "Cancel"
 msgstr "A_bbrechen"
 
-#: roger/contacts.c:953 roger/journal.c:485 roger/journal.c:539
+#: roger/contacts.c:953 roger/journal.c:482 roger/journal.c:536
 msgid "Delete"
 msgstr "Löschen"
 
@@ -432,48 +429,41 @@ msgstr "Kontakt"
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: roger/fax.c:79 roger/fax.c:85
+#: roger/fax.c:89
 #, c-format
 msgid "Transferring page %d of %d"
 msgstr "Übertrage Seite %d von %d"
 
-#: roger/fax.c:94
+#: roger/fax.c:95
 msgid "Fax transfer successful"
 msgstr "Faxübertragung erfolgreich"
 
-#: roger/fax.c:96
+#: roger/fax.c:97
 msgid "Fax transfer failed"
 msgstr "Faxübertragung fehlgeschlagen"
 
-#: roger/fax.c:151
-msgid "Fax devices"
-msgstr "Faxgeräte"
+#: roger/fax.c:108
+msgid "Connecting..."
+msgstr "Verbinden..."
 
-#: roger/fax.c:166 roger/phone.c:743
-msgid "Suppress number"
-msgstr "Nummer unterdrücken"
+#: roger/fax.c:120 roger/phone.c:66
+#, c-format
+msgid "Time: %s"
+msgstr "Zeit: %s"
 
-#: roger/fax.c:210
-msgid "From:"
-msgstr "Von:"
+#: roger/fax.c:226 roger/phone.c:262
+msgid "Fax Home"
+msgstr "Fax Zuhause"
 
-#: roger/fax.c:218
-msgid "To:"
-msgstr "An:"
+#: roger/fax.c:229 roger/phone.c:265
+msgid "Fax Work"
+msgstr "Fax Arbeit"
 
-#: roger/fax.c:226
-msgid "Status:"
-msgstr "Status:"
-
-#: roger/fax.c:367 roger/settings.glade:807 libroutermanager/rmfilter.c:564
-msgid "Fax"
-msgstr "Fax"
-
-#: roger/crash.c:338
+#: roger/crash.c:332
 msgid "Roger Router has crashed"
 msgstr "Roger Router ist abgestürzt"
 
-#: roger/crash.c:353
+#: roger/crash.c:347
 #, c-format
 msgid ""
 "%s.\n"
@@ -484,124 +474,119 @@ msgstr ""
 "Bitte erstelle einen Fehlerbericht und füge die unteren Informationen\n"
 "sowie das Debug-Log (~/.cache/routermanager/debug.log) hinzu."
 
-#: roger/crash.c:358
+#: roger/crash.c:352
 msgid "Debug log"
 msgstr "Debug Log"
 
-#: roger/crash.c:402
+#: roger/crash.c:394
 msgid "Close"
 msgstr "Schließen"
 
-#: roger/crash.c:407
+#: roger/crash.c:399
 msgid "Save in HOME"
 msgstr "Speichern in HOME"
 
-#: roger/crash.c:441
+#: roger/crash.c:432
 #, c-format
 msgid "Roger Router process (%ld) received signal %d"
 msgstr "Der Router Router Prozess (%ld) erhielt das Signal %d"
 
-#: roger/journal.c:311 roger/journal.c:317 roger/journal.c:338
+#: roger/journal.c:308 roger/journal.c:314 roger/journal.c:335
 msgid "<No profile>"
 msgstr "<Kein Profil>"
 
-#: roger/journal.c:328
+#: roger/journal.c:325
 #, c-format
 msgid "<small>%d calls, %d:%2.2dh</small>"
 msgstr "<small>%d Anrufe, %d:%2.2dh</small>"
 
-#: roger/journal.c:338
+#: roger/journal.c:335
 #, c-format
 msgid "%s - %d calls, %d:%2.2dh"
 msgstr "%s - %d Anrufe, %d:%2.2dh"
 
-#: roger/journal.c:482
+#: roger/journal.c:479
 msgid "Do you want to delete the router journal?"
 msgstr "Willst Du das Journal auf dem Router wirklich löschen?"
 
-#: roger/journal.c:536
+#: roger/journal.c:533
 msgid "Do you really want to delete the selected entry?"
 msgstr "Willst Du den ausgewählten Eintrag wirklich löschen?"
 
-#: roger/journal.c:871 roger/journal.c:885
+#: roger/journal.c:868 roger/journal.c:882
 msgid "Copy number"
 msgstr "Nummer kopieren"
 
-#: roger/journal.c:872 roger/journal.c:890
+#: roger/journal.c:869 roger/journal.c:887
 msgid "Call number"
 msgstr "Nummer wählen"
 
-#: roger/journal.c:899
+#: roger/journal.c:896
 msgid "Add contact"
 msgstr "Kontakt hinzufügen"
 
-#: roger/journal.c:908
+#: roger/journal.c:905
 msgid "Delete entry"
 msgstr "Eintrag löschen"
 
-#: roger/journal.c:998 roger/journal.c:1176
+#: roger/journal.c:995 roger/journal.c:1173
 msgid "Export journal"
 msgstr "Journal exportieren"
 
-#: roger/journal.c:998 roger/plugins/webjournal/webjournal.c:246
+#: roger/journal.c:995 roger/plugins/webjournal/webjournal.c:246
 msgid "_Save"
 msgstr "_Speichern"
 
-#: roger/journal.c:1077 roger/print.c:381 roger/settings.c:431
+#: roger/journal.c:1074 roger/print.c:381 roger/settings.c:442
 msgid "Type"
 msgstr "Typ"
 
-#: roger/journal.c:1078 roger/print.c:385 roger/settings.c:432
+#: roger/journal.c:1075 roger/print.c:385 roger/settings.c:443
 msgid "Date/Time"
 msgstr "Datum/Zeit"
 
-#: roger/journal.c:1080
+#: roger/journal.c:1077
 msgid "Company"
 msgstr "Firma"
 
-#: roger/journal.c:1083 roger/settings.c:435
+#: roger/journal.c:1080 roger/settings.c:446
 msgid "Extension"
 msgstr "Nebenstelle"
 
-#: roger/journal.c:1084 roger/settings.c:436
+#: roger/journal.c:1081 roger/settings.c:447
 msgid "Line"
 msgstr "Leitung"
 
-#: roger/journal.c:1085 roger/print.c:405
+#: roger/journal.c:1082 roger/print.c:405
 msgid "Duration"
 msgstr "Dauer"
 
-#: roger/journal.c:1173
+#: roger/journal.c:1170
 msgid "Refresh journal"
 msgstr "Journal laden"
 
-#: roger/journal.c:1174
+#: roger/journal.c:1171
 msgid "Print journal"
 msgstr "Journal drucken"
 
-#: roger/journal.c:1175
+#: roger/journal.c:1172
 msgid "Clear journal"
 msgstr "Journal löschen"
 
-#: roger/journal.c:1333
+#: roger/journal.c:1330
 msgid "Restore default"
 msgstr "Vorgabe verwenden"
 
-#: roger/journal.c:1345 roger/settings.glade:1261
-#: roger/plugins/statusicon/gtk.c:199 roger/plugins/indicator/indicator.c:221
+#: roger/journal.c:1342 roger/plugins/statusicon/gtk.c:199
+#: roger/plugins/indicator/indicator.c:221
 msgid "Journal"
 msgstr "Journal"
 
-#: roger/phone.c:70
-#, c-format
-msgid "Time: %s"
-msgstr "Zeit: %s"
-
-#: roger/phone.c:163
+#: roger/phone.c:157
 msgid "Connection problem"
 msgstr "Verbindungsproblem"
 
-#: roger/phone.c:164
+#: roger/phone.c:158
 msgid ""
 "This is most likely due to a closed CAPI port or an invalid phone number.\n"
 "\n"
@@ -614,25 +599,21 @@ msgstr ""
 "Lösung: Wähle #96*3* mit dem Telefon und überprüfe die Nummern in den "
 "Einstellungen"
 
-#: roger/phone.c:179
+#: roger/phone.c:173
 msgid "A call is in progress, hangup first"
 msgstr "Ein Anruf wird gerade geführt, bitte erst auflegen"
 
-#: roger/phone.c:264
-msgid "Fax Home"
-msgstr "Fax Zuhause"
-
-#: roger/phone.c:267
-msgid "Fax Work"
-msgstr "Fax Arbeit"
-
-#: roger/phone.c:447
+#: roger/phone.c:445
 msgid "<b>No contact found</b>"
 msgstr "<b>Kein Kontakt gefunden</b>"
 
-#: roger/phone.c:710
+#: roger/phone.c:707
 msgid "Phones"
 msgstr "Telefone"
+
+#: roger/phone.c:747
+msgid "Suppress number"
+msgstr "Nummer unterdrücken"
 
 #: roger/print.c:325
 msgid "Caller list"
@@ -655,198 +636,197 @@ msgstr "Lokale Nummer"
 msgid "Roger Router-Journal"
 msgstr "Roger Router-Journal"
 
-#: roger/print.c:571
+#: roger/print.c:570
 msgid "SUCCESS"
 msgstr "ERFOLG"
 
-#: roger/print.c:571
+#: roger/print.c:570
 msgid "FAILED"
 msgstr "FEHLGESCHLAGEN"
 
-#: roger/print.c:621
+#: roger/print.c:620
 msgid "Fax Transfer Protocol"
 msgstr "Faxübertragung-Protokoll"
 
-#: roger/print.c:629
+#: roger/print.c:628
 msgid "Date/Time:"
 msgstr "Datum/Zeit:"
 
-#: roger/print.c:636
+#: roger/print.c:635
 msgid "Transfer status:"
 msgstr "Transferstatus:"
 
-#: roger/print.c:642
+#: roger/print.c:641
 msgid "Receiver ID:"
 msgstr "Empfänger ID:"
 
-#: roger/print.c:650
+#: roger/print.c:649
 msgid "Pages sent:"
 msgstr "Seiten übertragen:"
 
-#: roger/print.c:658
+#: roger/print.c:657
 msgid "Recipient name:"
 msgstr "Empfängername:"
 
-#: roger/print.c:667
+#: roger/print.c:666
 msgid "Recipient number:"
 msgstr "Empfängernummer:"
 
-#: roger/print.c:675
+#: roger/print.c:674
 msgid "Sender name:"
 msgstr "Sendername:"
 
-#: roger/print.c:683
+#: roger/print.c:682
 msgid "Sender number:"
 msgstr "Sendernummer:"
 
-#: roger/print.c:691
+#: roger/print.c:690
 msgid "Bitrate:"
 msgstr "Bitrate:"
 
-#: roger/print.c:699
+#: roger/print.c:698
 msgid "Message:"
 msgstr "Nachricht:"
 
-#: roger/settings.c:110
+#: roger/settings.c:121
 msgid "Login password is valid"
 msgstr "Anmeldepasswort ist gültig"
 
-#: roger/settings.c:138
+#: roger/settings.c:149
 msgid "Could not connect to FTP. Missing USB storage?"
 msgstr "Konnte mich nicht per FTP verbinden. Fehlt der USB-Speicher?"
 
-#: roger/settings.c:141
+#: roger/settings.c:152
 msgid "FTP password is valid"
 msgstr "FTP-Password ist gültig"
 
-#: roger/settings.c:143
+#: roger/settings.c:154
 msgid "FTP password is invalid"
 msgstr "FTP-Password ist ungültig"
 
-#: roger/settings.c:143
+#: roger/settings.c:154
 msgid "Please check your FTP credentials"
 msgstr "Bitte überprüfe Deine FTP-Zugangsdaten"
 
-#: roger/settings.c:161
+#: roger/settings.c:172
 msgid "Do you want to reload the router settings and replace your preferences?"
 msgstr "Willst Du die Einstellungen vom Router laden und damit Deine ersetzen?"
 
-#: roger/settings.c:162
+#: roger/settings.c:173
 msgid "Update settings"
 msgstr "Einstellungen aktualisieren"
 
-#: roger/settings.c:285
+#: roger/settings.c:296 roger/settings.c:1674
 msgid "All"
 msgstr "Alle"
 
-#: roger/settings.c:286 roger/settings.glade:1925
+#: roger/settings.c:297 roger/settings.c:1672
 #: roger/plugins/statusicon/gtk.c:148 roger/plugins/indicator/indicator.c:154
 #: roger/plugins/notification/notification.c:517
 msgid "Incoming"
 msgstr "Eingehend"
 
-#: roger/settings.c:287 roger/plugins/statusicon/gtk.c:162
+#: roger/settings.c:298 roger/plugins/statusicon/gtk.c:162
 #: roger/plugins/indicator/indicator.c:168
 msgid "Missed"
 msgstr "Verpasst"
 
-#: roger/settings.c:288 roger/settings.glade:1911
+#: roger/settings.c:299 roger/settings.c:1673
 #: roger/plugins/statusicon/gtk.c:155 roger/plugins/indicator/indicator.c:161
 #: roger/plugins/notification/notification.c:512
 msgid "Outgoing"
 msgstr "Ausgehend"
 
-#: roger/settings.c:289
+#: roger/settings.c:300
 msgid "Voice box"
 msgstr "Anrufbeantworter"
 
-#: roger/settings.c:290
+#: roger/settings.c:301
 msgid "Fax box"
 msgstr "Fax-Box"
 
-#: roger/settings.c:291 libroutermanager/rmfilter.c:572
+#: roger/settings.c:302 libroutermanager/rmfilter.c:572
 msgid "Fax Report"
 msgstr "Faxbericht"
 
-#: roger/settings.c:292 libroutermanager/rmfilter.c:576
+#: roger/settings.c:303 libroutermanager/rmfilter.c:576
 msgid "Record"
 msgstr "Aufnahme"
 
-#: roger/settings.c:293 libroutermanager/rmfilter.c:580
+#: roger/settings.c:304 libroutermanager/rmfilter.c:580
 msgid "Blocked"
 msgstr "Blockiert"
 
-#: roger/settings.c:302 roger/settings.c:316
+#: roger/settings.c:313 roger/settings.c:327
 msgid "Is"
 msgstr "Ist"
 
-#: roger/settings.c:303 roger/settings.c:317
+#: roger/settings.c:314 roger/settings.c:328
 msgid "Is not"
 msgstr "Ist nicht"
 
-#: roger/settings.c:304
+#: roger/settings.c:315
 msgid "Is after"
 msgstr "Ist nach"
 
-#: roger/settings.c:305
+#: roger/settings.c:316
 msgid "Is before"
 msgstr "Ist vor"
 
-#: roger/settings.c:318
+#: roger/settings.c:329
 msgid "Starts with"
 msgstr "Beginnt mit"
 
-#: roger/settings.c:319
+#: roger/settings.c:330
 msgid "Contains"
 msgstr "Enthält"
 
-#: roger/settings.c:517
+#: roger/settings.c:528
 msgid "Edit filter"
 msgstr "Filter bearbeiten"
 
-#: roger/settings.c:523
+#: roger/settings.c:534
 msgid "Save"
 msgstr "Speichern"
 
-#: roger/settings.c:535 roger/settings.c:678
-#: roger/plugins/gtknotify/gtknotify.c:280
+#: roger/settings.c:546 roger/settings.c:689
 msgid "Name:"
 msgstr "Name:"
 
-#: roger/settings.c:550 roger/settings.c:692
+#: roger/settings.c:561 roger/settings.c:703
 msgid "Rules"
 msgstr "Regeln"
 
-#: roger/settings.c:612
+#: roger/settings.c:623
 #, c-format
 msgid "Do you want to delete the filter '%s'?"
 msgstr "Willst Du den Filter '%s' löschen?"
 
-#: roger/settings.c:613
+#: roger/settings.c:624
 msgid "Delete filter"
 msgstr "Filter löschen"
 
-#: roger/settings.c:660
+#: roger/settings.c:671
 msgid "New filter"
 msgstr "Neuer Filter"
 
-#: roger/settings.c:666
+#: roger/settings.c:677
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: roger/settings.c:922
+#: roger/settings.c:933
 msgid "Action"
 msgstr "Aktion"
 
-#: roger/settings.c:922
+#: roger/settings.c:933
 msgid "_Apply"
 msgstr "_Anwenden"
 
-#: roger/settings.c:958 roger/settings.glade:131
+#: roger/settings.c:969 roger/settings.glade:116
 msgid "Execute"
 msgstr "Ausführen"
 
-#: roger/settings.c:962
+#: roger/settings.c:973
 msgid ""
 "Regex:\n"
 "%LINE% - Local line\n"
@@ -860,50 +840,61 @@ msgstr ""
 "%NAME% - Anrufername\n"
 "%COMPANY% - Anruferfirma"
 
-#: roger/settings.c:970 roger/settings.glade:90 roger/settings.glade:716
-#: roger/settings.glade:1950
+#: roger/settings.c:981
 msgid "General"
 msgstr "Allgemein"
 
-#: roger/settings.c:1000
+#: roger/settings.c:1011
 msgid "Enable"
 msgstr "Aktivieren"
 
-#: roger/settings.c:1008 roger/settings.glade:155
+#: roger/settings.c:1019
 msgid "MSN Settings"
 msgstr "MSN Einstellungen"
 
-#: roger/settings.c:1062
+#: roger/settings.c:1073
 #, c-format
 msgid "Do you want to delete the action '%s'?"
 msgstr "Willst Du die Aktion '%s' löschen?"
 
-#: roger/settings.c:1063
+#: roger/settings.c:1074
 msgid "Delete action"
 msgstr "Aktion löschen"
 
-#: roger/settings.c:1496
-msgid "Settings"
-msgstr "Einstellungen"
+#: roger/settings.c:1460
+msgid "CAPI Phone"
+msgstr "CAPI Telefon"
 
-#: roger/settings.c:1697
+#: roger/settings.c:1571
+msgid "assigned to"
+msgstr "verknüpft mit"
+
+#: roger/settings.c:1649
+msgid "notified on"
+msgstr "benachrichtet bei"
+
+#: roger/settings.c:1671
+msgid "None"
+msgstr "Keine"
+
+#: roger/settings.c:1950
 #, c-format
 msgid "%s (Firmware: %s)"
 msgstr "%s (Firmware: %s)"
 
-#: roger/settings.glade:25
-msgid "Edit action"
-msgstr "Aktion editieren"
+#: roger/settings.glade:140
+msgid "Reacts on"
+msgstr "Reagiert bei"
 
-#: roger/settings.glade:188
+#: roger/settings.glade:173
 msgid "Active"
 msgstr "Aktiv"
 
-#: roger/settings.glade:226
+#: roger/settings.glade:211
 msgid "Placeholder"
 msgstr "Platzhalter"
 
-#: roger/settings.glade:260
+#: roger/settings.glade:245
 msgid ""
 "Local line\n"
 "Caller number\n"
@@ -915,255 +906,226 @@ msgstr ""
 "Anrufername\n"
 "Anruferfirma"
 
-#: roger/settings.glade:317 roger/settings.glade:701
-msgid "Refresh settings"
-msgstr "Einstellungen erneuern"
+#: roger/settings.glade:279
+msgid "Edit action"
+msgstr "Aktion editieren"
 
-#: roger/settings.glade:372
-msgid "Router"
-msgstr "Router"
-
-#: roger/settings.glade:389
+#: roger/settings.glade:344
 msgid "Host"
 msgstr "Host"
 
-#: roger/settings.glade:413
+#: roger/settings.glade:368
 msgid "Login user"
 msgstr "Anmeldebenutzer"
 
-#: roger/settings.glade:436
+#: roger/settings.glade:391
 msgid "Login password"
 msgstr "Anmeldepasswort"
 
-#: roger/settings.glade:449
+#: roger/settings.glade:404
 msgid "FTP user"
 msgstr "FTP-Benutzer"
 
-#: roger/settings.glade:505 roger/settings.glade:684
+#: roger/settings.glade:460 roger/settings.glade:494
 msgid "Check"
 msgstr "Überprüfen"
 
-#: roger/settings.glade:543
-msgid "Prefixes"
-msgstr "Vorwahlen"
+#: roger/settings.glade:511 roger/settings.glade:1885
+msgid "Refresh settings"
+msgstr "Einstellungen erneuern"
 
-#: roger/settings.glade:560
-msgid "Line access code"
+#: roger/settings.glade:526
+msgid "Router"
+msgstr "Router"
+
+#: roger/settings.glade:548
+msgid "External access code"
 msgstr "Amtsholung"
 
-#: roger/settings.glade:573
-msgid "International call prefix"
-msgstr "Internationaler Anrufpräfix"
+#: roger/settings.glade:561
+msgid "International access code"
+msgstr "Internationaler Vorwahl"
 
-#: roger/settings.glade:586
+#: roger/settings.glade:574
 msgid "Country code"
 msgstr "Landesvorwahl"
 
-#: roger/settings.glade:599
-msgid "National call prefix"
-msgstr "Nationaler Anrufpräfix"
+#: roger/settings.glade:587
+msgid "National access code"
+msgstr "Nationale Vorwahl"
 
-#: roger/settings.glade:612
+#: roger/settings.glade:600
 msgid "Area code"
 msgstr "Ortsvorwahl"
 
-#: roger/settings.glade:737
-msgid "Softphone"
-msgstr "Softphone"
+#: roger/settings.glade:669
+msgid "Codes"
+msgstr "Vorwahlen"
 
-#: roger/settings.glade:754 roger/settings.glade:910
-#: roger/plugins/sip/sip.c:459
-msgid "MSN"
-msgstr "MSN"
+#: roger/settings.glade:692
+msgid "Assign numbers"
+msgstr "Nummern zuweisen"
 
-#: roger/settings.glade:777 roger/settings.glade:923
+#: roger/settings.glade:786 roger/settings.glade:1013
 msgid "Controller"
 msgstr "Kontroller"
 
-#: roger/settings.glade:789 roger/settings.glade:935
+#: roger/settings.glade:822 roger/settings.glade:1065
 msgid "ISDN-Controller 1"
 msgstr "ISDN-Kontroller 1"
 
-#: roger/settings.glade:790 roger/settings.glade:936
+#: roger/settings.glade:823 roger/settings.glade:1066
 msgid "ISDN-Controller 2"
 msgstr "ISDN-Kontroller 2"
 
-#: roger/settings.glade:791 roger/settings.glade:937
+#: roger/settings.glade:824 roger/settings.glade:1067
 msgid "Outside line ISDN"
 msgstr "ISDN-Amt"
 
-#: roger/settings.glade:792 roger/settings.glade:938
+#: roger/settings.glade:825 roger/settings.glade:1068
 msgid "Outside line Analog"
 msgstr "Analog-Amt"
 
-#: roger/settings.glade:793 roger/settings.glade:939
+#: roger/settings.glade:826 roger/settings.glade:1069
 msgid "Internet"
 msgstr "Internet"
 
-#: roger/settings.glade:824
+#: roger/settings.glade:866
 msgid "Header"
 msgstr "Kopfzeile"
 
-#: roger/settings.glade:837
+#: roger/settings.glade:879
 msgid "Ident"
 msgstr "Ident"
 
-#: roger/settings.glade:850
+#: roger/settings.glade:892
 msgid "Resolution"
 msgstr "Auflösung"
 
-#: roger/settings.glade:882
+#: roger/settings.glade:925
 msgid "Low (98dpi)"
 msgstr "Niedrig (98dpi)"
 
-#: roger/settings.glade:883
+#: roger/settings.glade:926
 msgid "High (196dpi)"
 msgstr "Hoch (196dpi)"
 
-#: roger/settings.glade:897
+#: roger/settings.glade:940
 msgid "Report"
 msgstr "Bericht"
 
-#: roger/settings.glade:952
-msgid "Error correction mode"
-msgstr "Fehlerkorrekturmodus"
-
-#: roger/settings.glade:1024
+#: roger/settings.glade:1026
 msgid "Service"
 msgstr "Dienst"
 
-#: roger/settings.glade:1036
+#: roger/settings.glade:1039
+msgid "Error correction"
+msgstr "Fehlerkorrektur"
+
+#: roger/settings.glade:1082
 msgid "Analog"
 msgstr "Analog"
 
-#: roger/settings.glade:1037
+#: roger/settings.glade:1083
 msgid "ISDN"
 msgstr "ISDN"
 
-#: roger/settings.glade:1054
-msgid "Devices"
-msgstr "Geräte"
+#: roger/settings.glade:1100 libroutermanager/rmfilter.c:564
+msgid "Fax"
+msgstr "Fax"
 
-#: roger/settings.glade:1076
-msgid "View"
-msgstr "Ansicht"
-
-#: roger/settings.glade:1098
-msgid "Call type icons"
-msgstr "Anruftypicons"
-
-#: roger/settings.glade:1113
-msgid "Colored"
-msgstr "Farbig"
-
-#: roger/settings.glade:1114
-msgid "Monochrome"
-msgstr "Monochrom"
-
-#: roger/settings.glade:1137
-msgid "Manage filters"
-msgstr "Filter verwalten"
-
-#: roger/settings.glade:1283
-msgid "Define actions"
-msgstr "Aktionen definieren"
-
-#: roger/settings.glade:1304
-msgid "Execute when"
-msgstr "Ausführen bei"
-
-#: roger/settings.glade:1317
-msgid "Incoming call rings"
-msgstr "Eingehender Anruf klingelt"
-
-#: roger/settings.glade:1334
-msgid "Incoming call begins"
-msgstr "Eingehender Anruf beginnt"
-
-#: roger/settings.glade:1350
-msgid "Incoming call ends"
-msgstr "Eingehender Anruf beendet"
-
-#: roger/settings.glade:1366
-msgid "Incoming call missed"
-msgstr "Eingehender Anruf verpasst"
-
-#: roger/settings.glade:1382
-msgid "Outgoing call dial"
-msgstr "Ausgehender Anruf wählen"
-
-#: roger/settings.glade:1398
-msgid "Outgoing call begins"
-msgstr "Ausgehender Anruf beginnt"
-
-#: roger/settings.glade:1414
-msgid "Outgoing call ends"
-msgstr "Ausgehender Anruf beendet"
-
-#: roger/settings.glade:1430
-msgid "Examples"
-msgstr "Beispiele"
-
-#: roger/settings.glade:1562
-msgid "Actions"
-msgstr "Aktionen"
-
-#: roger/settings.glade:1584
-msgid "Choose which plugins should be loaded at startup"
-msgstr "Wähle welche Plugins beim Starten geladen werden sollen"
-
-#: roger/settings.glade:1604
-msgid "Plugins"
-msgstr "Plugins"
-
-#: roger/settings.glade:1626
-msgid "Audio"
-msgstr "Audio"
-
-#: roger/settings.glade:1643 roger/settings.glade:1733
-#: roger/settings.glade:1815 roger/settings.glade:1967
+#: roger/settings.glade:1123 roger/settings.glade:1660
+#: roger/settings.glade:1750 roger/settings.glade:1832
 msgid "Plugin"
 msgstr "Plugin"
 
-#: roger/settings.glade:1690
+#: roger/settings.glade:1136
+msgid "Ringtone"
+msgstr "Klingelton"
+
+#: roger/settings.glade:1173
+msgid "Setting per number"
+msgstr "Einstellung pro Nummer"
+
+#: roger/settings.glade:1219
+msgid "Notification"
+msgstr "Benachrichtigung"
+
+#: roger/settings.glade:1336
+msgid "Filter"
+msgstr "Filter"
+
+#: roger/settings.glade:1363
+msgid "Execute when"
+msgstr "Ausführen bei"
+
+#: roger/settings.glade:1376
+msgid "Incoming call rings"
+msgstr "Eingehender Anruf klingelt"
+
+#: roger/settings.glade:1393
+msgid "Incoming call begins"
+msgstr "Eingehender Anruf beginnt"
+
+#: roger/settings.glade:1409
+msgid "Incoming call ends"
+msgstr "Eingehender Anruf beendet"
+
+#: roger/settings.glade:1425
+msgid "Incoming call missed"
+msgstr "Eingehender Anruf verpasst"
+
+#: roger/settings.glade:1441
+msgid "Outgoing call dial"
+msgstr "Ausgehender Anruf wählen"
+
+#: roger/settings.glade:1457
+msgid "Outgoing call begins"
+msgstr "Ausgehender Anruf beginnt"
+
+#: roger/settings.glade:1473
+msgid "Outgoing call ends"
+msgstr "Ausgehender Anruf beendet"
+
+#: roger/settings.glade:1489
+msgid "Examples"
+msgstr "Beispiele"
+
+#: roger/settings.glade:1621
+msgid "Actions"
+msgstr "Aktionen"
+
+#: roger/settings.glade:1643
+msgid "Audio"
+msgstr "Audio"
+
+#: roger/settings.glade:1707
 msgid "Security"
 msgstr "Sicherheit"
 
-#: roger/settings.glade:1707
+#: roger/settings.glade:1724
 msgid "Output"
 msgstr "Ausgabe"
 
-#: roger/settings.glade:1720
+#: roger/settings.glade:1737
 msgid "Input"
 msgstr "Eingabe"
 
-#: roger/settings.glade:1757
+#: roger/settings.glade:1774
 msgid "Helper applications"
 msgstr "Hilfsanwendungen"
 
-#: roger/settings.glade:1774
+#: roger/settings.glade:1791
 msgid "Ghostscript"
 msgstr "Ghostscript"
 
-#: roger/settings.glade:1798
+#: roger/settings.glade:1815
 msgid "Address book"
 msgstr "Adressbuch"
 
-#: roger/settings.glade:1841
+#: roger/settings.glade:1858
 msgid "Extended"
 msgstr "Erweitert"
-
-#: roger/settings.glade:1864
-msgid "MSNs"
-msgstr "MSNs"
-
-#: roger/settings.glade:1980 roger/plugins/notification/notification.c:537
-msgid "Play ringtones"
-msgstr "Spiele Klingeltöne"
-
-#: roger/settings.glade:2019
-msgid "Notifications"
-msgstr "Benachrichtigungen"
 
 #: roger/shortcuts.glade:14
 msgctxt "shortcut window"
@@ -1200,55 +1162,26 @@ msgstr "Einstellungen öffnen"
 msgid "Book:"
 msgstr "Buch:"
 
-#: roger/plugins/evolution/evolution.c:675
 #: roger/plugins/fritzfon/fritzfon.c:697 roger/plugins/vcard/vcard.c:1245
 #: roger/plugins/thunderbird/thunderbird.c:1086
 msgid "Contact book"
 msgstr "Kontaktbuch"
 
-#: roger/plugins/gtknotify/gtknotify.c:290
-msgid "Number:"
-msgstr "Nummer:"
-
-#: roger/plugins/gtknotify/gtknotify.c:300
-msgid "Company:"
-msgstr "Firma:"
-
-#: roger/plugins/gtknotify/gtknotify.c:310
-msgid "Street:"
-msgstr "Straße:"
-
-#: roger/plugins/gtknotify/gtknotify.c:320
-msgid "City:"
-msgstr "Stadt:"
-
-#: roger/plugins/gtknotify/gtknotify.c:333
+#: roger/plugins/gtknotify/gtknotify.c:189
 #, c-format
 msgid "(on %s)"
 msgstr "(an %s)"
 
-#: roger/plugins/gtknotify/gtknotify.c:333
+#: roger/plugins/gtknotify/gtknotify.c:189
 msgid "(on ?)"
 msgstr "(an ?)"
 
-#: roger/plugins/gtknotify/gtknotify.c:358
+#: roger/plugins/gtknotify/gtknotify.c:216
 #: roger/plugins/notification/notification.c:132
 msgid "Incoming call"
 msgstr "Eingehender Anruf"
 
-#: roger/plugins/gtknotify/gtknotify.c:367
-#: roger/plugins/gnotification/gnotification.c:138
-#: roger/plugins/notification/notification.c:264
-msgid "Accept"
-msgstr "Annehmen"
-
-#: roger/plugins/gtknotify/gtknotify.c:372
-#: roger/plugins/gnotification/gnotification.c:139
-#: roger/plugins/notification/notification.c:265
-msgid "Decline"
-msgstr "Ablehnen"
-
-#: roger/plugins/gtknotify/gtknotify.c:380
+#: roger/plugins/gtknotify/gtknotify.c:230
 #: roger/plugins/notification/notification.c:132
 #: roger/plugins/notification/notification.c:271
 msgid "Outgoing call"
@@ -1257,6 +1190,10 @@ msgstr "Ausgehender Anruf"
 #: roger/plugins/statusicon/gtk.c:214 roger/plugins/indicator/indicator.c:236
 msgid "Last calls"
 msgstr "Letzte Anrufe"
+
+#: roger/plugins/statusicon/gtk.c:239 roger/plugins/indicator/indicator.c:262
+msgid "Help"
+msgstr "Hilfe"
 
 #: roger/plugins/statusicon/gtk.c:325 roger/org.tabos.roger.desktop.in:3
 #: roger/org.tabos.roger.desktop.in:4 roger/org.tabos.roger.appdata.xml.in:9
@@ -1359,7 +1296,7 @@ msgstr "Code eingeben:"
 msgid "Authorization refresh error"
 msgstr "Fehler bei der Autorisierungserneuerung"
 
-#: roger/plugins/google/google.c:924 roger/plugins/sip/sip.c:467
+#: roger/plugins/google/google.c:924
 msgid "Access data"
 msgstr "Zugangsdaten"
 
@@ -1409,6 +1346,16 @@ msgstr "Eingehender Anruf (auf %s)"
 msgid "Outgoing call (on %s)"
 msgstr "Ausgehender Anruf (auf %s)"
 
+#: roger/plugins/gnotification/gnotification.c:138
+#: roger/plugins/notification/notification.c:264
+msgid "Accept"
+msgstr "Annehmen"
+
+#: roger/plugins/gnotification/gnotification.c:139
+#: roger/plugins/notification/notification.c:265
+msgid "Decline"
+msgstr "Ablehnen"
+
 #: roger/plugins/notification/notification.c:123
 #: roger/plugins/notification/notification.c:247
 #, c-format
@@ -1438,6 +1385,10 @@ msgstr "Wähle für welche MSNs Benachrichtigungen angezeigt werden"
 msgid "Duration (outgoing)"
 msgstr "Anzeigedauer (ausgehend)"
 
+#: roger/plugins/notification/notification.c:537
+msgid "Play ringtones"
+msgstr "Spiele Klingeltöne"
+
 #: roger/plugins/notification/notification.c:545
 msgid "Popup"
 msgstr "Popup"
@@ -1454,6 +1405,10 @@ msgstr "Web Journal Ausgabedatei"
 msgid "Web Journal"
 msgstr "Web Journal"
 
+#: roger/plugins/sip/sip.c:474
+msgid "MSN"
+msgstr "MSN"
+
 #: roger-cli/main_cli.c:168
 msgid "Connected"
 msgstr "Verbunden"
@@ -1461,6 +1416,59 @@ msgstr "Verbunden"
 #: roger-cli/main_cli.c:179
 msgid "Disconnected"
 msgstr "Nicht verbunden"
+
+#: libroutermanager/rmfaxspooler.c:210
+#, c-format
+msgid "Spooler directory %s does not exists!"
+msgstr "Spooler Verzeichnis %s existiert nicht!"
+
+#: libroutermanager/rmfaxspooler.c:217
+#, c-format
+msgid ""
+"Could not access spooler directory. Is user in group fax?\n"
+"%s"
+msgstr ""
+"Konnte auf das Spooler-Verzeichnis nicht zugreifen. Ist der Benutzer in der "
+"Gruppe fax?\n"
+"%s"
+
+#: libroutermanager/rmfilter.c:548
+msgid "All calls"
+msgstr "Alle Anrufe"
+
+#: libroutermanager/rmfilter.c:552
+msgid "Incoming calls"
+msgstr "Eingehende Anrufe"
+
+#: libroutermanager/rmfilter.c:556
+msgid "Missed calls"
+msgstr "Verpasste Anrufe"
+
+#: libroutermanager/rmfilter.c:560
+msgid "Outgoing calls"
+msgstr "Ausgehende Anrufe"
+
+#: libroutermanager/rmfilter.c:568
+msgid "Answering machine"
+msgstr "Anrufbeantworter"
+
+#: libroutermanager/rmrouter.c:156 libroutermanager/rmrouter.c:157
+msgid ""
+"Login data are wrong or permissions are missing.\n"
+"Please check your login data."
+msgstr ""
+"Anmeldedaten sind fehlerhaft oder es fehlen Berechtigungen.\n"
+"Bitte überprüfen sie ihre Anmeldedaten."
+
+#: libroutermanager/plugins/fritzbox/firmware-common.c:636
+#: libroutermanager/plugins/fritzbox/firmware-common.c:767
+msgid "FTP Login failed"
+msgstr "FTP-Anmeldung fehlgeschlagen"
+
+#: libroutermanager/plugins/fritzbox/firmware-common.c:636
+#: libroutermanager/plugins/fritzbox/firmware-common.c:767
+msgid "Please check your ftp credentials"
+msgstr "Bitte überprüfe Deine FTP-Zugangsdaten"
 
 #: roger/org.tabos.roger.desktop.in:5 roger/org.tabos.roger.appdata.xml.in:10
 msgid "Journal, Fax-Software and Call-Monitor for AVM FRITZ!Box or compatible"
@@ -1501,58 +1509,83 @@ msgstr "Einige Plugins für Roger Router sind separat als Paket erhältlich."
 msgid "Journal view of all calls"
 msgstr "Journalansicht aller Anrufe"
 
-#: libroutermanager/rmfaxspooler.c:210
-#, c-format
-msgid "Spooler directory %s does not exists!"
-msgstr "Spooler Verzeichnis %s existiert nicht!"
+#~ msgid "Donate"
+#~ msgstr "Spenden"
 
-#: libroutermanager/rmfaxspooler.c:217
-#, c-format
-msgid ""
-"Could not access spooler directory. Is user in group fax?\n"
-"%s"
-msgstr ""
-"Konnte auf das Spooler-Verzeichnis nicht zugreifen. Ist der Benutzer in der "
-"Gruppe fax?\n"
-"%s"
+#~ msgid "Forum"
+#~ msgstr "Forum"
 
-#: libroutermanager/rmfilter.c:548
-msgid "All calls"
-msgstr "Alle Anrufe"
+#~ msgid "Fax devices"
+#~ msgstr "Faxgeräte"
 
-#: libroutermanager/rmfilter.c:552
-msgid "Incoming calls"
-msgstr "Eingehende Anrufe"
+#~ msgid "From:"
+#~ msgstr "Von:"
 
-#: libroutermanager/rmfilter.c:556
-msgid "Missed calls"
-msgstr "Verpasste Anrufe"
+#~ msgid "To:"
+#~ msgstr "An:"
 
-#: libroutermanager/rmfilter.c:560
-msgid "Outgoing calls"
-msgstr "Ausgehende Anrufe"
+#~ msgid "Status:"
+#~ msgstr "Status:"
 
-#: libroutermanager/rmfilter.c:568
-msgid "Answering machine"
-msgstr "Anrufbeantworter"
+#~ msgid "Settings"
+#~ msgstr "Einstellungen"
 
-#: libroutermanager/rmrouter.c:186 libroutermanager/rmrouter.c:187
-msgid ""
-"Login data are wrong or permissions are missing.\n"
-"Please check your login data."
-msgstr ""
-"Anmeldedaten sind fehlerhaft oder es fehlen Berechtigungen.\n"
-"Bitte überprüfen sie ihre Anmeldedaten."
+#~ msgid "Prefixes"
+#~ msgstr "Vorwahlen"
 
-#: libroutermanager/plugins/fritzbox/firmware-common.c:636
-#: libroutermanager/plugins/fritzbox/firmware-common.c:767
-msgid "FTP Login failed"
-msgstr "FTP-Anmeldung fehlgeschlagen"
+#~ msgid "International call prefix"
+#~ msgstr "Internationaler Anrufpräfix"
 
-#: libroutermanager/plugins/fritzbox/firmware-common.c:636
-#: libroutermanager/plugins/fritzbox/firmware-common.c:767
-msgid "Please check your ftp credentials"
-msgstr "Bitte überprüfe Deine FTP-Zugangsdaten"
+#~ msgid "National call prefix"
+#~ msgstr "Nationaler Anrufpräfix"
+
+#~ msgid "Softphone"
+#~ msgstr "Softphone"
+
+#~ msgid "Devices"
+#~ msgstr "Geräte"
+
+#~ msgid "View"
+#~ msgstr "Ansicht"
+
+#~ msgid "Call type icons"
+#~ msgstr "Anruftypicons"
+
+#~ msgid "Colored"
+#~ msgstr "Farbig"
+
+#~ msgid "Monochrome"
+#~ msgstr "Monochrom"
+
+#~ msgid "Manage filters"
+#~ msgstr "Filter verwalten"
+
+#~ msgid "Define actions"
+#~ msgstr "Aktionen definieren"
+
+#~ msgid "Choose which plugins should be loaded at startup"
+#~ msgstr "Wähle welche Plugins beim Starten geladen werden sollen"
+
+#~ msgid "Plugins"
+#~ msgstr "Plugins"
+
+#~ msgid "MSNs"
+#~ msgstr "MSNs"
+
+#~ msgid "Notifications"
+#~ msgstr "Benachrichtigungen"
+
+#~ msgid "Number:"
+#~ msgstr "Nummer:"
+
+#~ msgid "Company:"
+#~ msgstr "Firma:"
+
+#~ msgid "Street:"
+#~ msgstr "Straße:"
+
+#~ msgid "City:"
+#~ msgstr "Stadt:"
 
 #~ msgid "Enter name or number"
 #~ msgstr "Name oder Nummer eingeben"
@@ -1818,9 +1851,6 @@ msgstr "Bitte überprüfe Deine FTP-Zugangsdaten"
 #~ msgid "Apply"
 #~ msgstr "Anwenden"
 
-#~ msgid "Notification"
-#~ msgstr "Benachrichtigung"
-
 #~ msgid ""
 #~ "Error: Could not login to box ftp server\n"
 #~ "Please check your ftp user/password."
@@ -1830,9 +1860,6 @@ msgstr "Bitte überprüfe Deine FTP-Zugangsdaten"
 
 #~ msgid "Prefix"
 #~ msgstr "Vorwahlen"
-
-#~ msgid "Filters"
-#~ msgstr "Filter"
 
 #~ msgid "Misc"
 #~ msgstr "Verschiedenes"
@@ -2215,9 +2242,6 @@ msgstr "Bitte überprüfe Deine FTP-Zugangsdaten"
 
 #~ msgid "Choose an extension for this call"
 #~ msgstr "Wähle eine Nebenstelle für diesen Anruf"
-
-#~ msgid "Own number:"
-#~ msgstr "Eigene Nummer:"
 
 #~ msgid "Choose if your number should be visible for the called party"
 #~ msgstr "Wähle, ob deine Rufnummer an den Anrufenden übertragen werden soll"

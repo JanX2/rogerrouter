@@ -11,6 +11,8 @@ rm_dep += dependency('spandsp')
 rm_dep += dependency('json-glib-1.0')
 rm_dep += dependency('dconf')
 rm_dep += dependency('uuid')
+rm_dep += dependency('libtiff-4')
+rm_dep += cc.find_library('m', required: true)
 
 # Check for UPnP support
 upnp_dep = dependency('gupnp-1.0', required : false)

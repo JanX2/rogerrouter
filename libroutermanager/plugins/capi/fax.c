@@ -24,6 +24,8 @@
 
 #include <glib.h>
 
+#include <tiff.h>
+
 #define SPANDSP_EXPOSE_INTERNAL_STRUCTURES
 #include <spandsp.h>
 

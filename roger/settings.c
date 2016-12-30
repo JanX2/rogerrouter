@@ -91,7 +91,8 @@ struct settings {
 	GtkWidget *address_book_plugin_combobox;
 	GtkWidget *notification_plugin_combobox;
 	GtkWidget *notification_ringtone_switch;
-	GtkListStore *notification_liststore;
+	//GtkListStore *notification_liststore;
+	GtkWidget *notification_listbox;
 
 	GtkWidget *phone_settings;
 	GtkWidget *phone_notification_plugin_combobox;
@@ -1521,6 +1522,39 @@ void settings_numbers_device_combobox_changed_cb(GtkComboBox *box, gpointer user
 	}
 }
 
+void settings_notification_combobox_changed_cb(GtkComboBox *box, gpointer user_data)
+{
+	RmProfile *profile = rm_profile_get_active();
+	gchar *number = user_data;
+	gint idx = gtk_combo_box_get_active(GTK_COMBO_BOX(box));
+	gchar **incoming_numbers = rm_profile_get_notification_incoming_numbers(profile);
+	gchar **outgoing_numbers = rm_profile_get_notification_outgoing_numbers(profile);
+
+	switch (idx) {
+	case 0:
+		incoming_numbers = rm_strv_remove(incoming_numbers, number);
+		outgoing_numbers = rm_strv_remove(outgoing_numbers, number);
+		break;
+	case 1:
+		incoming_numbers = rm_strv_add(incoming_numbers, number);
+		outgoing_numbers = rm_strv_remove(outgoing_numbers, number);
+		break;
+	case 2:
+		incoming_numbers = rm_strv_remove(incoming_numbers, number);
+		outgoing_numbers = rm_strv_add(outgoing_numbers, number);
+		break;
+	case 3:
+		incoming_numbers = rm_strv_add(incoming_numbers, number);
+		outgoing_numbers = rm_strv_add(outgoing_numbers, number);
+		break;
+	default:
+		return;
+	}
+
+	rm_profile_set_notification_incoming_numbers(profile, (const gchar * const *) incoming_numbers);
+	rm_profile_set_notification_outgoing_numbers(profile, (const gchar * const *) outgoing_numbers);
+}
+
 void settings_numbers_populate(GtkWidget *listbox)
 {
 	RmProfile *profile;
@@ -1533,13 +1567,31 @@ void settings_numbers_populate(GtkWidget *listbox)
 	for (idx = 0; idx < g_strv_length(numbers); idx++) {
 		gint dev_idx = 0;
 		GtkWidget *child = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
+		GtkWidget *label = gtk_label_new(numbers[idx]);
+		GtkWidget *sub_label = gtk_label_new(_("assigned to"));
 
-		gtk_box_pack_start(GTK_BOX(child), gtk_label_new(numbers[idx]), TRUE, TRUE, 0);
-		GtkWidget *handle_label = gtk_label_new("handled by");
-		gtk_widget_set_sensitive(handle_label, FALSE);
-		gtk_box_pack_start(GTK_BOX(child), handle_label, FALSE, FALSE, 0);
+		gtk_widget_set_halign(label, GTK_ALIGN_START);
+		gtk_widget_set_halign(sub_label, GTK_ALIGN_START);
+		gtk_widget_set_sensitive(sub_label, FALSE);
+
+		GtkWidget *l_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+		gtk_widget_set_margin(l_box, 6, 6, 6, 6);
+		gtk_widget_set_halign(l_box, GTK_ALIGN_START);
+		gtk_widget_set_hexpand(l_box, TRUE);
+
+		gtk_box_pack_start(GTK_BOX(l_box), label, TRUE, TRUE, 0);
+		gtk_box_pack_start(GTK_BOX(l_box), sub_label, TRUE, TRUE, 0);
+
+		gtk_box_pack_start(GTK_BOX(child), l_box, TRUE, TRUE, 0);
+
+		//gchar *markup = g_markup_printf_escaped("<b>%s</b>\n<span style=\"italic\">assigned to</span>", numbers[idx]);
+		//gtk_label_set_markup(GTK_LABEL(label), markup);
+		//gtk_box_pack_start(GTK_BOX(l_box), label, TRUE, TRUE, 12);
 
 		GtkWidget *combobox = gtk_combo_box_text_new();
+		gtk_widget_set_halign(combobox, GTK_ALIGN_END);
+		gtk_widget_set_margin(combobox, 6, 6, 6, 6);
+
 		GSList *devices = rm_device_get_plugins();
 		GSList *list;
 
@@ -1558,7 +1610,7 @@ void settings_numbers_populate(GtkWidget *listbox)
 
 		g_signal_connect(G_OBJECT(combobox), "changed", G_CALLBACK(settings_numbers_device_combobox_changed_cb), numbers[idx]);
 
-		gtk_box_pack_start(GTK_BOX(child), combobox, FALSE, FALSE, 0);
+		gtk_box_pack_end(GTK_BOX(child), combobox, FALSE, FALSE, 0);
 
 		/*GtkWidget *notification_label = gtk_label_new("with notification for");
 		gtk_widget_set_sensitive(notification_label, FALSE);
@@ -1572,11 +1624,13 @@ void settings_numbers_populate(GtkWidget *listbox)
 
 		gtk_box_pack_start(GTK_BOX(child), notification_combobox, TRUE, TRUE, 0);*/
 
+		//gtk_widget_set_size_request(child, 100, 80);
+
 		gtk_list_box_insert(GTK_LIST_BOX(listbox), child, -1);
 	}
 }
 
-void settings_notification_populate(GtkWidget *list_store)
+void settings_notification_populate(GtkWidget *list_box)
 {
 	RmProfile *profile = rm_profile_get_active();
 	gchar **numbers = rm_router_get_numbers(profile);
@@ -1590,29 +1644,50 @@ void settings_notification_populate(GtkWidget *list_store)
 	selected_incoming_numbers = rm_profile_get_notification_incoming_numbers(profile);
 
 	for (index = 0; index < g_strv_length(numbers); index++) {
-		gtk_list_store_append(list_store, &iter);
+		GtkWidget *child = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
+		GtkWidget *label = gtk_label_new(numbers[index]);
+		GtkWidget *sub_label = gtk_label_new(_("notified on"));
+		gboolean in, out;
+		gint set = 0;
 
-		gtk_list_store_set(list_store, &iter, 0, numbers[index], -1);
-		gtk_list_store_set(list_store, &iter, 1, FALSE, -1);
-		gtk_list_store_set(list_store, &iter, 2, FALSE, -1);
+		gtk_widget_set_halign(label, GTK_ALIGN_START);
+		gtk_widget_set_halign(sub_label, GTK_ALIGN_START);
+		gtk_widget_set_sensitive(sub_label, FALSE);
 
-		if (selected_outgoing_numbers) {
-			for (count = 0; count < g_strv_length(selected_outgoing_numbers); count++) {
-				if (!strcmp(numbers[index], selected_outgoing_numbers[count])) {
-					gtk_list_store_set(list_store, &iter, 1, TRUE, -1);
-					break;
-				}
-			}
+		GtkWidget *l_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+		gtk_widget_set_margin(l_box, 6, 6, 6, 6);
+		gtk_widget_set_halign(l_box, GTK_ALIGN_START);
+		gtk_widget_set_hexpand(l_box, TRUE);
+
+		gtk_box_pack_start(GTK_BOX(l_box), label, TRUE, TRUE, 0);
+		gtk_box_pack_start(GTK_BOX(l_box), sub_label, TRUE, TRUE, 0);
+
+		gtk_box_pack_start(GTK_BOX(child), l_box, TRUE, TRUE, 0);
+
+		GtkWidget *combobox = gtk_combo_box_text_new();
+		gtk_widget_set_halign(combobox, GTK_ALIGN_END);
+		gtk_widget_set_margin(combobox, 6, 6, 6, 6);
+
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combobox), _("None"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combobox), _("Incoming"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combobox), _("Outgoing"));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combobox), _("All"));
+
+		g_signal_connect(G_OBJECT(combobox), "changed", G_CALLBACK(settings_notification_combobox_changed_cb), numbers[index]);
+
+		gtk_box_pack_end(GTK_BOX(child), combobox, FALSE, FALSE, 0);
+
+		gtk_list_box_insert(GTK_LIST_BOX(list_box), child, -1);
+
+		if (rm_strv_contains(selected_incoming_numbers, numbers[index])) {
+			set += 1;
 		}
 
-		if (selected_incoming_numbers) {
-			for (count = 0; count < g_strv_length(selected_incoming_numbers); count++) {
-				if (!strcmp(numbers[index], selected_incoming_numbers[count])) {
-					gtk_list_store_set(list_store, &iter, 2, TRUE, -1);
-					break;
-				}
-			}
+		if (rm_strv_contains(selected_outgoing_numbers, numbers[index])) {
+			set += 2;
 		}
+
+		gtk_combo_box_set_active(GTK_COMBO_BOX(combobox), set);
 	}
 }
 
@@ -1866,8 +1941,8 @@ void app_show_settings(void)
 	settings->notification_ringtone_switch = GTK_WIDGET(gtk_builder_get_object(builder, "notification_ringtone_switch"));
 	g_settings_bind(profile->settings, "notification-play-ringtone", settings->notification_ringtone_switch, "active", G_SETTINGS_BIND_DEFAULT);
 
-	settings->notification_liststore = GTK_LIST_STORE(gtk_builder_get_object(builder, "notification_liststore"));
-	settings_notification_populate(settings->notification_liststore);
+	settings->notification_listbox = GTK_LIST_STORE(gtk_builder_get_object(builder, "notification_listbox"));
+	settings_notification_populate(settings->notification_listbox);
 
 	/* Header bar information */
 	box_name = rm_router_get_name(profile);

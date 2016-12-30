@@ -84,22 +84,6 @@
             <property name="row_spacing">6</property>
             <property name="column_spacing">12</property>
             <child>
-              <object class="GtkLabel" id="label1">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="halign">start</property>
-                <property name="label" translatable="yes">General</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
-              </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
-                <property name="width">2</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkLabel" id="label2">
                 <property name="visible">True</property>
                 <property name="sensitive">False</property>
@@ -109,7 +93,7 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">1</property>
+                <property name="top_attach">0</property>
               </packing>
             </child>
             <child>
@@ -120,7 +104,7 @@
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">1</property>
+                <property name="top_attach">0</property>
               </packing>
             </child>
             <child>
@@ -133,7 +117,7 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">2</property>
+                <property name="top_attach">1</property>
               </packing>
             </child>
             <child>
@@ -144,7 +128,7 @@
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">2</property>
+                <property name="top_attach">1</property>
               </packing>
             </child>
             <child>
@@ -153,14 +137,14 @@
                 <property name="can_focus">False</property>
                 <property name="halign">start</property>
                 <property name="margin_top">12</property>
-                <property name="label" translatable="yes">MSN Settings</property>
+                <property name="label" translatable="yes">Reacts on</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">4</property>
+                <property name="top_attach">3</property>
                 <property name="width">2</property>
               </packing>
             </child>
@@ -214,7 +198,7 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">5</property>
+                <property name="top_attach">4</property>
                 <property name="width">2</property>
               </packing>
             </child>
@@ -228,7 +212,7 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">2</property>
               </packing>
             </child>
             <child>
@@ -272,7 +256,7 @@ Caller company</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">2</property>
               </packing>
             </child>
           </object>
@@ -289,8 +273,20 @@ Caller company</property>
       <action-widget response="1">action_apply_button</action-widget>
     </action-widgets>
     <child type="titlebar">
-      <placeholder/>
+      <object class="GtkHeaderBar">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="title" translatable="yes">Edit action</property>
+        <property name="has_subtitle">False</property>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
     </child>
+    <action-widgets>
+      <action-widget response="0">action_cancel_button</action-widget>
+      <action-widget response="1">action_apply_button</action-widget>
+    </action-widgets>
   </object>
   <object class="GtkListStore" id="filter_liststore">
     <columns>
@@ -309,16 +305,6 @@ Caller company</property>
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="icon_name">view-refresh-symbolic</property>
-  </object>
-  <object class="GtkListStore" id="notification_liststore">
-    <columns>
-      <!-- column-name Number -->
-      <column type="gchararray"/>
-      <!-- column-name Outgoing -->
-      <column type="gboolean"/>
-      <!-- column-name Incoming -->
-      <column type="gboolean"/>
-    </columns>
   </object>
   <object class="GtkWindow" id="settings">
     <property name="can_focus">False</property>
@@ -350,22 +336,6 @@ Caller company</property>
                 <property name="row_spacing">6</property>
                 <property name="column_spacing">12</property>
                 <child>
-                  <object class="GtkLabel" id="label20">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">start</property>
-                    <property name="label" translatable="yes">Router</property>
-                    <attributes>
-                      <attribute name="weight" value="bold"/>
-                    </attributes>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                    <property name="width">3</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkLabel" id="label21">
                     <property name="visible">True</property>
                     <property name="sensitive">False</property>
@@ -375,7 +345,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">1</property>
+                    <property name="top_attach">0</property>
                   </packing>
                 </child>
                 <child>
@@ -386,7 +356,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">1</property>
+                    <property name="top_attach">0</property>
                   </packing>
                 </child>
                 <child>
@@ -399,7 +369,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">2</property>
+                    <property name="top_attach">1</property>
                   </packing>
                 </child>
                 <child>
@@ -409,7 +379,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">2</property>
+                    <property name="top_attach">1</property>
                   </packing>
                 </child>
                 <child>
@@ -422,7 +392,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">3</property>
+                    <property name="top_attach">2</property>
                   </packing>
                 </child>
                 <child>
@@ -435,7 +405,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">4</property>
+                    <property name="top_attach">3</property>
                   </packing>
                 </child>
                 <child>
@@ -448,7 +418,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">5</property>
+                    <property name="top_attach">4</property>
                   </packing>
                 </child>
                 <child>
@@ -460,7 +430,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">3</property>
+                    <property name="top_attach">2</property>
                   </packing>
                 </child>
                 <child>
@@ -470,7 +440,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">4</property>
+                    <property name="top_attach">3</property>
                   </packing>
                 </child>
                 <child>
@@ -482,7 +452,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">5</property>
+                    <property name="top_attach">4</property>
                   </packing>
                 </child>
                 <child>
@@ -496,7 +466,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
-                    <property name="top_attach">3</property>
+                    <property name="top_attach">2</property>
                   </packing>
                 </child>
                 <child>
@@ -506,7 +476,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
-                    <property name="top_attach">2</property>
+                    <property name="top_attach">1</property>
                   </packing>
                 </child>
                 <child>
@@ -516,7 +486,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
-                    <property name="top_attach">4</property>
+                    <property name="top_attach">3</property>
                   </packing>
                 </child>
                 <child>
@@ -530,7 +500,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
-                    <property name="top_attach">5</property>
+                    <property name="top_attach">4</property>
                   </packing>
                 </child>
                 <child>
@@ -544,7 +514,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
-                    <property name="top_attach">1</property>
+                    <property name="top_attach">0</property>
                   </packing>
                 </child>
               </object>
@@ -570,22 +540,6 @@ Caller company</property>
                 <property name="row_spacing">6</property>
                 <property name="column_spacing">12</property>
                 <child>
-                  <object class="GtkLabel" id="label29">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">start</property>
-                    <property name="label" translatable="yes">Phone codes</property>
-                    <attributes>
-                      <attribute name="weight" value="bold"/>
-                    </attributes>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                    <property name="width">2</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkLabel" id="label30">
                     <property name="visible">True</property>
                     <property name="sensitive">False</property>
@@ -595,7 +549,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">1</property>
+                    <property name="top_attach">0</property>
                   </packing>
                 </child>
                 <child>
@@ -608,7 +562,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">2</property>
+                    <property name="top_attach">1</property>
                   </packing>
                 </child>
                 <child>
@@ -621,7 +575,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">3</property>
+                    <property name="top_attach">2</property>
                   </packing>
                 </child>
                 <child>
@@ -634,7 +588,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">4</property>
+                    <property name="top_attach">3</property>
                   </packing>
                 </child>
                 <child>
@@ -647,7 +601,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">5</property>
+                    <property name="top_attach">4</property>
                   </packing>
                 </child>
                 <child>
@@ -658,7 +612,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">1</property>
+                    <property name="top_attach">0</property>
                   </packing>
                 </child>
                 <child>
@@ -669,7 +623,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">2</property>
+                    <property name="top_attach">1</property>
                   </packing>
                 </child>
                 <child>
@@ -680,7 +634,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">3</property>
+                    <property name="top_attach">2</property>
                   </packing>
                 </child>
                 <child>
@@ -690,7 +644,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">4</property>
+                    <property name="top_attach">3</property>
                   </packing>
                 </child>
                 <child>
@@ -700,7 +654,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">5</property>
+                    <property name="top_attach">4</property>
                   </packing>
                 </child>
               </object>
@@ -742,7 +696,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">3</property>
+                    <property name="top_attach">2</property>
                     <property name="width">2</property>
                   </packing>
                 </child>
@@ -819,7 +773,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">4</property>
+                    <property name="top_attach">3</property>
                     <property name="width">2</property>
                   </packing>
                 </child>
@@ -833,23 +787,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">start</property>
-                    <property name="label" translatable="yes">Softphone</property>
-                    <attributes>
-                      <attribute name="weight" value="bold"/>
-                    </attributes>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                    <property name="width">2</property>
+                    <property name="top_attach">1</property>
                   </packing>
                 </child>
                 <child>
@@ -862,7 +800,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">1</property>
+                    <property name="top_attach">0</property>
                   </packing>
                 </child>
                 <child>
@@ -872,7 +810,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">1</property>
+                    <property name="top_attach">0</property>
                   </packing>
                 </child>
                 <child>
@@ -890,7 +828,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">2</property>
+                    <property name="top_attach">1</property>
                   </packing>
                 </child>
               </object>
@@ -920,22 +858,6 @@ Caller company</property>
                 <property name="row_spacing">6</property>
                 <property name="column_spacing">12</property>
                 <child>
-                  <object class="GtkLabel" id="label44">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">start</property>
-                    <property name="label" translatable="yes">Fax</property>
-                    <attributes>
-                      <attribute name="weight" value="bold"/>
-                    </attributes>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                    <property name="width">2</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkLabel" id="label45">
                     <property name="visible">True</property>
                     <property name="sensitive">False</property>
@@ -945,7 +867,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">1</property>
+                    <property name="top_attach">0</property>
                   </packing>
                 </child>
                 <child>
@@ -958,7 +880,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">2</property>
+                    <property name="top_attach">1</property>
                   </packing>
                 </child>
                 <child>
@@ -971,7 +893,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">6</property>
+                    <property name="top_attach">5</property>
                   </packing>
                 </child>
                 <child>
@@ -982,7 +904,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">1</property>
+                    <property name="top_attach">0</property>
                   </packing>
                 </child>
                 <child>
@@ -992,7 +914,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">2</property>
+                    <property name="top_attach">1</property>
                   </packing>
                 </child>
                 <child>
@@ -1006,7 +928,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">6</property>
+                    <property name="top_attach">5</property>
                   </packing>
                 </child>
                 <child>
@@ -1019,7 +941,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">7</property>
+                    <property name="top_attach">6</property>
                   </packing>
                 </child>
                 <child>
@@ -1056,7 +978,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">7</property>
+                    <property name="top_attach">6</property>
                   </packing>
                 </child>
                 <child>
@@ -1069,7 +991,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">3</property>
+                    <property name="top_attach">2</property>
                   </packing>
                 </child>
                 <child>
@@ -1079,7 +1001,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">3</property>
+                    <property name="top_attach">2</property>
                   </packing>
                 </child>
                 <child>
@@ -1092,7 +1014,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">4</property>
+                    <property name="top_attach">3</property>
                   </packing>
                 </child>
                 <child>
@@ -1105,7 +1027,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">5</property>
+                    <property name="top_attach">4</property>
                   </packing>
                 </child>
                 <child>
@@ -1114,11 +1036,11 @@ Caller company</property>
                     <property name="sensitive">False</property>
                     <property name="can_focus">False</property>
                     <property name="halign">end</property>
-                    <property name="label" translatable="yes">Error correction mode</property>
+                    <property name="label" translatable="yes">Error correction</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">8</property>
+                    <property name="top_attach">7</property>
                   </packing>
                 </child>
                 <child>
@@ -1130,7 +1052,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">8</property>
+                    <property name="top_attach">7</property>
                   </packing>
                 </child>
                 <child>
@@ -1149,7 +1071,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">4</property>
+                    <property name="top_attach">3</property>
                   </packing>
                 </child>
                 <child>
@@ -1163,7 +1085,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">5</property>
+                    <property name="top_attach">4</property>
                   </packing>
                 </child>
               </object>
@@ -1195,39 +1117,27 @@ Caller company</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
+                    <property name="sensitive">False</property>
                     <property name="can_focus">False</property>
-                    <property name="halign">start</property>
-                    <property name="label" translatable="yes">General</property>
-                    <attributes>
-                      <attribute name="weight" value="bold"/>
-                    </attributes>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                    <property name="width">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="halign">end</property>
                     <property name="label" translatable="yes">Plugin</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">1</property>
+                    <property name="top_attach">0</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
+                    <property name="sensitive">False</property>
                     <property name="can_focus">False</property>
+                    <property name="halign">end</property>
                     <property name="label" translatable="yes">Ringtone</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">2</property>
+                    <property name="top_attach">1</property>
                   </packing>
                 </child>
                 <child>
@@ -1240,7 +1150,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">2</property>
+                    <property name="top_attach">1</property>
                   </packing>
                 </child>
                 <child>
@@ -1251,7 +1161,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">1</property>
+                    <property name="top_attach">0</property>
                   </packing>
                 </child>
                 <child>
@@ -1267,7 +1177,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">3</property>
+                    <property name="top_attach">2</property>
                     <property name="width">2</property>
                   </packing>
                 </child>
@@ -1279,48 +1189,13 @@ Caller company</property>
                     <property name="vexpand">True</property>
                     <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkTreeView">
+                      <object class="GtkViewport">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="model">notification_liststore</property>
-                        <property name="rules_hint">True</property>
-                        <child internal-child="selection">
-                          <object class="GtkTreeSelection"/>
-                        </child>
+                        <property name="can_focus">False</property>
                         <child>
-                          <object class="GtkTreeViewColumn">
-                            <property name="sizing">autosize</property>
-                            <property name="title" translatable="yes">Number</property>
-                            <child>
-                              <object class="GtkCellRendererText" id="cellrenderertext3"/>
-                              <attributes>
-                                <attribute name="text">0</attribute>
-                              </attributes>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkTreeViewColumn">
-                            <property name="sizing">fixed</property>
-                            <property name="title" translatable="yes">Incoming</property>
-                            <child>
-                              <object class="GtkCellRendererToggle" id="notification_in_renderer"/>
-                              <attributes>
-                                <attribute name="active">1</attribute>
-                              </attributes>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkTreeViewColumn">
-                            <property name="sizing">fixed</property>
-                            <property name="title" translatable="yes">Outgoing</property>
-                            <child>
-                              <object class="GtkCellRendererToggle" id="notification_out_renderer"/>
-                              <attributes>
-                                <attribute name="active">2</attribute>
-                              </attributes>
-                            </child>
+                          <object class="GtkListBox" id="notification_listbox">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                           </object>
                         </child>
                       </object>
@@ -1328,7 +1203,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">4</property>
+                    <property name="top_attach">3</property>
                     <property name="width">2</property>
                   </packing>
                 </child>
@@ -1349,7 +1224,7 @@ Caller company</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox" id="box5">
+              <object class="GtkBox" id="box7">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="margin_left">18</property>
@@ -1357,186 +1232,96 @@ Caller company</property>
                 <property name="margin_top">18</property>
                 <property name="margin_bottom">18</property>
                 <property name="orientation">vertical</property>
-                <property name="spacing">6</property>
                 <child>
-                  <object class="GtkLabel" id="label80">
+                  <object class="GtkScrolledWindow" id="scrolledwindow3">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">start</property>
-                    <property name="label" translatable="yes">View</property>
-                    <attributes>
-                      <attribute name="weight" value="bold"/>
-                    </attributes>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkBox" id="box6">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="spacing">12</property>
+                    <property name="can_focus">True</property>
+                    <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkLabel" id="label90">
-                        <property name="visible">True</property>
-                        <property name="sensitive">False</property>
-                        <property name="can_focus">False</property>
-                        <property name="halign">end</property>
-                        <property name="label" translatable="yes">Call type icons</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkComboBoxText" id="view_call_type_icons_combobox">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="active">0</property>
-                        <property name="active_id">0</property>
-                        <items>
-                          <item id="color" translatable="yes">Colored</item>
-                          <item id="monochrome" translatable="yes">Monochrome</item>
-                        </items>
-                        <signal name="changed" handler="view_call_type_icons_combobox_changed_cb" after="yes" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="label91">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">start</property>
-                    <property name="margin_top">12</property>
-                    <property name="label" translatable="yes">Manage filters</property>
-                    <attributes>
-                      <attribute name="weight" value="bold"/>
-                    </attributes>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkBox" id="box7">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="orientation">vertical</property>
-                    <child>
-                      <object class="GtkScrolledWindow" id="scrolledwindow3">
+                      <object class="GtkTreeView" id="filter_treeview">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="shadow_type">in</property>
+                        <property name="model">filter_liststore</property>
+                        <property name="headers_visible">False</property>
+                        <property name="rules_hint">True</property>
+                        <property name="fixed_height_mode">True</property>
+                        <signal name="row-activated" handler="filter_edit_button_clicked_cb" swapped="yes"/>
+                        <child internal-child="selection">
+                          <object class="GtkTreeSelection" id="treeselection100"/>
+                        </child>
                         <child>
-                          <object class="GtkTreeView" id="filter_treeview">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="model">filter_liststore</property>
-                            <property name="headers_visible">False</property>
-                            <property name="rules_hint">True</property>
-                            <property name="fixed_height_mode">True</property>
-                            <signal name="row-activated" handler="filter_edit_button_clicked_cb" swapped="yes"/>
-                            <child internal-child="selection">
-                              <object class="GtkTreeSelection" id="treeselection100"/>
-                            </child>
+                          <object class="GtkTreeViewColumn" id="name_column">
+                            <property name="sizing">fixed</property>
+                            <property name="title" translatable="yes">Name</property>
                             <child>
-                              <object class="GtkTreeViewColumn" id="name_column">
-                                <property name="sizing">fixed</property>
-                                <property name="title" translatable="yes">Name</property>
-                                <child>
-                                  <object class="GtkCellRendererText" id="cellrenderertext4"/>
-                                  <attributes>
-                                    <attribute name="text">0</attribute>
-                                  </attributes>
-                                </child>
-                              </object>
+                              <object class="GtkCellRendererText" id="cellrenderertext4"/>
+                              <attributes>
+                                <attribute name="text">0</attribute>
+                              </attributes>
                             </child>
                           </object>
                         </child>
                       </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkToolbar" id="filter_toolbar">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="icon_size">2</property>
-                        <child>
-                          <object class="GtkToolButton" id="filter_add_button">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="use_underline">True</property>
-                            <property name="icon_name">list-add-symbolic</property>
-                            <signal name="clicked" handler="filter_add_button_clicked_cb" object="filter_treeview" swapped="no"/>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="homogeneous">True</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkToolButton" id="filter_remove_button">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="use_underline">True</property>
-                            <property name="icon_name">list-remove-symbolic</property>
-                            <signal name="clicked" handler="filter_remove_button_clicked_cb" object="filter_treeview" swapped="no"/>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="homogeneous">True</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkToolButton" id="filter_edit_button">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="use_underline">True</property>
-                            <property name="icon_name">text-editor-symbolic</property>
-                            <signal name="clicked" handler="filter_edit_button_clicked_cb" object="filter_treeview" swapped="no"/>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="homogeneous">True</property>
-                          </packing>
-                        </child>
-                        <style>
-                          <class name="inline-toolbar"/>
-                        </style>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
                     </child>
                   </object>
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">3</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToolbar" id="filter_toolbar">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="icon_size">2</property>
+                    <child>
+                      <object class="GtkToolButton" id="filter_add_button">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="icon_name">list-add-symbolic</property>
+                        <signal name="clicked" handler="filter_add_button_clicked_cb" object="filter_treeview" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="homogeneous">True</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkToolButton" id="filter_remove_button">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="icon_name">list-remove-symbolic</property>
+                        <signal name="clicked" handler="filter_remove_button_clicked_cb" object="filter_treeview" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="homogeneous">True</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkToolButton" id="filter_edit_button">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="icon_name">text-editor-symbolic</property>
+                        <signal name="clicked" handler="filter_edit_button_clicked_cb" object="filter_treeview" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="homogeneous">True</property>
+                      </packing>
+                    </child>
+                    <style>
+                      <class name="inline-toolbar"/>
+                    </style>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
                   </packing>
                 </child>
               </object>
@@ -1548,7 +1333,7 @@ Caller company</property>
               <object class="GtkLabel" id="label100">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Journal</property>
+                <property name="label" translatable="yes">Filter</property>
               </object>
               <packing>
                 <property name="position">5</property>
@@ -1565,22 +1350,6 @@ Caller company</property>
                 <property name="margin_bottom">18</property>
                 <property name="row_spacing">6</property>
                 <property name="column_spacing">12</property>
-                <child>
-                  <object class="GtkLabel" id="label101">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">start</property>
-                    <property name="label" translatable="yes">Define actions</property>
-                    <attributes>
-                      <attribute name="weight" value="bold"/>
-                    </attributes>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                    <property name="width">2</property>
-                  </packing>
-                </child>
                 <child>
                   <object class="GtkBox" id="box100">
                     <property name="visible">True</property>
@@ -1734,7 +1503,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">1</property>
+                    <property name="top_attach">0</property>
                   </packing>
                 </child>
                 <child>
@@ -1837,7 +1606,7 @@ Caller company</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">1</property>
+                    <property name="top_attach">0</property>
                   </packing>
                 </child>
               </object>
@@ -2123,6 +1892,16 @@ Caller company</property>
         </child>
       </object>
     </child>
+  </object>
+  <object class="GtkListStore" id="notification_liststore">
+    <columns>
+      <!-- column-name Number -->
+      <column type="gchararray"/>
+      <!-- column-name Outgoing -->
+      <column type="gboolean"/>
+      <!-- column-name Incoming -->
+      <column type="gboolean"/>
+    </columns>
   </object>
   <object class="GtkListStore" id="number_device_liststore">
     <columns>

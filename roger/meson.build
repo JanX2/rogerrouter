@@ -45,6 +45,7 @@ roger_dep += dependency('libpeas-gtk-1.0')
 roger_dep += dependency('libsoup-2.4')
 roger_dep += dependency('libtiff-4')
 roger_dep += dependency('spandsp')
+roger_dep += cc.find_library('m', required: true)
 
 inc = include_directories('..')
 

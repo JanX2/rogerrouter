@@ -135,7 +135,13 @@ gchar **rm_strv_add(gchar **strv, const gchar *str)
 {
 	guint len = g_strv_length(strv);
 	gint i;
-	gchar **new_strv = g_malloc0(sizeof(gchar *) * (len + 2));
+	gchar **new_strv;
+
+	if (rm_strv_contains(strv, str)) {
+		return strv;
+	}
+
+	new_strv = g_malloc0(sizeof(gchar *) * (len + 2));
 
 	for (i = 0; i < len; i++) {
 		new_strv[i] = g_strdup(strv[i]);
@@ -151,7 +157,9 @@ gchar **rm_strv_remove(gchar **strv, const gchar *str)
 {
 	guint len = g_strv_length(strv);
 	gint i, cnt = 0;
-	gchar **new_strv = g_malloc0(sizeof(gchar *) * (len));
+	gchar **new_strv;
+
+	new_strv = g_malloc0(sizeof(gchar *) * (len + 1));
 
 	for (i = 0; i < len; i++) {
 		if (strcmp(strv[i], str)) {
