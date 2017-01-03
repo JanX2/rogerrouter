@@ -165,6 +165,7 @@ static gboolean rm_faxspooler_setup_file_monitor(const gchar *dir_name, GError *
 {
 	GFileMonitor *file_monitor = NULL;
 	GFile *file = NULL;
+	GError *file_error = NULL;
 	gboolean ret;
 	const gchar *user_name = g_get_user_name();
 	g_assert(user_name != NULL);
@@ -176,7 +177,7 @@ static gboolean rm_faxspooler_setup_file_monitor(const gchar *dir_name, GError *
 	/* Create GFile for GFileMonitor */
 	file = g_file_new_for_path(dir_name);
 	/* Create file monitor for spool directory */
-	file_monitor = g_file_monitor_directory(file, 0, NULL, error);
+	file_monitor = g_file_monitor_directory(file, 0, NULL, &error);
 	g_object_unref(file);
 	if (file_monitor) {
 		/* Set callback for file monitor */
@@ -184,8 +185,8 @@ static gboolean rm_faxspooler_setup_file_monitor(const gchar *dir_name, GError *
 		ret = TRUE;
 	} else {
 		g_debug("%s(): Error occurred creating new file monitor", __FUNCTION__);
-		g_debug("%s(): Message: %s\n", __FUNCTION__, (*error)->message);
-		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Spooler directory %s does not exists!", dir_name);
+		g_debug("%s(): Message: %s\n", __FUNCTION__, file_error->message);
+		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "%s", file_error->message);
 		ret = FALSE;
 	}
 	return ret;
