@@ -24,15 +24,15 @@
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
-#include <libroutermanager/rmplugins.h>
-#include <libroutermanager/rmcall.h>
-#include <libroutermanager/rmobject.h>
-#include <libroutermanager/rmobjectemit.h>
-#include <libroutermanager/rmstring.h>
-#include <libroutermanager/rmaddressbook.h>
-#include <libroutermanager/rmrouter.h>
-#include <libroutermanager/rmsettings.h>
-#include <libroutermanager/rmnumber.h>
+#include <rm/rmplugins.h>
+#include <rm/rmcallentry.h>
+#include <rm/rmobject.h>
+#include <rm/rmobjectemit.h>
+#include <rm/rmstring.h>
+#include <rm/rmaddressbook.h>
+#include <rm/rmrouter.h>
+#include <rm/rmsettings.h>
+#include <rm/rmnumber.h>
 
 #include <roger/main.h>
 #include <roger/settings.h>
@@ -632,7 +632,7 @@ RmAddressBook evolution_book = {
 
 void impl_activate(PeasActivatable *plugin)
 {
-	ebook_settings = rm_settings_new_profile("org.tabos.roger.plugins.evolution", "evolution", rm_profile_get_name(rm_profile_get_active()));
+	ebook_settings = rm_settings_new_profile("org.tabos.roger.plugins.evolution", "evolution", (gchar*) rm_profile_get_name(rm_profile_get_active()));
 
 	ebook_read_book();
 

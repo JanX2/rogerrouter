@@ -1,6 +1,6 @@
-/**
+/*
  * Roger Router
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2017 Jan-Michael Brummer
  *
  * This file is part of Roger Router.
  *
@@ -23,6 +23,11 @@
 
 #include <roger/shortcuts.h>
 
+/**
+ * app_shortcuts:
+ *
+ * Entry for application shortcuts window
+ */
 void app_shortcuts(void)
 {
 	static GtkWidget *shortcuts_window;

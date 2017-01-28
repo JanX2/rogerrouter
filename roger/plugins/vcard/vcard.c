@@ -27,15 +27,15 @@
 #include <gio/gio.h>
 #include <gtk/gtk.h>
 
-#include <libroutermanager/rmstring.h>
-#include <libroutermanager/rmcontact.h>
-#include <libroutermanager/rmplugins.h>
-#include <libroutermanager/rmaddressbook.h>
-#include <libroutermanager/rmobject.h>
-#include <libroutermanager/rmobjectemit.h>
-#include <libroutermanager/rmfile.h>
-#include <libroutermanager/rmrouter.h>
-#include <libroutermanager/rmsettings.h>
+#include <rm/rmstring.h>
+#include <rm/rmcontact.h>
+#include <rm/rmplugins.h>
+#include <rm/rmaddressbook.h>
+#include <rm/rmobject.h>
+#include <rm/rmobjectemit.h>
+#include <rm/rmfile.h>
+#include <rm/rmrouter.h>
+#include <rm/rmsettings.h>
 
 #include <roger/main.h>
 #include <roger/settings.h>

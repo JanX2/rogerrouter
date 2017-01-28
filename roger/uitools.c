@@ -1,6 +1,6 @@
-/**
+/*
  * Roger Router
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2017 Jan-Michael Brummer
  *
  * This file is part of Roger Router.
  *
@@ -23,6 +23,14 @@
 
 #include <roger/uitools.h>
 
+/**
+ * ui_label_new:
+ * @text: new ui text label
+ *
+ * Creates a new ui description label (not sensitive and align at end)
+ *
+ * Returns: new ui label
+ */
 GtkWidget *ui_label_new(gchar *text)
 {
 	GtkWidget *label;
@@ -34,6 +42,16 @@ GtkWidget *ui_label_new(gchar *text)
 	return label;
 }
 
+/**
+ * gtk_widget_set_margin:
+ * @widget: a #GtkWidget
+ * @x1: left margin
+ * @y1: top margin
+ * @x2: right margin
+ * @y2: bottom margin
+ *
+ * Convenient function to set all margins at once.
+ */
 void gtk_widget_set_margin(GtkWidget *widget, gint x1, gint y1, gint x2, gint y2)
 {
 	gtk_widget_set_margin_top(widget, y1);

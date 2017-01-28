@@ -1,6 +1,6 @@
-/**
+/*
  * Roger Router
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2017 Jan-Michael Brummer
  *
  * This file is part of Roger Router.
  *
@@ -23,7 +23,7 @@
 
 #include <gtk/gtk.h>
 
-#include <libroutermanager/rmmain.h>
+#include <rm/rmmain.h>
 
 #include <roger/main.h>
 #include <roger/journal.h>
@@ -31,9 +31,11 @@
 #include <config.h>
 
 /**
- * \brief Dialog response callback - destroy dialog
- * \param widget dialog widget we will destroy
- * \param user_data UNUSED
+ * about_response:
+ * @widget: dialog widget we will destroy
+ * @user_data: UNUSED
+ *
+ * Dialog response callback - destroy dialog
  */
 static void about_response(GtkWidget *widget, gpointer user_data)
 {
@@ -41,7 +43,9 @@ static void about_response(GtkWidget *widget, gpointer user_data)
 }
 
 /**
- * \brief About dialog
+ * app_show_about:
+ *
+ * About dialog
  */
 void app_show_about(void)
 {
@@ -54,15 +58,15 @@ void app_show_about(void)
 		"Jan-Michael Brummer <jan.brummer@tabos.org>",
 		NULL
 	};
-	char *translators =
-	    "Jan-Michael Brummer <jan.brummer@tabos.org>";
+	gchar *translators =
+		"Jan-Michael Brummer <jan.brummer@tabos.org>";
 
 	/* create about dialog */
 	dialog = gtk_about_dialog_new();
 
 	gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(dialog), PACKAGE_NAME);
 	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog), PACKAGE_VERSION);
-	gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog), "(C) 2012-2016, Jan-Michael Brummer <jan.brummer@tabos.org>");
+	gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog), "(C) 2012-2017, Jan-Michael Brummer <jan.brummer@tabos.org>");
 	gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog), _("FRITZ!Box Journal, Soft/phone, and Fax\nDedicated to my father"));
 
 	gtk_about_dialog_set_license_type(GTK_ABOUT_DIALOG(dialog), GTK_LICENSE_GPL_2_0_ONLY);
@@ -71,7 +75,7 @@ void app_show_about(void)
 	gtk_about_dialog_set_documenters(GTK_ABOUT_DIALOG(dialog), documenters);
 	gtk_about_dialog_set_translator_credits(GTK_ABOUT_DIALOG(dialog), g_locale_to_utf8(translators, -1, 0, 0, 0));
 	gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog), PACKAGE_BUGREPORT);
-	gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(dialog), gdk_pixbuf_new_from_resource("/org/tabos/roger/images/app.png", NULL));
+	gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(dialog), gdk_pixbuf_new_from_resource("/org/tabos/roger/images/roger.svg", NULL));
 	g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(about_response), dialog);
 
 	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(journal_get_window()));

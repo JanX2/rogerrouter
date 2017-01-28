@@ -21,11 +21,11 @@
 
 #include <gtk/gtk.h>
 
-#include <libroutermanager/rmcall.h>
-#include <libroutermanager/rmplugins.h>
-#include <libroutermanager/rmprofile.h>
-#include <libroutermanager/routermanager.h>
-#include <libroutermanager/rmsettings.h>
+#include <rm/rmcallentry.h>
+#include <rm/rmplugins.h>
+#include <rm/rmprofile.h>
+#include <rm/routermanager.h>
+#include <rm/rmsettings.h>
 
 #include <roger/about.h>
 #include <roger/application.h>
@@ -108,7 +108,7 @@ void statusicon_menu_last_calls_group(GtkWidget *menu, gchar *label, int call_ty
 	list = journal_list;
 
 	while (list != NULL) {
-		RmCall *call = list->data;
+		RmCallEntry *call = list->data;
 
 		if (call->type == call_type && (strlen(call->remote->name) || strlen(call->remote->number))) {
 			item = gtk_menu_item_new();
@@ -145,21 +145,21 @@ GtkWidget *statusicon_menu_last_calls(void)
 	menu = gtk_menu_new();
 
 	/* Last calls - Incomming */
-	statusicon_menu_last_calls_group(menu, _("Incoming"), RM_CALL_TYPE_INCOMING);
+	statusicon_menu_last_calls_group(menu, _("Incoming"), RM_CALL_ENTRY_TYPE_INCOMING);
 
 	/* Separator */
 	item = gtk_separator_menu_item_new();
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
 	/* Last calls - Outgoing */
-	statusicon_menu_last_calls_group(menu, _("Outgoing"), RM_CALL_TYPE_OUTGOING);
+	statusicon_menu_last_calls_group(menu, _("Outgoing"), RM_CALL_ENTRY_TYPE_OUTGOING);
 
 	/* Separator */
 	item = gtk_separator_menu_item_new();
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
 	/* Last calls - Missed */
-	statusicon_menu_last_calls_group(menu, _("Missed"), RM_CALL_TYPE_MISSED);
+	statusicon_menu_last_calls_group(menu, _("Missed"), RM_CALL_ENTRY_TYPE_MISSED);
 
 	return menu;
 }

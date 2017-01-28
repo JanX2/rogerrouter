@@ -41,15 +41,14 @@ sourcelist += roger_gresources
 
 roger_dep = []
 roger_dep += dependency('gtk+-3.0', version : '>=3.12.0')
-roger_dep += dependency('libpeas-gtk-1.0')
+roger_dep += dependency('libpeas-gtk-1.0', fallback : ['libpeas-gtk', 'peas_gtk_dep'])
 roger_dep += dependency('libsoup-2.4')
 roger_dep += dependency('libtiff-4')
-roger_dep += dependency('spandsp')
+#roger_dep += dependency('spandsp')
 roger_dep += cc.find_library('m', required: true)
+roger_dep += rm_dep
 
-inc = include_directories('..')
-
-executable(name, sources : sourcelist, dependencies : roger_dep, link_with : libroutermanager, include_directories : inc, gui_app : true, install : true)
+executable(name, sources : sourcelist, dependencies : roger_dep, include_directories : roger_inc, gui_app : true, install : true)
 
 custom_target('org.tabos.roger.desktop',
     output : 'org.tabos.roger.desktop',

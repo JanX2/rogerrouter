@@ -22,6 +22,8 @@
 
 G_BEGIN_DECLS
 
+#include <rm/rmconnection.h>
+
 extern GSettings *app_settings;
 extern GtkApplication *roger_app;
 
@@ -31,6 +33,8 @@ void app_show_help(void);
 void app_quit(void);
 void app_copy_ip(void);
 void app_reconnect(void);
+void app_hangup(RmConnection *connection);
+void app_pickup(RmConnection *connection);
 
 G_END_DECLS
 

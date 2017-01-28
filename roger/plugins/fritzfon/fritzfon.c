@@ -23,19 +23,19 @@
 
 #include <gtk/gtk.h>
 
-#include <libroutermanager/rmplugins.h>
-#include <libroutermanager/rmobject.h>
-#include <libroutermanager/rmaddressbook.h>
-#include <libroutermanager/rmprofile.h>
-#include <libroutermanager/rmrouter.h>
-#include <libroutermanager/rmnetwork.h>
-#include <libroutermanager/rmstring.h>
-#include <libroutermanager/rmftp.h>
-#include <libroutermanager/xml.h>
-#include <libroutermanager/rmlog.h>
-#include <libroutermanager/rmfile.h>
-#include <libroutermanager/rmsettings.h>
-#include <libroutermanager/rmnumber.h>
+#include <rm/rmplugins.h>
+#include <rm/rmobject.h>
+#include <rm/rmaddressbook.h>
+#include <rm/rmprofile.h>
+#include <rm/rmrouter.h>
+#include <rm/rmnetwork.h>
+#include <rm/rmstring.h>
+#include <rm/rmftp.h>
+#include <rm/xml.h>
+#include <rm/rmlog.h>
+#include <rm/rmfile.h>
+#include <rm/rmsettings.h>
+#include <rm/rmnumber.h>
 
 #include <roger/main.h>
 
@@ -245,6 +245,7 @@ static gint fritzfon_read_book(void)
 	gint read = msg->response_body->length;
 
 	g_return_val_if_fail(data != NULL, -2);
+#define FRITZFON_DEBUG 1
 #if FRITZFON_DEBUG
 	if (read > 0) {
 		rm_log_save_data("test-in.xml", data, read);
@@ -321,7 +322,7 @@ static gint fritzfon_get_books(void)
 
 			/* Extract Name */
 			pos = end;
-			end = strstr(pos + 2, "\n");
+			end = strstr(pos + 2, "<");
 			g_assert(end != NULL);
 			len = end - pos - 1;
 			gchar *name = g_malloc0(len);
@@ -551,7 +552,7 @@ gboolean fritzfon_save(void)
 	node = phonebook_to_xmlnode();
 
 	data = xmlnode_to_formatted_str(node, &len);
-//#define FRITZFON_DEBUG 1
+#define FRITZFON_DEBUG 1
 #ifdef FRITZFON_DEBUG
 	gchar *file;
 	g_debug("len: %d", len);
@@ -641,7 +642,7 @@ gboolean fritzfon_save_contact(RmContact *contact)
 
 gchar *fritzfon_get_active_book_name(void)
 {
-	return g_strdup("FritzFon");
+	return g_strdup(g_settings_get_string(fritzfon_settings, "book-name"));
 }
 
 RmAddressBook fritzfon_book = {
@@ -694,7 +695,8 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	g_settings_bind(fritzfon_settings, "book-owner", combo_box, "active-id", G_SETTINGS_BIND_DEFAULT);
 	g_signal_connect(combo_box, "changed", G_CALLBACK(fritzfon_combobox_changed_cb), combo_box);
 
-	group = pref_group_create(box, _("Contact book"), TRUE, FALSE);
+	//group = pref_group_create(box, _("Contact book"), TRUE, FALSE);
+	group = box;
 
 	return group;
 }

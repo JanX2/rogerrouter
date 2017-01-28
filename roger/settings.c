@@ -1,6 +1,6 @@
-/**
+/*
  * Roger Router
- * Copyright (c) 2012-2016 Jan-Michael Brummer
+ * Copyright (c) 2012-2017 Jan-Michael Brummer
  *
  * This file is part of Roger Router.
  *
@@ -26,18 +26,18 @@
 #include <libpeas/peas.h>
 #include <libpeas-gtk/peas-gtk.h>
 
-#include <libroutermanager/rmprofile.h>
-#include <libroutermanager/rmrouter.h>
-#include <libroutermanager/rmnetmonitor.h>
-#include <libroutermanager/rmftp.h>
-#include <libroutermanager/rmfilter.h>
-#include <libroutermanager/rmobjectemit.h>
-#include <libroutermanager/rmpassword.h>
-#include <libroutermanager/rmaction.h>
-#include <libroutermanager/rmaudio.h>
-#include <libroutermanager/rmaddressbook.h>
-#include <libroutermanager/rmfax.h>
-#include <libroutermanager/rmstring.h>
+#include <rm/rmprofile.h>
+#include <rm/rmrouter.h>
+#include <rm/rmnetmonitor.h>
+#include <rm/rmftp.h>
+#include <rm/rmfilter.h>
+#include <rm/rmobjectemit.h>
+#include <rm/rmpassword.h>
+#include <rm/rmaction.h>
+#include <rm/rmaudio.h>
+#include <rm/rmaddressbook.h>
+#include <rm/rmfax.h>
+#include <rm/rmstring.h>
 
 #include <roger/application.h>
 #include <roger/settings.h>
@@ -108,29 +108,22 @@ static struct settings *settings = NULL;
  */
 void login_check_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
-	GtkWidget *dialog;
 	RmProfile *profile = rm_profile_get_active();
 	gboolean locked = rm_router_is_locked();
 	gboolean log_in = FALSE;
 
+	gtk_entry_set_icon_from_icon_name(GTK_ENTRY(settings->login_password_entry), GTK_ENTRY_ICON_SECONDARY, NULL);
 	rm_router_logout(profile);
 
 	rm_router_release_lock();
 	log_in = rm_router_login(profile);
 	if (log_in == TRUE) {
-		dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE, _("Login password is valid"));
-
-		gtk_dialog_run(GTK_DIALOG(dialog));
-		gtk_widget_destroy(dialog);
+		gtk_entry_set_icon_from_icon_name(GTK_ENTRY(settings->login_password_entry), GTK_ENTRY_ICON_SECONDARY, "emblem-ok-symbolic");
 
 		if (locked) {
 			rm_netmonitor_reconnect();
 		}
-	} else {
-		//dialog = gtk_message_dialog_new(user_data, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, _("Login password is invalid"));
-		// This case is handled by libroutermanager emitting a new message
 	}
-
 }
 
 /**
@@ -1285,7 +1278,7 @@ void audio_plugin_combobox_changed_cb(GtkComboBox *box, gpointer user_data) {
 
 void view_call_type_icons_combobox_changed_cb(GtkComboBoxText *widget, gpointer user_data)
 {
-	g_settings_set_string(app_settings, "icon-type", gtk_combo_box_get_active_id(widget));
+	g_settings_set_string(app_settings, "icon-type", gtk_combo_box_get_active_id(GTK_COMBO_BOX (widget)));
 	journal_init_call_icon();
 	journal_clear();
 	journal_redraw();
@@ -1307,32 +1300,6 @@ void settings_fill_address_book_plugin_combobox(struct settings *settings)
 		RmAddressBook *ab = list->data;
 
 		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->address_book_plugin_combobox), ab->name, ab->name);
-	}
-}
-
-static void settings_numbers_refresh_list(GtkListStore *list_store)
-{
-	RmProfile *profile = rm_profile_get_active();
-	gchar **numbers = rm_router_get_numbers(profile);
-	GtkTreeIter iter;
-	gint count;
-	gint index;
-
-	for (index = 0; index < g_strv_length(numbers); index++) {
-		gtk_list_store_append(list_store, &iter);
-		g_debug("%s(): %d = %s", __FUNCTION__, index, numbers[index]);
-		gtk_list_store_set(list_store, &iter, 0, numbers[index], -1);
-		//gtk_list_store_set(list_store, &iter, 1, 0, -1);
-		gtk_list_store_set(list_store, &iter, 2, FALSE, -1);
-
-		/*if (selected_incoming_numbers) {
-			for (count = 0; count < g_strv_length(selected_incoming_numbers); count++) {
-				if (!strcmp(numbers[index], selected_incoming_numbers[count])) {
-					gtk_list_store_set(list_store, &iter, 2, TRUE, -1);
-					break;
-				}
-			}
-		}*/
 	}
 }
 
@@ -1455,7 +1422,7 @@ void phone_settings_close_button_cb(GtkWidget *button, gpointer user_data)
 
 void phone_plugin_settings_button_clicked_cb(GtkWidget *button, gpointer user_data)
 {
-	gchar *name = gtk_combo_box_get_active_id(GTK_COMBO_BOX(settings->phone_plugin_combobox));
+	const gchar *name = gtk_combo_box_get_active_id(GTK_COMBO_BOX(settings->phone_plugin_combobox));
 
 	if (name && !strcmp(name, _("CAPI Phone"))) {
 		GtkBuilder *builder;
@@ -1634,8 +1601,6 @@ void settings_notification_populate(GtkWidget *list_box)
 {
 	RmProfile *profile = rm_profile_get_active();
 	gchar **numbers = rm_router_get_numbers(profile);
-	GtkTreeIter iter;
-	gint count;
 	gint index;
 	gchar **selected_outgoing_numbers;
 	gchar **selected_incoming_numbers;
@@ -1647,7 +1612,6 @@ void settings_notification_populate(GtkWidget *list_box)
 		GtkWidget *child = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
 		GtkWidget *label = gtk_label_new(numbers[index]);
 		GtkWidget *sub_label = gtk_label_new(_("notified on"));
-		gboolean in, out;
 		gint set = 0;
 
 		gtk_widget_set_halign(label, GTK_ALIGN_START);
@@ -1679,11 +1643,11 @@ void settings_notification_populate(GtkWidget *list_box)
 
 		gtk_list_box_insert(GTK_LIST_BOX(list_box), child, -1);
 
-		if (rm_strv_contains(selected_incoming_numbers, numbers[index])) {
+		if (rm_strv_contains((const gchar * const *)selected_incoming_numbers, numbers[index])) {
 			set += 1;
 		}
 
-		if (rm_strv_contains(selected_outgoing_numbers, numbers[index])) {
+		if (rm_strv_contains((const gchar * const *)selected_outgoing_numbers, numbers[index])) {
 			set += 2;
 		}
 
@@ -1701,8 +1665,6 @@ void app_show_settings(void)
 	gboolean is_cable;
 	gchar **numbers;
 	gint idx;
-	GSList *phone_plugins;
-	GSList *fax_plugins;
 	GSList *audio_plugins;
 	GSList *notification_plugins;
 	GSList *list;
@@ -1763,10 +1725,10 @@ void app_show_settings(void)
 	g_settings_bind(profile->settings, "national-access-code", settings->national_access_code_entry, "text", G_SETTINGS_BIND_DEFAULT);
 	g_settings_bind(profile->settings, "area-code", settings->area_code_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
-	gtk_widget_set_sensitive(settings->international_access_code_entry, is_cable);
+	/*gtk_widget_set_sensitive(settings->international_access_code_entry, is_cable);
 	gtk_widget_set_sensitive(settings->country_code_entry, is_cable);
 	gtk_widget_set_sensitive(settings->national_access_code_entry, is_cable);
-	gtk_widget_set_sensitive(settings->area_code_entry, is_cable);
+	gtk_widget_set_sensitive(settings->area_code_entry, is_cable);*/
 
 	gtk_editable_set_editable(GTK_EDITABLE(settings->international_access_code_entry), is_cable);
 	gtk_editable_set_editable(GTK_EDITABLE(settings->country_code_entry), is_cable);
@@ -1904,7 +1866,7 @@ void app_show_settings(void)
 	settings->security_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "security_plugin_combobox"));
 
 	for (list = plugins; list; list = list->next) {
-		struct password_manager *pm = list->data;
+		RmPasswordManager *pm = list->data;
 
 		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->security_plugin_combobox), pm->name, pm->name);
 	}
@@ -1917,8 +1879,8 @@ void app_show_settings(void)
 
 	/* Address book group */
 	settings->address_book_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "address_book_plugin_combobox"));
-	//settings_fill_address_book_plugin_combobox(settings);
-	//g_settings_bind(profile->settings, "address-book-plugin", settings->address_book_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+	settings_fill_address_book_plugin_combobox(settings);
+	g_settings_bind(profile->settings, "address-book-plugin", settings->address_book_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 
 	/* Notification group */
 	settings->notification_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "notification_plugin_combobox"));
@@ -1941,7 +1903,7 @@ void app_show_settings(void)
 	settings->notification_ringtone_switch = GTK_WIDGET(gtk_builder_get_object(builder, "notification_ringtone_switch"));
 	g_settings_bind(profile->settings, "notification-play-ringtone", settings->notification_ringtone_switch, "active", G_SETTINGS_BIND_DEFAULT);
 
-	settings->notification_listbox = GTK_LIST_STORE(gtk_builder_get_object(builder, "notification_listbox"));
+	settings->notification_listbox = GTK_WIDGET(gtk_builder_get_object(builder, "notification_listbox"));
 	settings_notification_populate(settings->notification_listbox);
 
 	/* Header bar information */

@@ -1,8 +1,14 @@
 #!/bin/sh
 
-PREFIX=${MESON_INSTALL_PREFIX:-/usr}
+# Packagers set DESTDIR so we don't want to try writing to root
+if [ -z $DESTDIR ]; then
+	PREFIX=${MESON_INSTALL_PREFIX:-/usr}
 
-glib-compile-schemas "$PREFIX/share/glib-2.0/schemas"
-update-desktop-database -q
-mkdir -p "$PREFIX/share/icons/hicolor"
-gtk-update-icon-cache -q -t -f "$PREFIX/share/icons/hicolor"
+	echo 'Compiling GSchema'
+	glib-compile-schemas "$PREFIX/share/glib-2.0/schemas"
+	echo 'Updating desktop database'
+	update-desktop-database -q
+	echo 'Updating icon cache'
+	mkdir -p "$PREFIX/share/icons/hicolor"
+	gtk-update-icon-cache -q -t -f "$PREFIX/share/icons/hicolor"
+fi

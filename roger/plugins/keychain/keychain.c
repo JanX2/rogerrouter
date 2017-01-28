@@ -26,9 +26,9 @@
 #include <Security/Security.h>
 #include <CoreServices/CoreServices.h>
 
-#include <libroutermanager/rmcall.h>
-#include <libroutermanager/rmplugins.h>
-#include <libroutermanager/rmpassword.h>
+#include <rm/rmcallentry.h>
+#include <rm/rmplugins.h>
+#include <rm/rmpassword.h>
 
 #define ROUTERMANAGER_TYPE_KEYCHAIN_PLUGIN        (routermanager_keychain_plugin_get_type ())
 #define RM_KEYCHAIN_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_KEYCHAIN_PLUGIN, RmKeyChainPlugin))

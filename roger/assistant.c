@@ -23,14 +23,14 @@
 
 #include <gtk/gtk.h>
 
-#include <libroutermanager/rmrouter.h>
-#include <libroutermanager/rmpassword.h>
-#include <libroutermanager/rmftp.h>
-#include <libroutermanager/rmmain.h>
-#include <libroutermanager/rmstring.h>
-#include <libroutermanager/rmobjectemit.h>
-#include <libroutermanager/rmnetmonitor.h>
-#include <libroutermanager/rmssdp.h>
+#include <rm/rmrouter.h>
+#include <rm/rmpassword.h>
+#include <rm/rmftp.h>
+#include <rm/rmmain.h>
+#include <rm/rmstring.h>
+#include <rm/rmobjectemit.h>
+#include <rm/rmnetmonitor.h>
+#include <rm/rmssdp.h>
 
 #include <roger/main.h>
 #include <roger/journal.h>

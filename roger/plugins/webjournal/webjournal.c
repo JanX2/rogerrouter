@@ -1,5 +1,5 @@
 /**
- * The libroutermanager project
+ * The rm project
  * Copyright (c) 2012-2014 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
@@ -25,14 +25,14 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
-#include <libroutermanager/rmobject.h>
-#include <libroutermanager/rmobjectemit.h>
-#include <libroutermanager/rmplugins.h>
-#include <libroutermanager/rmfile.h>
-#include <libroutermanager/rmmain.h>
-#include <libroutermanager/rmsettings.h>
-#include <libroutermanager/rmstring.h>
-#include <libroutermanager/rmcall.h>
+#include <rm/rmobject.h>
+#include <rm/rmobjectemit.h>
+#include <rm/rmplugins.h>
+#include <rm/rmfile.h>
+#include <rm/rmmain.h>
+#include <rm/rmsettings.h>
+#include <rm/rmstring.h>
+#include <rm/rmcallentry.h>
 
 #include <roger/settings.h>
 #include <roger/uitools.h>
@@ -59,19 +59,19 @@ static GSettings *webjournal_settings = NULL;
 gchar *get_call_type_string(gint type)
 {
 	switch (type) {
-	case RM_CALL_TYPE_INCOMING:
+	case RM_CALL_ENTRY_TYPE_INCOMING:
 		return "in";
-	case RM_CALL_TYPE_OUTGOING:
+	case RM_CALL_ENTRY_TYPE_OUTGOING:
 		return "out";
-	case RM_CALL_TYPE_MISSED:
+	case RM_CALL_ENTRY_TYPE_MISSED:
 		return "missed";
-	case RM_CALL_TYPE_FAX:
-	case RM_CALL_TYPE_FAX_REPORT:
+	case RM_CALL_ENTRY_TYPE_FAX:
+	case RM_CALL_ENTRY_TYPE_FAX_REPORT:
 		return "fax";
-	case RM_CALL_TYPE_VOICE:
-	case RM_CALL_TYPE_RECORD:
+	case RM_CALL_ENTRY_TYPE_VOICE:
+	case RM_CALL_ENTRY_TYPE_RECORD:
 		return "voice";
-	case RM_CALL_TYPE_BLOCKED:
+	case RM_CALL_ENTRY_TYPE_BLOCKED:
 		return "blocked";
 	}
 
@@ -105,7 +105,7 @@ void webjournal_journal_loaded_cb(RmObject *obj, GSList *journal, gpointer user_
 	string = g_string_new(webjournal_plugin->priv->header);
 
 	for (list = journal; list != NULL; list = list->next) {
-		RmCall *call = list->data;
+		RmCallEntry *call = list->data;
 		GRegex *type = g_regex_new("%TYPE%", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
 		GRegex *date_time = g_regex_new("%DATETIME%", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
 		GRegex *name = g_regex_new("%NAME%", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);

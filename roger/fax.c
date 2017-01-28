@@ -24,16 +24,18 @@
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
 
-#include <libroutermanager/rmprofile.h>
-#include <libroutermanager/rmobject.h>
-#include <libroutermanager/rmfax.h>
-#include <libroutermanager/rmmain.h>
-#include <libroutermanager/rmstring.h>
-#include <libroutermanager/rmnumber.h>
-#include <libroutermanager/rmrouter.h>
+#include <rm/rmprofile.h>
+#include <rm/rmobject.h>
+#include <rm/rmfax.h>
+#include <rm/rmmain.h>
+#include <rm/rmstring.h>
+#include <rm/rmnumber.h>
+#include <rm/rmrouter.h>
 
 #include <roger/journal.h>
 #include <roger/contacts.h>
+#include <roger/contactsearch.h>
+#include <roger/print.h>
 
 struct fax_ui {
 	GtkWidget *window;
@@ -66,7 +68,6 @@ gboolean fax_status_timer_cb(gpointer user_data)
 	RmFaxStatus *fax_status = &fax_ui->status;
 	gchar buffer[256];
 	static gdouble old_percent = 0.0f;
-	gchar *tmp;
 
 	if (!rm_fax_get_status(fax_ui->fax, fax_ui->connection, fax_status)) {
 		return TRUE;
@@ -80,16 +81,16 @@ gboolean fax_status_timer_cb(gpointer user_data)
 
 	/* Update status information */
 	switch (fax_status->phase) {
-	case PHASE_IDENTIFY:
+	case FAX_PHASE_IDENTIFY:
 		gtk_label_set_text(GTK_LABEL(fax_ui->receiver_label), fax_status->remote_ident);
 		g_free(fax_status->remote_ident);
 
 		/* Fall through */
-	case PHASE_SIGNALLING:
+	case FAX_PHASE_SIGNALLING:
 		snprintf(buffer, sizeof(buffer), _("Transferring page %d of %d"), fax_status->page_current, fax_status->page_total);
 		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar), buffer);
 		break;
-	case PHASE_RELEASE:
+	case FAX_PHASE_RELEASE:
 		if (!fax_status->error_code) {
 			g_debug("%s(): Fax transfer successful", __FUNCTION__);
 			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar),  _("Fax transfer successful"));
@@ -104,7 +105,7 @@ gboolean fax_status_timer_cb(gpointer user_data)
 		rm_fax_hangup(fax_ui->fax, fax_ui->connection);
 		return TRUE;
 		break;
-	case PHASE_CALL:
+	case FAX_PHASE_CALL:
 		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar),  _("Connecting..."));
 		break;
 	default:
@@ -134,6 +135,12 @@ gboolean fax_status_timer_cb(gpointer user_data)
 	return TRUE;
 }
 
+void fax_dial_buttons_set_dial(struct fax_ui *fax_ui, gboolean allow_dial)
+{
+	gtk_widget_set_sensitive(fax_ui->pickup_button, allow_dial);
+	gtk_widget_set_sensitive(fax_ui->hangup_button, !allow_dial);
+}
+
 static void fax_connection_changed_cb(RmObject *object, gint event, RmConnection *connection, gpointer user_data)
 {
 	struct fax_ui *fax_ui = user_data;
@@ -158,12 +165,6 @@ static void fax_connection_changed_cb(RmObject *object, gint event, RmConnection
 	}
 }
 
-void fax_dial_buttons_set_dial(struct fax_ui *fax_ui, gboolean allow_dial)
-{
-	gtk_widget_set_sensitive(fax_ui->pickup_button, allow_dial);
-	gtk_widget_set_sensitive(fax_ui->hangup_button, !allow_dial);
-}
-
 void fax_pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 	RmProfile *profile = rm_profile_get_active();
@@ -171,7 +172,7 @@ void fax_pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	gchar *scramble;
 
 	/* Get selected number (either number format or based on the selected name) */
-	fax_ui->number = g_strdup(contact_search_get_number(fax_ui->contact_search));
+	fax_ui->number = g_strdup(contact_search_get_number(CONTACT_SEARCH(fax_ui->contact_search)));
 	if (!RM_EMPTY_STRING(fax_ui->number) && !(isdigit(fax_ui->number[0]) || fax_ui->number[0] == '*' || fax_ui->number[0] == '#' || fax_ui->number[0] == '+')) {
 		fax_ui->number = g_object_get_data(G_OBJECT(fax_ui->contact_search), "number");
 	}
@@ -206,34 +207,6 @@ void fax_hangup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 
 	rm_fax_hangup(fax_ui->fax, fax_ui->connection);
 	fax_dial_buttons_set_dial(fax_ui, TRUE);
-}
-
-static gchar *fax_number_type_to_string(enum phone_number_type type)
-{
-	gchar *tmp;
-
-	switch (type) {
-	case PHONE_NUMBER_HOME:
-		tmp = g_strdup(_("Home"));
-		break;
-	case PHONE_NUMBER_WORK:
-		tmp = g_strdup(_("Work"));
-		break;
-	case PHONE_NUMBER_MOBILE:
-		tmp = g_strdup(_("Mobile"));
-		break;
-	case PHONE_NUMBER_FAX_HOME:
-		tmp = g_strdup(_("Fax Home"));
-		break;
-	case PHONE_NUMBER_FAX_WORK:
-		tmp = g_strdup(_("Fax Work"));
-		break;
-	default:
-		tmp = g_strdup(_("Unknown"));
-		break;
-	}
-
-	return tmp;
 }
 
 gboolean app_show_fax_window_idle(gpointer data)

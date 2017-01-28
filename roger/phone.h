@@ -20,11 +20,11 @@
 #ifndef PHONE_H
 #define PHONE_H
 
-#include <libroutermanager/rmcontact.h>
-#include <libroutermanager/rmconnection.h>
-#include <libroutermanager/rmcall.h>
-#include <libroutermanager/rmobject.h>
-#include <libroutermanager/rmphone.h>
+#include <rm/rmcontact.h>
+#include <rm/rmconnection.h>
+#include <rm/rmcallentry.h>
+#include <rm/rmobject.h>
+#include <rm/rmphone.h>
 
 G_BEGIN_DECLS
 
@@ -79,7 +79,7 @@ struct phone_device {
 
 void app_show_phone_window(RmContact *contact, RmConnection *connection);
 GtkWidget *phone_search_entry_new(GtkWidget *window, RmContact *contact, struct phone_state *state);
-void phone_call_notify_cb(RmObject *object, RmCall *call, gint connection, gchar *medium, gpointer user_data);
+void phone_call_notify_cb(RmObject *object, RmCallEntry *call, gint connection, gchar *medium, gpointer user_data);
 void phone_setup_timer();
 void phone_remove_timer();
 GtkWidget *phone_dial_buttons_new(GtkWidget *window, struct phone_state *state);

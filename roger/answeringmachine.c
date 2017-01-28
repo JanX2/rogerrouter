@@ -21,8 +21,8 @@
 
 #include <gtk/gtk.h>
 
-#include <libroutermanager/rmvox.h>
-#include <libroutermanager/rmrouter.h>
+#include <rm/rmvox.h>
+#include <rm/rmrouter.h>
 
 #include <roger/journal.h>
 #include <roger/main.h>

@@ -4,7 +4,7 @@ gnome = import('gnome')
 
 msgfmt = find_program('msgfmt')
 
-add_global_arguments('-DUSE_PRINTER_SPOOLER', language : 'c')
+add_global_arguments('-fdiagnostics-color=always', language : 'c')
 
 name = 'roger'
 version = '1.10-pre1'
@@ -19,8 +19,6 @@ cdata.set('GETTEXT_PACKAGE', '"roger"')
 cdata.set('APP_DATA', '"' + get_option('prefix') + '/' + get_option('datadir') + '/roger/"')
 cdata.set('APP_LOCALE', '"' + get_option('prefix') + '/' + get_option('localedir') + '"')
 cdata.set('APP_PLUGINS', '"' + get_option('prefix') + '/' + get_option('libdir') + '/roger/"')
-cdata.set('RM_PLUGINS', '"' + get_option('prefix') + '/' + get_option('libdir') + '/routermanager/"')
-cdata.set('RM_PLUGINS', '"' + get_option('prefix') + '/' + get_option('libdir') + '/routermanager/"')
 
 check_headers = [['dlfcn.h','HAVE_DLFCN_H'],
   ['sys/utsname.h', 'HAVE_SYS_UTSNAME_H'],
@@ -36,14 +34,15 @@ configure_file(input : 'config.h.meson',
   output : 'config.h',
   configuration : cdata)
 
+roger_inc = include_directories('.')
+
 subdir('po')
-subdir('libroutermanager')
+
+rm_sp = subproject('librm')
+rm_dep = rm_sp.get_variable('rm_dep')
+rm_inc = rm_sp.get_variable('rm_inc')
+
 subdir('roger')
 
-#if get_option('enable-gtk-doc')
-#	subdir('docs')
-#endif
+meson.add_install_script('meson_post_install.sh')
 
-if get_option('do-post-install')
-	meson.add_install_script('meson_post_install.sh')
-endif

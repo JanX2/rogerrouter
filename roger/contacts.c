@@ -22,10 +22,10 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
-#include <libroutermanager/rmaddressbook.h>
-#include <libroutermanager/rmstring.h>
-#include <libroutermanager/rmrouter.h>
-#include <libroutermanager/rmnumber.h>
+#include <rm/rmaddressbook.h>
+#include <rm/rmstring.h>
+#include <rm/rmrouter.h>
+#include <rm/rmnumber.h>
 #include <roger/contacts.h>
 #include <roger/main.h>
 #include <roger/uitools.h>
@@ -1049,7 +1049,12 @@ void app_contacts(RmContact *contact)
 	contacts->remove_button = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_remove_button"));
 	contacts->view_port = GTK_WIDGET(gtk_builder_get_object(builder, "view_port"));
 	contacts_header_bar_left = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_header_bar_left"));
+
 	name = rm_addressbook_get_name(book);
+	gtk_header_bar_set_title(GTK_HEADER_BAR(contacts_header_bar_left), name);
+	g_free(name);
+
+	name = rm_addressbook_get_sub_name(book);
 	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(contacts_header_bar_left), name);
 	g_free(name);
 

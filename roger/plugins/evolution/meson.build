@@ -6,9 +6,13 @@ evolution_dep += rm_dep
 evolution_dep += roger_dep
 evolution_dep += dependency('libebook-1.2')
 
+evolution_inc = []
+evolution_inc += rm_inc
+evolution_inc += include_directories('../../..')
+
 libevolution = shared_library('evolution',
                         evolution_sources,
-                        include_directories : rm_inc,
+                        include_directories : evolution_inc,
                         dependencies : evolution_dep,
                         link_with : libroutermanager,
                         install : true,
@@ -23,4 +27,4 @@ custom_target('evolution.plugin',
 
 gnome.compile_schemas()
 install_data('org.tabos.roger.plugins.evolution.gschema.xml',
-install_dir : 'share/glib-2.0/schemas')
+install_dir : join_paths(get_option('datadir'), 'glib-2.0', 'schemas'))

@@ -25,15 +25,15 @@
 
 #include <gtk/gtk.h>
 
-#include <libroutermanager/rmplugins.h>
-#include <libroutermanager/rmprofile.h>
-#include <libroutermanager/rmobject.h>
-#include <libroutermanager/rmaddressbook.h>
-#include <libroutermanager/rmcall.h>
-#include <libroutermanager/rmrouter.h>
-#include <libroutermanager/rmfile.h>
-#include <libroutermanager/rmstring.h>
-#include <libroutermanager/rmsettings.h>
+#include <rm/rmplugins.h>
+#include <rm/rmprofile.h>
+#include <rm/rmobject.h>
+#include <rm/rmaddressbook.h>
+#include <rm/rmcallentry.h>
+#include <rm/rmrouter.h>
+#include <rm/rmfile.h>
+#include <rm/rmstring.h>
+#include <rm/rmsettings.h>
 
 #include <roger/main.h>
 #include <roger/settings.h>

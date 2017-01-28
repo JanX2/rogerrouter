@@ -26,12 +26,13 @@
 #include <cairo-pdf.h>
 
 #include <tiff.h>
+#include <tiffio.h>
 
-#include <libroutermanager/rmobjectemit.h>
-#include <libroutermanager/rmrouter.h>
-#include <libroutermanager/rmnumber.h>
-//#include <libroutermanager/libfaxophone/faxophone.h>
-#include <libroutermanager/plugins/capi/fax.h>
+#include <rm/rmobjectemit.h>
+#include <rm/rmrouter.h>
+#include <rm/rmnumber.h>
+//#include <rm/libfaxophone/faxophone.h>
+//#include <rm/plugins/capi/fax.h>
 
 #include <roger/print.h>
 #include <roger/journal.h>
@@ -569,7 +570,7 @@ void create_fax_report(RmFaxStatus *status, gchar *file, const char *report_dir)
 	char *local = status->local_number;
 	char *status_code = status->error_code == 0 ? _("SUCCESS") : _("FAILED");
 	int pages = status->page_current;
-	int bitrate = status->bitrate;
+	//int bitrate = status->bitrate;
 	RmProfile *profile = rm_profile_get_active();
 	TIFF *tiff;
 	GdkPixbuf *scale;
@@ -685,6 +686,7 @@ void create_fax_report(RmFaxStatus *status, gchar *file, const char *report_dir)
 	cairo_show_text(cairo, buffer);
 	g_free(buffer);
 
+#if 0
 	/* Bitrate */
 	cairo_move_to(cairo, 60, 195);
 	cairo_show_text(cairo, _("Bitrate:"));
@@ -699,6 +701,7 @@ void create_fax_report(RmFaxStatus *status, gchar *file, const char *report_dir)
 	cairo_move_to(cairo, 1220, 195);
 	buffer = (char *) t30_completion_code_to_str(status->error_code);
 	cairo_show_text(cairo, buffer);
+#endif
 
 	/* line */
 	cairo_set_line_width(cairo, 0.5);

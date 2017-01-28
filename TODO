@@ -1,13 +1,14 @@
 TODO
 ----------
-* Prepend rm_ to each external routermanager function?
+* Remove winmain (shouldn't be needed with GtkApplication and new lib) & uitools (use glade instead)
+* Design Journal/Contacts/Phone with Glade
+
+
 * Areacodes plugin for every country (global list available as csv)
   (90% done, add special handling for countrys not starting with 0 indicator,
   e.g. Russian Federation)
-* Addressbook selection in preferences
 * Export contacts to router
 * FRITZ!Box: Read upnp xml to retrieve control url instead of hardcoding the value
-* Fix possible race condition between telnet and CAPI plugin
 
 * FRITZ!Fon: label field
 

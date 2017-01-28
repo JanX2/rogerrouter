@@ -1,5 +1,5 @@
 /**
- * The libroutermanager project
+ * The rm project
  * Copyright (c) 2012-2014 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or

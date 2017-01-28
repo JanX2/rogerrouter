@@ -24,7 +24,7 @@
 
 #include <gtk/gtk.h>
 
-#include <libroutermanager/rmmain.h>
+#include <rm/rmmain.h>
 
 #include <roger/application.h>
 #include <roger/main.h>

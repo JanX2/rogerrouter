@@ -1,7 +1,10 @@
-#include <libroutermanager/rmaddressbook.h>
-#include <libroutermanager/rmstring.h>
-#include <libroutermanager/rmmain.h>
-#include <libroutermanager/rmrouter.h>
+#include <ctype.h>
+
+#include <rm/rmaddressbook.h>
+#include <rm/rmstring.h>
+#include <rm/rmmain.h>
+#include <rm/rmrouter.h>
+#include <rm/rmobjectemit.h>
 
 #include <roger/contactsearch.h>
 #include <roger/contacts.h>
@@ -20,15 +23,6 @@ struct _ContactSearch {
 };
 
 G_DEFINE_TYPE(ContactSearch, contact_search, GTK_TYPE_BOX);
-
-static void contact_search_menu_closed_cb(GtkWidget *menu_widget, gpointer user_data)
-{
-	ContactSearch *widget = user_data;
-
-	/* Clear internal data */
-	widget->menu = NULL;
-	widget->box = NULL;
-}
 
 static void contact_search_destroy_contacts(GtkWidget *widget, gpointer user_data)
 {
@@ -137,7 +131,7 @@ static void contact_search_search_changed_cb(ContactSearch *widget, gpointer use
 	RmAddressBook *book;
 
 	/* Get current filter text */
-	widget->filter = gtk_entry_get_text(GTK_ENTRY(widget->entry));
+	widget->filter = (gchar*) gtk_entry_get_text(GTK_ENTRY(widget->entry));
 
 	/* If it is an invalid filter, abort and close menu if needed */
 	if (RM_EMPTY_STRING(widget->filter) || isdigit(widget->filter[0]) || widget->discard || widget->filter[0] == '*' || widget->filter[0] == '#') {
@@ -154,7 +148,7 @@ static void contact_search_search_changed_cb(ContactSearch *widget, gpointer use
 	/* Clean previous contacts */
 	gtk_container_foreach(GTK_CONTAINER(widget->box), contact_search_destroy_contacts, NULL);
 
-	widget->filter = gtk_entry_get_text(GTK_ENTRY(widget->entry));
+	widget->filter = (gchar*)gtk_entry_get_text(GTK_ENTRY(widget->entry));
 
 	/* Add contacts to entry completion */
 	book = rm_profile_get_addressbook(rm_profile_get_active());
@@ -235,7 +229,7 @@ static void contact_search_icon_press_cb(ContactSearch *widget, GtkEntryIconPosi
 	if (icon_pos == GTK_ENTRY_ICON_PRIMARY) {
 		/* If primary icon has been pressed, toggle menu */
 		if (!widget->menu) {
-			contact_search_search_changed_cb(GTK_SEARCH_ENTRY(widget->entry), NULL);
+			contact_search_search_changed_cb(CONTACT_SEARCH(widget->entry), NULL);
 		} else {
 			gtk_widget_hide(widget->menu);
 		}
@@ -272,7 +266,6 @@ static void contact_list_box_set_focus(GtkWidget *scrolled_win, GtkWidget *box, 
 
 static gboolean contact_search_key_press_event_cb(ContactSearch *widget, GdkEvent *event, gpointer user_data)
 {
-	GtkWidget *entry = widget->entry;
 	GtkListBoxRow *row = NULL;
 	GList *childs;
 	guint keyval = ((GdkEventKey *)event)->keyval;
@@ -371,7 +364,6 @@ static void contact_search_init(ContactSearch *widget)
 	GtkWidget *placeholder;
 	GtkWidget *image;
 	GtkWidget *text;
-	gint width, height;
 
 	gtk_widget_init_template(GTK_WIDGET(widget));
 	/* Create popover */

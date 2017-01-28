@@ -23,18 +23,18 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
-#include <libroutermanager/rmconnection.h>
-#include <libroutermanager/rmprofile.h>
-#include <libroutermanager/rmmain.h>
-#include <libroutermanager/rmplugins.h>
-#include <libroutermanager/rmosdep.h>
-#include <libroutermanager/rmrouter.h>
-#include <libroutermanager/rmobjectemit.h>
-#include <libroutermanager/rmnetmonitor.h>
-#include <libroutermanager/rmsettings.h>
-#include <libroutermanager/rmstring.h>
-#include <libroutermanager/rmphone.h>
-#include <libroutermanager/rmnumber.h>
+#include <rm/rmconnection.h>
+#include <rm/rmprofile.h>
+#include <rm/rmmain.h>
+#include <rm/rmplugins.h>
+#include <rm/rmosdep.h>
+#include <rm/rmrouter.h>
+#include <rm/rmobjectemit.h>
+#include <rm/rmnetmonitor.h>
+#include <rm/rmsettings.h>
+#include <rm/rmstring.h>
+#include <rm/rmphone.h>
+#include <rm/rmnumber.h>
 
 #include <roger/journal.h>
 #include <roger/assistant.h>
@@ -251,40 +251,59 @@ static void shortcuts_activated(GSimpleAction *action, GVariant *parameter, gpoi
 	app_shortcuts();
 }
 
-static void pickup_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+void app_pickup(RmConnection *connection)
 {
-	gint32 id = g_variant_get_int32(parameter);
-	RmConnection *connection = rm_connection_find_by_id(id);
+	RmNotificationMessage *message;
 	RmContact *contact;
 
 	g_assert(connection != NULL);
 
+	message = rm_notification_message_get(connection);
+	g_assert(message != NULL);
+
+	/* Close notification message */
+	rm_notification_message_close(message);
+
 	/** Ask for contact information */
 	contact = rm_contact_find_by_number(connection->remote_number);
-
-	/* Close notifications */
-	//notify_gnotification_close(connection->notification, NULL);
-	//connection->notification = NULL;
 
 	/* Show phone window */
 	app_show_phone_window(contact, connection);
 }
 
-static void hangup_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+static void pickup_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
+	RmConnection *connection;
 	gint32 id = g_variant_get_int32(parameter);
-	RmConnection *connection = rm_connection_find_by_id(id);
+
+	connection = rm_connection_find_by_id(id);
+
+	app_pickup(connection);
+}
+
+void app_hangup(RmConnection *connection)
+{
+	RmNotificationMessage *message;
 
 	g_assert(connection != NULL);
 
-	//notify_gnotification_close(connection->notification, NULL);
-	//connection->notification = NULL;
+	message = rm_notification_message_get(connection);
+	g_assert(message != NULL);
 
-	//if (!connection->priv) {
-		//connection->priv = active_capi_connection;
-	//}
+	/* Close notification message */
+	rm_notification_message_close(message);
 
-	//rm_phone_hangup(connection->priv);
+	rm_phone_hangup(connection);
+}
+
+static void hangup_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+{
+	RmConnection *connection;
+	gint32 id = g_variant_get_int32(parameter);
+
+	connection = rm_connection_find_by_id(id);
+
+	app_hangup(connection);
 }
 
 static void journal_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
@@ -339,7 +358,6 @@ static void app_init(GtkApplication *app)
 	GError *error = NULL;
 	GMenu *menu;
 	GMenu *section;
-	GMenu *sub_section;
 
 #if GTK_CHECK_VERSION(3,14,0)
 	const gchar *accels[] = {NULL, NULL, NULL, NULL};
@@ -397,11 +415,6 @@ static void app_init(GtkApplication *app)
 	g_menu_append(section, _("Keyboard Shortcuts"), "app.shortcuts");
 #endif
 
-	/*sub_section = g_menu_new();
-	g_menu_append(sub_section, _("Donate"), "app.donate");
-	g_menu_append(sub_section, _("Forum"), "app.forum");
-	g_menu_append_submenu(section, _("Help"), G_MENU_MODEL(sub_section));*/
-
 	g_menu_append(section, _("About"), "app.about");
 	g_menu_append(section, _("Quit"), "app.quit");
 
@@ -420,6 +433,7 @@ static void app_init(GtkApplication *app)
 		rm_set_requested_profile(option_state.profile);
 	}
 
+	option_state.debug = TRUE;
 	rm_new(option_state.debug, &error);
 	g_signal_connect(rm_object, "authenticate", G_CALLBACK(app_authenticate_cb), NULL);
 	g_signal_connect(rm_object, "message", G_CALLBACK(rm_object_message_cb), NULL);

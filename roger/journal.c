@@ -28,19 +28,19 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 
-#include <libroutermanager/rmprofile.h>
-#include <libroutermanager/rmrouter.h>
-#include <libroutermanager/rmcall.h>
-#include <libroutermanager/rmmain.h>
-#include <libroutermanager/rmfilter.h>
-#include <libroutermanager/rmobject.h>
-#include <libroutermanager/rmfile.h>
-#include <libroutermanager/rmosdep.h>
-#include <libroutermanager/rmobjectemit.h>
-#include <libroutermanager/rmlookup.h>
-#include <libroutermanager/rmcsv.h>
-#include <libroutermanager/rmstring.h>
-#include <libroutermanager/rmjournal.h>
+#include <rm/rmprofile.h>
+#include <rm/rmrouter.h>
+#include <rm/rmcallentry.h>
+#include <rm/rmmain.h>
+#include <rm/rmfilter.h>
+#include <rm/rmobject.h>
+#include <rm/rmfile.h>
+#include <rm/rmosdep.h>
+#include <rm/rmobjectemit.h>
+#include <rm/rmlookup.h>
+#include <rm/rmcsv.h>
+#include <rm/rmstring.h>
+#include <rm/rmjournal.h>
 
 #include <roger/main.h>
 #include <roger/phone.h>
@@ -210,21 +210,21 @@ void journal_init_call_icon(void)
 GdkPixbuf *journal_get_call_icon(gint type)
 {
 	switch (type) {
-	case RM_CALL_TYPE_INCOMING:
+	case RM_CALL_ENTRY_TYPE_INCOMING:
 		return icon_call_in;
-	case RM_CALL_TYPE_MISSED:
+	case RM_CALL_ENTRY_TYPE_MISSED:
 		return icon_call_missed;
-	case RM_CALL_TYPE_OUTGOING:
+	case RM_CALL_ENTRY_TYPE_OUTGOING:
 		return icon_call_out;
-	case RM_CALL_TYPE_FAX:
+	case RM_CALL_ENTRY_TYPE_FAX:
 		return icon_fax;
-	case RM_CALL_TYPE_FAX_REPORT:
+	case RM_CALL_ENTRY_TYPE_FAX_REPORT:
 		return icon_fax_report;
-	case RM_CALL_TYPE_VOICE:
+	case RM_CALL_ENTRY_TYPE_VOICE:
 		return icon_voice;
-	case RM_CALL_TYPE_RECORD:
+	case RM_CALL_ENTRY_TYPE_RECORD:
 		return icon_record;
-	case RM_CALL_TYPE_BLOCKED:
+	case RM_CALL_ENTRY_TYPE_BLOCKED:
 		return icon_blocked;
 	default:
 		g_debug("Unknown icon type: %d", type);
@@ -253,7 +253,7 @@ void journal_redraw(void)
 	/* Update liststore */
 	for (list = journal_list; list != NULL; list = list->next) {
 		GtkTreeIter iter;
-		RmCall *call = list->data;
+		RmCallEntry *call = list->data;
 
 		g_assert(call != NULL);
 
@@ -298,11 +298,8 @@ void journal_redraw(void)
 		GtkWidget *grid = gtk_grid_new();
 		GtkWidget *title;
 		GtkWidget *subtitle;
-		GtkWidget *image;
 		gchar *markup;
 		PangoAttrList *attributes;
-		GSList *list = rm_profile_get_list();
-		gboolean selection = g_slist_length(list) > 1;
 
 		//gtk_widget_set_hexpand(grid, TRUE);
 		markup = g_strdup_printf("<b>%s</b>", profile ? profile->name : _("<No profile>"));
@@ -315,12 +312,7 @@ void journal_redraw(void)
 		}
 
 		//gtk_widget_set_hexpand(title, TRUE);
-		gtk_grid_attach(GTK_GRID(grid), title, 0, 0, selection ? 1 : 2, 1);
-
-		if (selection) {
-			image = gtk_image_new_from_icon_name("pan-down-symbolic", GTK_ICON_SIZE_BUTTON);
-			gtk_grid_attach(GTK_GRID(grid), image, 1, 0, 1, 1);
-		}
+		gtk_grid_attach(GTK_GRID(grid), title, 0, 0, 2, 1);
 
 		markup = g_strdup_printf(_("<small>%d calls, %d:%2.2dh</small>"), count, duration / 60, duration % 60);
 		pango_parse_markup(markup, -1, 0, &attributes, &text, NULL, NULL);
@@ -344,7 +336,7 @@ static gboolean reload_journal(gpointer user_data)
 	GtkListStore *list_store;
 	GtkTreeIter iter;
 	gboolean valid;
-	RmCall *call;
+	RmCallEntry *call;
 
 	if (!journal_win) {
 		return FALSE;
@@ -376,22 +368,14 @@ gpointer lookup_journal(gpointer user_data)
 	GSList *list;
 
 	for (list = journal; list; list = list->next) {
-		RmCall *call = list->data;
+		RmCallEntry *call = list->data;
 		RmLookup *lookup = rm_profile_get_lookup(rm_profile_get_active());
-		gchar *name = NULL;
-		gchar *street = NULL;
-		gchar *zip = NULL;
-		gchar *city = NULL;
 
 		if (!RM_EMPTY_STRING(call->remote->name)) {
 			continue;
 		}
 
-		if (rm_lookup_search(lookup, call->remote->number, &name, &street, &zip, &city)) {
-			call->remote->name = name;
-			call->remote->street = street;
-			call->remote->zip = zip;
-			call->remote->city = city;
+		if (rm_lookup_search(lookup, call->remote->number, call->remote)) {
 			call->remote->lookup = TRUE;
 		}
 	}
@@ -423,7 +407,7 @@ void journal_loaded_cb(RmObject *obj, GSList *journal, gpointer unused)
 	journal_list = journal;
 
 	if (old) {
-		g_slist_free_full(old, rm_call_free);
+		g_slist_free_full(old, rm_call_entry_free);
 	}
 
 	journal_redraw();
@@ -493,7 +477,7 @@ void journal_button_clear_clicked_cb(GtkWidget *button, GtkWidget *view)
 
 void delete_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
 {
-	RmCall *call = NULL;
+	RmCallEntry *call = NULL;
 	GValue ptr = { 0 };
 
 	gtk_tree_model_get_value(model, iter, JOURNAL_COL_CALL_PTR, &ptr);
@@ -501,16 +485,16 @@ void delete_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, g
 	call = g_value_get_pointer(&ptr);
 
 	switch (call->type) {
-	case RM_CALL_TYPE_RECORD:
+	case RM_CALL_ENTRY_TYPE_RECORD:
 		g_unlink(call->priv);
 		break;
-	case RM_CALL_TYPE_VOICE:
+	case RM_CALL_ENTRY_TYPE_VOICE:
 		rm_router_delete_voice(rm_profile_get_active(), call->priv);
 		break;
-	case RM_CALL_TYPE_FAX:
+	case RM_CALL_ENTRY_TYPE_FAX:
 		rm_router_delete_fax(rm_profile_get_active(), call->priv);
 		break;
-	case RM_CALL_TYPE_FAX_REPORT:
+	case RM_CALL_ENTRY_TYPE_FAX_REPORT:
 		g_unlink(call->priv);
 		break;
 	default:
@@ -549,14 +533,14 @@ void journal_button_delete_clicked_cb(GtkWidget *button, GtkWidget *view)
 	rm_router_load_journal(rm_profile_get_active());
 }
 
-void journal_add_contact(RmCall *call)
+void journal_add_contact(RmCallEntry *call)
 {
 	app_contacts(call->remote);
 }
 
 void add_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
 {
-	RmCall *call = NULL;
+	RmCallEntry *call = NULL;
 	GValue ptr = { 0 };
 
 	gtk_tree_model_get_value(model, iter, JOURNAL_COL_CALL_PTR, &ptr);
@@ -657,13 +641,13 @@ void journal_update_filter(void)
 
 void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
 {
-	RmCall *call;
+	RmCallEntry *call;
 
 	gtk_tree_model_get(model, iter, JOURNAL_COL_CALL_PTR, &call, -1);
 
 	switch (call->type) {
-	case RM_CALL_TYPE_FAX_REPORT:
-	case RM_CALL_TYPE_FAX: {
+	case RM_CALL_ENTRY_TYPE_FAX_REPORT:
+	case RM_CALL_ENTRY_TYPE_FAX: {
 		gsize len = 0;
 		gchar *data = rm_router_load_fax(rm_profile_get_active(), call->priv, &len);
 
@@ -677,10 +661,10 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 		g_free(data);
 		break;
 	}
-	case RM_CALL_TYPE_RECORD:
+	case RM_CALL_ENTRY_TYPE_RECORD:
 		rm_os_execute(call->priv);
 		break;
-	case RM_CALL_TYPE_VOICE:
+	case RM_CALL_ENTRY_TYPE_VOICE:
 		answeringmachine_play(call->priv);
 		break;
 	default:
@@ -729,8 +713,8 @@ gint journal_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpointer data)
 
 gint journal_sort_by_date(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer data)
 {
-	RmCall *call_a;
-	RmCall *call_b;
+	RmCallEntry *call_a;
+	RmCallEntry *call_b;
 
 	gtk_tree_model_get(model, a, JOURNAL_COL_CALL_PTR, &call_a, -1);
 	gtk_tree_model_get(model, b, JOURNAL_COL_CALL_PTR, &call_b, -1);
@@ -751,7 +735,7 @@ gint journal_sort_by_type(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, g
 
 void name_column_cell_data_func(GtkTreeViewColumn *column, GtkCellRenderer *renderer, GtkTreeModel *model, GtkTreeIter *iter, gpointer user_data)
 {
-	RmCall *call;
+	RmCallEntry *call;
 
 	gtk_tree_model_get(model, iter, JOURNAL_COL_CALL_PTR, &call, -1);
 
@@ -822,29 +806,33 @@ static gboolean journal_column_header_button_pressed_cb(GtkTreeViewColumn *colum
 	GtkMenu *menu = GTK_MENU(user_data);
 
 	if (event->button == GDK_BUTTON_SECONDARY) {
+#if GTK_CHECK_VERSION(3, 21, 0)
+		gtk_menu_popup_at_pointer(menu, (GdkEvent*) event);
+#else
 		gtk_menu_popup(menu, NULL, NULL, NULL, NULL, event->button, event->time);
+#endif
 		return TRUE;
 	}
 
 	return FALSE;
 }
 
-void journal_popup_copy_number(GtkWidget *widget, RmCall *call)
+void journal_popup_copy_number(GtkWidget *widget, RmCallEntry *call)
 {
 	gtk_clipboard_set_text(gtk_clipboard_get(GDK_NONE), call->remote->number, -1);
 }
 
-void journal_popup_call_number(GtkWidget *widget, RmCall *call)
+void journal_popup_call_number(GtkWidget *widget, RmCallEntry *call)
 {
 	app_show_phone_window(call->remote, NULL);
 }
 
-void journal_popup_add_contact(GtkWidget *widget, RmCall *call)
+void journal_popup_add_contact(GtkWidget *widget, RmCallEntry *call)
 {
 	journal_add_contact(call);
 }
 
-void journal_popup_delete_entry(GtkWidget *widget, RmCall *call)
+void journal_popup_delete_entry(GtkWidget *widget, RmCallEntry *call)
 {
 	journal_button_delete_clicked_cb(NULL, journal_view);
 }
@@ -856,7 +844,7 @@ void journal_popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer use
 	GtkTreeModel *model;
 	GList *list;
 	GtkTreeIter iter;
-	RmCall *call = NULL;
+	RmCallEntry *call = NULL;
 
 	if (gtk_tree_selection_count_selected_rows(selection) != 1) {
 		return;
@@ -908,7 +896,11 @@ void journal_popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer use
 
 	gtk_widget_show_all(menu);
 
+#if GTK_CHECK_VERSION(3,21,0)
+	gtk_menu_popup_at_pointer(GTK_MENU(menu), (GdkEvent*)event);
+#else
 	gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, (event != NULL) ? event->button : 0, gdk_event_get_time((GdkEvent*)event));
+#endif
 #endif
 }
 

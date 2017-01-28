@@ -24,18 +24,18 @@
 #include <gio/gio.h>
 #include <gtk/gtk.h>
 
-#include <libroutermanager/rmplugins.h>
-#include <libroutermanager/rmcall.h>
-#include <libroutermanager/rmobject.h>
-#include <libroutermanager/rmobjectemit.h>
-#include <libroutermanager/rmphone.h>
-#include <libroutermanager/plugins/capi/ringtone.h>
-#include <libroutermanager/rmrouter.h>
-#include <libroutermanager/rmprofile.h>
-#include <libroutermanager/rmlookup.h>
-#include <libroutermanager/rmstring.h>
-#include <libroutermanager/rmsettings.h>
-#include <libroutermanager/rmnotification.h>
+#include <rm/rmplugins.h>
+#include <rm/rmcallentry.h>
+#include <rm/rmobject.h>
+#include <rm/rmobjectemit.h>
+#include <rm/rmphone.h>
+#include <rm/plugins/capi/ringtone.h>
+#include <rm/rmrouter.h>
+#include <rm/rmprofile.h>
+#include <rm/rmlookup.h>
+#include <rm/rmstring.h>
+#include <rm/rmsettings.h>
+#include <rm/rmnotification.h>
 
 #include <roger/main.h>
 #include <roger/application.h>
@@ -87,22 +87,15 @@ void gnotification_show_missed_calls(void)
 	g_object_unref(notify);
 }
 
-gpointer gnotification_show(RmConnection *connection)
+gpointer gnotification_show(RmConnection *connection, RmContact *contact)
 {
 	GNotification *notify = NULL;
-	RmLookup *lookup = rm_profile_get_lookup(rm_profile_get_active());
 	GIcon *icon;
 	gchar *title;
 	gchar *text;
 	gchar *uid;
 
 	g_debug("%s(): called", __FUNCTION__);
-	/** Ask for contact information */
-	RmContact *contact = rm_contact_find_by_number(connection->remote_number);
-
-	if (RM_EMPTY_STRING(contact->name)) {
-		rm_lookup_search(lookup, contact->number, &contact->name, &contact->street, &contact->zip, &contact->city);
-	}
 
 	if (connection->type != RM_CONNECTION_TYPE_INCOMING && connection->type != RM_CONNECTION_TYPE_OUTGOING) {
 		g_warning("Unhandled case in connection notify - gnotification!");
@@ -155,7 +148,7 @@ gpointer gnotification_show(RmConnection *connection)
 	return uid;
 }
 
-void gnotification_update(RmConnection *connection)
+void gnotification_update(RmConnection *connection, RmContact *contact)
 {
 }
 

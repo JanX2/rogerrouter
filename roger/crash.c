@@ -44,9 +44,9 @@
 #	include <gnu/libc-version.h>
 #endif
 
-#include <libroutermanager/rmfile.h>
-#include <libroutermanager/rmprofile.h>
-#include <libroutermanager/rmrouter.h>
+#include <rm/rmfile.h>
+#include <rm/rmprofile.h>
+#include <rm/rmrouter.h>
 
 #define DEBUGGERRC "debuggerrc"
 #define BUGZILLA_URI "https://www.tabos.org/forum"
@@ -344,7 +344,7 @@ static GtkWidget *crash_dialog_show(const gchar *text, const gchar *debug_output
 	gtk_container_set_border_width(GTK_CONTAINER(hbox1), 4);
 
 	label1 = gtk_label_new
-	    (g_strdup_printf(_("%s.\nPlease file a bug report and include the information below\nand the debug log (~/.cache/routermanager/debug.log)."), text));
+	    (g_strdup_printf(_("%s.\nPlease file a bug report and include the information below\nand the debug log (~/.cache/rm/debug.log)."), text));
 	gtk_widget_show(label1);
 	gtk_box_pack_start(GTK_BOX(hbox1), label1, TRUE, TRUE, 0);
 	gtk_widget_set_halign(label1, GTK_ALIGN_START);

@@ -42,7 +42,7 @@ msgstr "Ein Benutzername sowie Passwort werden von der Seite %s benötigt"
 
 #: roger/application.c:209 roger/application.c:390
 msgid "Extensions"
-msgstr "Nebenstellen"
+msgstr "Erweiterungen"
 
 #: roger/application.c:379 roger/contacts.c:1080
 #: roger/plugins/statusicon/gtk.c:204 roger/plugins/indicator/indicator.c:226

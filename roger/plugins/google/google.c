@@ -23,18 +23,18 @@
 
 #include <gtk/gtk.h>
 
-#include <libroutermanager/rmplugins.h>
-#include <libroutermanager/rmprofile.h>
-#include <libroutermanager/rmobject.h>
-#include <libroutermanager/rmaddressbook.h>
-#include <libroutermanager/rmcall.h>
-#include <libroutermanager/rmrouter.h>
-#include <libroutermanager/rmsettings.h>
-#include <libroutermanager/rmstring.h>
-#include <libroutermanager/rmosdep.h>
-#include <libroutermanager/rmobjectemit.h>
-#include <libroutermanager/rmpassword.h>
-#include <libroutermanager/rmnumber.h>
+#include <rm/rmplugins.h>
+#include <rm/rmprofile.h>
+#include <rm/rmobject.h>
+#include <rm/rmaddressbook.h>
+#include <rm/rmcallentry.h>
+#include <rm/rmrouter.h>
+#include <rm/rmsettings.h>
+#include <rm/rmstring.h>
+#include <rm/rmosdep.h>
+#include <rm/rmobjectemit.h>
+#include <rm/rmpassword.h>
+#include <rm/rmnumber.h>
 
 #include <roger/main.h>
 #include <roger/uitools.h>

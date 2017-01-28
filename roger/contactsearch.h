@@ -9,6 +9,9 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE(ContactSearch, contact_search, CONTACT, SEARCH, GtkBox)
 
+GtkWidget *contact_search_new(void);
+gchar *contact_search_get_number(ContactSearch *widget);
+
 G_END_DECLS
 
 #endif

@@ -24,14 +24,14 @@
 
 #include <gtk/gtk.h>
 
-#include <libroutermanager/rmobject.h>
-#include <libroutermanager/rmobjectemit.h>
-#include <libroutermanager/rmrouter.h>
-#include <libroutermanager/rmphone.h>
-#include <libroutermanager/rmaddressbook.h>
-#include <libroutermanager/rmstring.h>
-#include <libroutermanager/rmnumber.h>
-#include <libroutermanager/rmphone.h>
+#include <rm/rmobject.h>
+#include <rm/rmobjectemit.h>
+#include <rm/rmrouter.h>
+#include <rm/rmphone.h>
+#include <rm/rmaddressbook.h>
+#include <rm/rmstring.h>
+#include <rm/rmnumber.h>
+#include <rm/rmphone.h>
 
 #include <roger/main.h>
 #include <roger/journal.h>
@@ -98,37 +98,24 @@ static void phone_control_buttons_set_sensitive(gboolean sensitive)
  */
 void phone_dial_buttons_set_dial(gboolean allow_dial)
 {
-	RmProfile *profile = rm_profile_get_active();
-
 	gtk_widget_set_sensitive(phone_state->pickup_button, allow_dial);
 	gtk_widget_set_sensitive(phone_state->hangup_button, !allow_dial);
 
 	/* Toggle control buttons sensitive value */
-	//if (rm_router_get_phone_port(profile) == PORT_SOFTPHONE) {
-	//	phone_control_buttons_set_sensitive(!allow_dial);
-	//} else {
-	//	phone_control_buttons_set_sensitive(FALSE);
-	//}
-	g_warning("%s(): TODO", __FUNCTION__);
+	if (phone_state->connection && phone_state->connection->type & RM_CONNECTION_TYPE_SOFTPHONE) {
+		phone_control_buttons_set_sensitive(!allow_dial);
+	} else {
+		phone_control_buttons_set_sensitive(FALSE);
+	}
 }
 
 /**
- * \brief Connection established callback - Starts timer if needed
+ * \brief Connection changed callback
  * \param object appobject
  * \param connection connection pointer
  * \param user_data phone state pointer
  */
-static void phone_connection_established_cb(RmObject *object, RmConnection *connection, gpointer user_data)
-{
-}
-
-/**
- * \brief Connection terminated callback - Stops timer
- * \param object appobject
- * \param connection connection pointer
- * \param user_data phone state pointer
- */
-static void phone_connection_terminated_cb(RmObject *object, RmConnection *connection, gpointer user_data)
+static void phone_connection_changed_cb(RmObject *obj, gint type, RmConnection *connection, gpointer user_data)
 {
 	g_debug("%s(): connection = %p", __FUNCTION__, connection);
 
@@ -136,6 +123,11 @@ static void phone_connection_terminated_cb(RmObject *object, RmConnection *conne
 		return;
 	}
 
+	if (!(type & RM_CONNECTION_TYPE_DISCONNECT)) {
+		return;
+	}
+
+	g_debug("%s(): disconnect", __FUNCTION__);
 	/* Make sure that the status information is updated */
 	phone_status_timer_cb(NULL);
 
@@ -235,7 +227,7 @@ void hangup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	}
 
 	phone_control_buttons_reset();
-	rm_phone_hangup(phone_state->phone, phone_state->connection);
+	rm_phone_hangup(phone_state->connection);
 	phone_dial_buttons_set_dial(TRUE);
 }
 
@@ -845,7 +837,6 @@ void phone_clear_button_clicked_cb(GtkWidget *widget, gpointer user_data)
  */
 static void phone_pickup(RmConnection *connection)
 {
-#if 0
 	/* Pick up */
 	if (!rm_phone_pickup(connection)) {
 		/* Set internal connection */
@@ -853,8 +844,11 @@ static void phone_pickup(RmConnection *connection)
 
 		/* Disable dial button */
 		phone_dial_buttons_set_dial(FALSE);
+
+		if (!phone_state->status_timer_id) {
+			phone_state->status_timer_id = g_timeout_add(250, phone_status_timer_cb, NULL);
+		}
 	}
-#endif
 }
 
 /**
@@ -960,9 +954,8 @@ void app_show_phone_window(RmContact *contact, RmConnection *connection)
 
 	g_object_unref(G_OBJECT(builder));
 
-	/* Connect connection signals */
-	g_signal_connect(rm_object, "connection-established", G_CALLBACK(phone_connection_established_cb), NULL);
-	g_signal_connect(rm_object, "connection-terminated", G_CALLBACK(phone_connection_terminated_cb), NULL);
+	/* Connect connection signal */
+	g_signal_connect(rm_object, "connection-changed", G_CALLBACK(phone_connection_changed_cb), NULL);
 
 	if (contact) {
 		/* Set contact name */

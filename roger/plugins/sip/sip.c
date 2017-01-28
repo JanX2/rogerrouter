@@ -1,5 +1,5 @@
 /**
- * The libroutermanager project
+ * The rm project
  * Copyright (c) 2012-2016 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
@@ -23,16 +23,16 @@
 
 #include <pjsua-lib/pjsua.h>
 
-#include <libroutermanager/rmconnection.h>
-#include <libroutermanager/rmplugins.h>
-#include <libroutermanager/rmprofile.h>
-#include <libroutermanager/rmrouter.h>
-#include <libroutermanager/rmnetmonitor.h>
-#include <libroutermanager/rmaudio.h>
-#include <libroutermanager/rmstring.h>
-#include <libroutermanager/rmphone.h>
-#include <libroutermanager/rmobjectemit.h>
-#include <libroutermanager/rmsettings.h>
+#include <rm/rmconnection.h>
+#include <rm/rmplugins.h>
+#include <rm/rmprofile.h>
+#include <rm/rmrouter.h>
+#include <rm/rmnetmonitor.h>
+#include <rm/rmaudio.h>
+#include <rm/rmstring.h>
+#include <rm/rmphone.h>
+#include <rm/rmobjectemit.h>
+#include <rm/rmsettings.h>
 
 #include <roger/main.h>
 #include <roger/uitools.h>
@@ -42,7 +42,7 @@
 #define RM_SIP_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_SIP_PLUGIN, RmSipPlugin))
 
 typedef struct {
-	gconstpointer net_event_id;
+	RmNetEvent *net_event;
 
 	guint id;
 
@@ -59,68 +59,6 @@ struct sip_call {
 };
 
 static GSettings *sip_settings = NULL;
-
-struct sip_call *call_init_tonegen(pjsua_call_id call_id)
-{
-  pj_pool_t *pool;
-  struct sip_call *cd;
-  pjsua_call_info ci;
-
-  pool = pjsua_pool_create("mycall", 512, 512);
-  cd = PJ_POOL_ZALLOC_T(pool, struct sip_call);
-  cd->pool = pool;
-
-  pjmedia_tonegen_create(cd->pool, 8000, 1, 160, 16, 0, &cd->tonegen);
-  pjsua_conf_add_port(cd->pool, cd->tonegen, &cd->toneslot);
-
-  pjsua_call_get_info(call_id, &ci);
-  pjsua_conf_connect(cd->toneslot, ci.conf_slot);
-
-  pjsua_call_set_user_data(call_id, (void*) cd);
-
-  return cd;
-}
-
-void call_play_digit(RmConnection *connection, const char *digits)
-{
-  pjmedia_tone_digit d[16];
-  unsigned i, count = strlen(digits);
-  struct sip_call *cd;
-
-  cd = connection->priv;
-  if (!cd) {
-    cd = call_init_tonegen(connection->id);
-    connection->priv = cd;
-  }
-
-  if (count > PJ_ARRAY_SIZE(d))
-    count = PJ_ARRAY_SIZE(d);
-
-  pj_bzero(d, sizeof(d));
-  for (i=0; i<count; ++i) {
-    d[i].digit = digits[i];
-    d[i].on_msec = 100;
-    d[i].off_msec = 200;
-    d[i].volume = 0;
-  }
-
-  pjmedia_tonegen_play_digits(cd->tonegen, count, d, 0);
-}
-
-void call_deinit_tonegen(pjsua_call_id call_id)
-{
-  struct sip_call *cd;
-
-  cd = (struct sip_call*) pjsua_call_get_user_data(call_id);
-  if (!cd)
-     return;
-
-  pjsua_conf_remove_port(cd->toneslot);
-  pjmedia_port_destroy(cd->tonegen);
-  pj_pool_release(cd->pool);
-
-  pjsua_call_set_user_data(call_id, NULL);
-}
 
 /* Callback called by the library upon receiving incoming call */
 static void on_incoming_call(pjsua_acc_id acc_id, pjsua_call_id call_id, pjsip_rx_data *rdata)
@@ -163,10 +101,7 @@ static void on_call_state(pjsua_call_id call_id, pjsip_event *e)
 	if (ci.state == PJSIP_INV_STATE_CONFIRMED) {
 		rm_object_emit_connection_connect(connection);
 	} else if (ci.state == PJSIP_INV_STATE_DISCONNECTED) {
-		g_debug("%s(): Emitting disconnect", __FUNCTION__);
 		rm_object_emit_connection_disconnect(connection);
-		g_debug("%s(): Destroying connection", __FUNCTION__);
-		call_deinit_tonegen(call_id);
 		rm_connection_remove(connection);
 	}
 }
@@ -257,15 +192,13 @@ void sip_phone_send_dtmf_code(RmConnection *connection, guchar code)
 
 	pj_str_t dtmf_code = pj_str((gchar*)dtmf);
 
-	//call_play_digit(connection, (const char*) dtmf);
-
 	pjsua_call_dial_dtmf(connection->id, &dtmf_code);
+
 	g_free(dtmf);
 }
 
 gboolean sip_connect(gpointer user_data)
 {
-	//RmSipPlugin *sip_plugin = user_data;
 	RmProfile *profile = rm_profile_get_active();
 	pj_status_t status;
 	pj_thread_desc rtpdesc;
@@ -276,6 +209,11 @@ gboolean sip_connect(gpointer user_data)
 	pjsua_acc_config acc_cfg;
 
 	g_debug("%s(): called", __FUNCTION__);
+
+	if (RM_EMPTY_STRING(g_settings_get_string(sip_settings, "user")) || RM_EMPTY_STRING(g_settings_get_string(sip_settings, "password"))) {
+		g_debug("%s(): credentials not set, exiting", __FUNCTION__);
+		return FALSE;
+	}
 
 	/* Create pjsua first! */
 	status = pjsua_create();
@@ -358,16 +296,14 @@ gboolean sip_connect(gpointer user_data)
 	int dev_count;
 
 	pjmedia_aud_dev_index dev_idx;
-	pj_status_t status;
 	dev_count = pjmedia_aud_dev_count();
 	printf("Got %d audio devices\n", dev_count);
 
 	for (dev_idx=0; dev_idx<dev_count; ++dev_idx) {
 		pjmedia_aud_dev_info info;
-		status = pjmedia_aud_dev_get_info(dev_idx, &info);
+		pjmedia_aud_dev_get_info(dev_idx, &info);
 
 		printf("%d. %s/%s (in=%d, out=%d)\n", dev_idx, info.name, info.driver, info.input_count, info.output_count);
-		status = status;
 	}
 	}
 
@@ -385,23 +321,14 @@ gboolean sip_disconnect(gpointer user_data)
 	return status == PJ_SUCCESS;
 }
 
-gboolean sip_phone_number_is_handled(gchar *number)
-{
-	if (!strcmp(number, g_settings_get_string(sip_settings, "msn"))) {
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
 RmPhone sip_phone = {
+	NULL,
 	"SIP Phone",
 	sip_phone_dial,
 	sip_phone_pickup,
 	sip_phone_hangup,
 	sip_phone_hold,
 	sip_phone_send_dtmf_code,
-	sip_phone_number_is_handled,
 };
 
 /**
@@ -414,12 +341,14 @@ static void impl_activate(PeasActivatable *plugin)
 
 	g_debug("%s(): sip", __FUNCTION__);
 
-	sip_settings = rm_settings_new_profile("org.tabos.roger.plugins.sip", "sip", rm_profile_get_name(rm_profile_get_active()));
+	sip_settings = rm_settings_new_profile("org.tabos.roger.plugins.sip", "sip", (gchar*) rm_profile_get_name(rm_profile_get_active()));
 
 	/* Add network event */
-	sip_plugin->priv->net_event_id = rm_netmonitor_add_event("SIP", sip_connect, sip_disconnect, sip_plugin);
+	sip_plugin->priv->net_event = rm_netmonitor_add_event("SIP", sip_connect, sip_disconnect, sip_plugin);
 
 	sip_plugin->priv->device = rm_device_register("SIP");
+
+	sip_phone.device = sip_plugin->priv->device;
 
 	rm_phone_register(&sip_phone);
 }
@@ -434,7 +363,7 @@ static void impl_deactivate(PeasActivatable *plugin)
 
 	g_debug("%s(): sip", __FUNCTION__);
 	/* Remove network event */
-	rm_netmonitor_remove_event(sip_plugin->priv->net_event_id);
+	rm_netmonitor_remove_event(sip_plugin->priv->net_event);
 	rm_phone_unregister(&sip_phone);
 
 	g_clear_object(&sip_settings);
@@ -447,7 +376,6 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	GtkWidget *msn_entry;
 	GtkWidget *label;
 	GtkWidget *grid;
-	GtkWidget *group;
 
 	grid = gtk_grid_new();
 	//gtk_widget_set_margin(grid, 18, 18, 18, 18);
