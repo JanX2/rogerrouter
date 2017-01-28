@@ -1,0 +1,21 @@
+/* config.h.meson.  Generated from meson.  */
+
+/* Define to the version of this package. */
+#mesondefine PACKAGE_VERSION
+
+/* Define to the full name of this package. */
+#mesondefine PACKAGE_NAME
+
+/* Define to the address where bug reports for this package should be sent. */
+#mesondefine PACKAGE_BUGREPORT
+
+#mesondefine GETTEXT_PACKAGE
+
+#mesondefine APP_DATA
+
+#mesondefine APP_PLUGINS
+#mesondefine APP_LOCALE
+
+#mesondefine RM_PLUGINS
+
+#mesondefine HAVE_SYS_UTSNAME_H
