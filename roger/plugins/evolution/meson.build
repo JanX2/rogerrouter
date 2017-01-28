@@ -1,7 +1,7 @@
 evolution_sources = []
 evolution_sources += 'evolution.c'
 
-dep = dependency('libebook-1.2')
+dep = dependency('libebook-1.2', required: false)
 
 if dep.found()
 evolution_dep = []
