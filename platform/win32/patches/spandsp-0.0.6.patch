@@ -1,0 +1,39 @@
+diff -urN spandsp-0.0.6/configure.ac spandsp-0.0.6-new/configure.ac
+--- spandsp-0.0.6/configure.ac	2010-08-01 09:01:22.000000000 +0200
++++ spandsp-0.0.6-new/configure.ac	2013-10-19 13:09:33.456358704 +0200
+@@ -150,9 +150,9 @@
+ 
+ AC_FUNC_ERROR_AT_LINE
+ AC_FUNC_VPRINTF
+-AC_FUNC_MALLOC
++#AC_FUNC_MALLOC
+ AC_FUNC_MEMCMP
+-AC_FUNC_REALLOC
++#AC_FUNC_REALLOC
+ AC_FUNC_SELECT_ARGTYPES
+ 
+ AX_C99_FUNC_LRINT
+@@ -344,7 +344,8 @@
+     fi
+     case $host_os in
+     mingw* | cygwin*)
+-        COMP_VENDOR_LDFLAGS="-no-undefined"
++        COMP_VENDOR_LDFLAGS="-no-undefined -lws2_32"
++        COMP_VENDOR_CFLAGS="-DLIBSPANDSP_EXPORTS $COMP_VENDOR_CFLAGS"
+         ;;
+     *)
+         COMP_VENDOR_LDFLAGS=
+diff -urN spandsp-0.0.6/src/t4_rx.c spandsp-0.0.6-new/src/t4_rx.c
+--- spandsp-0.0.6/src/t4_rx.c	2012-08-04 11:16:07.000000000 +0200
++++ spandsp-0.0.6-new/src/t4_rx.c	2013-10-19 13:08:13.737968427 +0200
+@@ -103,6 +103,10 @@
+ #include "spandsp/private/t4_rx.h"
+ #include "spandsp/private/t4_tx.h"
+ 
++#ifdef __WIN32
++#include <winsock2.h>
++#endif
++
+ /*! The number of centimetres in one inch */
+ #define CM_PER_INCH                 2.54f
+ 

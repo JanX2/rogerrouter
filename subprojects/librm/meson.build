@@ -1,0 +1,73 @@
+project('rm', 'c', version : '2.0.0', license : 'GPL2', default_options : ['prefix=/usr'])
+
+rm_name = meson.project_name()
+rm_version = meson.project_version()
+
+version_arr = rm_version.split('.')
+rm_version_major = version_arr[0]
+rm_version_minor = version_arr[1]
+rm_version_micro = version_arr[2]
+
+api_version = '2.0'
+soversion = 0
+
+libversion = '@0@.@1@.0'.format(soversion, rm_version_minor.to_int() * 100 + rm_version_micro.to_int())
+
+gnome = import('gnome')
+
+cc = meson.get_compiler('c')
+msgfmt = find_program('msgfmt')
+
+podir = '@0@'.format(meson.current_source_dir())
+
+rm_dep = []
+rm_dep += dependency('glib-2.0')
+rm_dep += dependency('libsoup-2.4')
+rm_dep += dependency('speex')
+rm_dep += dependency('libxml-2.0')
+rm_dep += dependency('libtiff-4')
+rm_dep += cc.find_library('m', required: true)
+rm_dep += dependency('spandsp')
+rm_dep += dependency('json-glib-1.0')
+rm_dep += dependency('uuid')
+rm_dep += dependency('dconf')
+rm_dep += dependency('libpeas-1.0')
+
+# Check for UPnP support
+upnp_dep = dependency('gupnp-1.0', required : false)
+rm_dep += upnp_dep
+
+# Check for SSDP support
+ssdp_dep = dependency('gssdp-1.0', required : false)
+rm_dep += ssdp_dep
+
+rm_inc = include_directories('.')
+
+rm_plugins_path = get_option('prefix') + '/' + get_option('libdir') + '/' + rm_name
+
+cdata = configuration_data()
+cdata.set('RM_NAME', '"rm"')
+cdata.set('RM_VERSION', '"@0@"'.format(rm_version))
+cdata.set('RM_PLUGINS', '"' + rm_plugins_path + '"')
+cdata.set10('HAVE_SSDP', ssdp_dep.found())
+
+if host_machine.system() == 'windows'
+	cdata.set10('RM_FAX_SERVER', 1)
+else
+	cdata.set10('RM_FAX_SPOOLER', 1)
+endif
+
+configure_file(input : 'rmconfig.h.meson',
+  output : 'rmconfig.h',
+  configuration : cdata)
+
+gnome.compile_schemas()
+install_data('org.tabos.rm.gschema.xml',
+install_dir : 'share/glib-2.0/schemas')
+
+subdir('po')
+subdir('rm')
+subdir('plugins')
+#subdir('docs')
+
+meson.add_install_script('meson_post_install.sh')

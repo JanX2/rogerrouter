@@ -1,0 +1,15 @@
+#!/bin/sh
+set -x
+package_version=@PACKAGE_VERSION@
+if test -d ../.svn && test -x "`which svn 2>&1;true`" ; then \
+	svn=`svn info ../ | \
+	sed -n 's/^Revision: \([0-9][0-9]*\).*/\1/p'`
+fi
+
+echo SVN version: $svn
+#exit
+VERSION=$package_version
+gtk-mac-bundler roger.bundle
+pkgbuild --install-location /Applications --component RogerRouter.app --version $VERSION --scripts scripts Roger\ Router\ -\ ${VERSION}.pkg
+rm -rf RogerRouter.app
+

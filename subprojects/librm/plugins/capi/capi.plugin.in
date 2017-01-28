@@ -1,0 +1,9 @@
+[Plugin]
+Module=capi
+Name=CAPI
+Description=Fax & phone support based on CAPI
+Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
+Copyright=Copyright © 2016 Jan-Michael Brummer
+Website=http://www.tabos.org/
+Help=http://www.tabos.org/forum/
+Builtin=true

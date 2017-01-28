@@ -1,0 +1,74 @@
+<?xml version="1.0" standalone="no"?> <!--*- mode: nxml -*-->
+<?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
+<moduleset>
+	<include href="http://git.gnome.org/browse/gtk-osx/plain/modulesets-stable/gtk-osx.modules"/>
+	<repository type="svn" name="roger" href="http://svn.tabos.org/repos/"/>
+	<repository type="tarball" name="gnome-symbolic" href="http://ftp.gnome.org/pub/GNOME/sources/gnome-icon-theme-symbolic/3.10/"/>
+	<repository type="tarball" name="libcapi20" href="http://en.tabos.org/download/"/>
+	<repository type="tarball" name="speex" href="http://downloads.xiph.org/releases/speex/"/>
+	<repository type="tarball" name="libsndfile" href="http://www.mega-nerd.com/libsndfile/files/"/>
+	<repository type="tarball" name="libsoup" href="http://ftp.gnome.org/pub/GNOME/sources/libsoup/2.40/"/>
+	<repository type="tarball" name="libpeas" href="http://ftp.gnome.org/pub/GNOME/sources/libpeas/1.6/"/>
+	<repository type="tarball" name="spandsp" href="http://soft-switch.org/downloads/spandsp/"/>
+	<repository type="tarball" name="portaudio" href="http://www.portaudio.com/archives/"/>
+	<repository type="tarball" name="ghostscript" href="http://prdownloads.sourceforge.net/ghostscript/GPL%20Ghostscript/"/>
+
+	<autotools id="gnome-icon-theme-symbolic">
+		<branch repo="gnome-symbolic" module="gnome-icon-theme-symbolic-3.10.1.tar.xz" version="3.10.1" />
+	</autotools>
+
+	<autotools id="speex">
+		<branch repo="speex" module="speex-1.2rc1.tar.gz" version="1.2rc1" size="1061882" md5sum="c4438b22c08e5811ff10e2b06ee9b9ae" />
+	</autotools>
+
+	<autotools id="libsndfile">
+		<branch repo="libsndfile" module="libsndfile-1.0.25.tar.gz" version="1.0.25" size="1060692" md5sum="e2b7bb637e01022c7d20f95f9c3990a2">
+			<patch file="libsndfile-1.0.25.patch" strip="1"/>
+		</branch>
+	</autotools>
+
+	<autotools id="libsoup" autogen-sh="./autogen.sh; ./configure" autogenargs="--without-gnome --disable-tls-check" makeargs="CFLAGS+=-Wno-format-nonliteral">
+		<branch repo="libsoup" module="libsoup-2.40.3.tar.xz" version="2.40.3" />
+	</autotools>
+
+	<autotools id="libpeas">
+		<branch repo="libpeas" module="libpeas-1.6.2.tar.xz" version="1.6.2">
+			<patch file="libpeas-1.6.2.patch" strip="1"/>
+		</branch>
+	</autotools>
+
+	 <autotools id="spandsp" autogen-sh="./autogen.sh; ./configure">
+		<branch repo="spandsp" module="spandsp-0.0.6pre20.tgz" version="0.0.6" checkoutdir="spandsp-0.0.6" size="3278969" md5sum="9bdf1d027f1b5dc5e622d707fa1634cb"  />
+	</autotools>
+
+	<autotools id="libcapi20">
+		<branch repo="libcapi20" module="capi20.tar.bz2" version="3.6" checkoutdir="capi20" />
+	</autotools>
+
+	<autotools id="portaudio" autogen-sh="configure" autogenargs="--disable-mac-universal ">
+		<branch repo="portaudio" module="pa_stable_v19_20111121.tgz" version="v19" checkoutdir="portaudio" size="1422825" md5sum="25c85c1cc5e9e657486cbc299c6c035a">
+			<patch file="portaudio.patch" strip="1"/>
+		</branch>
+	</autotools>
+
+	<autotools id="ghostscript" autogen-sh="configure" autogenargs="--without-x">
+		<branch repo="ghostscript" module="9.09/ghostscript-9.09.tar.bz2" version="9.09"/>
+	</autotools>
+
+	<autotools id="roger" autogen-sh="autogen.sh; ./configure --disable-werror	">
+		<branch repo="roger"/>
+		<dependencies>
+			<dep package="librsvg"/>
+			<dep package="gnome-icon-theme"/>
+			<dep package="gnome-icon-theme-symbolic"/>
+			<dep package="libcapi20"/>
+			<dep package="speex"/>
+			<dep package="libsndfile"/>
+			<dep package="libsoup"/>
+			<dep package="libpeas"/>
+			<dep package="spandsp"/>
+			<dep package="portaudio"/>
+			<dep package="ghostscript"/>
+		</dependencies>
+	</autotools>
+</moduleset>

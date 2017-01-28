@@ -1,0 +1,314 @@
+diff -urN libpeas-1.8.1-orig/libpeas/Makefile.am libpeas-1.8.1/libpeas/Makefile.am
+--- libpeas-1.8.1-orig/libpeas/Makefile.am	2013-03-17 07:57:21.000000000 +0100
++++ libpeas-1.8.1/libpeas/Makefile.am	2013-12-18 23:38:12.678613707 +0100
+@@ -85,33 +85,33 @@
+ dist-hook:
+ 	cd $(distdir); rm -f $(BUILT_SOURCES)
+ 
+-if HAVE_INTROSPECTION
+-  -include $(INTROSPECTION_MAKEFILE)
+-  INTROSPECTION_GIRS = Peas-1.0.gir
+-  INTROSPECTION_SCANNER_ARGS = \
+-	-I$(top_srcdir) 		\
+-	--c-include=libpeas/peas.h	\
+-	--warn-all
+-
+-  introspection_sources = $(INST_H_FILES) $(C_FILES)
+-
+-  Peas-1.0.gir: libpeas-1.0.la
+-  Peas_1_0_gir_INCLUDES = GObject-2.0 GModule-2.0 Gio-2.0 GIRepository-2.0
+-  Peas_1_0_gir_CFLAGS = $(PEAS_CFLAGS)
+-  Peas_1_0_gir_LIBS = libpeas-1.0.la
+-  Peas_1_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
+-  Peas_1_0_gir_EXPORT_PACKAGES = libpeas-1.0
+-
+-  girdir = $(datadir)/gir-1.0
+-  gir_DATA = $(INTROSPECTION_GIRS)
+-
+-  typelibdir = $(libdir)/girepository-1.0
+-  typelib_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+-
+-  CLEANFILES += \
+-	$(gir_DATA)		\
+-	$(typelib_DATA)
+-endif
++#if HAVE_INTROSPECTION
++#  -include $(INTROSPECTION_MAKEFILE)
++#  INTROSPECTION_GIRS = Peas-1.0.gir
++#  INTROSPECTION_SCANNER_ARGS = \
++#	-I$(top_srcdir) 		\
++#	--c-include=libpeas/peas.h	\
++#	--warn-all
++#
++#  introspection_sources = $(INST_H_FILES) $(C_FILES)
++#
++#  Peas-1.0.gir: libpeas-1.0.la
++#  Peas_1_0_gir_INCLUDES = GObject-2.0 GModule-2.0 Gio-2.0 GIRepository-2.0
++#  Peas_1_0_gir_CFLAGS = $(PEAS_CFLAGS)
++#  Peas_1_0_gir_LIBS = libpeas-1.0.la
++#  Peas_1_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
++#  Peas_1_0_gir_EXPORT_PACKAGES = libpeas-1.0
++#
++#  girdir = $(datadir)/gir-1.0
++#  gir_DATA = $(INTROSPECTION_GIRS)
++#
++#  typelibdir = $(libdir)/girepository-1.0
++#  typelib_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
++#
++#  CLEANFILES += \
++#	$(gir_DATA)		\
++#	$(typelib_DATA)
++#endif
+ 
+ gcov_sources = $(C_FILES)
+ include $(top_srcdir)/Makefile.gcov
+diff -urN libpeas-1.8.1-orig/libpeas/Makefile.in libpeas-1.8.1/libpeas/Makefile.in
+--- libpeas-1.8.1-orig/libpeas/Makefile.in	2013-06-18 12:37:58.000000000 +0200
++++ libpeas-1.8.1/libpeas/Makefile.in	2013-12-18 23:38:12.679613812 +0100
+@@ -52,9 +52,9 @@
+ POST_UNINSTALL = :
+ build_triplet = @build@
+ host_triplet = @host@
+-@HAVE_INTROSPECTION_TRUE@am__append_1 = \
+-@HAVE_INTROSPECTION_TRUE@	$(gir_DATA)		\
+-@HAVE_INTROSPECTION_TRUE@	$(typelib_DATA)
++#@HAVE_INTROSPECTION_TRUE@am__append_1 = \
++#@HAVE_INTROSPECTION_TRUE@	$(gir_DATA)		\
++#@HAVE_INTROSPECTION_TRUE@	$(typelib_DATA)
+ 
+ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
+ 	$(top_srcdir)/Makefile.gcov
+@@ -457,22 +457,22 @@
+ header_DATA = $(INST_H_FILES)
+ EXTRA_DIST = peas-marshal.list
+ CLEANFILES = $(BUILT_SOURCES) $(am__append_1)
+-@HAVE_INTROSPECTION_TRUE@INTROSPECTION_GIRS = Peas-1.0.gir
+-@HAVE_INTROSPECTION_TRUE@INTROSPECTION_SCANNER_ARGS = \
+-@HAVE_INTROSPECTION_TRUE@	-I$(top_srcdir) 		\
+-@HAVE_INTROSPECTION_TRUE@	--c-include=libpeas/peas.h	\
+-@HAVE_INTROSPECTION_TRUE@	--warn-all
+-
+-@HAVE_INTROSPECTION_TRUE@introspection_sources = $(INST_H_FILES) $(C_FILES)
+-@HAVE_INTROSPECTION_TRUE@Peas_1_0_gir_INCLUDES = GObject-2.0 GModule-2.0 Gio-2.0 GIRepository-2.0
+-@HAVE_INTROSPECTION_TRUE@Peas_1_0_gir_CFLAGS = $(PEAS_CFLAGS)
+-@HAVE_INTROSPECTION_TRUE@Peas_1_0_gir_LIBS = libpeas-1.0.la
+-@HAVE_INTROSPECTION_TRUE@Peas_1_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
+-@HAVE_INTROSPECTION_TRUE@Peas_1_0_gir_EXPORT_PACKAGES = libpeas-1.0
+-@HAVE_INTROSPECTION_TRUE@girdir = $(datadir)/gir-1.0
+-@HAVE_INTROSPECTION_TRUE@gir_DATA = $(INTROSPECTION_GIRS)
+-@HAVE_INTROSPECTION_TRUE@typelibdir = $(libdir)/girepository-1.0
+-@HAVE_INTROSPECTION_TRUE@typelib_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
++#@HAVE_INTROSPECTION_TRUE@INTROSPECTION_GIRS = Peas-1.0.gir
++#@HAVE_INTROSPECTION_TRUE@INTROSPECTION_SCANNER_ARGS = \
++#@HAVE_INTROSPECTION_TRUE@	-I$(top_srcdir) 		\
++#@HAVE_INTROSPECTION_TRUE@	--c-include=libpeas/peas.h	\
++#@HAVE_INTROSPECTION_TRUE@	--warn-all
++
++#@HAVE_INTROSPECTION_TRUE@introspection_sources = $(INST_H_FILES) $(C_FILES)
++#@HAVE_INTROSPECTION_TRUE@Peas_1_0_gir_INCLUDES = GObject-2.0 GModule-2.0 Gio-2.0 GIRepository-2.0
++#@HAVE_INTROSPECTION_TRUE@Peas_1_0_gir_CFLAGS = $(PEAS_CFLAGS)
++#@HAVE_INTROSPECTION_TRUE@Peas_1_0_gir_LIBS = libpeas-1.0.la
++#@HAVE_INTROSPECTION_TRUE@Peas_1_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
++#@HAVE_INTROSPECTION_TRUE@Peas_1_0_gir_EXPORT_PACKAGES = libpeas-1.0
++#@HAVE_INTROSPECTION_TRUE@girdir = $(datadir)/gir-1.0
++#@HAVE_INTROSPECTION_TRUE@gir_DATA = $(INTROSPECTION_GIRS)
++#@HAVE_INTROSPECTION_TRUE@typelibdir = $(libdir)/girepository-1.0
++#@HAVE_INTROSPECTION_TRUE@typelib_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+ gcov_sources = $(C_FILES)
+ all: $(BUILT_SOURCES)
+ 	$(MAKE) $(AM_MAKEFLAGS) all-am
+@@ -886,9 +886,9 @@
+ dist-hook:
+ 	cd $(distdir); rm -f $(BUILT_SOURCES)
+ 
+-@HAVE_INTROSPECTION_TRUE@  -include $(INTROSPECTION_MAKEFILE)
++#@HAVE_INTROSPECTION_TRUE@  -include $(INTROSPECTION_MAKEFILE)
+ 
+-@HAVE_INTROSPECTION_TRUE@  Peas-1.0.gir: libpeas-1.0.la
++#@HAVE_INTROSPECTION_TRUE@  Peas-1.0.gir: libpeas-1.0.la
+ 
+ @GCOV_ENABLED_TRUE@gcov: all
+ @GCOV_ENABLED_TRUE@	@echo ""; \
+diff -urN libpeas-1.8.1-orig/libpeas/peas-object-module.h libpeas-1.8.1/libpeas/peas-object-module.h
+--- libpeas-1.8.1-orig/libpeas/peas-object-module.h	2012-04-16 19:54:04.000000000 +0200
++++ libpeas-1.8.1/libpeas/peas-object-module.h	2013-12-18 23:38:29.974425945 +0100
+@@ -88,13 +88,13 @@
+                                                                const gchar      *path,
+                                                                gboolean          resident);
+ 
+-GObject            *peas_object_module_create_object          (PeasObjectModule *module,
++/*GObject            *peas_object_module_create_object          (PeasObjectModule *module,
+                                                                GType             interface,
+                                                                guint             n_parameters,
+                                                                GParameter       *parameters);
+ gboolean            peas_object_module_provides_object        (PeasObjectModule *module,
+                                                                GType             interface);
+-
++*/
+ const gchar        *peas_object_module_get_path               (PeasObjectModule *module);
+ const gchar        *peas_object_module_get_module_name        (PeasObjectModule *module);
+ 
+diff -urN libpeas-1.8.1-orig/libpeas-gtk/Makefile.am libpeas-1.8.1/libpeas-gtk/Makefile.am
+--- libpeas-1.8.1-orig/libpeas-gtk/Makefile.am	2013-03-17 07:57:21.000000000 +0100
++++ libpeas-1.8.1/libpeas-gtk/Makefile.am	2013-12-18 23:38:12.679613812 +0100
+@@ -44,35 +44,35 @@
+ headerdir = $(prefix)/include/libpeas-1.0/libpeas-gtk
+ header_DATA = $(INST_H_FILES)
+ 
+-if HAVE_INTROSPECTION
+-  -include $(INTROSPECTION_MAKEFILE)
+-  INTROSPECTION_GIRS = PeasGtk-1.0.gir
+-  INTROSPECTION_SCANNER_ARGS = \
+-	--add-include-path=$(top_builddir)/libpeas	\
+-	--c-include=libpeas-gtk/peas-gtk.h		\
+-	--warn-all
+-  INTROSPECTION_COMPILER_ARGS = \
+-	--includedir=$(top_srcdir)/libpeas		\
+-	--includedir=$(top_builddir)/libpeas
+-
+-  introspection_sources = $(INST_H_FILES) $(C_FILES)
+-
+-  PeasGtk-1.0.gir: libpeas-gtk-1.0.la
+-  PeasGtk_1_0_gir_INCLUDES = GObject-2.0 Gtk-3.0
+-  PeasGtk_1_0_gir_CFLAGS = $(PEAS_CFLAGS) $(PEAS_GTK_CFLAGS) -I$(top_srcdir)
+-  PeasGtk_1_0_gir_LIBS = $(top_builddir)/libpeas/libpeas-1.0.la libpeas-gtk-1.0.la
+-  PeasGtk_1_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
+-  PeasGtk_1_0_gir_EXPORT_PACKAGES = libpeas-gtk-1.0
+-  PeasGtk_1_0_gir_SCANNERFLAGS = --include-uninstalled=$(top_builddir)/libpeas/Peas-1.0.gir
++#if HAVE_INTROSPECTION
++#  -include $(INTROSPECTION_MAKEFILE)
++#  INTROSPECTION_GIRS = PeasGtk-1.0.gir
++#  INTROSPECTION_SCANNER_ARGS = \
++#	--add-include-path=$(top_builddir)/libpeas	\
++#	--c-include=libpeas-gtk/peas-gtk.h		\
++#	--warn-all
++#  INTROSPECTION_COMPILER_ARGS = \
++#	--includedir=$(top_srcdir)/libpeas		\
++#	--includedir=$(top_builddir)/libpeas
++
++#  introspection_sources = $(INST_H_FILES) $(C_FILES)
++
++#  PeasGtk-1.0.gir: libpeas-gtk-1.0.la
++#  PeasGtk_1_0_gir_INCLUDES = GObject-2.0 Gtk-3.0
++#  PeasGtk_1_0_gir_CFLAGS = $(PEAS_CFLAGS) $(PEAS_GTK_CFLAGS) -I$(top_srcdir)
++#  PeasGtk_1_0_gir_LIBS = $(top_builddir)/libpeas/libpeas-1.0.la libpeas-gtk-1.0.la
++#  PeasGtk_1_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
++#  PeasGtk_1_0_gir_EXPORT_PACKAGES = libpeas-gtk-1.0
++#  PeasGtk_1_0_gir_SCANNERFLAGS = --include-uninstalled=$(top_builddir)/libpeas/Peas-1.0.gir
+ 
+-  girdir = $(datadir)/gir-1.0
+-  gir_DATA = $(INTROSPECTION_GIRS)
++#  girdir = $(datadir)/gir-1.0
++#  gir_DATA = $(INTROSPECTION_GIRS)
+ 
+-  typelibdir = $(libdir)/girepository-1.0
+-  typelib_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
++#  typelibdir = $(libdir)/girepository-1.0
++#  typelib_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+ 
+-  CLEANFILES = $(gir_DATA) $(typelib_DATA)
+-endif
++#  CLEANFILES = $(gir_DATA) $(typelib_DATA)
++#endif
+ 
+ gcov_sources = $(C_FILES)
+ include $(top_srcdir)/Makefile.gcov
+diff -urN libpeas-1.8.1-orig/libpeas-gtk/Makefile.in libpeas-1.8.1/libpeas-gtk/Makefile.in
+--- libpeas-1.8.1-orig/libpeas-gtk/Makefile.in	2013-06-18 12:37:58.000000000 +0200
++++ libpeas-1.8.1/libpeas-gtk/Makefile.in	2013-12-18 23:38:12.679613812 +0100
+@@ -420,28 +420,28 @@
+ 
+ headerdir = $(prefix)/include/libpeas-1.0/libpeas-gtk
+ header_DATA = $(INST_H_FILES)
+-@HAVE_INTROSPECTION_TRUE@INTROSPECTION_GIRS = PeasGtk-1.0.gir
+-@HAVE_INTROSPECTION_TRUE@INTROSPECTION_SCANNER_ARGS = \
+-@HAVE_INTROSPECTION_TRUE@	--add-include-path=$(top_builddir)/libpeas	\
+-@HAVE_INTROSPECTION_TRUE@	--c-include=libpeas-gtk/peas-gtk.h		\
+-@HAVE_INTROSPECTION_TRUE@	--warn-all
+-
+-@HAVE_INTROSPECTION_TRUE@INTROSPECTION_COMPILER_ARGS = \
+-@HAVE_INTROSPECTION_TRUE@	--includedir=$(top_srcdir)/libpeas		\
+-@HAVE_INTROSPECTION_TRUE@	--includedir=$(top_builddir)/libpeas
+-
+-@HAVE_INTROSPECTION_TRUE@introspection_sources = $(INST_H_FILES) $(C_FILES)
+-@HAVE_INTROSPECTION_TRUE@PeasGtk_1_0_gir_INCLUDES = GObject-2.0 Gtk-3.0
+-@HAVE_INTROSPECTION_TRUE@PeasGtk_1_0_gir_CFLAGS = $(PEAS_CFLAGS) $(PEAS_GTK_CFLAGS) -I$(top_srcdir)
+-@HAVE_INTROSPECTION_TRUE@PeasGtk_1_0_gir_LIBS = $(top_builddir)/libpeas/libpeas-1.0.la libpeas-gtk-1.0.la
+-@HAVE_INTROSPECTION_TRUE@PeasGtk_1_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
+-@HAVE_INTROSPECTION_TRUE@PeasGtk_1_0_gir_EXPORT_PACKAGES = libpeas-gtk-1.0
+-@HAVE_INTROSPECTION_TRUE@PeasGtk_1_0_gir_SCANNERFLAGS = --include-uninstalled=$(top_builddir)/libpeas/Peas-1.0.gir
+-@HAVE_INTROSPECTION_TRUE@girdir = $(datadir)/gir-1.0
+-@HAVE_INTROSPECTION_TRUE@gir_DATA = $(INTROSPECTION_GIRS)
+-@HAVE_INTROSPECTION_TRUE@typelibdir = $(libdir)/girepository-1.0
+-@HAVE_INTROSPECTION_TRUE@typelib_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+-@HAVE_INTROSPECTION_TRUE@CLEANFILES = $(gir_DATA) $(typelib_DATA)
++#@HAVE_INTROSPECTION_TRUE@INTROSPECTION_GIRS = PeasGtk-1.0.gir
++#@HAVE_INTROSPECTION_TRUE@INTROSPECTION_SCANNER_ARGS = \
++#@HAVE_INTROSPECTION_TRUE@	--add-include-path=$(top_builddir)/libpeas	\
++#@HAVE_INTROSPECTION_TRUE@	--c-include=libpeas-gtk/peas-gtk.h		\
++#@HAVE_INTROSPECTION_TRUE@	--warn-all
++
++#@HAVE_INTROSPECTION_TRUE@INTROSPECTION_COMPILER_ARGS = \
++#@HAVE_INTROSPECTION_TRUE@	--includedir=$(top_srcdir)/libpeas		\
++#@HAVE_INTROSPECTION_TRUE@	--includedir=$(top_builddir)/libpeas
++
++#@HAVE_INTROSPECTION_TRUE@introspection_sources = $(INST_H_FILES) $(C_FILES)
++#@HAVE_INTROSPECTION_TRUE@PeasGtk_1_0_gir_INCLUDES = GObject-2.0 Gtk-3.0
++#@HAVE_INTROSPECTION_TRUE@PeasGtk_1_0_gir_CFLAGS = $(PEAS_CFLAGS) $(PEAS_GTK_CFLAGS) -I$(top_srcdir)
++#@HAVE_INTROSPECTION_TRUE@PeasGtk_1_0_gir_LIBS = $(top_builddir)/libpeas/libpeas-1.0.la libpeas-gtk-1.0.la
++#@HAVE_INTROSPECTION_TRUE@PeasGtk_1_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
++#@HAVE_INTROSPECTION_TRUE@PeasGtk_1_0_gir_EXPORT_PACKAGES = libpeas-gtk-1.0
++#@HAVE_INTROSPECTION_TRUE@PeasGtk_1_0_gir_SCANNERFLAGS = --include-uninstalled=$(top_builddir)/libpeas/Peas-1.0.gir
++#@HAVE_INTROSPECTION_TRUE@girdir = $(datadir)/gir-1.0
++#@HAVE_INTROSPECTION_TRUE@gir_DATA = $(INTROSPECTION_GIRS)
++#@HAVE_INTROSPECTION_TRUE@typelibdir = $(libdir)/girepository-1.0
++#@HAVE_INTROSPECTION_TRUE@typelib_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
++#@HAVE_INTROSPECTION_TRUE@CLEANFILES = $(gir_DATA) $(typelib_DATA)
+ gcov_sources = $(C_FILES)
+ all: all-am
+ 
+@@ -827,9 +827,9 @@
+ 	uninstall-libLTLIBRARIES uninstall-typelibDATA
+ 
+ 
+-@HAVE_INTROSPECTION_TRUE@  -include $(INTROSPECTION_MAKEFILE)
++#@HAVE_INTROSPECTION_TRUE@  -include $(INTROSPECTION_MAKEFILE)
+ 
+-@HAVE_INTROSPECTION_TRUE@  PeasGtk-1.0.gir: libpeas-gtk-1.0.la
++#@HAVE_INTROSPECTION_TRUE@  PeasGtk-1.0.gir: libpeas-gtk-1.0.la
+ 
+ @GCOV_ENABLED_TRUE@gcov: all
+ @GCOV_ENABLED_TRUE@	@echo ""; \
+diff -urN libpeas-1.8.1-orig/Makefile.am libpeas-1.8.1/Makefile.am
+--- libpeas-1.8.1-orig/Makefile.am	2013-03-17 07:57:21.000000000 +0100
++++ libpeas-1.8.1/Makefile.am	2013-12-18 23:38:12.679613812 +0100
+@@ -10,7 +10,7 @@
+ GCOVDIRS += libpeas-gtk
+ endif
+ 
+-SUBDIRS += tests data po docs
++SUBDIRS += data po docs
+ 
+ dist-hook:
+ 	@if test -d "$(srcdir)/.git"; \
+diff -urN libpeas-1.8.1-orig/Makefile.in libpeas-1.8.1/Makefile.in
+--- libpeas-1.8.1-orig/Makefile.in	2013-06-18 12:38:00.000000000 +0200
++++ libpeas-1.8.1/Makefile.in	2013-12-18 23:38:12.679613812 +0100
+@@ -104,7 +104,7 @@
+ 	distdir dist dist-all distcheck
+ ETAGS = etags
+ CTAGS = ctags
+-DIST_SUBDIRS = libpeas loaders libpeas-gtk peas-demo tests data po \
++DIST_SUBDIRS = libpeas loaders libpeas-gtk peas-demo data po \
+ 	docs
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+ distdir = $(PACKAGE)-$(VERSION)
+@@ -367,7 +367,7 @@
+ top_srcdir = @top_srcdir@
+ ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
+ DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --enable-glade-catalog
+-SUBDIRS = libpeas loaders $(am__append_1) tests data po docs
++SUBDIRS = libpeas loaders $(am__append_1) data po docs
+ GCOVDIRS = libpeas loaders $(am__append_2)
+ all: config.h
+ 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
