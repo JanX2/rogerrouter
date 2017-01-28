@@ -21,12 +21,12 @@ msgfmt = find_program('msgfmt')
 podir = '@0@'.format(meson.current_source_dir())
 
 rm_dep = []
+rm_dep += cc.find_library('m', required: true)
 rm_dep += dependency('glib-2.0')
 rm_dep += dependency('libsoup-2.4')
 rm_dep += dependency('speex')
 rm_dep += dependency('libxml-2.0')
 rm_dep += dependency('libtiff-4')
-rm_dep += cc.find_library('m', required: true)
 rm_dep += dependency('spandsp')
 rm_dep += dependency('json-glib-1.0')
 rm_dep += dependency('uuid')
@@ -68,6 +68,9 @@ install_dir : 'share/glib-2.0/schemas')
 subdir('po')
 subdir('rm')
 subdir('plugins')
-#subdir('docs')
+
+if get_option('enable-gtk-doc')
+subdir('docs')
+endif
 
 meson.add_install_script('meson_post_install.sh')

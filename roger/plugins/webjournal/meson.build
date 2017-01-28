@@ -5,9 +5,11 @@ webjournal_dep = []
 webjournal_dep += rm_dep
 webjournal_dep += roger_dep
 
+webjournal_inc = [rm_inc, roger_inc]
+
 libwebjournal = shared_library('webjournal',
                         webjournal_sources,
-                        include_directories : rm_inc,
+                        include_directories : webjournal_inc,
                         dependencies : webjournal_dep,
                         install : true,
                         install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/webjournal/')

@@ -29,7 +29,7 @@
 #include <rm/rmobject.h>
 #include <rm/rmobjectemit.h>
 #include <rm/rmphone.h>
-#include <rm/plugins/capi/ringtone.h>
+//#include <rm/plugins/capi/ringtone.h>
 #include <rm/rmrouter.h>
 #include <rm/rmprofile.h>
 #include <rm/rmlookup.h>

@@ -12,9 +12,11 @@ gtknotify_dep = []
 gtknotify_dep += rm_dep
 gtknotify_dep += roger_dep
 
+gtknotify_inc = [rm_inc, roger_inc]
+
 libgtknotify = shared_library('gtknotify',
                         gtknotify_sources,
-                        include_directories : rm_inc,
+                        include_directories : gtknotify_inc,
                         dependencies : gtknotify_dep,
                         install : true,
                         install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/gtknotify/')

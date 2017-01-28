@@ -6,9 +6,11 @@ fritzfon_dep += rm_dep
 fritzfon_dep += roger_dep
 fritzfon_dep += dependency('libebook-1.2')
 
+fritzfon_inc = [rm_inc, roger_inc]
+
 libfritzfon = shared_library('fritzfon',
                         fritzfon_sources,
-                        include_directories : rm_inc,
+                        include_directories : fritzfon_inc,
                         dependencies : fritzfon_dep,
                         install : true,
                         install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/fritzfon/')

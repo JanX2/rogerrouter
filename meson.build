@@ -43,6 +43,7 @@ rm_dep = rm_sp.get_variable('rm_dep')
 rm_inc = rm_sp.get_variable('rm_inc')
 
 subdir('roger')
+subdir('roger-cli')
 
 meson.add_install_script('meson_post_install.sh')
 

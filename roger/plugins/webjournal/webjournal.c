@@ -243,7 +243,8 @@ static void impl_deactivate(PeasActivatable *plugin)
 
 void filename_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
-	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Set HTML file"), settings_get_window(), GTK_FILE_CHOOSER_ACTION_SAVE, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Save"), GTK_RESPONSE_ACCEPT, NULL);
+	GtkWindow *window = gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default()));
+	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Set HTML file"), window, GTK_FILE_CHOOSER_ACTION_SAVE, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Save"), GTK_RESPONSE_ACCEPT, NULL);
 	GtkFileFilter *filter;
 
 	filter = gtk_file_filter_new();
@@ -272,7 +273,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 15);
 
-	report_dir_label = ui_label_new(_("Web Journal output file"));
+	report_dir_label = gtk_label_new(_("Web Journal output file"));
 	gtk_grid_attach(GTK_GRID(grid), report_dir_label, 0, 1, 1, 1);
 
 	GtkWidget *report_dir_entry = gtk_entry_new();
@@ -286,8 +287,8 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	gtk_grid_attach(GTK_GRID(grid), report_dir_entry, 1, 1, 1, 1);
 	gtk_grid_attach(GTK_GRID(grid), report_dir_button, 2, 1, 1, 1);
 
-	group = pref_group_create(grid, _("Web Journal"), TRUE, FALSE);
+	//group = pref_group_create(grid, _("Web Journal"), TRUE, FALSE);
 
-	return group;
+	return grid;
 }
 

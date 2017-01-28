@@ -6,9 +6,11 @@ sip_dep += rm_dep
 sip_dep += roger_dep
 sip_dep += dependency('libpjproject')
 
+sip_inc = [rm_inc, roger_inc]
+
 libsip = shared_library('sip',
                         sip_sources,
-                        include_directories : rm_inc,
+                        include_directories : sip_inc,
                         dependencies : sip_dep,
                         install : true,
                         install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/sip/')

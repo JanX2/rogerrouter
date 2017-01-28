@@ -23,18 +23,18 @@
 #include <glib/gstdio.h>
 #include <glib/gprintf.h>
 
-#include <libroutermanager/rmobject.h>
-#include <libroutermanager/rmprofile.h>
-#include <libroutermanager/rmmain.h>
-#include <libroutermanager/rmlog.h>
-#include <libroutermanager/rmrouter.h>
-#include <libroutermanager/rmstring.h>
-#include <libroutermanager/rmcall.h>
+#include <rm/rmobject.h>
+#include <rm/rmprofile.h>
+#include <rm/rmmain.h>
+#include <rm/rmlog.h>
+#include <rm/rmrouter.h>
+#include <rm/rmstring.h>
+#include <rm/rmcallentry.h>
 
-//#include <libroutermanager/libfaxophone/faxophone.h>
-#include <libroutermanager/plugins/capi/fax.h>
-#include <libroutermanager/rmphone.h>
-//#include <libroutermanager/fax_phone.h>
+//#include <rm/libfaxophone/faxophone.h>
+//#include <rm/plugins/capi/fax.h>
+#include <rm/rmphone.h>
+//#include <rm/fax_phone.h>
 
 #include <config.h>
 
@@ -77,7 +77,7 @@ void journal_loaded_cb(RmObject *obj, GSList *journal, gpointer unused)
 
 	/* Just dump journal to cli */
 	for (list = journal; list != NULL; list = list->next) {
-		RmCall *call = list->data;
+		RmCallEntry *call = list->data;
 		gchar *local_name = rm_convert_utf8(call->local->name, -1);
 		gchar *remote_name = rm_convert_utf8(call->remote->name, -1);
 
@@ -163,20 +163,9 @@ gchar *convert_fax_to_tiff(gchar *file_name)
  * \param connection capi connection pointer
  * \param user_data user data pointer (NULL)
  */
-static void capi_connection_established_cb(RmObject *object, struct capi_connection *connection, gpointer user_data)
+static void capi_connection_notify_cb(RmObject *object, gint type, RmConnection *connection, gpointer user_data)
 {
-	g_message(_("Connected"));
-}
-
-/**
- * \brief CAPI connection terminated callback - just print message
- * \param object RmObject
- * \param connection capi connection pointer
- * \param user_data user data pointer (NULL)
- */
-static void capi_connection_terminated_cb(RmObject *object, struct capi_connection *connection, gpointer user_data)
-{
-	g_message(_("Disconnected"));
+	g_message(_("Called me"));
 }
 
 /**
@@ -186,7 +175,7 @@ static void capi_connection_terminated_cb(RmObject *object, struct capi_connecti
  * \param connection capi connection pointer
  * \param user_data user data pointer (NULL)
  */
-void fax_connection_status_cb(RmObject *object, gint status, struct capi_connection *connection, gpointer user_data)
+void fax_connection_status_cb(RmObject *object, gint status, RmConnection *connection, gpointer user_data)
 {
 /*	struct fax_status *fax_status;
 	gchar buffer[256];
@@ -303,8 +292,7 @@ int main(int argc, char **argv)
 
 	if (sendfax && file_name && number) {
 		g_signal_connect(rm_object, "connection-status", G_CALLBACK(fax_connection_status_cb), NULL);
-		g_signal_connect(rm_object, "connection-established", G_CALLBACK(capi_connection_established_cb), NULL);
-		g_signal_connect(rm_object, "connection-terminated", G_CALLBACK(capi_connection_terminated_cb), NULL);
+		g_signal_connect(rm_object, "connection-notify", G_CALLBACK(capi_connection_notify_cb), NULL);
 
 		tiff = convert_fax_to_tiff(file_name);
 		if (tiff) {
@@ -324,8 +312,7 @@ int main(int argc, char **argv)
 
 	if (call && number) {
 		RmPhone *phone = rm_profile_get_phone(rm_profile_get_active());
-		g_signal_connect(rm_object, "connection-established", G_CALLBACK(capi_connection_established_cb), NULL);
-		g_signal_connect(rm_object, "connection-terminated", G_CALLBACK(capi_connection_terminated_cb), NULL);
+		g_signal_connect(rm_object, "connection-notify", G_CALLBACK(capi_connection_notify_cb), NULL);
 
 		rm_phone_dial(phone, number, FALSE);
 	}

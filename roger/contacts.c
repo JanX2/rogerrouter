@@ -1029,6 +1029,13 @@ void app_contacts(RmContact *contact)
 	}
 
 	book = rm_profile_get_addressbook(rm_profile_get_active());
+	if (!book) {
+		GSList *book_plugins = rm_addressbook_get_plugins();
+
+		if (book_plugins) {
+			book = book_plugins->data;
+		}
+	}
 
 	contacts = g_malloc0(sizeof(struct contacts));
 	contacts_set_contact(contacts, contact);

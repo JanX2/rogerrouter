@@ -5,9 +5,11 @@ gnotification_dep = []
 gnotification_dep += rm_dep
 gnotification_dep += roger_dep
 
+gnotification_inc = [rm_inc, roger_inc]
+
 libgnotification = shared_library('gnotification',
                         gnotification_sources,
-                        include_directories : rm_inc,
+                        include_directories : gnotification_inc,
                         dependencies : gnotification_dep,
                         install : true,
                         install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/gnotification/')

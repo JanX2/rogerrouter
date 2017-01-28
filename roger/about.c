@@ -28,8 +28,6 @@
 #include <roger/main.h>
 #include <roger/journal.h>
 
-#include <config.h>
-
 /**
  * about_response:
  * @widget: dialog widget we will destroy
