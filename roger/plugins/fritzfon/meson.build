@@ -4,7 +4,6 @@ fritzfon_sources += 'fritzfon.c'
 fritzfon_dep = []
 fritzfon_dep += rm_dep
 fritzfon_dep += roger_dep
-fritzfon_dep += dependency('libebook-1.2')
 
 fritzfon_inc = [rm_inc, roger_inc]
 
