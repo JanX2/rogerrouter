@@ -26,7 +26,7 @@ function build()
 	else
 		autoconf
 	fi
-	mingw32-configure
+	mingw64-configure
 	if [ $? -ne 0 ]; then
 		exit
 	fi
@@ -97,20 +97,20 @@ topdir=`pwd`/..
 windir=`pwd`
 
 # ********************* INFO *****************************
-echo "Cross-Compiling Roger Router for Windows 32-bit"
+echo "Cross-Compiling Roger Router for Windows 64-bit"
 
-# ********************* MINGW32 PACKAGES **************************
+# ********************* MINgw64 PACKAGES **************************
 
-# Install mingw32 tools
+# Install mingw64 tools
 
 if [ $# -eq 1 ]; then
 	if [ $1 == "setup" ]; then
-		sudo dnf install mingw32-atk mingw32-gettext mingw32-pkg-config mingw32-binutils mingw32-glib2 mingw32-termcap mingw32-bzip2 mingw32-gtk3 \
-			mingw32-wine-gecko mingw32-cairo mingw32-harfbuzz mingw32-win-iconv mingw32-cpp mingw32-headers mingw32-zlib mingw32-crt \
-			mingw32-icu mingw32-expat mingw32-jasper mingw32-filesystem mingw32-libffi mingw32-fontconfig mingw32-libjpeg-turbo \
-			mingw32-freetype mingw32-libpng mingw-binutils-generic mingw32-gcc-c++ mingw32-libxml2 mingw-filesystem-base \
-			mingw32-gcc mingw32-pango mingw32-gdk-pixbuf mingw32-pixman mingw32-libsoup mingw32-dlfcn mingw32-libtiff mingw32-pthreads \
-			mingw32-libogg mingw32-speex mingw32-librsvg2 mingw32-nsis mingw32-hicolor-icon-theme mingw32-gstreamer1-plugins-good \
+		sudo dnf install mingw64-atk mingw64-gettext mingw64-pkg-config mingw64-binutils mingw64-glib2 mingw64-termcap mingw64-bzip2 mingw64-gtk3 \
+			mingw64-wine-gecko mingw64-cairo mingw64-harfbuzz mingw64-win-iconv mingw64-cpp mingw64-headers mingw64-zlib mingw64-crt \
+			mingw64-icu mingw64-expat mingw64-jasper mingw64-filesystem mingw64-libffi mingw64-fontconfig mingw64-libjpeg-turbo \
+			mingw64-freetype mingw64-libpng mingw-binutils-generic mingw64-gcc-c++ mingw64-libxml2 mingw-filesystem-base \
+			mingw64-gcc mingw64-pango mingw64-gdk-pixbuf mingw64-pixman mingw64-libsoup mingw64-dlfcn mingw64-libtiff mingw64-pthreads \
+			mingw64-libogg mingw64-speex mingw64-librsvg2 mingw64-nsis mingw64-hicolor-icon-theme mingw64-gstreamer1-plugins-good mingw64-dlfcn\
 			flex bison python-devel wget gcc patch autoconf automake intltool libtool glib2-devel
 		sudo dnf install wine
 	fi
@@ -134,12 +134,14 @@ make_pkg "http://tabos.org/downloads/" "libcapi20-3.0.7.tar.bz2" "capi20"
 make_pkg "http://soft-switch.org/downloads/spandsp/" "spandsp-0.0.6pre21.tgz" "spandsp-0.0.6"
 
 # Download and compile gobject-introspection (default compilation broken due to python)
-export python_dir=$HOME/.wine/drive_c/Python27
-make_pkg "http://ftp.gnome.org/pub/GNOME/sources/gobject-introspection/1.42/" "gobject-introspection-1.42.0.tar.xz" "gobject-introspection-1.42.0"
+#export python_dir=$HOME/.wine/drive_c/Python27
+#make_pkg "http://ftp.gnome.org/pub/GNOME/sources/gobject-introspection/1.42/" "gobject-introspection-1.42.0.tar.xz" "gobject-introspection-1.42.0"
 
 # Download and compile libpeas (depends on gobject-introspection, g-ir-scanner)
 #make_pkg "http://ftp.gnome.org/pub/GNOME/sources/libpeas/1.12/" "libpeas-1.12.1.tar.xz" "libpeas-1.12.1"
-make_pkg "http://ftp.gnome.org/pub/GNOME/sources/libpeas/1.8/" "libpeas-1.8.1.tar.xz" "libpeas-1.8.1"
+#make_pkg "http://ftp.gnome.org/pub/GNOME/sources/libpeas/1.8/" "libpeas-1.8.1.tar.xz" "libpeas-1.8.1"
+
+make_pkg "https://downloads.sourceforge.net/project/libuuid/" "libuuid-1.0.3.tar.gz" "libuuid-1.0.3"
 
 make_pkg "http://ftp.gnome.org/pub/GNOME/sources/gssdp/0.14/" "gssdp-0.14.15.tar.xz" "gssdp-0.14.15"
 
@@ -153,8 +155,8 @@ make_pkg "http://ftp.gnome.org/pub/GNOME/sources/json-glib/1.2/" "json-glib-1.2.
 download https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs919/ gs919w32.exe
 
 # Compile Roger Router
-cd $topdir
-build .
+#cd $topdir
+#build .
 
 # Build windows executable
-makensis win32/roger.nsi
+#makensis win32/roger.nsi

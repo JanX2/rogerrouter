@@ -1,0 +1,16 @@
+<schemalist>
+	<schema id="org.tabos.roger.plugins.gnotification" path="/org/tabos/roger/plugins/gnotification/">
+		<key name="incoming-numbers" type="as">
+			<default>[]</default>
+		</key>
+		<key name="outgoing-numbers" type="as">
+			<default>[]</default>
+		</key>
+		<key name="play-ringtones" type="b">
+			<default>true</default>
+		</key>
+		<key name="duration" type="i">
+			<default>5</default>
+		</key>
+	</schema>
+</schemalist>

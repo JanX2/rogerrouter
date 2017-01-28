@@ -62,7 +62,7 @@ struct _RmObjectClass {
 	void (*contact_process)(RmContact *contact);
 	void (*fax_process)(const gchar *filename);
 	void (*connection_status)(gint status, RmConnection *connection);
-	void (*message)(gchar *title, gchar *message);
+	void (*message)(gpointer title, gpointer message);
 	void (*contacts_changed)(void);
 	void (*authenticate)(RmAuthData *auth_data);
 };

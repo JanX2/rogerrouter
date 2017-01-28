@@ -23,6 +23,7 @@
 
 #include <rm/rmaddressbook.h>
 #include <rm/rmobject.h>
+#include <rm/rmobjectemit.h>
 #include <rm/rmcontact.h>
 #include <rm/rmrouter.h>
 #include <rm/rmstring.h>
@@ -331,4 +332,29 @@ gchar *rm_addressbook_get_sub_name(RmAddressBook *book)
 GSList *rm_addressbook_get_plugins(void)
 {
 	return rm_addressbook_plugins;
+}
+
+/**
+ * rm_addressbook_get_sub_books:
+ *
+ * Get all sub books provides by given address book plugin
+ *
+ * Returns: strv of all sub books or %NULL
+ */
+gchar **rm_addressbook_get_sub_books(RmAddressBook *book)
+{
+	if (book && book->get_sub_books) {
+		return book->get_sub_books();
+	}
+
+	return NULL;
+}
+
+void rm_addressbook_set_sub_book(RmAddressBook *book, gchar *name)
+{
+	if (book && book->set_sub_book) {
+		if (book->set_sub_book(name)) {
+			rm_object_emit_contacts_changed();
+		}
+	}
 }

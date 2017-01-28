@@ -8,7 +8,7 @@ google_dep += dependency('libgdata')
 
 libgoogle = shared_library('google',
                         google_sources,
-                        include_directories : rm_inc,
+                        include_directories : roger_inc,
                         dependencies : google_dep,
                         install : true,
                         install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/google/')

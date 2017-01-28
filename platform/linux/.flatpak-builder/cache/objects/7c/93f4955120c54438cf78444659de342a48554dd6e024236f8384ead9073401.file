@@ -1,0 +1,9 @@
+<tr><td sorttable_customkey="%TYPE%" class="%TYPE%"></td>
+	<td sorttable_customkey="%CUSTOMKEY%">%DATETIME%</td>
+	<td>%NAME%</td>
+	<td>%COMPANY%</td>
+	<td><a href="tel:%NUMBER%">%NUMBER%</a></td>
+	<td>%CITY%</td>
+	<td>%EXTENSION%</td>
+	<td>%LINE%</td>
+	<td>%DURATION%</td></tr>

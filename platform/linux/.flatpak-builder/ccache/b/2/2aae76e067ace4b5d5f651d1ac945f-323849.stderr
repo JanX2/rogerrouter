@@ -1,0 +1,4 @@
+t38_gateway.c: In function ‘hdlc_underflow_handler’:
+t38_gateway.c:376:9: warning: variable ‘old_data_type’ set but not used [-Wunused-but-set-variable]
+     int old_data_type;
+         ^

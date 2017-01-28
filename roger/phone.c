@@ -889,6 +889,11 @@ gboolean phone_window_delete_event_cb(GtkWidget *window, GdkEvent *event, gpoint
 void app_show_phone_window(RmContact *contact, RmConnection *connection)
 {
 	GtkBuilder *builder;
+	RmProfile *profile = rm_profile_get_active();
+
+	if (!profile) {
+		return;
+	}
 
 	/* If there is already an open phone window, present it to the user and return */
 	if (phone_state) {
@@ -913,7 +918,7 @@ void app_show_phone_window(RmContact *contact, RmConnection *connection)
 	/* Allocate phone state structure */
 	phone_state = g_slice_alloc0(sizeof(struct phone_state));
 
-	phone_state->phone = rm_profile_get_phone(rm_profile_get_active());
+	phone_state->phone = rm_profile_get_phone(profile);
 
 	/* Connect to builder objects */
 	phone_state->window = GTK_WIDGET(gtk_builder_get_object(builder, "phone_window"));

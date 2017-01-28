@@ -1,0 +1,4 @@
+fax_modems.c: In function ‘v21_rx_status_handler’:
+fax_modems.c:184:25: warning: variable ‘s’ set but not used [-Wunused-but-set-variable]
+     fax_modems_state_t *s;
+                         ^

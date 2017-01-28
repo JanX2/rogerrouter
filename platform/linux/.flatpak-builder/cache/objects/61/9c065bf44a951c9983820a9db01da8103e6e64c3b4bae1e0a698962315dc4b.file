@@ -1,0 +1,11 @@
+[Plugin]
+Depends=callmonitor
+Module=gtknotify
+Name=Notifications (Fallback)
+Name[de]=Benachrichtigungen (Fallback)
+Description=Display notification about incoming/outgoing/missed calls using GTK
+Description[de]=Zeigt Benachrichtigungen über eingehende/ausgehende/verpasste Anrufe (GTK)
+Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
+Copyright=Copyright © 2013 Jan-Michael Brummer
+Website=http://www.tabos.org/
+Help=http://www.tabos.org/forum/

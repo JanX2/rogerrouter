@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Journal</title>
+	<meta charset="utf-8" />
+	<script src="sortable.js"></script>
+	<script src="dragtable.js"></script>
+	<link rel="stylesheet" type="text/css" href="styling.css" media="all" />
+</head>
+<body>
+<center><h1>Roger Router Journal</h1></center>
+<table class="draggable sortable">
+<thead>
+<tr><th>Typ</th>
+	<th>Datum/Zeit</th>
+	<th>Name</th>
+	<th>Firma</th>
+	<th class="sorttable_numeric">Nummer</th>
+	<th>Stadt</th>
+	<th class="sorttable_numeric">Nebenstelle</th>
+	<th>Leitung</th>
+	<th class="sorttable_numeric">Dauer</th></tr>
+</thead>
+<tbody>

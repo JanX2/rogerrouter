@@ -280,17 +280,39 @@ static const gchar *get_operating_system(void)
  */
 static void crash_save_crash_log(GtkButton *button, const gchar *text)
 {
+	GtkFileChooserNative *native;
+	GtkFileChooser *chooser;
 	gchar *time;
 	gchar *buf;
 	GDateTime *datetime = g_date_time_new_now_local();
+	gint res;
 
 	time = g_date_time_format(datetime, "%Y-%m-%d-%H-%M-%S");
-	buf = g_strdup_printf("%s/roger-crash-log-%s.txt", g_get_home_dir(), time);
+	buf = g_strdup_printf("roger-crash-log-%s.txt", time);
 	g_free(time);
 	g_date_time_unref(datetime);
 
-	rm_file_save(buf, text, -1);
+	native = gtk_file_chooser_native_new("Save Crash Log", NULL, GTK_FILE_CHOOSER_ACTION_SAVE, NULL, NULL);
+	chooser = GTK_FILE_CHOOSER (native);
+
+	gtk_file_chooser_set_do_overwrite_confirmation(chooser, TRUE);
+
+	gtk_file_chooser_set_current_name(chooser, buf);
+
+	res = gtk_native_dialog_run(GTK_NATIVE_DIALOG(native));
+	if (res == GTK_RESPONSE_ACCEPT) {
+		char *filename;
+
+		filename = gtk_file_chooser_get_filename(chooser);
+		rm_file_save(filename, text, -1);
+		g_free (filename);
+
+		gtk_main_quit();
+	}
+
 	g_free(buf);
+
+	g_object_unref (native);
 }
 
 gboolean crash_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpointer data)
@@ -396,7 +418,7 @@ static GtkWidget *crash_dialog_show(const gchar *text, const gchar *debug_output
 	gtk_container_add(GTK_CONTAINER(hbuttonbox4), button3);
 	gtk_widget_set_can_default(button3, TRUE);
 
-	button4 = gtk_button_new_with_label(_("Save in HOME"));
+	button4 = gtk_button_new_with_label(_("Save"));
 	gtk_widget_show(button4);
 	gtk_container_add(GTK_CONTAINER(hbuttonbox4), button4);
 	gtk_widget_set_can_default(button4, TRUE);

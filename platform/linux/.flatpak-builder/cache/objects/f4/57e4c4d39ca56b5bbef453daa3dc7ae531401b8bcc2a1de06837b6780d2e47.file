@@ -1,0 +1,220 @@
+<schemalist>
+	<schema id="org.tabos.rm" path="/org/tabos/rm/">
+		<key name="profiles" type="as">
+			<default>[]</default>
+		</key>
+	</schema>
+
+	<schema id="org.tabos.rm.profile">
+		<!-- Profile specific information -->
+		<key name="name" type="s">
+			<default>''</default>
+			<summary>Unique profile name</summary>
+		</key>
+		<key name="active-plugins" type="as">
+			<default>['areacodes_global', 'reverselookup', 'simple_pwd', 'capi', 'gstreamer', 'gnotification']</default>
+			<summary>Default active plugins</summary>
+		</key>
+		<key name="lookup-plugin" type="s">
+			<default>''</default>
+			<summary>Active reverse lookup plugin</summary>
+		</key>
+		<key name="phone-plugin" type="s">
+			<default>''</default>
+			<summary>Active phone plugin</summary>
+		</key>
+		<key name="fax-plugin" type="s">
+			<default>''</default>
+			<summary>Active fax plugin</summary>
+		</key>
+		<key name="address-book-plugin" type="s">
+			<default>''</default>
+			<summary>Active address book plugin</summary>
+		</key>
+		<key name="audio-plugin" type="s">
+			<default>'GStreamer'</default>
+			<summary>Active audio plugin</summary>
+		</key>
+		<key name="audio-output" type="s">
+			<default>''</default>
+			<summary>Audio output device</summary>
+		</key>
+		<key name="audio-input" type="s">
+			<default>''</default>
+			<summary>Audio input device</summary>
+		</key>
+		<key name="password-manager" type="s">
+			<default>''</default>
+			<summary>Password manager storing your application passwords</summary>
+		</key>
+
+		<!-- Router access information -->
+		<key name="host" type="s">
+			<default>''</default>
+			<summary>Host of router</summary>
+		</key>
+		<key name="serial-number" type="s">
+			<default>''</default>
+			<summary>Serial number of router</summary>
+			<description>Serial number of router. This information is needed to detect the router for this profile.</description>
+		</key>
+		<key name="login-user" type="s">
+			<default>''</default>
+			<summary>Login user for router</summary>
+		</key>
+		<key name="login-password" type="s">
+			<default>''</default>
+			<summary>Login password for router</summary>
+			<description>Login password for router. Only used if internal password plugin is selected</description>
+		</key>
+		<key name="ftp-user" type="s">
+			<default>'ftpuser'</default>
+			<summary>FTP user for router</summary>
+		</key>
+		<key name="ftp-password" type="s">
+			<default>''</default>
+			<summary>FTP password for router</summary>
+			<description>FTP password for router. Only used if internal password plugin is selected</description>
+		</key>
+		<key name="auth-user" type="s">
+			<default>''</default>
+			<summary>Authentication name for proxy server</summary>
+		</key>
+		<key name="auth-password" type="s">
+			<default>''</default>
+			<summary>Authentication password for proxy server</summary>
+		</key>
+
+		<!-- Telephone codes -->
+		<key name="external-access-code" type="s">
+			<default>''</default>
+			<summary>External access code</summary>
+		</key>
+		<key name="international-access-code" type="s">
+			<default>''</default>
+			<summary>International access code</summary>
+		</key>
+		<key name="country-code" type="s">
+			<default>''</default>
+			<summary>Country code</summary>
+		</key>
+		<key name="national-access-code" type="s">
+			<default>''</default>
+			<summary>National access code</summary>
+		</key>
+		<key name="area-code" type="s">
+			<default>''</default>
+			<summary>Area code</summary>
+		</key>
+
+		<!-- Numbers the profile (router and devices) can handle -->
+		<key name="numbers" type="as">
+			<default>[]</default>
+			<summary>Telephone numbers supported by router</summary>
+		</key>
+
+		<!-- Fax information -->
+		<key name="fax-header" type="s">
+			<default>'Router Manager'</default>
+			<summary>Fax header information (name of sender)</summary>
+		</key>
+		<key name="fax-ident" type="s">
+			<default>''</default>
+			<summary>Fax identification (fax number of sender)</summary>
+		</key>
+		<key name="fax-resolution" type="i">
+			<default>0</default>
+			<summary>Fax resolution</summary>
+			<description>Fax resolution. 0 for 'Standard' (98dpi), 1 for 'Fine' (196dpi).</description>
+		</key>
+		<key name="fax-report" type="b">
+			<default>true</default>
+			<summary>Whether to store a fax report after fax transfer</summary>
+		</key>
+		<key name="fax-report-dir" type="s">
+			<default>''</default>
+			<summary>Where to store fax report if enabled</summary>
+		</key>
+
+		<key name="fax-number" type="s">
+			<default>''</default>
+		</key>
+		<key name="fax-bitrate" type="i">
+			<default>2</default>
+		</key>
+		<key name="fax-controller" type="i">
+			<default>4</default>
+		</key>
+		<key name="fax-ecm" type="b">
+			<default>true</default>
+		</key>
+		<key name="fax-cip" type="i">
+			<default>0</default>
+		</key>
+
+		<!-- Softphone -->
+		<key name="phone-number" type="s">
+			<default>''</default>
+		</key>
+		<key name="phone-controller" type="i">
+			<default>4</default>
+		</key>
+		<key name="suppress" type="b">
+			<default>false</default>
+		</key>
+
+		<!-- Ghostscript -->
+		<key name="ghostscript" type="s">
+			<default>''</default>
+		</key>
+
+		<!-- Actions -->
+		<key name="actions" type="as">
+			<default>[]</default>
+			<summary>List of active user actions</summary>
+		</key>
+
+		<!-- Notification plugin -->
+		<key name="notification-plugin" type="s">
+			<default>''</default>
+			<summary>Active notification plugin</summary>
+		</key>
+		<key name="notification-incoming-numbers" type="as">
+			<default>[]</default>
+			<summary>Which incoming numbers are allowed to show a notification</summary>
+		</key>
+		<key name="notification-outgoing-numbers" type="as">
+			<default>[]</default>
+			<summary>Which outgoing numbers are allowed to show a notification</summary>
+		</key>
+		<key name="notification-play-ringtone" type="b">
+			<default>true</default>
+			<summary>Whether ringtones should be played for notification</summary>
+		</key>
+
+	</schema>
+
+	<schema id="org.tabos.rm.profile.action">
+		<key name="name" type="s">
+			<default>''</default>
+		</key>
+		<key name="description" type="s">
+			<default>''</default>
+		</key>
+		<key name="exec" type="s">
+			<default>''</default>
+		</key>
+		<key name="flags" type="i">
+			<default>0</default>
+		</key>
+		<key name="numbers" type="as">
+			<default>[]</default>
+		</key>
+	</schema>
+
+	<schema id="org.tabos.rm.profile.devicenumbers">
+		<key name="numbers" type="as">
+			<default>[]</default>
+		</key>
+	</schema>
+</schemalist>

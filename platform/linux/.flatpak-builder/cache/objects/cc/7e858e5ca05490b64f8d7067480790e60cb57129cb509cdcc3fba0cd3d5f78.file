@@ -1,0 +1,80 @@
+<schemalist>
+	<schema id="org.tabos.roger" path="/org/tabos/roger/">
+		<key name="debug" type="b">
+			<default>false</default>
+		</key>
+		<key name="width" type="u">
+			<default>1200</default>
+		</key>
+		<key name="height" type="u">
+			<default>600</default>
+		</key>
+		<key name="maximized" type="b">
+			<default>false</default>
+		</key>
+
+		<key name="col-0-width" type="u">
+			<default>0</default>
+		</key>
+		<key name="col-1-width" type="u">
+			<default>0</default>
+		</key>
+		<key name="col-2-width" type="u">
+			<default>0</default>
+		</key>
+		<key name="col-3-width" type="u">
+			<default>0</default>
+		</key>
+		<key name="col-4-width" type="u">
+			<default>0</default>
+		</key>
+		<key name="col-5-width" type="u">
+			<default>0</default>
+		</key>
+		<key name="col-6-width" type="u">
+			<default>0</default>
+		</key>
+		<key name="col-7-width" type="u">
+			<default>0</default>
+		</key>
+		<key name="col-8-width" type="u">
+			<default>0</default>
+		</key>
+
+		<key name="col-0-visible" type="b">
+			<default>true</default>
+		</key>
+		<key name="col-1-visible" type="b">
+			<default>true</default>
+		</key>
+		<key name="col-2-visible" type="b">
+			<default>true</default>
+		</key>
+		<key name="col-3-visible" type="b">
+			<default>true</default>
+		</key>
+		<key name="col-4-visible" type="b">
+			<default>true</default>
+		</key>
+		<key name="col-5-visible" type="b">
+			<default>true</default>
+		</key>
+		<key name="col-6-visible" type="b">
+			<default>true</default>
+		</key>
+		<key name="col-7-visible" type="b">
+			<default>true</default>
+		</key>
+		<key name="col-8-visible" type="b">
+			<default>true</default>
+		</key>
+
+		<key name="contacts-hide-warning" type="b">
+			<default>false</default>
+		</key>
+
+		<key name="icon-type" type="u">
+			<default>0</default>
+		</key>
+	</schema>
+</schemalist>

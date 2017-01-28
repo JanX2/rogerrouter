@@ -1,0 +1,10 @@
+<schemalist>
+	<schema id="org.tabos.roger.plugins.fritzfon" path="/org/tabos/roger/plugins/fritzfon/">
+		<key name="book-owner" type="s">
+			<default>'0'</default>
+		</key>
+		<key name="book-name" type="s">
+			<default>'Telefonbuch'</default>
+		</key>
+	</schema>
+</schemalist>

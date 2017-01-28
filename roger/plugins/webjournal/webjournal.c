@@ -287,8 +287,8 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	gtk_grid_attach(GTK_GRID(grid), report_dir_entry, 1, 1, 1, 1);
 	gtk_grid_attach(GTK_GRID(grid), report_dir_button, 2, 1, 1, 1);
 
-	//group = pref_group_create(grid, _("Web Journal"), TRUE, FALSE);
+	group = ui_group_create(grid, _("Web Journal"), TRUE, FALSE);
 
-	return grid;
+	return group;
 }
 

@@ -44,10 +44,10 @@ export bits=32
 export GI_CROSS_LAUNCHER="env WINEARCH=win$bits WINEPREFIX=$srcdir/win$bits DISPLAY= /usr/bin/wine"
 
 # Second pass: build everything else with build != host (i.e. cross-compile)
-mingw32-configure --disable-silent-rules --enable-shared --enable-static --disable-doctool --disable-giscanner
+mingw64-configure --disable-silent-rules --enable-shared --enable-static --disable-doctool --disable-giscanner
 
 # Avoid overriding what built in the first pass
 make -t scannerparser.c _giscanner.la
 
 make
-#sudo make install
+sudo make install

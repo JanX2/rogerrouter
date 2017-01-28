@@ -23,6 +23,7 @@
 #include <rm/rmcallentry.h>
 #include <rm/rmplugins.h>
 #include <rm/rmpassword.h>
+#include <rm/rmstring.h>
 
 #include <secret.h>
 
@@ -147,6 +148,40 @@ RmPasswordManager secret = {
 };
 
 /**
+ * secret_available:
+ *
+ * Checks for secret based on desktop environment.
+ *
+ * Returns: %TRUE if it should be used, otherwise %FALSE
+ */
+gboolean secret_available(void)
+{
+	const gchar *xdg_desktop = g_environ_getenv(g_get_environ(), "XDG_CURRENT_DESKTOP");
+	const gchar *desktop_session = g_environ_getenv(g_get_environ(), "DESKTOP_SESSION");
+	gboolean ret = FALSE;
+
+	if (!g_strcmp0(xdg_desktop, "GNOME")) {
+		ret = TRUE;
+	} else if (!g_strcmp0(xdg_desktop, "Unity")) {
+		ret = TRUE;
+	}
+
+	if (!g_strcmp0(desktop_session, "gnome")) {
+		ret = TRUE;
+	} else if (!rm_strcasestr(desktop_session, "xfce")) {
+		ret = TRUE;
+	} else if (!rm_strcasestr(desktop_session, "xubuntu")) {
+		ret = TRUE;
+	}
+
+	if (!ret) {
+		g_debug("%s(): No supported desktop environment (%s/%s), secret will be disabled", __FUNCTION__, xdg_desktop, desktop_session);
+	}
+
+	return ret;
+}
+
+/**
  * impl_activate:
  * @plugin: a #PeasActivatable
  *
@@ -154,16 +189,11 @@ RmPasswordManager secret = {
  */
 void impl_activate(PeasActivatable *plugin)
 {
+	if (!secret_available()) {
+		return;
+	}
+
 	rm_password_register(&secret);
-
-#ifdef SECRET_TEST
-	g_debug("Starting secret\n");
-
-	secret_store_password(rm_profile_get_active(), "Test", "testpassword");
-
-	g_debug("Got test password: '%s'", secret_get_password(rm_profile_get_active(), "Test"));
-	secret_remove_password(rm_profile_get_active(), "Test");
-#endif
 }
 
 /**

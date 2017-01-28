@@ -1,0 +1,4 @@
+lpc10_analyse.c: In function ‘dynamic_pitch_tracking’:
+lpc10_analyse.c:206:13: warning: variable ‘path’ set but not used [-Wunused-but-set-variable]
+     int32_t path[2];
+             ^

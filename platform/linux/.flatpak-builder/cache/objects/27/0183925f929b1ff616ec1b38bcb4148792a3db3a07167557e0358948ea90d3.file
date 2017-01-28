@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ $# == 0 ] ; then
+	echo  "file roger-cups:/ \"Unknown\" \"Tabos.org Roger Router Fax Printer\""
+	exit 0
+fi
+
+RNAME=$2-Fax-ID$1
+SPOOL_DIR=/var/spool/roger/
+
+if [ $# -eq 6 ]; then
+	cp $6 $SPOOL_DIR/$RNAME.tmp
+else
+	cat > $SPOOL_DIR/$RNAME.tmp
+fi
+
+chmod 660 $SPOOL_DIR/$RNAME.tmp
+mv $SPOOL_DIR/$RNAME.tmp $SPOOL_DIR/$RNAME
+
+exit 0

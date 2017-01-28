@@ -21,7 +21,7 @@
 
 #include <string.h>
 
-#include <gtk/gtk.h>
+#include <gdk/gdk.h>
 
 #include <rm/rmplugins.h>
 #include <rm/rmobject.h>
@@ -46,10 +46,7 @@ typedef struct {
 	guint signal_id;
 } RmFritzFonPluginPrivate;
 
-RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_FRITZFON_PLUGIN, RmFritzFonPlugin, rm_fritzfon_plugin)
-
-void pref_notebook_add_page(GtkWidget *notebook, GtkWidget *page, gchar *title);
-GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand, gboolean vexpand);
+RM_PLUGIN_REGISTER(RM_TYPE_FRITZFON_PLUGIN, RmFritzFonPlugin, rm_fritzfon_plugin)
 
 static GSList *contacts = NULL;
 static GSettings *fritzfon_settings = NULL;
@@ -357,18 +354,6 @@ end:
 	return 0;
 }
 
-void fritzfon_combobox_changed_cb(GtkComboBox *widget, gpointer user_data)
-{
-	/* GSettings has not written the changed value to its container, so we explicit set it here */
-	GtkWidget *combo_box = user_data;
-
-	g_settings_set_string(fritzfon_settings, "book-owner", gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_box)));
-	g_settings_set_string(fritzfon_settings, "book-name", gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(combo_box)));
-
-	contacts = NULL;
-	fritzfon_read_book();
-}
-
 gboolean fritzfon_reload_contacts(void)
 {
 	return fritzfon_read_book() == 0;
@@ -645,13 +630,50 @@ gchar *fritzfon_get_active_book_name(void)
 	return g_strdup(g_settings_get_string(fritzfon_settings, "book-name"));
 }
 
+gchar **fritzfon_get_sub_books(void)
+{
+	GSList *list;
+	gchar **ret = NULL;
+
+	for (list = fritzfon_books; list != NULL; list = list->next) {
+		struct fritzfon_book *book = list->data;
+
+		ret = rm_strv_add(ret, book->name);
+	}
+
+	return ret;
+}
+
+gboolean fritzfon_set_sub_book(gchar *name)
+{
+	GSList *list;
+
+	for (list = fritzfon_books; list != NULL; list = list->next) {
+		struct fritzfon_book *book = list->data;
+
+		if (!strcmp(book->name, name)) {
+			g_settings_set_string(fritzfon_settings, "book-owner", book->id);
+			g_settings_set_string(fritzfon_settings, "book-name", book->name);
+
+			contacts = NULL;
+			fritzfon_read_book();
+
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
 RmAddressBook fritzfon_book = {
 	"FritzFon",
 	fritzfon_get_active_book_name,
 	fritzfon_get_contacts,
 	fritzfon_reload_contacts,
 	fritzfon_remove_contact,
-	fritzfon_save_contact
+	fritzfon_save_contact,
+	fritzfon_get_sub_books,
+	fritzfon_set_sub_book
 };
 
 void impl_activate(PeasActivatable *plugin)
@@ -670,33 +692,3 @@ void impl_deactivate(PeasActivatable *plugin)
 	g_clear_object(&fritzfon_settings);
 }
 
-GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
-{
-	GtkWidget *combo_box;
-	GtkWidget *label;
-	GtkWidget *box;
-	GtkWidget *group;
-	GSList *list;
-
-	box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-	combo_box = gtk_combo_box_text_new();
-	label = gtk_label_new("");
-
-	gtk_label_set_markup(GTK_LABEL(label), _("Book:"));
-	gtk_box_pack_start(GTK_BOX(box), label, FALSE, TRUE, 10);
-
-	for (list = fritzfon_books; list != NULL; list = list->next) {
-		struct fritzfon_book *book = list->data;
-
-		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box), book->id, book->name);
-	}
-
-	gtk_box_pack_start(GTK_BOX(box), combo_box, FALSE, TRUE, 5);
-	g_settings_bind(fritzfon_settings, "book-owner", combo_box, "active-id", G_SETTINGS_BIND_DEFAULT);
-	g_signal_connect(combo_box, "changed", G_CALLBACK(fritzfon_combobox_changed_cb), combo_box);
-
-	//group = pref_group_create(box, _("Contact book"), TRUE, FALSE);
-	group = box;
-
-	return group;
-}

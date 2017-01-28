@@ -1,0 +1,10 @@
+[Plugin]
+Module=vcard
+Name=VCard
+Name[de]=VCard
+Description=VCard address book support
+Description[de]=VCard Adressbuch-Support
+Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
+Copyright=Copyright © 2013 Jan-Michael Brummer
+Website=http://www.tabos.org/
+Help=http://www.tabos.org/forum/

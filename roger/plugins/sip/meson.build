@@ -1,6 +1,9 @@
 sip_sources = []
 sip_sources += 'sip.c'
 
+dep = dependency('libpjproject', required : false)
+
+if dep.found()
 sip_dep = []
 sip_dep += rm_dep
 sip_dep += roger_dep
@@ -25,3 +28,4 @@ custom_target('sip.plugin',
 gnome.compile_schemas()
 install_data('org.tabos.roger.plugins.sip.gschema.xml',
 install_dir : 'share/glib-2.0/schemas')
+endif

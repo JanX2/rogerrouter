@@ -17,8 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <config.h>
-
 #include <string.h>
 
 #include <gtk/gtk.h>
@@ -36,11 +34,11 @@
 #include <rm/rmpassword.h>
 #include <rm/rmnumber.h>
 
-#include <roger/main.h>
-#include <roger/uitools.h>
-
 #include <gdata/gdata.h>
 #include <gdata/gdata-oauth1-authorizer.h>
+
+#include <roger/main.h>
+#include <roger/uitools.h>
 
 #define RM_TYPE_GOOGLE_PLUGIN        (rm_google_plugin_get_type ())
 #define RM_GOOGLE_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_GOOGLE_PLUGIN, RmGooglePlugin))
@@ -901,6 +899,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 
 	grid = gtk_grid_new();
 	gtk_widget_set_margin(grid, 18, 18, 18, 18);
+
 	gtk_grid_set_row_spacing(GTK_GRID(grid), 6);
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 12);
 
@@ -921,7 +920,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	gtk_grid_attach(GTK_GRID(grid), password_entry, 1, 1, 1, 1);
 	g_settings_bind(google_settings, "password", password_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
-	group = pref_group_create(grid, _("Access data"), TRUE, FALSE);
+	group = ui_group_create(grid, _("Access data"), TRUE, FALSE);
 
 	return group;
 }

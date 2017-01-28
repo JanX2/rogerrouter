@@ -1,0 +1,985 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Index of all symbols: GUPnP Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
+<link rel="home" href="index.html" title="GUPnP Reference Manual">
+<link rel="up" href="index.html" title="GUPnP Reference Manual">
+<link rel="prev" href="glossary.html" title="Glossary">
+<link rel="next" href="api-index-deprecated.html" title="Index of deprecated symbols">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts"><span id="nav_index"><a class="shortcut" href="#idxA">A</a>
+                     <span class="dim">|</span> 
+                  <a class="shortcut" href="#idxC">C</a>
+                     <span class="dim">|</span> 
+                  <a class="shortcut" href="#idxD">D</a>
+                     <span class="dim">|</span> 
+                  <a class="shortcut" href="#idxE">E</a>
+                     <span class="dim">|</span> 
+                  <a class="shortcut" href="#idxG">G</a>
+                     <span class="dim">|</span> 
+                  <a class="shortcut" href="#idxR">R</a>
+                     <span class="dim">|</span> 
+                  <a class="shortcut" href="#idxS">S</a>
+                     <span class="dim">|</span> 
+                  <a class="shortcut" href="#idxT">T</a>
+                     <span class="dim">|</span> 
+                  <a class="shortcut" href="#idxW">W</a>
+                     <span class="dim">|</span> 
+                  <a class="shortcut" href="#idxX">X</a></span></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><img src="up-insensitive.png" width="16" height="16" border="0"></td>
+<td><a accesskey="p" href="glossary.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="api-index-deprecated.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="index">
+<div class="titlepage"><div><div><h1 class="title">
+<a name="api-index-full"></a>Index of all symbols</h1></div></div></div>
+<a name="idx"></a><a name="idxA"></a><h3 class="title">A</h3>
+<dt>
+<a class="link" href="GUPnPAcl.html#GUPnPAcl-struct" title="GUPnPAcl">GUPnPAcl</a>, struct in <a class="link" href="GUPnPAcl.html" title="GUPnPAcl">GUPnPAcl</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPAcl.html#GUPnPAclInterface" title="struct GUPnPAclInterface">GUPnPAclInterface</a>, struct in <a class="link" href="GUPnPAcl.html" title="GUPnPAcl">GUPnPAcl</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPAcl.html#gupnp-acl-can-sync" title="gupnp_acl_can_sync ()">gupnp_acl_can_sync</a>, function in <a class="link" href="GUPnPAcl.html" title="GUPnPAcl">GUPnPAcl</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPAcl.html#gupnp-acl-is-allowed" title="gupnp_acl_is_allowed ()">gupnp_acl_is_allowed</a>, function in <a class="link" href="GUPnPAcl.html" title="GUPnPAcl">GUPnPAcl</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPAcl.html#gupnp-acl-is-allowed-async" title="gupnp_acl_is_allowed_async ()">gupnp_acl_is_allowed_async</a>, function in <a class="link" href="GUPnPAcl.html" title="GUPnPAcl">GUPnPAcl</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPAcl.html#gupnp-acl-is-allowed-finish" title="gupnp_acl_is_allowed_finish ()">gupnp_acl_is_allowed_finish</a>, function in <a class="link" href="GUPnPAcl.html" title="GUPnPAcl">GUPnPAcl</a>
+</dt>
+<dd></dd>
+<a name="idxC"></a><h3 class="title">C</h3>
+<dt>
+<a class="link" href="GUPnPContext.html#GUPnPContext-struct" title="struct GUPnPContext">GUPnPContext</a>, struct in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#GUPnPContext--acl" title="The “acl” property">GUPnPContext:acl</a>, object property in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#GUPnPContext--default-language" title="The “default-language” property">GUPnPContext:default-language</a>, object property in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#GUPnPContext--port" title="The “port” property">GUPnPContext:port</a>, object property in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#GUPnPContext--server" title="The “server” property">GUPnPContext:server</a>, object property in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#GUPnPContext--session" title="The “session” property">GUPnPContext:session</a>, object property in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#GUPnPContext--subscription-timeout" title="The “subscription-timeout” property">GUPnPContext:subscription-timeout</a>, object property in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContextManager.html#GUPnPContextManager-struct" title="struct GUPnPContextManager">GUPnPContextManager</a>, struct in <a class="link" href="GUPnPContextManager.html" title="GUPnPContextManager">GUPnPContextManager</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContextManager.html#GUPnPContextManager-context-available" title="The “context-available” signal">GUPnPContextManager::context-available</a>, object signal in <a class="link" href="GUPnPContextManager.html" title="GUPnPContextManager">GUPnPContextManager</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContextManager.html#GUPnPContextManager-context-unavailable" title="The “context-unavailable” signal">GUPnPContextManager::context-unavailable</a>, object signal in <a class="link" href="GUPnPContextManager.html" title="GUPnPContextManager">GUPnPContextManager</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContextManager.html#GUPnPContextManager--main-context" title="The “main-context” property">GUPnPContextManager:main-context</a>, object property in <a class="link" href="GUPnPContextManager.html" title="GUPnPContextManager">GUPnPContextManager</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContextManager.html#GUPnPContextManager--port" title="The “port” property">GUPnPContextManager:port</a>, object property in <a class="link" href="GUPnPContextManager.html" title="GUPnPContextManager">GUPnPContextManager</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContextManager.html#GUPnPContextManager--white-list" title="The “white-list” property">GUPnPContextManager:white-list</a>, object property in <a class="link" href="GUPnPContextManager.html" title="GUPnPContextManager">GUPnPContextManager</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#gupnp-context-add-server-handler" title="gupnp_context_add_server_handler ()">gupnp_context_add_server_handler</a>, function in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#gupnp-context-get-acl" title="gupnp_context_get_acl ()">gupnp_context_get_acl</a>, function in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#gupnp-context-get-default-language" title="gupnp_context_get_default_language ()">gupnp_context_get_default_language</a>, function in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#gupnp-context-get-host-ip" title="gupnp_context_get_host_ip ()">gupnp_context_get_host_ip</a>, function in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#gupnp-context-get-port" title="gupnp_context_get_port ()">gupnp_context_get_port</a>, function in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#gupnp-context-get-server" title="gupnp_context_get_server ()">gupnp_context_get_server</a>, function in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#gupnp-context-get-session" title="gupnp_context_get_session ()">gupnp_context_get_session</a>, function in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#gupnp-context-get-subscription-timeout" title="gupnp_context_get_subscription_timeout ()">gupnp_context_get_subscription_timeout</a>, function in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#gupnp-context-host-path" title="gupnp_context_host_path ()">gupnp_context_host_path</a>, function in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#gupnp-context-host-path-for-agent" title="gupnp_context_host_path_for_agent ()">gupnp_context_host_path_for_agent</a>, function in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContextManager.html#gupnp-context-manager-create" title="gupnp_context_manager_create ()">gupnp_context_manager_create</a>, function in <a class="link" href="GUPnPContextManager.html" title="GUPnPContextManager">GUPnPContextManager</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContextManager.html#gupnp-context-manager-get-port" title="gupnp_context_manager_get_port ()">gupnp_context_manager_get_port</a>, function in <a class="link" href="GUPnPContextManager.html" title="GUPnPContextManager">GUPnPContextManager</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContextManager.html#gupnp-context-manager-get-white-list" title="gupnp_context_manager_get_white_list ()">gupnp_context_manager_get_white_list</a>, function in <a class="link" href="GUPnPContextManager.html" title="GUPnPContextManager">GUPnPContextManager</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContextManager.html#gupnp-context-manager-manage-control-point" title="gupnp_context_manager_manage_control_point ()">gupnp_context_manager_manage_control_point</a>, function in <a class="link" href="GUPnPContextManager.html" title="GUPnPContextManager">GUPnPContextManager</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContextManager.html#gupnp-context-manager-manage-root-device" title="gupnp_context_manager_manage_root_device ()">gupnp_context_manager_manage_root_device</a>, function in <a class="link" href="GUPnPContextManager.html" title="GUPnPContextManager">GUPnPContextManager</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContextManager.html#gupnp-context-manager-new" title="gupnp_context_manager_new ()">gupnp_context_manager_new</a>, function in <a class="link" href="GUPnPContextManager.html" title="GUPnPContextManager">GUPnPContextManager</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContextManager.html#gupnp-context-manager-rescan-control-points" title="gupnp_context_manager_rescan_control_points ()">gupnp_context_manager_rescan_control_points</a>, function in <a class="link" href="GUPnPContextManager.html" title="GUPnPContextManager">GUPnPContextManager</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#gupnp-context-new" title="gupnp_context_new ()">gupnp_context_new</a>, function in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#gupnp-context-remove-server-handler" title="gupnp_context_remove_server_handler ()">gupnp_context_remove_server_handler</a>, function in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#gupnp-context-set-acl" title="gupnp_context_set_acl ()">gupnp_context_set_acl</a>, function in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#gupnp-context-set-default-language" title="gupnp_context_set_default_language ()">gupnp_context_set_default_language</a>, function in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#gupnp-context-set-subscription-timeout" title="gupnp_context_set_subscription_timeout ()">gupnp_context_set_subscription_timeout</a>, function in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContext.html#gupnp-context-unhost-path" title="gupnp_context_unhost_path ()">gupnp_context_unhost_path</a>, function in <a class="link" href="GUPnPContext.html" title="GUPnPContext">GUPnPContext</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-Error-codes.html#GUPnPControlError" title="enum GUPnPControlError">GUPnPControlError</a>, enum in <a class="link" href="gupnp-Error-codes.html" title="Error codes">Error codes</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPControlPoint.html#GUPnPControlPoint-struct" title="struct GUPnPControlPoint">GUPnPControlPoint</a>, struct in <a class="link" href="GUPnPControlPoint.html" title="GUPnPControlPoint">GUPnPControlPoint</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPControlPoint.html#GUPnPControlPoint-device-proxy-available" title="The “device-proxy-available” signal">GUPnPControlPoint::device-proxy-available</a>, object signal in <a class="link" href="GUPnPControlPoint.html" title="GUPnPControlPoint">GUPnPControlPoint</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPControlPoint.html#GUPnPControlPoint-device-proxy-unavailable" title="The “device-proxy-unavailable” signal">GUPnPControlPoint::device-proxy-unavailable</a>, object signal in <a class="link" href="GUPnPControlPoint.html" title="GUPnPControlPoint">GUPnPControlPoint</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPControlPoint.html#GUPnPControlPoint-service-proxy-available" title="The “service-proxy-available” signal">GUPnPControlPoint::service-proxy-available</a>, object signal in <a class="link" href="GUPnPControlPoint.html" title="GUPnPControlPoint">GUPnPControlPoint</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPControlPoint.html#GUPnPControlPoint-service-proxy-unavailable" title="The “service-proxy-unavailable” signal">GUPnPControlPoint::service-proxy-unavailable</a>, object signal in <a class="link" href="GUPnPControlPoint.html" title="GUPnPControlPoint">GUPnPControlPoint</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPControlPoint.html#GUPnPControlPoint--resource-factory" title="The “resource-factory” property">GUPnPControlPoint:resource-factory</a>, object property in <a class="link" href="GUPnPControlPoint.html" title="GUPnPControlPoint">GUPnPControlPoint</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-Error-codes.html#GUPNP-CONTROL-ERROR:CAPS" title="GUPNP_CONTROL_ERROR">GUPNP_CONTROL_ERROR</a>, macro in <a class="link" href="gupnp-Error-codes.html" title="Error codes">Error codes</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPControlPoint.html#gupnp-control-point-get-context" title="gupnp_control_point_get_context ()">gupnp_control_point_get_context</a>, function in <a class="link" href="GUPnPControlPoint.html" title="GUPnPControlPoint">GUPnPControlPoint</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPControlPoint.html#gupnp-control-point-get-resource-factory" title="gupnp_control_point_get_resource_factory ()">gupnp_control_point_get_resource_factory</a>, function in <a class="link" href="GUPnPControlPoint.html" title="GUPnPControlPoint">GUPnPControlPoint</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPControlPoint.html#gupnp-control-point-list-device-proxies" title="gupnp_control_point_list_device_proxies ()">gupnp_control_point_list_device_proxies</a>, function in <a class="link" href="GUPnPControlPoint.html" title="GUPnPControlPoint">GUPnPControlPoint</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPControlPoint.html#gupnp-control-point-list-service-proxies" title="gupnp_control_point_list_service_proxies ()">gupnp_control_point_list_service_proxies</a>, function in <a class="link" href="GUPnPControlPoint.html" title="GUPnPControlPoint">GUPnPControlPoint</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPControlPoint.html#gupnp-control-point-new" title="gupnp_control_point_new ()">gupnp_control_point_new</a>, function in <a class="link" href="GUPnPControlPoint.html" title="GUPnPControlPoint">GUPnPControlPoint</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPControlPoint.html#gupnp-control-point-new-full" title="gupnp_control_point_new_full ()">gupnp_control_point_new_full</a>, function in <a class="link" href="GUPnPControlPoint.html" title="GUPnPControlPoint">GUPnPControlPoint</a>
+</dt>
+<dd></dd>
+<a name="idxD"></a><h3 class="title">D</h3>
+<dt>
+<a class="link" href="GUPnPDevice.html#GUPnPDevice-struct" title="struct GUPnPDevice">GUPnPDevice</a>, struct in <a class="link" href="GUPnPDevice.html" title="GUPnPDevice">GUPnPDevice</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDevice.html#GUPnPDevice--root-device" title="The “root-device” property">GUPnPDevice:root-device</a>, object property in <a class="link" href="GUPnPDevice.html" title="GUPnPDevice">GUPnPDevice</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#GUPnPDeviceInfo-struct" title="struct GUPnPDeviceInfo">GUPnPDeviceInfo</a>, struct in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#GUPnPDeviceInfo--context" title="The “context” property">GUPnPDeviceInfo:context</a>, object property in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#GUPnPDeviceInfo--device-type" title="The “device-type” property">GUPnPDeviceInfo:device-type</a>, object property in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#GUPnPDeviceInfo--document" title="The “document” property">GUPnPDeviceInfo:document</a>, object property in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#GUPnPDeviceInfo--element" title="The “element” property">GUPnPDeviceInfo:element</a>, object property in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#GUPnPDeviceInfo--location" title="The “location” property">GUPnPDeviceInfo:location</a>, object property in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#GUPnPDeviceInfo--resource-factory" title="The “resource-factory” property">GUPnPDeviceInfo:resource-factory</a>, object property in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#GUPnPDeviceInfo--udn" title="The “udn” property">GUPnPDeviceInfo:udn</a>, object property in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#GUPnPDeviceInfo--url-base" title="The “url-base” property">GUPnPDeviceInfo:url-base</a>, object property in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceProxy.html#GUPnPDeviceProxy-struct" title="struct GUPnPDeviceProxy">GUPnPDeviceProxy</a>, struct in <a class="link" href="GUPnPDeviceProxy.html" title="GUPnPDeviceProxy">GUPnPDeviceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-context" title="gupnp_device_info_get_context ()">gupnp_device_info_get_context</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-description-value" title="gupnp_device_info_get_description_value ()">gupnp_device_info_get_description_value</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-device" title="gupnp_device_info_get_device ()">gupnp_device_info_get_device</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-device-type" title="gupnp_device_info_get_device_type ()">gupnp_device_info_get_device_type</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-friendly-name" title="gupnp_device_info_get_friendly_name ()">gupnp_device_info_get_friendly_name</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-icon-url" title="gupnp_device_info_get_icon_url ()">gupnp_device_info_get_icon_url</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-location" title="gupnp_device_info_get_location ()">gupnp_device_info_get_location</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-manufacturer" title="gupnp_device_info_get_manufacturer ()">gupnp_device_info_get_manufacturer</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-manufacturer-url" title="gupnp_device_info_get_manufacturer_url ()">gupnp_device_info_get_manufacturer_url</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-model-description" title="gupnp_device_info_get_model_description ()">gupnp_device_info_get_model_description</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-model-name" title="gupnp_device_info_get_model_name ()">gupnp_device_info_get_model_name</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-model-number" title="gupnp_device_info_get_model_number ()">gupnp_device_info_get_model_number</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-model-url" title="gupnp_device_info_get_model_url ()">gupnp_device_info_get_model_url</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-presentation-url" title="gupnp_device_info_get_presentation_url ()">gupnp_device_info_get_presentation_url</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-resource-factory" title="gupnp_device_info_get_resource_factory ()">gupnp_device_info_get_resource_factory</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-serial-number" title="gupnp_device_info_get_serial_number ()">gupnp_device_info_get_serial_number</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-service" title="gupnp_device_info_get_service ()">gupnp_device_info_get_service</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-udn" title="gupnp_device_info_get_udn ()">gupnp_device_info_get_udn</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-upc" title="gupnp_device_info_get_upc ()">gupnp_device_info_get_upc</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-url-base" title="gupnp_device_info_get_url_base ()">gupnp_device_info_get_url_base</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-list-devices" title="gupnp_device_info_list_devices ()">gupnp_device_info_list_devices</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-list-device-types" title="gupnp_device_info_list_device_types ()">gupnp_device_info_list_device_types</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-list-dlna-capabilities" title="gupnp_device_info_list_dlna_capabilities ()">gupnp_device_info_list_dlna_capabilities</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-list-dlna-device-class-identifier" title="gupnp_device_info_list_dlna_device_class_identifier ()">gupnp_device_info_list_dlna_device_class_identifier</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-list-services" title="gupnp_device_info_list_services ()">gupnp_device_info_list_services</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-list-service-types" title="gupnp_device_info_list_service_types ()">gupnp_device_info_list_service_types</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<a name="idxE"></a><h3 class="title">E</h3>
+<dt>
+<a class="link" href="gupnp-Error-codes.html#GUPnPEventingError" title="enum GUPnPEventingError">GUPnPEventingError</a>, enum in <a class="link" href="gupnp-Error-codes.html" title="Error codes">Error codes</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-Error-codes.html#GUPNP-EVENTING-ERROR:CAPS" title="GUPNP_EVENTING_ERROR">GUPNP_EVENTING_ERROR</a>, macro in <a class="link" href="gupnp-Error-codes.html" title="Error codes">Error codes</a>
+</dt>
+<dd></dd>
+<a name="idxG"></a><h3 class="title">G</h3>
+<dt>
+<a class="link" href="gupnp-Utility-functions.html#gupnp-get-uuid" title="gupnp_get_uuid ()">gupnp_get_uuid</a>, function in <a class="link" href="gupnp-Utility-functions.html" title="Utility functions">Utility functions</a>
+</dt>
+<dd></dd>
+<a name="idxR"></a><h3 class="title">R</h3>
+<dt>
+<a class="link" href="GUPnPResourceFactory.html#GUPnPResourceFactory-struct" title="struct GUPnPResourceFactory">GUPnPResourceFactory</a>, struct in <a class="link" href="GUPnPResourceFactory.html" title="GUPnPResourceFactory">GUPnPResourceFactory</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPResourceFactory.html#gupnp-resource-factory-get-default" title="gupnp_resource_factory_get_default ()">gupnp_resource_factory_get_default</a>, function in <a class="link" href="GUPnPResourceFactory.html" title="GUPnPResourceFactory">GUPnPResourceFactory</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPResourceFactory.html#gupnp-resource-factory-new" title="gupnp_resource_factory_new ()">gupnp_resource_factory_new</a>, function in <a class="link" href="GUPnPResourceFactory.html" title="GUPnPResourceFactory">GUPnPResourceFactory</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPResourceFactory.html#gupnp-resource-factory-register-resource-proxy-type" title="gupnp_resource_factory_register_resource_proxy_type ()">gupnp_resource_factory_register_resource_proxy_type</a>, function in <a class="link" href="GUPnPResourceFactory.html" title="GUPnPResourceFactory">GUPnPResourceFactory</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPResourceFactory.html#gupnp-resource-factory-register-resource-type" title="gupnp_resource_factory_register_resource_type ()">gupnp_resource_factory_register_resource_type</a>, function in <a class="link" href="GUPnPResourceFactory.html" title="GUPnPResourceFactory">GUPnPResourceFactory</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPResourceFactory.html#gupnp-resource-factory-unregister-resource-proxy-type" title="gupnp_resource_factory_unregister_resource_proxy_type ()">gupnp_resource_factory_unregister_resource_proxy_type</a>, function in <a class="link" href="GUPnPResourceFactory.html" title="GUPnPResourceFactory">GUPnPResourceFactory</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPResourceFactory.html#gupnp-resource-factory-unregister-resource-type" title="gupnp_resource_factory_unregister_resource_type ()">gupnp_resource_factory_unregister_resource_type</a>, function in <a class="link" href="GUPnPResourceFactory.html" title="GUPnPResourceFactory">GUPnPResourceFactory</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPRootDevice.html#GUPnPRootDevice-struct" title="struct GUPnPRootDevice">GUPnPRootDevice</a>, struct in <a class="link" href="GUPnPRootDevice.html" title="GUPnPRootDevice">GUPnPRootDevice</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPRootDevice.html#GUPnPRootDevice--available" title="The “available” property">GUPnPRootDevice:available</a>, object property in <a class="link" href="GUPnPRootDevice.html" title="GUPnPRootDevice">GUPnPRootDevice</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPRootDevice.html#GUPnPRootDevice--description-dir" title="The “description-dir” property">GUPnPRootDevice:description-dir</a>, object property in <a class="link" href="GUPnPRootDevice.html" title="GUPnPRootDevice">GUPnPRootDevice</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPRootDevice.html#GUPnPRootDevice--description-doc" title="The “description-doc” property">GUPnPRootDevice:description-doc</a>, object property in <a class="link" href="GUPnPRootDevice.html" title="GUPnPRootDevice">GUPnPRootDevice</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPRootDevice.html#GUPnPRootDevice--description-path" title="The “description-path” property">GUPnPRootDevice:description-path</a>, object property in <a class="link" href="GUPnPRootDevice.html" title="GUPnPRootDevice">GUPnPRootDevice</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPRootDevice.html#gupnp-root-device-get-available" title="gupnp_root_device_get_available ()">gupnp_root_device_get_available</a>, function in <a class="link" href="GUPnPRootDevice.html" title="GUPnPRootDevice">GUPnPRootDevice</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPRootDevice.html#gupnp-root-device-get-description-dir" title="gupnp_root_device_get_description_dir ()">gupnp_root_device_get_description_dir</a>, function in <a class="link" href="GUPnPRootDevice.html" title="GUPnPRootDevice">GUPnPRootDevice</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPRootDevice.html#gupnp-root-device-get-description-path" title="gupnp_root_device_get_description_path ()">gupnp_root_device_get_description_path</a>, function in <a class="link" href="GUPnPRootDevice.html" title="GUPnPRootDevice">GUPnPRootDevice</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPRootDevice.html#gupnp-root-device-get-relative-location" title="gupnp_root_device_get_relative_location ()">gupnp_root_device_get_relative_location</a>, function in <a class="link" href="GUPnPRootDevice.html" title="GUPnPRootDevice">GUPnPRootDevice</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPRootDevice.html#gupnp-root-device-get-ssdp-resource-group" title="gupnp_root_device_get_ssdp_resource_group ()">gupnp_root_device_get_ssdp_resource_group</a>, function in <a class="link" href="GUPnPRootDevice.html" title="GUPnPRootDevice">GUPnPRootDevice</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPRootDevice.html#gupnp-root-device-new" title="gupnp_root_device_new ()">gupnp_root_device_new</a>, function in <a class="link" href="GUPnPRootDevice.html" title="GUPnPRootDevice">GUPnPRootDevice</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPRootDevice.html#gupnp-root-device-new-full" title="gupnp_root_device_new_full ()">gupnp_root_device_new_full</a>, function in <a class="link" href="GUPnPRootDevice.html" title="GUPnPRootDevice">GUPnPRootDevice</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPRootDevice.html#gupnp-root-device-set-available" title="gupnp_root_device_set_available ()">gupnp_root_device_set_available</a>, function in <a class="link" href="GUPnPRootDevice.html" title="GUPnPRootDevice">GUPnPRootDevice</a>
+</dt>
+<dd></dd>
+<a name="idxS"></a><h3 class="title">S</h3>
+<dt>
+<a class="link" href="gupnp-Error-codes.html#GUPnPServerError" title="enum GUPnPServerError">GUPnPServerError</a>, enum in <a class="link" href="gupnp-Error-codes.html" title="Error codes">Error codes</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-Error-codes.html#GUPNP-SERVER-ERROR:CAPS" title="GUPNP_SERVER_ERROR">GUPNP_SERVER_ERROR</a>, macro in <a class="link" href="gupnp-Error-codes.html" title="Error codes">Error codes</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#GUPnPService-struct" title="struct GUPnPService">GUPnPService</a>, struct in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#GUPnPService-action-invoked" title="The “action-invoked” signal">GUPnPService::action-invoked</a>, object signal in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#GUPnPService-notify-failed" title="The “notify-failed” signal">GUPnPService::notify-failed</a>, object signal in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#GUPnPService-query-variable" title="The “query-variable” signal">GUPnPService::query-variable</a>, object signal in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#GUPnPService--root-device" title="The “root-device” property">GUPnPService:root-device</a>, object property in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#GUPnPServiceAction-struct" title="GUPnPServiceAction">GUPnPServiceAction</a>, struct in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-gupnp-service-introspection.html#GUPnPServiceActionArgDirection" title="enum GUPnPServiceActionArgDirection">GUPnPServiceActionArgDirection</a>, enum in <a class="link" href="gupnp-gupnp-service-introspection.html" title="GUPnPServiceIntrospection">gupnp-service-introspection</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-gupnp-service-introspection.html#GUPnPServiceActionArgInfo" title="GUPnPServiceActionArgInfo">GUPnPServiceActionArgInfo</a>, struct in <a class="link" href="gupnp-gupnp-service-introspection.html" title="GUPnPServiceIntrospection">gupnp-service-introspection</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-gupnp-service-introspection.html#GUPnPServiceActionInfo" title="GUPnPServiceActionInfo">GUPnPServiceActionInfo</a>, struct in <a class="link" href="gupnp-gupnp-service-introspection.html" title="GUPnPServiceIntrospection">gupnp-service-introspection</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#GUPnPServiceInfo-struct" title="struct GUPnPServiceInfo">GUPnPServiceInfo</a>, struct in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#GUPnPServiceInfo--context" title="The “context” property">GUPnPServiceInfo:context</a>, object property in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#GUPnPServiceInfo--document" title="The “document” property">GUPnPServiceInfo:document</a>, object property in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#GUPnPServiceInfo--element" title="The “element” property">GUPnPServiceInfo:element</a>, object property in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#GUPnPServiceInfo--location" title="The “location” property">GUPnPServiceInfo:location</a>, object property in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#GUPnPServiceInfo--service-type" title="The “service-type” property">GUPnPServiceInfo:service-type</a>, object property in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#GUPnPServiceInfo--udn" title="The “udn” property">GUPnPServiceInfo:udn</a>, object property in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#GUPnPServiceInfo--url-base" title="The “url-base” property">GUPnPServiceInfo:url-base</a>, object property in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-gupnp-service-introspection.html#GUPnPServiceIntrospection-struct" title="struct GUPnPServiceIntrospection">GUPnPServiceIntrospection</a>, struct in <a class="link" href="gupnp-gupnp-service-introspection.html" title="GUPnPServiceIntrospection">GUPnPServiceIntrospection</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-gupnp-service-introspection.html#GUPnPServiceIntrospection--scpd" title="The “scpd” property">GUPnPServiceIntrospection:scpd</a>, object property in <a class="link" href="gupnp-gupnp-service-introspection.html" title="GUPnPServiceIntrospection">GUPnPServiceIntrospection</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#GUPnPServiceIntrospectionCallback" title="GUPnPServiceIntrospectionCallback ()">GUPnPServiceIntrospectionCallback</a>, user_function in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#GUPnPServiceProxy-struct" title="struct GUPnPServiceProxy">GUPnPServiceProxy</a>, struct in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#GUPnPServiceProxy-subscription-lost" title="The “subscription-lost” signal">GUPnPServiceProxy::subscription-lost</a>, object signal in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#GUPnPServiceProxy--subscribed" title="The “subscribed” property">GUPnPServiceProxy:subscribed</a>, object property in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#GUPnPServiceProxyAction" title="GUPnPServiceProxyAction">GUPnPServiceProxyAction</a>, struct in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#GUPnPServiceProxyActionCallback" title="GUPnPServiceProxyActionCallback ()">GUPnPServiceProxyActionCallback</a>, user_function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#GUPnPServiceProxyNotifyCallback" title="GUPnPServiceProxyNotifyCallback ()">GUPnPServiceProxyNotifyCallback</a>, user_function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-gupnp-service-introspection.html#GUPnPServiceStateVariableInfo" title="GUPnPServiceStateVariableInfo">GUPnPServiceStateVariableInfo</a>, struct in <a class="link" href="gupnp-gupnp-service-introspection.html" title="GUPnPServiceIntrospection">gupnp-service-introspection</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-action-get" title="gupnp_service_action_get ()">gupnp_service_action_get</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-action-get-argument-count" title="gupnp_service_action_get_argument_count ()">gupnp_service_action_get_argument_count</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-action-get-gvalue" title="gupnp_service_action_get_gvalue ()">gupnp_service_action_get_gvalue</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-action-get-locales" title="gupnp_service_action_get_locales ()">gupnp_service_action_get_locales</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-action-get-message" title="gupnp_service_action_get_message ()">gupnp_service_action_get_message</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-action-get-name" title="gupnp_service_action_get_name ()">gupnp_service_action_get_name</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-action-get-valist" title="gupnp_service_action_get_valist ()">gupnp_service_action_get_valist</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-action-get-value" title="gupnp_service_action_get_value ()">gupnp_service_action_get_value</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-action-get-values" title="gupnp_service_action_get_values ()">gupnp_service_action_get_values</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-action-return" title="gupnp_service_action_return ()">gupnp_service_action_return</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-action-return-error" title="gupnp_service_action_return_error ()">gupnp_service_action_return_error</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-action-set" title="gupnp_service_action_set ()">gupnp_service_action_set</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-action-set-valist" title="gupnp_service_action_set_valist ()">gupnp_service_action_set_valist</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-action-set-value" title="gupnp_service_action_set_value ()">gupnp_service_action_set_value</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-action-set-values" title="gupnp_service_action_set_values ()">gupnp_service_action_set_values</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-freeze-notify" title="gupnp_service_freeze_notify ()">gupnp_service_freeze_notify</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#gupnp-service-info-get-context" title="gupnp_service_info_get_context ()">gupnp_service_info_get_context</a>, function in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#gupnp-service-info-get-control-url" title="gupnp_service_info_get_control_url ()">gupnp_service_info_get_control_url</a>, function in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#gupnp-service-info-get-event-subscription-url" title="gupnp_service_info_get_event_subscription_url ()">gupnp_service_info_get_event_subscription_url</a>, function in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#gupnp-service-info-get-id" title="gupnp_service_info_get_id ()">gupnp_service_info_get_id</a>, function in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#gupnp-service-info-get-introspection" title="gupnp_service_info_get_introspection ()">gupnp_service_info_get_introspection</a>, function in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#gupnp-service-info-get-introspection-async" title="gupnp_service_info_get_introspection_async ()">gupnp_service_info_get_introspection_async</a>, function in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#gupnp-service-info-get-introspection-async-full" title="gupnp_service_info_get_introspection_async_full ()">gupnp_service_info_get_introspection_async_full</a>, function in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#gupnp-service-info-get-location" title="gupnp_service_info_get_location ()">gupnp_service_info_get_location</a>, function in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#gupnp-service-info-get-scpd-url" title="gupnp_service_info_get_scpd_url ()">gupnp_service_info_get_scpd_url</a>, function in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#gupnp-service-info-get-service-type" title="gupnp_service_info_get_service_type ()">gupnp_service_info_get_service_type</a>, function in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#gupnp-service-info-get-udn" title="gupnp_service_info_get_udn ()">gupnp_service_info_get_udn</a>, function in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceInfo.html#gupnp-service-info-get-url-base" title="gupnp_service_info_get_url_base ()">gupnp_service_info_get_url_base</a>, function in <a class="link" href="GUPnPServiceInfo.html" title="GUPnPServiceInfo">GUPnPServiceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-gupnp-service-introspection.html#gupnp-service-introspection-get-action" title="gupnp_service_introspection_get_action ()">gupnp_service_introspection_get_action</a>, function in <a class="link" href="gupnp-gupnp-service-introspection.html" title="GUPnPServiceIntrospection">GUPnPServiceIntrospection</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-gupnp-service-introspection.html#gupnp-service-introspection-get-state-variable" title="gupnp_service_introspection_get_state_variable ()">gupnp_service_introspection_get_state_variable</a>, function in <a class="link" href="gupnp-gupnp-service-introspection.html" title="GUPnPServiceIntrospection">GUPnPServiceIntrospection</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-gupnp-service-introspection.html#gupnp-service-introspection-list-actions" title="gupnp_service_introspection_list_actions ()">gupnp_service_introspection_list_actions</a>, function in <a class="link" href="gupnp-gupnp-service-introspection.html" title="GUPnPServiceIntrospection">GUPnPServiceIntrospection</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-gupnp-service-introspection.html#gupnp-service-introspection-list-action-names" title="gupnp_service_introspection_list_action_names ()">gupnp_service_introspection_list_action_names</a>, function in <a class="link" href="gupnp-gupnp-service-introspection.html" title="GUPnPServiceIntrospection">GUPnPServiceIntrospection</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-gupnp-service-introspection.html#gupnp-service-introspection-list-state-variables" title="gupnp_service_introspection_list_state_variables ()">gupnp_service_introspection_list_state_variables</a>, function in <a class="link" href="gupnp-gupnp-service-introspection.html" title="GUPnPServiceIntrospection">GUPnPServiceIntrospection</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-gupnp-service-introspection.html#gupnp-service-introspection-list-state-variable-names" title="gupnp_service_introspection_list_state_variable_names ()">gupnp_service_introspection_list_state_variable_names</a>, function in <a class="link" href="gupnp-gupnp-service-introspection.html" title="GUPnPServiceIntrospection">GUPnPServiceIntrospection</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-notify" title="gupnp_service_notify ()">gupnp_service_notify</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-notify-valist" title="gupnp_service_notify_valist ()">gupnp_service_notify_valist</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-notify-value" title="gupnp_service_notify_value ()">gupnp_service_notify_value</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#gupnp-service-proxy-add-notify" title="gupnp_service_proxy_add_notify ()">gupnp_service_proxy_add_notify</a>, function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#gupnp-service-proxy-add-notify-full" title="gupnp_service_proxy_add_notify_full ()">gupnp_service_proxy_add_notify_full</a>, function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#gupnp-service-proxy-add-raw-notify" title="gupnp_service_proxy_add_raw_notify ()">gupnp_service_proxy_add_raw_notify</a>, function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#gupnp-service-proxy-begin-action" title="gupnp_service_proxy_begin_action ()">gupnp_service_proxy_begin_action</a>, function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#gupnp-service-proxy-begin-action-hash" title="gupnp_service_proxy_begin_action_hash ()">gupnp_service_proxy_begin_action_hash</a>, function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#gupnp-service-proxy-begin-action-list" title="gupnp_service_proxy_begin_action_list ()">gupnp_service_proxy_begin_action_list</a>, function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#gupnp-service-proxy-begin-action-valist" title="gupnp_service_proxy_begin_action_valist ()">gupnp_service_proxy_begin_action_valist</a>, function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#gupnp-service-proxy-cancel-action" title="gupnp_service_proxy_cancel_action ()">gupnp_service_proxy_cancel_action</a>, function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#gupnp-service-proxy-end-action" title="gupnp_service_proxy_end_action ()">gupnp_service_proxy_end_action</a>, function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#gupnp-service-proxy-end-action-hash" title="gupnp_service_proxy_end_action_hash ()">gupnp_service_proxy_end_action_hash</a>, function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#gupnp-service-proxy-end-action-list" title="gupnp_service_proxy_end_action_list ()">gupnp_service_proxy_end_action_list</a>, function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#gupnp-service-proxy-end-action-valist" title="gupnp_service_proxy_end_action_valist ()">gupnp_service_proxy_end_action_valist</a>, function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#gupnp-service-proxy-get-subscribed" title="gupnp_service_proxy_get_subscribed ()">gupnp_service_proxy_get_subscribed</a>, function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#gupnp-service-proxy-remove-notify" title="gupnp_service_proxy_remove_notify ()">gupnp_service_proxy_remove_notify</a>, function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#gupnp-service-proxy-remove-raw-notify" title="gupnp_service_proxy_remove_raw_notify ()">gupnp_service_proxy_remove_raw_notify</a>, function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#gupnp-service-proxy-send-action" title="gupnp_service_proxy_send_action ()">gupnp_service_proxy_send_action</a>, function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#gupnp-service-proxy-send-action-hash" title="gupnp_service_proxy_send_action_hash ()">gupnp_service_proxy_send_action_hash</a>, function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#gupnp-service-proxy-send-action-list" title="gupnp_service_proxy_send_action_list ()">gupnp_service_proxy_send_action_list</a>, function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#gupnp-service-proxy-send-action-valist" title="gupnp_service_proxy_send_action_valist ()">gupnp_service_proxy_send_action_valist</a>, function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPServiceProxy.html#gupnp-service-proxy-set-subscribed" title="gupnp_service_proxy_set_subscribed ()">gupnp_service_proxy_set_subscribed</a>, function in <a class="link" href="GUPnPServiceProxy.html" title="GUPnPServiceProxy">GUPnPServiceProxy</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-signals-autoconnect" title="gupnp_service_signals_autoconnect ()">gupnp_service_signals_autoconnect</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-thaw-notify" title="gupnp_service_thaw_notify ()">gupnp_service_thaw_notify</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<a name="idxT"></a><h3 class="title">T</h3>
+<dt>
+<a class="link" href="gupnp-Special-UPnP-types.html#GUPNP-TYPE-BIN-BASE64:CAPS" title="GUPNP_TYPE_BIN_BASE64">GUPNP_TYPE_BIN_BASE64</a>, macro in <a class="link" href="gupnp-Special-UPnP-types.html" title="Special UPnP types">Special UPnP types</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-Special-UPnP-types.html#GUPNP-TYPE-BIN-HEX:CAPS" title="GUPNP_TYPE_BIN_HEX">GUPNP_TYPE_BIN_HEX</a>, macro in <a class="link" href="gupnp-Special-UPnP-types.html" title="Special UPnP types">Special UPnP types</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-Special-UPnP-types.html#GUPNP-TYPE-DATE:CAPS" title="GUPNP_TYPE_DATE">GUPNP_TYPE_DATE</a>, macro in <a class="link" href="gupnp-Special-UPnP-types.html" title="Special UPnP types">Special UPnP types</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-Special-UPnP-types.html#GUPNP-TYPE-DATE-TIME:CAPS" title="GUPNP_TYPE_DATE_TIME">GUPNP_TYPE_DATE_TIME</a>, macro in <a class="link" href="gupnp-Special-UPnP-types.html" title="Special UPnP types">Special UPnP types</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-Special-UPnP-types.html#GUPNP-TYPE-DATE-TIME-TZ:CAPS" title="GUPNP_TYPE_DATE_TIME_TZ">GUPNP_TYPE_DATE_TIME_TZ</a>, macro in <a class="link" href="gupnp-Special-UPnP-types.html" title="Special UPnP types">Special UPnP types</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-Special-UPnP-types.html#GUPNP-TYPE-TIME:CAPS" title="GUPNP_TYPE_TIME">GUPNP_TYPE_TIME</a>, macro in <a class="link" href="gupnp-Special-UPnP-types.html" title="Special UPnP types">Special UPnP types</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-Special-UPnP-types.html#GUPNP-TYPE-TIME-TZ:CAPS" title="GUPNP_TYPE_TIME_TZ">GUPNP_TYPE_TIME_TZ</a>, macro in <a class="link" href="gupnp-Special-UPnP-types.html" title="Special UPnP types">Special UPnP types</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-Special-UPnP-types.html#GUPNP-TYPE-URI:CAPS" title="GUPNP_TYPE_URI">GUPNP_TYPE_URI</a>, macro in <a class="link" href="gupnp-Special-UPnP-types.html" title="Special UPnP types">Special UPnP types</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-Special-UPnP-types.html#GUPNP-TYPE-UUID:CAPS" title="GUPNP_TYPE_UUID">GUPNP_TYPE_UUID</a>, macro in <a class="link" href="gupnp-Special-UPnP-types.html" title="Special UPnP types">Special UPnP types</a>
+</dt>
+<dd></dd>
+<a name="idxW"></a><h3 class="title">W</h3>
+<dt>
+<a class="link" href="GUPnPWhiteList.html#GUPnPWhiteList-struct" title="struct GUPnPWhiteList">GUPnPWhiteList</a>, struct in <a class="link" href="GUPnPWhiteList.html" title="GUPnPWhiteList">GUPnPWhiteList</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPWhiteList.html#GUPnPWhiteList--enabled" title="The “enabled” property">GUPnPWhiteList:enabled</a>, object property in <a class="link" href="GUPnPWhiteList.html" title="GUPnPWhiteList">GUPnPWhiteList</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPWhiteList.html#GUPnPWhiteList--entries" title="The “entries” property">GUPnPWhiteList:entries</a>, object property in <a class="link" href="GUPnPWhiteList.html" title="GUPnPWhiteList">GUPnPWhiteList</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPWhiteList.html#gupnp-white-list-add-entry" title="gupnp_white_list_add_entry ()">gupnp_white_list_add_entry</a>, function in <a class="link" href="GUPnPWhiteList.html" title="GUPnPWhiteList">GUPnPWhiteList</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPWhiteList.html#gupnp-white-list-add-entryv" title="gupnp_white_list_add_entryv ()">gupnp_white_list_add_entryv</a>, function in <a class="link" href="GUPnPWhiteList.html" title="GUPnPWhiteList">GUPnPWhiteList</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPWhiteList.html#gupnp-white-list-check-context" title="gupnp_white_list_check_context ()">gupnp_white_list_check_context</a>, function in <a class="link" href="GUPnPWhiteList.html" title="GUPnPWhiteList">GUPnPWhiteList</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPWhiteList.html#gupnp-white-list-clear" title="gupnp_white_list_clear ()">gupnp_white_list_clear</a>, function in <a class="link" href="GUPnPWhiteList.html" title="GUPnPWhiteList">GUPnPWhiteList</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPWhiteList.html#gupnp-white-list-get-enabled" title="gupnp_white_list_get_enabled ()">gupnp_white_list_get_enabled</a>, function in <a class="link" href="GUPnPWhiteList.html" title="GUPnPWhiteList">GUPnPWhiteList</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPWhiteList.html#gupnp-white-list-get-entries" title="gupnp_white_list_get_entries ()">gupnp_white_list_get_entries</a>, function in <a class="link" href="GUPnPWhiteList.html" title="GUPnPWhiteList">GUPnPWhiteList</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPWhiteList.html#gupnp-white-list-is-empty" title="gupnp_white_list_is_empty ()">gupnp_white_list_is_empty</a>, function in <a class="link" href="GUPnPWhiteList.html" title="GUPnPWhiteList">GUPnPWhiteList</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPWhiteList.html#gupnp-white-list-new" title="gupnp_white_list_new ()">gupnp_white_list_new</a>, function in <a class="link" href="GUPnPWhiteList.html" title="GUPnPWhiteList">GUPnPWhiteList</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPWhiteList.html#gupnp-white-list-remove-entry" title="gupnp_white_list_remove_entry ()">gupnp_white_list_remove_entry</a>, function in <a class="link" href="GUPnPWhiteList.html" title="GUPnPWhiteList">GUPnPWhiteList</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPWhiteList.html#gupnp-white-list-set-enabled" title="gupnp_white_list_set_enabled ()">gupnp_white_list_set_enabled</a>, function in <a class="link" href="GUPnPWhiteList.html" title="GUPnPWhiteList">GUPnPWhiteList</a>
+</dt>
+<dd></dd>
+<a name="idxX"></a><h3 class="title">X</h3>
+<dt>
+<a class="link" href="GUPnPXMLDoc.html#GUPnPXMLDoc-struct" title="struct GUPnPXMLDoc">GUPnPXMLDoc</a>, struct in <a class="link" href="GUPnPXMLDoc.html" title="GUPnPXMLDoc">GUPnPXMLDoc</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-Error-codes.html#GUPnPXMLError" title="enum GUPnPXMLError">GUPnPXMLError</a>, enum in <a class="link" href="gupnp-Error-codes.html" title="Error codes">Error codes</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPXMLDoc.html#gupnp-xml-doc-new" title="gupnp_xml_doc_new ()">gupnp_xml_doc_new</a>, function in <a class="link" href="GUPnPXMLDoc.html" title="GUPnPXMLDoc">GUPnPXMLDoc</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPXMLDoc.html#gupnp-xml-doc-new-from-path" title="gupnp_xml_doc_new_from_path ()">gupnp_xml_doc_new_from_path</a>, function in <a class="link" href="GUPnPXMLDoc.html" title="GUPnPXMLDoc">GUPnPXMLDoc</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gupnp-Error-codes.html#GUPNP-XML-ERROR:CAPS" title="GUPNP_XML_ERROR">GUPNP_XML_ERROR</a>, macro in <a class="link" href="gupnp-Error-codes.html" title="Error codes">Error codes</a>
+</dt>
+<dd></dd>
+</div>
+<div class="footer">
+<hr>Generated by GTK-Doc V1.25</div>
+</body>
+</html>

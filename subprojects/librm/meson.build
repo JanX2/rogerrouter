@@ -29,9 +29,6 @@ rm_dep += dependency('libxml-2.0')
 rm_dep += dependency('libtiff-4')
 rm_dep += dependency('spandsp')
 rm_dep += dependency('json-glib-1.0')
-rm_dep += dependency('uuid')
-rm_dep += dependency('dconf')
-rm_dep += dependency('libpeas-1.0')
 
 # Check for UPnP support
 upnp_dep = dependency('gupnp-1.0', required : false)
@@ -40,6 +37,12 @@ rm_dep += upnp_dep
 # Check for SSDP support
 ssdp_dep = dependency('gssdp-1.0', required : false)
 rm_dep += ssdp_dep
+
+if host_machine.system() != 'windows'
+rm_dep += dependency('uuid')
+rm_dep += dependency('dconf')
+rm_dep += dependency('libpeas-1.0')
+endif
 
 rm_inc = include_directories('.')
 

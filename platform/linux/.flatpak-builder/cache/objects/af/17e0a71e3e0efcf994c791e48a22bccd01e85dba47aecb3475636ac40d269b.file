@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="addon">
+  <id>roger-plugins-vcard</id>
+  <extends>org.tabos.roger.desktop</extends>
+  <name>VCard</name>
+  <name xml:lang="de">VCard</name>
+  <summary>Support for VCard address books</summary>
+  <summary xml:lang="de">Unterstützung für VCard Adressbücher</summary>
+  <url type="homepage">https://www.tabos.org</url>
+  <metadata_license>GPL-2.0</metadata_license>
+  <project_license>GPL-2.0</project_license>
+  <updatecontact>jan.brummer_AT_tabos.org</updatecontact>
+</component>

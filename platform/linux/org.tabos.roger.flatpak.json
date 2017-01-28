@@ -1,0 +1,120 @@
+{
+  "app-id": "org.tabos.roger",
+  "runtime": "org.gnome.Platform",
+  "runtime-version": "3.22",
+  "sdk": "org.gnome.Sdk",
+  "command": "roger",
+  "desktop-file-name-prefix": "(Nightly) ",
+  "separate-locales": false,
+  "no-debuginfo": true,
+  "rename-icon": "roger",
+  "finish-args": [
+     /* X11 + XShm access */
+     "--socket=x11", "--share=ipc",
+     /* Wayland access */
+     "--socket=wayland",
+     /* Needs to talk to the network: */
+     "--share=network",
+     /* Needed for dconf to work */
+     "--filesystem=xdg-run/dconf", "--filesystem=~/.config/dconf:ro",
+     "--talk-name=ca.desrt.dconf", "--env=DCONF_USER_CONFIG_DIR=.config/dconf",
+     /* Spooler access */
+     "--filesystem=/var/spool/roger"
+  ],
+  "build-options" : {
+        "cflags": "-O2 -g",
+        "cxxflags": "-O2 -g",
+        "env": {
+            "V": "1"
+        }
+    },
+  "cleanup": ["/include", "/lib/pkgconfig",
+                "/share/pkgconfig", "/share/aclocal",
+                "/man", "/share/man", "/share/gtk-doc",
+                "*.la", "*.a",
+                "/lib/girepository-1.0",
+                "/share/doc", "/share/gir-1.0"
+  ],
+  "modules": [
+    {
+      "name": "gssdp",
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://download.gnome.org/sources/gssdp/1.0/gssdp-1.0.1.tar.xz",
+          "sha256": "601d67f40bc28c067742b7c46f3018da96b364fd3e83f30ddac6e190e323d2e1"
+        }
+      ]
+    },
+    {
+      "name": "gupnp",
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://download.gnome.org/sources/gupnp/1.0/gupnp-1.0.1.tar.xz",
+          "sha256": "934584cc1b361bf251a5ac271ffb1995a3c6426ce44cb64f9c6d779f2af9a6d9"
+        }
+      ]
+    },
+    {
+      "name": "libpeas-1.0",
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://download.gnome.org/sources/libpeas/1.20/libpeas-1.20.0.tar.xz",
+          "sha256": "f392fffe2dc00072a51bb2a1b274224a06bdc5f9c3b3c0ac4816909e9933d354"
+        }
+      ]
+    },
+    {
+      "name": "capi20",
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://www.tabos.org/downloads/libcapi20-3.0.7.tar.bz2",
+          "sha256": "f36c7d1d8a46dd76b1e3443d6f5478ad16177d3f91c9f67bc654608167020293"
+        }
+      ]
+    },
+    {
+      "name": "spandsp",
+      "sources": [
+        {
+          "type": "archive",
+          "url": "http://www.soft-switch.org/downloads/spandsp/spandsp-0.0.6pre21.tgz",
+          "sha256": "bd152152bf0b204661ab9439c5a649098bcb8cefebcbfa959dd602442739aa50"
+        }
+      ]
+    },
+    {
+      "name": "roger",
+      "buildsystem": "meson",
+      "builddir": true,
+      "sources": [
+        {
+          "type": "git",
+          "url": "."
+        }
+      ],
+      "modules": [
+        {
+          "name": "meson",
+          "no-autogen": true,
+          "cleanup": [ "/bin", "/lib" ],
+          "sources": [
+            {
+              "type": "archive",
+              "url": "https://github.com/mesonbuild/meson/releases/download/0.37.1/meson-0.37.1.tar.gz",
+              "sha256": "72516e25eaf9efd67fe8262ccba05e1e84731cc139101fcda7794aed9f68f55a"
+            },
+            {
+              "type": "file",
+              "path": "setuptools-makefile",
+              "dest-filename": "Makefile"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

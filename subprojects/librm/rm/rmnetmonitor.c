@@ -128,7 +128,7 @@ static void rm_netmonitor_state_changed(gboolean state)
 {
 	GSList *list;
 
-	g_debug("Network state changed from %s to %s", rm_netmonitor_state(rm_net_online), rm_netmonitor_state(state));
+	g_debug("%s(): Network state changed from %s to %s", __FUNCTION__, rm_netmonitor_state(rm_net_online), rm_netmonitor_state(state));
 
 	/* Set internal network state */
 	rm_net_online = state;

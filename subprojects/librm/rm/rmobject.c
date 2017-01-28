@@ -109,16 +109,16 @@ static void rm_object_create_signals(GObjectClass *g_object_class)
 	            G_TYPE_POINTER);
 
 	rm_object_signals[RM_ACB_FAX_PROCESS] = g_signal_new(
-	        "fax-process",
-	        G_OBJECT_CLASS_TYPE(g_object_class),
-	        G_SIGNAL_RUN_FIRST,
-	        G_STRUCT_OFFSET(RmObjectClass, fax_process),
-	        NULL,
-	        NULL,
-	        g_cclosure_marshal_VOID__POINTER,
-	        G_TYPE_NONE,
-	        1,
-	        G_TYPE_POINTER);
+	            "fax-process",
+	            G_OBJECT_CLASS_TYPE(g_object_class),
+	            G_SIGNAL_RUN_FIRST,
+	            G_STRUCT_OFFSET(RmObjectClass, fax_process),
+	            NULL,
+	            NULL,
+	            g_cclosure_marshal_VOID__POINTER,
+	            G_TYPE_NONE,
+	            1,
+	            G_TYPE_POINTER);
 
 	rm_object_signals[RM_ACB_CONNECTION_STATUS] = g_signal_new(
 	            "connection-status",

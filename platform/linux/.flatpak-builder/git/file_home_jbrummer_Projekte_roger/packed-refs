@@ -1,0 +1,8 @@
+# pack-refs with: peeled fully-peeled 
+ed28c1ec2fb831868dfe638541c1c08395d5fb8e refs/heads/master
+bd6f8860d926cdc4f191632b96d091451a341aff refs/heads/roger-1.9.x
+ed28c1ec2fb831868dfe638541c1c08395d5fb8e refs/remotes/origin/HEAD
+ed28c1ec2fb831868dfe638541c1c08395d5fb8e refs/remotes/origin/master
+bd6f8860d926cdc4f191632b96d091451a341aff refs/remotes/origin/roger-1.9.x
+98600e38d6ca36c90de35dd5030f8aa2cfb82ec5 refs/tags/v1.9.2
+^95290bc50bbbdbeb82ed1387cffed09d4900d662

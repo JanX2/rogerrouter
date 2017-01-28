@@ -1,0 +1,12 @@
+[Plugin]
+Depends=callmonitor
+Module=gnotification
+Name=Notifications (using GNotification)
+Name[de]=Benachrichtigungen (mittels GNotification)
+Description=Display notification about incoming/outgoing/missed calls and plays sounds
+Description[de]=Zeigt Benachrichtigungen über eingehende/ausgehende/verpasste Anrufe und spielt Klänge
+Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
+Copyright=Copyright © 2014 Jan-Michael Brummer
+Website=http://www.tabos.org/
+Help=http://www.tabos.org/forum/
+

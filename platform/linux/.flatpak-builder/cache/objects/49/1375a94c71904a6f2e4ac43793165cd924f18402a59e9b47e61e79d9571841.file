@@ -1,0 +1,18 @@
+[Desktop Entry]
+Name[de]=Roger Router
+Name=Roger Router
+GenericName[de]=Roger Router
+GenericName=Roger Router
+Comment[de]=Journal, Fax-Software und Anrufmonitor für AVM FRITZ!Box oder kompatibel
+Comment=Journal, Fax-Software and Call-Monitor for AVM FRITZ!Box or compatible
+Exec=roger %u
+Icon[de]=roger
+Icon=roger
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=Network;
+Keywords[de]=fritz;box;fritzbox;router;verwaltung;fax;softphone;
+Keywords=fritz;box;fritzbox;router;manager;fax;softphone;
+MimeType=x-scheme-handler/tel;
+X-GNOME-UsesNotifications=true

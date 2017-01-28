@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="addon">
+  <id>roger-plugins-gtknotify</id>
+  <extends>org.tabos.roger.desktop</extends>
+  <name>GTK Notifications</name>
+  <name xml:lang="de">GTK Benachrichtigung</name>
+  <summary>Support for notifications using GTK</summary>
+  <summary xml:lang="de">Unterstützung für Benachrichtigungen mittels GTK</summary>
+  <url type="homepage">https://www.tabos.org</url>
+  <metadata_license>GPL-2.0</metadata_license>
+  <project_license>GPL-2.0</project_license>
+  <updatecontact>jan.brummer_AT_tabos.org</updatecontact>
+</component>

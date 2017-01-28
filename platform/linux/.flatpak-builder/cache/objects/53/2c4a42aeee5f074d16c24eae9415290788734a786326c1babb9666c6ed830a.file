@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<lookup>
+	<country code="31">
+		<lookup>
+			<service>gebeld.nl</service>
+			<prefix>0</prefix>
+			<url>http://www.gebeld.nl/content.asp?zapp=zapp&amp;land=&amp;zoek=Nummer&amp;searchfield1=fullnumber&amp;searchfield2=&amp;queryfield1=%NUMBER%&amp;queryfield2=&amp;fuzzy=&amp;volll=&amp;database=open&amp;tld=</url>
+			<pattern>&lt;/div&gt;</pattern>
+			<pattern></pattern>
+			<pattern>&lt;/td&gt;&lt;/tr&gt;</pattern>
+			<pattern>\s+&lt;tr\s+bgcolor=&quot;#fee3ad&quot;&gt;\s+&lt;TD&gt;&lt;/TD&gt;\s+&lt;td\s+width=&quot;73%&quot;&gt;&amp;nbsp;(?P&lt;name&gt;.*)&lt;/td&gt;\s+&lt;TD&gt;&lt;/TD&gt;&lt;/tr&gt;</pattern>
+			<pattern>\s+&lt;tr\s+bgcolor=&quot;#fee3ad&quot;&gt;\s+&lt;TD&gt;&lt;/TD&gt;\s+&lt;td\s+width=&quot;73%&quot;&gt;&amp;nbsp;(?P&lt;street&gt;.*)&lt;/td&gt;\s+&lt;TD&gt;&lt;/TD&gt;&lt;/tr&gt;</pattern>
+			<pattern>\s+&lt;tr\s+bgcolor=&quot;#fee3ad&quot;&gt;\s+&lt;TD&gt;&lt;/TD&gt;\s+&lt;td\s+width=&quot;73%&quot;&gt;&amp;nbsp;(?P&lt;zip&gt;.*)&amp;nbsp;(?P&lt;city&gt;.*)&lt;/td&gt;\s+&lt;TD&gt;&lt;/TD&gt;&lt;/tr&gt;</pattern>
+			<pattern>\s+&lt;tr\s+bgcolor=&quot;#fee3ad&quot;&gt;\s+&lt;TD&gt;&lt;/TD&gt;\s+&lt;td\s+width=&quot;73%&quot;&gt;&amp;nbsp;(?P&lt;misc&gt;.*)&lt;/td&gt;\s+&lt;TD&gt;&lt;/TD&gt;&lt;/tr&gt;</pattern>
+		</lookup>
+		<lookup>
+			<service>gevonden.cc</service>
+			<prefix>0</prefix>
+			<url>http://www.gevonden.cc/telefoonnummer/%NUMBER%/lastname/</url>
+			<pattern>&lt;div\sclass=&quot;resultaat&quot;&gt;&amp;nbsp;&lt;b&gt;(?P&lt;lastname&gt;.*),(?P&lt;firstname&gt;.*)&amp;nbsp;&lt;/b&gt;&lt;br\s/&gt;&amp;nbsp;(?P&lt;street&gt;.*)&amp;nbsp;&lt;br\s/&gt;&amp;nbsp;(?P&lt;zip&gt;.*)&amp;nbsp;(?P&lt;city&gt;.*)&lt;br\s/&gt;</pattern>
+		</lookup>
+		<lookup>
+			<service>nummerzoeker.com</service>
+			<prefix>0</prefix>
+			<url>http://www.nummerzoeker.com/?color=white&amp;lastname=&amp;str=&amp;hnr=&amp;pc=&amp;pl=&amp;phone=%NUMBER%&amp;maxrows=10&amp;sort=3&amp;search=Zoeken</url>
+			<pattern>\s+&lt;tr\sclass=&quot;c0&quot;&gt;</pattern>
+			<pattern>\s+&lt;td\sclass=&quot;nowrap&quot;&gt;</pattern>
+			<pattern>\s+&lt;/td&gt;</pattern>
+			<pattern>\s+&lt;td\sclass=&quot;nowrap&quot;&gt;.*&lt;/td&gt;</pattern>
+			<pattern>\s+&lt;td&gt;(?P&lt;lastname&gt;.*),(?P&lt;firstname&gt;.*)&lt;/td&gt;</pattern>
+			<pattern>\s+&lt;td\sclass=&quot;nowrap&quot;&gt;(?P&lt;street&gt;.*)&lt;/td&gt;</pattern>
+			<pattern>\s+&lt;td\sclass=&quot;nowrap&quot;&gt;(?P&lt;zip&gt;.*)&lt;/td&gt;</pattern>
+			<pattern>\s+&lt;td\sclass=&quot;nowrap&quot;&gt;(?P&lt;city&gt;.*)&lt;/td&gt;</pattern>
+			<pattern>\s+&lt;td\sclass=&quot;nowrap&quot;&gt;</pattern>
+		</lookup>
+	</country>
+	<country code="49">
+		<lookup>
+			<service>11880.com</service>
+			<prefix>0</prefix>
+			<url>http://www.11880.com/rueckwaertssuche/%NUMBER%</url>
+			<name mode="parser">h1 itemprop name</name>
+			<street mode="parser">span itemprop streetAddress</street>
+			<city mode="parser" zip="5">span itemprop addressLocality</city>
+		</lookup>
+		<lookup>
+			<service>klicktel.de</service>
+			<prefix>0</prefix>
+			<url>http://www.klicktel.de/rueckwaertssuche/%NUMBER%</url>
+			<name mode="parser">h1 itemprop name</name>
+			<street mode="parser">div itemprop streetAddress</street>
+			<city mode="parser" zip="5">div itemprop addressLocality</city>
+		</lookup>
+		<!--<lookup>
+			<service>gelbeseiten.de</service>
+			<prefix>0</prefix>
+			<url>http://www.gelbeseiten.de/%NUMBER%-</url>
+			<name mode="parser">span itemprop name</name>
+			<street mode="parser">span itemprop streetAddress</street>
+			<city mode="parser" zip="0">span itemprop addressLocality</city>
+		</lookup>-->
+		<!--<lookup>
+		 	<service>Das Oertliche</service>
+			<prefix>1</prefix>
+			<url>http://www.dasoertliche.de/Controller?&amp;form_name=search_inv&amp;ph=%NUMBER%</url>
+			<pattern>&lt;a href=&quot;[^&quot;]*&quot;\s+class=&quot;name &quot;.+&gt;&lt;span class=&quot;&quot;&gt;(?P&lt;name&gt;.+)&lt;/span&gt;</pattern>
+			<pattern>[^&lt;]*&lt;/a&gt;.+</pattern>
+			<pattern>[^&lt;]*&lt;address&gt;\s+(?P&lt;street&gt;.+),&amp;nbsp;(?P&lt;zip&gt;\d+)\s+&lt;span class=&quot;&quot;&gt;(?P&lt;city&gt;.+)&lt;/span&gt;&lt;span id</pattern>
+		</lookup>-->
+	</country>
+</lookup>

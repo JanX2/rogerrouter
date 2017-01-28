@@ -1,9 +1,15 @@
+if host_machine.system() == 'linux'
 subdir('evolution')
+endif
 
 subdir('fritzfon')
 subdir('gnotification')
 #subdir('google')
+
+if host_machine.system() == 'windows'
 subdir('gtknotify')
+endif
+
 subdir('sip')
 
 if get_option('enable-indicator')

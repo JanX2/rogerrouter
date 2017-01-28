@@ -21,7 +21,7 @@
 
 #include <string.h>
 
-#include <gtk/gtk.h>
+#include <gdk/gdk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include <rm/rmplugins.h>
@@ -35,7 +35,6 @@
 #include <rm/rmnumber.h>
 
 #include <roger/main.h>
-#include <roger/settings.h>
 #include "config.h"
 
 #include <libebook/libebook.h>
@@ -49,9 +48,7 @@ typedef struct {
 	guint signal_id;
 } RmEvolutionPluginPrivate;
 
-RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_EVOLUTION_PLUGIN, RmEvolutionPlugin, rm_evolution_plugin)
-
-void pref_notebook_add_page(GtkWidget *notebook, GtkWidget *page, gchar *title);
+RM_PLUGIN_REGISTER(RM_TYPE_EVOLUTION_PLUGIN, RmEvolutionPlugin, rm_evolution_plugin)
 
 static GSList *contacts = NULL;
 static GSettings *ebook_settings = NULL;
@@ -243,7 +240,7 @@ void ebook_read_data(EClient *e_client)
 	e_book_query_unref(query);
 
 	if (!ebook_contacts) {
-		g_debug("No contacts in book");
+		g_debug("%s(): No contacts in book", __FUNCTION__);
 		return;
 	}
 	for (list = ebook_contacts; list != NULL; list = list->next) {
@@ -446,17 +443,6 @@ gboolean ebook_read_book_sync(void)
 	return TRUE;
 }
 
-void ebook_combobox_changed_cb(GtkComboBox *widget, gpointer user_data)
-{
-	/* GSettings has not written the changed value to its container, so we explicit set it here */
-	GtkWidget *combo_box = user_data;
-
-	g_settings_set_string(ebook_settings, "book", gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_box)));
-
-	contacts = NULL;
-	ebook_read_book();
-}
-
 GSList *evolution_get_contacts(void)
 {
 	GSList *list = contacts;
@@ -618,7 +604,33 @@ gboolean evolution_save_contact(RmContact *contact)
 
 gchar *evolution_get_active_book_name(void)
 {
-	return g_strdup("Evolution");
+	return g_strdup(get_selected_ebook_id());
+}
+
+gchar **evolution_get_sub_books(void)
+{
+	GList *source, *sources;
+	gchar **ret = NULL;
+
+	sources = get_ebook_list();
+
+	for (source = sources; source != NULL; source = source->next) {
+		struct ebook_data *ebook_data = source->data;
+
+		ret = rm_strv_add(ret, ebook_data->name);
+	}
+
+	return ret;
+}
+
+gboolean evolution_set_sub_book(gchar *name)
+{
+	g_settings_set_string(ebook_settings, "book", name);
+
+	contacts = NULL;
+	ebook_read_book();
+
+	return TRUE;
 }
 
 RmAddressBook evolution_book = {
@@ -628,6 +640,8 @@ RmAddressBook evolution_book = {
 	evolution_reload,
 	evolution_remove_contact,
 	evolution_save_contact,
+	evolution_get_sub_books,
+	evolution_set_sub_book
 };
 
 void impl_activate(PeasActivatable *plugin)
@@ -645,35 +659,3 @@ void impl_deactivate(PeasActivatable *plugin)
 	g_clear_object(&ebook_settings);
 }
 
-GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
-{
-	GtkWidget *combo_box;
-	GtkWidget *label;
-	GtkWidget *box;
-	GList *source, *sources;
-	GtkWidget *group;
-
-	sources = get_ebook_list();
-
-	box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-	combo_box = gtk_combo_box_text_new();
-	label = gtk_label_new("");
-
-	gtk_label_set_markup(GTK_LABEL(label), _("Book:"));
-	gtk_box_pack_start(GTK_BOX(box), label, FALSE, TRUE, 10);
-
-	for (source = sources; source != NULL; source = source->next) {
-		struct ebook_data *ebook_data = source->data;
-
-		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_box), ebook_data->name, ebook_data->name);
-	}
-
-	gtk_box_pack_start(GTK_BOX(box), combo_box, FALSE, TRUE, 5);
-	g_settings_bind(ebook_settings, "book", combo_box, "active-id", G_SETTINGS_BIND_DEFAULT);
-	g_signal_connect(combo_box, "changed", G_CALLBACK(ebook_combobox_changed_cb), combo_box);
-
-	//group = pref_group_create(box, _("Contact book"), TRUE, FALSE);
-	group = box;
-
-	return group;
-}

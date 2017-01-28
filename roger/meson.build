@@ -35,18 +35,17 @@ sourcelist += 'settings.c'
 sourcelist += 'settings.h'
 sourcelist += 'shortcuts.c'
 sourcelist += 'shortcuts.h'
-sourcelist += 'uitools.c'
 sourcelist += 'uitools.h'
 sourcelist += roger_gresources
 
 roger_dep = []
 roger_dep += dependency('gtk+-3.0', version : '>=3.12.0')
-roger_dep += dependency('libpeas-gtk-1.0', fallback : ['libpeas-gtk', 'peas_gtk_dep'])
 roger_dep += dependency('libsoup-2.4')
 roger_dep += dependency('libtiff-4')
 #roger_dep += dependency('spandsp')
 roger_dep += cc.find_library('m', required: true)
 roger_dep += rm_dep
+#roger_dep += dependency('libpeas-gtk-1.0')
 
 executable(name, sources : sourcelist, dependencies : roger_dep, include_directories : roger_inc, gui_app : true, install : true)
 

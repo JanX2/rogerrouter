@@ -1,0 +1,344 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>PeasExtension: Peas Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="index.html" title="Peas Reference Manual">
+<link rel="up" href="ch01.html" title="Core Classes">
+<link rel="prev" href="PeasPluginInfo.html" title="PeasPluginInfo">
+<link rel="next" href="PeasExtensionSet.html" title="PeasExtensionSet">
+<meta name="generator" content="GTK-Doc V1.25.1 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#libpeas-PeasExtension.description" class="shortcut">Description</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="PeasPluginInfo.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="PeasExtensionSet.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="refentry">
+<a name="libpeas-PeasExtension"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="libpeas-PeasExtension.top_of_page"></a>PeasExtension</span></h2>
+<p>PeasExtension — Proxy for extensions.</p>
+</td>
+<td class="gallery_image" valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsect1">
+<a name="libpeas-PeasExtension.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody>
+<tr>
+<td class="function_type">
+<span class="returnvalue">GType</span>
+</td>
+<td class="function_name">
+<a class="link" href="libpeas-PeasExtension.html#peas-extension-get-extension-type" title="peas_extension_get_extension_type ()">peas_extension_get_extension_type</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">gboolean</span>
+</td>
+<td class="function_name">
+<a class="link" href="libpeas-PeasExtension.html#peas-extension-call" title="peas_extension_call ()">peas_extension_call</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">gboolean</span>
+</td>
+<td class="function_name">
+<a class="link" href="libpeas-PeasExtension.html#peas-extension-call-valist" title="peas_extension_call_valist ()">peas_extension_call_valist</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">gboolean</span>
+</td>
+<td class="function_name">
+<a class="link" href="libpeas-PeasExtension.html#peas-extension-callv" title="peas_extension_callv ()">peas_extension_callv</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="libpeas-PeasExtension.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody><tr>
+<td class="typedef_keyword">typedef</td>
+<td class="function_name"><a class="link" href="libpeas-PeasExtension.html#PeasExtension" title="PeasExtension">PeasExtension</a></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="libpeas-PeasExtension.description"></a><h2>Description</h2>
+<p><a class="link" href="libpeas-PeasExtension.html#PeasExtension" title="PeasExtension"><span class="type">PeasExtension</span></a> is a proxy class used to access actual extensions
+implemented using various languages.  As such, the application writer will
+use <a class="link" href="libpeas-PeasExtension.html#PeasExtension" title="PeasExtension"><span class="type">PeasExtension</span></a> instances to call methods on extension provided by
+loaded plugins.</p>
+<p>To properly use the proxy instances, you will need GObject-introspection
+data for the <a href="/opt/gnome/share/gtk-doc/html/gobject/GTypeModule.html"><span class="type">GInterface</span></a> or <span class="type">GObjectClass</span> you want to use as an extension
+point.  For instance, if you wish to use <a class="link" href="PeasActivatable.html" title="PeasActivatable"><span class="type">PeasActivatable</span></a>, you will need to
+put the following code excerpt in the engine initialization code, in order
+to load the required "Peas" typelib:</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2</pre></td>
+        <td class="listing_code"><pre class="programlisting">g_irepository_require (g_irepository_get_default (),
+                       <span class="number">&quot;Peas&quot;</span>, <span class="number">&quot;1.0&quot;</span>, <span class="number">0</span>, <span class="number">NULL</span>);</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
+<p>You should proceed the same way for any namespace which provides interfaces
+you want to use as extension points. GObject-introspection data is required
+for all the supported languages, even for C.</p>
+<p><a class="link" href="libpeas-PeasExtension.html#PeasExtension" title="PeasExtension"><span class="type">PeasExtension</span></a> does not provide any way to access the underlying object.
+The main reason is that some loaders may not rely on proper GObject
+inheritance for the definition of extensions, and hence it would not be
+possible for libpeas to provide a functional GObject instance at all.
+Another reason is that it makes reference counting issues easier to deal
+with.</p>
+<p>See <a class="link" href="libpeas-PeasExtension.html#peas-extension-call" title="peas_extension_call ()"><code class="function">peas_extension_call()</code></a> for more information.</p>
+</div>
+<div class="refsect1">
+<a name="libpeas-PeasExtension.functions_details"></a><h2>Functions</h2>
+<div class="refsect2">
+<a name="peas-extension-get-extension-type"></a><h3>peas_extension_get_extension_type ()</h3>
+<pre class="programlisting"><span class="returnvalue">GType</span>
+peas_extension_get_extension_type (<em class="parameter"><code><a class="link" href="libpeas-PeasExtension.html#PeasExtension" title="PeasExtension"><span class="type">PeasExtension</span></a> *exten</code></em>);</pre>
+<div class="warning"><p><code class="literal">peas_extension_get_extension_type</code> has been deprecated since version 1.2. and should not be used in newly-written code.</p></div>
+<p>Get the type of the extension interface of the object proxied by <em class="parameter"><code>exten</code></em>
+.</p>
+<div class="refsect3">
+<a name="peas-extension-get-extension-type.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>exten</p></td>
+<td class="parameter_description"><p>A <a class="link" href="libpeas-PeasExtension.html#PeasExtension" title="PeasExtension"><span class="type">PeasExtension</span></a>.</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="peas-extension-get-extension-type.returns"></a><h4>Returns</h4>
+<p> The <span class="type">GType</span> proxied by <em class="parameter"><code>exten</code></em>
+.</p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="peas-extension-call"></a><h3>peas_extension_call ()</h3>
+<pre class="programlisting"><span class="returnvalue">gboolean</span>
+peas_extension_call (<em class="parameter"><code><a class="link" href="libpeas-PeasExtension.html#PeasExtension" title="PeasExtension"><span class="type">PeasExtension</span></a> *exten</code></em>,
+                     <em class="parameter"><code>const <span class="type">gchar</span> *method_name</code></em>,
+                     <em class="parameter"><code>...</code></em>);</pre>
+<div class="warning">
+<p><code class="literal">peas_extension_call</code> has been deprecated since version 1.2 and should not be used in newly-written code.</p>
+<p>Use the interface directly instead.</p>
+</div>
+<p>Call a method of the object behind <em class="parameter"><code>extension</code></em>
+.</p>
+<p>The arguments provided to this functions should be of the same type as
+those defined in the <a href="/opt/gnome/share/gtk-doc/html/gobject/GTypeModule.html"><span class="type">GInterface</span></a> or <span class="type">GObjectClass</span> used as a base for the
+proxied extension. They should be provided in the same order, and if its
+return type is not void, then a pointer to a variable of that type should
+be passed as the last argument.</p>
+<p>For instance, if the method prototype is:</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5</pre></td>
+        <td class="listing_code"><pre class="programlisting">you should call peas_extension_call() this way:
+|[ peas_extension_call (extension, <span class="number">&quot;my_method&quot;</span>, <span class="number">&quot;some_str&quot;</span>, obj, &amp;gint_var)<span class="Error">;</span> ]|
+
+This function will not <span class="keyword">do</span> anything <span class="keyword">if</span> the introspection data <span class="keyword">for</span> the proxied
+object's class has not been loaded previously through g_irepository_require().</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="refsect3">
+<a name="peas-extension-call.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>exten</p></td>
+<td class="parameter_description"><p>A <a class="link" href="libpeas-PeasExtension.html#PeasExtension" title="PeasExtension"><span class="type">PeasExtension</span></a>.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>method_name</p></td>
+<td class="parameter_description"><p>the name of the method that should be called.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>...</p></td>
+<td class="parameter_description"><p>arguments for the method.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="peas-extension-call.returns"></a><h4>Returns</h4>
+<p> <code class="literal">TRUE</code> on successful call.</p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="peas-extension-call-valist"></a><h3>peas_extension_call_valist ()</h3>
+<pre class="programlisting"><span class="returnvalue">gboolean</span>
+peas_extension_call_valist (<em class="parameter"><code><a class="link" href="libpeas-PeasExtension.html#PeasExtension" title="PeasExtension"><span class="type">PeasExtension</span></a> *exten</code></em>,
+                            <em class="parameter"><code>const <span class="type">gchar</span> *method_name</code></em>,
+                            <em class="parameter"><code><span class="type">va_list</span> args</code></em>);</pre>
+<div class="warning">
+<p><code class="literal">peas_extension_call_valist</code> has been deprecated since version 1.2 and should not be used in newly-written code.</p>
+<p>Use the interface directly instead.</p>
+</div>
+<p>Call a method of the object behind <em class="parameter"><code>extension</code></em>
+, using <em class="parameter"><code>args</code></em>
+ as arguments.</p>
+<p>See <a class="link" href="libpeas-PeasExtension.html#peas-extension-call" title="peas_extension_call ()"><code class="function">peas_extension_call()</code></a> for more information.</p>
+<div class="refsect3">
+<a name="peas-extension-call-valist.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>exten</p></td>
+<td class="parameter_description"><p>A <a class="link" href="libpeas-PeasExtension.html#PeasExtension" title="PeasExtension"><span class="type">PeasExtension</span></a>.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>method_name</p></td>
+<td class="parameter_description"><p>the name of the method that should be called.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>args</p></td>
+<td class="parameter_description"><p>the arguments for the method.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="peas-extension-call-valist.returns"></a><h4>Returns</h4>
+<p> <code class="literal">TRUE</code> on successful call.</p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="peas-extension-callv"></a><h3>peas_extension_callv ()</h3>
+<pre class="programlisting"><span class="returnvalue">gboolean</span>
+peas_extension_callv (<em class="parameter"><code><a class="link" href="libpeas-PeasExtension.html#PeasExtension" title="PeasExtension"><span class="type">PeasExtension</span></a> *exten</code></em>,
+                      <em class="parameter"><code>const <span class="type">gchar</span> *method_name</code></em>,
+                      <em class="parameter"><code><span class="type">GIArgument</span> *args</code></em>,
+                      <em class="parameter"><code><span class="type">GIArgument</span> *return_value</code></em>);</pre>
+<div class="warning">
+<p><code class="literal">peas_extension_callv</code> has been deprecated since version 1.2 and should not be used in newly-written code.</p>
+<p>Use the interface directly instead.</p>
+</div>
+<p>Call a method of the object behind <em class="parameter"><code>extension</code></em>
+, using <em class="parameter"><code>args</code></em>
+ as arguments.</p>
+<p>See <a class="link" href="libpeas-PeasExtension.html#peas-extension-call" title="peas_extension_call ()"><code class="function">peas_extension_call()</code></a> for more information.</p>
+<div class="refsect3">
+<a name="peas-extension-callv.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>exten</p></td>
+<td class="parameter_description"><p>A <a class="link" href="libpeas-PeasExtension.html#PeasExtension" title="PeasExtension"><span class="type">PeasExtension</span></a>.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>method_name</p></td>
+<td class="parameter_description"><p>the name of the method that should be called.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>args</p></td>
+<td class="parameter_description"><p>the arguments for the method.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>return_value</p></td>
+<td class="parameter_description"><p>the return falue for the method.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="peas-extension-callv.returns"></a><h4>Returns</h4>
+<p> <code class="literal">TRUE</code> on successful call.</p>
+</div>
+</div>
+</div>
+<div class="refsect1">
+<a name="libpeas-PeasExtension.other_details"></a><h2>Types and Values</h2>
+<div class="refsect2">
+<a name="PeasExtension"></a><h3>PeasExtension</h3>
+<pre class="programlisting">typedef GObject PeasExtension;
+</pre>
+<p>A proxy class to access the actual plugin.</p>
+</div>
+</div>
+<div class="refsect1">
+<a name="libpeas-PeasExtension.see-also"></a><h2>See Also</h2>
+<p><a class="link" href="PeasExtensionSet.html" title="PeasExtensionSet"><span class="type">PeasExtensionSet</span></a></p>
+</div>
+</div>
+<div class="footer">
+<hr>Generated by GTK-Doc V1.25.1</div>
+</body>
+</html>

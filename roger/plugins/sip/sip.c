@@ -376,9 +376,10 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	GtkWidget *msn_entry;
 	GtkWidget *label;
 	GtkWidget *grid;
+	GtkWidget *group;
 
 	grid = gtk_grid_new();
-	//gtk_widget_set_margin(grid, 18, 18, 18, 18);
+	gtk_widget_set_margin(grid, 18, 18, 18, 18);
 	gtk_grid_set_row_spacing(GTK_GRID(grid), 6);
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 12);
 
@@ -407,7 +408,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	gtk_grid_attach(GTK_GRID(grid), msn_entry, 1, 2, 1, 1);
 	g_settings_bind(sip_settings, "msn", msn_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
-	//group = pref_group_create(grid, _("Access data"), TRUE, FALSE);
+	group = ui_group_create(grid, _("Access data"), TRUE, FALSE);
 
-	return grid;
+	return group;
 }

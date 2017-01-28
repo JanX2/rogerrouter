@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop">
+  <id>org.tabos.roger.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0</project_license>
+  <name>Roger Router</name>
+  <name xml:lang="de">Roger Router</name>
+  <summary>Journal, Fax-Software and Call-Monitor for AVM FRITZ!Box or compatible</summary>
+  <summary xml:lang="de">Journal, Fax-Software und Anrufmonitor für AVM FRITZ!Box oder kompatibel</summary>
+  <description><p>Roger Router is a clean solution for controlling the FRITZ!Box or compatible router with Linux. It offers a rich feature list, including call monitor, journal, fax support and also has a great integration into Evolution and FritzFon address books.</p> <p>Some plugins for Roger Router are packaged separately.</p></description>
+  <description xml:lang="de"><p>Roger Router ist eine saubere Lösung um die FRITZ!Box unter Linux zu kontrollieren. Es bietet einen reichhaltigen Funktionsumfang, darunter einen Anrufmonitor, Journal, Faxunterstützung und ebenso eine großartige Integration in verschiedene Addressbücher.</p> <p>Einige Plugins für Roger Router sind separat als Paket erhältlich.</p></description>
+  <screenshots>
+    <screenshot width="1024" type="default" height="576">
+      <image>https://www.tabos.org/downloads/roger-router-1.png</image>
+      <caption>Journal view of all calls</caption>
+      <caption xml:lang="de">Journalansicht aller Anrufe</caption>
+    </screenshot>
+  </screenshots>
+  <keywords>
+    <keyword xml:lang="de">box</keyword>
+    <keyword xml:lang="de">fax</keyword>
+    <keyword xml:lang="de">fritz</keyword>
+    <keyword xml:lang="de">fritzbox</keyword>
+    <keyword xml:lang="de">router</keyword>
+    <keyword xml:lang="de">softphone</keyword>
+    <keyword xml:lang="de">verwaltung</keyword>
+  </keywords>
+  <kudos>
+    <kudo>Notifications</kudo>
+  </kudos>
+  <url type="homepage">https://www.tabos.org</url>
+  <update_contact>jan.brummer@tabos.org</update_contact>
+  <developer_name>Jan-Michael Brummer</developer_name>
+  <url type="bugtracker">https://www.tabos.org/forum/</url>
+  <url type="donation">https://www.tabos.org/</url>
+  <url type="help">https://www.tabos.org/forum/</url>
+  <url type="faq">https://www.tabos.org/haeufig-gestellte-fragen-faq/</url>
+  <developer_name>Jan-Michael Brummer</developer_name>
+  <update_contact>jan.brummer_AT_tabos.org</update_contact>
+  <translation type="gettext">roger</translation>
+</component>

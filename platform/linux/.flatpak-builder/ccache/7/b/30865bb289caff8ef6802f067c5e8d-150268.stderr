@@ -1,0 +1,4 @@
+plc.c: In function ‘plc_fillin’:
+plc.c:168:14: warning: variable ‘orig_amp’ set but not used [-Wunused-but-set-variable]
+     int16_t *orig_amp;
+              ^

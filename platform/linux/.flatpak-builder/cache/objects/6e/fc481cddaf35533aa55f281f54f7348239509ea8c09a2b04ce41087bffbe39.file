@@ -1,0 +1,7 @@
+<schemalist>
+	<schema id="org.tabos.roger.plugins.thunderbird" path="/org/tabos/roger/plugins/thunderbird/">
+		<key name="filename" type="s">
+			<default>''</default>
+		</key>
+	</schema>
+</schemalist>

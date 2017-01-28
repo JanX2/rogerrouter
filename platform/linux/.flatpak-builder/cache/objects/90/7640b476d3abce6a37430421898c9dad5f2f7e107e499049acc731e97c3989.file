@@ -1,0 +1,4 @@
+#!/usr/bin/python3
+# EASY-INSTALL-SCRIPT: 'meson==0.37.1','wraptool'
+__requires__ = 'meson==0.37.1'
+__import__('pkg_resources').run_script('meson==0.37.1', 'wraptool')

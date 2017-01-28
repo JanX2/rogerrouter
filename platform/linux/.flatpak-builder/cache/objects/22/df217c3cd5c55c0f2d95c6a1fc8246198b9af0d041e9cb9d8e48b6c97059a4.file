@@ -1,0 +1,266 @@
+<schemalist>
+	<schema id="org.tabos.routermanager" path="/org/tabos/routermanager/">
+		<key name="profiles" type="as">
+			<default>[]</default>
+		</key>
+	</schema>
+
+	<schema id="org.tabos.routermanager.profile">
+		<key name="name" type="s">
+			<default>''</default>
+		</key>
+		<key name="host" type="s">
+			<default>''</default>
+		</key>
+		<key name="auth-user" type="s">
+			<default>''</default>
+		</key>
+		<key name="auth-password" type="s">
+			<default>''</default>
+		</key>
+		<key name="login-user" type="s">
+			<default>''</default>
+		</key>
+		<key name="login-password" type="s">
+			<default>''</default>
+		</key>
+		<key name="ftp-user" type="s">
+			<default>'ftpuser'</default>
+		</key>
+		<key name="ftp-password" type="s">
+			<default>''</default>
+		</key>
+		<key name="line-access-code" type="s">
+			<default>''</default>
+		</key>
+		<key name="international-call-prefix" type="s">
+			<default>''</default>
+		</key>
+		<key name="country-code" type="s">
+			<default>''</default>
+		</key>
+		<key name="national-call-prefix" type="s">
+			<default>''</default>
+		</key>
+		<key name="area-code" type="s">
+			<default>''</default>
+		</key>
+		<key name="port" type="i">
+			<default>0</default>
+		</key>
+		<key name="serial" type="s">
+			<default>''</default>
+		</key>
+		<key name="active-plugins" type="as">
+			<default>['callmonitor', 'areacodes_global', 'reverselookup', 'simple_pwd']</default>
+		</key>
+
+		<key name="active-filter" type="s">
+			<default>''</default>
+		</key>
+
+		<!-- Numbers -->
+		<key name="numbers" type="as">
+			<default>[]</default>
+		</key>
+
+		<!-- Name: Analog -->
+		<key name="name-analog1" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-analog2" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-analog3" type="s">
+			<default>''</default>
+		</key>
+
+		<!-- Name: ISDN -->
+		<key name="name-isdn1" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-isdn2" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-isdn3" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-isdn4" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-isdn5" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-isdn6" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-isdn7" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-isdn8" type="s">
+			<default>''</default>
+		</key>
+
+		<!-- Name: DECT -->
+		<key name="name-dect1" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-dect2" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-dect3" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-dect4" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-dect5" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-dect6" type="s">
+			<default>''</default>
+		</key>
+
+		<!-- Name: SIP -->
+		<key name="name-sip0" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-sip1" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-sip2" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-sip3" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-sip4" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-sip5" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-sip6" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-sip7" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-sip8" type="s">
+			<default>''</default>
+		</key>
+		<key name="name-sip9" type="s">
+			<default>''</default>
+		</key>
+
+		<!-- Fax -->
+		<key name="fax-header" type="s">
+			<default>'Roger Router'</default>
+		</key>
+		<key name="fax-ident" type="s">
+			<default>''</default>
+		</key>
+		<key name="fax-accept" type="b">
+			<default>false</default>
+		</key>
+		<key name="fax-resolution" type="i">
+			<default>0</default>
+		</key>
+		<key name="fax-report" type="b">
+			<default>true</default>
+		</key>
+		<key name="fax-report-dir" type="s">
+			<default>''</default>
+		</key>
+		<key name="fax-number" type="s">
+			<default>''</default>
+		</key>
+		<key name="fax-bitrate" type="i">
+			<default>2</default>
+		</key>
+		<key name="fax-controller" type="i">
+			<default>4</default>
+		</key>
+		<key name="fax-ecm" type="b">
+			<default>true</default>
+		</key>
+		<key name="fax-volume" type="s">
+			<default>''</default>
+		</key>
+		<key name="fax-sff" type="b">
+			<default>false</default>
+		</key>
+		<key name="fax-cip" type="i">
+			<default>0</default>
+		</key>
+
+		<!-- Softphone -->
+		<key name="phone-number" type="s">
+			<default>''</default>
+		</key>
+		<key name="phone-controller" type="i">
+			<default>4</default>
+		</key>
+		<key name="bluetooth-headset" type="s">
+			<default>''</default>
+		</key>
+
+		<key name="suppress" type="b">
+			<default>false</default>
+		</key>
+
+		<!-- TAM -->
+		<key name="tam-stick" type="i">
+			<default>0</default>
+		</key>
+
+		<!-- Audio -->
+		<key name="audio-plugin" type="s">
+			<default>'PulseAudio'</default>
+		</key>
+		<key name="audio-output" type="s">
+			<default>''</default>
+		</key>
+		<key name="audio-input" type="s">
+			<default>''</default>
+		</key>
+
+		<!-- Actions -->
+		<key name="actions" type="as">
+			<default>[]</default>
+		</key>
+
+		<!-- Ghostscript -->
+		<key name="ghostscript" type="s">
+			<default>''</default>
+		</key>
+
+		<!-- Password manager -->
+		<key name="password-manager" type="s">
+			<default>''</default>
+		</key>
+
+		<!-- Address book -->
+		<key name="address-book" type="s">
+			<default>''</default>
+		</key>
+	</schema>
+
+	<schema id="org.tabos.routermanager.profile.action">
+		<key name="name" type="s">
+			<default>''</default>
+		</key>
+		<key name="description" type="s">
+			<default>''</default>
+		</key>
+		<key name="exec" type="s">
+			<default>''</default>
+		</key>
+		<key name="flags" type="i">
+			<default>0</default>
+		</key>
+		<key name="numbers" type="as">
+			<default>[]</default>
+		</key>
+	</schema>
+</schemalist>

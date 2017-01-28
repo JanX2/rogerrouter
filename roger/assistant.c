@@ -602,7 +602,7 @@ void app_assistant(void)
 	}
 
 	/* Allocate private structure */
-	assistant = g_slice_alloc(sizeof(struct assistant));
+	assistant = g_slice_alloc0(sizeof(struct assistant));
 
 	/* Connect to builder objects */
 	assistant->window = GTK_WIDGET(gtk_builder_get_object(builder, "assistant"));

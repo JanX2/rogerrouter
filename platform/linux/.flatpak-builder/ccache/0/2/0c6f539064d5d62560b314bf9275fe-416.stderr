@@ -1,0 +1,4 @@
+conftest.c: In function 'main':
+conftest.c:28:1: warning: old-style function definition [-Wold-style-definition]
+ main ()
+ ^

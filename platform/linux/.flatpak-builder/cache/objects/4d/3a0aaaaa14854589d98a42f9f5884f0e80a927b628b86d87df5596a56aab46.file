@@ -1,0 +1,75 @@
+.\" Copyright (c) 2009-2016, Jan-Michael Brummer <jan.brummer@tabos.org>
+.TH roger 1 "" "Roger Router Version 1.9.3" "Roger Router - User Manual"
+
+.SH NAME
+roger \- this is the graphical user interface of Roger Router.
+
+.SH SYNOPSIS
+.B roger [OPTIONS...]
+
+.SH DESCRIPTION
+\fBRoger Router\fR is a clean solution for controlling the FRITZ!Box or compatible router with Linux. It offers a rich feature list, including caller monitor, fax and softphone support.
+
+.SH OPTIONS
+.TP
+\fB\-d\fR, \fB\-\-debug\fR
+Enable debug messages.
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Show help options.
+.TP
+\fB\-i\fR, \fB\-\-hidden\fR
+Start with hidden window.
+.TP
+\fB\-q\fR, \fB\-\-quit\fR
+Quit.
+.TP
+\fB\-c\fR, \fB\-\-call\fR
+Call remote phone number (given as following parameter).
+.TP
+\fB\-v\fR, \fB\-\-version\fR
+Version information.
+.TP
+\fB\-a\fR, \fB\-\-assistant\fR
+Start assistant.
+.TP
+\fB\-p\fR, \fB\-\-profile\fR
+Start with selected profile (given as following parameter).
+
+.SH NOTES
+.IP "\fIFaxing\fR" 4
+.RS
+If you want to use the capi fax function into Roger Router, you must enable capi-over-tcp within your FRITZ!Box with #96*3* and the user must be a member of the group fax.
+.RE
+.IP "\fINotifications\fR" 4
+.RS
+If you want to use the incoming and outgoing call notification into Roger Router, you must enable this feature  within  your  FRITZ!Box  with #96*5*.
+.RE
+.IP "\fIUPnP\fR" 4
+.RS
+Please activate the UPnP support of your FRITZ!Box.
+.RE
+
+.SH SEE ALSO
+.BR roger_cli (1)
+.IP "Website:" 4
+.RS
+\fIhttps://www.tabos.org/\fR
+.RE
+.IP "Forum:" 4
+.RS
+\fIhttps://www.tabos.org/forum/\fR
+.RE
+
+.SH LICENSE
+Copyright (c) 2009-2016 Jan-Michael Brummer <\fIjan.brummer@tabos.org\fR>
+
+.SH AUTHORS
+.IP "Roger Router's active developers are:" 4
+.RS
+Jan-Michael Brummer (developer)  <\fIjan.brummer@tabos.org\fR>
+.RE
+.IP "This manpage was written by:" 4
+.RS
+Jan-Michael Brummer <\fIjan.brummer@tabos.org\fR>
+.RE

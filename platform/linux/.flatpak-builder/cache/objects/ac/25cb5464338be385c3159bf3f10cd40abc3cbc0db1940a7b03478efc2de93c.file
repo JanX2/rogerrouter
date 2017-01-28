@@ -1,0 +1,10 @@
+[Plugin]
+Module=reverselookup
+Name=Reverse Lookup
+Name[de]=Rückwärtssuche
+Description=Reverse lookup through 3rd-party
+Description[de]=Rückwärtssuche durch andere Anbieter
+Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
+Copyright=Copyright © 2013 Jan-Michael Brummer
+Website=http://www.tabos.org/
+Help=http://www.tabos.org/forum/

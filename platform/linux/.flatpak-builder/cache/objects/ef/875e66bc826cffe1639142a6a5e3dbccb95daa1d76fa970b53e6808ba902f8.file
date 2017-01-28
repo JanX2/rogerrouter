@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Index of new symbols in 0.13.0: GUPnP Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
+<link rel="home" href="index.html" title="GUPnP Reference Manual">
+<link rel="up" href="index.html" title="GUPnP Reference Manual">
+<link rel="prev" href="api-index-0-12-3.html" title="Index of new symbols in 0.12.3">
+<link rel="next" href="api-index-0-13-3.html" title="Index of new symbols in 0.13.3">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts"><span id="nav_index"><a class="shortcut" href="#idxC">C</a>
+                     <span class="dim">|</span> 
+                  <a class="shortcut" href="#idxD">D</a>
+                     <span class="dim">|</span> 
+                  <a class="shortcut" href="#idxR">R</a>
+                     <span class="dim">|</span> 
+                  <a class="shortcut" href="#idxS">S</a>
+                     <span class="dim">|</span> 
+                  <a class="shortcut" href="#idxX">X</a></span></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><img src="up-insensitive.png" width="16" height="16" border="0"></td>
+<td><a accesskey="p" href="api-index-0-12-3.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="api-index-0-13-3.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="index">
+<div class="titlepage"><div><div><h1 class="title">
+<a name="api-index-0-13-0"></a>Index of new symbols in 0.13.0</h1></div></div></div>
+<a name="idx"></a><a name="idxC"></a><h3 class="title">C</h3>
+<dt>
+<a class="link" href="GUPnPContextManager.html#gupnp-context-manager-manage-control-point" title="gupnp_context_manager_manage_control_point ()">gupnp_context_manager_manage_control_point</a>, function in <a class="link" href="GUPnPContextManager.html" title="GUPnPContextManager">GUPnPContextManager</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContextManager.html#gupnp-context-manager-manage-root-device" title="gupnp_context_manager_manage_root_device ()">gupnp_context_manager_manage_root_device</a>, function in <a class="link" href="GUPnPContextManager.html" title="GUPnPContextManager">GUPnPContextManager</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPContextManager.html#gupnp-context-manager-new" title="gupnp_context_manager_new ()">gupnp_context_manager_new</a>, function in <a class="link" href="GUPnPContextManager.html" title="GUPnPContextManager">GUPnPContextManager</a>
+</dt>
+<dd></dd>
+<a name="idxD"></a><h3 class="title">D</h3>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-get-description-value" title="gupnp_device_info_get_description_value ()">gupnp_device_info_get_description_value</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPDeviceInfo.html#gupnp-device-info-list-dlna-capabilities" title="gupnp_device_info_list_dlna_capabilities ()">gupnp_device_info_list_dlna_capabilities</a>, function in <a class="link" href="GUPnPDeviceInfo.html" title="GUPnPDeviceInfo">GUPnPDeviceInfo</a>
+</dt>
+<dd></dd>
+<a name="idxR"></a><h3 class="title">R</h3>
+<dt>
+<a class="link" href="GUPnPRootDevice.html#GUPnPRootDevice--description-doc" title="The “description-doc” property">GUPnPRootDevice:description-doc</a>, object property in <a class="link" href="GUPnPRootDevice.html" title="GUPnPRootDevice">GUPnPRootDevice</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPRootDevice.html#GUPnPRootDevice--description-path" title="The “description-path” property">GUPnPRootDevice:description-path</a>, object property in <a class="link" href="GUPnPRootDevice.html" title="GUPnPRootDevice">GUPnPRootDevice</a>
+</dt>
+<dd></dd>
+<a name="idxS"></a><h3 class="title">S</h3>
+<dt>
+<a class="link" href="GUPnPService.html#gupnp-service-action-get-message" title="gupnp_service_action_get_message ()">gupnp_service_action_get_message</a>, function in <a class="link" href="GUPnPService.html" title="GUPnPService">GUPnPService</a>
+</dt>
+<dd></dd>
+<a name="idxX"></a><h3 class="title">X</h3>
+<dt>
+<a class="link" href="GUPnPXMLDoc.html#gupnp-xml-doc-new" title="gupnp_xml_doc_new ()">gupnp_xml_doc_new</a>, function in <a class="link" href="GUPnPXMLDoc.html" title="GUPnPXMLDoc">GUPnPXMLDoc</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GUPnPXMLDoc.html#gupnp-xml-doc-new-from-path" title="gupnp_xml_doc_new_from_path ()">gupnp_xml_doc_new_from_path</a>, function in <a class="link" href="GUPnPXMLDoc.html" title="GUPnPXMLDoc">GUPnPXMLDoc</a>
+</dt>
+<dd></dd>
+</div>
+<div class="footer">
+<hr>Generated by GTK-Doc V1.25</div>
+</body>
+</html>

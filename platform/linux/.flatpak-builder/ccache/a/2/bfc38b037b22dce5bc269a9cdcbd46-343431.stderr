@@ -1,0 +1,3 @@
+t31.c:1329:13: warning: ‘v8_handler’ defined but not used [-Wunused-function]
+ static void v8_handler(void *user_data, v8_parms_t *result)
+             ^

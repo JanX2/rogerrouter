@@ -1,0 +1,21 @@
+[Application]
+name=org.tabos.roger
+runtime=org.gnome.Platform/x86_64/3.22
+sdk=org.gnome.Sdk/x86_64/3.22
+command=roger
+
+[Context]
+shared=network;ipc;
+sockets=x11;wayland;
+filesystems=xdg-run/dconf;/var/spool/roger;~/.config/dconf:ro;
+
+[Session Bus Policy]
+ca.desrt.dconf=talk
+
+[Environment]
+DCONF_USER_CONFIG_DIR=.config/dconf
+
+[Extension org.tabos.roger.Debug]
+directory=lib/debug
+autodelete=true
+no-autodownload=true

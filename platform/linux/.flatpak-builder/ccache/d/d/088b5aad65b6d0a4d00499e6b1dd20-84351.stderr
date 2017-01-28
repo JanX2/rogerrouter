@@ -1,0 +1,4 @@
+queue.c: In function ‘queue_read_byte’:
+queue.c:191:9: warning: variable ‘to_end’ set but not used [-Wunused-but-set-variable]
+     int to_end;
+         ^

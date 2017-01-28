@@ -650,7 +650,7 @@ RmConnection *capi_fax_dial(gchar *tiff, const gchar *trg_no, gboolean suppress)
 	gchar *target;
 
 	if (RM_EMPTY_STRING(src_no)) {
-		rm_object_emit_message(0, "Source MSN not set, cannot dial");
+		rm_object_emit_message("Dial error", "Source MSN not set, cannot dial");
 		return NULL;
 	}
 

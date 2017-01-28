@@ -1,0 +1,14 @@
+timezone.c: In function ‘time_sub’:
+timezone.c:121:32: warning: assuming signed overflow does not occur when assuming that (X - c) <= X is always true [-Wstrict-overflow]
+     return (*number < number0) != (delta < 0);
+                                ^
+timezone.c:820:1: warning: assuming signed overflow does not occur when assuming that (X + c) < X is always false [-Wstrict-overflow]
+ }
+ ^
+timezone.c:121:32: warning: assuming signed overflow does not occur when assuming that (X + c) < X is always false [-Wstrict-overflow]
+     return (*number < number0) != (delta < 0);
+                                ^
+timezone.c: In function ‘tz_localtime’:
+timezone.c:245:12: warning: assuming signed overflow does not occur when assuming that (X + c) < X is always false [-Wstrict-overflow]
+         if (increment_overflow(&y, 1))
+            ^

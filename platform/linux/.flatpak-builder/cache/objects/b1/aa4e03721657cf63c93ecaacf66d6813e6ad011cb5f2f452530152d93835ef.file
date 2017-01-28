@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg7384"
+   sodipodi:docname="roger-call-blocked-symbolic.svg"
+   version="1.1"
+   inkscape:version="0.48.5 r10040"
+   height="18"
+   width="18">
+  <metadata
+     id="metadata90">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Roger Router</dc:title>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-sa/3.0/" />
+        <dc:description>Roger Router - Icon Call Blocked Symbolic</dc:description>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-sa/3.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     inkscape:cy="8.1063754"
+     pagecolor="#555753"
+     borderopacity="1"
+     showborder="true"
+     inkscape:bbox-paths="false"
+     guidetolerance="10"
+     inkscape:object-paths="true"
+     inkscape:window-width="1920"
+     showguides="true"
+     inkscape:object-nodes="true"
+     inkscape:snap-bbox="true"
+     inkscape:pageshadow="2"
+     inkscape:guide-bbox="true"
+     inkscape:snap-nodes="false"
+     bordercolor="#666666"
+     objecttolerance="10"
+     id="namedview88"
+     showgrid="true"
+     inkscape:window-maximized="1"
+     inkscape:window-x="0"
+     inkscape:snap-global="true"
+     inkscape:window-y="27"
+     gridtolerance="10"
+     inkscape:window-height="1014"
+     inkscape:snap-to-guides="true"
+     inkscape:current-layer="layer12"
+     inkscape:snap-bbox-midpoints="false"
+     inkscape:zoom="15"
+     inkscape:cx="30.457818"
+     inkscape:snap-grids="true"
+     inkscape:pageopacity="1"
+     borderlayer="false">
+    <inkscape:grid
+       spacingx="1px"
+       spacingy="1px"
+       id="grid4866"
+       empspacing="2"
+       enabled="true"
+       type="xygrid"
+       snapvisiblegridlinesonly="true"
+       visible="true" />
+  </sodipodi:namedview>
+  <title
+     id="title9167">Roger Router</title>
+  <defs
+     id="defs7386">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 8 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="16 : 8 : 1"
+       inkscape:persp3d-origin="8 : 5.3333333 : 1"
+       id="perspective3786" />
+  </defs>
+  <g
+     inkscape:label="status"
+     transform="translate(-80.0002,-744)"
+     inkscape:groupmode="layer"
+     id="layer9"
+     style="display:inline" />
+  <g
+     inkscape:label="devices"
+     transform="translate(-80.0002,-744)"
+     inkscape:groupmode="layer"
+     id="layer10" />
+  <g
+     inkscape:label="apps"
+     transform="translate(-80.0002,-744)"
+     inkscape:groupmode="layer"
+     id="layer11" />
+  <g
+     inkscape:label="places"
+     transform="translate(-80.0002,-744)"
+     inkscape:groupmode="layer"
+     id="layer13" />
+  <g
+     inkscape:label="mimetypes"
+     transform="translate(-80.0002,-744)"
+     inkscape:groupmode="layer"
+     id="layer14" />
+  <g
+     inkscape:label="emblems"
+     transform="translate(-80.0002,-744)"
+     inkscape:groupmode="layer"
+     id="layer15"
+     style="display:inline" />
+  <g
+     inkscape:label="categories"
+     transform="translate(-80.0002,-744)"
+     inkscape:groupmode="layer"
+     id="g4953"
+     style="display:inline" />
+  <g
+     inkscape:label="actions"
+     transform="translate(-80.0002,-744)"
+     inkscape:groupmode="layer"
+     id="layer12"
+     style="display:inline">
+    <path
+       inkscape:connector-curvature="0"
+       d="m 83.344259,744.97133 c 1.02838,0.0575 1.77745,0.91285 2.42142,1.62959 0.62229,0.8025 1.25665,1.67883 1.43179,2.70068 8.7e-4,0.30542 -0.37882,0.45383 -0.54455,0.69129 -0.62769,0.56454 -1.27403,1.42332 -0.87497,2.30171 0.5623,1.11603 1.62398,1.85624 2.44322,2.77178 0.66353,0.66594 1.51297,1.57169 2.549,1.18775 0.76839,-0.29179 1.22061,-1.00069 1.8197,-1.48383 0.82889,0.0641 1.56017,0.57873 2.25356,1.00355 0.88857,0.64438 1.80891,1.43596 2.13125,2.52424 0.18953,0.86624 -0.72032,1.33136 -1.28297,1.78728 -1.40558,1.01821 -3.29374,1.15278 -4.90016,0.56984 -2.58725,-0.91897 -4.67216,-2.83124 -6.50822,-4.81203 -1.56928,-1.78463 -3.067734,-3.87719 -3.268889,-6.31944 -0.137797,-1.71753 0.737475,-3.42037 2.060869,-4.47555 l 0.13306,-0.0525 0.13586,-0.0243 z"
+       id="path44084"
+       style="opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;display:inline;enable-background:new" />
+    <path
+       inkscape:connector-curvature="0"
+       d="m 92.692501,745 c -1.012117,0 -1.846155,0.83403 -1.846155,1.84615 l 0,1.84616 -0.615388,0 c -0.34092,0 -0.615379,0.27446 -0.615379,0.61538 l 0,0.32693 0,3.36538 3.076922,0 1.230767,0 3.076932,0 0,-3.36538 0,-0.32693 c 0,-0.34092 -0.274468,-0.61538 -0.615388,-0.61538 l -0.615379,0 0,-1.84616 C 95.769433,745.83403 94.935395,745 93.923268,745 l -1.230767,0 z m 0,1.23077 1.230767,0 c 0.351573,0 0.615389,0.26381 0.615389,0.61538 l 0,1.84616 -2.461535,0 0,-1.84616 c 0,-0.35157 0.263807,-0.61538 0.615379,-0.61538 z"
+       id="path4215"
+       style="color:#bebebe;fill:#bebebe;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:2;marker:none;visibility:visible;display:inline;overflow:visible" />
+  </g>
+</svg>
