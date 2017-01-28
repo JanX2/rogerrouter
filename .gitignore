@@ -32,7 +32,6 @@ build
 # Misc
 aclocal.m4
 autom4te.cache/
-config.*
 depcomp
 m4/libtool.m4
 *appdata.xml

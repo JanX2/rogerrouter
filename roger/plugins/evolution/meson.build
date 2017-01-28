@@ -1,6 +1,9 @@
 evolution_sources = []
 evolution_sources += 'evolution.c'
 
+dep = dependency('libebook-1.2')
+
+if dep.found()
 evolution_dep = []
 evolution_dep += rm_dep
 evolution_dep += roger_dep
@@ -27,3 +30,4 @@ custom_target('evolution.plugin',
 gnome.compile_schemas()
 install_data('org.tabos.roger.plugins.evolution.gschema.xml',
 install_dir : join_paths(get_option('datadir'), 'glib-2.0', 'schemas'))
+endif
