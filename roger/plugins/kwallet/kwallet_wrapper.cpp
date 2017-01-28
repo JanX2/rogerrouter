@@ -22,18 +22,18 @@ extern int kwallet4_get_password( const char *, char ** );
 extern int kwallet4_store_password( const char *, const char * );
 extern int kwallet4_init( void );
 
-#include <libroutermanager/call.h>
-#include <libroutermanager/plugins.h>
-#include <libroutermanager/password.h>
+#include <librm/call.h>
+#include <librm/plugins.h>
+#include <librm/password.h>
 
-#define ROUTERMANAGER_TYPE_KWALLET_PLUGIN        (routermanager_kwallet_plugin_get_type ())
-#define ROUTERMANAGER_KWALLET_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), ROUTERMANAGER_TYPE_KWALLET_PLUGIN, RouterManagerKWalletPlugin))
+#define RM_TYPE_KWALLET_PLUGIN        (rm_kwallet_plugin_get_type ())
+#define RM_KWALLET_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_KWALLET_PLUGIN, RmKWalletPlugin))
 
 typedef struct {
 	guint signal_id;
-} RouterManagerKWalletPluginPrivate;
+} RmKWalletPluginPrivate;
 
-ROUTERMANAGER_PLUGIN_REGISTER(ROUTERMANAGER_TYPE_KWALLET_PLUGIN, RouterManagerKWalletPlugin, routermanager_kwallet_plugin)
+RM_PLUGIN_REGISTER(RM_TYPE_KWALLET_PLUGIN, RmKWalletPlugin, rm_kwallet_plugin)
 
 /**
  * \brief Get password out of kwallet

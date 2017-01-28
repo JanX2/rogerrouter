@@ -38,7 +38,7 @@
 #include <roger/uitools.h>
 #include <roger/settings.h>
 
-#define RM_TYPE_SIP_PLUGIN (routermanager_sip_plugin_get_type ())
+#define RM_TYPE_SIP_PLUGIN (rm_sip_plugin_get_type ())
 #define RM_SIP_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_SIP_PLUGIN, RmSipPlugin))
 
 typedef struct {
@@ -49,7 +49,7 @@ typedef struct {
 	RmDevice *device;
 } RmSipPluginPrivate;
 
-RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_SIP_PLUGIN, RmSipPlugin, routermanager_sip_plugin)
+RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_SIP_PLUGIN, RmSipPlugin, rm_sip_plugin)
 
 struct sip_call {
 	gint id;

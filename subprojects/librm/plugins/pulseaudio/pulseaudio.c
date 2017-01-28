@@ -349,7 +349,7 @@ static void *pulse_audio_open(void)
 		output = NULL;
 	}
 
-	pipes->simple_out = pa_simple_new(NULL, "Roger Router", PA_STREAM_PLAYBACK, output, "phone", &sample_spec, NULL, NULL, &error);
+	pipes->simple_out = pa_simple_new(NULL, "Router Manager", PA_STREAM_PLAYBACK, output, "phone", &sample_spec, NULL, NULL, &error);
 	if (pipes->simple_out == NULL) {
 		g_debug("Pulseaudio - Could not open output device '%s'. Error: %s", output ? output : "", pa_strerror(error));
 		free(pipes);
@@ -361,7 +361,7 @@ static void *pulse_audio_open(void)
 		input = NULL;
 	}
 
-	pipes->simple_in = pa_simple_new(NULL, "Roger Router", PA_STREAM_RECORD, input, "phone", &sample_spec, NULL, &buffer, &error);
+	pipes->simple_in = pa_simple_new(NULL, "Router Manager", PA_STREAM_RECORD, input, "phone", &sample_spec, NULL, &buffer, &error);
 	if (pipes->simple_in == NULL) {
 		g_debug("Pulseaudio - Could not open input device '%s'. Error: %s", input ? input : "", pa_strerror(error));
 		//pa_simple_free(pipes->simple_out);

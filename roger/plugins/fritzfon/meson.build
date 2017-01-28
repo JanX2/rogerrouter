@@ -10,7 +10,6 @@ libfritzfon = shared_library('fritzfon',
                         fritzfon_sources,
                         include_directories : rm_inc,
                         dependencies : fritzfon_dep,
-                        link_with : libroutermanager,
                         install : true,
                         install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/fritzfon/')
 

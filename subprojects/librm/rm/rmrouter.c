@@ -628,7 +628,7 @@ GSList *rm_router_load_voice_records(RmProfile *profile, GSList *journal)
 	GError *error = NULL;
 	const gchar *file_name;
 	const gchar *user_plugins = g_get_user_data_dir();
-	gchar *dir_name = g_build_filename(user_plugins, "roger", G_DIR_SEPARATOR_S, NULL);
+	gchar *dir_name = g_build_filename(user_plugins, RM_NAME, G_DIR_SEPARATOR_S, NULL);
 
 	if (!dir_name) {
 		return journal;

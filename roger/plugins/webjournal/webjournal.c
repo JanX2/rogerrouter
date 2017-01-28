@@ -39,7 +39,7 @@
 
 #include <webjournal.h>
 
-#define RM_TYPE_WEBJOURNAL_PLUGIN (routermanager_webjournal_plugin_get_type ())
+#define RM_TYPE_WEBJOURNAL_PLUGIN (rm_webjournal_plugin_get_type ())
 #define RM_WEBJOURNAL_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_WEBJOURNAL_PLUGIN, RmWebJournalPlugin))
 
 typedef struct {
@@ -52,7 +52,7 @@ typedef struct {
 	gchar *styling;
 } RmWebJournalPluginPrivate;
 
-RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_WEBJOURNAL_PLUGIN, RmWebJournalPlugin, routermanager_webjournal_plugin)
+RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_WEBJOURNAL_PLUGIN, RmWebJournalPlugin, rm_webjournal_plugin)
 
 static GSettings *webjournal_settings = NULL;
 

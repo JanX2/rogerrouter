@@ -42,14 +42,14 @@
 #include <gdata/gdata.h>
 #include <gdata/gdata-oauth1-authorizer.h>
 
-#define RM_TYPE_GOOGLE_PLUGIN        (routermanager_google_plugin_get_type ())
+#define RM_TYPE_GOOGLE_PLUGIN        (rm_google_plugin_get_type ())
 #define RM_GOOGLE_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_GOOGLE_PLUGIN, RmGooglePlugin))
 
 typedef struct {
 	guint signal_id;
 } RmGooglePluginPrivate;
 
-RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_GOOGLE_PLUGIN, RmGooglePlugin, routermanager_google_plugin)
+RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_GOOGLE_PLUGIN, RmGooglePlugin, rm_google_plugin)
 
 void pref_notebook_add_page(GtkWidget *notebook, GtkWidget *page, gchar *title);
 GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand, gboolean vexpand);

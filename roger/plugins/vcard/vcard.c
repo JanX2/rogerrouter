@@ -43,14 +43,14 @@
 
 #include <vcard.h>
 
-#define RM_TYPE_VCARD_PLUGIN        (routermanager_vcard_plugin_get_type ())
+#define RM_TYPE_VCARD_PLUGIN        (rm_vcard_plugin_get_type ())
 #define RM_VCARD_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_VCARD_PLUGIN, RmVCardPlugin))
 
 typedef struct {
 	guint signal_id;
 } RmVCardPluginPrivate;
 
-RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_VCARD_PLUGIN, RmVCardPlugin, routermanager_vcard_plugin)
+RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_VCARD_PLUGIN, RmVCardPlugin, rm_vcard_plugin)
 
 static GSList *contacts = NULL;
 

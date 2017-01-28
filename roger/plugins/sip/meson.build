@@ -10,7 +10,6 @@ libsip = shared_library('sip',
                         sip_sources,
                         include_directories : rm_inc,
                         dependencies : sip_dep,
-                        link_with : libroutermanager,
                         install : true,
                         install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/sip/')
 

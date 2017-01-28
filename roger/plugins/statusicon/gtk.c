@@ -24,7 +24,7 @@
 #include <rm/rmcallentry.h>
 #include <rm/rmplugins.h>
 #include <rm/rmprofile.h>
-#include <rm/routermanager.h>
+#include <rm/rm.h>
 #include <rm/rmsettings.h>
 
 #include <roger/about.h>
@@ -39,14 +39,14 @@ G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 
 #define MAX_LASTCALLS 5
 
-#define RM_TYPE_STATUSICON_PLUGIN        (routermanager_statusicon_plugin_get_type ())
+#define RM_TYPE_STATUSICON_PLUGIN        (rm_statusicon_plugin_get_type ())
 #define RM_STATUSICON_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_STATUSICON_PLUGIN, RmStatusIconPlugin))
 
 typedef struct {
 	guint signal_id;
 } RmStatusIconPluginPrivate;
 
-RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_STATUSICON_PLUGIN, RmStatusIconPlugin, routermanager_statusicon_plugin)
+RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_STATUSICON_PLUGIN, RmStatusIconPlugin, rm_statusicon_plugin)
 
 extern GList *journal_list;
 extern GtkWidget *journal_win;

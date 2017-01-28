@@ -39,14 +39,14 @@
 
 #include <roger/main.h>
 
-#define RM_TYPE_FRITZFON_PLUGIN        (routermanager_fritzfon_plugin_get_type ())
+#define RM_TYPE_FRITZFON_PLUGIN        (rm_fritzfon_plugin_get_type ())
 #define RM_FRITZFON_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_FRITZFON_PLUGIN, RmFritzFonPlugin))
 
 typedef struct {
 	guint signal_id;
 } RmFritzFonPluginPrivate;
 
-RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_FRITZFON_PLUGIN, RmFritzFonPlugin, routermanager_fritzfon_plugin)
+RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_FRITZFON_PLUGIN, RmFritzFonPlugin, rm_fritzfon_plugin)
 
 void pref_notebook_add_page(GtkWidget *notebook, GtkWidget *page, gchar *title);
 GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand, gboolean vexpand);

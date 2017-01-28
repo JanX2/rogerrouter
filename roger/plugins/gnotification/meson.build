@@ -9,7 +9,6 @@ libgnotification = shared_library('gnotification',
                         gnotification_sources,
                         include_directories : rm_inc,
                         dependencies : gnotification_dep,
-                        link_with : libroutermanager,
                         install : true,
                         install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/gnotification/')
 

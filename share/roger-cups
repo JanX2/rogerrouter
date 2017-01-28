@@ -6,7 +6,7 @@ if [ $# == 0 ] ; then
 fi
 
 RNAME=$2-Fax-ID$1
-SPOOL_DIR=/var/spool/roger/
+SPOOL_DIR=/var/spool/rm/
 
 if [ $# -eq 6 ]; then
 	cp $6 $SPOOL_DIR/$RNAME.tmp

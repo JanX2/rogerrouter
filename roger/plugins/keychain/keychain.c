@@ -30,14 +30,14 @@
 #include <rm/rmplugins.h>
 #include <rm/rmpassword.h>
 
-#define ROUTERMANAGER_TYPE_KEYCHAIN_PLUGIN        (routermanager_keychain_plugin_get_type ())
+#define RM_TYPE_KEYCHAIN_PLUGIN        (rm_keychain_plugin_get_type ())
 #define RM_KEYCHAIN_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_KEYCHAIN_PLUGIN, RmKeyChainPlugin))
 
 typedef struct {
 	guint signal_id;
 } RmKeyChainPluginPrivate;
 
-RM_PLUGIN_REGISTER(RM_TYPE_KEYCHAIN_PLUGIN, RmKeyChainPlugin, routermanager_keychain_plugin)
+RM_PLUGIN_REGISTER(RM_TYPE_KEYCHAIN_PLUGIN, RmKeyChainPlugin, rm_keychain_plugin)
 
 #define SERVICE_NAME "roger"
 

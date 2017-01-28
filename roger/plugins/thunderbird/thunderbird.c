@@ -39,14 +39,14 @@
 #include <roger/settings.h>
 #include <roger/uitools.h>
 
-#define RM_TYPE_THUNDERBIRD_PLUGIN        (routermanager_thunderbird_plugin_get_type ())
+#define RM_TYPE_THUNDERBIRD_PLUGIN        (rm_thunderbird_plugin_get_type ())
 #define RM_THUNDERBIRD_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_THUNDERBIRD_PLUGIN, RmThunderbirdPlugin))
 
 typedef struct {
 	guint signal_id;
 } RmThunderbirdPluginPrivate;
 
-RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_THUNDERBIRD_PLUGIN, RmThunderbirdPlugin, routermanager_thunderbird_plugin)
+RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_THUNDERBIRD_PLUGIN, RmThunderbirdPlugin, rm_thunderbird_plugin)
 
 void pref_notebook_add_page(GtkWidget *notebook, GtkWidget *page, gchar *title);
 GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand, gboolean vexpand);

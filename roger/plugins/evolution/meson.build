@@ -14,7 +14,6 @@ libevolution = shared_library('evolution',
                         evolution_sources,
                         include_directories : evolution_inc,
                         dependencies : evolution_dep,
-                        link_with : libroutermanager,
                         install : true,
                         install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/evolution/')
 

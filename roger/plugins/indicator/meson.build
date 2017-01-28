@@ -10,7 +10,6 @@ libindicator = shared_library('indicator',
                         indicator_sources,
                         include_directories : rm_inc,
                         dependencies : indicator_dep,
-                        link_with : libroutermanager,
                         install : true,
                         install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/indicator/')
 

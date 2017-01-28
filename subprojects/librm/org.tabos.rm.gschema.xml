@@ -115,7 +115,7 @@
 
 		<!-- Fax information -->
 		<key name="fax-header" type="s">
-			<default>'Roger Router'</default>
+			<default>'Router Manager'</default>
 			<summary>Fax header information (name of sender)</summary>
 		</key>
 		<key name="fax-ident" type="s">

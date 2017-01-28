@@ -93,9 +93,9 @@ if ! test -d $cupsbackenddir; then
 fi
 
 # Create spooler directory
-mkdir -p /var/spool/roger/
-chown $spooldir_uid:$spooldir_gid /var/spool/roger
-chmod 2770 /var/spool/roger/
+mkdir -p /var/spool/rm/
+chown $spooldir_uid:$spooldir_gid /var/spool/rm/
+chmod 2770 /var/spool/rm/
 
 # install the backend
 cp roger-cups $cupsbackenddir

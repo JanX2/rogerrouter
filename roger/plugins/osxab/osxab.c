@@ -37,14 +37,14 @@
 #include <rm/rmstring.h>
 #include <rm/rmsettings.h>
 
-#define RM_TYPE_OSXAB_PLUGIN        (routermanager_osxab_plugin_get_type ())
+#define RM_TYPE_OSXAB_PLUGIN        (rm_osxab_plugin_get_type ())
 #define RM_OSXAB_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_OSXAB_PLUGIN, RmOSXAbPlugin))
 
 typedef struct {
 	guint signal_id;
 } RmOSXAbPluginPrivate;
 
-RM_PLUGIN_REGISTER(RM_TYPE_OSXAB_PLUGIN, RmOSXAbPlugin, routermanager_osxab_plugin)
+RM_PLUGIN_REGISTER(RM_TYPE_OSXAB_PLUGIN, RmOSXAbPlugin, rm_osxab_plugin)
 
 static GSList *contacts = NULL;
 
