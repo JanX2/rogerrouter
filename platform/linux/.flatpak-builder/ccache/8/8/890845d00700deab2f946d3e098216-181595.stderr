@@ -1,7 +1,0 @@
-sig_tone.c: In function ‘sig_tone_rx_init’:
-sig_tone.c:655:36: warning: iteration 2u invokes undefined behavior [-Waggressive-loop-optimizations]
-             s->tone[j].notch_z1[i] = 0.0f;
-                                    ^
-sig_tone.c:651:5: note: containing loop
-     for (i = 0;  i < 3;  i++)
-     ^

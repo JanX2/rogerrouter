@@ -1,4 +1,0 @@
-v18.c: In function ‘v18_rx_dtmf’:
-v18.c:570:18: warning: variable ‘s’ set but not used [-Wunused-but-set-variable]
-     v18_state_t *s;
-                  ^

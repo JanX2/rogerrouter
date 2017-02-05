@@ -1,4 +1,0 @@
-t30.c: In function ‘process_rx_pps’:
-t30.c:2391:9: warning: variable ‘image_ended’ set but not used [-Wunused-but-set-variable]
-     int image_ended;
-         ^

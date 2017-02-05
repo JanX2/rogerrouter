@@ -1,4 +1,0 @@
-at_interpreter.c: In function ‘at_cmd_D’:
-at_interpreter.c:848:17: warning: variable ‘w’ set but not used [-Wunused-but-set-variable]
-     const char *w;
-                 ^
