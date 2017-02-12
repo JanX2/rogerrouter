@@ -39,15 +39,6 @@
 
 #include <roger/main.h>
 
-#define RM_TYPE_FRITZFON_PLUGIN        (rm_fritzfon_plugin_get_type ())
-#define RM_FRITZFON_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_FRITZFON_PLUGIN, RmFritzFonPlugin))
-
-typedef struct {
-	guint signal_id;
-} RmFritzFonPluginPrivate;
-
-RM_PLUGIN_REGISTER(RM_TYPE_FRITZFON_PLUGIN, RmFritzFonPlugin, rm_fritzfon_plugin)
-
 static GSList *contacts = NULL;
 static GSettings *fritzfon_settings = NULL;
 
@@ -676,7 +667,7 @@ RmAddressBook fritzfon_book = {
 	fritzfon_set_sub_book
 };
 
-void impl_activate(PeasActivatable *plugin)
+gboolean fritzfon_plugin_init(RmPlugin *plugin)
 {
 	fritzfon_settings = rm_settings_new("org.tabos.roger.plugins.fritzfon");
 
@@ -684,11 +675,16 @@ void impl_activate(PeasActivatable *plugin)
 	fritzfon_read_book();
 
 	rm_addressbook_register(&fritzfon_book);
+
+	return TRUE;
 }
 
-void impl_deactivate(PeasActivatable *plugin)
+gboolean fritzfon_plugin_shutdown(RmPlugin *plugin)
 {
 	rm_addressbook_unregister(&fritzfon_book);
 	g_clear_object(&fritzfon_settings);
+
+	return TRUE;
 }
 
+PLUGIN(fritzfon);

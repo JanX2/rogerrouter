@@ -1,6 +1,6 @@
-/**
+/*
  * Roger Router
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2017 Jan-Michael Brummer
  *
  * This file is part of Roger Router.
  *
@@ -38,6 +38,7 @@
 
 #include <roger/journal.h>
 #include <roger/assistant.h>
+#include <roger/application.h>
 #include <roger/main.h>
 #include <roger/phone.h>
 #include <roger/settings.h>
@@ -46,6 +47,8 @@
 #include <roger/contacts.h>
 #include <roger/shortcuts.h>
 #include <roger/crash.h>
+#include <roger/uitools.h>
+#include <roger/plugins.h>
 
 #include <config.h>
 
@@ -196,24 +199,9 @@ static void preferences_activated(GSimpleAction *action, GVariant *parameter, gp
 	app_show_settings();
 }
 
-#include <libpeas/peas.h>
-#include <libpeas-gtk/peas-gtk.h>
-
-
 static void extensions_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
-	GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	PeasEngine *peas = peas_engine_get_default();
-
-	gtk_window_set_default_size(GTK_WINDOW(window), 450, 600);
-	gtk_window_set_title(GTK_WINDOW(window), _("Extensions"));
-	gtk_window_set_modal(GTK_WINDOW(window), TRUE);
-
-	gtk_window_set_transient_for(GTK_WINDOW(window), GTK_WINDOW(journal_get_window()));
-	GtkWidget *manager = peas_gtk_plugin_manager_new(peas);
-	gtk_container_add(GTK_CONTAINER(window), manager);
-
-	gtk_widget_show_all(window);
+	app_show_plugins();
 }
 
 static void donate_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
@@ -342,9 +330,8 @@ static void application_startup(GtkApplication *application)
 
 static void rm_object_message_cb(RmObject *object, gchar *title, gchar *message, gpointer user_data)
 {
-	g_debug("%s(): title %s, message %s, data %s", __FUNCTION__, title, message, user_data);
-	//GtkWidget *dialog = gtk_message_dialog_new(roger_app ? gtk_application_get_active_window(roger_app) : NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, title);
 	GtkWidget *dialog = gtk_message_dialog_new_with_markup(roger_app ? gtk_application_get_active_window(roger_app) : NULL, GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE, "<span weight=\"bold\" size=\"larger\">%s</span>", title);
+
 	gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), "%s", message ? message : "");
 
 	g_free(message);
@@ -434,7 +421,7 @@ static void app_init(GtkApplication *app)
 		rm_set_requested_profile(option_state.profile);
 	}
 
-	option_state.debug = TRUE;
+	//option_state.debug = TRUE;
 	rm_new(option_state.debug, &error);
 	g_signal_connect(rm_object, "authenticate", G_CALLBACK(app_authenticate_cb), NULL);
 	g_signal_connect(rm_object, "message", G_CALLBACK(rm_object_message_cb), NULL);
@@ -459,8 +446,8 @@ static void app_init(GtkApplication *app)
 	}
 
 	if (rm_netmonitor_is_online() && !rm_profile_get_active()) {
-		journal_set_hide_on_start(TRUE);
-		app_assistant();
+		//journal_set_hide_on_start(TRUE);
+		//app_assistant();
 	}
 
 	journal_window(G_APPLICATION(app));
@@ -506,12 +493,23 @@ static void application_options_process(GtkApplication *app, const struct cmd_li
 	g_settings_set_boolean(app_settings, "debug", options->debug);
 }
 
+/**
+ * application_command_line_cb:
+ * @app: a #GtkApplication
+ * @command_line: a #GApplicationCommandLine
+ * @data: unused
+ *
+ * Handles command line parameters of application
+ *
+ * Returns: 0 on success, otherwise != 0 on error
+ */
 static gint application_command_line_cb(GtkApplication *app, GApplicationCommandLine *command_line, gpointer data)
 {
 	GOptionContext *context;
 	int argc;
 	char **argv;
 
+	/* Get arguments */
 	argv = g_application_command_line_get_arguments(command_line, &argc);
 
 	memset(&option_state, 0, sizeof(option_state));
@@ -524,6 +522,7 @@ static gint application_command_line_cb(GtkApplication *app, GApplicationCommand
 		return 1;
 	}
 
+	/* In case we have more than one argument, guess that it is a number */
 	if (argc > 1) {
 		/* Guess it is a number to call */
 		gchar *number = argv[1];
@@ -534,24 +533,29 @@ static gint application_command_line_cb(GtkApplication *app, GApplicationCommand
 
 	application_options_process(app, &option_state);
 
-	g_debug("startup_called: %d", startup_called);
-	if (startup_called != FALSE) {
+	g_debug("%s(): Startup_called?: %d", __FUNCTION__, startup_called);
+	if (startup_called) {
+		/* Install crash handle */
 		crash_install_handlers();
 
+		/* Initialize app and mark startup as done */
 		app_init(app);
 		gdk_notify_startup_complete();
 		startup_called = FALSE;
 	} else {
+		/* Application is already running, present journal window */
 		extern GtkWidget *journal_win;
 		gtk_widget_set_visible(GTK_WIDGET(journal_win), TRUE);
 	}
 
+	/* Check if we should start hidden */
 	if (!option_state.start_hidden) {
+		/* In case we have a number, setup phone window */
 		if (option_state.number) {
 			RmContact *contact;
 			gchar *full_number;
 
-			g_debug("number: %s", option_state.number);
+			g_debug("%s(): number: %s", __FUNCTION__, option_state.number);
 			full_number = rm_number_full(option_state.number, FALSE);
 
 			/** Ask for contact information */
@@ -561,6 +565,7 @@ static gint application_command_line_cb(GtkApplication *app, GApplicationCommand
 			g_free(full_number);
 		}
 
+		/* If assistant is requested, start it */
 		if (option_state.assistant) {
 			app_assistant();
 		}
@@ -571,23 +576,39 @@ static gint application_command_line_cb(GtkApplication *app, GApplicationCommand
 	return 0;
 }
 
-static void application_activated(GtkApplication *app, gpointer data)
+/**
+ * application_activated:
+ * @app: a #GtkApplication
+ * @data: unused
+ *
+ * Reacts on activate signal.
+ */
+static void application_activate_cb(GtkApplication *app, gpointer data)
 {
-	g_debug("called");
 	journal_activated(NULL, NULL, NULL);
 }
 
-#define APP_GSETTINGS_SCHEMA "org.tabos.roger"
-
+/**
+ * application_new:
+ *
+ * Creates a new #GtkApplication
+ *
+ * Retuns: a #GtkApplication
+ */
 GtkApplication *application_new(void)
 {
+	/* Set application name */
 	g_set_prgname(PACKAGE_NAME);
 	g_set_application_name(PACKAGE_NAME);
 
-	roger_app = gtk_application_new("org.tabos.roger", G_APPLICATION_HANDLES_COMMAND_LINE);
+	/* Create application */
+	roger_app = gtk_application_new(APP_GSETTINGS_SCHEMA, G_APPLICATION_HANDLES_COMMAND_LINE);
 
+	/* Create application settings */
 	app_settings = rm_settings_new(APP_GSETTINGS_SCHEMA);
-	g_signal_connect(roger_app, "activate", G_CALLBACK(application_activated), roger_app);
+
+	/* Connect to application signals */
+	g_signal_connect(roger_app, "activate", G_CALLBACK(application_activate_cb), roger_app);
 	g_signal_connect(roger_app, "startup", G_CALLBACK(application_startup), roger_app);
 	g_signal_connect(roger_app, "shutdown", G_CALLBACK(application_shutdown), roger_app);
 	g_signal_connect(roger_app, "command-line", G_CALLBACK(application_command_line_cb), roger_app);

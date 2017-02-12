@@ -23,9 +23,6 @@
 
 #include <gtk/gtk.h>
 
-#include <libpeas/peas.h>
-#include <libpeas-gtk/peas-gtk.h>
-
 #include <rm/rmprofile.h>
 #include <rm/rmrouter.h>
 #include <rm/rmnetmonitor.h>
@@ -1395,26 +1392,6 @@ void settings_notification_incoming_toggled_cb(GtkCellRendererToggle *toggle, gc
 	rm_profile_set_notification_incoming_numbers(rm_profile_get_active(), (const gchar * const *) selected_incoming_numbers);
 }
 
-void settings_notebook_switch_page_cb(GtkNotebook *notebook, GtkWidget *page, guint page_num, gpointer user_data)
-{
-	RmProfile *profile;
-
-	if (page_num != 5) {
-		return;
-	}
-
-	profile = rm_profile_get_active();
-	g_settings_unbind(profile->settings, "address-book-plugin");
-
-	gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(settings->address_book_plugin_combobox));
-	settings_fill_address_book_plugin_combobox(settings);
-	g_settings_bind(profile->settings, "address-book-plugin", settings->address_book_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
-
-	if (!gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(settings->address_book_plugin_combobox))) {
-		gtk_combo_box_set_active(GTK_COMBO_BOX(settings->address_book_plugin_combobox), 0);
-	}
-}
-
 void phone_settings_close_button_cb(GtkWidget *button, gpointer user_data)
 {
 	gtk_widget_destroy(settings->phone_settings);
@@ -1666,7 +1643,6 @@ void app_show_settings(void)
 	gchar **numbers;
 	gint idx;
 	GSList *audio_plugins;
-	GSList *notification_plugins;
 	GSList *list;
 
 	if (settings) {
@@ -1806,8 +1782,8 @@ void app_show_settings(void)
 	g_settings_bind(profile->settings, "fax-ecm", settings->fax_ecm_switch, "active", G_SETTINGS_BIND_DEFAULT);
 
 	/* Journal group */
-	settings->view_call_type_icons_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "view_call_type_icons_combobox"));
-	g_settings_bind(app_settings, "icon-type", settings->view_call_type_icons_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+	//settings->view_call_type_icons_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "view_call_type_icons_combobox"));
+	//g_settings_bind(app_settings, "icon-type", settings->view_call_type_icons_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 
 	settings->filter_liststore = GTK_LIST_STORE(gtk_builder_get_object(builder, "filter_liststore"));
 	filter_refresh_list(settings->filter_liststore);
@@ -1860,45 +1836,6 @@ void app_show_settings(void)
 				audio_plugin_combobox_changed_cb(NULL, NULL);
 		}
 	}
-
-	/* Security group */
-	GSList *plugins = rm_password_get_plugins();
-	settings->security_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "security_plugin_combobox"));
-
-	for (list = plugins; list; list = list->next) {
-		RmPasswordManager *pm = list->data;
-
-		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->security_plugin_combobox), pm->name, pm->name);
-	}
-
-	if (!gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(settings->security_plugin_combobox))) {
-		gtk_combo_box_set_active(GTK_COMBO_BOX(settings->security_plugin_combobox), 0);
-	}
-
-	g_settings_bind(profile->settings, "password-manager", settings->security_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
-
-	/* Address book group */
-	settings->address_book_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "address_book_plugin_combobox"));
-	settings_fill_address_book_plugin_combobox(settings);
-	g_settings_bind(profile->settings, "address-book-plugin", settings->address_book_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
-
-	/* Notification group */
-	settings->notification_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "notification_plugin_combobox"));
-
-	notification_plugins = rm_notification_get_plugins();
-	for (list = notification_plugins; list != NULL; list = list->next) {
-		RmNotification *notification = list->data;
-		gchar *name;
-
-		g_assert(notification != NULL);
-
-		name = rm_notification_get_name(notification);
-
-		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->notification_plugin_combobox), name, name);
-		g_free(name);
-	}
-
-	g_settings_bind(profile->settings, "notification-plugin", settings->notification_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 
 	settings->notification_ringtone_switch = GTK_WIDGET(gtk_builder_get_object(builder, "notification_ringtone_switch"));
 	g_settings_bind(profile->settings, "notification-play-ringtone", settings->notification_ringtone_switch, "active", G_SETTINGS_BIND_DEFAULT);

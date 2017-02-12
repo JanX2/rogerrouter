@@ -35,15 +35,10 @@
 
 #include "csv.h"
 
-#define RM_TYPE_GLOBAL_AREACODES_PLUGIN (rm_global_areacodes_plugin_get_type ())
-#define RM_GLOBAL_AREACODES_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_GLOBAL_AREACODES_PLUGIN, RmGlobalAreaCodesPlugin))
-
 typedef struct {
 	guint signal_id;
 	GHashTable *table;
-} RmGlobalAreaCodesPluginPrivate;
-
-RM_PLUGIN_REGISTER(RM_TYPE_GLOBAL_AREACODES_PLUGIN, RmGlobalAreaCodesPlugin, rm_global_areacodes_plugin)
+} RmGlobalAreaCodesPlugin;
 
 /**
  * areacodes_get_area_code:
@@ -67,7 +62,7 @@ RmAreaCode *areacodes_get_area_code(RmGlobalAreaCodesPlugin *areacodes_plugin, c
 		memset(sub_string, 0, sizeof(sub_string));
 		strncpy(sub_string, full_number + 2, index);
 
-		areacode = g_hash_table_lookup(areacodes_plugin->priv->table, sub_string);
+		areacode = g_hash_table_lookup(areacodes_plugin->table, sub_string);
 		if (areacode) {
 			return areacode;
 		}
@@ -94,7 +89,7 @@ static gchar *areacodes_get_city(RmGlobalAreaCodesPlugin *areacodes_plugin, gcha
 	gchar sub_string[6];
 	gchar *local_number;
 
-	if (!areacodes_plugin->priv->table) {
+	if (!areacodes_plugin->table) {
 		return g_strdup("");
 	}
 
@@ -175,14 +170,16 @@ static void areacodes_contact_process_cb(RmObject *obj, RmContact *contact, gpoi
  *
  * Activate plugin
  */
-static void impl_activate(PeasActivatable *plugin)
+static gboolean areacodes_plugin_init(RmPlugin *plugin)
 {
-	RmGlobalAreaCodesPlugin *areacodes_plugin = RM_GLOBAL_AREACODES_PLUGIN(plugin);
+	RmGlobalAreaCodesPlugin *areacodes_plugin = g_slice_alloc0(sizeof(RmGlobalAreaCodesPlugin));
 	gchar *areacodes = g_build_filename(rm_get_directory(RM_PLUGINS), "areacodes_global", "globalareacodes.csv", NULL);
 	gchar *data;
 	gsize read;
 
 	g_debug("AreaCodes: '%s'", areacodes);
+
+	plugin->priv = areacodes_plugin;
 
 	/* Load data file */
 	data = rm_file_load(areacodes, &read);
@@ -191,21 +188,23 @@ static void impl_activate(PeasActivatable *plugin)
 		g_free(data);
 		g_free(areacodes);
 
-		return;
+		return FALSE;
 	}
 
 	/* Make sure data is terminated */
 	data[read - 1] = '\0';
 
 	/* Parse data */
-	areacodes_plugin->priv->table = csv_parse_global_areacodes_data(data);
+	areacodes_plugin->table = csv_parse_global_areacodes_data(data);
 
 	/* Free data */
 	g_free(data);
 	g_free(areacodes);
 
 	/* Connect to "contact-process" signal using "after" as this should come last */
-	areacodes_plugin->priv->signal_id = g_signal_connect_after(G_OBJECT(rm_object), "contact-process", G_CALLBACK(areacodes_contact_process_cb), areacodes_plugin);
+	areacodes_plugin->signal_id = g_signal_connect_after(G_OBJECT(rm_object), "contact-process", G_CALLBACK(areacodes_contact_process_cb), areacodes_plugin);
+
+	return TRUE;
 }
 
 /**
@@ -214,17 +213,21 @@ static void impl_activate(PeasActivatable *plugin)
  *
  * Deactivate plugin
  */
-static void impl_deactivate(PeasActivatable *plugin)
+static gboolean areacodes_plugin_shutdown(RmPlugin *plugin)
 {
-	RmGlobalAreaCodesPlugin *areacodes_plugin = RM_GLOBAL_AREACODES_PLUGIN(plugin);
+	RmGlobalAreaCodesPlugin *areacodes_plugin = plugin->priv;
 
 	/* If signal handler is connected: disconnect */
-	if (g_signal_handler_is_connected(G_OBJECT(rm_object), areacodes_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(rm_object), areacodes_plugin->priv->signal_id);
+	if (g_signal_handler_is_connected(G_OBJECT(rm_object), areacodes_plugin->signal_id)) {
+		g_signal_handler_disconnect(G_OBJECT(rm_object), areacodes_plugin->signal_id);
 	}
 
 	/* Free hash table */
-	if (areacodes_plugin->priv->table) {
-		g_hash_table_destroy(areacodes_plugin->priv->table);
+	if (areacodes_plugin->table) {
+		g_hash_table_destroy(areacodes_plugin->table);
 	}
+
+	return TRUE;
 }
+
+PLUGIN(areacodes);

@@ -35,7 +35,7 @@
 GtkApplication *application_new(void);
 gchar *argv0 = NULL;
 
-#ifdef G_OS_WIN32
+#ifdef G3_OS_WIN32
 #include <windows.h>
 /**
  * \brief roger_main - windows library main function

@@ -12,3 +12,7 @@ system = 'windows'
 cpu_family = 'x86'
 cpu = 'x86_64'
 endian = 'little'
+
+[properties]
+root = '/usr/x86_64-w64-mingw32/sys-root/mingw/'
+lib = 'lib'

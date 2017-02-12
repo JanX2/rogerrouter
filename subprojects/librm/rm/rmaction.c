@@ -20,8 +20,16 @@
 #include <string.h>
 
 #include <glib.h>
+
+#include <rmconfig.h>
+
+#if HAVE_UUID
 #include <uuid.h>
+#endif
+
+#if HAVE_DCONF
 #include <dconf.h>
+#endif
 
 #include <rm/rmaction.h>
 #include <rm/rmstring.h>
@@ -362,6 +370,32 @@ static RmAction *rm_action_load(RmProfile *profile, const gchar *name)
 	return action;
 }
 
+static char *rand_string(gchar *str, size_t size)
+{
+	const gchar charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+	if (size) {
+		--size;
+		for (size_t n = 0; n < size; n++) {
+			int key = g_random_int() % (gint)(sizeof(charset) - 1);
+			str[n] = charset[key];
+		}
+
+		str[size] = '\0';
+	}
+
+	return str;
+}
+
+char *rand_string_alloc(size_t size)
+{
+	char *s = g_malloc0(size + 1);
+
+	rand_string(s, size);
+
+	return s;
+}
+
 /**
  * rm_action_new:
  * @profile: a #RmProfile
@@ -373,13 +407,18 @@ static RmAction *rm_action_load(RmProfile *profile, const gchar *name)
 RmAction *rm_action_new(RmProfile *profile)
 {
 	RmAction *action;
-	uuid_t u;
 	gchar uuidstr[37];
+#if HAVE_UUID
+	uuid_t u;
 
 	uuid_generate(u);
 	uuid_unparse(u, uuidstr);
 
 	action = rm_action_load(profile, uuidstr);
+#else
+	rand_string(uuidstr, sizeof(uuidstr));
+	action = rm_action_load(profile, uuidstr);
+#endif
 
 	/* Save all actions to profile */
 	rm_action_save(profile);
@@ -402,6 +441,7 @@ void rm_action_remove(RmProfile *profile, RmAction *action)
 	/* Save all actions to profile */
 	rm_action_save(profile);
 
+#if HAVE_DCONF
 	if (rm_settings_backend_is_dconf()) {
 		gchar *path;
 		DConfClient *client;
@@ -412,6 +452,7 @@ void rm_action_remove(RmProfile *profile, RmAction *action)
 		g_free(path);
 		g_object_unref(client);
 	}
+#endif
 
 	/* Free internal action data */
 	g_object_unref(action);

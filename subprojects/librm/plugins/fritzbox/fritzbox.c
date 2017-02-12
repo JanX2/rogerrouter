@@ -43,15 +43,6 @@
 #include "csv.h"
 #include "callmonitor.h"
 
-#define RM_TYPE_FRITZBOX_PLUGIN        (rm_fritzbox_plugin_get_type ())
-#define RM_FRITZBOX_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_FRITZBOX_PLUGIN, RmFritzboxPlugin))
-
-typedef struct {
-	guint dummy;
-} RmFritzBoxPluginPrivate;
-
-RM_PLUGIN_REGISTER(RM_TYPE_FRITZBOX_PLUGIN, RmFritzBoxPlugin, rm_fritzbox_plugin)
-
 GSettings *fritzbox_settings = NULL;
 
 /**
@@ -264,9 +255,8 @@ RmPhone dialer_phone = {
 
 /**
  * \brief Activate plugin (register fritzbox router)
- * \param plugin peas plugin
  */
-static void impl_activate(PeasActivatable *plugin)
+static gboolean fritzbox_plugin_init(RmPlugin *plugin)
 {
 	/* Register router structure */
 	rm_router_register(&fritzbox);
@@ -280,15 +270,20 @@ static void impl_activate(PeasActivatable *plugin)
 
 	phone->name = g_strdup("MOEP");
 	rm_phone_register(phone);*/
+
+	return TRUE;
 }
 
 /**
  * \brief Deactivate plugin
- * \param plugin peas plugin
  */
-static void impl_deactivate(PeasActivatable *plugin)
+static gboolean fritzbox_plugin_shutdown(RmPlugin *plugin)
 {
 	fritzbox_shutdown_callmonitor();
 
 	rm_phone_unregister(&dialer_phone);
+
+	return TRUE;
 }
+
+PLUGIN(fritzbox);

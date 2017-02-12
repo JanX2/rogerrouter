@@ -1,6 +1,6 @@
-/**
+/*
  * Roger Router
- * Copyright (c) 2012-2016 Jan-Michael Brummer
+ * Copyright (c) 2012-2017 Jan-Michael Brummer
  *
  * This file is part of Roger Router.
  *
@@ -17,14 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ANSWERINGMACHINE_H
-#define ANSWERINGMACHINE_H
-
-#include <glib.h>
+#ifndef PLUGINS_H
+#define PLUGINS_H
 
 G_BEGIN_DECLS
 
-void app_answeringmachine(const gchar *name);
+void app_show_plugins(void);
 
 G_END_DECLS
 

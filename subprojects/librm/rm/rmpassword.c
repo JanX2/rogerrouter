@@ -243,7 +243,7 @@ gchar *rm_password_encode(const gchar *in)
  */
 guchar *rm_password_decode(const gchar *in)
 {
-	return g_strdup(in);
+	return (guchar*)g_strdup(in);
 }
 
 #endif

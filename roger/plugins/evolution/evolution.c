@@ -41,15 +41,6 @@
 
 #include "ebook-sources.h"
 
-#define RM_TYPE_EVOLUTION_PLUGIN        (rm_evolution_plugin_get_type ())
-#define RM_EVOLUTION_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_EVOLUTION_PLUGIN, RmEvolutionPlugin))
-
-typedef struct {
-	guint signal_id;
-} RmEvolutionPluginPrivate;
-
-RM_PLUGIN_REGISTER(RM_TYPE_EVOLUTION_PLUGIN, RmEvolutionPlugin, rm_evolution_plugin)
-
 static GSList *contacts = NULL;
 static GSettings *ebook_settings = NULL;
 static EClient *e_client = NULL;
@@ -644,18 +635,23 @@ RmAddressBook evolution_book = {
 	evolution_set_sub_book
 };
 
-void impl_activate(PeasActivatable *plugin)
+gboolean evolution_plugin_init(RmPlugin *plugin)
 {
 	ebook_settings = rm_settings_new_profile("org.tabos.roger.plugins.evolution", "evolution", (gchar*) rm_profile_get_name(rm_profile_get_active()));
 
 	ebook_read_book();
 
 	rm_addressbook_register(&evolution_book);
+
+	return TRUE;
 }
 
-void impl_deactivate(PeasActivatable *plugin)
+gboolean evolution_plugin_shutdown(RmPlugin *plugin)
 {
 	rm_addressbook_unregister(&evolution_book);
 	g_clear_object(&ebook_settings);
+
+	return TRUE;
 }
 
+PLUGIN(evolution);

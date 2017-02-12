@@ -210,9 +210,10 @@ void rm_netmonitor_changed_cb(GNetworkMonitor *monitor, gboolean available, gpoi
  */
 gboolean rm_netmonitor_init(void)
 {
+	gboolean state = TRUE;
+
 #ifdef G_OS_UNIX
 	GNetworkMonitor *monitor = g_network_monitor_get_default();
-	gboolean state = TRUE;
 
 	g_return_val_if_fail(monitor != NULL, FALSE);
 
@@ -222,9 +223,9 @@ gboolean rm_netmonitor_init(void)
 	rm_ssdp_init();
 
 	state = g_network_monitor_get_network_available(monitor);
+#endif
 
 	rm_netmonitor_state_changed(state);
-#endif
 
 	return TRUE;
 }

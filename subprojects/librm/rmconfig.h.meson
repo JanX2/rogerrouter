@@ -12,6 +12,12 @@
 /* Define whether ssdp is available. */
 #mesondefine HAVE_SSDP
 
+/* Define whether dconf is available. */
+#mesondefine HAVE_DCONF
+
+/* Define whether uuid is available. */
+#mesondefine HAVE_UUID
+
 /* Define whether to use the fax spooler */
 #mesondefine RM_FAX_SPOOLER
 

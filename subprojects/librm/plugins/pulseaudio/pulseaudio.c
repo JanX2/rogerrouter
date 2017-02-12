@@ -32,15 +32,6 @@
 #include <rm/rmaudio.h>
 #include <rm/rmstring.h>
 
-#define RM_TYPE_PULSEAUDIO_PLUGIN (rm_pulseaudio_plugin_get_type())
-#define RM_PULSEAUDIO_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_PULSEAUDIO_PLUGIN, RmPulseAudioPlugin))
-
-typedef struct {
-	guint id;
-} RmPulseAudioPluginPrivate;
-
-RM_PLUGIN_REGISTER(RM_TYPE_PULSEAUDIO_PLUGIN, RmPulseAudioPlugin, rm_pulseaudio_plugin)
-
 struct pulse_pipes {
 	pa_simple *simple_in;
 	pa_simple *simple_out;
@@ -274,7 +265,7 @@ GSList *pulse_audio_detect_devices(void)
 		device = g_slice_new0(RmAudioDevice);
 		device->internal_name = g_strdup(output_device_list[index].name);
 		device->name = g_strdup(output_device_list[index].description);
-		device->type = AUDIO_OUTPUT;
+		device->type = RM_AUDIO_OUTPUT;
 		list = g_slist_prepend(list, device);
 	}
 
@@ -286,7 +277,7 @@ GSList *pulse_audio_detect_devices(void)
 		device = g_slice_new0(RmAudioDevice);
 		device->internal_name = g_strdup(input_device_list[index].name);
 		device->name = g_strdup(input_device_list[index].description);
-		device->type = AUDIO_INPUT;
+		device->type = RM_AUDIO_INPUT;
 		list = g_slist_prepend(list, device);
 
 		found_in++;
@@ -474,24 +465,26 @@ RmAudio pulse_audio = {
  * \brief Activate plugin (add net event)
  * \param plugin peas plugin
  */
-static void impl_activate(PeasActivatable *plugin)
+static gboolean pulseaudio_plugin_init(RmPlugin *plugin)
 {
-	//RmPulseAudioPlugin *pulseaudio_plugin = RM_PULSEAUDIO_PLUGIN(plugin);
-
 	/* Set media role */
 	g_setenv("PULSE_PROP_media.role", "phone", TRUE);
 	g_setenv("PULSE_PROP_filter.want", "echo-cancel", TRUE);
 
 	rm_audio_register(&pulse_audio);
+
+	return TRUE;
 }
 
 /**
  * \brief Deactivate plugin (remote net event)
  * \param plugin peas plugin
  */
-static void impl_deactivate(PeasActivatable *plugin)
+static gboolean pulseaudio_plugin_shutdown(RmPlugin *plugin)
 {
-	//RmPulseAudioPlugin *pulseaudio_plugin = RM_PULSEAUDIO_PLUGIN(plugin);
-
 	rm_audio_unregister(&pulse_audio);
+
+	return TRUE;
 }
+
+PLUGIN(pulseaudio);

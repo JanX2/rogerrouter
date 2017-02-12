@@ -90,6 +90,18 @@ static gpointer rm_vox_playback_thread(gpointer user_data)
 	gint max_cnt = 0;
 	guchar bytes = 0;
 
+	/* open audio device */
+	playback->audio_priv = rm_audio_open(playback->audio);
+	if (!playback->audio_priv) {
+		g_debug("%s(): Could not open audio device", __FUNCTION__);
+		g_slice_free(RmVoxPlayback, playback);
+
+		//g_set_error(error, RM_ERROR, RM_ERROR_AUDIO, "%s", "Could not open audio device");
+
+
+		return NULL;
+	}
+
 	speex_bits_init(&bits);
 
 	/* Get frame rate */
@@ -97,6 +109,8 @@ static gpointer rm_vox_playback_thread(gpointer user_data)
 
 	/* Loop through data in order to calculate frame counts */
 	playback->offset = 0;
+	playback->cnt = 0;
+
 	while (playback->offset < playback->len && !g_cancellable_is_cancelled(playback->cancel)) {
 		bytes = playback->data[playback->offset];
 		playback->offset++;
@@ -172,6 +186,8 @@ static gpointer rm_vox_playback_thread(gpointer user_data)
 #endif
 
 	speex_bits_destroy(&bits);
+	playback->thread = NULL;
+	rm_audio_close(playback->audio, playback->audio_priv);
 
 	return NULL;
 }
@@ -192,12 +208,21 @@ gboolean rm_vox_play(gpointer vox_data)
 		return FALSE;
 	}
 
+	/* Pause music, cancel cancellable and join thread */
+	if (playback->thread) {
+		g_cancellable_cancel(playback->cancel);
+		g_thread_join(playback->thread);
+	}
+
+	g_cancellable_reset(playback->cancel);
+
 	/* Reset internal values */
-	playback->offset = 0;
-	playback->cnt = 0;
+	playback->fraction = 0;
+	playback->seconds = 0;
 
 	/* Start playback thread */
 	playback->state = FALSE;
+
 	playback->thread = g_thread_new("play vox", rm_vox_playback_thread, playback);
 
 	return playback->thread != NULL;
@@ -225,14 +250,14 @@ gboolean rm_vox_playpause(gpointer vox_data)
 }
 
 /**
- * rm_vox_stop:
+ * rm_vox_shutdown:
  * @vox_data: pointer to vox playback data
  *
  * Stop vox playback if it is still running
  *
  * Returns: %TRUE if playback has been stop, %FALSE on error
  */
-gboolean rm_vox_stop(gpointer vox_data)
+gboolean rm_vox_shutdown(gpointer vox_data)
 {
 	RmVoxPlayback *playback = vox_data;
 
@@ -243,14 +268,16 @@ gboolean rm_vox_stop(gpointer vox_data)
 
 	/* Pause music, cancel cancellable and join thread */
 	playback->state = TRUE;
-	g_cancellable_cancel(playback->cancel);
-	g_thread_join(playback->thread);
+
+	if (playback->thread) {
+		g_cancellable_cancel(playback->cancel);
+		g_thread_join(playback->thread);
+	}
 
 	/* Destroy speex decoder */
 	speex_decoder_destroy(playback->speex);
 
 	/* Close audio device */
-	rm_audio_close(playback->audio, playback->audio_priv);
 	playback->audio = NULL;
 
 	/* Unref cancellable and free structure */
@@ -366,7 +393,7 @@ gpointer rm_vox_init(gchar *data, gsize len, GError **error)
 	spx_int32_t rate = 0;
 
 	/* Create internal structue and store data pointer and data length */
-	playback = g_slice_new(RmVoxPlayback);
+	playback = g_slice_new0(RmVoxPlayback);
 	playback->data = data;
 	playback->len = len;
 
@@ -382,25 +409,12 @@ gpointer rm_vox_init(gchar *data, gsize len, GError **error)
 		return NULL;
 	}
 
-	/* open audio device */
-	playback->audio_priv = rm_audio_open(playback->audio);
-	if (!playback->audio_priv) {
-		g_debug("%s(): Could not open audio device", __FUNCTION__);
-		g_slice_free(RmVoxPlayback, playback);
-
-		g_set_error(error, RM_ERROR, RM_ERROR_AUDIO, "%s", "Could not open audio device");
-
-
-		return NULL;
-	}
-
 	/* Initialize speex decoder */
 	mode = speex_lib_get_mode(0);
 
 	playback->speex = speex_decoder_init(mode);
 	if (!playback->speex) {
 		g_warning("%s(): Decoder initialization failed.", __FUNCTION__);
-		rm_audio_close(playback->audio, playback->audio_priv);
 
 		g_slice_free(RmVoxPlayback, playback);
 

@@ -24,6 +24,8 @@ G_BEGIN_DECLS
 
 #include <rm/rmconnection.h>
 
+#define APP_GSETTINGS_SCHEMA "org.tabos.roger"
+
 extern GSettings *app_settings;
 extern GtkApplication *roger_app;
 

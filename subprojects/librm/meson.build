@@ -29,6 +29,7 @@ rm_dep += dependency('libxml-2.0')
 rm_dep += dependency('libtiff-4')
 rm_dep += dependency('spandsp')
 rm_dep += dependency('json-glib-1.0')
+rm_dep += dependency('gmodule-2.0')
 
 # Check for UPnP support
 upnp_dep = dependency('gupnp-1.0', required : false)
@@ -38,11 +39,13 @@ rm_dep += upnp_dep
 ssdp_dep = dependency('gssdp-1.0', required : false)
 rm_dep += ssdp_dep
 
-if host_machine.system() != 'windows'
-rm_dep += dependency('uuid')
-rm_dep += dependency('dconf')
-rm_dep += dependency('libpeas-1.0')
-endif
+# Check for dconf (allowing us to delete gsettings entries on Linux)
+dconf_dep = dependency('dconf', required : false)
+rm_dep += dconf_dep
+
+# Check for uuid
+uuid_dep = dependency('uuid', required : false)
+rm_dep += uuid_dep
 
 rm_inc = include_directories('.')
 
@@ -53,6 +56,8 @@ cdata.set('RM_NAME', '"rm"')
 cdata.set('RM_VERSION', '"@0@"'.format(rm_version))
 cdata.set('RM_PLUGINS', '"' + rm_plugins_path + '"')
 cdata.set10('HAVE_SSDP', ssdp_dep.found())
+cdata.set10('HAVE_DCONF', dconf_dep.found())
+cdata.set10('HAVE_UUID', dconf_dep.found())
 
 if host_machine.system() == 'windows'
 	cdata.set10('RM_FAX_SERVER', 1)

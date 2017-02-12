@@ -37,15 +37,6 @@
 
 #include <roger/main.h>
 
-#define RM_TYPE_GNOTIFICATION_PLUGIN (rm_gnotification_plugin_get_type ())
-#define RM_GNOTIFICATION_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_GNOTIFICATION_PLUGIN, RmGNotificationPlugin))
-
-typedef struct {
-	guint signal_id;
-} RmGNotificationPluginPrivate;
-
-RM_PLUGIN_REGISTER(RM_TYPE_GNOTIFICATION_PLUGIN, RmGNotificationPlugin, rm_gnotification_plugin)
-
 /**
  * \brief Close gnotification window
  */
@@ -157,20 +148,24 @@ RmNotification gnotification = {
  * \brief Activate plugin
  * \param plugin peas plugin
  */
-void impl_activate(PeasActivatable *plugin)
+gboolean gnotification_plugin_init(RmPlugin *plugin)
 {
-	g_debug("%s(): gnotification", __FUNCTION__);
 	rm_notification_register(&gnotification);
+
+	return TRUE;
 }
 
 /**
  * \brief Deactivate plugin
  * \param plugin peas plugin
  */
-void impl_deactivate(PeasActivatable *plugin)
+gboolean gnotification_plugin_shutdown(RmPlugin *plugin)
 {
-	g_debug("%s(): gnotification", __FUNCTION__);
 	g_application_withdraw_notification(G_APPLICATION(g_application_get_default()), "missed-calls");
 
 	rm_notification_unregister(&gnotification);
+
+	return TRUE;
 }
+
+PLUGIN(gnotification);

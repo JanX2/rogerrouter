@@ -144,67 +144,16 @@ GdkPixbuf *pixbuf_copy_mirror(GdkPixbuf *src)
 
 void journal_init_call_icon(void)
 {
-	GtkIconTheme *icons;
 	gint width = 18;
-	gchar * icon_type = g_settings_get_string(app_settings, "icon-type");
 
-	icons = gtk_icon_theme_get_default();
-
-	gtk_icon_theme_append_search_path(icons, rm_get_directory(APP_DATA));
-	if (icon_call_in) {
-		g_object_unref(icon_call_in);
-	}
-	if (icon_call_missed) {
-		g_object_unref(icon_call_missed);
-	}
-	if (icon_call_out) {
-		g_object_unref(icon_call_out);
-	}
-	if (icon_fax) {
-		g_object_unref(icon_fax);
-	}
-	if (icon_fax_report) {
-		g_object_unref(icon_fax_report);
-	}
-	if (icon_voice) {
-		g_object_unref(icon_voice);
-	}
-	if (icon_record) {
-		g_object_unref(icon_record);
-	}
-	if (icon_blocked) {
-		g_object_unref(icon_blocked);
-	}
-
-	g_debug("%s(): icon_type %s", __FUNCTION__, icon_type);
-	if (!strcmp(icon_type, "color")) {
-		icon_call_in = gtk_icon_theme_load_icon(icons, "roger-call-in", width, 0, NULL);
-		icon_call_missed = gtk_icon_theme_load_icon(icons, "roger-call-missed", width, 0, NULL);
-		icon_call_out = gtk_icon_theme_load_icon(icons, "roger-call-out", width, 0, NULL);
-		icon_fax = gtk_icon_theme_load_icon(icons, "roger-fax", width, 0, NULL);
-		icon_fax_report = gtk_icon_theme_load_icon(icons, "roger-fax-report", width, 0, NULL);
-		icon_voice = gtk_icon_theme_load_icon(icons, "roger-call-voice", width, 0, NULL);
-		icon_record = gtk_icon_theme_load_icon(icons, "roger-record", width, 0, NULL);
-		icon_blocked = gtk_icon_theme_load_icon(icons, "roger-call-blocked", width, 0, NULL);
-	} else {
-		icon_call_in = gtk_icon_theme_load_icon(icons, "roger-call-in-symbolic", width, 0, NULL);
-		icon_call_missed = gtk_icon_theme_load_icon(icons, "roger-call-missed-symbolic", width, 0, NULL);
-		icon_call_out = gtk_icon_theme_load_icon(icons, "roger-call-out-symbolic", width, 0, NULL);
-		icon_fax = gtk_icon_theme_load_icon(icons, "roger-fax-symbolic", width, 0, NULL);
-		icon_fax_report = gtk_icon_theme_load_icon(icons, "roger-fax-report-symbolic", width, 0, NULL);
-		icon_voice = gtk_icon_theme_load_icon(icons, "roger-call-voice-symbolic", width, 0, NULL);
-		icon_record = gtk_icon_theme_load_icon(icons, "roger-record-symbolic", width, 0, NULL);
-		icon_blocked = gtk_icon_theme_load_icon(icons, "roger-call-blocked-symbolic", width, 0, NULL);
-	}
-
-	g_assert(icon_call_in != NULL);
-	g_assert(icon_call_missed != NULL);
-	g_assert(icon_call_out != NULL);
-	g_assert(icon_fax != NULL);
-	g_assert(icon_fax_report != NULL);
-	g_assert(icon_voice != NULL);
-	g_assert(icon_record != NULL);
-	g_assert(icon_blocked != NULL);
+	icon_call_in = gdk_pixbuf_new_from_resource_at_scale("/org/tabos/roger/images/roger-call-in.svg", width, width, TRUE, NULL);
+	icon_call_missed = gdk_pixbuf_new_from_resource_at_scale("/org/tabos/roger/images/roger-call-missed.svg", width, width, TRUE, NULL);
+	icon_call_out = gdk_pixbuf_new_from_resource_at_scale("/org/tabos/roger/images/roger-call-out.svg", width, width, TRUE, NULL);
+	icon_fax = gdk_pixbuf_new_from_resource_at_scale("/org/tabos/roger/images/roger-fax.svg", width, width, TRUE, NULL);
+	icon_fax_report = gdk_pixbuf_new_from_resource_at_scale("/org/tabos/roger/images/roger-fax-report.svg", width, width, TRUE, NULL);
+	icon_voice = gdk_pixbuf_new_from_resource_at_scale("/org/tabos/roger/images/roger-call-voice.svg", width, width, TRUE, NULL);
+	icon_record = gdk_pixbuf_new_from_resource_at_scale("/org/tabos/roger/images/roger-record.svg", width, width, TRUE, NULL);
+	icon_blocked = gdk_pixbuf_new_from_resource_at_scale("/org/tabos/roger/images/roger-call-blocked.svg", width, width, TRUE, NULL);
 }
 
 GdkPixbuf *journal_get_call_icon(gint type)
@@ -665,7 +614,7 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 		rm_os_execute(call->priv);
 		break;
 	case RM_CALL_ENTRY_TYPE_VOICE:
-		answeringmachine_play(call->priv);
+		app_answeringmachine(call->priv);
 		break;
 	default:
 		app_show_phone_window(call->remote, NULL);
@@ -1350,9 +1299,11 @@ void journal_window(GApplication *app)
 
 	filter_box_changed(GTK_COMBO_BOX(journal_filter_box), NULL);
 
+	g_debug("%s(): Show grid", __FUNCTION__);
 	gtk_widget_show_all(GTK_WIDGET(grid));
 
 	if (!journal_hide_on_start) {
+	g_debug("%s(): Show window", __FUNCTION__);
 		gtk_widget_show(GTK_WIDGET(window));
 	}
 

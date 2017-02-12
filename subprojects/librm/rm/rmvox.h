@@ -24,7 +24,7 @@ G_BEGIN_DECLS
 
 gpointer rm_vox_init(gchar *data, gsize len, GError **error);
 gboolean rm_vox_play(gpointer vox_data);
-gboolean rm_vox_stop(gpointer vox_data);
+gboolean rm_vox_shutdown(gpointer vox_data);
 gboolean rm_vox_playpause(gpointer vox_data);
 gboolean rm_vox_seek(gpointer vox_data, gdouble pos);
 gint rm_vox_get_fraction(gpointer vox_data);

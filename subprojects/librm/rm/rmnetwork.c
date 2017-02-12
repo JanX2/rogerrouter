@@ -166,7 +166,11 @@ static void network_authenticate_cb(SoupSession *session, SoupMessage *msg, Soup
  */
 gboolean rm_network_init(void)
 {
-	rm_soup_session = soup_session_new_with_options(SOUP_SESSION_TIMEOUT, 5, NULL);
+	SoupCache *cache;
+
+	cache = soup_cache_new(NULL, SOUP_CACHE_SINGLE_USER);
+	rm_soup_session = soup_session_new_with_options(SOUP_SESSION_TIMEOUT, 5, SOUP_SESSION_USE_THREAD_CONTEXT, TRUE, SOUP_SESSION_ADD_FEATURE, cache, NULL);
+	soup_cache_load(cache);
 
 	g_signal_connect(rm_soup_session, "authenticate", G_CALLBACK(network_authenticate_cb), rm_soup_session);
 

@@ -80,12 +80,18 @@ install_headers(rm_headers, subdir : 'rm')
 
 rm_inc = include_directories('.', '..')
 
+rm_link = []
+
+if host_machine.system() != 'windows'
+rm_link += '-lcrypt'
+endif
+
 rm_shared = shared_library('rm',
                         rm_sources,
                         include_directories : rm_inc,
                         dependencies : rm_dep,
                         install : true,
-                        link_args : '-lcrypt')
+                        link_args : rm_link)
 
 rm_dep = declare_dependency(link_with : rm_shared,
     include_directories : rm_inc,

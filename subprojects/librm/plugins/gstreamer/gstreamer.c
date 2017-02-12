@@ -29,15 +29,6 @@
 #include <rm/rmaudio.h>
 #include <rm/rmstring.h>
 
-#define RM_TYPE_GSTREAMER_PLUGIN (rm_gstreamer_plugin_get_type())
-#define RM_GSTREAMER_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_GSTREAMER_PLUGIN, RmGStreamerPlugin))
-
-typedef struct {
-	guint id;
-} RmGStreamerPluginPrivate;
-
-RM_PLUGIN_REGISTER(RM_TYPE_GSTREAMER_PLUGIN, RmGStreamerPlugin, rm_gstreamer_plugin)
-
 /** predefined backup values */
 static gint gstreamer_channels = 2;
 static gint gstreamer_sample_rate = 8000;
@@ -465,7 +456,7 @@ RmAudio gstreamer = {
  * \brief Activate plugin (add net event)
  * \param plugin peas plugin
  */
-static void impl_activate(PeasActivatable *plugin)
+static gboolean gstreamer_plugin_init(RmPlugin *plugin)
 {
 	gst_init(NULL, NULL);
 
@@ -473,13 +464,19 @@ static void impl_activate(PeasActivatable *plugin)
 	g_setenv("PULSE_PROP_filter.want", "echo-cancel", TRUE);
 
 	rm_audio_register(&gstreamer);
+
+	return TRUE;
 }
 
 /**
  * \brief Deactivate plugin (remote net event)
  * \param plugin peas plugin
  */
-static void impl_deactivate(PeasActivatable *plugin)
+static gboolean gstreamer_plugin_shutdown(RmPlugin *plugin)
 {
 	rm_audio_unregister(&gstreamer);
+
+	return TRUE;
 }
+
+PLUGIN(gstreamer);

@@ -140,7 +140,8 @@
 			<default>''</default>
 		</key>
 		<key name="fax-bitrate" type="i">
-			<default>2</default>
+			<default>3</default>
+			<summary>Fax transfer bitrate: 0 = 2400, 1 = 4800, 2 = 9600, 3 = 14400</summary>
 		</key>
 		<key name="fax-controller" type="i">
 			<default>4</default>

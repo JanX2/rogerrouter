@@ -168,7 +168,7 @@ The following wizard will help you adding a router to the application.</property
                     <property name="has_focus">True</property>
                     <property name="is_focus">True</property>
                     <property name="activates_default">True</property>
-                    <signal name="changed" handler="profile_entry_changed" swapped="no"/>
+                    <!-- <signal name="changed" handler="profile_entry_changed" swapped="no"/>-->
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -245,7 +245,6 @@ Either select auto discovered router below or switch to manual mode and enter it
               <object class="GtkStack" id="router_stack">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <signal name="set-focus-child" handler="router_entry_changed" swapped="no"/>
                 <child>
                   <object class="GtkScrolledWindow" id="scrolled_window">
                     <property name="height_request">50</property>
@@ -261,8 +260,8 @@ Either select auto discovered router below or switch to manual mode and enter it
                           <object class="GtkListBox" id="router_listbox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <signal name="row-activated" handler="router_listbox_row_activated_cb" swapped="no"/>
-                            <signal name="row-selected" handler="router_row_selected_cb" swapped="no"/>
+                            <!--<signal name="row-activated" handler="router_listbox_row_activated_cb" swapped="no"/>
+                            <signal name="row-selected" handler="router_row_selected_cb" swapped="no"/>-->
                           </object>
                         </child>
                       </object>
@@ -301,7 +300,7 @@ Either select auto discovered router below or switch to manual mode and enter it
                         <property name="is_focus">True</property>
                         <property name="valign">center</property>
                         <property name="margin_top">12</property>
-                        <signal name="changed" handler="router_entry_changed" swapped="no"/>
+                        <!--<signal name="changed" handler="router_entry_changed" swapped="no"/>-->
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -641,7 +640,6 @@ Either select auto discovered router below or switch to manual mode and enter it
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <signal name="clicked" handler="back_button_clicked_cb" swapped="no"/>
           </object>
         </child>
         <child>
@@ -653,7 +651,6 @@ Either select auto discovered router below or switch to manual mode and enter it
             <property name="can_default">True</property>
             <property name="has_default">True</property>
             <property name="receives_default">True</property>
-            <signal name="clicked" handler="next_button_clicked_cb" swapped="no"/>
           </object>
           <packing>
             <property name="pack_type">end</property>

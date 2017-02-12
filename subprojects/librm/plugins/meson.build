@@ -9,11 +9,11 @@ if get_option('enable-gstreamer')
 	subdir('gstreamer')
 endif
 
-if get_option('enable-portaudio')
-	portaudio = []
-	portaudio += dependency('portaudio', version : '>= 19')
-	subdir('portaudio')
-endif
+# if get_option('enable-portaudio')
+# 	portaudio = []
+# 	portaudio += dependency('portaudio', version : '>= 19')
+# 	subdir('portaudio')
+# endif
 
 if get_option('enable-pulseaudio')
 	pulseaudio = []
@@ -21,13 +21,13 @@ if get_option('enable-pulseaudio')
 	subdir('pulseaudio')
 endif
 
-subdir('reverselookup')
+# subdir('reverselookup')
 
 if host_machine.system() == 'linux' and get_option('enable-libsecret')
-    subdir('secret')
+	subdir('secret')
 endif
 
-subdir('simple_pwd')
+# subdir('simple_pwd')
 
 if host_machine.system() == 'windows'
 	subdir('wincred')

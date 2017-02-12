@@ -40,17 +40,9 @@
 #include <roger/main.h>
 #include <roger/uitools.h>
 
-#define RM_TYPE_GOOGLE_PLUGIN        (rm_google_plugin_get_type ())
-#define RM_GOOGLE_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_GOOGLE_PLUGIN, RmGooglePlugin))
-
 typedef struct {
 	guint signal_id;
-} RmGooglePluginPrivate;
-
-RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_GOOGLE_PLUGIN, RmGooglePlugin, rm_google_plugin)
-
-void pref_notebook_add_page(GtkWidget *notebook, GtkWidget *page, gchar *title);
-GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand, gboolean vexpand);
+} RmGooglePlugin;
 
 static GSList *contacts = NULL;
 static GSettings *google_settings = NULL;
@@ -262,14 +254,16 @@ static int google_init(void)
  * \return error code
  */
 static int google_shutdown(void) {
-	gchar *token;
+	gchar *token = NULL;
 
 	if (service != NULL) {
 		g_object_unref(service);
 		service = NULL;
 	}
 
-	token = gdata_oauth2_authorizer_dup_refresh_token(authorizer);
+	if (authorizer) {
+		token = gdata_oauth2_authorizer_dup_refresh_token(authorizer);
+	}
 	g_settings_set_string(google_settings, "token", token ? token : "");
 
 	if (authorizer != NULL) {
@@ -855,29 +849,32 @@ RmAddressBook google_book = {
 	NULL//google_save_contact
 };
 
-void impl_activate(PeasActivatable *plugin)
+gboolean google_plugin_init(RmPlugin *plugin)
 {
-	//RmGooglePlugin *google_plugin = RM_GOOGLE_PLUGIN(plugin);
+	RmGooglePlugin *google_plugin = g_slice_alloc0(sizeof(RmGooglePlugin));
 
+	plugin->priv = google_plugin;
 	google_settings = rm_settings_new("org.tabos.roger.plugins.google");
 
 	table = g_hash_table_new(g_str_hash, g_str_equal);
 
 	google_read_book();
 
-	//google_plugin->priv->signal_id = g_signal_connect(G_OBJECT(rm_object), "contact-process", G_CALLBACK(google_contact_process_cb), NULL);
+	//google_plugin->signal_id = g_signal_connect(G_OBJECT(rm_object), "contact-process", G_CALLBACK(google_contact_process_cb), NULL);
 
 	rm_addressbook_register(&google_book);
+
+	return TRUE;
 }
 
-void impl_deactivate(PeasActivatable *plugin)
+gboolean google_plugin_shutdown(RmPlugin *plugin)
 {
-	RmGooglePlugin *google_plugin = RM_GOOGLE_PLUGIN(plugin);
+	RmGooglePlugin *google_plugin = plugin->priv;
 
 	rm_addressbook_unregister(&google_book);
 
-	if (g_signal_handler_is_connected(G_OBJECT(rm_object), google_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(rm_object), google_plugin->priv->signal_id);
+	if (google_plugin && g_signal_handler_is_connected(G_OBJECT(rm_object), google_plugin->signal_id)) {
+		g_signal_handler_disconnect(G_OBJECT(rm_object), google_plugin->signal_id);
 	}
 
 	google_shutdown();
@@ -887,9 +884,11 @@ void impl_deactivate(PeasActivatable *plugin)
 	if (table) {
 		g_hash_table_destroy(table);
 	}
+
+	return TRUE;
 }
 
-GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
+gpointer google_plugin_configure(RmPlugin *config)
 {
 	GtkWidget *user_entry;
 	GtkWidget *password_entry;
@@ -924,3 +923,5 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 
 	return group;
 }
+
+PLUGIN_CONFIG(google);

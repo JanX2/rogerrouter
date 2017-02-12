@@ -146,6 +146,7 @@ void rm_log_init(gboolean debug)
 
 	g_unlink(filename);
 
+	g_print("Creating %s", filename);
 	file = g_file_new_for_path(filename);
 	g_free(filename);
 

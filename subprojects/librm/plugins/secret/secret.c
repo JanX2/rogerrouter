@@ -27,15 +27,6 @@
 
 #include <secret.h>
 
-#define RM_TYPE_SECRET_PLUGIN        (rm_secret_plugin_get_type ())
-#define RM_SECRET_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_SECRET_PLUGIN, RmSecretPlugin))
-
-typedef struct {
-	guint signal_id;
-} RmSecretPluginPrivate;
-
-RM_PLUGIN_REGISTER(RM_TYPE_SECRET_PLUGIN, RmSecretPlugin, rm_secret_plugin)
-
 /**
  * secret_get_schema:
  *
@@ -187,13 +178,15 @@ gboolean secret_available(void)
  *
  * Activate peas plugin - register libsecret password manager if present
  */
-void impl_activate(PeasActivatable *plugin)
+gboolean secret_plugin_init(RmPlugin *plugin)
 {
 	if (!secret_available()) {
-		return;
+		return FALSE;
 	}
 
 	rm_password_register(&secret);
+
+	return TRUE;
 }
 
 /**
@@ -202,7 +195,9 @@ void impl_activate(PeasActivatable *plugin)
  *
  * Deactivate peas plugin
  */
-void impl_deactivate(PeasActivatable *plugin)
+gboolean secret_plugin_shutdown(RmPlugin *plugin)
 {
+	return TRUE;
 }
 
+PLUGIN(secret);

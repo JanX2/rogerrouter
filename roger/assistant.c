@@ -606,11 +606,14 @@ void app_assistant(void)
 
 	/* Connect to builder objects */
 	assistant->window = GTK_WIDGET(gtk_builder_get_object(builder, "assistant"));
+	gtk_application_add_window(GTK_APPLICATION(g_application_get_default()), GTK_WINDOW(assistant->window));
 	assistant->header = GTK_WIDGET(gtk_builder_get_object(builder, "headerbar"));
 
 	assistant->stack = GTK_WIDGET(gtk_builder_get_object(builder, "stack"));
 	assistant->back_button = GTK_WIDGET(gtk_builder_get_object(builder, "back_button"));
+	g_signal_connect(assistant->back_button, "clicked", G_CALLBACK(back_button_clicked_cb), NULL);
 	assistant->next_button = GTK_WIDGET(gtk_builder_get_object(builder, "next_button"));
+	g_signal_connect(assistant->next_button, "clicked", G_CALLBACK(next_button_clicked_cb), NULL);
 
 	assistant->profile_name = GTK_WIDGET(gtk_builder_get_object(builder, "profile_name_entry"));
 

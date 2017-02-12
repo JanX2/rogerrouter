@@ -25,7 +25,7 @@
 #include <shellapi.h>
 
 #define RM_OS_OPEN "start"
-#elseif __APPLE__
+#elif __APPLE__
 #define RM_OS_OPEN "open"
 #else
 #define RM_OS_OPEN "xdg-open"

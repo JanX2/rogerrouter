@@ -46,17 +46,12 @@
 #include <phone.h>
 #include <isdn-convert.h>
 
-#define RM_TYPE_CAPI_PLUGIN (rm_capi_plugin_get_type ())
-#define RM_CAPI_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_CAPI_PLUGIN, RmCapiPlugin))
-
 typedef struct {
 	RmNetEvent *net_event;
 
 	GIOChannel *channel;
 	guint id;
-} RmCapiPluginPrivate;
-
-RM_PLUGIN_REGISTER(RM_TYPE_CAPI_PLUGIN, RmCapiPlugin, rm_capi_plugin)
+} RmCapiPlugin;
 
 //#define CAPI_DEBUG 1
 
@@ -1904,31 +1899,36 @@ gboolean capi_session_disconnect(gpointer user_data)
  * \brief Activate plugin (add net event)
  * \param plugin peas plugin
  */
-static void impl_activate(PeasActivatable *plugin)
+static gboolean capi_plugin_init(RmPlugin *plugin)
 {
-	RmCapiPlugin *capi_plugin = RM_CAPI_PLUGIN(plugin);
+	RmCapiPlugin *capi_plugin = g_slice_alloc0(sizeof(RmCapiPlugin));
 
+	plugin->priv = capi_plugin;
 	/* Add network event */
-	capi_plugin->priv->net_event = rm_netmonitor_add_event("CAPI", capi_session_connect, capi_session_disconnect, capi_plugin);
+	capi_plugin->net_event = rm_netmonitor_add_event("CAPI", capi_session_connect, capi_session_disconnect, capi_plugin);
 
 	capi_device = rm_device_register("CAPI");
 	capi_phone_init(capi_device);
 	capi_fax_init(capi_device);
+
+	return TRUE;
 }
 
 /**
  * \brief Deactivate plugin (remote net event)
  * \param plugin peas plugin
  */
-static void impl_deactivate(PeasActivatable *plugin)
+static gboolean capi_plugin_shutdown(RmPlugin *plugin)
 {
-	RmCapiPlugin *capi_plugin = RM_CAPI_PLUGIN(plugin);
-
-	g_debug("%s(): capi", __FUNCTION__);
+	RmCapiPlugin *capi_plugin = plugin->priv;
 
 	rm_device_unregister(capi_device);
 	capi_phone_shutdown();
 
 	/* Remove network event */
-	rm_netmonitor_remove_event(capi_plugin->priv->net_event);
+	rm_netmonitor_remove_event(capi_plugin->net_event);
+
+	return TRUE;
 }
+
+PLUGIN(capi);

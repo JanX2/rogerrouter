@@ -22,17 +22,11 @@
 
 #include <wchar.h>
 
+#include <glib.h>
+#include <gio/gio.h>
+
 #include <rm/rmplugins.h>
 #include <rm/rmpassword.h>
-
-#define RM_TYPE_WINCRED_PLUGIN        (rm_wincred_plugin_get_type ())
-#define RM_WINCRED_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_WINCRED_PLUGIN, RmWinCredPlugin))
-
-typedef struct {
-	guint signal_id;
-} RmWinCredPluginPrivate;
-
-RM_PLUGIN_REGISTER(RM_TYPE_WINCRED_PLUGIN, RmWinCredPlugin, rm_wincred_plugin)
 
 /**
  * \brief Store password
@@ -131,7 +125,7 @@ static gboolean wincred_remove_password(RmProfile *profile, const gchar *name)
 	return result;
 }
 
-struct password_manager wincred = {
+RmPasswordManager wincred = {
 	"Windows Credentials",
 	wincred_store_password,
 	wincred_get_password,
@@ -142,16 +136,20 @@ struct password_manager wincred = {
  * \brief Activate plugin - register windows credential password manager
  * \pram plugin peas plugin
  */
-void impl_activate(PeasActivatable *plugin)
+gboolean wincred_plugin_init(RmPlugin *plugin)
 {
-	g_debug("Register wincred password manager plugin");
 	rm_password_register(&wincred);
+
+	return TRUE;
 }
 
 /**
  * \brief Deactivate plugin
  * \pram plugin peas plugin
  */
-void impl_deactivate(PeasActivatable *plugin)
+gboolean wincred_plugin_shutdown(RmPlugin *plugin)
 {
+	return TRUE;
 }
+
+PLUGIN(wincred);

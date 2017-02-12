@@ -13,5 +13,13 @@
 		<file preprocess="xml-stripblanks">contactsearch.glade</file>
 		<file preprocess="xml-stripblanks">images/roger.svg</file>
 		<file preprocess="xml-stripblanks">images/address-book.svg</file>
+		<file preprocess="xml-stripblanks">images/roger-call-blocked.svg</file>
+		<file preprocess="xml-stripblanks">images/roger-call-in.svg</file>
+		<file preprocess="xml-stripblanks">images/roger-call-missed.svg</file>
+		<file preprocess="xml-stripblanks">images/roger-call-out.svg</file>
+		<file preprocess="xml-stripblanks">images/roger-call-voice.svg</file>
+		<file preprocess="xml-stripblanks">images/roger-fax.svg</file>
+		<file preprocess="xml-stripblanks">images/roger-fax-report.svg</file>
+		<file preprocess="xml-stripblanks">images/roger-record.svg</file>
 	</gresource>
 </gresources>

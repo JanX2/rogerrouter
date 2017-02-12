@@ -278,6 +278,7 @@ again:
 #endif
 
 #ifdef G_OS_WIN32
+	tcp_keepalive_time = tcp_keepalive_time;
 	channel = g_io_channel_win32_new_socket(sock);
 #else
 	channel = g_io_channel_unix_new(sock);

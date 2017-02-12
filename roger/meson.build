@@ -29,6 +29,8 @@ sourcelist += 'main.h'
 sourcelist += 'main_ui.c'
 sourcelist += 'phone.c'
 sourcelist += 'phone.h'
+sourcelist += 'plugins.c'
+sourcelist += 'plugins.h'
 sourcelist += 'print.c'
 sourcelist += 'print.h'
 sourcelist += 'settings.c'
@@ -42,10 +44,9 @@ roger_dep = []
 roger_dep += dependency('gtk+-3.0', version : '>=3.12.0')
 roger_dep += dependency('libsoup-2.4')
 roger_dep += dependency('libtiff-4')
-#roger_dep += dependency('spandsp')
+roger_dep += dependency('spandsp')
 roger_dep += cc.find_library('m', required: true)
 roger_dep += rm_dep
-#roger_dep += dependency('libpeas-gtk-1.0')
 
 executable(name, sources : sourcelist, dependencies : roger_dep, include_directories : roger_inc, gui_app : true, install : true)
 
@@ -65,22 +66,6 @@ custom_target('org.tabos.roger.appdata.xml',
 
 images = []
 images += 'images/app.png'
-images += 'images/roger-call-blocked.svg'
-images += 'images/roger-call-blocked-symbolic.svg'
-images += 'images/roger-call-in.svg'
-images += 'images/roger-call-in-symbolic.svg'
-images += 'images/roger-call-missed.svg'
-images += 'images/roger-call-missed-symbolic.svg'
-images += 'images/roger-call-out.svg'
-images += 'images/roger-call-out-symbolic.svg'
-images += 'images/roger-call-voice.svg'
-images += 'images/roger-call-voice-symbolic.svg'
-images += 'images/roger-fax.svg'
-images += 'images/roger-fax-symbolic.svg'
-images += 'images/roger-fax-report.svg'
-images += 'images/roger-fax-report-symbolic.svg'
-images += 'images/roger-record.svg'
-images += 'images/roger-record-symbolic.svg'
 
 install_data(images, install_dir : get_option('datadir') + '/roger/')
 

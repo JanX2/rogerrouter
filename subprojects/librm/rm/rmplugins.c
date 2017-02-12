@@ -17,13 +17,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <rmconfig.h>
+#include <string.h>
 
-#include <libpeas/peas.h>
+#include <rmconfig.h>
 
 #include <rm/rmprofile.h>
 #include <rm/rmobject.h>
 #include <rm/rmplugins.h>
+#include <rm/rmstring.h>
+
+GSList *rm_plugins = NULL;
 
 /**
  * SECTION:rmplugins
@@ -35,10 +38,6 @@
 
 /** Internal search path list */
 static GSList *rm_search_path_list = NULL;
-/** Internal peas exten set */
-static PeasExtensionSet *rm_extension = NULL;
-/** peas engine */
-PeasEngine *rm_engine = NULL;
 
 /**
  * rm_plugins_add_search_path:
@@ -52,40 +51,119 @@ void rm_plugins_add_search_path(gchar *path)
 }
 
 /**
- * rm_plugins_extension_added_cb:
- * @set: a #PeasExtensionSet
- * @info: a #PeasPluginInfo
- * @extension: a #PeasExtension
- * @unused: unused data poiner
- *
- * Add extension callback, activates a plugin.
+ * \brief load plugin by filename
+ * \param pnName file name
+ * \return error code
  */
-static void rm_plugins_extension_added_cb(PeasExtensionSet *set, PeasPluginInfo *info, PeasExtension *extension, gpointer unused)
+static gint rm_plugins_load_plugin(char *name)
 {
-	/* Active plugin now */
-	g_debug(" + %s (%s) activated", peas_plugin_info_get_name(info), peas_plugin_info_get_module_name(info));
+	RmPlugin *plugin;
+	GModule *module;
+	typedef void (*rmInitPlugin)(RmPlugin *plugin);
+	rmInitPlugin init_plugin;
+	gpointer tmp;
+	GKeyFile *keyfile;
+	gchar *module_name;
+	gchar *lib_name;
 
-	peas_activatable_activate(PEAS_ACTIVATABLE(extension));
+	keyfile = g_key_file_new();
+	g_key_file_load_from_file (keyfile, name, G_KEY_FILE_NONE, NULL);
+
+	module_name = g_key_file_get_string(keyfile, "Plugin", "Module", NULL);
+
+	lib_name = g_strdup_printf("%s/lib%s.%s", g_dirname(name), module_name, G_MODULE_SUFFIX);
+	//g_debug("%s(): lib_name: %s", __FUNCTION__, lib_name);
+	module = g_module_open(lib_name, G_MODULE_BIND_LAZY);
+	if (!module) {
+		g_warning("%s(): Cannot load plugin %s\n%s", __FUNCTION__, name, g_module_error());
+		return -1;
+	}
+
+	if (!g_module_symbol(module, "__rm_init_plugin", &tmp)) {
+		g_warning("%s(): Cannot load symbol '__rm_init_plugin' : %s", __FUNCTION__, g_module_error());
+		g_module_close(module);
+		return -2;
+	}
+	init_plugin = tmp;
+
+	plugin = g_slice_alloc0 (sizeof(RmPlugin));
+
+	init_plugin(plugin);
+
+	plugin->module = module;
+
+	plugin->module_name = module_name;
+	plugin->name = g_key_file_get_string(keyfile, "Plugin", "Name", NULL);
+	plugin->description = g_key_file_get_string(keyfile, "Plugin", "Description", NULL);
+	plugin->builtin = g_key_file_get_boolean(keyfile, "Plugin", "Builtin", NULL);
+	plugin->help_url = g_key_file_get_string(keyfile, "Plugin", "Help", NULL);
+
+	/**** First step: Load them immediately, late we will connect it to the profiles */
+	if (plugin->builtin) {
+		rm_plugins_enable(plugin);
+	}
+	/**** First step: Load them immediately, late we will connect it to the profiles */
+
+	rm_plugins = g_slist_prepend(rm_plugins, plugin);
+
+	return 0;
 }
 
 /**
- * rm_plugins_extension_removed_cb:
- * @set: a #PeasExtensionSet
- * @info: a #PeasPluginInfo
- * @extension: a #PeasExtension
- * @unused: unused data poiner
+ * rm_plugins_has_file_extension:
+ * @file: filename
+ * @ext: extension
  *
- * Remove extensionsion callback, deactivates a plugin.
+ * Check if file has extension
+ *
+ * Returns: %TRUE or %FALSE
  */
-static void rm_plugins_extension_removed_cb(PeasExtensionSet *set, PeasPluginInfo *info, PeasExtension *extension, gpointer unused)
+gboolean rm_plugins_has_file_extension(const char *file, const char *ext)
 {
-	/* Remove 'non-builtin' plugin now */
-	if (!peas_plugin_info_is_builtin(info)) {
-		g_debug(" - %s (%s) deactivated", peas_plugin_info_get_name(info), peas_plugin_info_get_module_name(info));
+	int len, ext_len;
 
-		peas_activatable_deactivate(PEAS_ACTIVATABLE(extension));
-	} else {
-		g_debug(" - %s (%s) built-in, skipped", peas_plugin_info_get_name(info), peas_plugin_info_get_module_name(info));
+	if (file == NULL || *file == '\0' || ext == NULL) {
+		return FALSE;
+	}
+
+	ext_len = strlen(ext);
+	len = strlen(file) - ext_len;
+
+	if (len < 0) {
+		return FALSE;
+	}
+
+	return (strncmp(file + len, ext, ext_len ) == 0);
+}
+
+/**
+ * rm_plugins_load_dir:
+ * @plugin_dir: plugin directroy to scan for new plugins
+ *
+ * Scans @plugin_dir for new plugins (with system extension) and loads them
+ */
+void rm_plugins_load_dir(gchar *plugin_dir)
+{
+	GDir *dir;
+	const gchar *file;
+	gchar *path;
+	char *ext = ".plugin";
+
+	dir = g_dir_open(plugin_dir, 0, NULL);
+
+	if (dir) {
+		while ((file = g_dir_read_name(dir)) != NULL) {
+			path = g_build_filename(plugin_dir, file, NULL);
+			g_debug("%s(): Trying %s", __FUNCTION__, path);
+
+			if (g_file_test(path, G_FILE_TEST_IS_DIR)) {
+				rm_plugins_load_dir(path);
+			} else if (rm_plugins_has_file_extension(file, ext)) {
+				rm_plugins_load_plugin(path);
+			}
+			g_free(path);
+		}
+		g_dir_close(dir);
 	}
 }
 
@@ -97,38 +175,13 @@ static void rm_plugins_extension_removed_cb(PeasExtensionSet *set, PeasPluginInf
 void rm_plugins_init(void)
 {
 	GSList *slist;
-	const GList *list;
-
-	/* Get default rm_engine */
-	rm_engine = peas_engine_get_default();
-
-	/* Set app object as object to rm_engine */
-	rm_extension = peas_extension_set_new(rm_engine, PEAS_TYPE_ACTIVATABLE, "object", rm_object, NULL);
-
-	/* Look for plugins in plugin_dir */
-	peas_engine_add_search_path(rm_engine, RM_PLUGINS, RM_PLUGINS);
 
 	/* And all other directories */
 	for (slist = rm_search_path_list; slist != NULL; slist = slist->next) {
 		gchar *plugin_dir = slist->data;
 
-		peas_engine_add_search_path(rm_engine, plugin_dir, plugin_dir);
-	}
-
-	/* In addition to C we want to support python plugins */
-	peas_engine_enable_loader(rm_engine, "python3");
-
-	/* Connect rm_extensionsion added/removed signals */
-	g_signal_connect(rm_extension, "extension-added", G_CALLBACK(rm_plugins_extension_added_cb), NULL);
-	g_signal_connect(rm_extension, "extension-removed", G_CALLBACK(rm_plugins_extension_removed_cb), NULL);
-
-	/* Traverse through detected plugins and loaded builtin plugins now */
-	for (list = peas_engine_get_plugin_list(rm_engine); list != NULL; list = list->next) {
-		PeasPluginInfo *info = list->data;
-
-		if (peas_plugin_info_is_builtin(info)) {
-			peas_engine_load_plugin(rm_engine, info);
-		}
+		g_debug("%s(): Trying %s", __FUNCTION__, plugin_dir);
+		rm_plugins_load_dir(plugin_dir);
 	}
 }
 
@@ -139,7 +192,26 @@ void rm_plugins_init(void)
  */
 void rm_plugins_bind_loaded_plugins(void)
 {
-	g_settings_bind(rm_profile_get_active()->settings, "active-plugins", rm_engine, "loaded-plugins", G_SETTINGS_BIND_DEFAULT | G_SETTINGS_BIND_NO_SENSITIVITY);
+	GSList *list;
+	gchar **active_plugins = g_settings_get_strv(rm_profile_get_active()->settings, "active-plugins");
+
+	g_debug("%s(): Called for profile", __FUNCTION__);
+
+	for (list = rm_plugins; list != NULL; list = list->next) {
+		RmPlugin *plugin = list->data;
+
+		if (plugin->builtin) {
+			continue;
+		}
+
+		if (rm_strv_contains((const gchar * const *) active_plugins, plugin->module_name)) {
+			if (!plugin->enabled) {
+				rm_plugins_enable(plugin);
+			}
+		} else if (plugin->enabled) {
+			plugin->shutdown(plugin);
+		}
+	}
 }
 
 /**
@@ -149,15 +221,59 @@ void rm_plugins_bind_loaded_plugins(void)
  */
 void rm_plugins_shutdown(void)
 {
-	if (!rm_extension) {
+	GSList *list;
+
+	for (list = rm_plugins; list != NULL; list = list->next) {
+		RmPlugin *plugin = list->data;
+
+		if (plugin->enabled) {
+			plugin->enabled = !plugin->shutdown(plugin);
+		}
+	}
+}
+
+GSList *rm_plugins_get(void)
+{
+	return rm_plugins;
+}
+
+void rm_plugins_disable(RmPlugin *plugin)
+{
+	RmProfile *profile = rm_profile_get_active();
+	gchar **active_plugins;
+
+	if (plugin->enabled) {
+		g_debug("%s(): - %s", __FUNCTION__, plugin->name);
+		plugin->enabled = !plugin->shutdown(plugin);
+	}
+
+	if (!profile) {
 		return;
 	}
 
-	g_signal_handlers_disconnect_by_func(rm_extension, G_CALLBACK(rm_plugins_extension_added_cb), NULL);
-	g_signal_handlers_disconnect_by_func(rm_extension, G_CALLBACK(rm_plugins_extension_removed_cb), NULL);
+	active_plugins = g_settings_get_strv(profile->settings, "active-plugins");
+	active_plugins = rm_strv_remove(active_plugins, plugin->module_name);
 
-	peas_extension_set_foreach(rm_extension, rm_plugins_extension_removed_cb, NULL);
-
-	g_clear_object(&rm_extension);
-	g_clear_object(&rm_engine);
+	g_settings_set_strv(profile->settings, "active-plugins", (const gchar * const *) active_plugins);
 }
+
+void rm_plugins_enable(RmPlugin *plugin)
+{
+	RmProfile *profile = rm_profile_get_active();
+	gchar **active_plugins;
+
+	if (!plugin->enabled) {
+		g_debug("%s(): + %s", __FUNCTION__, plugin->name);
+		plugin->enabled = plugin->init(plugin);
+	}
+
+	if (!profile) {
+		return;
+	}
+
+	active_plugins = g_settings_get_strv(profile->settings, "active-plugins");
+	active_plugins = rm_strv_add(active_plugins, plugin->module_name);
+
+	g_settings_set_strv(profile->settings, "active-plugins", (const gchar * const *) active_plugins);
+}
+
