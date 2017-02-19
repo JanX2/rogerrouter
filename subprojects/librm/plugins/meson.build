@@ -23,7 +23,7 @@ endif
 
 # subdir('reverselookup')
 
-if host_machine.system() == 'linux' and get_option('enable-libsecret')
+if get_option('enable-libsecret')
 	subdir('secret')
 endif
 
