@@ -9,11 +9,11 @@ if get_option('enable-gstreamer')
 	subdir('gstreamer')
 endif
 
-#if get_option('enable-portaudio')
+if get_option('enable-portaudio')
 	portaudio = []
 	portaudio += dependency('portaudio-2.0', version : '>= 19')
 	subdir('portaudio')
-#endif
+endif
 
 if get_option('enable-pulseaudio')
 	pulseaudio = []
