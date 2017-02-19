@@ -73,9 +73,9 @@ static gboolean use_header = FALSE;
 
 gboolean roger_uses_headerbar(void)
 {
-	//return TRUE;
+	return TRUE;
 	//return FALSE;
-	return use_header;
+	//return use_header;
 }
 
 void journal_clear(void)
@@ -931,12 +931,25 @@ static void journal_export_cb(GtkWidget *dialog, gint response, gpointer user_da
 
 void export_journal_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
-	GtkWidget *dialog;
+	GtkFileChooserNative *native;
+	GtkFileChooser *chooser;
+	gint res;
 
-	dialog = gtk_file_chooser_dialog_new(_("Export journal"), GTK_WINDOW(journal_win), GTK_FILE_CHOOSER_ACTION_SAVE, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Save"), GTK_RESPONSE_ACCEPT, NULL);
-	gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), "journal.csv");
-	g_signal_connect(dialog, "response", G_CALLBACK(journal_export_cb), NULL);
-	gtk_widget_show_all(dialog);
+	native = gtk_file_chooser_native_new(_("Export journal"), GTK_WINDOW(journal_win), GTK_FILE_CHOOSER_ACTION_SAVE, NULL, NULL);
+	chooser = GTK_FILE_CHOOSER(native);
+	gtk_file_chooser_set_current_name(chooser, "journal.csv");
+	//g_signal_connect(chooser, "response", G_CALLBACK(journal_export_cb), NULL);
+	//gtk_widget_show_all(GTK_WIDGET(chooser));
+	res = gtk_native_dialog_run (GTK_NATIVE_DIALOG (native));
+	if (res == GTK_RESPONSE_ACCEPT) {
+		gchar *file = gtk_file_chooser_get_filename(chooser);
+
+		g_debug("file: %s", file);
+		rm_journal_save_as(journal_list, file);
+		g_free(file);
+	}
+
+	g_object_unref(native);
 }
 
 void delete_entry_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
@@ -1299,11 +1312,9 @@ void journal_window(GApplication *app)
 
 	filter_box_changed(GTK_COMBO_BOX(journal_filter_box), NULL);
 
-	g_debug("%s(): Show grid", __FUNCTION__);
 	gtk_widget_show_all(GTK_WIDGET(grid));
 
 	if (!journal_hide_on_start) {
-	g_debug("%s(): Show window", __FUNCTION__);
 		gtk_widget_show(GTK_WIDGET(window));
 	}
 

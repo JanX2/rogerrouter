@@ -35,19 +35,6 @@
 GtkApplication *application_new(void);
 gchar *argv0 = NULL;
 
-#ifdef G3_OS_WIN32
-#include <windows.h>
-/**
- * \brief roger_main - windows library main function
- * \param hint hinstance
- * \param argc argument count
- * \param argv argument vector
- * \return error code
- */
-int roger_main(HINSTANCE hint, int argc, char **argv);
-int roger_main(HINSTANCE hint, int argc, char **argv)
-{
-#else
 /**
  * \brief Main function
  * \param argc argument count
@@ -56,7 +43,6 @@ int roger_main(HINSTANCE hint, int argc, char **argv)
  */
 int main(int argc, char **argv)
 {
-#endif
 	int status;
 	int idx;
 

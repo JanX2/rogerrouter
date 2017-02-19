@@ -40,6 +40,11 @@ sourcelist += 'shortcuts.h'
 sourcelist += 'uitools.h'
 sourcelist += roger_gresources
 
+if host_machine.system() == 'windows'
+win = import('windows')
+sourcelist += win.compile_resources('roger_winres.rc')
+endif
+
 roger_dep = []
 roger_dep += dependency('gtk+-3.0', version : '>=3.12.0')
 roger_dep += dependency('libsoup-2.4')

@@ -1851,6 +1851,27 @@ void app_show_settings(void)
 	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(settings->headerbar), box_string);
 	g_free(box_string);
 
+	gtk_builder_add_callback_symbols(builder,
+									 "settings_destroy_cb", G_CALLBACK(settings_destroy_cb),
+									 "reload_button_clicked_cb", G_CALLBACK(reload_button_clicked_cb),
+									 "audio_plugin_combobox_changed_cb", G_CALLBACK(audio_plugin_combobox_changed_cb),
+									 "actions_edit_button_clicked_cb", G_CALLBACK(actions_edit_button_clicked_cb),
+									 "actions_remove_button_clicked_cb", G_CALLBACK(actions_remove_button_clicked_cb),
+									 "actions_add_button_clicked_cb", G_CALLBACK(actions_add_button_clicked_cb),
+									 "actions_treeview_button_press_event_cb", G_CALLBACK(actions_treeview_button_press_event_cb),
+									 "actions_treeview_cursor_changed_cb", G_CALLBACK(actions_treeview_cursor_changed_cb),
+									 "action_checkbutton_toggled_cb", G_CALLBACK(action_checkbutton_toggled_cb),
+									 "filter_edit_button_clicked_cb", G_CALLBACK(filter_edit_button_clicked_cb),
+									 "filter_remove_button_clicked_cb", G_CALLBACK(filter_remove_button_clicked_cb),
+									 "filter_add_button_clicked_cb", G_CALLBACK(filter_add_button_clicked_cb),
+									 "fax_report_directory_chooser_file_set_cb", G_CALLBACK(fax_report_directory_chooser_file_set_cb),
+									 "fax_report_switch_activate_cb", G_CALLBACK(fax_report_switch_activate_cb),
+									 "ftp_login_check_button_clicked_cb", G_CALLBACK(ftp_login_check_button_clicked_cb),
+									 "login_check_button_clicked_cb", G_CALLBACK(login_check_button_clicked_cb),
+									 "ftp_password_entry_changed_cb", G_CALLBACK(ftp_password_entry_changed_cb),
+									 "login_password_entry_changed_cb", G_CALLBACK(login_password_entry_changed_cb),
+									 "action_enable_renderer_toggled_cb", G_CALLBACK(action_enable_renderer_toggled_cb),
+									 NULL);
 	gtk_builder_connect_signals(builder, NULL);
 
 	g_object_unref(G_OBJECT(builder));

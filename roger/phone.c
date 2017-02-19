@@ -955,6 +955,17 @@ void app_show_phone_window(RmContact *contact, RmConnection *connection)
 		gtk_grid_attach(GTK_GRID(grid), phone_state->header_bar, 0, 0, 3, 1);
 	}
 
+	gtk_builder_add_callback_symbol(builder, "phone_window_delete_event_cb", G_CALLBACK(phone_window_delete_event_cb));
+	gtk_builder_add_callback_symbol(builder, "phone_dtmf_clicked_cb", G_CALLBACK(phone_dtmf_clicked_cb));
+	gtk_builder_add_callback_symbol(builder, "phone_record_button_clicked_cb", G_CALLBACK(phone_record_button_clicked_cb));
+	gtk_builder_add_callback_symbol(builder, "phone_hold_button_clicked_cb", G_CALLBACK(phone_hold_button_clicked_cb));
+	gtk_builder_add_callback_symbol(builder, "phone_mute_button_clicked_cb", G_CALLBACK(phone_mute_button_clicked_cb));
+	gtk_builder_add_callback_symbol(builder, "phone_clear_button_clicked_cb", G_CALLBACK(phone_clear_button_clicked_cb));
+	gtk_builder_add_callback_symbol(builder, "hangup_button_clicked_cb", G_CALLBACK(hangup_button_clicked_cb));
+	gtk_builder_add_callback_symbol(builder, "pickup_button_clicked_cb", G_CALLBACK(pickup_button_clicked_cb));
+	gtk_builder_add_callback_symbol(builder, "phone_search_entry_icon_press_cb", G_CALLBACK(phone_search_entry_icon_press_cb));
+	gtk_builder_add_callback_symbol(builder, "phone_search_entry_key_press_event_cb", G_CALLBACK(phone_search_entry_key_press_event_cb));
+	gtk_builder_add_callback_symbol(builder, "phone_search_entry_search_changed_cb", G_CALLBACK(phone_search_entry_search_changed_cb));
 	gtk_builder_connect_signals(builder, NULL);
 
 	g_object_unref(G_OBJECT(builder));

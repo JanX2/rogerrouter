@@ -1,5 +1,13 @@
 TODO
 ----------
+* Windows:
+    - Crash on closing plugins window
+    - Plugins window empty
+    - Contacts/Phone can only be opened once
+    - Settings signal handlers
+    - Terminal window pops up
+    - Open shortcuts window centered
+
 * Remove winmain (shouldn't be needed with GtkApplication and new lib) & uitools (use glade instead)
 * Design Journal/Contacts/Phone with Glade
 

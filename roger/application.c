@@ -446,8 +446,8 @@ static void app_init(GtkApplication *app)
 	}
 
 	if (rm_netmonitor_is_online() && !rm_profile_get_active()) {
-		//journal_set_hide_on_start(TRUE);
-		//app_assistant();
+		journal_set_hide_on_start(TRUE);
+		app_assistant();
 	}
 
 	journal_window(G_APPLICATION(app));
@@ -535,8 +535,10 @@ static gint application_command_line_cb(GtkApplication *app, GApplicationCommand
 
 	g_debug("%s(): Startup_called?: %d", __FUNCTION__, startup_called);
 	if (startup_called) {
+#ifndef G_OS_WIN32
 		/* Install crash handle */
 		crash_install_handlers();
+#endif
 
 		/* Initialize app and mark startup as done */
 		app_init(app);

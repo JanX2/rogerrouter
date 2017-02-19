@@ -1,0 +1,6 @@
+This directory should contain everything for:
+  - Platform setup with all dependencies (cross-compiling on Fedora) -> setup-mingw.sh
+  - Build generation (compile everything using a shell script) -> setup-roger.sh
+  - Setup file generation using makensis from local build (non-root interaction) -> create-setup.sh
+
+Following these shell scripts should result in a setup file called: Roger Router-X.YY.exe

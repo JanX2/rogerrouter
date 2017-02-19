@@ -110,8 +110,8 @@ gboolean rm_faxprinter_init(GError **error)
 
 	socket = g_socket_new(G_SOCKET_FAMILY_IPV4, G_SOCKET_TYPE_STREAM, G_SOCKET_PROTOCOL_TCP, &fax_error);
 	if (socket == NULL) {
-		g_debug("Could not create socket. Error: '%s'", fax_error->message);
-		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Could not create socket. Error: '%s'", fax_error ? fax_error->message : "");
+		g_debug("%s(): %s'", __FUNCTION__, fax_error->message);
+		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Fax printer: '%s'", fax_error ? fax_error->message : "");
 		g_error_free(fax_error);
 		return FALSE;
 	}
@@ -120,29 +120,29 @@ gboolean rm_faxprinter_init(GError **error)
 
 	sock_address = g_inet_socket_address_new(inet_address, 9100);
 	if (sock_address == NULL) {
-		g_debug("Could not create sock address on port 9100");
+		g_debug("%s(): Could not create sock address on port 9100", __FUNCTION__);
 		g_object_unref(socket);
 		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "%s", "Could not create sock address on port 9100");
 		return FALSE;
 	}
 
 	if (g_socket_bind(socket, sock_address, TRUE, &fax_error) == FALSE) {
-		g_debug("Could not bind to socket. Error: %s", fax_error->message);
-		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Could not bind to socket. Error: %s", fax_error->message);
+		g_debug("%s(): %s", __FUNCTION__, fax_error->message);
+		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Fax printer: %s", fax_error->message);
 		g_error_free(fax_error);
 		g_object_unref(socket);
 		return FALSE;
 	}
 
 	if (g_socket_listen(socket, &fax_error) == FALSE) {
-		g_debug("Could not listen on socket. Error: %s", fax_error->message);
-		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Could not listen on socket. Error: %s", fax_error->message);
+		g_debug("%s(): Error: %s", __FUNCTION__, fax_error->message);
+		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Fax printer: %s", fax_error->message);
 		g_error_free(fax_error);
 		g_object_unref(socket);
 		return FALSE;
 	}
 
-	g_debug("Fax Server running on port 9100");
+	g_debug("%s(): Fax Server running on port 9100", __FUNCTION__);
 
 	g_thread_new("printserver", rm_faxserver_thread, socket);
 

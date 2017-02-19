@@ -16,3 +16,5 @@ endian = 'little'
 [properties]
 root = '/usr/x86_64-w64-mingw32/sys-root/mingw/'
 lib = 'lib'
+c_link_args = ['-mwindows']
+WINDRES = '/usr/bin/x86_64-w64-mingw32-windres'

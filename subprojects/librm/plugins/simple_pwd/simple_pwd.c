@@ -22,18 +22,9 @@
 #include <rm/rmpassword.h>
 #include <rm/rmmain.h>
 
-#define RM_TYPE_SIMPLE_PWD_PLUGIN        (rm_simple_pwd_plugin_get_type ())
-#define RM_SIMPLE_PWD_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_SIMPLE_PWD_PLUGIN, RmSimplePwdPlugin))
-
-typedef struct {
-	guint dummy;
-} RmSimplePwdPluginPrivate;
-
 static GKeyFile *simple_pwd_keyfile = NULL;
 static gchar *simple_pwd_file = NULL;
 static gchar *simple_pwd_group = NULL;
-
-RM_PLUGIN_REGISTER(RM_TYPE_SIMPLE_PWD_PLUGIN, RmSimplePwdPlugin, rm_simple_pwd_plugin)
 
 /**
  * simple_pwd_store_password:
@@ -118,7 +109,7 @@ RmPasswordManager simple_pwd = {
  *
  * Activate peas plugin - register libsimple_pwd password manager if present
  */
-void impl_activate(PeasActivatable *plugin)
+gboolean simple_pwd_plugin_init(RmPlugin *plugin)
 {
 	GError *error = NULL;
 
@@ -132,6 +123,8 @@ void impl_activate(PeasActivatable *plugin)
 	}
 
 	rm_password_register(&simple_pwd);
+
+	return TRUE;
 }
 
 /**
@@ -140,8 +133,11 @@ void impl_activate(PeasActivatable *plugin)
  *
  * Deactivate peas plugin
  */
-void impl_deactivate(PeasActivatable *plugin)
+gboolean simple_pwd_plugin_shutdown(RmPlugin *plugin)
 {
-	//g_key_file_free(simple_pwd_keyfile);
+	//g_key_file_free(simple_pwd_keyfile)
+
+	return TRUE;
 }
 
+PLUGIN(simple_pwd);

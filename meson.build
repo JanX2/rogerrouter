@@ -7,7 +7,7 @@ msgfmt = find_program('msgfmt')
 add_global_arguments('-fdiagnostics-color=always', language : 'c')
 
 name = 'roger'
-version = '1.10-pre1'
+version = '1.90'
 
 cc = meson.get_compiler('c')
 
@@ -16,9 +16,16 @@ cdata.set('PACKAGE_NAME', '"Roger Router"')
 cdata.set('PACKAGE_VERSION', '"@0@"'.format(version))
 cdata.set('PACKAGE_BUGREPORT', '"https://www.tabos.org/forum"')
 cdata.set('GETTEXT_PACKAGE', '"roger"')
+
+if host_machine.system() == 'windows'
+cdata.set('APP_PLUGINS', '"' + get_option('libdir') + '/roger/"')
+cdata.set('APP_DATA', '"' + get_option('datadir') + '/roger/"')
+cdata.set('APP_LOCALE', '"' + get_option('localedir') + '"')
+else
+cdata.set('APP_PLUGINS', '"' + get_option('prefix') + '/' + get_option('libdir') + '/roger/"')
 cdata.set('APP_DATA', '"' + get_option('prefix') + '/' + get_option('datadir') + '/roger/"')
 cdata.set('APP_LOCALE', '"' + get_option('prefix') + '/' + get_option('localedir') + '"')
-cdata.set('APP_PLUGINS', '"' + get_option('prefix') + '/' + get_option('libdir') + '/roger/"')
+endif
 
 check_headers = [['dlfcn.h','HAVE_DLFCN_H'],
   ['sys/utsname.h', 'HAVE_SYS_UTSNAME_H'],
@@ -44,6 +51,7 @@ rm_inc = rm_sp.get_variable('rm_inc')
 
 subdir('roger')
 subdir('roger-cli')
+subdir('platform')
 
 meson.add_install_script('meson_post_install.sh')
 

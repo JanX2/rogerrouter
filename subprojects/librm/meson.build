@@ -49,7 +49,11 @@ rm_dep += uuid_dep
 
 rm_inc = include_directories('.')
 
+if host_machine.system() == 'windows'
+rm_plugins_path = 'lib/' + rm_name
+else
 rm_plugins_path = get_option('prefix') + '/' + get_option('libdir') + '/' + rm_name
+endif
 
 cdata = configuration_data()
 cdata.set('RM_NAME', '"rm"')

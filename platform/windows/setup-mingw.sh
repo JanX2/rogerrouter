@@ -128,20 +128,14 @@ make_pkg "http://www.mega-nerd.com/libsndfile/files/" "libsndfile-1.0.25.tar.gz"
 # Download and compile libcapi20
 make_pkg "http://tabos.org/downloads/" "libcapi20-3.0.7.tar.bz2" "capi20"
 
+make_pkg "http://www.portaudio.com/archives/" "pa_stable_v190600_20161030.tgz" "portaudio"
+
 # ************ PATCHED PACKAGES ********************
 
 # Download and compile spandsp (configure needs to be patched, gethostname not resolved)
 make_pkg "http://soft-switch.org/downloads/spandsp/" "spandsp-0.0.6pre21.tgz" "spandsp-0.0.6"
 
-# Download and compile gobject-introspection (default compilation broken due to python)
-#export python_dir=$HOME/.wine/drive_c/Python27
-#make_pkg "http://ftp.gnome.org/pub/GNOME/sources/gobject-introspection/1.42/" "gobject-introspection-1.42.0.tar.xz" "gobject-introspection-1.42.0"
-
-# Download and compile libpeas (depends on gobject-introspection, g-ir-scanner)
-#make_pkg "http://ftp.gnome.org/pub/GNOME/sources/libpeas/1.12/" "libpeas-1.12.1.tar.xz" "libpeas-1.12.1"
-#make_pkg "http://ftp.gnome.org/pub/GNOME/sources/libpeas/1.8/" "libpeas-1.8.1.tar.xz" "libpeas-1.8.1"
-
-make_pkg "https://downloads.sourceforge.net/project/libuuid/" "libuuid-1.0.3.tar.gz" "libuuid-1.0.3"
+#make_pkg "https://downloads.sourceforge.net/project/libuuid/" "libuuid-1.0.3.tar.gz" "libuuid-1.0.3"
 
 make_pkg "http://ftp.gnome.org/pub/GNOME/sources/gssdp/0.14/" "gssdp-0.14.15.tar.xz" "gssdp-0.14.15"
 
@@ -149,14 +143,7 @@ make_pkg "http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.20/" "gupnp-0.20.17.tar
 
 make_pkg "http://ftp.gnome.org/pub/GNOME/sources/json-glib/1.2/" "json-glib-1.2.0.tar.xz" "json-glib-1.2.0"
 
-#make_pkg "http://www.pjsip.org/release/2.5.1/" "pjproject-2.5.1.tar.bz2" "pjproject-2.5.1"
+##make_pkg "http://www.pjsip.org/release/2.5.1/" "pjproject-2.5.1.tar.bz2" "pjproject-2.5.1"
 
 # ******************** Roger Router *******************
 download https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs919/ gs919w32.exe
-
-# Compile Roger Router
-#cd $topdir
-#build .
-
-# Build windows executable
-#makensis win32/roger.nsi

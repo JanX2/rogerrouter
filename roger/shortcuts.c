@@ -22,6 +22,7 @@
 #include <gtk/gtk.h>
 
 #include <roger/shortcuts.h>
+#include <roger/journal.h>
 
 /**
  * app_shortcuts:
@@ -38,10 +39,11 @@ void app_shortcuts(void)
 		builder = gtk_builder_new_from_resource("/org/tabos/roger/shortcuts.glade");
 		shortcuts_window = GTK_WIDGET(gtk_builder_get_object(builder, "shortcuts_window"));
 
-		g_signal_connect(shortcuts_window, "destroy", G_CALLBACK(gtk_widget_destroyed), &shortcuts_window);
-
+		g_signal_connect(shortcuts_window, "delete-event", G_CALLBACK(gtk_widget_hide_on_delete), &shortcuts_window);
+		g_debug("%s(): Called", __FUNCTION__);
 		g_object_unref (builder);
 	}
+	gtk_window_set_transient_for(GTK_WINDOW(shortcuts_window), GTK_WINDOW(journal_get_window()));
 
 	gtk_widget_show_all(shortcuts_window);
 	gtk_window_present(GTK_WINDOW(shortcuts_window));

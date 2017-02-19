@@ -322,7 +322,6 @@ Caller company</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="show_border">False</property>
-            <signal name="switch-page" handler="settings_notebook_switch_page_cb" swapped="no"/>
             <child>
               <object class="GtkGrid" id="grid2">
                 <property name="visible">True</property>

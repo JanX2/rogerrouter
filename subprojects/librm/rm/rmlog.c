@@ -78,6 +78,7 @@ static void rm_log_func(const gchar *log_domain, GLogLevelFlags log_level, const
 	gchar *time = g_date_time_format(datetime, "%H:%M:%S");
 	gsize len;
 
+	return;
 	output = g_string_new(time);
 	g_free(time);
 	g_date_time_unref(datetime);
@@ -118,7 +119,9 @@ static void rm_log_func(const gchar *log_domain, GLogLevelFlags log_level, const
 	g_string_append_printf(output, "%s\n", message);
 #endif
 
+//#ifndef G_OS_WIN32
 	g_print("%s", output->str);
+//#endif
 	g_output_stream_printf(G_OUTPUT_STREAM(rm_file_stream), &len, NULL, NULL, "%s", output->str);
 	g_string_free(output, TRUE);
 }
@@ -132,11 +135,13 @@ static void rm_log_func(const gchar *log_domain, GLogLevelFlags log_level, const
 void rm_log_init(gboolean debug)
 {
 	GFile *file;
+	GError *error = NULL;
 	gchar *filename;
 
 	if (!debug) {
 		return;
 	}
+	return;
 
 	filename = g_build_filename(rm_get_user_cache_dir(), "debug.log", NULL);
 
@@ -144,16 +149,15 @@ void rm_log_init(gboolean debug)
 	g_mkdir_with_parents(dirname, 0700);
 	g_free(dirname);
 
-	g_unlink(filename);
-
-	g_print("Creating %s", filename);
 	file = g_file_new_for_path(filename);
 	g_free(filename);
 
-	rm_file_stream = g_file_create(file, G_FILE_CREATE_NONE, NULL, NULL);
-
-	g_setenv("G_MESSAGE_DEBUG", "all", TRUE);
-	g_log_set_default_handler(rm_log_func, NULL);
+	rm_file_stream = g_file_replace(file, NULL, TRUE, G_FILE_CREATE_PRIVATE, NULL, &error);
+	if (!rm_file_stream) {
+		g_warning("%s(): file stream creation failed (%s)!", __FUNCTION__, error->message);
+	} else {
+		g_log_set_default_handler(rm_log_func, NULL);
+	}
 }
 
 /**

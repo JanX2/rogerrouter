@@ -1212,6 +1212,16 @@ void app_contacts(RmContact *contact)
 	/* Update contact list */
 	contacts_update_list();
 
+	gtk_builder_add_callback_symbol(builder, "contacts_window_delete_event_cb", G_CALLBACK(contacts_window_delete_event_cb));
+	gtk_builder_add_callback_symbol(builder, "contacts_save_button_clicked_cb", G_CALLBACK(contacts_save_button_clicked_cb));
+	gtk_builder_add_callback_symbol(builder, "edit_button_clicked_cb", G_CALLBACK(edit_button_clicked_cb));
+	gtk_builder_add_callback_symbol(builder, "contacts_cancel_button_clicked_cb", G_CALLBACK(contacts_cancel_button_clicked_cb));
+	gtk_builder_add_callback_symbol(builder, "remove_button_clicked_cb", G_CALLBACK(remove_button_clicked_cb));
+	gtk_builder_add_callback_symbol(builder, "contacts_book_clicked_cb", G_CALLBACK(contacts_book_clicked_cb));
+	gtk_builder_add_callback_symbol(builder, "add_button_clicked_cb", G_CALLBACK(add_button_clicked_cb));
+	gtk_builder_add_callback_symbol(builder, "contacts_list_box_row_selected_cb", G_CALLBACK(contacts_list_box_row_selected_cb));
+	gtk_builder_add_callback_symbol(builder, "remove_button_clicked_cb", G_CALLBACK(remove_button_clicked_cb));
+	gtk_builder_add_callback_symbol(builder, "search_entry_search_changed_cb", G_CALLBACK(search_entry_search_changed_cb));
 	gtk_builder_connect_signals(builder, NULL);
 
 	g_signal_connect(rm_object, "contacts-changed", G_CALLBACK(contacts_contacts_changed_cb), NULL);

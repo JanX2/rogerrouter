@@ -168,7 +168,6 @@ The following wizard will help you adding a router to the application.</property
                     <property name="has_focus">True</property>
                     <property name="is_focus">True</property>
                     <property name="activates_default">True</property>
-                    <!-- <signal name="changed" handler="profile_entry_changed" swapped="no"/>-->
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -260,8 +259,6 @@ Either select auto discovered router below or switch to manual mode and enter it
                           <object class="GtkListBox" id="router_listbox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <!--<signal name="row-activated" handler="router_listbox_row_activated_cb" swapped="no"/>
-                            <signal name="row-selected" handler="router_row_selected_cb" swapped="no"/>-->
                           </object>
                         </child>
                       </object>

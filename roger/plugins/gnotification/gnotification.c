@@ -161,8 +161,14 @@ gboolean gnotification_plugin_init(RmPlugin *plugin)
  */
 gboolean gnotification_plugin_shutdown(RmPlugin *plugin)
 {
-	g_application_withdraw_notification(G_APPLICATION(g_application_get_default()), "missed-calls");
+	g_debug("%s(): Withdraw", __FUNCTION__);
+	GApplication *app = g_application_get_default();
 
+	if (app) {
+	//	g_application_withdraw_notification(G_APPLICATION(app), "missed-calls");
+	}
+
+	g_debug("%s(): unregister", __FUNCTION__);
 	rm_notification_unregister(&gnotification);
 
 	return TRUE;

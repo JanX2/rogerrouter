@@ -9,11 +9,11 @@ if get_option('enable-gstreamer')
 	subdir('gstreamer')
 endif
 
-# if get_option('enable-portaudio')
-# 	portaudio = []
-# 	portaudio += dependency('portaudio', version : '>= 19')
-# 	subdir('portaudio')
-# endif
+#if get_option('enable-portaudio')
+	portaudio = []
+	portaudio += dependency('portaudio-2.0', version : '>= 19')
+	subdir('portaudio')
+#endif
 
 if get_option('enable-pulseaudio')
 	pulseaudio = []
@@ -27,8 +27,9 @@ if host_machine.system() == 'linux' and get_option('enable-libsecret')
 	subdir('secret')
 endif
 
-# subdir('simple_pwd')
+subdir('simple_pwd')
 
-if host_machine.system() == 'windows'
-	subdir('wincred')
-endif
+# Disabled - needs more love
+#if host_machine.system() == 'windows'
+#	subdir('wincred')
+#endif

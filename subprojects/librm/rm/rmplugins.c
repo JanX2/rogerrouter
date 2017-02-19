@@ -154,7 +154,6 @@ void rm_plugins_load_dir(gchar *plugin_dir)
 	if (dir) {
 		while ((file = g_dir_read_name(dir)) != NULL) {
 			path = g_build_filename(plugin_dir, file, NULL);
-			g_debug("%s(): Trying %s", __FUNCTION__, path);
 
 			if (g_file_test(path, G_FILE_TEST_IS_DIR)) {
 				rm_plugins_load_dir(path);
@@ -180,7 +179,6 @@ void rm_plugins_init(void)
 	for (slist = rm_search_path_list; slist != NULL; slist = slist->next) {
 		gchar *plugin_dir = slist->data;
 
-		g_debug("%s(): Trying %s", __FUNCTION__, plugin_dir);
 		rm_plugins_load_dir(plugin_dir);
 	}
 }
@@ -227,7 +225,9 @@ void rm_plugins_shutdown(void)
 		RmPlugin *plugin = list->data;
 
 		if (plugin->enabled) {
+			g_debug("%s(): Shuting down %s", __FUNCTION__, plugin->name);
 			plugin->enabled = !plugin->shutdown(plugin);
+			g_debug("%s(): Shuting down %s done", __FUNCTION__, plugin->name);
 		}
 	}
 }

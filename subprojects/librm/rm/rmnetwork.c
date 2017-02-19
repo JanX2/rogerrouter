@@ -25,6 +25,7 @@
 #include <rm/rmobjectemit.h>
 #include <rm/rmprofile.h>
 #include <rm/rmrouter.h>
+#include <rm/rmmain.h>
 
 /**
  * SECTION:rmnetwork
@@ -168,7 +169,8 @@ gboolean rm_network_init(void)
 {
 	SoupCache *cache;
 
-	cache = soup_cache_new(NULL, SOUP_CACHE_SINGLE_USER);
+	/* NULL for directory is not sufficient on Windows platform, therefore set user cache dir */
+	cache = soup_cache_new(rm_get_user_cache_dir(), SOUP_CACHE_SINGLE_USER);
 	rm_soup_session = soup_session_new_with_options(SOUP_SESSION_TIMEOUT, 5, SOUP_SESSION_USE_THREAD_CONTEXT, TRUE, SOUP_SESSION_ADD_FEATURE, cache, NULL);
 	soup_cache_load(cache);
 

@@ -1,0 +1,1 @@
+makensis roger.nsi

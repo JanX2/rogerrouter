@@ -29,6 +29,8 @@
 #include <uitools.h>
 #include <journal.h>
 
+static GtkWidget *plugins_window = NULL;
+
 gboolean extensions_state_set_cb(GtkSwitch *widget, gboolean state, gpointer user_data)
 {
 	RmPlugin *plugin = user_data;
@@ -117,9 +119,15 @@ static void extensions_listbox_row_selected_cb(GtkListBox    *box,
                GtkListBoxRow *row,
                gpointer       user_data)
 {
-	GtkWidget *child = gtk_container_get_children(GTK_CONTAINER(row))->data;
-	RmPlugin *plugin = g_object_get_data(G_OBJECT(child), "plugin");
+	GtkWidget *child;
+	RmPlugin *plugin;
 
+	if (!box || !row) {
+		return;
+	}
+
+	child = gtk_container_get_children(GTK_CONTAINER(row))->data;
+	plugin = g_object_get_data(G_OBJECT(child), "plugin");
 	if (!plugin) {
 		return;
 	}
@@ -137,35 +145,47 @@ static void extensions_listbox_row_selected_cb(GtkListBox    *box,
 	}
 }
 
+gboolean plugins_delete_event_cb(GtkWidget *win,
+                                 gpointer   user_data)
+{
+	g_debug("%s(): Called", __FUNCTION__);
+	return FALSE;
+}
+
 void app_show_plugins(void)
 {
-	GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	GtkWidget *header = gtk_header_bar_new();
+	GtkWidget *header;
 	GtkWidget *grid;
 	GtkWidget *scroll_win;
 	GtkWidget *toolbar;
 	GSList *list;
-	//PeasEngine *peas = peas_engine_get_default();
 
-	gtk_window_set_default_size(GTK_WINDOW(window), 600, 350);
+	if (plugins_window) {
+		gtk_window_present(GTK_WINDOW(plugins_window));
+		return;
+	}
+
+	extern GApplication *journal_application;
+	plugins_window = gtk_application_window_new(G_APPLICATION(journal_application));
+	gtk_window_set_default_size(GTK_WINDOW(plugins_window), 700, 350);
+
+	header = gtk_header_bar_new();
 	gtk_header_bar_set_title(GTK_HEADER_BAR(header), _("Configure extensions"));
 	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
-	gtk_window_set_titlebar(GTK_WINDOW(window), header);
-	gtk_window_set_modal(GTK_WINDOW(window), TRUE);
+	gtk_window_set_titlebar(GTK_WINDOW(plugins_window), header);
+	gtk_window_set_modal(GTK_WINDOW(plugins_window), TRUE);
+	//g_signal_connect(plugins_window, "delete-event", G_CALLBACK(plugins_delete_event_cb), NULL);
+	g_signal_connect(plugins_window, "destroy", G_CALLBACK(gtk_widget_destroyed), &plugins_window);
 
-	gtk_window_set_transient_for(GTK_WINDOW(window), GTK_WINDOW(journal_get_window()));
+	gtk_window_set_transient_for(GTK_WINDOW(plugins_window), GTK_WINDOW(journal_get_window()));
 
 	scroll_win = gtk_scrolled_window_new (NULL, NULL);
 	gtk_widget_set_vexpand(scroll_win, TRUE);
 
 	GtkWidget *listbox = gtk_list_box_new();
-	gtk_container_add(GTK_CONTAINER(scroll_win), listbox);
-	g_signal_connect(listbox, "row-selected", G_CALLBACK(extensions_listbox_row_selected_cb), NULL);
 
-	//GtkWidget *manager = peas_gtk_plugin_manager_new(peas);
 	grid = gtk_grid_new();
 	gtk_grid_attach(GTK_GRID(grid), scroll_win, 0, 0, 1, 1);
-	gtk_container_add(GTK_CONTAINER(window), grid);
 
 	for (list = rm_plugins_get(); list != NULL; list = list->next) {
 		RmPlugin *plugin = list->data;
@@ -205,6 +225,8 @@ void app_show_plugins(void)
 
 		gtk_list_box_insert(GTK_LIST_BOX(listbox), child, -1);
 	}
+	gtk_container_add(GTK_CONTAINER(scroll_win), listbox);
+	g_signal_connect(listbox, "row-selected", G_CALLBACK(extensions_listbox_row_selected_cb), NULL);
 
 	toolbar = gtk_toolbar_new();
 	gtk_style_context_add_class(gtk_widget_get_style_context(toolbar), GTK_STYLE_CLASS_INLINE_TOOLBAR);
@@ -250,7 +272,7 @@ void app_show_plugins(void)
 	gtk_box_pack_start(GTK_BOX(button_box), button, FALSE, FALSE, 0);
 
 	gtk_grid_attach(GTK_GRID(grid), toolbar, 0, 1, 1, 1);
+	gtk_container_add(GTK_CONTAINER(plugins_window), grid);
 
-	gtk_widget_show_all(window);
-
+	gtk_widget_show_all(plugins_window);
 }

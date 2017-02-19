@@ -233,7 +233,7 @@ void router_listbox_row_activated_cb(GtkListBox *box, GtkListBoxRow *row, gpoint
  * \param row selected row
  * \param user_data UNUSED
  */
-void router_row_selected_cb(GtkListBox *box, GtkListBoxRow *row, gpointer user_data)
+void router_listbox_row_selected_cb(GtkListBox *box, GtkListBoxRow *row, gpointer user_data)
 {
 	router_listbox_row_activated_cb(box, row, user_data);
 }
@@ -616,16 +616,20 @@ void app_assistant(void)
 	g_signal_connect(assistant->next_button, "clicked", G_CALLBACK(next_button_clicked_cb), NULL);
 
 	assistant->profile_name = GTK_WIDGET(gtk_builder_get_object(builder, "profile_name_entry"));
+	g_signal_connect(assistant->profile_name, "changed", G_CALLBACK(profile_entry_changed), NULL);
 
 	assistant->router_stack = GTK_WIDGET(gtk_builder_get_object(builder, "router_stack"));
 	g_signal_connect(assistant->router_stack, "notify::visible-child", G_CALLBACK(router_stack_changed_cb), NULL);
 
 	assistant->router_listbox = GTK_WIDGET(gtk_builder_get_object(builder, "router_listbox"));
+	g_signal_connect(assistant->router_listbox, "row-activated", G_CALLBACK(router_listbox_row_activated_cb), NULL);
+	g_signal_connect(assistant->router_listbox, "row-selected", G_CALLBACK(router_listbox_row_selected_cb), NULL);
 	placeholder = gtk_label_new(_("No router detected"));
 	gtk_widget_show(placeholder);
 	gtk_list_box_set_placeholder(GTK_LIST_BOX(assistant->router_listbox), placeholder);
 
 	assistant->server = GTK_WIDGET(gtk_builder_get_object(builder, "ip_address_entry"));
+	g_signal_connect(assistant->server, "changed", G_CALLBACK(router_entry_changed), NULL);
 	assistant->user = GTK_WIDGET(gtk_builder_get_object(builder, "user_entry"));
 	assistant->password = GTK_WIDGET(gtk_builder_get_object(builder, "password_entry"));
 

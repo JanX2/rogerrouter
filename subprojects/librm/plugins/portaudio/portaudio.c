@@ -38,17 +38,8 @@
 #include <rm/rmaudio.h>
 #include <rm/rmstring.h>
 
-#define RM_TYPE_PORTAUDIO_PLUGIN (rm_portaudio_plugin_get_type())
-#define RM_PORTAUDIO_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_PORTAUDIO_PLUGIN, RmPortAudioPlugin))
-
-typedef struct {
-	guint id;
-} RmPortAudioPluginPrivate;
-
-RM_PLUGIN_REGISTER(RM_TYPE_PORTAUDIO_PLUGIN, RmPortAudioPlugin, rm_portaudio_plugin)
-
 /* Does not work at the moment */
-#define USE_SPEEX 1
+//#define USE_SPEEX 1
 
 /** predefined backup values */
 static gint port_channels = 1;
@@ -336,7 +327,7 @@ static GSList *port_audio_detect_devices(void)
 			device = g_slice_new0(RmAudioDevice);
 			device->internal_name = g_strdup(info->name);
 			device->name = g_strdup(info->name);
-			device->type = AUDIO_OUTPUT;
+			device->type = RM_AUDIO_OUTPUT;
 			list = g_slist_prepend(list, device);
 		}
 
@@ -344,7 +335,7 @@ static GSList *port_audio_detect_devices(void)
 			device = g_slice_new0(RmAudioDevice);
 			device->internal_name = g_strdup(info->name);
 			device->name = g_strdup(info->name);
-			device->type = AUDIO_INPUT;
+			device->type = RM_AUDIO_INPUT;
 			list = g_slist_prepend(list, device);
 		}
 	}
@@ -850,16 +841,22 @@ RmAudio port_audio = {
  * \brief Activate plugin (add net event)
  * \param plugin peas plugin
  */
-static void impl_activate(PeasActivatable *plugin)
+static gboolean portaudio_plugin_init(RmPlugin *plugin)
 {
 	rm_audio_register(&port_audio);
+
+	return TRUE;
 }
 
 /**
  * \brief Deactivate plugin (remote net event)
  * \param plugin peas plugin
  */
-static void impl_deactivate(PeasActivatable *plugin)
+static gboolean portaudio_plugin_shutdown(RmPlugin *plugin)
 {
 	rm_audio_unregister(&port_audio);
+
+	return TRUE;
 }
+
+PLUGIN(portaudio)
