@@ -19,7 +19,11 @@
      "--filesystem=xdg-run/dconf", "--filesystem=~/.config/dconf:ro",
      "--talk-name=ca.desrt.dconf", "--env=DCONF_USER_CONFIG_DIR=.config/dconf",
      /* Spooler access */
-     "--filesystem=/var/spool/roger"
+     "--filesystem=/var/spool/rm",
+     /* LD_LIBRARY_PATH */
+     "--env=LD_LIBRARY_PATH=/app/lib64:/app/lib",
+     /* Pulseaudio */
+     "--socket=pulseaudio"
   ],
   "build-options" : {
         "cflags": "-O2 -g",
@@ -57,16 +61,6 @@
       ]
     },
     {
-      "name": "libpeas-1.0",
-      "sources": [
-        {
-          "type": "archive",
-          "url": "https://download.gnome.org/sources/libpeas/1.20/libpeas-1.20.0.tar.xz",
-          "sha256": "f392fffe2dc00072a51bb2a1b274224a06bdc5f9c3b3c0ac4816909e9933d354"
-        }
-      ]
-    },
-    {
       "name": "capi20",
       "sources": [
         {
@@ -90,10 +84,11 @@
       "name": "roger",
       "buildsystem": "meson",
       "builddir": true,
+      
       "sources": [
         {
-          "type": "git",
-          "url": "."
+          "type": "archive",
+          "path": "latest.tar.xz"
         }
       ],
       "modules": [
