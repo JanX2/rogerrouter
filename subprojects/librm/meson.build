@@ -59,7 +59,11 @@ cdata = configuration_data()
 cdata.set('RM_NAME', '"rm"')
 cdata.set('RM_VERSION', '"@0@"'.format(rm_version))
 cdata.set('RM_PLUGINS', '"' + rm_plugins_path + '"')
-cdata.set10('HAVE_SSDP', ssdp_dep.found())
+
+if ssdp_dep.found()
+cdata.set10('HAVE_SSDP', 1)
+endif
+
 cdata.set10('HAVE_DCONF', dconf_dep.found())
 cdata.set10('HAVE_UUID', dconf_dep.found())
 

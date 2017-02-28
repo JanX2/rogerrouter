@@ -1,1 +1,1 @@
-makensis roger.nsi
+makensis build/platform/windows/roger.nsi

@@ -32,13 +32,10 @@ rm_sources = [
 	'rmphone.c',
 	'rmrouter.c',
 	'rmsettings.c',
+	'rmssdp.c',
 	'rmvox.c',
 	'xml.c'
 ]
-
-if ssdp_dep.found()
-	rm_sources += 'rmssdp.c'
-endif
 
 rm_headers = [
 	'rmaction.h',

@@ -40,7 +40,7 @@ InstallDir "$PROGRAMFILES\${PACKAGE_NAME}"
 ; Welcome page
 !insertmacro MUI_PAGE_WELCOME
 ; License page
-!insertmacro MUI_PAGE_LICENSE "../../COPYING"
+!insertmacro MUI_PAGE_LICENSE "../../../../../COPYING"
 ; Components page
 !insertmacro MUI_PAGE_COMPONENTS
 ; Directory page
@@ -74,7 +74,7 @@ FunctionEnd
 Section -Prerequisites
 	SetOutPath $INSTDIR\3rdparty
 	MessageBox MB_YESNO "Ghostscript is needed for the fax transfer. Do you want to install it?" /SD IDYES IDNO endGhostscript
-		File "packages\gs919w32.exe"
+		File "..\..\..\packages\gs919w32.exe"
 		ExecWait "$INSTDIR\3rdparty\gs919w32.exe"
 	endGhostscript:
 SectionEnd
@@ -82,17 +82,17 @@ SectionEnd
 Section RogerRouter
 	; Install license file
 	SetOutPath "$INSTDIR"
-	File "../../COPYING"
-	File "printer/*"
+	File "../../../../../COPYING"
+	File "../../../printer/*"
 
 	; Install program and libraries
 	SetOutPath "$INSTDIR"
 
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/roger.exe"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/roger-cli.exe"
+	File "../../roger/roger.exe"
+	File "../../roger-cli/roger-cli.exe"
+	File "../../subprojects/librm/rm//librm.dll"
 	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/gspawn-win64-helper-console.exe"
 	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/gspawn-win64-helper.exe"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/librm.dll"
 	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libatk-1.0-0.dll"
 	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libcairo-2.dll"
 	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libcairo-gobject-2.dll"
@@ -117,7 +117,7 @@ Section RogerRouter
 	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libxml2-2.dll"
 	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/gdk-pixbuf-query-loaders.exe"
 	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/zlib1.dll"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libjasper-4.dll"
+	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libjasper-1.dll"
 	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libcapi20-3.dll"
 	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libdl.dll"
 	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libspandsp-2.dll"
@@ -143,28 +143,6 @@ Section RogerRouter
 	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libgupnp-1.0-4.dll"
 	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libjson-glib-1.0-0.dll"
 
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libgstreamer-1.0-0.dll"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libgstallocators-1.0-0.dll"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libgstaudio-1.0-0.dll"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libgstcontroller-1.0-0.dll"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libgstnet-1.0-0.dll"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libgstreamer-1.0-0.dll"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libgstrtp-1.0-0.dll"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libgstsdp-1.0-0.dll"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libgstvideo-1.0-0.dll"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libgstapp-1.0-0.dll"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libgstbase-1.0-0.dll"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libgstfft-1.0-0.dll"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libgstpbutils-1.0-0.dll"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libgstriff-1.0-0.dll"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libgstrtsp-1.0-0.dll"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libgsttag-1.0-0.dll"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libogg-0.dll"
-	#File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/liborc-0.4-0.dll"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libvorbis-0.dll"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libvorbisenc-2.dll"
-	#File "/usr/x86_64-w64-mingw32/sys-root/mingw/bin/libwavpack-1.dll"
-
 	; Install data files
 	SetOutPath "$INSTDIR\etc"
 	File /r "/usr/x86_64-w64-mingw32/sys-root/mingw/etc/fonts"
@@ -172,7 +150,7 @@ Section RogerRouter
 	CreateDirectory "$INSTDIR\etc\pango"
 
 	SetOutPath "$INSTDIR\etc\gtk-3.0"
-	File "settings.ini"
+	File "../../../settings.ini"
 
 	SetOutPath "$INSTDIR\lib"
 	File /r "/usr/x86_64-w64-mingw32/sys-root/mingw/lib/gtk-3.0"
@@ -182,16 +160,13 @@ Section RogerRouter
 	File /r "/usr/x86_64-w64-mingw32/sys-root/mingw/lib/capi/*fritz*.dll"
 
 	SetOutPath "$INSTDIR\lib\roger"
-	File /r "/usr/x86_64-w64-mingw32/sys-root/mingw/lib/roger/"
+	File /r "../../roger/plugins/"
 
 	SetOutPath "$INSTDIR\lib\rm"
-	File /r "/usr/x86_64-w64-mingw32/sys-root/mingw/lib/rm/"
-
-	SetOutPath "$INSTDIR\lib\gstreamer-1.0"
-	File /r "/usr/x86_64-w64-mingw32/sys-root/mingw/lib/gstreamer-1.0/"
+	File /r "../../subprojects/librm/plugins/"
 
 	SetOutPath "$INSTDIR\share\"
-	File /r "/usr/x86_64-w64-mingw32/sys-root/mingw/share/roger"
+	#File /r "/usr/x86_64-w64-mingw32/sys-root/mingw/share/roger"
 	File /r "/usr/x86_64-w64-mingw32/sys-root/mingw/share/glib-2.0"
 
 	SetOutPath "$INSTDIR\share\icons\Adwaita"
@@ -203,7 +178,7 @@ Section RogerRouter
 	#File "/usr/share/icons/hicolor/index.theme"
 
 	SetOutPath "$INSTDIR\share\locale\de\LC_MESSAGES\"
-	File "/usr/x86_64-w64-mingw32/sys-root/mingw/share/locale/de/LC_MESSAGES/roger.mo"
+	#File "/usr/x86_64-w64-mingw32/sys-root/mingw/share/locale/de/LC_MESSAGES/roger.mo"
 	File "/usr/x86_64-w64-mingw32/sys-root/mingw/share/locale/de/LC_MESSAGES/atk10.mo"
 	File "/usr/x86_64-w64-mingw32/sys-root/mingw/share/locale/de/LC_MESSAGES/gtk30.mo"
 	File "/usr/x86_64-w64-mingw32/sys-root/mingw/share/locale/de/LC_MESSAGES/glib20.mo"

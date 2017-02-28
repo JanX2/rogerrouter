@@ -110,8 +110,8 @@ if [ $# -eq 1 ]; then
 			mingw64-icu mingw64-expat mingw64-jasper mingw64-filesystem mingw64-libffi mingw64-fontconfig mingw64-libjpeg-turbo \
 			mingw64-freetype mingw64-libpng mingw-binutils-generic mingw64-gcc-c++ mingw64-libxml2 mingw-filesystem-base \
 			mingw64-gcc mingw64-pango mingw64-gdk-pixbuf mingw64-pixman mingw64-libsoup mingw64-dlfcn mingw64-libtiff mingw64-pthreads \
-			mingw64-libogg mingw64-speex mingw64-librsvg2 mingw64-nsis mingw64-hicolor-icon-theme mingw64-gstreamer1-plugins-good mingw64-dlfcn\
-			flex bison python-devel wget gcc patch autoconf automake intltool libtool glib2-devel
+			mingw64-libogg mingw64-speex mingw64-librsvg2 mingw32-nsis mingw64-hicolor-icon-theme mingw64-gstreamer1-plugins-good mingw64-dlfcn mingw64-librsvg2\
+			flex bison python-devel wget gcc patch autoconf automake intltool libtool glib2-devel mingw64-filesystem mingw64-gcc mingw64-dlfcn mingw64-libtiff mingw64-libsoup mingw64-speex patch
 		sudo dnf install wine
 	fi
 fi
@@ -123,7 +123,7 @@ cd packages
 # ********************* 3rd PARTY PACKAGES ************************
 
 # Download and compile sndfile
-make_pkg "http://www.mega-nerd.com/libsndfile/files/" "libsndfile-1.0.25.tar.gz" "libsndfile-1.0.25"
+make_pkg "http://www.mega-nerd.com/libsndfile/files/" "libsndfile-1.0.27.tar.gz" "libsndfile-1.0.27"
 
 # Download and compile libcapi20
 make_pkg "http://tabos.org/downloads/" "libcapi20-3.0.7.tar.bz2" "capi20"
