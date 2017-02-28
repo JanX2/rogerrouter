@@ -166,7 +166,7 @@ void app_show_plugins(void)
 	}
 
 	extern GApplication *journal_application;
-	plugins_window = gtk_application_window_new(G_APPLICATION(journal_application));
+	plugins_window = gtk_application_window_new(GTK_APPLICATION(journal_application));
 	gtk_window_set_default_size(GTK_WINDOW(plugins_window), 700, 350);
 
 	header = gtk_header_bar_new();
@@ -199,7 +199,7 @@ void app_show_plugins(void)
 		GtkWidget *name = gtk_label_new(plugin->name);
 		GtkWidget *description = gtk_label_new(plugin->description);
 
-		gtk_widget_set_margin(child, 6, 6, 6, 6);
+		gtk_widget_set_margin(child, 12, 6, 12, 6);
 		gchar *tmp = g_strdup_printf("<b>%s</b>", plugin->name);
 		gtk_label_set_markup(GTK_LABEL(name), tmp);
 		g_free(tmp);
@@ -266,7 +266,7 @@ void app_show_plugins(void)
 
 	button = gtk_button_new();
 	help_button = button;
-	image = gtk_image_new_from_icon_name("help-browser-symbolic", GTK_ICON_SIZE_BUTTON);
+	image = gtk_image_new_from_icon_name("help-faq-symbolic", GTK_ICON_SIZE_BUTTON);
 	gtk_button_set_image(GTK_BUTTON(button), image);
 	g_signal_connect(help_button, "clicked", G_CALLBACK(extensions_help_clicked_cb), listbox);
 	gtk_box_pack_start(GTK_BOX(button_box), button, FALSE, FALSE, 0);

@@ -22,10 +22,13 @@
 
 G_BEGIN_DECLS
 
+typedef void (*rm_log_func)(GLogLevelFlags level, const gchar *message);
 void rm_log_save_data(gchar *name, const gchar *data, gsize len);
-void rm_log_init(gboolean debug);
+void rm_log_init(void);
 void rm_log_shutdown(void);
+void rm_log_set_debug(gboolean state);
 void rm_log_set_level(GLogLevelFlags level);
+void rm_log_set_app_handler(rm_log_func app_log);
 
 G_END_DECLS
 

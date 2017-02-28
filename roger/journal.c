@@ -917,7 +917,7 @@ void clear_journal_activated(GSimpleAction *action, GVariant *parameter, gpointe
 	journal_button_clear_clicked_cb(NULL, NULL);
 }
 
-static void journal_export_cb(GtkWidget *dialog, gint response, gpointer user_data)
+/*static void journal_export_cb(GtkWidget *dialog, gint response, gpointer user_data)
 {
 	if (response == GTK_RESPONSE_ACCEPT) {
 		gchar *file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
@@ -927,7 +927,7 @@ static void journal_export_cb(GtkWidget *dialog, gint response, gpointer user_da
 	}
 
 	gtk_widget_destroy(dialog);
-}
+}*/
 
 void export_journal_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {

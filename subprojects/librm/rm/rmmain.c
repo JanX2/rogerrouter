@@ -37,6 +37,7 @@
 #include <rm/rmfaxprinter.h>
 #include <rm/rmaction.h>
 #include <rm/rmpassword.h>
+#include <rm/rmlog.h>
 
 #ifdef __APPLE__
 #include <gtkmacintegration/gtkosxapplication.h>
@@ -218,10 +219,8 @@ gboolean rm_new(gboolean debug, GError **error)
 	rm_init_directory_paths();
 
 	/* Initialize logging system */
-	rm_log_init(debug);
-
-	/* Say hello */
-	g_info("%s %s", RM_NAME, RM_VERSION);
+	rm_log_init();
+	rm_log_set_debug(debug);
 
 	/* Create rm data & cache & config directory */
 	g_mkdir_with_parents(rm_get_user_config_dir(), 0700);
@@ -245,6 +244,9 @@ gboolean rm_new(gboolean debug, GError **error)
  */
 gboolean rm_init(GError **error)
 {
+	/* Say hello */
+	g_info("%s %s", RM_NAME, RM_VERSION);
+
 	/* Init fax printer */
 	if (!rm_faxprinter_init(error)) {
 		return FALSE;

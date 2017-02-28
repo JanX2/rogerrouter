@@ -35,6 +35,8 @@
 #include <rm/rmstring.h>
 #include <rm/rmphone.h>
 #include <rm/rmnumber.h>
+#include <rm/rmlog.h>
+#include <rm/rmfile.h>
 
 #include <roger/journal.h>
 #include <roger/assistant.h>
@@ -49,6 +51,7 @@
 #include <roger/crash.h>
 #include <roger/uitools.h>
 #include <roger/plugins.h>
+#include <roger/debug.h>
 
 #include <config.h>
 
@@ -305,6 +308,11 @@ static void journal_activated(GSimpleAction *action, GVariant *parameter, gpoint
 	}
 }
 
+static void debug_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+{
+	app_debug_window();
+}
+
 static GActionEntry apps_entries[] = {
 	{"addressbook", addressbook_activated, NULL, NULL, NULL},
 	{"assistant", assistant_activated, NULL, NULL, NULL},
@@ -321,6 +329,7 @@ static GActionEntry apps_entries[] = {
 	{"hangup", hangup_activated, "i", NULL, NULL},
 	{"journal", journal_activated, NULL, NULL, NULL},
 	{"shortcuts", shortcuts_activated, NULL, NULL, NULL},
+	{"debug", debug_activated, NULL, NULL, NULL},
 };
 
 static void application_startup(GtkApplication *application)
@@ -370,12 +379,16 @@ static void app_init(GtkApplication *app)
 
 	accels[0] = "<Primary>s";
 	gtk_application_set_accels_for_action(app, "app.preferences", accels);
+
+	accels[0] = "<Primary>d";
+	gtk_application_set_accels_for_action(app, "app.debug", accels);
 #else
 	gtk_application_add_accelerator(app, "<Control>p", "app.phone", NULL);
 	gtk_application_add_accelerator(app, "<Control>c", "app.addressbook", NULL);
 	gtk_application_add_accelerator(app, "<Control>a", "app.assistant", NULL);
 	gtk_application_add_accelerator(app, "<Control>q", "app.quit", NULL);
 	gtk_application_add_accelerator(app, "<Control>s", "app.preferences", NULL);
+	gtk_application_add_accelerator(app, "<Control>d", "app.debug", NULL);
 #endif
 
 	g_action_map_add_action_entries(G_ACTION_MAP(app), apps_entries, G_N_ELEMENTS(apps_entries), app);
@@ -388,6 +401,7 @@ static void app_init(GtkApplication *app)
 	section = g_menu_new();
 	g_menu_append(section, _("Copy IP address"), "app.copy_ip");
 	g_menu_append(section, _("Reconnect"), "app.reconnect");
+	g_menu_append(section, _("Debug"), "app.debug");
 	g_menu_append_submenu(menu, _("Functions"), G_MENU_MODEL(section));
 
 	g_menu_append(menu, _("Assistant"), "app.assistant");
@@ -421,8 +435,12 @@ static void app_init(GtkApplication *app)
 		rm_set_requested_profile(option_state.profile);
 	}
 
-	//option_state.debug = TRUE;
 	rm_new(option_state.debug, &error);
+
+	if (g_settings_get_boolean(app_settings, "debug")) {
+		debug_activated(NULL, NULL, NULL);
+	}
+
 	g_signal_connect(rm_object, "authenticate", G_CALLBACK(app_authenticate_cb), NULL);
 	g_signal_connect(rm_object, "message", G_CALLBACK(rm_object_message_cb), NULL);
 
@@ -489,8 +507,6 @@ static void application_options_process(GtkApplication *app, const struct cmd_li
 		gdk_notify_startup_complete();
 		exit(0);
 	}
-
-	g_settings_set_boolean(app_settings, "debug", options->debug);
 }
 
 /**

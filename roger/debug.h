@@ -17,26 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ROGER_FAX_H
-#define ROGER_FAX_H
+#ifndef DEBUG_H
+#define DEBUG_H
 
 G_BEGIN_DECLS
 
-//#include <rm/plugins/capi/fax.h>
-
-struct fax_ui {
-	gchar *file;
-
-	GtkWidget *progress_bar;
-	GtkWidget *remote_label;
-
-	struct fax_status *status;
-};
-
-void fax_process_init(void);
-void app_show_fax_window(gchar *tiff_file);
-void fax_window_clear(gpointer priv);
+void app_debug_window(void);
 
 G_END_DECLS
 
 #endif
+
