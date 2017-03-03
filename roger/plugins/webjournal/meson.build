@@ -1,5 +1,11 @@
+webjournal_gresources = gnome.compile_resources(
+  'webjournal-gresources', 'webjournal.gresource.xml',
+  source_dir : '.',
+  c_name : '')
+
 webjournal_sources = []
 webjournal_sources += 'webjournal.c'
+webjournal_sources += webjournal_gresources
 
 webjournal_dep = []
 webjournal_dep += rm_dep
@@ -16,7 +22,7 @@ libwebjournal = shared_library('webjournal',
 
 custom_target('webjournal.plugin',
     output : 'webjournal.plugin',
-    input : 'webjournal.plugin.in',
+    input : 'webjournal.desktop.in',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', podir, '-o', '@OUTPUT@'],
     install : true,
     install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/webjournal/')

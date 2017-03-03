@@ -1,7 +1,7 @@
 [Plugin]
-Module=keychain
-_Name=KeyChain
-_Description=OS X KeyChain support
+Module=kwallet
+Name=KWallet
+Comment=KDE wallet support
 Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
 Copyright=Copyright © 2014 Jan-Michael Brummer
 Website=http://www.tabos.org/

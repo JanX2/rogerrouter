@@ -1,26 +1,24 @@
-if host_machine.system() == 'linux'
-	subdir('evolution')
-endif
-
+subdir('evolution')
 subdir('fritzfon')
 subdir('gnotification')
-#subdir('google')
+subdir('google')
 
-# if host_machine.system() == 'windows'
-# subdir('gtknotify')
-# endif
+if host_machine.system() == 'windows'
+subdir('gtknotify')
+endif
 
-# subdir('sip')
+subdir('indicator')
+subdir('keychain')
 
-# if get_option('enable-indicator')
-# 	indicator = []
-# 	indicator += dependency('appindicator3-0.1')
-# 	subdir('indicator')
-# endif
+# KWallet is disabled and needs some love for KDE5
+#subdir('kwallet')
 
-# if get_option('enable-kwallet')
-# 	kwallet = []
-# 	subdir('kwallet')
-# endif
+subdir('osxab')
+subdir('sip')
 
-# subdir('webjournal')
+# Statusicon needs more love
+#subdir('statusicon')
+
+subdir('thunderbird')
+subdir('vcard')
+subdir('webjournal')

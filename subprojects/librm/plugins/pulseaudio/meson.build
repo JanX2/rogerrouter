@@ -17,7 +17,7 @@ libpulseaudio = shared_library('pulseaudio',
 
 custom_target('pulseaudio.plugin',
     output : 'pulseaudio.plugin',
-    input : 'pulseaudio.plugin.in',
+    input : 'pulseaudio.desktop.in',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', rm_podir, '-o', '@OUTPUT@'],
     install : true,
     install_dir : rm_plugins_path + '/pulseaudio/')

@@ -39,9 +39,6 @@
 
 #include <webjournal.h>
 
-#define RM_TYPE_WEBJOURNAL_PLUGIN (rm_webjournal_plugin_get_type ())
-#define RM_WEBJOURNAL_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_WEBJOURNAL_PLUGIN, RmWebJournalPlugin))
-
 typedef struct {
 	guint signal_id;
 	gchar *header;
@@ -50,9 +47,7 @@ typedef struct {
 	gchar *dragtable;
 	gchar *sortable;
 	gchar *styling;
-} RmWebJournalPluginPrivate;
-
-RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_WEBJOURNAL_PLUGIN, RmWebJournalPlugin, rm_webjournal_plugin)
+} RmWebJournalPlugin;
 
 static GSettings *webjournal_settings = NULL;
 
@@ -102,7 +97,7 @@ void webjournal_journal_loaded_cb(RmObject *obj, GSList *journal, gpointer user_
 
 	file = g_settings_get_string(webjournal_settings, "filename");
 
-	string = g_string_new(webjournal_plugin->priv->header);
+	string = g_string_new(webjournal_plugin->header);
 
 	for (list = journal; list != NULL; list = list->next) {
 		RmCallEntry *call = list->data;
@@ -120,7 +115,7 @@ void webjournal_journal_loaded_cb(RmObject *obj, GSList *journal, gpointer user_
 		gchar *out2;
 		gchar *customkey = convert_date_time(call->date_time);
 
-		out1 = g_regex_replace_literal(type, webjournal_plugin->priv->entry, -1, 0, get_call_type_string(call->type), 0, NULL);
+		out1 = g_regex_replace_literal(type, webjournal_plugin->entry, -1, 0, get_call_type_string(call->type), 0, NULL);
 
 		out2 = g_regex_replace_literal(date_time, out1, -1, 0, call->date_time, 0, NULL);
 		g_free(out1);
@@ -155,7 +150,7 @@ void webjournal_journal_loaded_cb(RmObject *obj, GSList *journal, gpointer user_
 		g_regex_unref(type);
 	}
 
-	string = g_string_append(string, webjournal_plugin->priv->footer);
+	string = g_string_append(string, webjournal_plugin->footer);
 
 	out = g_string_free(string, FALSE);
 
@@ -164,15 +159,15 @@ void webjournal_journal_loaded_cb(RmObject *obj, GSList *journal, gpointer user_
 	dirname = g_path_get_dirname(file);
 
 	file = g_strdup_printf("%s/dragtable.js", dirname);
-	rm_file_save(file, webjournal_plugin->priv->dragtable, -1);
+	rm_file_save(file, webjournal_plugin->dragtable, -1);
 	g_free(file);
 
 	file = g_strdup_printf("%s/sortable.js", dirname);
-	rm_file_save(file, webjournal_plugin->priv->sortable, -1);
+	rm_file_save(file, webjournal_plugin->sortable, -1);
 	g_free(file);
 
 	file = g_strdup_printf("%s/styling.css", dirname);
-	rm_file_save(file, webjournal_plugin->priv->styling, -1);
+	rm_file_save(file, webjournal_plugin->styling, -1);
 	g_free(file);
 
 	g_free(dirname);
@@ -184,61 +179,62 @@ void webjournal_journal_loaded_cb(RmObject *obj, GSList *journal, gpointer user_
  * \brief Activate plugin
  * \param plugin peas plugin
  */
-static void impl_activate(PeasActivatable *plugin)
+static gboolean webjournal_plugin_init(RmPlugin *plugin)
 {
-	RmWebJournalPlugin *webjournal_plugin = RM_WEBJOURNAL_PLUGIN(plugin);
+	RmWebJournalPlugin *webjournal_plugin = g_slice_new0(RmWebJournalPlugin);
+	GBytes *tmp;
 	gchar *file;
 
-	file = g_strconcat(rm_get_directory(RM_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "header.html", NULL);
-	webjournal_plugin->priv->header = rm_file_load(file, NULL);
-	g_free(file);
+	plugin->priv = webjournal_plugin;
 
-	file = g_strconcat(rm_get_directory(RM_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "entry.html", NULL);
-	webjournal_plugin->priv->entry = rm_file_load(file, NULL);
-	g_free(file);
+	tmp = g_resources_lookup_data("/org/tabos/roger/plugins/webjournal/share/header.html", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+	webjournal_plugin->header = (gchar *) g_bytes_get_data(tmp, NULL);
+	//g_free(file);
 
-	file = g_strconcat(rm_get_directory(RM_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "footer.html", NULL);
-	webjournal_plugin->priv->footer = rm_file_load(file, NULL);
-	g_free(file);
+	tmp = g_resources_lookup_data("/org/tabos/roger/plugins/webjournal/share/entry.html", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+	webjournal_plugin->entry = (gchar*) g_bytes_get_data(tmp, NULL);
 
-	file = g_strconcat(rm_get_directory(RM_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "dragtable.js", NULL);
-	webjournal_plugin->priv->dragtable = rm_file_load(file, NULL);
-	g_free(file);
+	tmp = g_resources_lookup_data("/org/tabos/roger/plugins/webjournal/share/footer.html", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+	webjournal_plugin->footer = (gchar*) g_bytes_get_data(tmp, NULL);
 
-	file = g_strconcat(rm_get_directory(RM_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "sortable.js", NULL);
-	webjournal_plugin->priv->sortable = rm_file_load(file, NULL);
-	g_free(file);
+	tmp = g_resources_lookup_data("/org/tabos/roger/plugins/webjournal/share/dragtable.js", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+	webjournal_plugin->dragtable = (gchar*) g_bytes_get_data(tmp, NULL);
 
-	file = g_strconcat(rm_get_directory(RM_PLUGINS), G_DIR_SEPARATOR_S, "webjournal", G_DIR_SEPARATOR_S, "styling.css", NULL);
-	webjournal_plugin->priv->styling = rm_file_load(file, NULL);
-	g_free(file);
+	tmp = g_resources_lookup_data("/org/tabos/roger/plugins/webjournal/share/sortable.js", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+	webjournal_plugin->sortable = (gchar*) g_bytes_get_data(tmp, NULL);
+
+	tmp = g_resources_lookup_data("/org/tabos/roger/plugins/webjournal/share/styling.css", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+	webjournal_plugin->styling = (gchar*) g_bytes_get_data(tmp, NULL);
 
 	webjournal_settings = rm_settings_new("org.tabos.roger.plugins.webjournal");
 
 	file = g_settings_get_string(webjournal_settings, "filename");
 	if (RM_EMPTY_STRING(file)) {
-		file = g_build_filename(g_get_user_data_dir(), "roger", "journal.html", NULL);
+		file = g_build_filename(rm_get_user_data_dir(), "journal.html", NULL);
 		g_settings_set_string(webjournal_settings, "filename", file);
 	}
 
-	webjournal_plugin->priv->signal_id = g_signal_connect_after(G_OBJECT(rm_object), "journal-loaded", G_CALLBACK(webjournal_journal_loaded_cb), webjournal_plugin);
+	webjournal_plugin->signal_id = g_signal_connect_after(G_OBJECT(rm_object), "journal-loaded", G_CALLBACK(webjournal_journal_loaded_cb), webjournal_plugin);
 
+	return TRUE;
 }
 
 /**
  * \brief Deactivate plugin
  * \param plugin peas plugin
  */
-static void impl_deactivate(PeasActivatable *plugin)
+static gboolean webjournal_plugin_shutdown(RmPlugin *plugin)
 {
-	RmWebJournalPlugin *webjournal_plugin = RM_WEBJOURNAL_PLUGIN(plugin);
+	RmWebJournalPlugin *webjournal_plugin = plugin->priv;
 
 	/* If signal handler is connected: disconnect */
-	if (g_signal_handler_is_connected(G_OBJECT(rm_object), webjournal_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(rm_object), webjournal_plugin->priv->signal_id);
+	if (g_signal_handler_is_connected(G_OBJECT(rm_object), webjournal_plugin->signal_id)) {
+		g_signal_handler_disconnect(G_OBJECT(rm_object), webjournal_plugin->signal_id);
 	}
 
 	g_clear_object(&webjournal_settings);
+
+	return TRUE;
 }
 
 void filename_button_clicked_cb(GtkButton *button, gpointer user_data)
@@ -263,7 +259,7 @@ void filename_button_clicked_cb(GtkButton *button, gpointer user_data)
 	gtk_widget_destroy(dialog);
 }
 
-GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
+gpointer webjournal_plugin_configure(RmPlugin *plugin)
 {
 	GtkWidget *grid = gtk_grid_new();
 	GtkWidget *group;
@@ -292,3 +288,4 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	return group;
 }
 
+PLUGIN_CONFIG(webjournal)

@@ -1,10 +1,13 @@
+indicator = dependency('libappindicator', required: false)
+
+if indicator.found()
 indicator_sources = []
 indicator_sources += 'indicator.c'
 
 indicator_dep = []
 indicator_dep += rm_dep
 indicator_dep += roger_dep
-indicator_dep += dependency('libebook-1.2')
+indicator_dep += indicator
 
 libindicator = shared_library('indicator',
                         indicator_sources,
@@ -15,7 +18,9 @@ libindicator = shared_library('indicator',
 
 custom_target('indicator.plugin',
     output : 'indicator.plugin',
-    input : 'indicator.plugin.in',
+    input : 'indicator.desktop.in',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', podir, '-o', '@OUTPUT@'],
     install : true,
     install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/indicator/')
+
+endif

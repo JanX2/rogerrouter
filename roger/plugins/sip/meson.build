@@ -20,7 +20,7 @@ libsip = shared_library('sip',
 
 custom_target('sip.plugin',
     output : 'sip.plugin',
-    input : 'sip.plugin.in',
+    input : 'sip.desktop.in',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', podir, '-o', '@OUTPUT@'],
     install : true,
     install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/sip/')

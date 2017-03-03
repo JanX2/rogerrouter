@@ -17,7 +17,7 @@ libsecret = shared_library('secret',
 
 custom_target('secret.plugin',
     output : 'secret.plugin',
-    input : 'secret.plugin.in',
+    input : 'secret.desktop.in',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', rm_podir, '-o', '@OUTPUT@'],
     install : true,
     install_dir : rm_plugins_path + '/secret/')

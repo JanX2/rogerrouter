@@ -14,7 +14,7 @@ libareacodes_global = shared_library('areacodes_global',
 
 custom_target('areacodes_global.plugin',
     output : 'areacodes_global.plugin',
-    input : 'areacodes_global.plugin.in',
+    input : 'areacodes_global.desktop.in',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', rm_podir, '-o', '@OUTPUT@'],
     install : true,
     install_dir : rm_plugins_path + '/areacodes_global/')

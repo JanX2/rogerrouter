@@ -15,6 +15,8 @@ app_version_micro = version_arr[2]
 
 cc = meson.get_compiler('c')
 
+intltool_merge = find_program('intltool-merge')
+
 cdata = configuration_data()
 cdata.set('PACKAGE_NAME', '"Roger Router"')
 cdata.set('PACKAGE_VERSION', '"@0@"'.format(app_version))

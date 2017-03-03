@@ -1,7 +1,7 @@
 [Plugin]
 Module=sip
 Name=SIP
-Description=Phone support based on SIP
+Comment=Phone support based on SIP
 Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
 Copyright=Copyright © 2016 Jan-Michael Brummer
 Website=http://www.tabos.org/

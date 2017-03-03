@@ -43,12 +43,14 @@ typedef gpointer (*configurePlugin)(RmPlugin *plugin);
 struct _RmPlugin {
 	gchar *name;
 	gchar *description;
+	gchar *copyright;
 	initPlugin init;
 	shutdownPlugin shutdown;
 	configurePlugin configure;
 
 	gchar *module_name;
-	gchar *help_url;
+	gchar *help;
+	gchar *homepage;
 	gboolean builtin;
 	gboolean enabled;
 	gpointer priv;

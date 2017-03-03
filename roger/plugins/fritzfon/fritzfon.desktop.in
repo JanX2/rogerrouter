@@ -1,7 +1,7 @@
 [Plugin]
 Module=fritzfon
 Name=FritzFon
-Description=FRITZ!Box address book support
+Comment=FRITZ!Box address book support
 Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
 Copyright=Copyright © 2013 Jan-Michael Brummer
 Website=http://www.tabos.org/

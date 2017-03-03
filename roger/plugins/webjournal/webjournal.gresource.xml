@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+	<gresource prefix="/org/tabos/roger/plugins/webjournal">
+		<file>share/dragtable.js</file>
+		<file>share/entry.html</file>
+		<file>share/footer.html</file>
+		<file>share/header.html</file>
+		<file>share/sortable.js</file>
+		<file>share/styling.css</file>
+	</gresource>
+</gresources>

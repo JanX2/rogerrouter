@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-03 00:58+0100\n"
+"POT-Creation-Date: 2017-03-03 14:06+0100\n"
 "PO-Revision-Date: 2016-09-17 21:39+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <>\n"
@@ -41,18 +41,24 @@ msgid "A username and password are being requested by the site %s"
 msgstr "Ein Benutzername sowie Passwort werden von der Seite %s benötigt"
 
 #: roger/application.c:398 roger/contacts.c:1201
+#: roger/plugins/indicator/indicator.c:226
+#: roger/plugins/statusicon/statusicon.c:199
 msgid "Contacts"
 msgstr "Kontakte"
 
 #: roger/application.c:399 roger/phone.c:52 roger/settings.glade:840
+#: roger/plugins/indicator/indicator.c:231
+#: roger/plugins/statusicon/statusicon.c:204
 msgid "Phone"
 msgstr "Telefon"
 
-#: roger/application.c:402
+#: roger/application.c:402 roger/plugins/indicator/indicator.c:76
+#: roger/plugins/statusicon/statusicon.c:65
 msgid "Copy IP address"
 msgstr "IP-Adresse kopieren"
 
-#: roger/application.c:403
+#: roger/application.c:403 roger/plugins/indicator/indicator.c:81
+#: roger/plugins/statusicon/statusicon.c:70
 msgid "Reconnect"
 msgstr "Neu verbinden"
 
@@ -60,7 +66,8 @@ msgstr "Neu verbinden"
 msgid "Debug window"
 msgstr "Debug-Fenster"
 
-#: roger/application.c:405
+#: roger/application.c:405 roger/plugins/indicator/indicator.c:243
+#: roger/plugins/statusicon/statusicon.c:215
 msgid "Functions"
 msgstr "Funktionen"
 
@@ -72,7 +79,8 @@ msgstr "Assistent"
 msgid "Plugins"
 msgstr "Plugins"
 
-#: roger/application.c:411
+#: roger/application.c:411 roger/plugins/indicator/indicator.c:253
+#: roger/plugins/statusicon/statusicon.c:225
 msgid "Preferences"
 msgstr "Einstellungen"
 
@@ -80,11 +88,14 @@ msgstr "Einstellungen"
 msgid "Keyboard Shortcuts"
 msgstr "Tastenkürzel"
 
-#: roger/application.c:420
+#: roger/application.c:420 roger/plugins/indicator/indicator.c:267
+#: roger/plugins/statusicon/statusicon.c:239
 msgid "About"
 msgstr "Info"
 
 #: roger/application.c:421 roger/assistant.c:520 roger/assistant.c:654
+#: roger/plugins/indicator/indicator.c:276
+#: roger/plugins/statusicon/statusicon.c:248
 msgid "Quit"
 msgstr "Beenden"
 
@@ -198,6 +209,7 @@ msgid "Enter credentials you are using to login to routers webpage"
 msgstr "Gib die Zugangsdaten ein, die Du auf der Router Webseite verwendest"
 
 #: roger/assistant.glade:401 roger/assistant.glade:515
+#: roger/plugins/google/google.c:905 roger/plugins/sip/sip.c:386
 msgid "User"
 msgstr "Benutzer"
 
@@ -206,7 +218,8 @@ msgid "Optional"
 msgstr "Optional"
 
 #: roger/assistant.glade:428 roger/assistant.glade:541
-#: roger/authenticate.glade:115
+#: roger/authenticate.glade:115 roger/plugins/google/google.c:913
+#: roger/plugins/sip/sip.c:394
 msgid "Password"
 msgstr "Passwort"
 
@@ -286,11 +299,14 @@ msgstr "<b>Einen Kontakt auswählen</b>"
 msgid "Open image"
 msgstr "Bild öffnen"
 
-#: roger/contacts.c:512 roger/settings.c:926
+#: roger/contacts.c:512 roger/settings.c:926 roger/plugins/google/google.c:98
+#: roger/plugins/thunderbird/thunderbird.c:1011
+#: roger/plugins/vcard/vcard.c:1196 roger/plugins/webjournal/webjournal.c:247
 msgid "_Cancel"
 msgstr "_Abbrechen"
 
-#: roger/contacts.c:512
+#: roger/contacts.c:512 roger/plugins/thunderbird/thunderbird.c:1011
+#: roger/plugins/vcard/vcard.c:1196
 msgid "_Open"
 msgstr "_Öffnen"
 
@@ -589,7 +605,8 @@ msgstr "Journal löschen"
 msgid "Restore default"
 msgstr "Vorgabe verwenden"
 
-#: roger/journal.c:1296
+#: roger/journal.c:1296 roger/plugins/indicator/indicator.c:221
+#: roger/plugins/statusicon/statusicon.c:194
 msgid "Journal"
 msgstr "Journal"
 
@@ -734,7 +751,25 @@ msgstr "9"
 msgid "<small>WXYZ</small>"
 msgstr "<small>WXYZ</small>"
 
-#: roger/plugins.c:173
+#: roger/plugins.c:81
+msgid "About this plugin"
+msgstr "Über dieses Plugin"
+
+#: roger/plugins.c:93
+#, c-format
+msgid "<b>%s</b>"
+msgstr "<b>%s</b>"
+
+#: roger/plugins.c:107 roger/plugins/indicator/indicator.c:262
+#: roger/plugins/statusicon/statusicon.c:234
+msgid "Help"
+msgstr "Hilfe"
+
+#: roger/plugins.c:117
+msgid "Homepage"
+msgstr "Homepage"
+
+#: roger/plugins.c:218
 msgid "Configure plugins"
 msgstr "Plugins konfigurieren"
 
@@ -840,14 +875,19 @@ msgid "All"
 msgstr "Alle"
 
 #: roger/settings.c:290 roger/settings.c:1616
+#: roger/plugins/indicator/indicator.c:154
+#: roger/plugins/statusicon/statusicon.c:143
 msgid "Incoming"
 msgstr "Eingehend"
 
-#: roger/settings.c:291
+#: roger/settings.c:291 roger/plugins/indicator/indicator.c:168
+#: roger/plugins/statusicon/statusicon.c:157
 msgid "Missed"
 msgstr "Verpasst"
 
 #: roger/settings.c:292 roger/settings.c:1617
+#: roger/plugins/indicator/indicator.c:161
+#: roger/plugins/statusicon/statusicon.c:150
 msgid "Outgoing"
 msgstr "Ausgehend"
 
@@ -1255,6 +1295,7 @@ msgid "Open settings"
 msgstr "Einstellungen öffnen"
 
 #: roger/org.tabos.roger.desktop.in:3 roger/org.tabos.roger.desktop.in:4
+#: roger/plugins/statusicon/statusicon.c:320
 msgid "Roger Router"
 msgstr "Roger Router"
 
@@ -1271,6 +1312,324 @@ msgstr "roger"
 msgid "fritz;box;fritzbox;router;manager;fax;softphone;"
 msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
 
+#: roger/plugins/evolution/evolution.desktop.in:4
+msgid "Evolution"
+msgstr "Evolution"
+
+#: roger/plugins/evolution/evolution.desktop.in:5
+msgid "Evolution address book support"
+msgstr "Evolution Adressbuch-Support"
+
+#: roger/plugins/fritzfon/fritzfon.desktop.in:4
+msgid "FritzFon"
+msgstr "FritzFon"
+
+#: roger/plugins/fritzfon/fritzfon.desktop.in:5
+msgid "FRITZ!Box address book support"
+msgstr "FRITZ!Box Adressbuch-Support"
+
+#: roger/plugins/gnotification/gnotification.c:63
+msgid "You have missed calls"
+msgstr "Sie haben verpasste Anrufe"
+
+#: roger/plugins/gnotification/gnotification.c:65
+msgid "Missed call(s)"
+msgstr "Verpasste Anrufe"
+
+#: roger/plugins/gnotification/gnotification.c:70
+msgid "Open journal"
+msgstr "Journal öffnen"
+
+#: roger/plugins/gnotification/gnotification.c:91
+#, c-format
+msgid ""
+"Name:\t\t%s\n"
+"Number:\t\t%s\n"
+"Company:\t%s\n"
+"Street:\t\t%s\n"
+"City:\t\t\t%s%s%s\n"
+msgstr ""
+"Name:\t\t%s\n"
+"Nummer:\t\t%s\n"
+"Firma:\t%s\n"
+"Straße:\t\t%s\n"
+"Stadt:\t\t\t%s%s%s\n"
+
+#: roger/plugins/gnotification/gnotification.c:102
+#, c-format
+msgid "Incoming call (on %s)"
+msgstr "Eingehender Anruf (auf %s)"
+
+#: roger/plugins/gnotification/gnotification.c:104
+#, c-format
+msgid "Outgoing call (on %s)"
+msgstr "Ausgehender Anruf (auf %s)"
+
+#: roger/plugins/gnotification/gnotification.c:116
+msgid "Accept"
+msgstr "Annehmen"
+
+#: roger/plugins/gnotification/gnotification.c:117
+msgid "Decline"
+msgstr "Ablehnen"
+
+#: roger/plugins/gnotification/gnotification.desktop.in:4
+msgid "Notifications (using GNotification)"
+msgstr "Benachrichtigungen (mittels GNotification)"
+
+#: roger/plugins/gnotification/gnotification.desktop.in:5
+msgid ""
+"Display notification about incoming/outgoing/missed calls and plays sounds"
+msgstr ""
+"Zeigt Benachrichtigungen über eingehende/ausgehende/verpasste Anrufe und "
+"spielt Klänge"
+
+#: roger/plugins/google/google.c:91
+msgid "Google plugin: Authorization required"
+msgstr "Google Plugin: Autorisierung benötigt"
+
+#: roger/plugins/google/google.c:93
+msgid ""
+"You need to authorize Roger Router to access your Google contact list.\n"
+"\n"
+"Visit Google's authorization page by pressing the button below. After you "
+"confirmed the authorization, you will get an authorization code. Enter that "
+"code in the field below to grant Roger Router access to your Google contact "
+"list."
+msgstr ""
+"Du musst Roger Router den Zugriff auf Deine Google Kontakte erlauben.\n"
+"\n"
+"Besuche die Google Autorisierungsseite in dem du den unteren Knopf drückst. "
+"Nachdem du den Zugriff bestätigst hast, bekommst du einen "
+"Autorisierungscode. Diesen gibst du im unteren Feld ein und erlaubst so "
+"Roger Router den Zugriff auf Deine Google Kontakte."
+
+#: roger/plugins/google/google.c:99
+msgid "_OK"
+msgstr "_OK"
+
+#: roger/plugins/google/google.c:109
+msgid "Step 1:"
+msgstr "Schritt 1:"
+
+#: roger/plugins/google/google.c:115
+msgid "Click here to open the Google authorization page in a browser"
+msgstr "Hier klicken um die Google Autorisierungsseite im Browser zu öffnen"
+
+#: roger/plugins/google/google.c:119
+msgid "Step 2:"
+msgstr "Schritt 2:"
+
+#: roger/plugins/google/google.c:125
+msgid "Enter code:"
+msgstr "Code eingeben:"
+
+#: roger/plugins/google/google.c:235
+msgid "Authorization refresh error"
+msgstr "Fehler bei der Autorisierungserneuerung"
+
+#: roger/plugins/google/google.c:922 roger/plugins/sip/sip.c:411
+msgid "Access data"
+msgstr "Zugangsdaten"
+
+#: roger/plugins/google/google.desktop.in:4
+msgid "Google"
+msgstr "Google"
+
+#: roger/plugins/google/google.desktop.in:5
+msgid "Google address book support"
+msgstr "Google Adressbuch-Support"
+
+#: roger/plugins/gtknotify/gtknotify.c:92
+#, c-format
+msgid "(on %s)"
+msgstr "(an %s)"
+
+#: roger/plugins/gtknotify/gtknotify.c:92
+msgid "(on ?)"
+msgstr "(an ?)"
+
+#: roger/plugins/gtknotify/gtknotify.c:116
+msgid "Incoming call"
+msgstr "Eingehender Anruf"
+
+#: roger/plugins/gtknotify/gtknotify.c:137
+msgid "Outgoing call"
+msgstr "Ausgehender Anruf"
+
+#: roger/plugins/gtknotify/gtknotify.desktop.in:4
+msgid "Notifications (using GTK)"
+msgstr "Benachrichtigungen (mittels GTK)"
+
+#: roger/plugins/gtknotify/gtknotify.desktop.in:5
+msgid "Display notification about incoming/outgoing/missed calls using GTK"
+msgstr ""
+"Zeigt Benachrichtigungen über eingehende/ausgehende/verpasste Anrufe (GTK)"
+
+#: roger/plugins/indicator/indicator.c:236
+#: roger/plugins/statusicon/statusicon.c:209
+msgid "Last calls"
+msgstr "Letzte Anrufe"
+
+#: roger/plugins/indicator/indicator.c:405
+#: roger/plugins/statusicon/statusicon.c:387
+msgid "Hide Journal on startup"
+msgstr "Verstecke das Journal beim Starten"
+
+#: roger/plugins/indicator/indicator.c:414
+#: roger/plugins/statusicon/statusicon.c:396
+msgid "Default Icon"
+msgstr "Standard-Symbol"
+
+#: roger/plugins/indicator/indicator.c:418
+#: roger/plugins/indicator/indicator.c:428
+#: roger/plugins/statusicon/statusicon.c:400
+#: roger/plugins/statusicon/statusicon.c:410
+msgid "default"
+msgstr "default"
+
+#: roger/plugins/indicator/indicator.c:419
+#: roger/plugins/indicator/indicator.c:429
+#: roger/plugins/statusicon/statusicon.c:401
+#: roger/plugins/statusicon/statusicon.c:411
+msgid "mono-dark"
+msgstr "mono-dark"
+
+#: roger/plugins/indicator/indicator.c:420
+#: roger/plugins/indicator/indicator.c:430
+#: roger/plugins/statusicon/statusicon.c:402
+#: roger/plugins/statusicon/statusicon.c:412
+msgid "mono-lite"
+msgstr "mono-lite"
+
+#: roger/plugins/indicator/indicator.c:424
+#: roger/plugins/statusicon/statusicon.c:406
+msgid "Notify Icon"
+msgstr "Benachrichtigungs-Symbol"
+
+#: roger/plugins/indicator/indicator.c:441
+msgid "Settings for Application Indicator"
+msgstr "Einstellungen für Application Indicator"
+
+#: roger/plugins/indicator/indicator.desktop.in:4
+msgid "Application Indicator"
+msgstr "Application Indicator"
+
+#: roger/plugins/indicator/indicator.desktop.in:5
+msgid "Status icon plugin using AppIndicator support"
+msgstr "Statusicon-Plugin mit AppIndicator-Unterstützung"
+
+#: roger/plugins/keychain/keychain.desktop.in:4
+msgid "KeyChain"
+msgstr "KeyChain"
+
+#: roger/plugins/keychain/keychain.desktop.in:5
+msgid "OS X KeyChain support"
+msgstr "OS X KeyChain Unterstützung"
+
+#: roger/plugins/kwallet/kwallet.desktop.in:4
+msgid "KWallet"
+msgstr "KWallet"
+
+#: roger/plugins/kwallet/kwallet.desktop.in:5
+msgid "KDE wallet support"
+msgstr "KDE Brieftasche Unterstützung"
+
+#: roger/plugins/osxab/osxab.desktop.in:4
+msgid "OSX Address book"
+msgstr "OSX Adressbuch"
+
+#: roger/plugins/osxab/osxab.desktop.in:5
+msgid "OS X Address book"
+msgstr "OS X Adressbuch"
+
+#: roger/plugins/sip/sip.c:403
+msgid "MSN"
+msgstr "MSN"
+
+#: roger/plugins/sip/sip.desktop.in:4
+msgid "SIP"
+msgstr "SIP"
+
+#: roger/plugins/sip/sip.desktop.in:5
+msgid "Phone support based on SIP"
+msgstr "Telefonunterstützung basierend auf SIP"
+
+#: roger/plugins/statusicon/statusicon.c:423
+msgid "Settings for Status icon GTK"
+msgstr "Einstellungen für Statusicon GTK"
+
+#: roger/plugins/statusicon/statusicon.desktop.in:4
+msgid "Status icon GTK"
+msgstr "Statusicon GTK"
+
+#: roger/plugins/statusicon/statusicon.desktop.in:5
+msgid "Status icon plugin using GTK following FreeDesktop standard"
+msgstr "Statusicon-Plugin in GTK nach den FreeDesktop-Standard"
+
+#: roger/plugins/thunderbird/thunderbird.c:1011
+msgid "Select mab file"
+msgstr "VCard-Datei auswählen"
+
+#: roger/plugins/thunderbird/thunderbird.c:1058
+msgid "Thunderbird file"
+msgstr "Thunderbird-Datei"
+
+#: roger/plugins/thunderbird/thunderbird.c:1062
+#: roger/plugins/vcard/vcard.c:1231 roger/plugins/webjournal/webjournal.c:280
+msgid "Select"
+msgstr "Auswählen"
+
+#: roger/plugins/thunderbird/thunderbird.c:1072
+#: roger/plugins/vcard/vcard.c:1241
+msgid "Contact book"
+msgstr "Kontaktbuch"
+
+#: roger/plugins/thunderbird/thunderbird.desktop.in:4
+msgid "Thunderbird"
+msgstr "Thunderbird"
+
+#: roger/plugins/thunderbird/thunderbird.desktop.in:5
+msgid "Thunderbird address book support"
+msgstr "Thunderbird Adressbuch-Support"
+
+#: roger/plugins/vcard/vcard.c:1196
+msgid "Select vcard file"
+msgstr "VCard-Datei auswählen"
+
+#: roger/plugins/vcard/vcard.c:1227
+msgid "VCard file"
+msgstr "VCard-Datei"
+
+#: roger/plugins/vcard/vcard.desktop.in:4
+msgid "VCard"
+msgstr "VCard"
+
+#: roger/plugins/vcard/vcard.desktop.in:5
+msgid "VCard address book support"
+msgstr "VCard Adressbuch-Support"
+
+#: roger/plugins/webjournal/webjournal.c:247
+msgid "Set HTML file"
+msgstr "HTML-Datei auswählen"
+
+#: roger/plugins/webjournal/webjournal.c:247
+msgid "_Save"
+msgstr "_Speichern"
+
+#: roger/plugins/webjournal/webjournal.c:276
+msgid "Web Journal output file"
+msgstr "Web Journal Ausgabedatei"
+
+#: roger/plugins/webjournal/webjournal.c:290
+#: roger/plugins/webjournal/webjournal.desktop.in:4
+msgid "Web Journal"
+msgstr "Web Journal"
+
+#: roger/plugins/webjournal/webjournal.desktop.in:5
+msgid "Store journal as html file on a server"
+msgstr "Speichert das Journal als HTML-Datei auf einem Server"
+
 #, fuzzy
 #~ msgid "Debug"
 #~ msgstr "Debug Log"
@@ -1281,9 +1640,6 @@ msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
 #~ msgid "Save in HOME"
 #~ msgstr "Speichern in HOME"
 
-#~ msgid "_Save"
-#~ msgstr "_Speichern"
-
 #~ msgid "Login password is valid"
 #~ msgstr "Anmeldepasswort ist gültig"
 
@@ -1293,144 +1649,8 @@ msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
 #~ msgid "Security"
 #~ msgstr "Sicherheit"
 
-#~ msgid "Address book"
-#~ msgstr "Adressbuch"
-
 #~ msgid "Extended"
 #~ msgstr "Erweitert"
-
-#~ msgid "Contact book"
-#~ msgstr "Kontaktbuch"
-
-#~ msgid "(on %s)"
-#~ msgstr "(an %s)"
-
-#~ msgid "(on ?)"
-#~ msgstr "(an ?)"
-
-#~ msgid "Incoming call"
-#~ msgstr "Eingehender Anruf"
-
-#~ msgid "Outgoing call"
-#~ msgstr "Ausgehender Anruf"
-
-#~ msgid "Last calls"
-#~ msgstr "Letzte Anrufe"
-
-#~ msgid "Help"
-#~ msgstr "Hilfe"
-
-#~ msgid "Hide Journal on startup"
-#~ msgstr "Verstecke das Journal beim Starten"
-
-#~ msgid "Default Icon"
-#~ msgstr "Standard-Symbol"
-
-#~ msgid "default"
-#~ msgstr "default"
-
-#~ msgid "mono-dark"
-#~ msgstr "mono-dark"
-
-#~ msgid "mono-lite"
-#~ msgstr "mono-lite"
-
-#~ msgid "Notify Icon"
-#~ msgstr "Benachrichtigungs-Symbol"
-
-#~ msgid "Settings for Status icon GTK"
-#~ msgstr "Einstellungen für Statusicon GTK"
-
-#~ msgid "Settings for Application Indicator"
-#~ msgstr "Einstellungen für Application Indicator"
-
-#~ msgid "Select vcard file"
-#~ msgstr "VCard-Datei auswählen"
-
-#~ msgid "VCard file"
-#~ msgstr "VCard-Datei"
-
-#~ msgid "Select"
-#~ msgstr "Auswählen"
-
-#~ msgid "Google plugin: Authorization required"
-#~ msgstr "Google Plugin: Autorisierung benötigt"
-
-#~ msgid ""
-#~ "You need to authorize Roger Router to access your Google contact list.\n"
-#~ "\n"
-#~ "Visit Google's authorization page by pressing the button below. After you "
-#~ "confirmed the authorization, you will get an authorization code. Enter "
-#~ "that code in the field below to grant Roger Router access to your Google "
-#~ "contact list."
-#~ msgstr ""
-#~ "Du musst Roger Router den Zugriff auf Deine Google Kontakte erlauben.\n"
-#~ "\n"
-#~ "Besuche die Google Autorisierungsseite in dem du den unteren Knopf "
-#~ "drückst. Nachdem du den Zugriff bestätigst hast, bekommst du einen "
-#~ "Autorisierungscode. Diesen gibst du im unteren Feld ein und erlaubst so "
-#~ "Roger Router den Zugriff auf Deine Google Kontakte."
-
-#~ msgid "_OK"
-#~ msgstr "_OK"
-
-#~ msgid "Step 1:"
-#~ msgstr "Schritt 1:"
-
-#~ msgid "Click here to open the Google authorization page in a browser"
-#~ msgstr "Hier klicken um die Google Autorisierungsseite im Browser zu öffnen"
-
-#~ msgid "Step 2:"
-#~ msgstr "Schritt 2:"
-
-#~ msgid "Enter code:"
-#~ msgstr "Code eingeben:"
-
-#~ msgid "Authorization refresh error"
-#~ msgstr "Fehler bei der Autorisierungserneuerung"
-
-#~ msgid "Access data"
-#~ msgstr "Zugangsdaten"
-
-#~ msgid "Select mab file"
-#~ msgstr "VCard-Datei auswählen"
-
-#~ msgid "Thunderbird file"
-#~ msgstr "Thunderbird-Datei"
-
-#~ msgid "You have missed calls"
-#~ msgstr "Sie haben verpasste Anrufe"
-
-#~ msgid "Missed call(s)"
-#~ msgstr "Verpasste Anrufe"
-
-#~ msgid "Open journal"
-#~ msgstr "Journal öffnen"
-
-#~ msgid ""
-#~ "Name:\t\t%s\n"
-#~ "Number:\t\t%s\n"
-#~ "Company:\t%s\n"
-#~ "Street:\t\t%s\n"
-#~ "City:\t\t\t%s%s%s\n"
-#~ msgstr ""
-#~ "Name:\t\t%s\n"
-#~ "Nummer:\t\t%s\n"
-#~ "Firma:\t%s\n"
-#~ "Straße:\t\t%s\n"
-#~ "Stadt:\t\t\t%s%s%s\n"
-
-#~ msgid "Incoming call (on %s)"
-#~ msgstr "Eingehender Anruf (auf %s)"
-
-#~ msgid "Outgoing call (on %s)"
-#~ msgstr "Ausgehender Anruf (auf %s)"
-
-#~ msgid "Accept"
-#~ msgstr "Annehmen"
-
-#~ msgid "Decline"
-#~ msgstr "Ablehnen"
 
 #~ msgid ""
 #~ "Name:\t%s\n"
@@ -1459,18 +1679,6 @@ msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
 
 #~ msgid "Popup"
 #~ msgstr "Popup"
-
-#~ msgid "Set HTML file"
-#~ msgstr "HTML-Datei auswählen"
-
-#~ msgid "Web Journal output file"
-#~ msgstr "Web Journal Ausgabedatei"
-
-#~ msgid "Web Journal"
-#~ msgstr "Web Journal"
-
-#~ msgid "MSN"
-#~ msgstr "MSN"
 
 #~ msgid "Connected"
 #~ msgstr "Verbunden"
@@ -1609,20 +1817,8 @@ msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
 #~ msgid "Hang up"
 #~ msgstr "Auflegen"
 
-#~ msgid "Evolution"
-#~ msgstr "Evolution"
-
 #~ msgid "Support for Evolution address book"
 #~ msgstr "Unterstützung für das Evolution Adressbuch"
-
-#~ msgid "Evolution address book support"
-#~ msgstr "Evolution Adressbuch-Support"
-
-#~ msgid "FritzFon"
-#~ msgstr "FritzFon"
-
-#~ msgid "FRITZ!Box address book support"
-#~ msgstr "FRITZ!Box Adressbuch-Support"
 
 #~ msgid "Support for FRITZ!Box address book"
 #~ msgstr "Unterstützung für das FRITZ!Box Adressbuch"
@@ -1651,21 +1847,11 @@ msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
 #~ msgid "Notifications (Fallback)"
 #~ msgstr "Benachrichtigungen (Fallback)"
 
-#~ msgid "Display notification about incoming/outgoing/missed calls using GTK"
-#~ msgstr ""
-#~ "Zeigt Benachrichtigungen über eingehende/ausgehende/verpasste Anrufe (GTK)"
-
 #~ msgid "Statusicon"
 #~ msgstr "Statusicon"
 
 #~ msgid "Support for status icon"
 #~ msgstr "Unterstützung für ein Statusicon"
-
-#~ msgid "Status icon GTK"
-#~ msgstr "Statusicon GTK"
-
-#~ msgid "Status icon plugin using GTK following FreeDesktop standard"
-#~ msgstr "Statusicon-Plugin in GTK nach den FreeDesktop-Standard"
 
 #~ msgid "Indicator"
 #~ msgstr "Indicator"
@@ -1673,38 +1859,14 @@ msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
 #~ msgid "Support for AppIndicator"
 #~ msgstr "Unterstützung für AppIndicator"
 
-#~ msgid "Application Indicator"
-#~ msgstr "Application Indicator"
-
-#~ msgid "Status icon plugin using AppIndicator support"
-#~ msgstr "Statusicon-Plugin mit AppIndicator-Unterstützung"
-
-#~ msgid "VCard"
-#~ msgstr "VCard"
-
 #~ msgid "Support for VCard address books"
 #~ msgstr "Unterstützung für VCard Adressbücher"
-
-#~ msgid "VCard address book support"
-#~ msgstr "VCard Adressbuch-Support"
-
-#~ msgid "Google"
-#~ msgstr "Google"
 
 #~ msgid "Support for Google address book"
 #~ msgstr "Unterstützung für das Google Adressbuch"
 
-#~ msgid "Google address book support"
-#~ msgstr "Google Adressbuch-Support"
-
-#~ msgid "Thunderbird"
-#~ msgstr "Thunderbird"
-
 #~ msgid "Support for Thunderbird address book"
 #~ msgstr "Unterstützung für das Thunderbird Adressbuch"
-
-#~ msgid "Thunderbird address book support"
-#~ msgstr "Thunderbird Adressbuch-Support"
 
 #~ msgid ""
 #~ "Name:\t\t%s\n"
@@ -1724,15 +1886,6 @@ msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
 #~ msgid "Choose for which MSNs you want gnotifications"
 #~ msgstr "Wähle für welche MSNs Benachrichtigungen angezeigt werden"
 
-#~ msgid "Notifications (using GNotification)"
-#~ msgstr "Benachrichtigungen (mittels GNotification)"
-
-#~ msgid ""
-#~ "Display notification about incoming/outgoing/missed calls and plays sounds"
-#~ msgstr ""
-#~ "Zeigt Benachrichtigungen über eingehende/ausgehende/verpasste Anrufe und "
-#~ "spielt Klänge"
-
 #~ msgid "GNotifications"
 #~ msgstr "GNotification"
 
@@ -1751,20 +1904,11 @@ msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
 #~ msgid "Support for exporting journal as HTML file"
 #~ msgstr "Unterstützung um das Journal als HTML-Datei zu exportieren"
 
-#~ msgid "Store journal as html file on a server"
-#~ msgstr "Speichert das Journal als HTML-Datei auf einem Server"
-
 #~ msgid "Support for KDE4 Wallet"
 #~ msgstr "Unterstützung für die KDE4 Brieftasche"
 
-#~ msgid "SIP"
-#~ msgstr "SIP"
-
 #~ msgid "Support for SIP protocol (phone)"
 #~ msgstr "Unterstützung für das SIP Protokoll (Telefon)"
-
-#~ msgid "Phone support based on SIP"
-#~ msgstr "Telefonunterstützung basierend auf SIP"
 
 #~ msgid "Transfer starting:"
 #~ msgstr "Übertragung beginnt:"

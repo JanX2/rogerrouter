@@ -110,7 +110,10 @@ void rm_phone_hangup(RmConnection *connection)
 	RmPhone *phone = RM_PHONE(connection->device);
 
 	if (!phone || !phone->hangup) {
-		g_warning("%s(): No phone or hangup function", __FUNCTION__);
+		g_warning("%s(): No phone or hangup function (%p)", __FUNCTION__, phone);
+		if (phone) {
+			g_warning("%s(): Phone '%s'", __FUNCTION__, rm_phone_get_name(phone));
+		}
 		return;
 	}
 

@@ -1,7 +1,7 @@
 [Plugin]
-Module=gstreamer
-Name=GStreamer 1.x plugin
-Description=Audio plugin for GStreamer
+Module=reverselookup
+Name=Reverse Lookup
+Comment=Reverse lookup through 3rd-party
 Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
 Copyright=Copyright © 2013 Jan-Michael Brummer
 Website=http://www.tabos.org/

@@ -44,6 +44,12 @@ gboolean plugins_state_set_cb(GtkSwitch *widget, gboolean state, gpointer user_d
 	return FALSE;
 }
 
+static void url_button_clicked_cb(GtkWidget *widget,
+                                  gpointer   user_data)
+{
+	rm_os_execute(user_data);
+}
+
 static void plugins_about_clicked_cb(GtkWidget *button,
                                        gpointer   user_data)
 {
@@ -51,23 +57,68 @@ static void plugins_about_clicked_cb(GtkWidget *button,
 	GtkWidget *child = gtk_container_get_children(GTK_CONTAINER(row))->data;
 	RmPlugin *plugin = g_object_get_data(G_OBJECT(child), "plugin");
 	GtkWidget *about;
-	GtkWidget *image;
-	GdkPixbuf *pixbuf;
+	GtkWidget *header_bar;
+	GtkWidget *vbox;
+	GtkWidget *name_label;
+	GtkWidget *description_label;
+	GtkWidget *copyright_label;
+	GtkWidget *hbox;
+	GtkWidget *help_button;
+	GtkWidget *homepage_button;
+	GtkWidget *dummy;
+	gchar *name;
 
 	if (!plugin) {
 		return;
 	}
 
-	about = gtk_about_dialog_new();
-	gtk_window_set_title(GTK_WINDOW(about), plugin->name);
-	gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(about), plugin->name);
-	gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(about), plugin->description);
-	image = gtk_image_new_from_icon_name("application-x-addon-symbolic", GTK_ICON_SIZE_DIALOG);
-	pixbuf = gtk_image_get_pixbuf(GTK_IMAGE(image));
-	gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(about), pixbuf);
+	about = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_transient_for(GTK_WINDOW(about), GTK_WINDOW(plugins_window));
+	gtk_window_set_resizable(GTK_WINDOW(about), FALSE);
+	gtk_window_set_modal(GTK_WINDOW(about), TRUE);
 
-	gtk_dialog_run(GTK_DIALOG(about));
-	gtk_widget_destroy(about);
+	header_bar = gtk_header_bar_new();
+	gtk_header_bar_set_title(GTK_HEADER_BAR(header_bar), _("About this plugin"));
+	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header_bar), TRUE);
+	gtk_window_set_titlebar(GTK_WINDOW(about), header_bar);
+
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 12);
+	gtk_widget_set_hexpand(vbox, TRUE);
+	gtk_widget_set_vexpand(vbox, TRUE);
+	gtk_widget_set_margin(vbox, 18, 18, 18, 18);
+	gtk_container_add(GTK_CONTAINER(about), vbox);
+
+	name_label = gtk_label_new("");
+	gtk_box_pack_start(GTK_BOX(vbox), name_label, FALSE, FALSE, 0);
+	name = g_strdup_printf(_("<b>%s</b>"), plugin->name);
+	gtk_label_set_markup(GTK_LABEL(name_label), name);
+	g_free(name);
+
+	description_label = gtk_label_new(plugin->description);
+	gtk_box_pack_start(GTK_BOX(vbox), description_label, FALSE, FALSE, 0);
+
+	copyright_label = gtk_label_new(plugin->copyright);
+	gtk_box_pack_start(GTK_BOX(vbox), copyright_label, FALSE, FALSE, 0);
+
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
+	gtk_box_set_homogeneous(GTK_BOX(hbox), TRUE);
+	gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
+
+	help_button = gtk_button_new_with_label(_("Help"));
+	g_signal_connect(help_button, "clicked", G_CALLBACK(url_button_clicked_cb), plugin->help);
+	gtk_box_pack_start(GTK_BOX(hbox), help_button, TRUE, TRUE, 0);
+
+	dummy = gtk_label_new("");
+	gtk_box_pack_start(GTK_BOX(hbox), dummy, FALSE, FALSE, 0);
+
+	dummy = gtk_label_new("");
+	gtk_box_pack_start(GTK_BOX(hbox), dummy, FALSE, FALSE, 0);
+
+	homepage_button = gtk_button_new_with_label(_("Homepage"));
+	g_signal_connect(homepage_button, "clicked", G_CALLBACK(url_button_clicked_cb), plugin->homepage);
+	gtk_box_pack_end(GTK_BOX(hbox), homepage_button, TRUE, TRUE, 0);
+
+	gtk_widget_show_all(about);
 }
 
 static void plugins_help_clicked_cb(GtkWidget *button,
@@ -81,7 +132,7 @@ static void plugins_help_clicked_cb(GtkWidget *button,
 		return;
 	}
 
-	rm_os_execute(plugin->help_url);
+	rm_os_execute(plugin->help);
 }
 
 static void plugins_configure_clicked_cb(GtkWidget *button,
@@ -138,18 +189,11 @@ static void plugins_listbox_row_selected_cb(GtkListBox    *box,
 		gtk_widget_set_sensitive(config_button, FALSE);
 	}
 
-	if (plugin->help_url) {
+	if (plugin->help) {
 		gtk_widget_set_sensitive (help_button, TRUE);
 	} else {
 		gtk_widget_set_sensitive (help_button, FALSE);
 	}
-}
-
-gboolean plugins_delete_event_cb(GtkWidget *win,
-                                 gpointer   user_data)
-{
-	g_debug("%s(): Called", __FUNCTION__);
-	return FALSE;
 }
 
 void app_show_plugins(void)
@@ -168,13 +212,12 @@ void app_show_plugins(void)
 	extern GApplication *journal_application;
 	plugins_window = gtk_application_window_new(GTK_APPLICATION(journal_application));
 	gtk_window_set_default_size(GTK_WINDOW(plugins_window), 700, 350);
+	gtk_window_set_transient_for(GTK_WINDOW(plugins_window), GTK_WINDOW(journal_get_window()));
 
 	header = gtk_header_bar_new();
 	gtk_header_bar_set_title(GTK_HEADER_BAR(header), _("Configure plugins"));
 	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
 	gtk_window_set_titlebar(GTK_WINDOW(plugins_window), header);
-	gtk_window_set_modal(GTK_WINDOW(plugins_window), TRUE);
-	//g_signal_connect(plugins_window, "delete-event", G_CALLBACK(plugins_delete_event_cb), NULL);
 	g_signal_connect(plugins_window, "destroy", G_CALLBACK(gtk_widget_destroyed), &plugins_window);
 
 	gtk_window_set_transient_for(GTK_WINDOW(plugins_window), GTK_WINDOW(journal_get_window()));
@@ -210,6 +253,8 @@ void app_show_plugins(void)
 		gtk_widget_set_halign(description, GTK_ALIGN_START);
 
 		gtk_grid_attach(GTK_GRID(child), name, 0, 0, 1, 1);
+
+		gtk_label_set_ellipsize(GTK_LABEL(description), PANGO_ELLIPSIZE_END);
 		gtk_grid_attach(GTK_GRID(child), description, 0, 1, 1, 1);
 
 		on_switch = gtk_switch_new();

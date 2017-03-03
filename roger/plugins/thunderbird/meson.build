@@ -1,0 +1,22 @@
+thunderbird_sources = []
+thunderbird_sources += 'thunderbird.c'
+
+thunderbird_dep = []
+thunderbird_dep += rm_dep
+thunderbird_dep += roger_dep
+
+thunderbird_inc = [rm_inc, roger_inc]
+
+libthunderbird = shared_library('thunderbird',
+                        thunderbird_sources,
+                        include_directories : thunderbird_inc,
+                        dependencies : thunderbird_dep,
+                        install : true,
+                        install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/thunderbird/')
+
+custom_target('thunderbird.plugin',
+    output : 'thunderbird.plugin',
+    input : 'thunderbird.desktop.in',
+    command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', podir, '-o', '@OUTPUT@'],
+    install : true,
+    install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/thunderbird/')

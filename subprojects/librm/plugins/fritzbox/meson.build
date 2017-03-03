@@ -19,7 +19,7 @@ libfritzbox = shared_library('fritzbox',
 
 custom_target('fritzbox.plugin',
     output : 'fritzbox.plugin',
-    input : 'fritzbox.plugin.in',
+    input : 'fritzbox.desktop.in',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', rm_podir, '-o', '@OUTPUT@'],
     install : true,
     install_dir : rm_plugins_path + '/fritzbox/')

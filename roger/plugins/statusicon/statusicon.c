@@ -39,20 +39,15 @@ G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 
 #define MAX_LASTCALLS 5
 
-#define RM_TYPE_STATUSICON_PLUGIN        (rm_statusicon_plugin_get_type ())
-#define RM_STATUSICON_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_STATUSICON_PLUGIN, RmStatusIconPlugin))
-
-typedef struct {
-	guint signal_id;
-} RmStatusIconPluginPrivate;
-
-RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_STATUSICON_PLUGIN, RmStatusIconPlugin, rm_statusicon_plugin)
-
 extern GList *journal_list;
 extern GtkWidget *journal_win;
 
 static GSettings *statusicon_settings = NULL;
 static GtkStatusIcon *statusicon = NULL;
+
+typedef struct {
+	guint signal_id;
+} RmStatusIconPlugin;
 
 /**
  * \brief create "Functions" submenu items
@@ -270,9 +265,9 @@ void statusicon_popup_menu_cb(GtkStatusIcon *statusicon, guint button, guint act
  */
 void statusicon_connection_notify_cb(RmObject *obj, RmConnection *connection, gpointer unused_pointer)
 {
-	g_debug("Called: '%d/%d", connection->type, CONNECTION_TYPE_MISSED);
-	if (connection->type == CONNECTION_TYPE_MISSED) {
-		g_debug("Setting missed icon");
+	g_debug("%s(): Called: '%d/%d", __FUNCTION__, connection->type, RM_CONNECTION_TYPE_MISSED);
+	if (connection->type == RM_CONNECTION_TYPE_MISSED) {
+		g_debug("%s(): Setting missed icon", __FUNCTION__);
 		gchar *iconname = g_strconcat("roger-", g_settings_get_string(statusicon_settings, "notify-icon"), NULL);
 		gtk_status_icon_set_from_icon_name(statusicon, iconname);
 		g_free(iconname);
@@ -328,36 +323,37 @@ static gboolean add_statusicon(gpointer user_data)
 	return FALSE;
 }
 
-void impl_activate(PeasActivatable *plugin)
+gboolean statusicon_plugin_init(RmPlugin *plugin)
 {
-	RmStatusIconPlugin *statusicon_plugin;
+	RmStatusIconPlugin *statusicon_plugin = g_slice_new0(RmStatusIconPlugin);
 
 	journal_set_hide_on_quit(TRUE);
 
 	statusicon_settings = rm_settings_new("org.tabos.roger.plugins.statusicon");
 
 	/* Connect to "call-notify" signal */
-	statusicon_plugin = RM_STATUSICON_PLUGIN(plugin);
-	statusicon_plugin->priv->signal_id = g_signal_connect(G_OBJECT(rm_object), "connection-notify", G_CALLBACK(statusicon_connection_notify_cb), NULL);
+	plugin->priv = statusicon_plugin;
+	statusicon_plugin->signal_id = g_signal_connect(G_OBJECT(rm_object), "connection-notify", G_CALLBACK(statusicon_connection_notify_cb), NULL);
 
 	if (g_settings_get_boolean(statusicon_settings, "hide-journal-on-startup")) {
 		journal_set_hide_on_start(TRUE);
 	}
 
 	g_idle_add(add_statusicon, NULL);
+
+	return TRUE;
 }
 
-void impl_deactivate(PeasActivatable *plugin)
+gboolean statusicon_plugin_shutdown(RmPlugin *plugin)
 {
-	RmStatusIconPlugin *statusicon_plugin;
+	RmStatusIconPlugin *statusicon_plugin = plugin->priv;
 
 	/* Unregister delete handler */
 	journal_set_hide_on_quit(FALSE);
 
 	/* If signal handler is connected: disconnect */
-	statusicon_plugin = RM_STATUSICON_PLUGIN(plugin);
-	if (g_signal_handler_is_connected(G_OBJECT(rm_object), statusicon_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(rm_object), statusicon_plugin->priv->signal_id);
+	if (g_signal_handler_is_connected(G_OBJECT(rm_object), statusicon_plugin->signal_id)) {
+		g_signal_handler_disconnect(G_OBJECT(rm_object), statusicon_plugin->signal_id);
 	}
 
 	if (journal_win) {
@@ -366,12 +362,14 @@ void impl_deactivate(PeasActivatable *plugin)
 	}
 
 	gtk_status_icon_set_visible(statusicon, FALSE);
-	g_clear_object(statusicon);
+	//g_clear_object(statusicon);
 
 	statusicon = NULL;
+
+	return TRUE;
 }
 
-GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
+gpointer statusicon_plugin_configure(RmPlugin *plugin)
 {
 	GtkWidget *settings_grid;
 	GtkWidget *label;
@@ -428,3 +426,5 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 }
 
 G_GNUC_END_IGNORE_DEPRECATIONS
+
+PLUGIN_CONFIG(statusicon)

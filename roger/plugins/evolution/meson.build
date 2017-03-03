@@ -1,9 +1,10 @@
-evolution_sources = []
-evolution_sources += 'evolution.c'
-
 dep = dependency('libebook-1.2', required: false)
 
 if dep.found()
+
+evolution_sources = []
+evolution_sources += 'evolution.c'
+
 evolution_dep = []
 evolution_dep += rm_dep
 evolution_dep += roger_dep
@@ -22,7 +23,7 @@ libevolution = shared_library('evolution',
 
 custom_target('evolution.plugin',
     output : 'evolution.plugin',
-    input : 'evolution.plugin.in',
+    input : 'evolution.desktop.in',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', podir, '-o', '@OUTPUT@'],
     install : true,
     install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/evolution/')

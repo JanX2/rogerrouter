@@ -16,7 +16,7 @@ libfritzfon = shared_library('fritzfon',
 
 custom_target('fritzfon.plugin',
     output : 'fritzfon.plugin',
-    input : 'fritzfon.plugin.in',
+    input : 'fritzfon.desktop.in',
     command : [msgfmt, '--desktop', '--template', '@INPUT@','-d', podir, '-o', '@OUTPUT@'],
     install : true,
     install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/fritzfon/')

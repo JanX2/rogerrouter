@@ -10,7 +10,7 @@ libwincred = shared_library('wincred',
 
 custom_target('wincred.plugin',
     output : 'wincred.plugin',
-    input : 'wincred.plugin.in',
+    input : 'wincred.desktop.in',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', rm_podir, '-o', '@OUTPUT@'],
     install : true,
     install_dir : rm_plugins_path + '/wincred/')

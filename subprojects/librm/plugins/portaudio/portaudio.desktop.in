@@ -1,9 +1,9 @@
 [Plugin]
-Module=capi
-Name=CAPI
-Description=Fax & phone support based on CAPI
+Module=portaudio
+Name=PortAudio plugin
+Comment=Audio plugin for PortAudio
 Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
-Copyright=Copyright © 2016 Jan-Michael Brummer
+Copyright=Copyright © 2013 Jan-Michael Brummer
 Website=http://www.tabos.org/
 Help=http://www.tabos.org/forum/
 Builtin=true

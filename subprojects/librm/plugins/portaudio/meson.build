@@ -16,7 +16,7 @@ libportaudio = shared_library('portaudio',
 
 custom_target('portaudio.plugin',
     output : 'portaudio.plugin',
-    input : 'portaudio.plugin.in',
+    input : 'portaudio.desktop.in',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', rm_podir, '-o', '@OUTPUT@'],
     install : true,
     install_dir : rm_plugins_path + '/portaudio/')

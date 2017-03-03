@@ -93,10 +93,12 @@ static gint rm_plugins_load_plugin(char *name)
 	plugin->module = module;
 
 	plugin->module_name = module_name;
-	plugin->name = g_key_file_get_string(keyfile, "Plugin", "Name", NULL);
-	plugin->description = g_key_file_get_string(keyfile, "Plugin", "Description", NULL);
+	plugin->name = g_key_file_get_locale_string(keyfile, "Plugin", "Name", NULL, NULL);
+	plugin->description = g_key_file_get_locale_string(keyfile, "Plugin", "Comment", NULL, NULL);
+	plugin->copyright = g_key_file_get_string(keyfile, "Plugin", "Copyright", NULL);
 	plugin->builtin = g_key_file_get_boolean(keyfile, "Plugin", "Builtin", NULL);
-	plugin->help_url = g_key_file_get_string(keyfile, "Plugin", "Help", NULL);
+	plugin->help = g_key_file_get_string(keyfile, "Plugin", "Help", NULL);
+	plugin->homepage = g_key_file_get_string(keyfile, "Plugin", "Website", NULL);
 
 	/**** First step: Load them immediately, late we will connect it to the profiles */
 	if (plugin->builtin) {

@@ -16,7 +16,7 @@ libgnotification = shared_library('gnotification',
 
 custom_target('gnotification.plugin',
     output : 'gnotification.plugin',
-    input : 'gnotification.plugin.in',
+    input : 'gnotification.desktop.in',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', podir, '-o', '@OUTPUT@'],
     install : true,
     install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/gnotification/')

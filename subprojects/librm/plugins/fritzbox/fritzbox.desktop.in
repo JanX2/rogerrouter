@@ -1,7 +1,7 @@
 [Plugin]
 Module=fritzbox
 Name=AVM FRITZ!Box
-Description=FRITZ!Box router integration for firmware >= 04.74
+Comment=FRITZ!Box router integration for firmware >= 04.74
 Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
 Copyright=Copyright © 2014 Jan-Michael Brummer
 Website=http://www.tabos.org/

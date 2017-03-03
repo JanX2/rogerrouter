@@ -23,7 +23,7 @@ libgtknotify = shared_library('gtknotify',
 
 custom_target('gtknotify.plugin',
     output : 'gtknotify.plugin',
-    input : 'gtknotify.plugin.in',
+    input : 'gtknotify.desktop.in',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', podir, '-o', '@OUTPUT@'],
     install : true,
     install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/gtknotify/')

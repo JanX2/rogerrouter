@@ -1,4 +1,4 @@
-/**
+/*
  * Roger Router
  * Copyright (c) 2012-2014 Jan-Michael Brummer
  *
@@ -34,19 +34,11 @@
 #include <rm/rmfile.h>
 #include <rm/rmstring.h>
 #include <rm/rmsettings.h>
+#include <rm/rmnumber.h>
 
 #include <roger/main.h>
 #include <roger/settings.h>
 #include <roger/uitools.h>
-
-#define RM_TYPE_THUNDERBIRD_PLUGIN        (rm_thunderbird_plugin_get_type ())
-#define RM_THUNDERBIRD_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_THUNDERBIRD_PLUGIN, RmThunderbirdPlugin))
-
-typedef struct {
-	guint signal_id;
-} RmThunderbirdPluginPrivate;
-
-RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_THUNDERBIRD_PLUGIN, RmThunderbirdPlugin, rm_thunderbird_plugin)
 
 void pref_notebook_add_page(GtkWidget *notebook, GtkWidget *page, gchar *title);
 GtkWidget *pref_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand, gboolean vexpand);
@@ -989,40 +981,34 @@ RmAddressBook thunderbird_book = {
 	NULL//thunderbird_save_contact
 };
 
-void impl_activate(PeasActivatable *plugin)
+gboolean thunderbird_plugin_init(RmPlugin *plugin)
 {
-	//RmThunderbirdPlugin *thunderbird_plugin = RM_THUNDERBIRD_PLUGIN(plugin);
-
 	thunderbird_settings = rm_settings_new("org.tabos.roger.plugins.thunderbird");
 
 	table = g_hash_table_new(g_str_hash, g_str_equal);
 
 	thunderbird_read_book();
 
-	//thunderbird_plugin->priv->signal_id = g_signal_connect(G_OBJECT(rm_object), "contact-process", G_CALLBACK(thunderbird_contact_process_cb), NULL);
-
 	rm_addressbook_register(&thunderbird_book);
+
+	return TRUE;
 }
 
-void impl_deactivate(PeasActivatable *plugin)
+gboolean thunderbird_plugin_shutdown(RmPlugin *plugin)
 {
-	RmThunderbirdPlugin *thunderbird_plugin = RM_THUNDERBIRD_PLUGIN(plugin);
-
-	if (g_signal_handler_is_connected(G_OBJECT(rm_object), thunderbird_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(rm_object), thunderbird_plugin->priv->signal_id);
-	}
-
 	rm_addressbook_unregister(&thunderbird_book);
 	g_clear_object(&thunderbird_settings);
 
 	if (table) {
 		g_hash_table_destroy(table);
 	}
+
+	return TRUE;
 }
 
 void filename_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
-	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Select mab file"), settings_get_window(), GTK_FILE_CHOOSER_ACTION_OPEN, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Open"), GTK_RESPONSE_ACCEPT, NULL);
+	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Select mab file"), NULL, GTK_FILE_CHOOSER_ACTION_OPEN, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Open"), GTK_RESPONSE_ACCEPT, NULL);
 	GtkFileFilter *filter;
 	const gchar *book;
 	gchar *dir;
@@ -1059,7 +1045,7 @@ void filename_button_clicked_cb(GtkButton *button, gpointer user_data)
 	gtk_widget_destroy(dialog);
 }
 
-GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
+gpointer thunderbird_plugin_configure(RmPlugin *plugin)
 {
 	GtkWidget *grid = gtk_grid_new();
 	GtkWidget *group;
@@ -1083,7 +1069,9 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	gtk_grid_attach(GTK_GRID(grid), report_dir_entry, 1, 1, 1, 1);
 	gtk_grid_attach(GTK_GRID(grid), report_dir_button, 2, 1, 1, 1);
 
-	group = pref_group_create(grid, _("Contact book"), TRUE, FALSE);
+	group = ui_group_create(grid, _("Contact book"), TRUE, FALSE);
 
 	return group;
 }
+
+PLUGIN_CONFIG(thunderbird)

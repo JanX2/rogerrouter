@@ -36,21 +36,13 @@
 #include <rm/rmfile.h>
 #include <rm/rmrouter.h>
 #include <rm/rmsettings.h>
+#include <rm/rmnumber.h>
 
 #include <roger/main.h>
 #include <roger/settings.h>
 #include <roger/uitools.h>
 
 #include <vcard.h>
-
-#define RM_TYPE_VCARD_PLUGIN        (rm_vcard_plugin_get_type ())
-#define RM_VCARD_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_VCARD_PLUGIN, RmVCardPlugin))
-
-typedef struct {
-	guint signal_id;
-} RmVCardPluginPrivate;
-
-RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_VCARD_PLUGIN, RmVCardPlugin, rm_vcard_plugin)
 
 static GSList *contacts = NULL;
 
@@ -1172,7 +1164,7 @@ RmAddressBook vcard_book = {
 	vcard_save_contact
 };
 
-void impl_activate(PeasActivatable *plugin)
+gboolean vcard_plugin_init(RmPlugin *plugin)
 {
 	gchar *name;
 
@@ -1187,17 +1179,21 @@ void impl_activate(PeasActivatable *plugin)
 	vcard_load_file(name);
 
 	rm_addressbook_register(&vcard_book);
+
+	return TRUE;
 }
 
-void impl_deactivate(PeasActivatable *plugin)
+gboolean vcard_plugin_shutdown(RmPlugin *plugin)
 {
 	rm_addressbook_unregister(&vcard_book);
 	g_clear_object(&vcard_settings);
+
+	return TRUE;
 }
 
 void filename_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
-	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Select vcard file"), settings_get_window(), GTK_FILE_CHOOSER_ACTION_OPEN, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Open"), GTK_RESPONSE_ACCEPT, NULL);
+	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Select vcard file"), NULL, GTK_FILE_CHOOSER_ACTION_OPEN, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Open"), GTK_RESPONSE_ACCEPT, NULL);
 	GtkFileFilter *filter;
 
 	filter = gtk_file_filter_new();
@@ -1218,7 +1214,7 @@ void filename_button_clicked_cb(GtkButton *button, gpointer user_data)
 	gtk_widget_destroy(dialog);
 }
 
-GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
+gpointer vcard_plugin_configure(RmPlugin *plugin)
 {
 	GtkWidget *grid = gtk_grid_new();
 	GtkWidget *group;
@@ -1242,7 +1238,9 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	gtk_grid_attach(GTK_GRID(grid), report_dir_entry, 1, 1, 1, 1);
 	gtk_grid_attach(GTK_GRID(grid), report_dir_button, 2, 1, 1, 1);
 
-	group = pref_group_create(grid, _("Contact book"), TRUE, FALSE);
+	group = ui_group_create(grid, _("Contact book"), TRUE, FALSE);
 
 	return group;
 }
+
+PLUGIN_CONFIG(vcard)

@@ -1,7 +1,7 @@
 [Plugin]
-Module=vcard
-_Name=VCard
-_Description=VCard address book support
+Module=gstreamer
+Name=GStreamer 1.x plugin
+Comment=Audio plugin for GStreamer
 Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
 Copyright=Copyright © 2013 Jan-Michael Brummer
 Website=http://www.tabos.org/

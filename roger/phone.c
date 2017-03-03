@@ -947,6 +947,7 @@ void app_show_phone_window(RmContact *contact, RmConnection *connection)
 	if (roger_uses_headerbar()) {
 		/* Create header bar and set it to window */
 		gtk_header_bar_set_title(GTK_HEADER_BAR(phone_state->header_bar), phone_get_active_name());
+		gtk_header_bar_set_subtitle(GTK_HEADER_BAR(phone_state->header_bar), "");
 		gtk_window_set_titlebar(GTK_WINDOW(phone_state->window), phone_state->header_bar);
 	} else {
 		GtkWidget *grid = GTK_WIDGET(gtk_builder_get_object(builder, "phone_grid"));
