@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-03 14:06+0100\n"
+"POT-Creation-Date: 2017-03-03 15:25+0100\n"
 "PO-Revision-Date: 2016-09-17 21:39+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <>\n"
@@ -301,7 +301,7 @@ msgstr "Bild öffnen"
 
 #: roger/contacts.c:512 roger/settings.c:926 roger/plugins/google/google.c:98
 #: roger/plugins/thunderbird/thunderbird.c:1011
-#: roger/plugins/vcard/vcard.c:1196 roger/plugins/webjournal/webjournal.c:247
+#: roger/plugins/vcard/vcard.c:1196 roger/plugins/webjournal/webjournal.c:243
 msgid "_Cancel"
 msgstr "_Abbrechen"
 
@@ -1576,7 +1576,7 @@ msgid "Thunderbird file"
 msgstr "Thunderbird-Datei"
 
 #: roger/plugins/thunderbird/thunderbird.c:1062
-#: roger/plugins/vcard/vcard.c:1231 roger/plugins/webjournal/webjournal.c:280
+#: roger/plugins/vcard/vcard.c:1231 roger/plugins/webjournal/webjournal.c:276
 msgid "Select"
 msgstr "Auswählen"
 
@@ -1609,19 +1609,19 @@ msgstr "VCard"
 msgid "VCard address book support"
 msgstr "VCard Adressbuch-Support"
 
-#: roger/plugins/webjournal/webjournal.c:247
+#: roger/plugins/webjournal/webjournal.c:243
 msgid "Set HTML file"
 msgstr "HTML-Datei auswählen"
 
-#: roger/plugins/webjournal/webjournal.c:247
+#: roger/plugins/webjournal/webjournal.c:243
 msgid "_Save"
 msgstr "_Speichern"
 
-#: roger/plugins/webjournal/webjournal.c:276
+#: roger/plugins/webjournal/webjournal.c:272
 msgid "Web Journal output file"
 msgstr "Web Journal Ausgabedatei"
 
-#: roger/plugins/webjournal/webjournal.c:290
+#: roger/plugins/webjournal/webjournal.c:286
 #: roger/plugins/webjournal/webjournal.desktop.in:4
 msgid "Web Journal"
 msgstr "Web Journal"

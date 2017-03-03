@@ -17,8 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <config.h>
-
 #include <gtk/gtk.h>
 
 #include <pjsua-lib/pjsua.h>
@@ -38,18 +36,13 @@
 #include <roger/uitools.h>
 #include <roger/settings.h>
 
-#define RM_TYPE_SIP_PLUGIN (rm_sip_plugin_get_type ())
-#define RM_SIP_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_SIP_PLUGIN, RmSipPlugin))
-
 typedef struct {
 	RmNetEvent *net_event;
 
 	guint id;
 
 	RmDevice *device;
-} RmSipPluginPrivate;
-
-RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_SIP_PLUGIN, RmSipPlugin, rm_sip_plugin)
+} RmSipPlugin;
 
 struct sip_call {
 	gint id;
@@ -335,41 +328,47 @@ RmPhone sip_phone = {
  * \brief Activate plugin (add net event)
  * \param plugin peas plugin
  */
-static void impl_activate(PeasActivatable *plugin)
+static gboolean sip_plugin_init(RmPlugin *plugin)
 {
-	RmSipPlugin *sip_plugin = RM_SIP_PLUGIN(plugin);
+	RmSipPlugin *sip_plugin = g_slice_new0(RmSipPlugin);
+
+	plugin->priv = sip_plugin;
 
 	g_debug("%s(): sip", __FUNCTION__);
 
 	sip_settings = rm_settings_new_profile("org.tabos.roger.plugins.sip", "sip", (gchar*) rm_profile_get_name(rm_profile_get_active()));
 
 	/* Add network event */
-	sip_plugin->priv->net_event = rm_netmonitor_add_event("SIP", sip_connect, sip_disconnect, sip_plugin);
+	sip_plugin->net_event = rm_netmonitor_add_event("SIP", sip_connect, sip_disconnect, sip_plugin);
 
-	sip_plugin->priv->device = rm_device_register("SIP");
+	sip_plugin->device = rm_device_register("SIP");
 
-	sip_phone.device = sip_plugin->priv->device;
+	sip_phone.device = sip_plugin->device;
 
 	rm_phone_register(&sip_phone);
+
+	return TRUE;
 }
 
 /**
  * \brief Deactivate plugin (remote net event)
  * \param plugin peas plugin
  */
-static void impl_deactivate(PeasActivatable *plugin)
+static gboolean sip_plugin_shutdown(RmPlugin *plugin)
 {
-	RmSipPlugin *sip_plugin = RM_SIP_PLUGIN(plugin);
+	RmSipPlugin *sip_plugin = plugin->priv;
 
 	g_debug("%s(): sip", __FUNCTION__);
 	/* Remove network event */
-	rm_netmonitor_remove_event(sip_plugin->priv->net_event);
+	rm_netmonitor_remove_event(sip_plugin->net_event);
 	rm_phone_unregister(&sip_phone);
 
 	g_clear_object(&sip_settings);
+
+	return TRUE;
 }
 
-GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
+gpointer sip_plugin_configure(RmPlugin *plugin)
 {
 	GtkWidget *user_entry;
 	GtkWidget *password_entry;
@@ -412,3 +411,5 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 
 	return group;
 }
+
+PLUGIN_CONFIG(sip)

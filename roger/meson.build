@@ -90,8 +90,11 @@ i18n.merge_file(
 
 images = []
 images += 'images/app.png'
-
 install_data(images, install_dir : get_option('datadir') + '/roger/')
+
+images = []
+images += 'images/roger.svg'
+install_data(images, install_dir : get_option('datadir') + '/icons/hicolor/scalable/apps/')
 
 subdir('plugins')
 subdir('data')
