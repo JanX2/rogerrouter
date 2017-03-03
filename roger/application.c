@@ -202,7 +202,7 @@ static void preferences_activated(GSimpleAction *action, GVariant *parameter, gp
 	app_show_settings();
 }
 
-static void extensions_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+static void plugins_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
 	app_show_plugins();
 }
@@ -316,7 +316,7 @@ static void debug_activated(GSimpleAction *action, GVariant *parameter, gpointer
 static GActionEntry apps_entries[] = {
 	{"addressbook", addressbook_activated, NULL, NULL, NULL},
 	{"assistant", assistant_activated, NULL, NULL, NULL},
-	{"extensions", extensions_activated, NULL, NULL, NULL},
+	{"plugins", plugins_activated, NULL, NULL, NULL},
 	{"preferences", preferences_activated, NULL, NULL, NULL},
 	{"phone", dialnumber_activated, NULL, NULL, NULL},
 	{"copy_ip", copy_ip_activated, NULL, NULL, NULL},
@@ -401,13 +401,13 @@ static void app_init(GtkApplication *app)
 	section = g_menu_new();
 	g_menu_append(section, _("Copy IP address"), "app.copy_ip");
 	g_menu_append(section, _("Reconnect"), "app.reconnect");
-	g_menu_append(section, _("Debug"), "app.debug");
+	g_menu_append(section, _("Debug window"), "app.debug");
 	g_menu_append_submenu(menu, _("Functions"), G_MENU_MODEL(section));
 
 	g_menu_append(menu, _("Assistant"), "app.assistant");
 
 	section = g_menu_new();
-	g_menu_append(section, _("Extensions"), "app.extensions");
+	g_menu_append(section, _("Plugins"), "app.plugins");
 	g_menu_append(section, _("Preferences"), "app.preferences");
 	g_menu_append_section(menu, NULL, G_MENU_MODEL(section));
 

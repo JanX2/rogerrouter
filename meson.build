@@ -1,4 +1,4 @@
-project('roger', 'c', version : '1.10-pre1', license : 'GPL2', default_options : ['prefix=/usr'])
+project('roger', 'c', version : '1.90.0', license : 'GPL2')
 
 gnome = import('gnome')
 
@@ -6,14 +6,18 @@ msgfmt = find_program('msgfmt')
 
 add_global_arguments('-fdiagnostics-color=always', language : 'c')
 
-name = 'roger'
-version = '1.90'
+app_version = meson.project_version()
+
+version_arr = app_version.split('.')
+app_version_major = version_arr[0]
+app_version_minor = version_arr[1]
+app_version_micro = version_arr[2]
 
 cc = meson.get_compiler('c')
 
 cdata = configuration_data()
 cdata.set('PACKAGE_NAME', '"Roger Router"')
-cdata.set('PACKAGE_VERSION', '"@0@"'.format(version))
+cdata.set('PACKAGE_VERSION', '"@0@"'.format(app_version))
 cdata.set('PACKAGE_BUGREPORT', '"https://www.tabos.org/forum"')
 cdata.set('GETTEXT_PACKAGE', '"roger"')
 
@@ -54,4 +58,3 @@ subdir('roger-cli')
 subdir('platform')
 
 meson.add_install_script('meson_post_install.sh')
-

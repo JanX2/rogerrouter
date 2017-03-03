@@ -248,6 +248,7 @@
             <child>
               <object class="GtkLabel" id="contacts_sub_book_name_label">
                 <property name="visible">True</property>
+                <property name="sensitive">False</property>
                 <property name="can_focus">False</property>
                 <property name="valign">start</property>
                 <property name="label" translatable="yes">All contacts</property>

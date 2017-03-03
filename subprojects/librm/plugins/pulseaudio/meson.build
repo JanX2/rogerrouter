@@ -1,8 +1,12 @@
+pulseaudio = dependency('libpulse-simple', required: false)
+
+if pulseaudio.found()
+
 pulseaudio_sources = ['pulseaudio.c']
 
 pulseaudio_dep = []
 pulseaudio_dep += rm_dep
-pulseaudio_dep += dependency('libpulse-simple')
+pulseaudio_dep += pulseaudio
 
 libpulseaudio = shared_library('pulseaudio',
                         pulseaudio_sources,
@@ -17,3 +21,5 @@ custom_target('pulseaudio.plugin',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', rm_podir, '-o', '@OUTPUT@'],
     install : true,
     install_dir : rm_plugins_path + '/pulseaudio/')
+
+endif

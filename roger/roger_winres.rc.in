@@ -29,4 +29,4 @@ VS_VERSION_INFO VERSIONINFO
     END
   END
 
-104 ICON "../win32/roger.ico"
+104 ICON "../roger.ico"

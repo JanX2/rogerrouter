@@ -3,6 +3,19 @@ roger_gresources = gnome.compile_resources(
   source_dir : '.',
   c_name : '')
 
+cdata = configuration_data()
+cdata.set('PACKAGE_NAME', 'Roger Router')
+cdata.set('PACKAGE_VERSION', '@0@'.format(app_version))
+cdata.set('PACKAGE_BUGREPORT', '"https://www.tabos.org/forum"')
+cdata.set('ROGER_VERSION_MAJOR', app_version_major)
+cdata.set('ROGER_VERSION_MINOR', app_version_minor)
+cdata.set('ROGER_VERSION_MICRO', app_version_micro)
+cdata.set('VERSION', app_version)
+
+resfile = configure_file(input : 'roger_winres.rc.in',
+  output : 'roger_winres.rc',
+  configuration : cdata)
+
 sourcelist = []
 sourcelist += 'about.c'
 sourcelist += 'about.h'
@@ -44,7 +57,7 @@ sourcelist += roger_gresources
 
 if host_machine.system() == 'windows'
 win = import('windows')
-sourcelist += win.compile_resources('roger_winres.rc')
+sourcelist += win.compile_resources(resfile)
 endif
 
 roger_dep = []
@@ -55,21 +68,25 @@ roger_dep += dependency('spandsp')
 roger_dep += cc.find_library('m', required: true)
 roger_dep += rm_dep
 
-executable(name, sources : sourcelist, dependencies : roger_dep, include_directories : roger_inc, gui_app : true, install : true)
+executable('roger', sources : sourcelist, dependencies : roger_dep, include_directories : roger_inc, gui_app : true, install : true)
 
-custom_target('org.tabos.roger.desktop',
-    output : 'org.tabos.roger.desktop',
-    input : 'org.tabos.roger.desktop.in',
-    command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', podir, '-o', '@OUTPUT@'],
-    install : true,
-    install_dir : get_option('datadir') + '/applications',)
+i18n.merge_file(
+    input: 'org.tabos.roger.desktop.in',
+    output: 'org.tabos.roger.desktop',
+    type: 'desktop',
+    po_dir: '../po',
+    install: true,
+    install_dir: join_paths(get_option('datadir'), 'applications')
+)
 
-custom_target('org.tabos.roger.appdata.xml',
-    output : 'org.tabos.roger.appdata.xml',
-    input : 'org.tabos.roger.appdata.xml.in',
-    command : [msgfmt, '--xml', '--template', '@INPUT@', '-d', podir, '-o', '@OUTPUT@'],
-    install : true,
-    install_dir : get_option('datadir') + '/appdata',)
+i18n.merge_file(
+    input: 'org.tabos.roger.appdata.xml.in',
+    output: 'org.tabos.roger.appdata.xml',
+    type: 'xml',
+    po_dir: '../po',
+    install: true,
+    install_dir: join_paths(get_option('datadir'), 'appdata')
+)
 
 images = []
 images += 'images/app.png'

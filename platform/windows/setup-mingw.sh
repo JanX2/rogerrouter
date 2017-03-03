@@ -26,7 +26,7 @@ function build()
 	else
 		autoconf
 	fi
-	mingw64-configure
+	mingw32-configure
 	if [ $? -ne 0 ]; then
 		exit
 	fi
@@ -97,21 +97,21 @@ topdir=`pwd`/..
 windir=`pwd`
 
 # ********************* INFO *****************************
-echo "Cross-Compiling Roger Router for Windows 64-bit"
+echo "Cross-Compiling Roger Router for Windows 32-bit"
 
-# ********************* MINgw64 PACKAGES **************************
+# ********************* MINgw32 PACKAGES **************************
 
-# Install mingw64 tools
+# Install mingw32 tools
 
 if [ $# -eq 1 ]; then
 	if [ $1 == "setup" ]; then
-		sudo dnf install mingw64-atk mingw64-gettext mingw64-pkg-config mingw64-binutils mingw64-glib2 mingw64-termcap mingw64-bzip2 mingw64-gtk3 \
-			mingw64-wine-gecko mingw64-cairo mingw64-harfbuzz mingw64-win-iconv mingw64-cpp mingw64-headers mingw64-zlib mingw64-crt \
-			mingw64-icu mingw64-expat mingw64-jasper mingw64-filesystem mingw64-libffi mingw64-fontconfig mingw64-libjpeg-turbo \
-			mingw64-freetype mingw64-libpng mingw-binutils-generic mingw64-gcc-c++ mingw64-libxml2 mingw-filesystem-base \
-			mingw64-gcc mingw64-pango mingw64-gdk-pixbuf mingw64-pixman mingw64-libsoup mingw64-dlfcn mingw64-libtiff mingw64-pthreads \
-			mingw64-libogg mingw64-speex mingw64-librsvg2 mingw32-nsis mingw64-hicolor-icon-theme mingw64-gstreamer1-plugins-good mingw64-dlfcn mingw64-librsvg2\
-			flex bison python-devel wget gcc patch autoconf automake intltool libtool glib2-devel mingw64-filesystem mingw64-gcc mingw64-dlfcn mingw64-libtiff mingw64-libsoup mingw64-speex patch
+		sudo dnf install mingw32-atk mingw32-gettext mingw32-pkg-config mingw32-binutils mingw32-glib2 mingw32-termcap mingw32-bzip2 mingw32-gtk3 \
+			mingw32-wine-gecko mingw32-cairo mingw32-harfbuzz mingw32-win-iconv mingw32-cpp mingw32-headers mingw32-zlib mingw32-crt \
+			mingw32-icu mingw32-expat mingw32-jasper mingw32-filesystem mingw32-libffi mingw32-fontconfig mingw32-libjpeg-turbo \
+			mingw32-freetype mingw32-libpng mingw-binutils-generic mingw32-gcc-c++ mingw32-libxml2 mingw-filesystem-base \
+			mingw32-gcc mingw32-pango mingw32-gdk-pixbuf mingw32-pixman mingw32-libsoup mingw32-dlfcn mingw32-libtiff mingw32-pthreads \
+			mingw32-libogg mingw32-speex mingw32-librsvg2 mingw32-nsis mingw32-hicolor-icon-theme mingw32-gstreamer1-plugins-good mingw32-dlfcn mingw32-librsvg2\
+			flex bison python-devel wget gcc patch autoconf automake intltool libtool glib2-devel mingw32-filesystem mingw32-gcc mingw32-dlfcn mingw32-libtiff mingw32-libsoup mingw32-speex patch
 		sudo dnf install wine
 	fi
 fi

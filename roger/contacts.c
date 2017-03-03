@@ -1068,7 +1068,7 @@ static void contacts_contacts_changed_cb(RmObject *object, gpointer user_data)
 	g_free(name);
 
 	name = rm_addressbook_get_sub_name(contacts->book);
-	tmp = g_strdup_printf("<small>%s</small>", name);
+	tmp = g_strdup_printf("%s", name);
 	gtk_label_set_markup(GTK_LABEL(contacts->sub_book_name_label), tmp);
 	g_free(tmp);
 	g_free(name);
@@ -1169,7 +1169,7 @@ void app_contacts(RmContact *contact)
 
 	name = rm_addressbook_get_sub_name(book);
 	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(contacts_header_bar_left), name);
-	tmp = g_strdup_printf("<small>%s</small>", name);
+	tmp = g_strdup_printf("%s", name);
 	gtk_label_set_markup(GTK_LABEL(contacts->sub_book_name_label), tmp);
 	g_free(tmp);
 	g_free(name);

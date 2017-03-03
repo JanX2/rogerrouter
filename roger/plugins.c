@@ -31,7 +31,7 @@
 
 static GtkWidget *plugins_window = NULL;
 
-gboolean extensions_state_set_cb(GtkSwitch *widget, gboolean state, gpointer user_data)
+gboolean plugins_state_set_cb(GtkSwitch *widget, gboolean state, gpointer user_data)
 {
 	RmPlugin *plugin = user_data;
 
@@ -44,7 +44,7 @@ gboolean extensions_state_set_cb(GtkSwitch *widget, gboolean state, gpointer use
 	return FALSE;
 }
 
-static void extensions_about_clicked_cb(GtkWidget *button,
+static void plugins_about_clicked_cb(GtkWidget *button,
                                        gpointer   user_data)
 {
 	GtkListBoxRow *row = gtk_list_box_get_selected_row(GTK_LIST_BOX(user_data));
@@ -70,7 +70,7 @@ static void extensions_about_clicked_cb(GtkWidget *button,
 	gtk_widget_destroy(about);
 }
 
-static void extensions_help_clicked_cb(GtkWidget *button,
+static void plugins_help_clicked_cb(GtkWidget *button,
                                        gpointer   user_data)
 {
 	GtkListBoxRow *row = gtk_list_box_get_selected_row(GTK_LIST_BOX(user_data));
@@ -84,7 +84,7 @@ static void extensions_help_clicked_cb(GtkWidget *button,
 	rm_os_execute(plugin->help_url);
 }
 
-static void extensions_configure_clicked_cb(GtkWidget *button,
+static void plugins_configure_clicked_cb(GtkWidget *button,
                                        gpointer   user_data)
 {
 	GtkListBoxRow *row = gtk_list_box_get_selected_row(GTK_LIST_BOX(user_data));
@@ -115,7 +115,7 @@ static void extensions_configure_clicked_cb(GtkWidget *button,
 static GtkWidget *config_button = NULL;
 static GtkWidget *help_button = NULL;
 
-static void extensions_listbox_row_selected_cb(GtkListBox    *box,
+static void plugins_listbox_row_selected_cb(GtkListBox    *box,
                GtkListBoxRow *row,
                gpointer       user_data)
 {
@@ -170,7 +170,7 @@ void app_show_plugins(void)
 	gtk_window_set_default_size(GTK_WINDOW(plugins_window), 700, 350);
 
 	header = gtk_header_bar_new();
-	gtk_header_bar_set_title(GTK_HEADER_BAR(header), _("Configure extensions"));
+	gtk_header_bar_set_title(GTK_HEADER_BAR(header), _("Configure plugins"));
 	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
 	gtk_window_set_titlebar(GTK_WINDOW(plugins_window), header);
 	gtk_window_set_modal(GTK_WINDOW(plugins_window), TRUE);
@@ -216,7 +216,7 @@ void app_show_plugins(void)
 		gtk_widget_set_margin(on_switch, 6, 6, 3, 6);
 		gtk_widget_set_vexpand(on_switch, FALSE);
 		gtk_switch_set_active(GTK_SWITCH(on_switch), plugin->enabled);
-		g_signal_connect(G_OBJECT(on_switch), "state-set", G_CALLBACK(extensions_state_set_cb), plugin);
+		g_signal_connect(G_OBJECT(on_switch), "state-set", G_CALLBACK(plugins_state_set_cb), plugin);
 
 		gtk_widget_set_sensitive(on_switch, !plugin->builtin);
 		gtk_grid_attach(GTK_GRID(child), on_switch, 1, 0, 1, 2);
@@ -226,7 +226,7 @@ void app_show_plugins(void)
 		gtk_list_box_insert(GTK_LIST_BOX(listbox), child, -1);
 	}
 	gtk_container_add(GTK_CONTAINER(scroll_win), listbox);
-	g_signal_connect(listbox, "row-selected", G_CALLBACK(extensions_listbox_row_selected_cb), NULL);
+	g_signal_connect(listbox, "row-selected", G_CALLBACK(plugins_listbox_row_selected_cb), NULL);
 
 	toolbar = gtk_toolbar_new();
 	gtk_style_context_add_class(gtk_widget_get_style_context(toolbar), GTK_STYLE_CLASS_INLINE_TOOLBAR);
@@ -240,7 +240,7 @@ void app_show_plugins(void)
 
 	gtk_container_add(GTK_CONTAINER(item), config_button);
 
-	g_signal_connect(config_button, "clicked", G_CALLBACK(extensions_configure_clicked_cb), listbox);
+	g_signal_connect(config_button, "clicked", G_CALLBACK(plugins_configure_clicked_cb), listbox);
 	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, 0);
 
 	item = gtk_separator_tool_item_new();
@@ -261,14 +261,14 @@ void app_show_plugins(void)
 	help_button = button;
 	image = gtk_image_new_from_icon_name("dialog-information-symbolic", GTK_ICON_SIZE_BUTTON);
 	gtk_button_set_image(GTK_BUTTON(button), image);
-	g_signal_connect(help_button, "clicked", G_CALLBACK(extensions_about_clicked_cb), listbox);
+	g_signal_connect(help_button, "clicked", G_CALLBACK(plugins_about_clicked_cb), listbox);
 	gtk_box_pack_start(GTK_BOX(button_box), button, FALSE, FALSE, 0);
 
 	button = gtk_button_new();
 	help_button = button;
 	image = gtk_image_new_from_icon_name("help-faq-symbolic", GTK_ICON_SIZE_BUTTON);
 	gtk_button_set_image(GTK_BUTTON(button), image);
-	g_signal_connect(help_button, "clicked", G_CALLBACK(extensions_help_clicked_cb), listbox);
+	g_signal_connect(help_button, "clicked", G_CALLBACK(plugins_help_clicked_cb), listbox);
 	gtk_box_pack_start(GTK_BOX(button_box), button, FALSE, FALSE, 0);
 
 	gtk_grid_attach(GTK_GRID(grid), toolbar, 0, 1, 1, 1);

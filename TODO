@@ -1,16 +1,16 @@
 TODO
 ----------
-* Windows:
-    - Crash on closing plugins window
-    - Plugins window empty
-    - Contacts/Phone can only be opened once
-    - Settings signal handlers
-    - Terminal window pops up
-    - Open shortcuts window centered
+* Translation of extensions/plugins and about dialog
+* Default notification should be all instead none
+* "Ein Anruf wird gerade geführt"-Bug
 
-* Remove winmain (shouldn't be needed with GtkApplication and new lib) & uitools (use glade instead)
+
+* Windows
+-----------
+  * Printer installation
+  * Audio plugin test
+
 * Design Journal/Contacts/Phone with Glade
-
 
 * Areacodes plugin for every country (global list available as csv)
   (90% done, add special handling for countrys not starting with 0 indicator,
@@ -58,6 +58,5 @@ TODO
 * Distribution schema: Add default actions
 
 * wincred faults with empty password?
-
 
 * VCard crashes on file changes

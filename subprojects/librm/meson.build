@@ -84,9 +84,6 @@ install_dir : 'share/glib-2.0/schemas')
 subdir('po')
 subdir('rm')
 subdir('plugins')
-
-if get_option('enable-gtk-doc')
-subdir('docs')
-endif
+#subdir('docs')
 
 meson.add_install_script('meson_post_install.sh')

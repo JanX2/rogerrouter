@@ -52,9 +52,7 @@
 typedef struct {
 	guint signal_id;
 	GHashTable *table;
-} RmReverseLookupPluginPrivate;
-
-RM_PLUGIN_REGISTER(RM_TYPE_REVERSE_LOOKUP_PLUGIN, RmReverseLookupPlugin, rm_reverse_lookup_plugin)
+} RmReverseLookupPlugin;
 
 static GHashTable *table = NULL;
 /** Global lookup list */
@@ -538,13 +536,15 @@ RmLookup rl = {
  * \brief Activate plugin
  * \param plugin peas plugin
  */
-static void impl_activate(PeasActivatable *plugin)
+static gboolean reverselookup_plugin_init(RmPlugin *plugin)
 {
-	RmReverseLookupPlugin *reverselookup_plugin = RM_REVERSE_LOOKUP_PLUGIN(plugin);
+	RmReverseLookupPlugin *reverselookup_plugin = g_slice_new0(RmReverseLookupPlugin);
 	xmlnode *node, *child;
 	gchar *file;
 
-	reverselookup_plugin->priv->table = g_hash_table_new(g_str_hash, g_str_equal);
+	plugin->priv = reverselookup_plugin;
+
+	reverselookup_plugin->table = g_hash_table_new(g_str_hash, g_str_equal);
 	table = g_hash_table_new(g_str_hash, g_str_equal);
 
 	file = g_build_filename(g_get_home_dir(), "lookup.xml", NULL);
@@ -558,7 +558,7 @@ static void impl_activate(PeasActivatable *plugin)
 	if (!node) {
 		g_debug("Could not read %s", file);
 		g_free(file);
-		return;
+		return FALSE;
 	}
 	g_debug("ReverseLookup: '%s'", file);
 	g_free(file);
@@ -579,20 +579,26 @@ static void impl_activate(PeasActivatable *plugin)
 	xmlnode_free(node);
 
 	rm_lookup_register(&rl);
+
+	return TRUE;
 }
 
 /**
  * \brief Deactivate plugin
  * \param plugin peas plugin
  */
-static void impl_deactivate(PeasActivatable *plugin)
+static gboolean reverselookup_plugin_shutdown(RmPlugin *plugin)
 {
-	RmReverseLookupPlugin *reverselookup_plugin = RM_REVERSE_LOOKUP_PLUGIN(plugin);
+	RmReverseLookupPlugin *reverselookup_plugin = plugin->priv;
 
 	/* If signal handler is connected: disconnect */
-	if (g_signal_handler_is_connected(G_OBJECT(rm_object), reverselookup_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(rm_object), reverselookup_plugin->priv->signal_id);
+	if (g_signal_handler_is_connected(G_OBJECT(rm_object), reverselookup_plugin->signal_id)) {
+		g_signal_handler_disconnect(G_OBJECT(rm_object), reverselookup_plugin->signal_id);
 	}
 
 	rm_lookup_unregister(&rl);
+
+	return TRUE;
 }
+
+PLUGIN(reverselookup)

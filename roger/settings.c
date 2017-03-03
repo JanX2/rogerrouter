@@ -71,6 +71,9 @@ struct settings {
 	GtkWidget *fax_report_switch;
 	GtkWidget *fax_report_directory_chooser;
 	GtkWidget *fax_ecm_switch;
+	GtkWidget *fax_ghostscript_label;
+	GtkWidget *fax_ghostscript_file_chooser_button;
+
 	GtkWidget *view_call_type_icons_combobox;
 	GtkListStore *filter_liststore;
 	GtkListStore *actions_liststore;
@@ -1632,6 +1635,14 @@ void settings_notification_populate(GtkWidget *list_box)
 	}
 }
 
+void fax_ghostscript_file_chooser_button_file_set_cb(GtkWidget *button, gpointer user_data)
+{
+	RmProfile *profile = rm_profile_get_active();
+	gchar *file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(button));;
+
+	g_settings_set_string(profile->settings, "ghostscript", file);
+}
+
 void app_show_settings(void)
 {
 	GtkBuilder *builder;
@@ -1781,10 +1792,16 @@ void app_show_settings(void)
 	settings->fax_ecm_switch = GTK_WIDGET(gtk_builder_get_object(builder, "fax_ecm_switch"));
 	g_settings_bind(profile->settings, "fax-ecm", settings->fax_ecm_switch, "active", G_SETTINGS_BIND_DEFAULT);
 
-	/* Journal group */
-	//settings->view_call_type_icons_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "view_call_type_icons_combobox"));
-	//g_settings_bind(app_settings, "icon-type", settings->view_call_type_icons_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+//#if G_OS_WIN32
+	settings->fax_ghostscript_label = GTK_WIDGET(gtk_builder_get_object(builder, "fax_ghostscript_label"));
+	gtk_widget_set_no_show_all(settings->fax_ghostscript_label, FALSE);
+	settings->fax_ghostscript_file_chooser_button = GTK_WIDGET(gtk_builder_get_object(builder, "fax_ghostscript_file_chooser_button"));
+	gtk_widget_set_no_show_all(settings->fax_ghostscript_file_chooser_button, FALSE);
+	gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(settings->fax_ghostscript_file_chooser_button), g_settings_get_string(profile->settings, "ghostscript"));
+	g_signal_connect(G_OBJECT(settings->fax_ghostscript_file_chooser_button), "file-set", G_CALLBACK(fax_ghostscript_file_chooser_button_file_set_cb), NULL);
+//#endif
 
+	/* Journal group */
 	settings->filter_liststore = GTK_LIST_STORE(gtk_builder_get_object(builder, "filter_liststore"));
 	filter_refresh_list(settings->filter_liststore);
 
@@ -1798,12 +1815,6 @@ void app_show_settings(void)
 	settings->outgoing_call_begins_checkbutton = GTK_WIDGET(gtk_builder_get_object(builder, "outgoing_call_begins_checkbutton"));
 	settings->outgoing_call_ends_checkbutton = GTK_WIDGET(gtk_builder_get_object(builder, "outgoing_call_ends_checkbutton"));
 	action_refresh_list(settings->actions_liststore);
-
-	/* Plugins group - Workaround for Ubuntu 16.04 */
-	/*GtkWidget *tmp = GTK_WIDGET(gtk_builder_get_object(builder, "plugins_box"));
-	PeasEngine *peas = peas_engine_get_default();
-	GtkWidget *manager = peas_gtk_plugin_manager_new(peas);
-	gtk_box_pack_start(GTK_BOX(tmp), GTK_WIDGET(manager), TRUE, TRUE, 0);*/
 
 	/* Extended group */
 	settings->audio_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "audio_plugin_combobox"));
