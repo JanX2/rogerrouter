@@ -27,7 +27,7 @@
 
 G_BEGIN_DECLS
 
-#define _(text) gettext(text)
+#define R_(text) dgettext(RM_GETTEXT_PACKAGE, text)
 
 #define RM_SCHEME "org.tabos.rm"
 #define RM_SCHEME_PROFILE "org.tabos.rm.profile"

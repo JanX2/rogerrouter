@@ -59,6 +59,7 @@ cdata = configuration_data()
 cdata.set('RM_NAME', '"rm"')
 cdata.set('RM_VERSION', '"@0@"'.format(rm_version))
 cdata.set('RM_PLUGINS', '"' + rm_plugins_path + '"')
+cdata.set('RM_GETTEXT_PACKAGE', '"rm"')
 
 if ssdp_dep.found()
 cdata.set10('HAVE_SSDP', 1)
@@ -69,8 +70,10 @@ cdata.set10('HAVE_UUID', dconf_dep.found())
 
 if host_machine.system() == 'windows'
 	cdata.set10('RM_FAX_SERVER', 1)
+	cdata.set('APP_LOCALE', '"' + get_option('localedir') + '"')
 else
 	cdata.set10('RM_FAX_SPOOLER', 1)
+	cdata.set('APP_LOCALE', '"' + get_option('prefix') + '/' + get_option('localedir') + '"')
 endif
 
 configure_file(input : 'rmconfig.h.meson',

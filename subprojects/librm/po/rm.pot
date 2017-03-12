@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: rm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-28 15:12+0100\n"
+"POT-Creation-Date: 2017-03-05 14:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,12 +17,154 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: plugins/fritzbox/firmware-common.c:636
-#: plugins/fritzbox/firmware-common.c:767
+#: subprojects/librm/rm/rmaddressbook.c:321
+msgid "All contacts"
+msgstr ""
+
+#: subprojects/librm/rm/rmfaxspooler.c:211
+#, c-format
+msgid "Spooler directory %s does not exists!"
+msgstr ""
+
+#: subprojects/librm/rm/rmfaxspooler.c:219
+#, c-format
+msgid ""
+"Could not access spooler directory. Is user in group fax?\n"
+"%s"
+msgstr ""
+
+#: subprojects/librm/rm/rmfilter.c:547
+msgid "All calls"
+msgstr ""
+
+#: subprojects/librm/rm/rmfilter.c:551
+msgid "Incoming calls"
+msgstr ""
+
+#: subprojects/librm/rm/rmfilter.c:555
+msgid "Missed calls"
+msgstr ""
+
+#: subprojects/librm/rm/rmfilter.c:559
+msgid "Outgoing calls"
+msgstr ""
+
+#: subprojects/librm/rm/rmfilter.c:563
+msgid "Fax"
+msgstr ""
+
+#: subprojects/librm/rm/rmfilter.c:567
+msgid "Answering machine"
+msgstr ""
+
+#: subprojects/librm/rm/rmfilter.c:571
+msgid "Fax Report"
+msgstr ""
+
+#: subprojects/librm/rm/rmfilter.c:575
+msgid "Record"
+msgstr ""
+
+#: subprojects/librm/rm/rmfilter.c:579
+msgid "Blocked"
+msgstr ""
+
+#: subprojects/librm/rm/rmrouter.c:156 subprojects/librm/rm/rmrouter.c:157
+msgid ""
+"Login data are wrong or permissions are missing.\n"
+"Please check your login data."
+msgstr ""
+
+#: subprojects/librm/rm/rmrouter.c:157
+msgid "Login failed"
+msgstr ""
+
+#: subprojects/librm/plugins/fritzbox/firmware-common.c:637
+#: subprojects/librm/plugins/fritzbox/firmware-common.c:768
 msgid "FTP Login failed"
 msgstr ""
 
-#: plugins/fritzbox/firmware-common.c:636
-#: plugins/fritzbox/firmware-common.c:767
+#: subprojects/librm/plugins/fritzbox/firmware-common.c:637
+#: subprojects/librm/plugins/fritzbox/firmware-common.c:768
 msgid "Please check your ftp credentials"
+msgstr ""
+
+#: subprojects/librm/plugins/areacodes_global/areacodes_global.desktop.in:4
+msgid "Areacodes (Global)"
+msgstr ""
+
+#: subprojects/librm/plugins/areacodes_global/areacodes_global.desktop.in:5
+msgid "Display city name in journal"
+msgstr ""
+
+#: subprojects/librm/plugins/capi/capi.desktop.in:4
+msgid "CAPI"
+msgstr ""
+
+#: subprojects/librm/plugins/capi/capi.desktop.in:5
+msgid "Fax & phone support based on CAPI"
+msgstr ""
+
+#: subprojects/librm/plugins/fritzbox/fritzbox.desktop.in:4
+msgid "AVM FRITZ!Box"
+msgstr ""
+
+#: subprojects/librm/plugins/fritzbox/fritzbox.desktop.in:5
+msgid "FRITZ!Box router integration for firmware >= 04.74"
+msgstr ""
+
+#: subprojects/librm/plugins/gstreamer/gstreamer.desktop.in:4
+msgid "GStreamer 1.x plugin"
+msgstr ""
+
+#: subprojects/librm/plugins/gstreamer/gstreamer.desktop.in:5
+msgid "Audio plugin for GStreamer"
+msgstr ""
+
+#: subprojects/librm/plugins/portaudio/portaudio.desktop.in:4
+msgid "PortAudio plugin"
+msgstr ""
+
+#: subprojects/librm/plugins/portaudio/portaudio.desktop.in:5
+msgid "Audio plugin for PortAudio"
+msgstr ""
+
+#: subprojects/librm/plugins/pulseaudio/pulseaudio.desktop.in:4
+msgid "PulseAudio plugin"
+msgstr ""
+
+#: subprojects/librm/plugins/pulseaudio/pulseaudio.desktop.in:5
+msgid "Audio plugin for PulseAudio"
+msgstr ""
+
+#: subprojects/librm/plugins/reverselookup/reverselookup.desktop.in:4
+msgid "Reverse Lookup"
+msgstr ""
+
+#: subprojects/librm/plugins/reverselookup/reverselookup.desktop.in:5
+msgid "Reverse lookup through 3rd-party"
+msgstr ""
+
+#: subprojects/librm/plugins/secret/secret.desktop.in:4
+msgid "Secret"
+msgstr ""
+
+#: subprojects/librm/plugins/secret/secret.desktop.in:5
+msgid "Secret password storage"
+msgstr ""
+
+#: subprojects/librm/plugins/simple_pwd/simple_pwd.desktop.in:4
+msgid "Simple Password"
+msgstr ""
+
+#: subprojects/librm/plugins/simple_pwd/simple_pwd.desktop.in:5
+msgid "Simple password storage"
+msgstr ""
+
+#: subprojects/librm/plugins/wincred/wincred.desktop.in:4
+msgid "Windows Credentials"
+msgstr ""
+
+#: subprojects/librm/plugins/wincred/wincred.desktop.in:5
+msgid "Windows Credentials password storage"
 msgstr ""

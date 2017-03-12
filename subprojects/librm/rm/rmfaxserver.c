@@ -56,15 +56,16 @@ gpointer rm_faxserver_thread(gpointer data)
 		sock = g_socket_accept(server, NULL, &error);
 		g_assert_no_error(error);
 
-		file_name = g_strdup_printf("%s/fax-XXXXXX", g_get_tmp_dir());
+		file_name = g_build_filename(rm_get_user_cache_dir(), "fax-XXXXXX", NULL);
 		int file_id = g_mkstemp(file_name);
 
 		if (file_id == -1) {
-			g_warning("Can't open temporary file");
+			g_warning("%s(): Can't open temporary file '%s'", __FUNCTION__, file_name);
+			g_free(file_name);
 			continue;
 		}
 
-		g_debug("file: %s (%d)", file_name, file_id);
+		g_debug("%s(): file: %s (%d)", __FUNCTION__, file_name, file_id);
 
 		do {
 			len = g_socket_receive(sock, buffer, BUFFER_LENGTH, NULL, &error);
@@ -81,7 +82,8 @@ gpointer rm_faxserver_thread(gpointer data)
 		} while (len > 0);
 
 		if (len == 0) {
-			g_debug("Print job received on socket");
+			g_close(file_id);
+		 	g_debug("%s(): Print job received on socket (%s)", __FUNCTION__, file_name);
 
 			rm_object_emit_fax_process(file_name);
 		}

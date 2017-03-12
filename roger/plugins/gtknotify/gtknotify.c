@@ -30,15 +30,6 @@
 #include <roger/main.h>
 #include <roger/uitools.h>
 
-#define RM_TYPE_NOTIFICATION_GTK_PLUGIN (rm_notification_gtk_plugin_get_type ())
-#define RM_NOTIFICATION_GTK_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_NOTIFICATION_GTK_PLUGIN, RmNotificationGtkPlugin))
-
-typedef struct {
-	guint signal_id;
-} RmNotificationGtkPluginPrivate;
-
-RM_PLUGIN_REGISTER(RM_TYPE_NOTIFICATION_GTK_PLUGIN, RmNotificationGtkPlugin, rm_notification_gtk_plugin)
-
 /**
  * \brief Close notification_gtk window
  */
@@ -164,18 +155,24 @@ RmNotification gtknotify = {
  * \brief Activate plugin (init libnotify and connect to call-notify signal)
  * \param plugin peas plugin
  */
-void impl_activate(PeasActivatable *plugin)
+gboolean gtknotify_plugin_init(RmPlugin *plugin)
 {
 	g_debug("%s(): gtknotify", __FUNCTION__);
 	rm_notification_register(&gtknotify);
+
+	return TRUE;
 }
 
 /**
  * \brief Deactivate plugin
  * \param plugin peas plugin
  */
-void impl_deactivate(PeasActivatable *plugin)
+gboolean gtknotify_plugin_shutdown(RmPlugin *plugin)
 {
 	g_debug("%s(): gtknotify", __FUNCTION__);
 	rm_notification_unregister(&gtknotify);
+
+	return TRUE;
 }
+
+PLUGIN(gtknotify)

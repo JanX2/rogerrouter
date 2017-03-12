@@ -165,6 +165,9 @@ Section RogerRouter
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libvorbisenc-2.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libwavpack-1.dll"
 
+	SetOutPath "$INSTDIR\lib\gstreamer-1.0"
+	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/gstreamer-1.0/"
+
 	; Install data files
 	SetOutPath "$INSTDIR\etc"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/etc/fonts"
@@ -243,7 +246,7 @@ Section "Uninstall"
 	SetDetailsPrint textonly
 	DetailPrint "Removing Roger Router Fax printer"
 	SetDetailsPrint none
-	ExecWait 'rundll32 printui.dll,PrintUIEntry /dl /n "Roger Router (Fax)" /q'
+	ExecWait 'rundll32 printui.dll,PrintUIEntry /dl /n "Roger Router (Fax)"'
 
 	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\RogerRouter"
 SectionEnd
@@ -284,7 +287,7 @@ Section -ExecBatchFiles SEC15
 	SetDetailsPrint none
 
 	; Removing printers
-	ExecWait 'rundll32 printui.dll,PrintUIEntry /dl /n "Roger Router (Fax)" /q'
+	ExecWait 'rundll32 printui.dll,PrintUIEntry /q /dl /n "Roger Router (Fax)"'
 	sleep 2
 
 	;Display text above progress bar
@@ -293,7 +296,7 @@ Section -ExecBatchFiles SEC15
 	SetDetailsPrint none
 
 	; Installing printers
-	ExecWait 'rundll32 printui.dll,PrintUIEntry /if /b "Roger Router (Fax)" /f "$INSTDIR\ghostpdf.inf" /q /r "RogerRouterFax" /m "Ghostscript PDF" /z'
+	ExecWait 'rundll32 printui.dll,PrintUIEntry /if /b "Roger Router (Fax)" /f "$INSTDIR\ghostpdf.inf" /r "RogerRouterFax" /m "Ghostscript PDF" /z'
 	sleep 1
 
 	;Display text above progress bar
@@ -302,5 +305,9 @@ Section -ExecBatchFiles SEC15
 	SetDetailsPrint none
 
 	; Adding Printer comments
-	ExecWait 'rundll32 printui.dll,PrintUIEntry /Xs /q /n "Roger Router (Fax)" comment "Fax-Printer of Roger Router"  location "Router"'
+	ExecWait 'rundll32 printui.dll,PrintUIEntry /q /Xs /n "Roger Router (Fax)" comment "Fax-Printer of Roger Router"  location "Router"'
+
+	SetDetailsPrint textonly
+	DetailPrint "Installation completed"
+	SetDetailsPrint none
 SectionEnd

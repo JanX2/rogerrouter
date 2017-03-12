@@ -5,10 +5,12 @@
 #include <rm/rmmain.h>
 #include <rm/rmrouter.h>
 #include <rm/rmobjectemit.h>
+#include <rm/rmstring.h>
 
 #include <roger/contactsearch.h>
 #include <roger/contacts.h>
 #include <roger/icons.h>
+#include <roger/main.h>
 
 struct _ContactSearch {
 	GtkBox parent_instance;
@@ -152,6 +154,14 @@ static void contact_search_search_changed_cb(ContactSearch *widget, gpointer use
 
 	/* Add contacts to entry completion */
 	book = rm_profile_get_addressbook(rm_profile_get_active());
+	if (!book) {
+		GSList *book_plugins = rm_addressbook_get_plugins();
+
+		if (book_plugins) {
+			book = book_plugins->data;
+		}
+	}
+
 	contacts = rm_addressbook_get_contacts(book);
 
 	for (list = contacts; list; list = list->next) {
@@ -406,6 +416,10 @@ GtkWidget *contact_search_new(void)
 gchar *contact_search_get_number(ContactSearch *widget)
 {
 	gchar *number = g_object_get_data(G_OBJECT(widget->entry), "number");
+
+	if (RM_EMPTY_STRING(number)) {
+		number = (gchar*) gtk_entry_get_text(GTK_ENTRY(widget->entry));
+	}
 
 	return number;
 }

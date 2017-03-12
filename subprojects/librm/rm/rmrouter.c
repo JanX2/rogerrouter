@@ -153,8 +153,8 @@ gboolean rm_router_login(RmProfile *profile)
 
 	result = active_router->login(profile);
 	if (!result) {
-		g_warning(_("Login data are wrong or permissions are missing.\nPlease check your login data."));
-		rm_object_emit_message(_("Login failed"), _("Login data are wrong or permissions are missing.\nPlease check your login data."));
+		g_warning(R_("Login data are wrong or permissions are missing.\nPlease check your login data."));
+		rm_object_emit_message(R_("Login failed"), R_("Login data are wrong or permissions are missing.\nPlease check your login data."));
 		rm_router_login_blocked = TRUE;
 	}
 
@@ -459,7 +459,7 @@ void rm_router_process_journal(GSList *journal)
  */
 gchar *rm_router_load_fax(RmProfile *profile, const gchar *filename, gsize *len)
 {
-	return filename[0] == '/' ? rm_file_load((gchar*)filename, len) : active_router->load_fax(profile, filename, len);
+	return active_router->load_fax(profile, filename, len);
 }
 
 /**

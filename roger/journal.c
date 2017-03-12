@@ -69,7 +69,6 @@ static RmFilter *journal_filter = NULL;
 static RmFilter *journal_search_filter = NULL;
 static GtkWidget *spinner = NULL;
 static GMutex journal_mutex;
-static gboolean use_header = FALSE;
 
 gboolean roger_uses_headerbar(void)
 {
@@ -334,6 +333,8 @@ gpointer lookup_journal(gpointer user_data)
 	return NULL;
 }
 
+void filter_box_changed(GtkComboBox *box, gpointer user_data);
+
 void journal_loaded_cb(RmObject *obj, GSList *journal, gpointer unused)
 {
 	GSList *old;
@@ -342,6 +343,8 @@ void journal_loaded_cb(RmObject *obj, GSList *journal, gpointer unused)
 		g_debug("Journal loading already in progress");
 		return;
 	}
+
+	filter_box_changed(GTK_COMBO_BOX(journal_filter_box), NULL);
 
 	if (spinner && !gtk_widget_get_visible(spinner)) {
 		gtk_spinner_start(GTK_SPINNER(spinner));
@@ -548,27 +551,24 @@ void entry_icon_released(GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEven
 void filter_box_changed(GtkComboBox *box, gpointer user_data)
 {
 	const gchar *text = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(box));
-	GSList *filter_list = rm_filter_get_list(rm_profile_get_active());
+	RmProfile *profile = rm_profile_get_active();
+	GSList *filter_list;
 
-	if (!text) {
-		journal_filter = NULL;
-		journal_clear();
-		journal_redraw();
-		return;
-	}
+	journal_filter = NULL;
+	journal_clear();
 
-	while (filter_list) {
-		RmFilter *filter = filter_list->data;
+	if (text && profile) {
+		for (filter_list = rm_filter_get_list(profile); filter_list != NULL; filter_list = filter_list->next) {
+			RmFilter *filter = filter_list->data;
 
-		if (!strcmp(filter->name, text)) {
-			journal_filter = filter;
-			journal_clear();
-			journal_redraw();
-			break;
+			if (!strcmp(filter->name, text)) {
+				journal_filter = filter;
+				break;
+			}
 		}
-
-		filter_list = filter_list->next;
 	}
+
+	journal_redraw();
 }
 
 void journal_update_filter(void)
@@ -596,12 +596,17 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 
 	switch (call->type) {
 	case RM_CALL_ENTRY_TYPE_FAX_REPORT:
+		rm_os_execute(call->priv);
+		break;
 	case RM_CALL_ENTRY_TYPE_FAX: {
 		gsize len = 0;
-		gchar *data = rm_router_load_fax(rm_profile_get_active(), call->priv, &len);
+		gchar *data;
+
+		data = rm_router_load_fax(rm_profile_get_active(), call->priv, &len);
 
 		if (data && len) {
-			gchar *path = g_build_filename(g_get_user_cache_dir(), G_DIR_SEPARATOR_S, "fax.pdf", NULL);
+			gchar *path = g_build_filename(rm_get_user_cache_dir(), G_DIR_SEPARATOR_S, "fax.pdf", NULL);
+
 			rm_file_save(path, data, len);
 
 			rm_os_execute(path);
@@ -1052,14 +1057,7 @@ void journal_window(GApplication *app)
 		{"contacts-edit-address-work", contacts_add_detail_activated},
 	};
 
-	//int i = 0;
-	//g_printf("%d ", journal_hide_on_start / i);
-
 	journal_startup(app);
-
-	use_header = gtk_application_prefers_app_menu(GTK_APPLICATION(app));
-	g_debug("Use headerbar: %d", use_header);
-
 	journal_init_call_icon();
 
 	window = gtk_application_window_new(GTK_APPLICATION(app));

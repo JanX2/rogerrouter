@@ -26,6 +26,7 @@
 #define FAX_H
 
 #include <rm/rmconnection.h>
+#include <rm/rmfax.h>
 
 #define SPANDSP_EXPOSE_INTERNAL_STRUCTURES
 #include <spandsp.h>
@@ -71,6 +72,8 @@ struct fax_status {
 
 	fax_state_t *fax_state;
 };
+
+extern RmFax capi_fax;
 
 struct capi_connection *fax_send(gchar *tiff_file, gint modem, gint ecm, gint controller, gint cip, const gchar *src_no, const gchar *trg_no, const gchar *lsi, const gchar *local_header_info, gint call_anonymous);
 gint fax_recv(const gchar *tiff_file, gint modem, gint ecm, const gchar *src_no, gchar *trg_no, const gchar *lsi, const gchar *local_header_info, gint manual_hookup);

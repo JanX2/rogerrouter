@@ -207,6 +207,10 @@ static void rm_profile_load(const gchar *name)
  */
 void rm_profile_set_active(RmProfile *profile)
 {
+	if (rm_profile_active == profile) {
+		return;
+	}
+
 	/* Shut profile actions down */
 	rm_action_shutdown(rm_profile_active);
 

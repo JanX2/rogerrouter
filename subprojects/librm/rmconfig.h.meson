@@ -23,3 +23,7 @@
 
 /* Define whether to use the fax server */
 #mesondefine RM_FAX_SERVER
+
+#mesondefine RM_GETTEXT_PACKAGE
+
+#mesondefine APP_LOCALE

@@ -318,7 +318,7 @@ gchar *rm_addressbook_get_sub_name(RmAddressBook *book)
 		return g_strdup(book->get_active_book_name());
 	}
 
-	return g_strdup(_("All contacts"));
+	return g_strdup(R_("All contacts"));
 }
 
 /**

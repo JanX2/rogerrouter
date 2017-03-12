@@ -150,8 +150,13 @@ static void rm_netmonitor_state_changed(gboolean state)
 	} else {
 		RmProfile *profile;
 
-		/* Online: Try to detect active profile */
-		profile = rm_profile_detect();
+		/* Do not switch profile if transition is online -> online, get current active profile */
+		profile = rm_profile_get_active();
+		if (!profile) {
+			/* Online and no active profile: Try to detect active profile */
+			profile = rm_profile_detect();
+		}
+
 		if (profile) {
 			rm_profile_set_active(profile);
 

@@ -218,6 +218,9 @@ gboolean rm_new(gboolean debug, GError **error)
 	/* Init directory path */
 	rm_init_directory_paths();
 
+	bindtextdomain(RM_GETTEXT_PACKAGE, rm_get_directory(APP_LOCALE));
+	bind_textdomain_codeset(RM_GETTEXT_PACKAGE, "UTF-8");
+
 	/* Initialize logging system */
 	rm_log_init();
 	rm_log_set_debug(debug);

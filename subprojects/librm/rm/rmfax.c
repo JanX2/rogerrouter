@@ -124,6 +124,11 @@ RmFax *rm_fax_get(gchar *name)
 		}
 	}
 
+	/* Temporary workaround */
+	if (rm_fax_plugins) {
+		return rm_fax_plugins->data;
+	}
+
 	return NULL;
 }
 

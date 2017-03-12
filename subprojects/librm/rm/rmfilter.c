@@ -35,7 +35,6 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <gio/gio.h>
-#include <libintl.h>
 
 #include <rm/rmfile.h>
 #include <rm/rmcallentry.h>
@@ -545,39 +544,39 @@ void rm_filter_init(RmProfile *profile)
 	/* No self-made filters available, create standard filters */
 
 	/* All calls */
-	filter = rm_filter_new(profile, _("All calls"));
+	filter = rm_filter_new(profile, R_("All calls"));
 	rm_filter_rule_add(filter, 0, RM_CALL_ENTRY_TYPE_ALL, NULL);
 
 	/* Incoming calls */
-	filter = rm_filter_new(profile, _("Incoming calls"));
+	filter = rm_filter_new(profile, R_("Incoming calls"));
 	rm_filter_rule_add(filter, 0, RM_CALL_ENTRY_TYPE_INCOMING, NULL);
 
 	/* Missed calls */
-	filter = rm_filter_new(profile, _("Missed calls"));
+	filter = rm_filter_new(profile, R_("Missed calls"));
 	rm_filter_rule_add(filter, 0, RM_CALL_ENTRY_TYPE_MISSED, NULL);
 
 	/* Outgoing calls */
-	filter = rm_filter_new(profile, _("Outgoing calls"));
+	filter = rm_filter_new(profile, R_("Outgoing calls"));
 	rm_filter_rule_add(filter, 0, RM_CALL_ENTRY_TYPE_OUTGOING, NULL);
 
 	/* Fax */
-	filter = rm_filter_new(profile, _("Fax"));
+	filter = rm_filter_new(profile, R_("Fax"));
 	rm_filter_rule_add(filter, 0, RM_CALL_ENTRY_TYPE_FAX, NULL);
 
 	/* Answering machine */
-	filter = rm_filter_new(profile, _("Answering machine"));
+	filter = rm_filter_new(profile, R_("Answering machine"));
 	rm_filter_rule_add(filter, 0, RM_CALL_ENTRY_TYPE_VOICE, NULL);
 
 	/* Fax Report */
-	filter = rm_filter_new(profile, _("Fax Report"));
+	filter = rm_filter_new(profile, R_("Fax Report"));
 	rm_filter_rule_add(filter, 0, RM_CALL_ENTRY_TYPE_FAX_REPORT, NULL);
 
 	/* Voice Record */
-	filter = rm_filter_new(profile, _("Record"));
+	filter = rm_filter_new(profile, R_("Record"));
 	rm_filter_rule_add(filter, 0, RM_CALL_ENTRY_TYPE_RECORD, NULL);
 
 	/* Blocked calls */
-	filter = rm_filter_new(profile, _("Blocked"));
+	filter = rm_filter_new(profile, R_("Blocked"));
 	rm_filter_rule_add(filter, 0, RM_CALL_ENTRY_TYPE_BLOCKED, NULL);
 }
 

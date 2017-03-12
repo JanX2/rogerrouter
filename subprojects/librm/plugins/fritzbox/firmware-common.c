@@ -36,6 +36,7 @@
 #include <rm/rmobjectemit.h>
 #include <rm/rmfile.h>
 #include <rm/rmjournal.h>
+#include <rm/rmmain.h>
 
 #include "fritzbox.h"
 #include "firmware-common.h"
@@ -633,7 +634,7 @@ GSList *fritzbox_load_faxbox(GSList *journal)
 
 	if (!rm_ftp_login(client, user, rm_router_get_ftp_password(profile))) {
 		g_warning("Could not login to router ftp");
-		rm_object_emit_message(_("FTP Login failed"), _("Please check your ftp credentials"));
+		rm_object_emit_message(R_("FTP Login failed"), R_("Please check your ftp credentials"));
 		rm_ftp_shutdown(client);
 		return journal;
 	}
@@ -764,7 +765,7 @@ GSList *fritzbox_load_voicebox(GSList *journal)
 
 	if (!rm_ftp_login(client, user, rm_router_get_ftp_password(profile))) {
 		g_warning("Could not login to router ftp");
-		rm_object_emit_message(_("FTP Login failed"), _("Please check your ftp credentials"));
+		rm_object_emit_message(R_("FTP Login failed"), R_("Please check your ftp credentials"));
 		rm_ftp_shutdown(client);
 		return journal;
 	}

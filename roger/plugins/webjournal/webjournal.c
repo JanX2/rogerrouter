@@ -36,6 +36,7 @@
 
 #include <roger/settings.h>
 #include <roger/uitools.h>
+#include <roger/main.h>
 
 #include <webjournal.h>
 

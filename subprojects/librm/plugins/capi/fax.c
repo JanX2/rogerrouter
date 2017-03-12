@@ -664,17 +664,16 @@ RmConnection *capi_fax_dial(gchar *tiff, const gchar *trg_no, gboolean suppress)
 		g_debug("Using 'Analog Fax' id");
 	}
 
-	if (g_settings_get_boolean(profile->settings, "fax-sff")) {
-		g_warning("%s(): TODO", __FUNCTION__);
-		capi_connection = sff_send(tiff, modem, ecm, controller, src_no, target, ident, header, suppress);
-	} else {
-		g_warning("%s(): TODO", __FUNCTION__);
+	/* if (g_settings_get_boolean(profile->settings, "fax-sff")) { */
+	/* 	g_warning("%s(): TODO", __FUNCTION__); */
+	/* 	capi_connection = sff_send(tiff, modem, ecm, controller, src_no, target, ident, header, suppress); */
+	/* } else { */
 		capi_connection = fax_send(tiff, modem, ecm, controller, cip, src_no, target, ident, header, suppress);
-	}
+	/* } */
 	g_free(target);
 
 	if (capi_connection) {
-		connection = rm_connection_add(capi_device, capi_connection->id, RM_CONNECTION_TYPE_OUTGOING, src_no, trg_no);
+		connection = rm_connection_add(&capi_fax, capi_connection->id, RM_CONNECTION_TYPE_OUTGOING, src_no, trg_no);
 		connection->priv = capi_connection;
 	}
 
@@ -685,6 +684,10 @@ gboolean capi_fax_get_status(RmConnection *connection, RmFaxStatus *status)
 {
 	struct capi_connection *capi_connection = connection->priv;
 	struct fax_status *fax_status = capi_connection->priv;
+
+	if (!fax_status) {
+		return TRUE;
+	}
 
 	switch (fax_status->phase) {
 	case PHASE_B:

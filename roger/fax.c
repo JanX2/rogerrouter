@@ -36,6 +36,7 @@
 #include <roger/contacts.h>
 #include <roger/contactsearch.h>
 #include <roger/print.h>
+#include <roger/main.h>
 
 struct fax_ui {
 	GtkWidget *window;
@@ -46,10 +47,7 @@ struct fax_ui {
 	GtkWidget *sender_label;
 	GtkWidget *receiver_label;
 	GtkWidget *progress_bar;
-	//GtkWidget *contact_menu;
-	//GtkWidget *box;
 	GtkWidget *frame;
-	//GtkWidget *scrolled_win;
 
 	RmFax *fax;
 	RmFaxStatus status;
@@ -103,10 +101,10 @@ gboolean fax_status_timer_cb(gpointer user_data)
 		}
 
 		rm_fax_hangup(fax_ui->fax, fax_ui->connection);
-		return TRUE;
-		break;
+		fax_ui->status_timer_id = 0;
+		return G_SOURCE_REMOVE;
 	case FAX_PHASE_CALL:
-		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar),  _("Connecting..."));
+		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar),  _("Connecting…"));
 		break;
 	default:
 		g_debug("%s(): Unhandled phase (%d)", __FUNCTION__, fax_status->phase);
@@ -132,7 +130,7 @@ gboolean fax_status_timer_cb(gpointer user_data)
     g_free(buf);
 
 
-	return TRUE;
+	return G_SOURCE_CONTINUE;
 }
 
 void fax_dial_buttons_set_dial(struct fax_ui *fax_ui, gboolean allow_dial)
@@ -153,10 +151,12 @@ static void fax_connection_changed_cb(RmObject *object, gint event, RmConnection
 
 	if (event == RM_CONNECTION_TYPE_DISCONNECT) {
 		g_debug("%s(): cleanup", __FUNCTION__);
-		//g_unlink(fax_ui->file);
+		g_unlink(fax_ui->file);
 
-		g_source_remove(fax_ui->status_timer_id);
-		fax_ui->status_timer_id = 0;
+		if (fax_ui->status_timer_id) {
+			g_source_remove(fax_ui->status_timer_id);
+			fax_ui->status_timer_id = 0;
+		}
 
 		fax_status_timer_cb(fax_ui);
 
@@ -178,6 +178,7 @@ void fax_pickup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	}
 
 	if (RM_EMPTY_STRING(fax_ui->number)) {
+		g_debug("%s(): No number, exiting", __FUNCTION__);
 		return;
 	}
 
@@ -214,17 +215,17 @@ gboolean app_show_fax_window_idle(gpointer data)
 	GtkBuilder *builder;
 	RmProfile *profile = rm_profile_get_active();
 	struct fax_ui *fax_ui;
-	gchar *fax_file = data ? data : g_strdup("/home/jbrummer/jbrummer-Fax-ID21.tiff");
+	gchar *fax_file = data;
 
 	if (!profile) {
-		//g_unlink(fax_file);
+		g_unlink(fax_file);
 		return FALSE;
 	}
 
 	builder = gtk_builder_new_from_resource("/org/tabos/roger/fax.glade");
 	if (!builder) {
 		g_warning("Could not load fax ui");
-		//g_unlink(fax_file);
+		g_unlink(fax_file);
 		return FALSE;
 	}
 
@@ -293,6 +294,7 @@ gchar *convert_to_fax(gchar *file_name)
 	gchar *output;
 	gchar *out_file;
 	RmProfile *profile = rm_profile_get_active();
+	gint conv_ret_value;
 
 	/* convert ps to fax */
 #ifdef G_OS_WIN32
@@ -311,13 +313,17 @@ gchar *convert_to_fax(gchar *file_name)
 #ifdef FAX_SFF
 	if (g_settings_get_boolean(profile->settings, "fax-sff")) {
 		args[5] = "-sDEVICE=cfax";
-		out_file = g_strdup_printf("%s/%s.sff", g_get_user_cache_dir(), g_path_get_basename(file_name));
+		out_file = g_strdup_printf("%s/%s.sff", rm_get_user_cache_dir(), g_path_get_basename(file_name));
 	} else
 #endif
 	{
+		gchar *ofile = g_strdup_printf("%s.tif", g_path_get_basename(file_name));
 		args[5] = "-sDEVICE=tiffg4";
-		out_file = g_strdup_printf("%s/%s.tif", g_get_user_cache_dir(), g_path_get_basename(file_name));
+		out_file = g_build_filename(rm_get_user_cache_dir(), ofile, NULL);
+		g_free(ofile);
 	}
+
+	g_debug("%s(): out_file: '%s'", __FUNCTION__, out_file);
 
 	args[6] = "-dPDFFitPage";
 	args[7] = "-dMaxStripSize=0";
@@ -341,7 +347,7 @@ gchar *convert_to_fax(gchar *file_name)
 	args[11] = file_name;
 	args[12] = NULL;
 
-	if (!g_spawn_sync(NULL, args, NULL, G_SPAWN_SEARCH_PATH | G_SPAWN_STDOUT_TO_DEV_NULL | G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, NULL, NULL, NULL, &error)) {
+	if (!g_spawn_sync(NULL, args, NULL, G_SPAWN_SEARCH_PATH | G_SPAWN_CHILD_INHERITS_STDIN | G_SPAWN_LEAVE_DESCRIPTORS_OPEN /*| G_SPAWN_STDOUT_TO_DEV_NULL | G_SPAWN_STDERR_TO_DEV_NULL*/, NULL, NULL, NULL, NULL, &conv_ret_value, &error)) {
 		g_warning("%s(): Error occurred: %s", __FUNCTION__, error ? error->message : "");
 		g_free(args[0]);
 		g_free(out_file);
