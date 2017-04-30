@@ -52,10 +52,15 @@ RmLookup *rm_lookup_get(gchar *name)
 {
 	GSList *list;
 
+	if (!name) {
+		g_warning("%s(): requested invalid name", __FUNCTION__);
+		return NULL;
+	}
+
 	for (list = rm_lookup_plugins; list != NULL; list = list->next) {
 		RmLookup *lookup = list->data;
 
-		if (lookup && lookup->name && name && !strcmp(lookup->name, name)) {
+		if (lookup && lookup->name && !strcmp(lookup->name, name)) {
 			return lookup;
 		}
 	}
@@ -65,7 +70,6 @@ RmLookup *rm_lookup_get(gchar *name)
 
 /**
  * rm_lookup_search:
- * @lookup: a #RmLookup
  * @number: number to lookup
  * @contact: a #RmContact to store data to
  *
@@ -73,10 +77,16 @@ RmLookup *rm_lookup_get(gchar *name)
  *
  * Returns: %TRUE is lookup data has been found, otherwise %FALSE
  */
-gboolean rm_lookup_search(RmLookup *lookup, gchar *number, RmContact *contact)
+gboolean rm_lookup_search(gchar *number, RmContact *contact)
 {
-	if (lookup) {
-		return lookup->search(number, contact);
+	GSList *list;
+
+	for (list = rm_lookup_plugins; list != NULL; list = list->next) {
+		RmLookup *lookup = list->data;
+
+		if (lookup->search(number, contact)) {
+			return TRUE;
+		}
 	}
 
 	return FALSE;

@@ -30,6 +30,7 @@ rm_dep += dependency('libtiff-4')
 rm_dep += dependency('spandsp')
 rm_dep += dependency('json-glib-1.0')
 rm_dep += dependency('gmodule-2.0')
+rm_dep += dependency('sndfile')
 
 # Check for UPnP support
 upnp_dep = dependency('gupnp-1.0', required : false)
@@ -76,7 +77,7 @@ else
 	cdata.set('APP_LOCALE', '"' + get_option('prefix') + '/' + get_option('localedir') + '"')
 endif
 
-configure_file(input : 'rmconfig.h.meson',
+configure_file(
   output : 'rmconfig.h',
   configuration : cdata)
 

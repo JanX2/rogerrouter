@@ -20,3 +20,7 @@ custom_target('vcard.plugin',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', podir, '-o', '@OUTPUT@'],
     install : true,
     install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/vcard/')
+
+gnome.compile_schemas()
+install_data('org.tabos.roger.plugins.vcard.gschema.xml',
+install_dir : 'share/glib-2.0/schemas')

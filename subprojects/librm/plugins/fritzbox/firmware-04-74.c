@@ -454,10 +454,10 @@ gboolean fritzbox_get_settings_04_74(RmProfile *profile)
 	for (index = 0; index < PORT_MAX; index++) {
 		gchar *value;
 
-		value = xml_extract_input_value(data, fritzbox_phone_ports[index].name);
+		value = xml_extract_input_value(data, fritzbox_phone_ports[index].code_name);
 		if (value != NULL && strlen(value) > 0) {
 			g_debug("port %d: '%s'", index, value);
-			g_settings_set_string(profile->settings, rm_router_phone_ports[index].name, value);
+			g_settings_set_string(profile->settings, fritzbox_phone_ports[index].setting_name, value);
 		}
 		g_free(value);
 	}

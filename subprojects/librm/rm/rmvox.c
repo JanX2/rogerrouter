@@ -24,12 +24,14 @@
 #include <gio/gio.h>
 
 #include <speex/speex_callbacks.h>
+#include <sndfile.h>
 
 #include <rm/rmvox.h>
 #include <rm/rmaudio.h>
 #include <rm/rmobjectemit.h>
 #include <rm/rmmain.h>
 #include <rm/rmprofile.h>
+#include <rm/rmfile.h>
 
 /**
  * SECTION:rmvox
@@ -70,6 +72,9 @@ typedef struct _RmVoxPlayback {
 	gint fraction;
 	/** Current seconds */
 	gfloat seconds;
+
+	SNDFILE *sf;
+	SF_INFO info;
 } RmVoxPlayback;
 
 /**
@@ -193,6 +198,61 @@ static gpointer rm_vox_playback_thread(gpointer user_data)
 }
 
 /**
+ * rm_vox_sf_playback_thread:
+ * @user_data audio private pointer:
+ *
+ * Main playback thread
+ *
+ * Returns: %NULL
+ */
+static gpointer rm_vox_sf_playback_thread(gpointer user_data)
+{
+	RmVoxPlayback *playback = user_data;
+	gint num_read;
+	gshort buffer[80];
+
+	/* open audio device */
+	playback->audio_priv = rm_audio_open(playback->audio);
+	if (!playback->audio_priv) {
+		g_debug("%s(): Could not open audio device", __FUNCTION__);
+		g_slice_free(RmVoxPlayback, playback);
+
+		return NULL;
+	}
+
+	playback->offset = 0;
+	playback->cnt = 0;
+	playback->num_cnt = playback->info.frames;
+
+	gint len = 80;
+
+	sf_seek(playback->sf, 0, SEEK_SET);
+
+	/* Start playback */
+	while (playback->cnt < playback->num_cnt && !g_cancellable_is_cancelled(playback->cancel)) {
+		if (playback->state) {
+			/* We are in pause state, delay the loop to prevent high cpu load */
+			g_usleep(100);
+			continue;
+		}
+
+		num_read = sf_read_short(playback->sf, buffer, len);
+		/* Write data to audio device */
+		rm_audio_write(playback->audio, playback->audio_priv, (guchar *) buffer, num_read * 2);
+
+		playback->cnt += 80;
+
+		playback->fraction = playback->cnt * 100 / playback->num_cnt;
+		playback->seconds = (gfloat)((gfloat)(playback->cnt) / (gfloat)8000);
+	}
+
+	playback->thread = NULL;
+	rm_audio_close(playback->audio, playback->audio_priv);
+
+	return NULL;
+}
+
+/**
  * rm_vox_play:
  * @vox_data: pointer to vox playback data
  *
@@ -223,7 +283,11 @@ gboolean rm_vox_play(gpointer vox_data)
 	/* Start playback thread */
 	playback->state = FALSE;
 
-	playback->thread = g_thread_new("play vox", rm_vox_playback_thread, playback);
+	if (playback->speex) {
+		playback->thread = g_thread_new("play vox", rm_vox_playback_thread, playback);
+	} else {
+		playback->thread = g_thread_new("play vox", rm_vox_sf_playback_thread, playback);
+	}
 
 	return playback->thread != NULL;
 }
@@ -274,8 +338,14 @@ gboolean rm_vox_shutdown(gpointer vox_data)
 		g_thread_join(playback->thread);
 	}
 
-	/* Destroy speex decoder */
-	speex_decoder_destroy(playback->speex);
+	if (playback->speex) {
+		/* Destroy speex decoder */
+		speex_decoder_destroy(playback->speex);
+	}
+	if (playback->sf) {
+		sf_close(playback->sf);
+		playback->sf = NULL;
+	}
 
 	/* Close audio device */
 	playback->audio = NULL;
@@ -311,6 +381,12 @@ gboolean rm_vox_seek(gpointer vox_data, gdouble pos)
 
 	if (!playback) {
 		return FALSE;
+	}
+
+	if (playback->sf) {
+		sf_seek(playback->sf, pos * playback->num_cnt, SEEK_SET);
+		playback->cnt = pos;
+		return TRUE;
 	}
 
 	/* Get frame rate */
@@ -409,22 +485,33 @@ gpointer rm_vox_init(gchar *data, gsize len, GError **error)
 		return NULL;
 	}
 
-	/* Initialize speex decoder */
-	mode = speex_lib_get_mode(0);
+	if (!g_ascii_strncasecmp(data, "RIFF", 4)) {
+		rm_file_save("vox.wav", data, len);
+		playback->sf = sf_open("vox.wav", SFM_READ, &playback->info);
 
-	playback->speex = speex_decoder_init(mode);
-	if (!playback->speex) {
-		g_warning("%s(): Decoder initialization failed.", __FUNCTION__);
+		if (playback->info.format != (SF_FORMAT_WAV | SF_FORMAT_PCM_16)) {
+			g_debug("%s(): Not a valid WAVE file", __FUNCTION__);
+			return NULL;
+		}
+	} else {
 
-		g_slice_free(RmVoxPlayback, playback);
+		/* Initialize speex decoder */
+		mode = speex_lib_get_mode(0);
 
-		g_set_error(error, RM_ERROR, RM_ERROR_AUDIO, "%s", "Decoder initialization failed.");
+		playback->speex = speex_decoder_init(mode);
+		if (!playback->speex) {
+			g_warning("%s(): Decoder initialization failed.", __FUNCTION__);
 
-		return NULL;
+			g_slice_free(RmVoxPlayback, playback);
+
+			g_set_error(error, RM_ERROR, RM_ERROR_AUDIO, "%s", "Decoder initialization failed.");
+
+			return NULL;
+		}
+
+		rate = 8000;
+		speex_decoder_ctl(playback->speex, SPEEX_SET_SAMPLING_RATE, &rate);
 	}
-
-	rate = 8000;
-	speex_decoder_ctl(playback->speex, SPEEX_SET_SAMPLING_RATE, &rate);
 
 	/* Create cancellable */
 	playback->cancel = g_cancellable_new();

@@ -150,21 +150,22 @@ RmContact *rm_contact_find_by_number(gchar *number)
 		}
 	}
 
+	g_debug("%s(): type %d", __FUNCTION__, type);
 	if (type == -1) {
 		return contact;
 	}
 
 	switch (type) {
+	case PHONE_NUMBER_WORK:
+	case PHONE_NUMBER_FAX_WORK:
+	case PHONE_NUMBER_PAGER:
+		type = 1;
+		break;
 	case PHONE_NUMBER_HOME:
 	case PHONE_NUMBER_FAX_HOME:
 	case PHONE_NUMBER_MOBILE:
 	default:
 		type = 0;
-		break;
-	case PHONE_NUMBER_WORK:
-	case PHONE_NUMBER_FAX_WORK:
-	case PHONE_NUMBER_PAGER:
-		type = 1;
 		break;
 	}
 

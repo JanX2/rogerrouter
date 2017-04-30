@@ -193,6 +193,7 @@ static void rm_addressbook_contact_process_cb(RmObject *obj, RmContact *contact,
 	RmAddressBook *book = rm_profile_get_addressbook(rm_profile_get_active());
 	RmContact *tmp_contact;
 	GSList *contacts;
+	gchar *number = contact->number;
 
 	if (RM_EMPTY_STRING(contact->number)) {
 		/* Contact number is not present, abort */
@@ -231,6 +232,8 @@ static void rm_addressbook_contact_process_cb(RmObject *obj, RmContact *contact,
 
 		g_free(full_number);
 	}
+
+	contact->number = number;
 }
 
 /**

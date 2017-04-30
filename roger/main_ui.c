@@ -1,4 +1,4 @@
-/**
+/*
  * Roger Router
  * Copyright (c) 2012-2014 Jan-Michael Brummer
  *
@@ -36,20 +36,18 @@ GtkApplication *application_new(void);
 gchar *argv0 = NULL;
 
 /**
- * \brief Main function
- * \param argc argument count
- * \param argv argument vector
- * \return error code
+ * main:
+ * @argc: argument count
+ * @argv: argument vector
+ *
+ * Main function
+ *
+ * Returns: error code
  */
 int main(int argc, char **argv)
 {
 	int status;
 	int idx;
-
-	/* Set local bindings */
-	bindtextdomain(GETTEXT_PACKAGE, rm_get_directory(APP_LOCALE));
-	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
-	textdomain(GETTEXT_PACKAGE);
 
 	argv0 = g_strdup(argv[0]);
 

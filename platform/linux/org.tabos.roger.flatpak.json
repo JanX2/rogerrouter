@@ -1,5 +1,5 @@
 {
-  "app-id": "org.tabos.roger",
+  "id": "org.tabos.roger",
   "runtime": "org.gnome.Platform",
   "runtime-version": "3.22",
   "sdk": "org.gnome.Sdk",
@@ -26,11 +26,7 @@
      "--socket=pulseaudio"
   ],
   "build-options" : {
-        "cflags": "-O2 -g",
-        "cxxflags": "-O2 -g",
-        "env": {
-            "V": "1"
-        }
+        "cflags": "-O2 -g"
     },
   "cleanup": ["/include", "/lib/pkgconfig",
                 "/share/pkgconfig", "/share/aclocal",
@@ -65,8 +61,8 @@
       "sources": [
         {
           "type": "archive",
-          "url": "https://www.tabos.org/downloads/libcapi20-3.0.7.tar.bz2",
-          "sha256": "f36c7d1d8a46dd76b1e3443d6f5478ad16177d3f91c9f67bc654608167020293"
+          "url": "https://www.tabos.org/wp-content/uploads/2017/03/capi20-v3.tar.xz",
+          "sha256": "d6612fc5472cd40f56de4463975eae602dcab38dc285c0c7d4059a5a35a39724"
         }
       ]
     },
@@ -81,35 +77,25 @@
       ]
     },
     {
-      "name": "roger",
-      "buildsystem": "meson",
-      "builddir": true,
-      
+      "name": "meson",
+      "no-autogen": true,
       "sources": [
         {
           "type": "archive",
-          "path": "latest.tar.xz"
-        }
-      ],
-      "modules": [
+          "url": "https://github.com/mesonbuild/meson/releases/download/0.39.1/meson-0.39.1.tar.gz",
+          "sha256": "44885ccfef94d3d4afb1053fa6673ed130d3093fc9e9f6624d08161d8a385220"
+        },
         {
-          "name": "meson",
-          "no-autogen": true,
-          "cleanup": [ "/bin", "/lib" ],
-          "sources": [
-            {
-              "type": "archive",
-              "url": "https://github.com/mesonbuild/meson/releases/download/0.37.1/meson-0.37.1.tar.gz",
-              "sha256": "72516e25eaf9efd67fe8262ccba05e1e84731cc139101fcda7794aed9f68f55a"
-            },
-            {
-              "type": "file",
-              "path": "setuptools-makefile",
-              "dest-filename": "Makefile"
-            }
-          ]
+          "type": "file",
+          "path": "setuptools-makefile",
+          "dest-filename": "Makefile"
         }
       ]
+    },
+    {
+      "name": "roger",
+      "buildsystem": "meson",
+      "builddir": true
     }
   ]
 }

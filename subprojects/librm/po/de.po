@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: rm 1.90\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-05 14:54+0100\n"
+"POT-Creation-Date: 2017-03-20 17:55+0100\n"
 "PO-Revision-Date: 2016-09-17 21:39+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <>\n"
@@ -95,6 +95,19 @@ msgstr "FTP-Anmeldung fehlgeschlagen"
 msgid "Please check your ftp credentials"
 msgstr "Bitte überprüfe Deine FTP-Zugangsdaten"
 
+#: subprojects/librm/plugins/fritzbox/fritzbox.c:228
+#: subprojects/librm/plugins/fritzbox/fritzbox.c:263
+msgid "Phone dialer"
+msgstr "Wählhilfe"
+
+#: subprojects/librm/plugins/fritzbox/fritzbox.c:228
+msgid "Pickup phone when ringing"
+msgstr "Höhrer aufnehmen wenn es klingelt"
+
+#: subprojects/librm/plugins/capi/phone.c:573
+msgid "CAPI Softphone"
+msgstr "CAPI Softphone"
+
 #: subprojects/librm/plugins/areacodes_global/areacodes_global.desktop.in:4
 msgid "Areacodes (Global)"
 msgstr "Ortsvorwahl (Global)"
@@ -174,3 +187,9 @@ msgstr "Windows Credentials"
 #: subprojects/librm/plugins/wincred/wincred.desktop.in:5
 msgid "Windows Credentials password storage"
 msgstr "Windows Credentials Passwortspeicher"
+
+#~ msgid "Dial support"
+#~ msgstr "Wählhilfe"
+
+#~ msgid "Dialer phone"
+#~ msgstr "Wählhilfe"

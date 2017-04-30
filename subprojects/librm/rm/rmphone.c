@@ -74,7 +74,7 @@ RmConnection *rm_phone_dial(RmPhone *phone, const gchar *target, gboolean anonym
 		return NULL;
 	}
 
-	return phone->dial(target, anonymous);
+	return phone->dial(phone, target, anonymous);
 }
 
 /**

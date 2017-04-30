@@ -3,9 +3,9 @@ subdir('fritzfon')
 subdir('gnotification')
 subdir('google')
 
-if host_machine.system() == 'windows'
+#if host_machine.system() == 'windows'
 subdir('gtknotify')
-endif
+#endif
 
 subdir('indicator')
 subdir('keychain')

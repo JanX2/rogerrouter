@@ -75,6 +75,8 @@ RmCallEntry *rm_call_entry_new(enum rm_call_entry_types type, const gchar *date_
 	call_entry->remote->city = g_strdup("");
 	call_entry->priv = priv;
 
+	//g_debug("%s(): %d / %s / %s / %s", __FUNCTION__, call_entry->type, call_entry->date_time, call_entry->remote->number, call_entry->local->number);
+
 	return call_entry;
 }
 

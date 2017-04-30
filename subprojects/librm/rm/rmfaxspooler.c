@@ -208,7 +208,7 @@ gboolean rm_faxprinter_init(GError **error)
 	/* Check if spooler is present */
 	if (!g_file_test(spooler_dir, G_FILE_TEST_IS_DIR)) {
 		g_warning("%s(): Spooler directory %s does not exist!", __FUNCTION__, spooler_dir);
-		g_set_error(error, RM_ERROR, RM_ERROR_FAX, R_("Spooler directory %s does not exists!"), spooler_dir);
+		//g_set_error(error, RM_ERROR, RM_ERROR_FAX, R_("Spooler directory %s does not exists!"), spooler_dir);
 		g_free(spooler_dir);
 		return FALSE;
 	}
@@ -216,7 +216,7 @@ gboolean rm_faxprinter_init(GError **error)
 	dir = g_dir_open(spooler_dir,  0, &file_error);
 	if (!dir) {
 		g_warning("%s(): Could not access spooler directory. Is user in group fax?\n%s", __FUNCTION__, file_error ? file_error->message : "");
-		g_set_error(error, RM_ERROR, RM_ERROR_FAX, R_("Could not access spooler directory. Is user in group fax?\n%s"), file_error ? file_error->message : "");
+		//g_set_error(error, RM_ERROR, RM_ERROR_FAX, R_("Could not access spooler directory. Is user in group fax?\n%s"), file_error ? file_error->message : "");
 		g_free(spooler_dir);
 		return FALSE;
 	}

@@ -868,6 +868,7 @@ void book_item_toggled_cb(GtkWidget *widget, gpointer user_data)
 		g_debug("%s(): name %s", __FUNCTION__, name);
 		contacts->book = book;
 
+		rm_profile_set_addressbook(rm_profile_get_active(), book);
 		gchar *sub_name = (gchar*) name + strlen(rm_addressbook_get_name(book)) + 3;
 		g_debug("%s(): sub_book '%s'", __FUNCTION__, sub_name);
 

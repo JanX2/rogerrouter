@@ -251,9 +251,7 @@ gboolean rm_init(GError **error)
 	g_info("%s %s", RM_NAME, RM_VERSION);
 
 	/* Init fax printer */
-	if (!rm_faxprinter_init(error)) {
-		return FALSE;
-	}
+	rm_faxprinter_init(NULL);
 
 	/* Initialize network */
 	rm_network_init();

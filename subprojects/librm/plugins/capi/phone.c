@@ -36,6 +36,7 @@
 #include <rm/rmstring.h>
 #include <rm/rmnumber.h>
 #include <rm/rmobjectemit.h>
+#include <rm/rmmain.h>
 
 
 /* Close recording */
@@ -146,7 +147,7 @@ void capi_phone_transfer(struct capi_connection *connection, _cmsg capi_message)
  * \param anonymous anonymous flag (suppress number)
  * \return connection structure or NULL on error
  */
-static RmConnection *capi_phone_dial(const char *trg_no, gboolean anonymous)
+static RmConnection *capi_phone_dial(RmPhone *phone, const char *trg_no, gboolean anonymous)
 {
 	RmProfile *profile = rm_profile_get_active();
 	gint controller = g_settings_get_int(profile->settings, "phone-controller") + 1;
@@ -559,7 +560,7 @@ void capi_phone_conference(RmConnection *connection_active, RmConnection *connec
 
 RmPhone capi_phone = {
 	NULL,
-	"CAPI Phone",
+	"CAPI Softphone",
 	capi_phone_dial,
 	capi_phone_pickup,
 	capi_phone_hangup,
@@ -570,6 +571,7 @@ RmPhone capi_phone = {
 
 void capi_phone_init(RmDevice *device)
 {
+	capi_phone.name = R_("CAPI Softphone");
 	capi_phone.device = device;
 
 	rm_phone_register(&capi_phone);

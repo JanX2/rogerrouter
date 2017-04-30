@@ -18,6 +18,7 @@
  */
 
 #include <glib.h>
+#include <glib/gstdio.h>
 
 #include <unistd.h>
 #include <errno.h>
@@ -82,7 +83,7 @@ gpointer rm_faxserver_thread(gpointer data)
 		} while (len > 0);
 
 		if (len == 0) {
-			g_close(file_id);
+			g_close(file_id, &error);
 		 	g_debug("%s(): Print job received on socket (%s)", __FUNCTION__, file_name);
 
 			rm_object_emit_fax_process(file_name);

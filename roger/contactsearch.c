@@ -74,13 +74,15 @@ static gchar *fax_number_type_to_string(enum phone_number_type type)
 	return tmp;
 }
 
-static void contact_search_set_contact(ContactSearch *widget, RmContact *contact, gboolean identify)
+void contact_search_set_contact(ContactSearch *widget, RmContact *contact, gboolean identify)
 {
 	RmContact *search_contact;
 
 	if (!widget || !contact) {
 		return;
 	}
+
+	widget->discard = TRUE;
 
 	if (identify) {
 		/* Copy contact and try to identify it */
@@ -111,7 +113,6 @@ static void contact_search_set_contact_by_row(ContactSearch *widget, GtkListBoxR
 
 	contact = g_object_get_data(G_OBJECT(grid), "contact");
 	contact->number = number;
-	widget->discard = TRUE;
 	contact_search_set_contact(widget, contact, FALSE);
 
 	gtk_widget_hide(widget->menu);
@@ -162,6 +163,9 @@ static void contact_search_search_changed_cb(ContactSearch *widget, gpointer use
 		}
 	}
 
+	if (book) {
+		g_debug("%s(): book '%s'", __FUNCTION__, rm_addressbook_get_name(book));
+	}
 	contacts = rm_addressbook_get_contacts(book);
 
 	for (list = contacts; list; list = list->next) {
@@ -400,8 +404,7 @@ static void contact_search_init(ContactSearch *widget)
 	gtk_widget_set_sensitive(text, FALSE);
 	gtk_grid_attach(GTK_GRID(placeholder), text, 0, 1, 1, 1);
 
-	gtk_widget_show_all(placeholder);
-	gtk_list_box_set_placeholder(GTK_LIST_BOX(widget->box), placeholder);
+ 	gtk_list_box_set_placeholder(GTK_LIST_BOX(widget->box), placeholder);
 	gtk_list_box_set_filter_func(GTK_LIST_BOX(widget->box), contact_search_filter_cb, widget, NULL);
 	gtk_container_add(GTK_CONTAINER(widget->scrolled_win), widget->box);
 	g_signal_connect(G_OBJECT(widget->box), "row-activated", G_CALLBACK(contact_search_list_box_activated_cb), widget);
@@ -422,4 +425,20 @@ gchar *contact_search_get_number(ContactSearch *widget)
 	}
 
 	return number;
+}
+
+void contact_search_clear(ContactSearch *widget)
+{
+	gtk_entry_set_text(GTK_ENTRY(widget->entry), "");
+}
+
+void contact_search_set_text(ContactSearch *widget,
+                             gchar         *text)
+{
+	gtk_entry_set_text(GTK_ENTRY(widget->entry), text);
+}
+
+const gchar *contact_search_get_text(ContactSearch *widget)
+{
+	return gtk_entry_get_text(GTK_ENTRY(widget->entry));
 }

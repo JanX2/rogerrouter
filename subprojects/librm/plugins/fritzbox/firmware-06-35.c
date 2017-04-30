@@ -83,7 +83,7 @@ static void fritzbox_detect_controller_06_35(RmProfile *profile, const gchar *da
 	gint type = 4;
 
 	for (index = 0; index < PORT_MAX; index++) {
-		if (!RM_EMPTY_STRING(rm_router_phone_ports[index].name)) {
+		if (!RM_EMPTY_STRING(fritzbox_phone_ports[index].setting_name)) {
 			if (index < PORT_ISDNALL) {
 				/* Analog */
 				type = 3;
@@ -321,7 +321,7 @@ void fritzbox_extract_phone_names_06_35(RmProfile *profile, const gchar *data, g
 			for (index = 0; index < PORT_MAX; index++) {
 				if (fritzbox_phone_ports[index].number == val) {
 					g_debug("Port %d: '%s'", index, name);
-					g_settings_set_string(profile->settings, rm_router_phone_ports[index].name, name);
+					g_settings_set_string(profile->settings, fritzbox_phone_ports[index].setting_name, name);
 				}
 			}
 		}

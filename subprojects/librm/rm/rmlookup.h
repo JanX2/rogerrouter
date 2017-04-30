@@ -30,7 +30,7 @@ typedef struct {
 } RmLookup;
 
 RmLookup *rm_lookup_get(gchar *name);
-gboolean rm_lookup_search(RmLookup *lookup, gchar *number, RmContact *contact);
+gboolean rm_lookup_search(gchar *number, RmContact *contact);
 gboolean rm_lookup_register(RmLookup *lookup);
 gboolean rm_lookup_unregister(RmLookup *lookup);
 

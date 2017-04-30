@@ -27,40 +27,7 @@
 G_BEGIN_DECLS
 
 #define ROUTER_ENABLE_TELNET	"#96*5*"
-#define ROUTER_ENABLE_CAPI		"#96*3*"
-
-enum phone_ports {
-	PORT_SOFTPHONE,
-	PORT_ANALOG1,
-	PORT_ANALOG2,
-	PORT_ANALOG3,
-	PORT_ISDNALL,
-	PORT_ISDN1,
-	PORT_ISDN2,
-	PORT_ISDN3,
-	PORT_ISDN4,
-	PORT_ISDN5,
-	PORT_ISDN6,
-	PORT_ISDN7,
-	PORT_ISDN8,
-	PORT_DECT1,
-	PORT_DECT2,
-	PORT_DECT3,
-	PORT_DECT4,
-	PORT_DECT5,
-	PORT_DECT6,
-	PORT_IP1,
-	PORT_IP2,
-	PORT_IP3,
-	PORT_IP4,
-	PORT_IP5,
-	PORT_IP6,
-	PORT_IP7,
-	PORT_IP8,
-	PORT_IP9,
-	PORT_IP10,
-	PORT_MAX
-};
+#define ROUTER_ENABLE_CAPI	"#96*3*"
 
 enum phone_number_type {
 	PHONE_NUMBER_HOME,
@@ -86,39 +53,13 @@ typedef struct {
 } RmPhoneNumber;
 
 typedef struct {
-	gchar *name;
-	gint type;
-	gint number;
-} RmPhonePort;
-
-#if 0
-typedef struct {
-	gchar *host;
-	gchar *user;
-	gchar *password;
-	gchar *name;
-	gchar *version;
-	gchar *serial;
-	gchar *session_id;
-	gchar *lang;
-	gchar *annex;
-
-	/* Extend */
-	gint box_id;
-	gint maj_ver_id;
-	gint min_ver_id;
-	GTimer *session_timer;
-} RmRouterInfo;
-#endif
-
-typedef struct {
 	const gchar *name;
 	gboolean (*present)(RmRouterInfo *router_info);
 	void (*set_active)(RmProfile *profile);
 	gboolean (*login)(RmProfile *profile);
 	gboolean (*logout)(RmProfile *profile, gboolean force);
 	gboolean (*get_settings)(RmProfile *profile);
-	gboolean (*load_journal)(RmProfile *profile, gchar **data);
+	gboolean (*load_journal)(RmProfile *profile);
 	gboolean (*clear_journal)(RmProfile *profile);
 	gboolean (*dial_number)(RmProfile *profile, gint port, const gchar *number);
 	gboolean (*hangup)(RmProfile *profile, gint port, const gchar *number);
@@ -128,9 +69,8 @@ typedef struct {
 	gboolean (*reconnect)(RmProfile *profile);
 	gboolean (*delete_fax)(RmProfile *profile, const gchar *filename);
 	gboolean (*delete_voice)(RmProfile *profile, const gchar *filename);
+	gboolean (*need_ftp)(RmProfile *profile);
 } RmRouter;
-
-extern RmPhonePort rm_router_phone_ports[PORT_MAX];
 
 gboolean rm_router_present(RmRouterInfo *router_info);
 gboolean rm_router_login(RmProfile *profile);
@@ -186,6 +126,8 @@ gboolean rm_router_get_suppress_state(RmProfile *profile);
 
 void rm_router_release_lock(void);
 gboolean rm_router_is_locked(void);
+
+gboolean rm_router_need_ftp(RmProfile *profile);
 
 
 G_END_DECLS

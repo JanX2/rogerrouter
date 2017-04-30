@@ -1,4 +1,4 @@
-/**
+/*
  * Roger Router
  * Copyright (c) 2012-2014 Jan-Michael Brummer
  *
@@ -88,57 +88,6 @@ void journal_clear(void)
 	list_store = g_object_get_data(G_OBJECT(journal_win), "list_store");
 
 	gtk_list_store_clear(list_store);
-}
-
-GdkPixbuf *pixbuf_copy_mirror(GdkPixbuf *src)
-{
-	GdkPixbuf *dest;
-	gint has_alpha;
-	gint w, h, srs;
-	gint drs;
-	guchar *s_pix;
-	guchar *d_pix;
-	guchar *sp;
-	guchar *dp;
-	gint i, j;
-	gint a;
-
-	if (!src) {
-		return NULL;
-	}
-
-	w = gdk_pixbuf_get_width(src);
-	h = gdk_pixbuf_get_height(src);
-	has_alpha = gdk_pixbuf_get_has_alpha(src);
-	srs = gdk_pixbuf_get_rowstride(src);
-	s_pix = gdk_pixbuf_get_pixels(src);
-
-	dest = gdk_pixbuf_new(GDK_COLORSPACE_RGB, has_alpha, 8, w, h);
-	drs = gdk_pixbuf_get_rowstride(dest);
-	d_pix = gdk_pixbuf_get_pixels(dest);
-
-	a = has_alpha ? 4 : 3;
-
-	for (i = 0; i < h; i++) {
-		sp = s_pix + (i * srs);
-		dp = d_pix + (i * drs);
-
-		dp += (w - 1) * a;
-
-		for (j = 0; j < w; j++) {
-			*(dp++) = *(sp++);	/* r */
-			*(dp++) = *(sp++);	/* g */
-			*(dp++) = *(sp++);	/* b */
-
-			if (has_alpha) {
-				*(dp) = *(sp++);	/* a */
-			}
-
-			dp -= (a + 3);
-		}
-	}
-
-	return dest;
 }
 
 void journal_init_call_icon(void)
@@ -317,13 +266,12 @@ gpointer lookup_journal(gpointer user_data)
 
 	for (list = journal; list; list = list->next) {
 		RmCallEntry *call = list->data;
-		RmLookup *lookup = rm_profile_get_lookup(rm_profile_get_active());
 
 		if (!RM_EMPTY_STRING(call->remote->name)) {
 			continue;
 		}
 
-		if (rm_lookup_search(lookup, call->remote->number, call->remote)) {
+		if (rm_lookup_search(call->remote->number, call->remote)) {
 			call->remote->lookup = TRUE;
 		}
 	}
@@ -1315,6 +1263,8 @@ void journal_window(GApplication *app)
 	if (!journal_hide_on_start) {
 		gtk_widget_show(GTK_WIDGET(window));
 	}
+
+	//rm_router_load_journal(rm_profile_get_active());
 
 #ifdef FAX_DBEUG
 	extern gboolean app_show_fax_window_idle(gpointer data);

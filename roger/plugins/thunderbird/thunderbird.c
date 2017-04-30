@@ -972,13 +972,33 @@ gchar *thunderbird_get_active_book_name(void)
 	return g_strdup("Thunderbird");
 }
 
+
+gchar **thunderbird_get_sub_books(void)
+{
+	gchar **ret = NULL;
+	const gchar *name = thunderbird_get_selected_book();
+
+	if (name) {
+		ret = rm_strv_add(ret, name);
+	}
+
+	return ret;
+}
+
+gboolean thunderbird_set_sub_book(gchar *name)
+{
+	return TRUE;
+}
+
 RmAddressBook thunderbird_book = {
 	"Thunderbird",
 	thunderbird_get_active_book_name,
 	thunderbird_get_contacts,
 	thunderbird_reload_contacts,
 	NULL,//thunderbird_remove_contact,
-	NULL//thunderbird_save_contact
+	NULL,//thunderbird_save_contact,
+	thunderbird_get_sub_books,
+	thunderbird_set_sub_book
 };
 
 gboolean thunderbird_plugin_init(RmPlugin *plugin)

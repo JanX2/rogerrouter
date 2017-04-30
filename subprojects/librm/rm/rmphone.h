@@ -33,7 +33,7 @@ typedef struct _RmPhone RmPhone;
 struct _RmPhone {
 	RmDevice *device;
 	gchar *name;
-	RmConnection *(*dial)(const gchar *target, gboolean anonymous);
+	RmConnection *(*dial)(RmPhone *phone, const gchar *target, gboolean anonymous);
 	gint (*pickup)(RmConnection *connection);
 	void (*hangup)(RmConnection *connection);
 	void (*hold)(RmConnection *connection, gboolean hold);

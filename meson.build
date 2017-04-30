@@ -1,4 +1,4 @@
-project('roger', 'c', version : '1.90.3', license : 'GPL2')
+project('roger', 'c', version : '1.90.5', license : 'GPL2')
 
 gnome = import('gnome')
 
@@ -43,7 +43,7 @@ foreach h : check_headers
   endif
 endforeach
 
-configure_file(input : 'config.h.meson',
+configure_file(
   output : 'config.h',
   configuration : cdata)
 
@@ -60,3 +60,6 @@ subdir('roger-cli')
 subdir('platform')
 
 meson.add_install_script('meson_post_install.sh')
+
+#rpm = import('rpm')
+#rpm.generate_spec_template()

@@ -38,37 +38,6 @@ static GSList *rm_router_list = NULL;
 /** Router login blocked shield */
 static gboolean rm_router_login_blocked = FALSE;
 
-/** Mapping between config value and port type */
-RmPhonePort rm_router_phone_ports[PORT_MAX] = {
-	{"name-analog1", PORT_ANALOG1, -1},
-	{"name-analog2", PORT_ANALOG2, -1},
-	{"name-analog3", PORT_ANALOG3, -1},
-	{"name-isdn1", PORT_ISDN1, -1},
-	{"name-isdn2", PORT_ISDN2, -1},
-	{"name-isdn3", PORT_ISDN3, -1},
-	{"name-isdn4", PORT_ISDN4, -1},
-	{"name-isdn5", PORT_ISDN5, -1},
-	{"name-isdn6", PORT_ISDN6, -1},
-	{"name-isdn7", PORT_ISDN7, -1},
-	{"name-isdn8", PORT_ISDN8, -1},
-	{"name-dect1", PORT_DECT1, -1},
-	{"name-dect2", PORT_DECT2, -1},
-	{"name-dect3", PORT_DECT3, -1},
-	{"name-dect4", PORT_DECT4, -1},
-	{"name-dect5", PORT_DECT5, -1},
-	{"name-dect6", PORT_DECT6, -1},
-	{"name-sip0", PORT_IP1, -1},
-	{"name-sip1", PORT_IP2, -1},
-	{"name-sip2", PORT_IP3, -1},
-	{"name-sip3", PORT_IP4, -1},
-	{"name-sip4", PORT_IP5, -1},
-	{"name-sip5", PORT_IP6, -1},
-	{"name-sip6", PORT_IP7, -1},
-	{"name-sip7", PORT_IP8, -1},
-	{"name-sip8", PORT_IP9, -1},
-	{"name-sip9", PORT_IP10, -1}
-};
-
 /**
  * \brief Free one phone list entry
  * \param data pointer to phone structure
@@ -340,8 +309,7 @@ const gchar *rm_router_get_version(RmProfile *profile)
  */
 gboolean rm_router_load_journal(RmProfile *profile)
 {
-	g_debug("%s(): %p", __FUNCTION__, active_router);
-	return active_router ? active_router->load_journal(profile, NULL) : FALSE;
+	return active_router ? active_router->load_journal(profile) : FALSE;
 }
 /**
  * \brief Clear router journal
@@ -687,4 +655,9 @@ GSList *rm_router_load_voice_records(RmProfile *profile, GSList *journal)
 gboolean rm_router_get_suppress_state(RmProfile *profile)
 {
 	return g_settings_get_boolean(profile->settings, "suppress");
+}
+
+gboolean rm_router_need_ftp(RmProfile *profile)
+{
+	return active_router->need_ftp(profile);
 }

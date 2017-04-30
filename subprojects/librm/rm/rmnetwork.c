@@ -72,6 +72,7 @@ static void rm_network_save_password_cb(SoupMessage* msg, RmAuthData *auth_data)
 		g_debug("%s(): Storing data for later processing", __FUNCTION__);
 	}
 
+	g_debug("%s(): MOEP", __FUNCTION__);
 	g_signal_handlers_disconnect_by_func(msg, rm_network_save_password_cb, auth_data);
 
 	rm_network_free_auth_data(auth_data);
@@ -107,7 +108,7 @@ void rm_network_authenticate(gboolean auth_set, RmAuthData *auth_data)
  *
  * A network authentication is required. Retrieve information from settings or ask user.
  */
-static void network_authenticate_cb(SoupSession *session, SoupMessage *msg, SoupAuth *auth, gboolean retrying, gpointer user_data)
+static void rm_network_authenticate_cb(SoupSession *session, SoupMessage *msg, SoupAuth *auth, gboolean retrying, gpointer user_data)
 {
 	RmAuthData *auth_data;
 	RmProfile *profile = rm_profile_get_active();
@@ -171,10 +172,10 @@ gboolean rm_network_init(void)
 
 	/* NULL for directory is not sufficient on Windows platform, therefore set user cache dir */
 	cache = soup_cache_new(rm_get_user_cache_dir(), SOUP_CACHE_SINGLE_USER);
-	rm_soup_session = soup_session_new_with_options(SOUP_SESSION_TIMEOUT, 5, SOUP_SESSION_USE_THREAD_CONTEXT, TRUE, SOUP_SESSION_ADD_FEATURE, cache, NULL);
+	rm_soup_session = soup_session_new_with_options(SOUP_SESSION_TIMEOUT, 5, SOUP_SESSION_USE_THREAD_CONTEXT, TRUE, SOUP_SESSION_ADD_FEATURE, cache, SOUP_SESSION_SSL_STRICT, FALSE, NULL);
 	soup_cache_load(cache);
 
-	g_signal_connect(rm_soup_session, "authenticate", G_CALLBACK(network_authenticate_cb), rm_soup_session);
+	g_signal_connect(rm_soup_session, "authenticate", G_CALLBACK(rm_network_authenticate_cb), rm_soup_session);
 
 	return rm_soup_session != NULL;
 }

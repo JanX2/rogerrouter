@@ -12,12 +12,8 @@
 			<summary>Unique profile name</summary>
 		</key>
 		<key name="active-plugins" type="as">
-			<default>['areacodes_global', 'reverselookup', 'simple_pwd', 'capi', 'gstreamer', 'gnotification']</default>
+			<default>['areacodes_global', 'reverselookup', 'simple_pwd', 'capi', 'gstreamer', 'gnotification', 'fritzfon']</default>
 			<summary>Default active plugins</summary>
-		</key>
-		<key name="lookup-plugin" type="s">
-			<default>''</default>
-			<summary>Active reverse lookup plugin</summary>
 		</key>
 		<key name="phone-plugin" type="s">
 			<default>''</default>

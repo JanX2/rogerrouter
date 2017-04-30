@@ -1,4 +1,4 @@
-/**
+/*
  * The rm project
  * Copyright (c) 2012-2015 Jan-Michael Brummer
  *
@@ -50,7 +50,7 @@ gboolean fritzbox_get_settings_query(RmProfile *profile)
 	gchar *scramble;
 	gint i;
 
-	g_debug("Get settings");
+	g_debug("%s(): Get settings", __FUNCTION__);
 
 	/* Login */
 	if (!rm_router_login(profile)) {
@@ -60,7 +60,7 @@ gboolean fritzbox_get_settings_query(RmProfile *profile)
 	g_test_timer_start();
 
 	/* Extract data */
-	url = g_strdup_printf("http://%s/query.lua", rm_router_get_host(profile));
+	url = g_strdup_printf("https://%s/query.lua", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
 								"LKZPrefix", "telcfg:settings/Location/LKZPrefix",
 								"LKZ", "telcfg:settings/Location/LKZ",
@@ -165,6 +165,7 @@ gboolean fritzbox_get_settings_query(RmProfile *profile)
 	g_debug("FaxMSN0: %s", scramble);
 	g_free(scramble);
 	g_settings_set_string(fritzbox_settings, "fax-number", fax_msn);
+	g_settings_set_string(profile->settings, "fax-number", fax_msn);
 	json_reader_end_member(reader);
 
 	gchar *formated_number = rm_number_format(profile, fax_msn, RM_NUMBER_FORMAT_INTERNATIONAL_PLUS);

@@ -510,6 +510,10 @@ void back_button_clicked_cb(GtkWidget *next, gpointer user_data)
 	/* Decrease current page counter */
 	assistant->current_page--;
 
+	if (!rm_router_need_ftp(assistant->profile) && !g_strcmp0(assistant_pages[assistant->current_page].name, "ftp_password")) {
+		assistant->current_page--;
+	}
+
 	/* If we have two next pages, ensure that next button label is correct */
 	if (assistant->current_page == assistant->max_page - 2) {
 		gtk_button_set_label(GTK_BUTTON(assistant->next_button), _("Next"));
@@ -560,6 +564,10 @@ void next_button_clicked_cb(GtkWidget *next, gpointer user_data)
 
 	/* Increate current page counter */
 	assistant->current_page++;
+
+	if (!rm_router_need_ftp(assistant->profile) && !g_strcmp0(assistant_pages[assistant->current_page].name, "ftp_password")) {
+		assistant->current_page++;
+	}
 
 	/* Ensure that all buttons are sensitive */
 	gtk_widget_set_sensitive(assistant->next_button, TRUE);

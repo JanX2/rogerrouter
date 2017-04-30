@@ -158,7 +158,7 @@ static gpointer rm_notification_reverse_lookup_thread(gpointer data)
 
 	number = connection->remote_number;
 
-	if (rm_lookup_search(rm_profile_get_lookup(rm_profile_get_active()), number, &contact)) {
+	if (rm_lookup_search(number, &contact)) {
 		RmNotificationMessage *message = rm_notification_message_get(connection);
 
 		if (message) {

@@ -791,9 +791,9 @@ void settings_refresh_list(GtkListStore *list_store)
 		}
 	}
 
-	if (selected_numbers) {
+	/*if (selected_numbers) {
 		g_strfreev(selected_numbers);
-	}
+	}*/
 }
 
 void action_enable_renderer_toggled_cb(GtkCellRendererToggle *toggle, gchar *path_str, gpointer user_data)

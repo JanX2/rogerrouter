@@ -42,7 +42,8 @@
 			<url>http://www.11880.com/rueckwaertssuche/%NUMBER%</url>
 			<name mode="parser">h1 itemprop name</name>
 			<street mode="parser">span itemprop streetAddress</street>
-			<city mode="parser" zip="5">span itemprop addressLocality</city>
+			<zip mode="parser">span itemprop postalCode</zip>
+			<city mode="parser">span itemprop addressLocality</city>
 		</lookup>
 		<lookup>
 			<service>klicktel.de</service>

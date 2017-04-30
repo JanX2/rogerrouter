@@ -1155,13 +1155,32 @@ gchar *vcard_get_active_book_name(void)
 	return g_strdup("VCard");
 }
 
+gchar **vcard_get_sub_books(void)
+{
+	gchar **ret = NULL;
+	gchar *name = g_settings_get_string(vcard_settings, "filename");
+
+	if (name) {
+		ret = rm_strv_add(ret, name);
+	}
+
+	return ret;
+}
+
+gboolean vcard_set_sub_book(gchar *name)
+{
+	return TRUE;
+}
+
 RmAddressBook vcard_book = {
 	"VCard",
 	vcard_get_active_book_name,
 	vcard_get_contacts,
 	vcard_reload_contacts,
 	vcard_remove_contact,
-	vcard_save_contact
+	vcard_save_contact,
+	vcard_get_sub_books,
+	vcard_set_sub_book
 };
 
 gboolean vcard_plugin_init(RmPlugin *plugin)

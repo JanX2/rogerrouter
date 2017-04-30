@@ -32,6 +32,7 @@
 #include <rm/rmsettings.h>
 #include <rm/rmnotification.h>
 #include <rm/rmfilter.h>
+#include <rm/rmstring.h>
 
 /**
  * SECTION:rmprofile
@@ -406,14 +407,29 @@ void rm_profile_set_login_password(RmProfile *profile, const gchar *password)
  */
 RmAddressBook *rm_profile_get_addressbook(RmProfile *profile)
 {
-	RmAddressBook *book;
+	RmAddressBook *book = NULL;
 	gchar *name = g_settings_get_string(profile->settings, "address-book-plugin");
 
-	book = rm_addressbook_get(name);
+	if (!RM_EMPTY_STRING(name)) {
+		book = rm_addressbook_get(name);
+	} else {
+		GSList *books = rm_addressbook_get_plugins();
+
+		if (books) {
+			g_debug("%s(): Address book not set, setting it to first one", __FUNCTION__);
+			book = books->data;
+			g_settings_set_string(profile->settings, "address-book-plugin", rm_addressbook_get_name(book));
+		}
+	}
 
 	g_free(name);
 
 	return book;
+}
+
+void rm_profile_set_addressbook(RmProfile *profile, RmAddressBook *book)
+{
+	g_settings_set_string(profile->settings, "address-book-plugin", rm_addressbook_get_name(book));
 }
 
 /**
@@ -508,24 +524,6 @@ void rm_profile_set_notification_incoming_numbers(RmProfile *profile, const gcha
 void rm_profile_set_notification_outgoing_numbers(RmProfile *profile, const gchar * const* numbers)
 {
 	g_settings_set_strv(profile->settings, "notification-outgoing-numbers", numbers);
-}
-
-/**
- * rm_profile_get_lookup:
- * @profile: a #RmProfile
- *
- * Get lookup for selected profile.
- */
-RmLookup *rm_profile_get_lookup(RmProfile *profile)
-{
-	RmLookup *lookup;
-	gchar *name = g_settings_get_string(profile->settings, "lookup-plugin");
-
-	lookup = rm_lookup_get(name);
-
-	g_free(name);
-
-	return lookup;
 }
 
 /**

@@ -26,6 +26,7 @@ struct lookup {
 	gchar *url;
 	gchar **name;
 	gchar **street;
+	gchar **zip;
 	gchar **city;
 	gint zip_len;
 };

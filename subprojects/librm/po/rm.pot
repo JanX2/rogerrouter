@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: rm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-05 14:54+0100\n"
+"POT-Creation-Date: 2017-03-20 17:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -87,6 +87,19 @@ msgstr ""
 #: subprojects/librm/plugins/fritzbox/firmware-common.c:637
 #: subprojects/librm/plugins/fritzbox/firmware-common.c:768
 msgid "Please check your ftp credentials"
+msgstr ""
+
+#: subprojects/librm/plugins/fritzbox/fritzbox.c:228
+#: subprojects/librm/plugins/fritzbox/fritzbox.c:263
+msgid "Phone dialer"
+msgstr ""
+
+#: subprojects/librm/plugins/fritzbox/fritzbox.c:228
+msgid "Pickup phone when ringing"
+msgstr ""
+
+#: subprojects/librm/plugins/capi/phone.c:573
+msgid "CAPI Softphone"
 msgstr ""
 
 #: subprojects/librm/plugins/areacodes_global/areacodes_global.desktop.in:4

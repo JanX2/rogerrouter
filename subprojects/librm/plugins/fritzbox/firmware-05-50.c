@@ -603,12 +603,12 @@ gboolean fritzbox_get_settings_05_50(RmProfile *profile)
 	for (index = 0; index < PORT_MAX; index++) {
 		gchar *value;
 
-		value = xml_extract_list_value(data, fritzbox_phone_ports[index].name);
+		value = xml_extract_list_value(data, fritzbox_phone_ports[index].code_name);
 		if (value) {
 			if (!RM_EMPTY_STRING(value)) {
 				g_debug("Port %d: '%s'", index, value);
 			}
-			g_settings_set_string(profile->settings, rm_router_phone_ports[index].name, value);
+			g_settings_set_string(profile->settings, fritzbox_phone_ports[index].setting_name, value);
 			g_free(value);
 		}
 	}
@@ -732,6 +732,11 @@ void fritzbox_journal_05_50_cb(SoupSession *session, SoupMessage *msg, gpointer 
 {
 	GSList *journal = NULL;
 	RmProfile *profile = user_data;
+
+	if (msg->status_code != SOUP_STATUS_OK) {
+		g_debug("%s(): Got invalid data, return code: %d", __FUNCTION__, msg->status_code);
+		return;
+	}
 
 	/* Parse online journal */
 	journal = csv_parse_fritzbox_journal_data(journal, msg->response_body->data);

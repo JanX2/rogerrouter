@@ -7,6 +7,7 @@ fritzbox_sources = [
 	'firmware-06-35.c',
 	'firmware-common.c',
 	'firmware-query.c',
+	'firmware-tr64.c',
 	'fritzbox.c'
 ]
 

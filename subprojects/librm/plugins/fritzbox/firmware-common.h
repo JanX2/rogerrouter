@@ -26,9 +26,44 @@
 #include <rm/rmcallentry.h>
 #include <rm/rmnumber.h>
 
+#include "fritzbox.h"
+
 G_BEGIN_DECLS
 
 #define FIRMWARE_IS(major, minor) (((profile->router_info->maj_ver_id == major) && (profile->router_info->min_ver_id >= minor)) || (profile->router_info->maj_ver_id > major))
+
+enum fritzbox_phone_ports {
+	PORT_SOFTPHONE,
+	PORT_ANALOG1,
+	PORT_ANALOG2,
+	PORT_ANALOG3,
+	PORT_ISDNALL,
+	PORT_ISDN1,
+	PORT_ISDN2,
+	PORT_ISDN3,
+	PORT_ISDN4,
+	PORT_ISDN5,
+	PORT_ISDN6,
+	PORT_ISDN7,
+	PORT_ISDN8,
+	PORT_DECT1,
+	PORT_DECT2,
+	PORT_DECT3,
+	PORT_DECT4,
+	PORT_DECT5,
+	PORT_DECT6,
+	PORT_IP1,
+	PORT_IP2,
+	PORT_IP3,
+	PORT_IP4,
+	PORT_IP5,
+	PORT_IP6,
+	PORT_IP7,
+	PORT_IP8,
+	PORT_IP9,
+	PORT_IP10,
+	PORT_MAX
+};
 
 struct voice_data {
 	/* 0 */
@@ -71,7 +106,7 @@ struct voice_box {
 	gpointer data;
 };
 
-extern RmPhonePort fritzbox_phone_ports[PORT_MAX];
+extern FritzBoxPhonePort fritzbox_phone_ports[PORT_MAX];
 
 gchar **xml_extract_tags(const gchar *data, gchar *tag_start, gchar *tag_end);
 gchar *xml_extract_tag(const gchar *data, gchar *tag);
@@ -137,6 +172,26 @@ static inline gchar *md5(gchar *input)
 	if (error == NULL) {
 		ret = g_compute_checksum_for_string(G_CHECKSUM_MD5, (gchar *) bin, written);
 		g_free(bin);
+	} else {
+		g_debug("Error converting utf8 to utf16: '%s'", error->message);
+		g_error_free(error);
+	}
+
+	return ret;
+}
+
+/**
+ * \brief Compute md5 sum of input string
+ * \param input - input string
+ * \return md5 in hex or NULL on error
+ */
+static inline gchar *md5_simple(gchar *input)
+{
+	GError *error = NULL;
+	gchar *ret = NULL;
+
+	if (error == NULL) {
+		ret = g_compute_checksum_for_string(G_CHECKSUM_MD5, (gchar *) input, -1);
 	} else {
 		g_debug("Error converting utf8 to utf16: '%s'", error->message);
 		g_error_free(error);

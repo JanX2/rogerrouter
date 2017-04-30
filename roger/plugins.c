@@ -30,6 +30,8 @@
 #include <journal.h>
 
 static GtkWidget *plugins_window = NULL;
+static GtkWidget *config_button = NULL;
+static GtkWidget *help_button = NULL;
 
 gboolean plugins_state_set_cb(GtkSwitch *widget, gboolean state, gpointer user_data)
 {
@@ -37,7 +39,9 @@ gboolean plugins_state_set_cb(GtkSwitch *widget, gboolean state, gpointer user_d
 
 	if (state) {
 		rm_plugins_enable(plugin);
+		gtk_widget_set_sensitive(config_button, TRUE);
 	} else {
+		gtk_widget_set_sensitive(config_button, FALSE);
 		rm_plugins_disable(plugin);
 	}
 
@@ -76,6 +80,7 @@ static void plugins_about_clicked_cb(GtkWidget *button,
 	gtk_window_set_transient_for(GTK_WINDOW(about), GTK_WINDOW(plugins_window));
 	gtk_window_set_resizable(GTK_WINDOW(about), FALSE);
 	gtk_window_set_modal(GTK_WINDOW(about), TRUE);
+	gtk_window_set_position(GTK_WINDOW(about), GTK_WIN_POS_CENTER_ON_PARENT);
 
 	header_bar = gtk_header_bar_new();
 	gtk_header_bar_set_title(GTK_HEADER_BAR(header_bar), _("About this plugin"));
@@ -141,6 +146,7 @@ static void plugins_configure_clicked_cb(GtkWidget *button,
 	GtkListBoxRow *row = gtk_list_box_get_selected_row(GTK_LIST_BOX(user_data));
 	GtkWidget *child = gtk_container_get_children(GTK_CONTAINER(row))->data;
 	RmPlugin *plugin = g_object_get_data(G_OBJECT(child), "plugin");
+	GValue a = G_VALUE_INIT;;
 
 	if (!plugin) {
 		return;
@@ -155,6 +161,9 @@ static void plugins_configure_clicked_cb(GtkWidget *button,
 		}
 
 		win = gtk_dialog_new();
+		g_value_init (&a, G_TYPE_INT);
+		g_value_set_int (&a, 1);
+		g_object_set_property(G_OBJECT(win), "use-header-bar", &a);
 		gtk_window_set_title(GTK_WINDOW(win), plugin->name);
 		gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(win))), config);
 		gtk_widget_show_all(win);
@@ -162,9 +171,6 @@ static void plugins_configure_clicked_cb(GtkWidget *button,
 		gtk_widget_destroy(win);
 	}
 }
-
-static GtkWidget *config_button = NULL;
-static GtkWidget *help_button = NULL;
 
 static void plugins_listbox_row_selected_cb(GtkListBox    *box,
                GtkListBoxRow *row,
@@ -183,7 +189,7 @@ static void plugins_listbox_row_selected_cb(GtkListBox    *box,
 		return;
 	}
 
-	if (plugin->configure) {
+	if (plugin->configure && plugin->enabled) {
 		gtk_widget_set_sensitive(config_button, TRUE);
 	} else {
 		gtk_widget_set_sensitive(config_button, FALSE);
@@ -213,6 +219,7 @@ void app_show_plugins(void)
 	plugins_window = gtk_application_window_new(GTK_APPLICATION(journal_application));
 	gtk_window_set_default_size(GTK_WINDOW(plugins_window), 700, 350);
 	gtk_window_set_transient_for(GTK_WINDOW(plugins_window), GTK_WINDOW(journal_get_window()));
+	gtk_window_set_position(GTK_WINDOW(plugins_window), GTK_WIN_POS_CENTER_ON_PARENT);
 
 	header = gtk_header_bar_new();
 	gtk_header_bar_set_title(GTK_HEADER_BAR(header), _("Configure plugins"));
@@ -222,7 +229,7 @@ void app_show_plugins(void)
 
 	gtk_window_set_transient_for(GTK_WINDOW(plugins_window), GTK_WINDOW(journal_get_window()));
 
-	scroll_win = gtk_scrolled_window_new (NULL, NULL);
+	scroll_win = gtk_scrolled_window_new(NULL, NULL);
 	gtk_widget_set_vexpand(scroll_win, TRUE);
 
 	GtkWidget *listbox = gtk_list_box_new();

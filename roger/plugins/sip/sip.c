@@ -122,7 +122,7 @@ void sip_g722_state(gboolean state)
 	pjsua_codec_set_priority(pj_cstr(&tmp, "G722"), state == TRUE ? 128 : 0);
 }
 
-static RmConnection *sip_phone_dial(const char *trg_no, gboolean anonymous)
+static RmConnection *sip_phone_dial(RmPhone *phone, const char *trg_no, gboolean anonymous)
 {
 	RmConnection *connection;
 	RmProfile *profile = rm_profile_get_active();

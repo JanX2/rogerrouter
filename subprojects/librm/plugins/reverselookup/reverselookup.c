@@ -44,9 +44,6 @@
 
 #include "reverselookup.h"
 
-#define RM_TYPE_REVERSE_LOOKUP_PLUGIN (rm_reverse_lookup_plugin_get_type ())
-#define RM_REVERSE_LOOKUP_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_REVERSE_LOOKUP_PLUGIN, RmReverseLookupPlugin))
-
 //#define RL_DEBUG 1
 
 typedef struct {
@@ -194,7 +191,17 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, RmContac
 		goto end;
 	}
 
-	if (lookup->zip_len) {
+	if (lookup->zip) {
+		if (!extract_element(lookup->zip, node, &contact->zip)) {
+	#ifdef RL_DEBUG
+			gchar *tmp_file = g_strdup_printf("rl-%s-%s.html", lookup->service, number);
+			rm_log_save_data(tmp_file, rdata, len);
+			g_free(tmp_file);
+			g_debug("%s(): Could not extract zip", __FUNCTION__);
+	#endif
+			goto end;
+		}
+	} else if (lookup->zip_len) {
 		contact->zip = g_strndup(contact->city, lookup->zip_len);
 		memmove(contact->city, contact->city + lookup->zip_len + 1, strlen(contact->city) - lookup->zip_len + 1);
 	}
@@ -410,6 +417,7 @@ static void lookup_add(xmlnode *node)
 	gchar **name = NULL;
 	gchar **street = NULL;
 	gchar **city = NULL;
+	gchar **zip = NULL;
 	gint zip_len = 0;
 
 	child = xmlnode_get_child(node, "service");
@@ -446,6 +454,13 @@ static void lookup_add(xmlnode *node)
 		zip_len = atoi(tmp);
 	}
 
+	child = xmlnode_get_child(node, "zip");
+
+	if (child) {
+		tmp = xmlnode_get_data(child);
+		zip = g_strsplit(tmp, " ", -1);
+	}
+
 	lookup = g_slice_alloc0(sizeof(struct lookup));
 	g_debug(" o Service: '%s', prefix: %s", service, prefix);
 	lookup->service = service;
@@ -454,6 +469,7 @@ static void lookup_add(xmlnode *node)
 	lookup->name = name;
 	lookup->street = street;
 	lookup->city = city;
+	lookup->zip = zip;
 	lookup->zip_len = zip_len;
 
 	lookup_list = g_slist_prepend(lookup_list, lookup);

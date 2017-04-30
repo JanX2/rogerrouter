@@ -17,14 +17,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef FIRMWARE_QUERY_H
-#define FIRMWARE_QUERY_H
+#ifndef FIRMWARE_TR64_H
+#define FIRMWARE_TR64_H
 
 #include <rm/rmrouter.h>
 
 G_BEGIN_DECLS
 
-gboolean fritzbox_get_settings_query(RmProfile *profile);
+gboolean firmware_tr64_is_available(RmProfile *profile);
+gboolean firmware_tr64_load_journal(RmProfile *profile);
+gchar *firmware_tr64_load_voice(RmProfile *profile, const gchar *filename, gsize *len);
+gboolean firmware_tr64_dial_number(RmProfile *profile, gint port, const gchar *number);
 
 G_END_DECLS
 

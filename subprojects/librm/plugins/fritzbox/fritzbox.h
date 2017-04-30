@@ -24,12 +24,19 @@
 
 G_BEGIN_DECLS
 
+typedef struct {
+	gchar *setting_name;
+	gchar *code_name;
+	gint type;
+	gint number;
+} FritzBoxPhonePort;
+
 extern RmPhone dialer_phone;
 extern GSettings *fritzbox_settings;
 
 gboolean fritzbox_login(RmProfile *profile);
 gboolean fritzbox_get_settings(RmProfile *profile);
-gboolean fritzbox_load_journal(RmProfile *profile, gchar **data_ptr);
+gboolean fritzbox_load_journal(RmProfile *profile);
 gboolean fritzbox_dial_number(RmProfile *profile, gint port, const gchar *number);
 gboolean fritzbox_hangup(RmProfile *profile, gint port, const gchar *number);
 

@@ -1,4 +1,4 @@
-/**
+/*
  * The rm project
  * Copyright (c) 2012-2014 Jan-Michael Brummer
  *
@@ -37,45 +37,12 @@
 #include <rm/rmfile.h>
 #include <rm/rmjournal.h>
 #include <rm/rmmain.h>
+#include <rm/rmosdep.h>
 
 #include "fritzbox.h"
 #include "firmware-common.h"
 #include "firmware-04-00.h"
-
-/** phone port names */
-RmPhonePort fritzbox_phone_ports[PORT_MAX] = {
-	/* Analog */
-	{"telcfg:settings/MSN/Port0/Name", PORT_ANALOG1, 1},
-	{"telcfg:settings/MSN/Port1/Name", PORT_ANALOG2, 2},
-	{"telcfg:settings/MSN/Port2/Name", PORT_ANALOG3, 3},
-	/* ISDN */
-	{"telcfg:settings/NTHotDialList/Name1", PORT_ISDN1, 51},
-	{"telcfg:settings/NTHotDialList/Name2", PORT_ISDN2, 52},
-	{"telcfg:settings/NTHotDialList/Name3", PORT_ISDN3, 53},
-	{"telcfg:settings/NTHotDialList/Name4", PORT_ISDN4, 54},
-	{"telcfg:settings/NTHotDialList/Name5", PORT_ISDN5, 55},
-	{"telcfg:settings/NTHotDialList/Name6", PORT_ISDN6, 56},
-	{"telcfg:settings/NTHotDialList/Name7", PORT_ISDN7, 57},
-	{"telcfg:settings/NTHotDialList/Name8", PORT_ISDN8, 58},
-	/* DECT */
-	{"telcfg:settings/Foncontrol/User1/Name", PORT_DECT1, 60},
-	{"telcfg:settings/Foncontrol/User2/Name", PORT_DECT2, 61},
-	{"telcfg:settings/Foncontrol/User3/Name", PORT_DECT3, 62},
-	{"telcfg:settings/Foncontrol/User4/Name", PORT_DECT4, 63},
-	{"telcfg:settings/Foncontrol/User5/Name", PORT_DECT5, 64},
-	{"telcfg:settings/Foncontrol/User6/Name", PORT_DECT6, 65},
-	/* IP-Phone */
-	{"telcfg:settings/VoipExtension0/Name", PORT_IP1, 620},
-	{"telcfg:settings/VoipExtension1/Name", PORT_IP2, 621},
-	{"telcfg:settings/VoipExtension2/Name", PORT_IP3, 622},
-	{"telcfg:settings/VoipExtension3/Name", PORT_IP4, 623},
-	{"telcfg:settings/VoipExtension4/Name", PORT_IP5, 624},
-	{"telcfg:settings/VoipExtension5/Name", PORT_IP6, 625},
-	{"telcfg:settings/VoipExtension6/Name", PORT_IP7, 626},
-	{"telcfg:settings/VoipExtension7/Name", PORT_IP8, 627},
-	{"telcfg:settings/VoipExtension8/Name", PORT_IP9, 628},
-	{"telcfg:settings/VoipExtension9/Name", PORT_IP10, 629},
-};
+#include "firmware-tr64.h"
 
 static struct voice_box voice_boxes[5];
 
@@ -346,7 +313,7 @@ gchar **strv_remove_duplicates(gchar **numbers)
 	gint ret_idx = 1;
 
 	for (idx = 0; idx < len; idx++) {
-		if (!ret || !strv_contains((const gchar * const *)ret, numbers[idx])) {
+		if (!ret || !rm_strv_contains((const gchar * const *)ret, numbers[idx])) {
 			ret = g_realloc(ret, (ret_idx + 1) * sizeof(char *));
 			ret[ret_idx - 1] = g_strdup(numbers[idx]);
 			ret[ret_idx] = NULL;
@@ -805,6 +772,8 @@ GSList *fritzbox_load_voicebox(GSList *journal)
 	return journal;
 }
 
+extern gboolean fritzbox_use_tr64;
+
 /**
  * \brief Load fax file via FTP
  * \param profile profile structure
@@ -814,17 +783,47 @@ GSList *fritzbox_load_voicebox(GSList *journal)
  */
 gchar *fritzbox_load_fax(RmProfile *profile, const gchar *filename, gsize *len)
 {
-	RmFtp *client;
-	gchar *user = rm_router_get_ftp_user(profile);
-	gchar *ret;
+	gchar *ret = NULL;
 
-	client = rm_ftp_init(rm_router_get_host(profile));
-	rm_ftp_login(client, user, rm_router_get_ftp_password(profile));
+	g_debug("%s(): filename %s", __FUNCTION__, filename ? filename : "NULL");
+	if (fritzbox_use_tr64) {
+		SoupMessage *msg;
+		gchar *url;
 
-	rm_ftp_passive(client);
+		rm_router_login(profile);
+		/* Create message */
+		url = g_strdup_printf("https://%s:49443%s&sid=%s", rm_router_get_host(profile), filename, profile->router_info->session_id);
+		msg = soup_message_new(SOUP_METHOD_GET, url);
 
-	ret = rm_ftp_get_file(client, filename, len);
-	rm_ftp_shutdown(client);
+		g_free(url);
+
+		soup_session_send_message(rm_soup_session, msg);
+
+		if (msg->status_code != 200) {
+			g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
+			rm_file_save("loadfax-error.xml", msg->response_body->data, -1);
+			g_object_unref(msg);
+			return NULL;
+		}
+
+		rm_file_save("loadfax.xml", msg->response_body->data, -1);
+		ret = g_malloc0(msg->response_body->length);
+		memcpy(ret, msg->response_body->data, msg->response_body->length);
+		*len = msg->response_body->length;
+
+		g_object_unref(msg);
+	} else {
+		RmFtp *client;
+		gchar *user = rm_router_get_ftp_user(profile);
+
+		client = rm_ftp_init(rm_router_get_host(profile));
+		rm_ftp_login(client, user, rm_router_get_ftp_password(profile));
+
+		rm_ftp_passive(client);
+
+		ret = rm_ftp_get_file(client, filename, len);
+		rm_ftp_shutdown(client);
+	}
 
 	return ret;
 }
@@ -836,28 +835,34 @@ gchar *fritzbox_load_fax(RmProfile *profile, const gchar *filename, gsize *len)
  * \param len pointer to store the data length to
  * \return voice data
  */
-gchar *fritzbox_load_voice(RmProfile *profile, const gchar *name, gsize *len)
+gchar *fritzbox_load_voice(RmProfile *profile, const gchar *filename, gsize *len)
 {
-	RmFtp *client;
-	gchar *filename = g_strconcat("/", g_settings_get_string(fritzbox_settings, "fax-volume"), "/FRITZ/voicebox/rec/", name, NULL);
-	gchar *user = rm_router_get_ftp_user(profile);
 	gchar *ret = NULL;
 
-	client = rm_ftp_init(rm_router_get_host(profile));
-	if (!client) {
-		g_debug("Could not init ftp connection");
-		return ret;
+	g_debug("%s(): filename %s", __FUNCTION__, filename ? filename : "NULL");
+	if (fritzbox_use_tr64) {
+		return firmware_tr64_load_voice(profile, filename, len);
+	} else {
+		RmFtp *client;
+		gchar *name = g_strconcat("/", g_settings_get_string(fritzbox_settings, "fax-volume"), "/FRITZ/voicebox/rec/", filename, NULL);
+		gchar *user = rm_router_get_ftp_user(profile);
+
+		client = rm_ftp_init(rm_router_get_host(profile));
+		if (!client) {
+			g_debug("Could not init ftp connection");
+			return ret;
+		}
+
+		rm_ftp_login(client, user, rm_router_get_ftp_password(profile));
+
+		rm_ftp_passive(client);
+
+		ret = rm_ftp_get_file(client, name, len);
+
+		rm_ftp_shutdown(client);
+
+		g_free(name);
 	}
-
-	rm_ftp_login(client, user, rm_router_get_ftp_password(profile));
-
-	rm_ftp_passive(client);
-
-	ret = rm_ftp_get_file(client, filename, len);
-
-	rm_ftp_shutdown(client);
-
-	g_free(filename);
 
 	return ret;
 }
@@ -880,61 +885,6 @@ gint fritzbox_find_phone_port(gint dial_port)
 	return -1;
 }
 
-
-gchar *fritzbox_new1(RmProfile *profile)
-{
-	SoupMessage *msg;
-	SoupURI *uri;
-	gchar *ip = NULL;
-	gchar *request;
-	SoupMessageHeaders *headers;
-	gchar *url;
-
-	rm_router_login(profile);
-
-	/* Create POST message */
-	if (FIRMWARE_IS(6, 6)) {
-		url = g_strdup_printf("http://%s/upnp/control/x_contact", rm_router_get_host(profile));
-	} else {
-		url = g_strdup_printf("http://%s/upnp/control/x_contact", rm_router_get_host(profile));
-	}
-
-	uri = soup_uri_new(url);
-	soup_uri_set_port(uri, 49000);
-	msg = soup_message_new_from_uri(SOUP_METHOD_POST, uri);
-	g_free(url);
-
-	request = g_strdup(
-	              "<?xml version='1.0' encoding='utf-8'?>"
-	              " <s:Envelope s:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/' xmlns:s='http://schemas.xmlsoap.org/soap/envelope/'>"
-	              " <s:Body>"
-	              " <u:GetCallList xmlns:u=\"urn:dslforum-org:service:X_AVM-DE_OnTel:1\" />"
-	              " </s:Body>"
-	              " </s:Envelope>\r\n");
-
-	soup_message_set_request(msg, "text/xml; charset=\"utf-8\"", SOUP_MEMORY_STATIC, request, strlen(request));
-	headers = msg->request_headers;
-	soup_message_headers_append(headers, "SoapAction", "urn:dslforum-org:service:X_AVM-DE_OnTel:1#GetCallList");
-
-	soup_session_send_message(rm_soup_session, msg);
-
-	if (msg->status_code != 200) {
-		g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
-		g_object_unref(msg);
-		return NULL;
-	}
-	rm_file_save("moep", msg->response_body->data, -1);
-
-	ip = xml_extract_tag(msg->response_body->data, "NewCallListURL");
-
-	g_object_unref(msg);
-
-	g_debug("Got IP data (%s)", ip);
-
-	return ip;
-}
-
-
 /**
  * \brief Extract IP address from router
  * \param profile profile pointer
@@ -948,8 +898,6 @@ gchar *fritzbox_get_ip(RmProfile *profile)
 	gchar *request;
 	SoupMessageHeaders *headers;
 	gchar *url;
-
-	return fritzbox_new1(profile);
 
 	/* Create POST message */
 	if (FIRMWARE_IS(6, 6)) {
@@ -1134,25 +1082,5 @@ gboolean fritzbox_delete_voice(RmProfile *profile, const gchar *filename)
 	g_free(name);
 
 	return TRUE;
-}
-
-/**
- * \brief Checks if @strv contains @str. @strv must not be %NULL.
- * \strv a %NULL-terminated array of strings
- * \str a string
- * \return %TRUE if @str is an element of @strv, according to g_str_equal().
- */
-gboolean strv_contains(const gchar *const *strv, const gchar *str)
-{
-	g_return_val_if_fail(strv != NULL, FALSE);
-	g_return_val_if_fail(str != NULL, FALSE);
-
-	for (; *strv != NULL; strv++) {
-		if (g_str_equal(str, *strv)) {
-			return TRUE;
-		}
-	}
-
-	return FALSE;
 }
 

@@ -235,7 +235,7 @@ void app_debug_window(void)
 	/* Add header bar */
 	header_bar = gtk_header_bar_new();
 	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header_bar), TRUE);
-	gtk_header_bar_set_title(GTK_HEADER_BAR(header_bar), _("Debug window"));
+	gtk_header_bar_set_title(GTK_HEADER_BAR(header_bar), _("Debug"));
 	gtk_window_set_titlebar(GTK_WINDOW(debug_window), header_bar);
 
 	/* Add save button */
@@ -257,6 +257,7 @@ void app_debug_window(void)
 	/* Add textview and set text buffer tags */
 	gtk_container_add(GTK_CONTAINER(scroll_win), textview);
 	gtk_text_view_set_editable(GTK_TEXT_VIEW(textview), FALSE);
+	gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(textview), GTK_WRAP_CHAR);
 
 	text_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview));
 	gtk_text_buffer_create_tag(text_buffer, "blue_fg", "foreground", "blue", NULL);

@@ -23,7 +23,7 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
-          <object class="GtkGrid">
+          <object class="GtkGrid" id="phone_grid_intern">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="margin_left">18</property>
@@ -32,24 +32,6 @@
             <property name="margin_bottom">18</property>
             <property name="row_spacing">18</property>
             <property name="column_spacing">12</property>
-            <child>
-              <object class="GtkSearchEntry" id="call_search_entry">
-                <property name="width_request">280</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="hexpand">True</property>
-                <property name="activates_default">True</property>
-                <property name="primary_icon_name">edit-find-symbolic</property>
-                <property name="placeholder_text" translatable="yes">Enter name or number</property>
-                <signal name="icon-press" handler="phone_search_entry_icon_press_cb" swapped="no"/>
-                <signal name="key-press-event" handler="phone_search_entry_key_press_event_cb" swapped="no"/>
-                <signal name="search-changed" handler="phone_search_entry_search_changed_cb" swapped="no"/>
-              </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
-              </packing>
-            </child>
             <child>
               <object class="GtkButton" id="call_start_button">
                 <property name="visible">True</property>
@@ -919,6 +901,9 @@
                 <property name="left_attach">0</property>
                 <property name="top_attach">1</property>
               </packing>
+            </child>
+            <child>
+              <placeholder/>
             </child>
           </object>
           <packing>

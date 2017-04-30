@@ -83,7 +83,6 @@ Section RogerRouter
 	; Install license file
 	SetOutPath "$INSTDIR"
 	File "../../../../../COPYING"
-	File "../../../printer/*"
 
 	; Install program and libraries
 	SetOutPath "$INSTDIR"
@@ -117,7 +116,7 @@ Section RogerRouter
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libxml2-2.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/gdk-pixbuf-query-loaders.exe"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/zlib1.dll"
-	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libjasper-1.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libjasper-4.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libcapi20-3.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libdl.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libspandsp-2.dll"
@@ -246,7 +245,7 @@ Section "Uninstall"
 	SetDetailsPrint textonly
 	DetailPrint "Removing Roger Router Fax printer"
 	SetDetailsPrint none
-	ExecWait 'rundll32 printui.dll,PrintUIEntry /dl /n "Roger Router (Fax)"'
+	ExecWait 'rundll32 printui.dll,PrintUIEntry /dl /n "Roger Router (Fax)" /q'
 
 	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\RogerRouter"
 SectionEnd
@@ -296,7 +295,7 @@ Section -ExecBatchFiles SEC15
 	SetDetailsPrint none
 
 	; Installing printers
-	ExecWait 'rundll32 printui.dll,PrintUIEntry /if /b "Roger Router (Fax)" /f "$INSTDIR\ghostpdf.inf" /r "RogerRouterFax" /m "Ghostscript PDF" /z'
+	ExecWait 'rundll32 printui.dll,PrintUIEntry /if /b "Roger Router (Fax)" /f "C:\Windows\INF\prnms005.inf" /r "RogerRouterFax" /m "Microsoft PS Class Driver" /z'
 	sleep 1
 
 	;Display text above progress bar

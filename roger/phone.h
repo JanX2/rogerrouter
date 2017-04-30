@@ -41,7 +41,7 @@ struct phone_state {
 	GtkWidget *control_frame;
 	GtkWidget *call_frame;
 	GtkWidget *header_bar;
-	GtkWidget *search_entry;
+	GtkWidget *contact_search;
 	GtkWidget *mute_button;
 	GtkWidget *hold_button;
 	GtkWidget *record_button;
