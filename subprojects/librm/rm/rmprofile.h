@@ -61,6 +61,7 @@ void rm_profile_set_login_password(RmProfile *profile, const gchar *password);
 RmAddressBook *rm_profile_get_addressbook(RmProfile *profile);
 void rm_profile_set_addressbook(RmProfile *profile, RmAddressBook *book);
 RmAudio *rm_profile_get_audio(RmProfile *profile);
+gchar *rm_profile_get_audio_ringtone(RmProfile *profile);
 RmNotification *rm_profile_get_notification(RmProfile *profile);
 gchar **rm_profile_get_notification_incoming_numbers(RmProfile *profile);
 gchar **rm_profile_get_notification_outgoing_numbers(RmProfile *profile);

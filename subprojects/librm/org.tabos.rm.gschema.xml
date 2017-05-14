@@ -23,6 +23,10 @@
 			<default>''</default>
 			<summary>Active fax plugin</summary>
 		</key>
+		<key name="fax-active" type="b">
+			<default>true</default>
+			<summary>Fax support active?</summary>
+		</key>
 		<key name="address-book-plugin" type="s">
 			<default>''</default>
 			<summary>Active address book plugin</summary>
@@ -34,6 +38,10 @@
 		<key name="audio-output" type="s">
 			<default>''</default>
 			<summary>Audio output device</summary>
+		</key>
+		<key name="audio-output-ringtone" type="s">
+			<default>''</default>
+			<summary>Audio output device for ringtones</summary>
 		</key>
 		<key name="audio-input" type="s">
 			<default>''</default>
@@ -150,6 +158,10 @@
 		</key>
 
 		<!-- Softphone -->
+		<key name="phone-active" type="b">
+			<default>true</default>
+			<summary>Phone support active?</summary>
+		</key>
 		<key name="phone-number" type="s">
 			<default>''</default>
 		</key>

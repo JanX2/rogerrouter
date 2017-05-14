@@ -187,7 +187,7 @@ static int gstreamer_init(unsigned char channels, unsigned short sample_rate, un
  * \brief Open audio device
  * \return private data or NULL on error
  */
-static void *gstreamer_open(void)
+static void *gstreamer_open(gchar *output)
 {
 	RmProfile *profile = rm_profile_get_active();
 	struct pipes *pipes = NULL;
@@ -217,7 +217,7 @@ static void *gstreamer_open(void)
 		gst_devices = gst_device_monitor_get_devices(monitor);
 
 		/* Get preferred input/output device names */
-		output_name = g_settings_get_string(profile->settings, "audio-output");
+		output_name = output;
 		input_name = g_settings_get_string(profile->settings, "audio-input");
 
 		/* Find output device */

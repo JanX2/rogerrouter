@@ -187,6 +187,8 @@ void rm_log_set_debug(gboolean state)
 		rm_file_stream = g_file_replace(file, NULL, TRUE, G_FILE_CREATE_PRIVATE, NULL, &error);
 		if (!rm_file_stream) {
 			g_warning("%s(): file stream creation failed (%s)!", __FUNCTION__, error->message);
+		} else {
+			g_debug("%s(): Writing debug log to %s", __FUNCTION__, filename);
 		}
 	}
 

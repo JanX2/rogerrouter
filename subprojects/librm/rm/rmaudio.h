@@ -36,7 +36,7 @@ typedef struct {
 	/* Initialize function */
 	gboolean (*init)(guchar channels, gushort rate, guchar bits);
 	/* Open device for playback */
-	gpointer (*open)(void);
+	gpointer (*open)(gchar *device_name);
 	/* Write data to audio device */
 	gsize (*write)(gpointer priv, guchar *buffer, gsize len);
 	/* Read data of audio device */
@@ -58,7 +58,7 @@ typedef struct {
 void rm_audio_register(RmAudio *audio);
 void rm_audio_unregister(RmAudio *audio);
 RmAudio *rm_audio_get(gchar *name);
-gpointer rm_audio_open(RmAudio *audio);
+gpointer rm_audio_open(RmAudio *audio, gchar *device_name);
 gsize rm_audio_read(RmAudio *audio, gpointer audio_priv, guchar *data, gsize size);
 gsize rm_audio_write(RmAudio *audio, gpointer audio_priv, guchar *data, gsize size);
 gboolean rm_audio_close(RmAudio *audio, gpointer audio_priv);

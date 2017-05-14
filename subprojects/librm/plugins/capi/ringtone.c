@@ -185,14 +185,15 @@ static gpointer ringtone_thread(gpointer user_data)
 	unsigned int snd_count = 0;
 	unsigned long effect_pos = 0;
 	void *priv = NULL;
-	RmAudio *audio = rm_profile_get_audio(rm_profile_get_active());
+	RmProfile *profile = rm_profile_get_active();
+	RmAudio *audio = rm_profile_get_audio(profile);
 	int counter = 0;
 
 	if (audio == NULL) {
 		return NULL;
 	}
 
-	priv = audio->open();
+	priv = rm_audio_open(audio, rm_profile_get_audio_ringtone(profile));
 	if (!priv) {
 		return NULL;
 	}

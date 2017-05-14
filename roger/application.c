@@ -438,12 +438,11 @@ static void app_init(GtkApplication *app)
 	rm_new(option_state.debug, &error);
 
 	/* Set local bindings */
-	g_debug("****** %s(): '%s'", __FUNCTION__, rm_get_directory(APP_LOCALE));
 	bindtextdomain(GETTEXT_PACKAGE, rm_get_directory(APP_LOCALE));
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);
 
-	if (g_settings_get_boolean(app_settings, "debug")) {
+	if (option_state.debug || g_settings_get_boolean(app_settings, "debug")) {
 		debug_activated(NULL, NULL, NULL);
 	}
 

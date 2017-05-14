@@ -93,7 +93,6 @@ void webjournal_journal_loaded_cb(RmObject *obj, GSList *journal, gpointer user_
 	gchar *file;
 	GString *string;
 	GSList *list;
-	gchar *out;
 	gchar *dirname;
 
 	file = g_settings_get_string(webjournal_settings, "filename");
@@ -153,9 +152,9 @@ void webjournal_journal_loaded_cb(RmObject *obj, GSList *journal, gpointer user_
 
 	string = g_string_append(string, webjournal_plugin->footer);
 
-	out = g_string_free(string, FALSE);
+	rm_file_save(file, string->str, string->len);
 
-	rm_file_save(file, out, -1);
+	g_string_free(string, TRUE);
 
 	dirname = g_path_get_dirname(file);
 
@@ -172,8 +171,6 @@ void webjournal_journal_loaded_cb(RmObject *obj, GSList *journal, gpointer user_
 	g_free(file);
 
 	g_free(dirname);
-
-	g_free(out);
 }
 
 /**

@@ -659,5 +659,6 @@ gboolean rm_router_get_suppress_state(RmProfile *profile)
 
 gboolean rm_router_need_ftp(RmProfile *profile)
 {
-	return active_router->need_ftp(profile);
+	g_debug("%s(): called", __FUNCTION__);
+	return active_router ? active_router->need_ftp(profile) : TRUE;
 }

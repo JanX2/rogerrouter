@@ -355,11 +355,12 @@ void fritzbox_set_active(RmProfile *profile)
 
 	/* Check whether tr64 is available */
 	fritzbox_use_tr64 = firmware_tr64_is_available(profile);
+	g_debug("%s(): TR-064 %s", __FUNCTION__, fritzbox_use_tr64 ? "enabled" : "disabled");
 }
 
 static gboolean fritzbox_need_ftp(RmProfile *profile)
 {
-	return fritzbox_use_tr64;
+	return !fritzbox_use_tr64;
 }
 
 /** FRITZ!Box router functions */

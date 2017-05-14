@@ -307,7 +307,7 @@ static int pulse_audio_init(unsigned char channels, unsigned short sample_rate, 
  * \brief Open new playback and record pipes
  * \return pipe pointer or NULL on error
  */
-static void *pulse_audio_open(void)
+static void *pulse_audio_open(gchar *output)
 {
 	pa_sample_spec sample_spec = {
 		.format = PA_SAMPLE_S16LE,
@@ -321,7 +321,6 @@ static void *pulse_audio_open(void)
 		.tlength = -1,
 	};
 	struct pulse_pipes *pipes = malloc(sizeof(struct pulse_pipes));
-	const gchar *output;
 	const gchar *input;
 
 	if (!pipes) {
@@ -335,7 +334,6 @@ static void *pulse_audio_open(void)
 		sample_spec.format = PA_SAMPLE_S16LE;
 	}
 
-	output = g_settings_get_string(rm_profile_get_active()->settings, "audio-output");
 	if (RM_EMPTY_STRING(output)) {
 		output = NULL;
 	}

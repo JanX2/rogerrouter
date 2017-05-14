@@ -96,7 +96,7 @@ static gpointer rm_vox_playback_thread(gpointer user_data)
 	guchar bytes = 0;
 
 	/* open audio device */
-	playback->audio_priv = rm_audio_open(playback->audio);
+	playback->audio_priv = rm_audio_open(playback->audio, NULL);
 	if (!playback->audio_priv) {
 		g_debug("%s(): Could not open audio device", __FUNCTION__);
 		g_slice_free(RmVoxPlayback, playback);
@@ -212,7 +212,7 @@ static gpointer rm_vox_sf_playback_thread(gpointer user_data)
 	gshort buffer[80];
 
 	/* open audio device */
-	playback->audio_priv = rm_audio_open(playback->audio);
+	playback->audio_priv = rm_audio_open(playback->audio, NULL);
 	if (!playback->audio_priv) {
 		g_debug("%s(): Could not open audio device", __FUNCTION__);
 		g_slice_free(RmVoxPlayback, playback);

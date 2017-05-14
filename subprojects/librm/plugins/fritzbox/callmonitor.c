@@ -332,6 +332,7 @@ void fritzbox_init_callmonitor(void)
 	net_event = rm_netmonitor_add_event("Call Monitor", callmonitor_connect, callmonitor_disconnect, NULL);
 
 	telnet_device = rm_device_register("Call Monitor");
+	dialer_phone.device = telnet_device;
 }
 
 /**

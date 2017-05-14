@@ -22,6 +22,7 @@
 #include <glib.h>
 
 #include <rm/rmaudio.h>
+#include <rm/rmprofile.h>
 
 /**
  * SECTION:rmaudio
@@ -69,14 +70,25 @@ RmAudio *rm_audio_get(gchar *name)
 /**
  * rm_audio_open:
  * @audio: a #RmAudio
+ * @device_name: device name
  *
  * Open current audio plugin.
  *
  * Returns: private audio data pointer or %NULL% on error
  */
-gpointer rm_audio_open(RmAudio *audio)
+gpointer rm_audio_open(RmAudio *audio, gchar *device_name)
 {
-	return audio ? audio->open() : NULL;
+	RmProfile *profile = rm_profile_get_active();
+
+	if (!audio) {
+		return NULL;
+	}
+
+	if (!device_name) {
+		device_name = g_settings_get_string(profile->settings, "audio-output");
+	}
+
+	return audio->open(device_name);
 }
 
 /**

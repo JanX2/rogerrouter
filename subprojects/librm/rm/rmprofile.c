@@ -451,6 +451,17 @@ RmAudio *rm_profile_get_audio(RmProfile *profile)
 }
 
 /**
+ * rm_profile_get_ringtone_device:
+ * @profile: a #RmProfile
+*
+ * Get audio for selected profile.
+ */
+gchar *rm_profile_get_audio_ringtone(RmProfile *profile)
+{
+	return g_settings_get_string(profile->settings, "audio-ringtone-plugin");
+}
+
+/**
  * rm_profile_get_notification:
  * @profile: a #RmProfile
  *

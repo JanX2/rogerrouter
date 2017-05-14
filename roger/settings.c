@@ -60,8 +60,10 @@ struct settings {
 	GtkWidget *fax_plugin_combobox;
 	GtkWidget *numbers_assign_listbox;
 
+	GtkWidget *phone_active_switch;
 	GtkWidget *softphone_msn_combobox;
 	GtkWidget *softphone_controller_combobox;
+	GtkWidget *fax_active_switch;
 	GtkWidget *fax_header_entry;
 	GtkWidget *fax_ident_entry;
 	GtkWidget *fax_msn_combobox;
@@ -86,6 +88,7 @@ struct settings {
 	GtkWidget *outgoing_call_ends_checkbutton;
 	GtkWidget *audio_plugin_combobox;
 	GtkWidget *audio_output_combobox;
+	GtkWidget *audio_output_ringtone_combobox;
 	GtkWidget *audio_input_combobox;
 	GtkWidget *security_plugin_combobox;
 	GtkWidget *address_book_plugin_combobox;
@@ -1216,14 +1219,17 @@ void audio_plugin_combobox_changed_cb(GtkComboBox *box, gpointer user_data) {
 	GSList *list;
 	gchar *input_name;
 	gchar *output_name;
+	gchar *output_ringtone_name;
 	gint input_cnt = 0;
 	gint output_cnt = 0;
 
 	input_name = g_settings_get_string(rm_profile_get_active()->settings, "audio-input");
 	output_name = g_settings_get_string(rm_profile_get_active()->settings, "audio-output");
+	output_ringtone_name = g_settings_get_string(rm_profile_get_active()->settings, "audio-output-ringtone");
 
 	/* Clear device comboboxes */
 	gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(settings->audio_output_combobox));
+	gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(settings->audio_output_ringtone_combobox));
 	gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(settings->audio_input_combobox));
 
 	/* Read active audio plugin */
@@ -1256,9 +1262,14 @@ void audio_plugin_combobox_changed_cb(GtkComboBox *box, gpointer user_data) {
 			input_cnt++;
 		} else {
 			gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->audio_output_combobox), device->internal_name, device->name);
+			gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->audio_output_ringtone_combobox), device->internal_name, device->name);
 
 			if (!strcmp(device->internal_name, output_name)) {
 				gtk_combo_box_set_active(GTK_COMBO_BOX(settings->audio_output_combobox), output_cnt);
+			}
+
+			if (!strcmp(device->internal_name, output_ringtone_name)) {
+				gtk_combo_box_set_active(GTK_COMBO_BOX(settings->audio_output_ringtone_combobox), output_cnt);
 			}
 			output_cnt++;
 		}
@@ -1272,6 +1283,10 @@ void audio_plugin_combobox_changed_cb(GtkComboBox *box, gpointer user_data) {
 
 		if (!gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(settings->audio_output_combobox))) {
 			gtk_combo_box_set_active(GTK_COMBO_BOX(settings->audio_output_combobox), 0);
+		}
+
+		if (!gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(settings->audio_output_ringtone_combobox))) {
+			gtk_combo_box_set_active(GTK_COMBO_BOX(settings->audio_output_ringtone_combobox), 0);
 		}
 	}
 }
@@ -1610,6 +1625,8 @@ void settings_notification_populate(GtkWidget *list_box)
 
 		GtkWidget *combobox = gtk_combo_box_text_new();
 		gtk_widget_set_halign(combobox, GTK_ALIGN_END);
+		gtk_widget_set_vexpand(combobox, FALSE);
+		gtk_widget_set_valign(combobox, GTK_ALIGN_CENTER);
 		gtk_widget_set_margin(combobox, 6, 6, 6, 6);
 
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combobox), _("None"));
@@ -1643,6 +1660,87 @@ void fax_ghostscript_file_chooser_button_file_set_cb(GtkWidget *button, gpointer
 	g_settings_set_string(profile->settings, "ghostscript", file);
 }
 
+void update_numbers(gboolean active, const gchar *number)
+{
+	GSList *devices = rm_device_get_plugins();
+	GSList *list;
+	/* This one is hard-coded as we are currently supporting CAPI and Call Monitor only, once
+	 * SIP is implemented we need to break this one up */
+	RmDevice *new_device = active ? rm_device_get("CAPI") : rm_device_get("Call Monitor");
+	RmDevice *old_device = NULL;
+	gchar **numbers;
+
+	for (list = devices; list != NULL; list = list->next) {
+		RmDevice *device = list->data;
+
+		if (rm_device_handles_number(device, (gchar*)number)) {
+			old_device = device;
+			break;
+		}
+	}
+
+	//Remove number
+	if (old_device) {
+		numbers = rm_strv_remove(rm_device_get_numbers(old_device), number);
+
+		rm_device_set_numbers(old_device, numbers);
+	}
+
+	//Add number
+	if (new_device) {
+		numbers = rm_strv_add(rm_device_get_numbers(new_device), number);
+
+		rm_device_set_numbers(new_device, numbers);
+	}
+}
+
+void phone_active_switch_activate_cb(GtkSwitch *widget, gpointer user_data)
+{
+	const gchar *number = gtk_combo_box_get_active_id(GTK_COMBO_BOX(settings->softphone_msn_combobox));
+	gboolean active = gtk_switch_get_active(widget);
+
+	g_debug("%s(): Updating numbers", __FUNCTION__);
+	update_numbers(active, number);
+}
+
+void fax_active_switch_activate_cb(GtkSwitch *widget, gpointer user_data)
+{
+	const gchar *number = gtk_combo_box_get_active_id(GTK_COMBO_BOX(settings->fax_msn_combobox));
+	gboolean active = gtk_switch_get_active(widget);
+
+	g_debug("%s(): Updating numbers", __FUNCTION__);
+	update_numbers(active, number);
+}
+
+void numbers_header_func(GtkListBoxRow *row,
+                         GtkListBoxRow *before,
+                         gpointer       user_data)
+{
+	GtkWidget *current;
+
+	if (!before) {
+		gtk_list_box_row_set_header(row , NULL);
+		return;
+	}
+
+	current = gtk_list_box_row_get_header(row);
+	if (!current) {
+		current = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
+		gtk_widget_show(current);
+		gtk_list_box_row_set_header(row, current);
+	}
+}
+
+void fax_msn_changed_cb(GtkWidget *widget,
+                        gpointer   user_data)
+{
+	const gchar *number = gtk_combo_box_get_active_id(GTK_COMBO_BOX(settings->fax_msn_combobox));
+	gboolean active = gtk_switch_get_active(GTK_SWITCH(settings->fax_active_switch));
+
+	g_debug("%s(): Updating numbers", __FUNCTION__);
+	update_numbers(active, number);
+}
+
 void app_show_settings(void)
 {
 	GtkBuilder *builder;
@@ -1673,7 +1771,7 @@ void app_show_settings(void)
 		return;
 	}
 
-	settings = g_slice_new(struct settings);
+	settings = g_slice_new0(struct settings);
 
 	/* Connect to builder objects */
 	settings->window = GTK_WIDGET(gtk_builder_get_object(builder, "settings"));
@@ -1697,6 +1795,15 @@ void app_show_settings(void)
 	settings->ftp_password_entry = GTK_WIDGET(gtk_builder_get_object(builder, "ftp_password_entry"));
 	gtk_entry_set_text(GTK_ENTRY(settings->ftp_password_entry), rm_router_get_ftp_password(profile));
 
+	if (!rm_router_need_ftp(profile)) {
+		GtkWidget *tmp = GTK_WIDGET(gtk_builder_get_object(builder, "ftp_login_check_button"));
+
+		g_debug("%s(): Disable ftp data", __FUNCTION__);
+		gtk_widget_set_sensitive(settings->ftp_user_entry, FALSE);
+		gtk_widget_set_sensitive(settings->ftp_password_entry, FALSE);
+		gtk_widget_set_sensitive(tmp, FALSE);
+	}
+
 	/* Prefix group */
 	is_cable = rm_router_is_cable(profile);
 
@@ -1717,12 +1824,17 @@ void app_show_settings(void)
 	gtk_widget_set_sensitive(settings->national_access_code_entry, is_cable);
 	gtk_widget_set_sensitive(settings->area_code_entry, is_cable);*/
 
+	is_cable = TRUE;
 	gtk_editable_set_editable(GTK_EDITABLE(settings->international_access_code_entry), is_cable);
 	gtk_editable_set_editable(GTK_EDITABLE(settings->country_code_entry), is_cable);
 	gtk_editable_set_editable(GTK_EDITABLE(settings->national_access_code_entry), is_cable);
 	gtk_editable_set_editable(GTK_EDITABLE(settings->area_code_entry), is_cable);
 
 	/* Numbers group */
+	settings->phone_active_switch = GTK_WIDGET(gtk_builder_get_object(builder, "phone_active_switch"));
+	g_settings_bind(profile->settings, "phone-active", settings->phone_active_switch, "active", G_SETTINGS_BIND_DEFAULT);
+	g_signal_connect(G_OBJECT(settings->phone_active_switch), "notify::active", G_CALLBACK(phone_active_switch_activate_cb), NULL);
+
 	settings->softphone_msn_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "softphone_number_combobox"));
 	numbers = rm_router_get_numbers(profile);
 	for (idx = 0; idx < g_strv_length(numbers); idx++) {
@@ -1734,11 +1846,15 @@ void app_show_settings(void)
 	g_settings_bind(profile->settings, "phone-controller", settings->softphone_controller_combobox, "active", G_SETTINGS_BIND_DEFAULT);
 
 
-	settings->numbers_assign_listbox = GTK_WIDGET(gtk_builder_get_object(builder, "numbers_assign_listbox"));
-	settings_numbers_populate(settings->numbers_assign_listbox);
+	//settings->numbers_assign_listbox = GTK_WIDGET(gtk_builder_get_object(builder, "numbers_assign_listbox"));
+	//settings_numbers_populate(settings->numbers_assign_listbox);
 
 	/* Fax group */
-	/*settings->fax_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "fax_plugin_combobox"));
+	settings->fax_active_switch = GTK_WIDGET(gtk_builder_get_object(builder, "fax_active_switch"));
+	g_settings_bind(profile->settings, "fax-active", settings->fax_active_switch, "active", G_SETTINGS_BIND_DEFAULT);
+	g_signal_connect(G_OBJECT(settings->fax_active_switch), "notify::active", G_CALLBACK(fax_active_switch_activate_cb), NULL);
+
+		/*settings->fax_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "fax_plugin_combobox"));
 	fax_plugins = rm_fax_get_plugins();
 	for (list = fax_plugins; list != NULL; list = list->next) {
 		RmFax *fax = list->data;
@@ -1768,6 +1884,7 @@ void app_show_settings(void)
 		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->fax_msn_combobox), numbers[idx], numbers[idx]);
 	}
 	g_settings_bind(profile->settings, "fax-number", settings->fax_msn_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+	g_signal_connect(settings->fax_msn_combobox, "changed", G_CALLBACK(fax_msn_changed_cb), NULL);
 
 	settings->fax_controller_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "fax_controller_combobox"));
 	g_settings_bind(profile->settings, "fax-controller", settings->fax_controller_combobox, "active", G_SETTINGS_BIND_DEFAULT);
@@ -1819,6 +1936,7 @@ void app_show_settings(void)
 	/* Extended group */
 	settings->audio_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "audio_plugin_combobox"));
 	settings->audio_output_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "audio_output_combobox"));
+	settings->audio_output_ringtone_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "audio_output_ringtone_combobox"));
 	settings->audio_input_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "audio_input_combobox"));
 
 	audio_plugins = rm_audio_get_plugins();
@@ -1837,6 +1955,7 @@ void app_show_settings(void)
 	g_signal_connect(settings->audio_plugin_combobox, "changed", G_CALLBACK(audio_plugin_combobox_changed_cb), NULL);
 
 	g_settings_bind(rm_profile_get_active()->settings, "audio-output", settings->audio_output_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(rm_profile_get_active()->settings, "audio-output-ringtone", settings->audio_output_ringtone_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 	g_settings_bind(rm_profile_get_active()->settings, "audio-input", settings->audio_input_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 	g_settings_bind(rm_profile_get_active()->settings, "audio-plugin", settings->audio_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
 
@@ -1852,6 +1971,7 @@ void app_show_settings(void)
 	g_settings_bind(profile->settings, "notification-play-ringtone", settings->notification_ringtone_switch, "active", G_SETTINGS_BIND_DEFAULT);
 
 	settings->notification_listbox = GTK_WIDGET(gtk_builder_get_object(builder, "notification_listbox"));
+	gtk_list_box_set_header_func (GTK_LIST_BOX(settings->notification_listbox), numbers_header_func, NULL, NULL);
 	settings_notification_populate(settings->notification_listbox);
 
 	/* Header bar information */
@@ -1882,6 +2002,8 @@ void app_show_settings(void)
 									 "ftp_password_entry_changed_cb", G_CALLBACK(ftp_password_entry_changed_cb),
 									 "login_password_entry_changed_cb", G_CALLBACK(login_password_entry_changed_cb),
 									 "action_enable_renderer_toggled_cb", G_CALLBACK(action_enable_renderer_toggled_cb),
+									 "phone_active_switch_activate_cb", G_CALLBACK(phone_active_switch_activate_cb),
+									 "fax_active_switch_activate_cb", G_CALLBACK(fax_active_switch_activate_cb),
 									 NULL);
 	gtk_builder_connect_signals(builder, NULL);
 

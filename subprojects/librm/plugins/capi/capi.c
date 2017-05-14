@@ -936,7 +936,7 @@ static int capi_indication(_cmsg capi_message)
 			if (connection->type == SESSION_PHONE) {
 				RmAudio *audio = rm_profile_get_audio(rm_profile_get_active());
 
-				connection->audio = rm_audio_open(audio);
+				connection->audio = rm_audio_open(audio, NULL);
 				if (!connection->audio) {
 					g_warning("Could not open audio. Hangup");
 					capi_hangup(connection);
@@ -961,7 +961,7 @@ static int capi_indication(_cmsg capi_message)
 				if (connection->type == SESSION_PHONE) {
 					RmAudio *audio = rm_profile_get_audio(rm_profile_get_active());
 
-					connection->audio = rm_audio_open(audio);
+					connection->audio = rm_audio_open(audio, NULL);
 					if (!connection->audio) {
 						g_warning("Could not open audio. Hangup");
 						rm_object_emit_message("Audio error", "Could not open audio. Hangup");
@@ -1337,7 +1337,7 @@ static int capi_indication(_cmsg capi_message)
 				if (connection->type == SESSION_PHONE) {
 					RmAudio *audio = rm_profile_get_audio(rm_profile_get_active());
 
-					connection->audio = rm_audio_open(audio);
+					connection->audio = rm_audio_open(audio, NULL);
 					if (!connection->audio) {
 						g_warning("Could not open audio. Hangup");
 						rm_object_emit_message("Audio error", "Could not open audio. Hangup");

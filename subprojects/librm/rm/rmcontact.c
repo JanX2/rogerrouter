@@ -38,7 +38,7 @@ gpointer rm_contact_copy_numbers(gconstpointer src, gpointer data)
 	RmPhoneNumber *copy = NULL;
 	RmPhoneNumber *src_number = (RmPhoneNumber *)src;
 
-	copy = g_slice_new(RmPhoneNumber);
+	copy = g_slice_new0(RmPhoneNumber);
 
 	copy->type = src_number->type;
 	copy->number = g_strdup(src_number->number);
