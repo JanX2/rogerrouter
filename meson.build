@@ -33,6 +33,12 @@ cdata.set('APP_DATA', '"' + get_option('prefix') + '/' + get_option('datadir') +
 cdata.set('APP_LOCALE', '"' + get_option('prefix') + '/' + get_option('localedir') + '"')
 endif
 
+if get_option('fax_spooler')
+	cdata.set10('RM_FAX_SPOOLER', 1)
+else
+	cdata.set10('RM_FAX_SERVER', 1)
+endif
+
 check_headers = [['dlfcn.h','HAVE_DLFCN_H'],
   ['sys/utsname.h', 'HAVE_SYS_UTSNAME_H'],
 ]

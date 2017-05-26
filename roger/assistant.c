@@ -510,7 +510,7 @@ void back_button_clicked_cb(GtkWidget *next, gpointer user_data)
 	/* Decrease current page counter */
 	assistant->current_page--;
 
-	if (!rm_router_need_ftp(assistant->profile) && !g_strcmp0(assistant_pages[assistant->current_page].name, "ftp_password")) {
+	if (!g_strcmp0(assistant_pages[assistant->current_page].name, "ftp_password") && !rm_router_need_ftp(assistant->profile)) {
 		assistant->current_page--;
 	}
 
@@ -565,7 +565,7 @@ void next_button_clicked_cb(GtkWidget *next, gpointer user_data)
 	/* Increate current page counter */
 	assistant->current_page++;
 
-	if (!rm_router_need_ftp(assistant->profile) && !g_strcmp0(assistant_pages[assistant->current_page].name, "ftp_password")) {
+	if (!g_strcmp0(assistant_pages[assistant->current_page].name, "ftp_password") && !rm_router_need_ftp(assistant->profile)) {
 		assistant->current_page++;
 	}
 

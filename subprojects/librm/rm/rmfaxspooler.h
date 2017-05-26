@@ -17,15 +17,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef __RM_FAXPRINTER_H
-#define __RM_FAXPRINTER_H
+#ifndef __RMFAXSPOOLER_H__
+#define __RMFAXSPOOLER_H__
 
 G_BEGIN_DECLS
 
-#include <rm/rmmain.h>
-
-gboolean rm_faxprinter_init(GError **error);
+gboolean rm_faxspooler_init(void);
 
 G_END_DECLS
 
 #endif
+

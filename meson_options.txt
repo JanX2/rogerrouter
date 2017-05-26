@@ -1,0 +1,1 @@
+option('fax_spooler', type : 'boolean', value : true, description : 'Use fax spooler instead of server?')

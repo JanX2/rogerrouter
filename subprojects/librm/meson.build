@@ -70,10 +70,8 @@ cdata.set10('HAVE_DCONF', dconf_dep.found())
 cdata.set10('HAVE_UUID', dconf_dep.found())
 
 if host_machine.system() == 'windows'
-	cdata.set10('RM_FAX_SERVER', 1)
 	cdata.set('APP_LOCALE', '"' + get_option('localedir') + '"')
 else
-	cdata.set10('RM_FAX_SPOOLER', 1)
 	cdata.set('APP_LOCALE', '"' + get_option('prefix') + '/' + get_option('localedir') + '"')
 endif
 

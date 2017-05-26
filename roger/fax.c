@@ -24,6 +24,9 @@
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
 
+#include <ghostscript/iapi.h>
+#include <ghostscript/ierrors.h>
+
 #include <rm/rmprofile.h>
 #include <rm/rmobject.h>
 #include <rm/rmfax.h>
@@ -289,22 +292,16 @@ gboolean app_show_fax_window_idle(gpointer data)
 
 gchar *convert_to_fax(gchar *file_name)
 {
-	GError *error = NULL;
 	gchar *args[13];
 	gchar *output;
 	gchar *out_file;
 	RmProfile *profile = rm_profile_get_active();
-	gint conv_ret_value;
+	gint ret;
+	gint ret1;
+	void *minst;
 
 	/* convert ps to fax */
-#ifdef G_OS_WIN32
-	args[0] = g_settings_get_string(profile->settings, "ghostscript");
-#elif __APPLE__
-	args[0] = rm_get_directory("bin/gs");
-#else
-	args[0] = rm_get_directory("gs");
-#endif
-	g_debug("convert_fax_to_out_file(): args[0]=%s", args[0]);
+	args[0] = "ps2tiff";
 	args[1] = "-q";
 	args[2] = "-dNOPAUSE";
 	args[3] = "-dSAFER";
@@ -347,6 +344,26 @@ gchar *convert_to_fax(gchar *file_name)
 	args[11] = file_name;
 	args[12] = NULL;
 
+#if 1
+	ret = gsapi_new_instance(&minst, NULL);
+    if (ret < 0) {
+		return NULL;
+	}
+	ret = gsapi_set_arg_encoding(minst, GS_ARG_ENCODING_UTF8);
+    if (ret == 0) {
+        ret = gsapi_init_with_args(minst, 12, args);
+	}
+
+    ret1 = gsapi_exit(minst);
+    if ((ret == 0) || (ret == gs_error_Quit)) {
+		ret = ret1;
+	}
+
+    gsapi_delete_instance(minst);
+#else
+	GError *error = NULL;
+	gint conv_ret_value;
+
 	if (!g_spawn_sync(NULL, args, NULL, G_SPAWN_SEARCH_PATH | G_SPAWN_CHILD_INHERITS_STDIN | G_SPAWN_LEAVE_DESCRIPTORS_OPEN /*| G_SPAWN_STDOUT_TO_DEV_NULL | G_SPAWN_STDERR_TO_DEV_NULL*/, NULL, NULL, NULL, NULL, &conv_ret_value, &error)) {
 		g_warning("%s(): Error occurred: %s", __FUNCTION__, error ? error->message : "");
 		g_free(args[0]);
@@ -354,7 +371,7 @@ gchar *convert_to_fax(gchar *file_name)
 
 		return NULL;
 	}
-	g_free(args[0]);
+#endif
 
 	if (!g_file_test(out_file, G_FILE_TEST_EXISTS)) {
 		g_warning("%s(): Error converting print file to FAX format!", __FUNCTION__);

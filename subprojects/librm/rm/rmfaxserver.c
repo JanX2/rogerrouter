@@ -28,9 +28,8 @@
 #include <rmconfig.h>
 
 #include <rmobjectemit.h>
-#include <rmfaxprinter.h>
-
-#ifdef RM_FAX_SERVER
+#include <rmfaxserver.h>
+#include <rmmain.h>
 
 #define BUFFER_LENGTH 1024
 
@@ -97,14 +96,13 @@ gpointer rm_faxserver_thread(gpointer data)
 }
 
 /**
- * rm_faxprinter_init:
- * @error: a #GError:
+ * rm_faxserver_init:
  *
  * Initialize fax network spooler
  *
  * Returns: %TRUE if network spooler could be started, %FALSE on error
  */
-gboolean rm_faxprinter_init(GError **error)
+gboolean rm_faxserver_init(void)
 {
 	GSocket *socket = NULL;
 	GInetAddress *inet_address = NULL;
@@ -113,8 +111,7 @@ gboolean rm_faxprinter_init(GError **error)
 
 	socket = g_socket_new(G_SOCKET_FAMILY_IPV4, G_SOCKET_TYPE_STREAM, G_SOCKET_PROTOCOL_TCP, &fax_error);
 	if (socket == NULL) {
-		g_debug("%s(): %s'", __FUNCTION__, fax_error->message);
-		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Fax printer: '%s'", fax_error ? fax_error->message : "");
+		g_warning("%s(): %s'", __FUNCTION__, fax_error->message);
 		g_error_free(fax_error);
 		return FALSE;
 	}
@@ -123,23 +120,20 @@ gboolean rm_faxprinter_init(GError **error)
 
 	sock_address = g_inet_socket_address_new(inet_address, 9100);
 	if (sock_address == NULL) {
-		g_debug("%s(): Could not create sock address on port 9100", __FUNCTION__);
+		g_warning("%s(): Could not create sock address on port 9100", __FUNCTION__);
 		g_object_unref(socket);
-		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "%s", "Could not create sock address on port 9100");
 		return FALSE;
 	}
 
 	if (g_socket_bind(socket, sock_address, TRUE, &fax_error) == FALSE) {
-		g_debug("%s(): %s", __FUNCTION__, fax_error->message);
-		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Fax printer: %s", fax_error->message);
+		g_warning("%s(): %s", __FUNCTION__, fax_error->message);
 		g_error_free(fax_error);
 		g_object_unref(socket);
 		return FALSE;
 	}
 
 	if (g_socket_listen(socket, &fax_error) == FALSE) {
-		g_debug("%s(): Error: %s", __FUNCTION__, fax_error->message);
-		g_set_error(error, RM_ERROR, RM_ERROR_FAX, "Fax printer: %s", fax_error->message);
+		g_warning("%s(): Error: %s", __FUNCTION__, fax_error->message);
 		g_error_free(fax_error);
 		g_object_unref(socket);
 		return FALSE;
@@ -152,4 +146,3 @@ gboolean rm_faxprinter_init(GError **error)
 	return TRUE;
 }
 
-#endif

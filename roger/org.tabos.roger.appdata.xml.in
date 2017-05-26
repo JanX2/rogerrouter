@@ -13,8 +13,8 @@
     <p>Some plugins for Roger Router are packaged separately.</p>
   </description>
   <screenshots>
-    <screenshot height="576" type="default" width="1024">
-      <image>https://www.tabos.org/downloads/roger-router-1.png</image>
+    <screenshot height="575" type="default" width="1252">
+      <image>https://www.tabos.org/wp-content/uploads/2015/01/roger-headerbar-linux.png</image>
       <caption>Journal view of all calls</caption>
     </screenshot>
   </screenshots>

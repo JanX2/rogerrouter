@@ -98,7 +98,7 @@ void app_copy_ip(void)
 
 	ip = rm_router_get_ip(profile);
 	if (ip) {
-		g_debug("IP: '%s'", ip);
+		g_debug("%s(): IP: '%s'", __FUNCTION__, ip);
 		gtk_clipboard_set_text(gtk_clipboard_get(GDK_NONE), ip, -1);
 		g_free(ip);
 	} else {
@@ -356,6 +356,30 @@ static void app_init(GtkApplication *app)
 	GMenu *menu;
 	GMenu *section;
 
+	const gchar *user_plugins = g_get_user_data_dir();
+	gchar *path = g_build_filename(user_plugins, "roger", G_DIR_SEPARATOR_S, "plugins", NULL);
+
+	rm_plugins_add_search_path(path);
+	rm_plugins_add_search_path(rm_get_directory(APP_PLUGINS));
+	g_free(path);
+
+	if (option_state.profile) {
+		rm_set_requested_profile(option_state.profile);
+	}
+
+	rm_new(option_state.debug, &error);
+
+	/* Set local bindings */
+	bindtextdomain(GETTEXT_PACKAGE, rm_get_directory(APP_LOCALE));
+	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+	textdomain(GETTEXT_PACKAGE);
+
+#if RM_FAX_SERVER
+	rm_use_fax_server(TRUE);
+#else
+	rm_use_fax_server(FALSE);
+#endif
+
 #if GTK_CHECK_VERSION(3,14,0)
 	const gchar *accels[] = {NULL, NULL, NULL, NULL};
 
@@ -423,24 +447,6 @@ static void app_init(GtkApplication *app)
 	g_menu_append_section(menu, NULL, G_MENU_MODEL(section));
 
 	gtk_application_set_app_menu(GTK_APPLICATION(app), G_MENU_MODEL(menu));
-
-	const gchar *user_plugins = g_get_user_data_dir();
-	gchar *path = g_build_filename(user_plugins, "roger", G_DIR_SEPARATOR_S, "plugins", NULL);
-
-	rm_plugins_add_search_path(path);
-	rm_plugins_add_search_path(rm_get_directory(APP_PLUGINS));
-	g_free(path);
-
-	if (option_state.profile) {
-		rm_set_requested_profile(option_state.profile);
-	}
-
-	rm_new(option_state.debug, &error);
-
-	/* Set local bindings */
-	bindtextdomain(GETTEXT_PACKAGE, rm_get_directory(APP_LOCALE));
-	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
-	textdomain(GETTEXT_PACKAGE);
 
 	if (option_state.debug || g_settings_get_boolean(app_settings, "debug")) {
 		debug_activated(NULL, NULL, NULL);

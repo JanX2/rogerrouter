@@ -26,9 +26,7 @@ Author: Jan-Michael Brummer
   <object class="GtkWindow" id="assistant">
     <property name="can_focus">False</property>
     <property name="resizable">False</property>
-    <property name="modal">True</property>
     <property name="window_position">center-always</property>
-    <property name="type_hint">dialog</property>
     <child>
       <object class="GtkStack" id="stack">
         <property name="visible">True</property>
@@ -297,7 +295,6 @@ Either select auto discovered router below or switch to manual mode and enter it
                         <property name="is_focus">True</property>
                         <property name="valign">center</property>
                         <property name="margin_top">12</property>
-                        <!--<signal name="changed" handler="router_entry_changed" swapped="no"/>-->
                       </object>
                       <packing>
                         <property name="expand">False</property>

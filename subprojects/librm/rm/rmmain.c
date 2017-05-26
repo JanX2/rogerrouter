@@ -34,7 +34,8 @@
 #include <rm/rmnetwork.h>
 #include <rm/rmnetmonitor.h>
 #include <rm/rmphone.h>
-#include <rm/rmfaxprinter.h>
+#include <rm/rmfaxspooler.h>
+#include <rm/rmfaxserver.h>
 #include <rm/rmaction.h>
 #include <rm/rmpassword.h>
 #include <rm/rmlog.h>
@@ -61,6 +62,8 @@ static gchar *rm_user_cache_dir = NULL;
 static gchar *rm_user_data_dir = NULL;
 /** Requested user profile */
 static gchar *rm_requested_profile = NULL;
+/** Fax server flag */
+static gboolean rm_fax_server_active = FALSE;
 
 /**
  * rm_print_error_quark:
@@ -84,6 +87,8 @@ GQuark rm_print_error_quark(void)
  */
 gchar *rm_get_directory(gchar *type)
 {
+	gchar *ret = NULL;
+
 #ifdef G_OS_WIN32
 	GFile *directory;
 	GFile *child;
@@ -102,18 +107,20 @@ gchar *rm_get_directory(gchar *type)
 	tmp = g_file_get_path(directory);
 	g_object_unref(directory);
 
-	return tmp;
+	ret = tmp;
 #elif __APPLE__
 	gchar *bundle = gtkosx_application_get_bundle_path();
 
 	if (gtkosx_application_get_bundle_id()) {
-		return g_strdup_printf("%s/Contents/Resources/%s", bundle, type);
+		ret = g_strdup_printf("%s/Contents/Resources/%s", bundle, type);
 	} else {
-		return g_strdup_printf("%s/../%s", bundle, type);
+		ret = g_strdup_printf("%s/../%s", bundle, type);
 	}
 #else
-	return g_strdup(type);
+	ret = g_strdup(type);
 #endif
+
+	return ret;
 }
 
 /**
@@ -238,6 +245,17 @@ gboolean rm_new(gboolean debug, GError **error)
 }
 
 /**
+ * rm_use_fax_server:
+ * @on: flag indicating if fax server should be used
+ *
+ * Activate/Deactivate fax server
+ */
+void rm_use_fax_server(gboolean on)
+{
+	rm_fax_server_active = on;
+}
+
+/**
  * rm_init:
  * @error: a @GError
  *
@@ -251,7 +269,11 @@ gboolean rm_init(GError **error)
 	g_info("%s %s", RM_NAME, RM_VERSION);
 
 	/* Init fax printer */
-	rm_faxprinter_init(NULL);
+	if (rm_fax_server_active) {
+		rm_faxserver_init();
+	} else {
+		rm_faxspooler_init();
+	}
 
 	/* Initialize network */
 	rm_network_init();
