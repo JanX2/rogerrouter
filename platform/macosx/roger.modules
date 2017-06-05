@@ -8,7 +8,7 @@
 	<repository type="tarball" name="speex" href="http://downloads.xiph.org/releases/speex/"/>
 	<repository type="tarball" name="libsndfile" href="http://www.mega-nerd.com/libsndfile/files/"/>
 	<repository type="tarball" name="libsoup" href="http://ftp.gnome.org/pub/GNOME/sources/libsoup/2.40/"/>
-	<repository type="tarball" name="libpeas" href="http://ftp.gnome.org/pub/GNOME/sources/libpeas/1.6/"/>
+	<repository type="tarball" name="gupnp" href="http://ftp.gnome.org/pub/GNOME/sources/gupnp/1.0/"/>
 	<repository type="tarball" name="spandsp" href="http://soft-switch.org/downloads/spandsp/"/>
 	<repository type="tarball" name="portaudio" href="http://www.portaudio.com/archives/"/>
 	<repository type="tarball" name="ghostscript" href="http://prdownloads.sourceforge.net/ghostscript/GPL%20Ghostscript/"/>
@@ -31,10 +31,8 @@
 		<branch repo="libsoup" module="libsoup-2.40.3.tar.xz" version="2.40.3" />
 	</autotools>
 
-	<autotools id="libpeas">
-		<branch repo="libpeas" module="libpeas-1.6.2.tar.xz" version="1.6.2">
-			<patch file="libpeas-1.6.2.patch" strip="1"/>
-		</branch>
+	<autotools id="gupnp">
+		<branch repo="gupnp" module="gupnp-1.0.2.tar.xz" version="1.0.2"/>
 	</autotools>
 
 	 <autotools id="spandsp" autogen-sh="./autogen.sh; ./configure">

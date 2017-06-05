@@ -1,8 +1,12 @@
+gstreamer = dependency('gstreamer-1.0', required: false)
+
+if gstreamer.found()
+
 gstreamer_sources = ['gstreamer.c']
 
 gstreamer_dep = []
 gstreamer_dep += rm_dep
-gstreamer_dep += dependency('gstreamer-1.0')
+gstreamer_dep += gstreamer
 gstreamer_dep += dependency('gstreamer-app-1.0')
 
 libgstreamer = shared_library('gstreamer',
@@ -18,3 +22,5 @@ custom_target('gstreamer.plugin',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', rm_podir, '-o', '@OUTPUT@'],
     install : true,
     install_dir : rm_plugins_path + '/gstreamer/')
+
+endif
