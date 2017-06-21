@@ -375,8 +375,10 @@ static char *rand_string(gchar *str, size_t size)
 	const gchar charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 	if (size) {
+		size_t n;
+
 		--size;
-		for (size_t n = 0; n < size; n++) {
+		for (n = 0; n < size; n++) {
 			int key = g_random_int() % (gint)(sizeof(charset) - 1);
 			str[n] = charset[key];
 		}
