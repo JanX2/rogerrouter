@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define _POSIX_SOURCE
+
 #include <config.h>
 
 #include <glib.h>
