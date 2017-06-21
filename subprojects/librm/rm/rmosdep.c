@@ -18,6 +18,7 @@
  */
 
 #include <glib.h>
+#include <gio/gio.h>
 
 #include <rm/rmosdep.h>
 
@@ -38,6 +39,7 @@
  */
 void rm_os_execute(const gchar *uri)
 {
+#if 0
 	gchar *exec;
 
 	/* create execution command line for g_spawn */
@@ -51,4 +53,26 @@ void rm_os_execute(const gchar *uri)
 
 	/* free command line */
 	g_free(exec);
+#else
+	GError *error = NULL;
+	GFile *file = g_file_new_for_path(uri);
+	GAppInfo *info = g_file_query_default_handler(file, NULL, &error);
+	GList *list = g_list_append(NULL, file);
+
+	if (!info) {
+		g_warning("%s(): %s", __FUNCTION__, error->message);
+		g_object_unref(file);
+		return;
+	}
+
+	g_debug("%s(): %s/%s", __FUNCTION__, g_app_info_get_display_name(info), g_app_info_get_executable(info));
+	if (!g_app_info_launch(info, list, NULL, &error)) {
+		g_warning("%s(): %s", __FUNCTION__, error->message);
+
+	}
+
+	g_list_free(list);
+	g_object_unref(file);
+	g_object_unref(info);
+#endif
 }

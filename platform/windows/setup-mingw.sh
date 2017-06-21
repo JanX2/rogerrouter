@@ -130,20 +130,21 @@ make_pkg "http://tabos.org/downloads/" "libcapi20-3.0.7.tar.bz2" "capi20"
 
 make_pkg "http://www.portaudio.com/archives/" "pa_stable_v190600_20161030.tgz" "portaudio"
 
-# ************ PATCHED PACKAGES ********************
-
-# Download and compile spandsp (configure needs to be patched, gethostname not resolved)
-make_pkg "http://soft-switch.org/downloads/spandsp/" "spandsp-0.0.6pre21.tgz" "spandsp-0.0.6"
-
-#make_pkg "https://downloads.sourceforge.net/project/libuuid/" "libuuid-1.0.3.tar.gz" "libuuid-1.0.3"
-
 make_pkg "http://ftp.gnome.org/pub/GNOME/sources/gssdp/0.14/" "gssdp-0.14.15.tar.xz" "gssdp-0.14.15"
 
 make_pkg "http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.20/" "gupnp-0.20.17.tar.xz" "gupnp-0.20.17"
 
 make_pkg "http://ftp.gnome.org/pub/GNOME/sources/json-glib/1.2/" "json-glib-1.2.0.tar.xz" "json-glib-1.2.0"
 
+make_pkg "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs921/" "ghostscript-9.21.tar.gz"  "ghostscript-9.21"
+
+# ************ PATCHED PACKAGES ********************
+
+# Download and compile spandsp (configure needs to be patched, gethostname not resolved)
+make_pkg "http://soft-switch.org/downloads/spandsp/" "spandsp-0.0.6pre21.tgz" "spandsp-0.0.6"
+
+#make_pkg "https://downloads.sourceforge.net/project/libuuid/" "libuuid-1.0.3.tar.gz" "libuuid-1.0.3"
 ##make_pkg "http://www.pjsip.org/release/2.5.1/" "pjproject-2.5.1.tar.bz2" "pjproject-2.5.1"
 
 # ******************** Roger Router *******************
-download https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs919/ gs919w32.exe
+#download https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs919/ gs919w32.exe

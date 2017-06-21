@@ -321,6 +321,7 @@ Caller company</property>
           <object class="GtkNotebook" id="settings_notebook">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="tab_pos">left</property>
             <property name="show_border">False</property>
             <child>
               <object class="GtkGrid" id="grid2">

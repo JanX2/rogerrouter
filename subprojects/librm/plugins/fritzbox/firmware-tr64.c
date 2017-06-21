@@ -45,7 +45,7 @@
 #include "firmware-common.h"
 #include "firmware-query.h"
 
-//#define FIRMWARE_TR64_DEBUG 1
+#define FIRMWARE_TR64_DEBUG 1
 
 static gint firmware_tr64_security_port = 0;
 
@@ -511,14 +511,58 @@ gchar *firmware_tr64_load_voice(RmProfile *profile, const gchar *filename, gsize
 gboolean firmware_tr64_dial_number(RmProfile *profile, gint port, const gchar *number)
 {
 	SoupMessage *msg;
+	gint idx = -1;
+	gchar *name;
+	gchar *prefix = NULL;
 
-	msg = firmware_tr64_request(profile, TRUE, "x_voip", "X_AVM-DE_DialSetConfig", "urn:dslforum-org:service:X_VoIP:1", "NewX_AVM-DE_PhoneName", g_settings_get_string(fritzbox_settings, fritzbox_phone_ports[port].setting_name), NULL);
+	for (gint i = 0; i < PORT_MAX - 2; i++) {
+		if (fritzbox_phone_ports[i].type == port) {
+			idx = i;
+			break;
+		}
+	}
+
+	if (idx == -1) {
+		return FALSE;
+	}
+
+	switch (port) {
+	case PORT_ISDNALL...PORT_ISDN8:
+		prefix = g_strdup("ISDN: ");
+		break;
+	case PORT_ANALOG1...PORT_ANALOG3:
+		prefix = g_strdup("POTS: ");
+		break;
+	case PORT_DECT1...PORT_DECT6:
+	default:
+		prefix = g_strdup("DECT: ");
+		break;
+	}
+
+	name = g_strdup_printf("%s%s", prefix, g_settings_get_string(fritzbox_settings, fritzbox_phone_ports[idx].setting_name));
+
+	msg = firmware_tr64_request(profile, TRUE, "x_voip", "X_AVM-DE_DialSetConfig", "urn:dslforum-org:service:X_VoIP:1", "NewX_AVM-DE_PhoneName", name, NULL);
 	if (!msg) {
 		return FALSE;
 	}
 
 	if (msg->status_code != SOUP_STATUS_OK) {
 		g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
+		rm_log_save_data("dialsetconfig-error.xml", msg->response_body->data, -1);
+		g_object_unref(msg);
+		return FALSE;
+	}
+	g_object_unref(msg);
+
+	/* Now dial number */
+	msg = firmware_tr64_request(profile, TRUE, "x_voip", "X_AVM-DE_DialNumber", "urn:dslforum-org:service:X_VoIP:1", "NewX_AVM-DE_PhoneNumber", number, NULL);
+	if (!msg) {
+		return FALSE;
+	}
+
+	if (msg->status_code != SOUP_STATUS_OK) {
+		g_debug("%s(): Received status code: %d", __FUNCTION__, msg->status_code);
+		rm_log_save_data("dialnumber-error.xml", msg->response_body->data, -1);
 		g_object_unref(msg);
 		return FALSE;
 	}
@@ -541,7 +585,7 @@ gboolean firmware_tr64_get_dial_config(RmProfile *profile)
 		g_object_unref(msg);
 		return FALSE;
 	}
-	rm_file_save("getdialconfig.xml", msg->response_body->data, msg->response_body->length);
+	rm_log_save_data("getdialconfig.xml", msg->response_body->data, msg->response_body->length);
 	g_object_unref(msg);
 
 	return TRUE;

@@ -4,8 +4,6 @@ gnome = import('gnome')
 
 msgfmt = find_program('msgfmt')
 
-add_global_arguments('-fdiagnostics-color=always', language : 'c')
-
 app_version = meson.project_version()
 
 version_arr = app_version.split('.')

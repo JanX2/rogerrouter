@@ -60,6 +60,7 @@ void rm_log_save_data(gchar *name, const gchar *data, gsize len)
 	}
 
 	file = g_build_filename(rm_get_user_cache_dir(), name, NULL);
+	g_debug("%s(): Writing to '%s'", __FUNCTION__, file);
 	rm_file_save(file, data, len);
 
 	g_free(file);

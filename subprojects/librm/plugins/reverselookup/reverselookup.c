@@ -56,6 +56,8 @@ static GHashTable *table = NULL;
 static GSList *lookup_list = NULL;
 /** Lookup country code hash table */
 static GHashTable *lookup_table = NULL;
+/** Lookup soup session */
+static SoupSession *rl_session = NULL;
 
 static gchar *replace_number(gchar *url, gchar *full_number)
 {
@@ -137,7 +139,7 @@ static gboolean do_reverse_lookup(struct lookup *lookup, gchar *number, RmContac
 	msg = soup_message_new_from_uri(SOUP_METHOD_GET, uri);
 	soup_message_headers_append (msg->request_headers, "User-Agent", "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)");
 
-	soup_session_send_message(rm_soup_session, msg);
+	soup_session_send_message(rl_session, msg);
 	soup_uri_free(uri);
 	g_free(url);
 	if (msg->status_code != 200) {
@@ -593,6 +595,8 @@ static gboolean reverselookup_plugin_init(RmPlugin *plugin)
 	g_free(file);
 
 	xmlnode_free(node);
+
+	rl_session = soup_session_new();
 
 	rm_lookup_register(&rl);
 
