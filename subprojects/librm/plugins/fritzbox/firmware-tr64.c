@@ -384,6 +384,7 @@ void firmware_tr64_journal_cb(SoupSession *session, SoupMessage *msg, gpointer u
 {
 	GSList *journal = NULL;
 	RmProfile *profile = user_data;
+	xmlnode *child;
 
 	if (msg->status_code != SOUP_STATUS_OK) {
 		g_debug("%s(): Got invalid data, return code: %d", __FUNCTION__, msg->status_code);
@@ -401,7 +402,7 @@ void firmware_tr64_journal_cb(SoupSession *session, SoupMessage *msg, gpointer u
 		return;
 	}
 
-	for (xmlnode *child = xmlnode_get_child(node, "Call"); child != NULL; child = xmlnode_get_next_twin(child)) {
+	for (child = xmlnode_get_child(node, "Call"); child != NULL; child = xmlnode_get_next_twin(child)) {
 		journal = firmware_tr64_add_call(journal, profile, child);
 	}
 
@@ -514,8 +515,9 @@ gboolean firmware_tr64_dial_number(RmProfile *profile, gint port, const gchar *n
 	gint idx = -1;
 	gchar *name;
 	gchar *prefix = NULL;
+	gint i;
 
-	for (gint i = 0; i < PORT_MAX - 2; i++) {
+	for (i = 0; i < PORT_MAX - 2; i++) {
 		if (fritzbox_phone_ports[i].type == port) {
 			idx = i;
 			break;

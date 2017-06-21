@@ -245,7 +245,7 @@ int recording_open(struct recorder *recorder, char *file)
 		}
 	}
 
-	recorder->file_name = strdup(file);
+	recorder->file_name = g_strdup(file);
 	recorder->last_write = 0;
 
 	memset(&recorder->local, 0, sizeof(struct record_channel));

@@ -469,8 +469,8 @@ struct capi_connection *capi_call(
 		return connection;
 	}
 
-	connection->target = strdup(trg_no);
-	connection->source = strdup(src_no);
+	connection->target = g_strdup(trg_no);
+	connection->source = g_strdup(src_no);
 
 	return connection;
 }

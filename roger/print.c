@@ -21,6 +21,7 @@
 
 #include <math.h>
 #include <string.h>
+#include <strings.h>
 
 #include <gtk/gtk.h>
 #include <cairo-pdf.h>
