@@ -41,6 +41,11 @@
 #include <roger/print.h>
 #include <roger/main.h>
 
+/* Workaround to build with pre-9.18 versions */
+#if defined( e_Quit )
+   #define gs_error_Quit  e_Quit
+#endif
+
 struct fax_ui {
 	GtkWidget *window;
 	GtkWidget *header_bar;
