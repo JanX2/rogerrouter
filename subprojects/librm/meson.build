@@ -32,12 +32,17 @@ rm_dep += dependency('json-glib-1.0')
 rm_dep += dependency('gmodule-2.0')
 rm_dep += dependency('sndfile')
 
+if host_machine.system() == 'darwin'
+rm_dep += dependency('gtk+-3.0')
+rm_dep += dependency('gtk-mac-integration')
+endif
+
 # Check for UPnP support
-upnp_dep = dependency('gupnp-1.0', required : false)
+upnp_dep = dependency('gupnp-1.0')
 rm_dep += upnp_dep
 
 # Check for SSDP support
-ssdp_dep = dependency('gssdp-1.0', required : false)
+ssdp_dep = dependency('gssdp-1.0')
 rm_dep += ssdp_dep
 
 # Check for dconf (allowing us to delete gsettings entries on Linux)

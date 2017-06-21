@@ -80,7 +80,7 @@ rm_inc = include_directories('.', '..')
 
 rm_link = []
 
-if host_machine.system() != 'windows'
+if host_machine.system() == 'linux'
 rm_link += '-lcrypt'
 endif
 
