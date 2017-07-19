@@ -2,10 +2,9 @@ fritzfon_sources = []
 fritzfon_sources += 'fritzfon.c'
 
 fritzfon_dep = []
-fritzfon_dep += rm_dep
 fritzfon_dep += roger_dep
 
-fritzfon_inc = [rm_inc, roger_inc]
+fritzfon_inc = [roger_inc]
 
 libfritzfon = shared_library('fritzfon',
                         fritzfon_sources,

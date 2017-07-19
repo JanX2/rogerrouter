@@ -27,13 +27,7 @@
 #include <ghostscript/iapi.h>
 #include <ghostscript/ierrors.h>
 
-#include <rm/rmprofile.h>
-#include <rm/rmobject.h>
-#include <rm/rmfax.h>
-#include <rm/rmmain.h>
-#include <rm/rmstring.h>
-#include <rm/rmnumber.h>
-#include <rm/rmrouter.h>
+#include <rm/rm.h>
 
 #include <roger/journal.h>
 #include <roger/contacts.h>
@@ -87,16 +81,16 @@ gboolean fax_status_timer_cb(gpointer user_data)
 
 	/* Update status information */
 	switch (fax_status->phase) {
-	case FAX_PHASE_IDENTIFY:
+	case RM_FAX_PHASE_IDENTIFY:
 		gtk_label_set_text(GTK_LABEL(fax_ui->receiver_label), fax_status->remote_ident);
 		g_free(fax_status->remote_ident);
 
 		/* Fall through */
-	case FAX_PHASE_SIGNALLING:
+	case RM_FAX_PHASE_SIGNALLING:
 		snprintf(buffer, sizeof(buffer), _("Transferring page %d of %d"), fax_status->page_current, fax_status->page_total);
 		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar), buffer);
 		break;
-	case FAX_PHASE_RELEASE:
+	case RM_FAX_PHASE_RELEASE:
 		if (!fax_status->error_code) {
 			g_debug("%s(): Fax transfer successful", __FUNCTION__);
 			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar),  _("Fax transfer successful"));
@@ -111,7 +105,7 @@ gboolean fax_status_timer_cb(gpointer user_data)
 		rm_fax_hangup(fax_ui->fax, fax_ui->connection);
 		fax_ui->status_timer_id = 0;
 		return G_SOURCE_REMOVE;
-	case FAX_PHASE_CALL:
+	case RM_FAX_PHASE_CALL:
 		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar),  _("Connecting…"));
 		break;
 	default:

@@ -1,11 +1,6 @@
 #include <ctype.h>
 
-#include <rm/rmaddressbook.h>
-#include <rm/rmstring.h>
-#include <rm/rmmain.h>
-#include <rm/rmrouter.h>
-#include <rm/rmobjectemit.h>
-#include <rm/rmstring.h>
+#include <rm/rm.h>
 
 #include <roger/contactsearch.h>
 #include <roger/contacts.h>
@@ -46,24 +41,24 @@ static gboolean contact_search_filter_cb(GtkListBoxRow *row, gpointer user_data)
 	return rm_strcasestr(contact->name, widget->filter) != NULL;
 }
 
-static gchar *fax_number_type_to_string(enum phone_number_type type)
+static gchar *fax_number_type_to_string(RmPhoneNumberType type)
 {
 	gchar *tmp;
 
 	switch (type) {
-	case PHONE_NUMBER_HOME:
+	case RM_PHONE_NUMBER_TYPE_HOME:
 		tmp = g_strdup(_("Home"));
 		break;
-	case PHONE_NUMBER_WORK:
+	case RM_PHONE_NUMBER_TYPE_WORK:
 		tmp = g_strdup(_("Work"));
 		break;
-	case PHONE_NUMBER_MOBILE:
+	case RM_PHONE_NUMBER_TYPE_MOBILE:
 		tmp = g_strdup(_("Mobile"));
 		break;
-	case PHONE_NUMBER_FAX_HOME:
+	case RM_PHONE_NUMBER_TYPE_FAX_HOME:
 		tmp = g_strdup(_("Fax Home"));
 		break;
-	case PHONE_NUMBER_FAX_WORK:
+	case RM_PHONE_NUMBER_TYPE_FAX_WORK:
 		tmp = g_strdup(_("Fax Work"));
 		break;
 	default:

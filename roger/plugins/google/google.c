@@ -21,18 +21,7 @@
 
 #include <gtk/gtk.h>
 
-#include <rm/rmplugins.h>
-#include <rm/rmprofile.h>
-#include <rm/rmobject.h>
-#include <rm/rmaddressbook.h>
-#include <rm/rmcallentry.h>
-#include <rm/rmrouter.h>
-#include <rm/rmsettings.h>
-#include <rm/rmstring.h>
-#include <rm/rmosdep.h>
-#include <rm/rmobjectemit.h>
-#include <rm/rmpassword.h>
-#include <rm/rmnumber.h>
+#include <rm/rm.h>
 
 #include <gdata/gdata.h>
 #include <gdata/gdata-oauth1-authorizer.h>
@@ -381,15 +370,15 @@ static int google_read_book(void) {
 
 				phone_number = g_slice_new(RmPhoneNumber);
 				if (strcmp(type, GDATA_GD_PHONE_NUMBER_WORK) == 0) {
-					phone_number->type = PHONE_NUMBER_WORK;
+					phone_number->type = RM_PHONE_NUMBER_TYPE_WORK;
 				} else if (strcmp(type, GDATA_GD_PHONE_NUMBER_HOME) == 0) {
-					phone_number->type = PHONE_NUMBER_HOME;
+					phone_number->type = RM_PHONE_NUMBER_TYPE_HOME;
 				} else if (strcmp(type, GDATA_GD_PHONE_NUMBER_MOBILE) == 0) {
-					phone_number->type = PHONE_NUMBER_MOBILE;
+					phone_number->type = RM_PHONE_NUMBER_TYPE_MOBILE;
 				} else if (strcmp(type, GDATA_GD_PHONE_NUMBER_HOME_FAX) == 0) {
-					phone_number->type = PHONE_NUMBER_FAX_HOME;
+					phone_number->type = RM_PHONE_NUMBER_TYPE_FAX_HOME;
 				} else if (strcmp(type, GDATA_GD_PHONE_NUMBER_WORK_FAX) == 0) {
-					phone_number->type = PHONE_NUMBER_FAX_WORK;
+					phone_number->type = RM_PHONE_NUMBER_TYPE_FAX_WORK;
 				}
 				phone_number->number = rm_number_full(num, FALSE);
 				contact->numbers = g_slist_prepend(contact->numbers, phone_number);

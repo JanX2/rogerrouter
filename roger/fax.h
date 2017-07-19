@@ -22,8 +22,6 @@
 
 G_BEGIN_DECLS
 
-//#include <rm/plugins/capi/fax.h>
-
 struct fax_ui {
 	gchar *file;
 

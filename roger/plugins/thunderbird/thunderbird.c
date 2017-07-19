@@ -25,16 +25,7 @@
 
 #include <gtk/gtk.h>
 
-#include <rm/rmplugins.h>
-#include <rm/rmprofile.h>
-#include <rm/rmobject.h>
-#include <rm/rmaddressbook.h>
-#include <rm/rmcallentry.h>
-#include <rm/rmrouter.h>
-#include <rm/rmfile.h>
-#include <rm/rmstring.h>
-#include <rm/rmsettings.h>
-#include <rm/rmnumber.h>
+#include <rm/rm.h>
 
 #include <roger/main.h>
 #include <roger/settings.h>
@@ -738,22 +729,22 @@ static void parse_person(GHashTable *map, gpointer pId) {
 		if (!strcmp(column, "HomePhone")) {
 			number = g_slice_new(RmPhoneNumber);
 			number->number = rm_number_full(value, FALSE);
-			number->type = PHONE_NUMBER_HOME;
+			number->type = RM_PHONE_NUMBER_TYPE_HOME;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
 		} else if (!strcmp(column, "WorkPhone")) {
 			number = g_slice_new(RmPhoneNumber);
 			number->number = rm_number_full(value, FALSE);
-			number->type = PHONE_NUMBER_WORK;
+			number->type = RM_PHONE_NUMBER_TYPE_WORK;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
 		} else if (!strcmp(column, "FaxNumber")) {
 			number = g_slice_new(RmPhoneNumber);
 			number->number = rm_number_full(value, FALSE);
-			number->type = PHONE_NUMBER_FAX_HOME;
+			number->type = RM_PHONE_NUMBER_TYPE_FAX_HOME;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
 		} else if (!strcmp(column, "CellularNumber")) {
 			number = g_slice_new(RmPhoneNumber);
 			number->number = rm_number_full(value, FALSE);
-			number->type = PHONE_NUMBER_MOBILE;
+			number->type = RM_PHONE_NUMBER_TYPE_MOBILE;
 			contact->numbers = g_slist_prepend(contact->numbers, number);
 		} else if (!strcmp(column, "DisplayName")) {
 			contact->name = g_strdup(value);

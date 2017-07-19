@@ -46,9 +46,7 @@
 #	include <gnu/libc-version.h>
 #endif
 
-#include <rm/rmfile.h>
-#include <rm/rmprofile.h>
-#include <rm/rmrouter.h>
+#include <rm/rm.h>
 
 #define DEBUGGERRC "debuggerrc"
 #define BUGZILLA_URI "https://www.tabos.org/forum"

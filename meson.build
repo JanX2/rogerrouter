@@ -56,11 +56,6 @@ configure_file(
 roger_inc = include_directories('.')
 
 subdir('po')
-
-rm_sp = subproject('librm')
-rm_dep = rm_sp.get_variable('rm_dep')
-rm_inc = rm_sp.get_variable('rm_inc')
-
 subdir('roger')
 subdir('roger-cli')
 subdir('platform')

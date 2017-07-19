@@ -21,8 +21,7 @@
 
 #include <gtk/gtk.h>
 
-#include <rm/rmplugins.h>
-#include <rm/rmosdep.h>
+#include <rm/rm.h>
 
 #include <main.h>
 #include <plugins.h>

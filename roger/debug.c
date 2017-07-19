@@ -19,8 +19,7 @@
 
 #include <gtk/gtk.h>
 
-#include <rm/rmfile.h>
-#include <rm/rmlog.h>
+#include <rm/rm.h>
 
 #include <roger/application.h>
 #include <roger/main.h>

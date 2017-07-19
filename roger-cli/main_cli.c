@@ -23,18 +23,7 @@
 #include <glib/gstdio.h>
 #include <glib/gprintf.h>
 
-#include <rm/rmobject.h>
-#include <rm/rmprofile.h>
-#include <rm/rmmain.h>
-#include <rm/rmlog.h>
-#include <rm/rmrouter.h>
-#include <rm/rmstring.h>
-#include <rm/rmcallentry.h>
-
-//#include <rm/libfaxophone/faxophone.h>
-//#include <rm/plugins/capi/fax.h>
-#include <rm/rmphone.h>
-//#include <rm/fax_phone.h>
+#include <rm/rm.h>
 
 #include <config.h>
 

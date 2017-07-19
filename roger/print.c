@@ -29,11 +29,7 @@
 #include <tiff.h>
 #include <tiffio.h>
 
-#include <rm/rmobjectemit.h>
-#include <rm/rmrouter.h>
-#include <rm/rmnumber.h>
-//#include <rm/libfaxophone/faxophone.h>
-//#include <rm/plugins/capi/fax.h>
+#include <rm/rm.h>
 
 #include <roger/print.h>
 #include <roger/journal.h>

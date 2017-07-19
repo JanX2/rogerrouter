@@ -24,15 +24,7 @@
 #include <gdk/gdk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
-#include <rm/rmplugins.h>
-#include <rm/rmcallentry.h>
-#include <rm/rmobject.h>
-#include <rm/rmobjectemit.h>
-#include <rm/rmstring.h>
-#include <rm/rmaddressbook.h>
-#include <rm/rmrouter.h>
-#include <rm/rmsettings.h>
-#include <rm/rmnumber.h>
+#include <rm/rm.h>
 
 #include <roger/main.h>
 #include "config.h"
@@ -306,7 +298,7 @@ void ebook_read_data(EClient *e_client)
 		number = e_contact_get_const(e_contact, E_CONTACT_PHONE_HOME);
 		if (!RM_EMPTY_STRING(number)) {
 			phone_number = g_slice_new(RmPhoneNumber);
-			phone_number->type = PHONE_NUMBER_HOME;
+			phone_number->type = RM_PHONE_NUMBER_TYPE_HOME;
 			phone_number->number = rm_number_full(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 		}
@@ -314,7 +306,7 @@ void ebook_read_data(EClient *e_client)
 		number = e_contact_get_const(e_contact, E_CONTACT_PHONE_BUSINESS);
 		if (!RM_EMPTY_STRING(number)) {
 			phone_number = g_slice_new(RmPhoneNumber);
-			phone_number->type = PHONE_NUMBER_WORK;
+			phone_number->type = RM_PHONE_NUMBER_TYPE_WORK;
 			phone_number->number = rm_number_full(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 		}
@@ -322,7 +314,7 @@ void ebook_read_data(EClient *e_client)
 		number = e_contact_get_const(e_contact, E_CONTACT_PHONE_MOBILE);
 		if (!RM_EMPTY_STRING(number)) {
 			phone_number = g_slice_new(RmPhoneNumber);
-			phone_number->type = PHONE_NUMBER_MOBILE;
+			phone_number->type = RM_PHONE_NUMBER_TYPE_MOBILE;
 			phone_number->number = rm_number_full(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 		}
@@ -330,7 +322,7 @@ void ebook_read_data(EClient *e_client)
 		number = e_contact_get_const(e_contact, E_CONTACT_PHONE_HOME_FAX);
 		if (!RM_EMPTY_STRING(number)) {
 			phone_number = g_slice_new(RmPhoneNumber);
-			phone_number->type = PHONE_NUMBER_FAX_HOME;
+			phone_number->type = RM_PHONE_NUMBER_TYPE_FAX_HOME;
 			phone_number->number = rm_number_full(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 		}
@@ -338,7 +330,7 @@ void ebook_read_data(EClient *e_client)
 		number = e_contact_get_const(e_contact, E_CONTACT_PHONE_BUSINESS_FAX);
 		if (!RM_EMPTY_STRING(number)) {
 			phone_number = g_slice_new(RmPhoneNumber);
-			phone_number->type = PHONE_NUMBER_FAX_WORK;
+			phone_number->type = RM_PHONE_NUMBER_TYPE_FAX_WORK;
 			phone_number->number = rm_number_full(number, FALSE);
 			contact->numbers = g_slist_prepend(contact->numbers, phone_number);
 		}
@@ -527,19 +519,19 @@ gboolean evolution_save_contact(RmContact *contact)
 		gint type;
 
 		switch (number->type) {
-		case PHONE_NUMBER_HOME:
+		case RM_PHONE_NUMBER_TYPE_HOME:
 			type = E_CONTACT_PHONE_HOME;
 			break;
-		case PHONE_NUMBER_WORK:
+		case RM_PHONE_NUMBER_TYPE_WORK:
 			type = E_CONTACT_PHONE_BUSINESS;
 			break;
-		case PHONE_NUMBER_MOBILE:
+		case RM_PHONE_NUMBER_TYPE_MOBILE:
 			type = E_CONTACT_PHONE_MOBILE;
 			break;
-		case PHONE_NUMBER_FAX_HOME:
+		case RM_PHONE_NUMBER_TYPE_FAX_HOME:
 			type = E_CONTACT_PHONE_HOME_FAX;
 			break;
-		case PHONE_NUMBER_FAX_WORK:
+		case RM_PHONE_NUMBER_TYPE_FAX_WORK:
 			type = E_CONTACT_PHONE_BUSINESS_FAX;
 			break;
 		default:

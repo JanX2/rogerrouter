@@ -23,19 +23,7 @@
 
 #include <gdk/gdk.h>
 
-#include <rm/rmplugins.h>
-#include <rm/rmobject.h>
-#include <rm/rmaddressbook.h>
-#include <rm/rmprofile.h>
-#include <rm/rmrouter.h>
-#include <rm/rmnetwork.h>
-#include <rm/rmstring.h>
-#include <rm/rmftp.h>
-#include <rm/xml.h>
-#include <rm/rmlog.h>
-#include <rm/rmfile.h>
-#include <rm/rmsettings.h>
-#include <rm/rmnumber.h>
+#include <rm/rm.h>
 
 #include <roger/main.h>
 
@@ -126,17 +114,17 @@ static void parse_telephony(RmContact *contact, xmlnode *telephony)
 
 			phone_number = g_slice_new(RmPhoneNumber);
 			if (strcmp(type, "mobile") == 0) {
-				phone_number->type = PHONE_NUMBER_MOBILE;
+				phone_number->type = RM_PHONE_NUMBER_TYPE_MOBILE;
 			} else if (strcmp(type, "home") == 0) {
-				phone_number->type = PHONE_NUMBER_HOME;
+				phone_number->type = RM_PHONE_NUMBER_TYPE_HOME;
 			} else if (strcmp(type, "work") == 0) {
-				phone_number->type = PHONE_NUMBER_WORK;
+				phone_number->type = RM_PHONE_NUMBER_TYPE_WORK;
 			} else if (strcmp(type, "fax_work") == 0) {
-				phone_number->type = PHONE_NUMBER_FAX_WORK;
+				phone_number->type = RM_PHONE_NUMBER_TYPE_FAX_WORK;
 			} else if (strcmp(type, "fax_home") == 0) {
-				phone_number->type = PHONE_NUMBER_FAX_HOME;
+				phone_number->type = RM_PHONE_NUMBER_TYPE_FAX_HOME;
 			} else if (strcmp(type, "pager") == 0) {
-				phone_number->type = PHONE_NUMBER_PAGER;
+				phone_number->type = RM_PHONE_NUMBER_TYPE_PAGER;
 			} else {
 				phone_number->type = -1;
 				g_debug("Unhandled phone number type: '%s'", type);
@@ -419,19 +407,19 @@ static xmlnode *contact_to_xmlnode(RmContact *contact)
 			number_node = xmlnode_new("number");
 
 			switch (number->type) {
-			case PHONE_NUMBER_HOME:
+			case RM_PHONE_NUMBER_TYPE_HOME:
 				xmlnode_set_attrib(number_node, "type", "home");
 				break;
-			case PHONE_NUMBER_WORK:
+			case RM_PHONE_NUMBER_TYPE_WORK:
 				xmlnode_set_attrib(number_node, "type", "work");
 				break;
-			case PHONE_NUMBER_MOBILE:
+			case RM_PHONE_NUMBER_TYPE_MOBILE:
 				xmlnode_set_attrib(number_node, "type", "mobile");
 				break;
-			case PHONE_NUMBER_FAX_WORK:
+			case RM_PHONE_NUMBER_TYPE_FAX_WORK:
 				xmlnode_set_attrib(number_node, "type", "fax_work");
 				break;
-			case PHONE_NUMBER_FAX_HOME:
+			case RM_PHONE_NUMBER_TYPE_FAX_HOME:
 				xmlnode_set_attrib(number_node, "type", "fax_home");
 				break;
 			default:

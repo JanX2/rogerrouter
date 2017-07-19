@@ -23,7 +23,7 @@
 
 #include <gtk/gtk.h>
 
-#include <rm/rmmain.h>
+#include <rm/rm.h>
 
 #include <roger/main.h>
 #include <roger/journal.h>

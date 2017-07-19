@@ -21,16 +21,7 @@
 
 #include <pjsua-lib/pjsua.h>
 
-#include <rm/rmconnection.h>
-#include <rm/rmplugins.h>
-#include <rm/rmprofile.h>
-#include <rm/rmrouter.h>
-#include <rm/rmnetmonitor.h>
-#include <rm/rmaudio.h>
-#include <rm/rmstring.h>
-#include <rm/rmphone.h>
-#include <rm/rmobjectemit.h>
-#include <rm/rmsettings.h>
+#include <rm/rm.h>
 
 #include <roger/main.h>
 #include <roger/uitools.h>

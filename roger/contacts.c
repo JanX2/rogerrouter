@@ -22,10 +22,8 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
-#include <rm/rmaddressbook.h>
-#include <rm/rmstring.h>
-#include <rm/rmrouter.h>
-#include <rm/rmnumber.h>
+#include <rm/rm.h>
+
 #include <roger/contacts.h>
 #include <roger/main.h>
 #include <roger/uitools.h>
@@ -147,22 +145,22 @@ static void contacts_update_details(RmContact *contact)
 				RmPhoneNumber *phone_number = numbers->data;
 
 				switch (phone_number->type) {
-				case PHONE_NUMBER_HOME:
+				case RM_PHONE_NUMBER_TYPE_HOME:
 					type = ui_label_new(_("Private"));
 					break;
-				case PHONE_NUMBER_WORK:
+				case RM_PHONE_NUMBER_TYPE_WORK:
 					type = ui_label_new(_("Business"));
 					break;
-				case PHONE_NUMBER_MOBILE:
+				case RM_PHONE_NUMBER_TYPE_MOBILE:
 					type = ui_label_new(_("Mobile"));
 					break;
-				case PHONE_NUMBER_FAX_HOME:
+				case RM_PHONE_NUMBER_TYPE_FAX_HOME:
 					type = ui_label_new(_("Private Fax"));
 					break;
-				case PHONE_NUMBER_FAX_WORK:
+				case RM_PHONE_NUMBER_TYPE_FAX_WORK:
 					type = ui_label_new(_("Business Fax"));
 					break;
-				case PHONE_NUMBER_PAGER:
+				case RM_PHONE_NUMBER_TYPE_PAGER:
 					type = ui_label_new(_("Pager"));
 					break;
 				default:
@@ -548,7 +546,7 @@ void contact_add_number(RmContact *contact, gchar *number)
 	RmPhoneNumber *phone_number;
 
 	phone_number = g_slice_new(RmPhoneNumber);
-	phone_number->type = PHONE_NUMBER_HOME;
+	phone_number->type = RM_PHONE_NUMBER_TYPE_HOME;
 	phone_number->number = g_strdup(number);
 
 	contact->numbers = g_slist_prepend(contact->numbers, phone_number);
@@ -577,17 +575,17 @@ void contacts_add_detail(gchar *detail)
 		phone_number = g_slice_new(RmPhoneNumber);
 
 		if (!strcmp(detail, "phone-home")) {
-			phone_number->type = PHONE_NUMBER_HOME;
+			phone_number->type = RM_PHONE_NUMBER_TYPE_HOME;
 		} else if (!strcmp(detail, "phone-work")) {
-			phone_number->type = PHONE_NUMBER_WORK;
+			phone_number->type = RM_PHONE_NUMBER_TYPE_WORK;
 		} else if (!strcmp(detail, "phone-mobile")) {
-			phone_number->type = PHONE_NUMBER_MOBILE;
+			phone_number->type = RM_PHONE_NUMBER_TYPE_MOBILE;
 		} else if (!strcmp(detail, "phone-home-fax")) {
-			phone_number->type = PHONE_NUMBER_FAX_HOME;
+			phone_number->type = RM_PHONE_NUMBER_TYPE_FAX_HOME;
 		} else if (!strcmp(detail, "phone-work-fax")) {
-			phone_number->type = PHONE_NUMBER_FAX_WORK;
+			phone_number->type = RM_PHONE_NUMBER_TYPE_FAX_WORK;
 		} else if (!strcmp(detail, "phone-pager")) {
-			phone_number->type = PHONE_NUMBER_PAGER;
+			phone_number->type = RM_PHONE_NUMBER_TYPE_PAGER;
 		}
 
 		phone_number->number = g_strdup("");

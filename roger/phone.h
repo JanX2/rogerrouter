@@ -20,11 +20,7 @@
 #ifndef PHONE_H
 #define PHONE_H
 
-#include <rm/rmcontact.h>
-#include <rm/rmconnection.h>
-#include <rm/rmcallentry.h>
-#include <rm/rmobject.h>
-#include <rm/rmphone.h>
+#include <rm/rm.h>
 
 G_BEGIN_DECLS
 

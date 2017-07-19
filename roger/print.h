@@ -20,9 +20,7 @@
 #ifndef PRINT_H
 #define PRINT_H
 
-#include <rm/rmrouter.h>
-//#include <rm/libfaxophone/faxophone.h>
-//#include <rm/libfaxophone/fax.h>
+#include <rm/rm.h>
 
 G_BEGIN_DECLS
 

@@ -21,11 +21,7 @@
 
 #include <gtk/gtk.h>
 
-#include <rm/rmcallentry.h>
-#include <rm/rmplugins.h>
-#include <rm/rmprofile.h>
 #include <rm/rm.h>
-#include <rm/rmsettings.h>
 
 #include <roger/about.h>
 #include <roger/application.h>

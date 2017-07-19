@@ -2,10 +2,9 @@ gnotification_sources = []
 gnotification_sources += 'gnotification.c'
 
 gnotification_dep = []
-gnotification_dep += rm_dep
 gnotification_dep += roger_dep
 
-gnotification_inc = [rm_inc, roger_inc]
+gnotification_inc = [roger_inc]
 
 libgnotification = shared_library('gnotification',
                         gnotification_sources,

@@ -23,17 +23,7 @@
 
 #include <gio/gio.h>
 
-#include <rm/rmplugins.h>
-#include <rm/rmcallentry.h>
-#include <rm/rmobject.h>
-#include <rm/rmobjectemit.h>
-#include <rm/rmphone.h>
-#include <rm/rmrouter.h>
-#include <rm/rmprofile.h>
-#include <rm/rmlookup.h>
-#include <rm/rmstring.h>
-#include <rm/rmsettings.h>
-#include <rm/rmnotification.h>
+#include <rm/rm.h>
 
 #include <roger/main.h>
 

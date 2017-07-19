@@ -23,18 +23,7 @@
 
 #include <gtk/gtk.h>
 
-#include <rm/rmprofile.h>
-#include <rm/rmrouter.h>
-#include <rm/rmnetmonitor.h>
-#include <rm/rmftp.h>
-#include <rm/rmfilter.h>
-#include <rm/rmobjectemit.h>
-#include <rm/rmpassword.h>
-#include <rm/rmaction.h>
-#include <rm/rmaudio.h>
-#include <rm/rmaddressbook.h>
-#include <rm/rmfax.h>
-#include <rm/rmstring.h>
+#include <rm/rm.h>
 
 #include <roger/application.h>
 #include <roger/settings.h>

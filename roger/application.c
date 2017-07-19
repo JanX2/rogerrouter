@@ -23,20 +23,7 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
-#include <rm/rmconnection.h>
-#include <rm/rmprofile.h>
-#include <rm/rmmain.h>
-#include <rm/rmplugins.h>
-#include <rm/rmosdep.h>
-#include <rm/rmrouter.h>
-#include <rm/rmobjectemit.h>
-#include <rm/rmnetmonitor.h>
-#include <rm/rmsettings.h>
-#include <rm/rmstring.h>
-#include <rm/rmphone.h>
-#include <rm/rmnumber.h>
-#include <rm/rmlog.h>
-#include <rm/rmfile.h>
+#include <rm/rm.h>
 
 #include <roger/journal.h>
 #include <roger/assistant.h>
@@ -115,7 +102,7 @@ void app_reconnect(void)
 
 static void auth_response_callback(GtkDialog *dialog, gint response_id, gpointer user_data)
 {
-	struct auth_data* auth_data = user_data;
+	RmAuthData *auth_data = user_data;
 
 	if (response_id == 1) {
 		GtkWidget *user_entry = g_object_get_data(G_OBJECT(dialog), "user");
@@ -130,7 +117,7 @@ static void auth_response_callback(GtkDialog *dialog, gint response_id, gpointer
 	gtk_widget_destroy(GTK_WIDGET(dialog));
 }
 
-void app_authenticate_cb(RmObject *app, struct auth_data *auth_data)
+void app_authenticate_cb(RmObject *app, RmAuthData *auth_data)
 {
 	GtkBuilder *builder;
 	GtkWidget *dialog;

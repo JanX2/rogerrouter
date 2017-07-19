@@ -21,11 +21,7 @@
 
 #include <gtk/gtk.h>
 
-#include <rm/rmplugins.h>
-#include <rm/rmconnection.h>
-#include <rm/rmcontact.h>
-#include <rm/rmnotification.h>
-#include <rm/rmstring.h>
+#include <rm/rm.h>
 
 #include <roger/main.h>
 #include <roger/uitools.h>

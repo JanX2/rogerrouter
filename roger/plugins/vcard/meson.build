@@ -2,10 +2,9 @@ vcard_sources = []
 vcard_sources += 'vcard.c'
 
 vcard_dep = []
-vcard_dep += rm_dep
 vcard_dep += roger_dep
 
-vcard_inc = [rm_inc, roger_inc]
+vcard_inc = [roger_inc]
 
 libvcard = shared_library('vcard',
                         vcard_sources,

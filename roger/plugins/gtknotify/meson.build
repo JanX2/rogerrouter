@@ -9,10 +9,9 @@ gtknotify_sources += 'gtknotify.c'
 gtknotify_sources += gtknotify_gresources
 
 gtknotify_dep = []
-gtknotify_dep += rm_dep
 gtknotify_dep += roger_dep
 
-gtknotify_inc = [rm_inc, roger_inc]
+gtknotify_inc = [roger_inc]
 
 libgtknotify = shared_library('gtknotify',
                         gtknotify_sources,

@@ -25,14 +25,7 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
-#include <rm/rmobject.h>
-#include <rm/rmobjectemit.h>
-#include <rm/rmplugins.h>
-#include <rm/rmfile.h>
-#include <rm/rmmain.h>
-#include <rm/rmsettings.h>
-#include <rm/rmstring.h>
-#include <rm/rmcallentry.h>
+#include <rm/rm.h>
 
 #include <roger/settings.h>
 #include <roger/uitools.h>

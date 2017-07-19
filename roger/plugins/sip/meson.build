@@ -5,7 +5,6 @@ dep = dependency('libpjproject', required : false)
 
 if dep.found()
 sip_dep = []
-sip_dep += rm_dep
 sip_dep += roger_dep
 sip_dep += dep
 sip_dep += dependency('libsrtp')
@@ -13,7 +12,7 @@ sip_dep += dependency('speexdsp')
 sip_dep += dependency('uuid')
 sip_dep += dependency('openssl')
 
-sip_inc = [rm_inc, roger_inc]
+sip_inc = [roger_inc]
 
 libsip = shared_library('sip',
                         sip_sources,

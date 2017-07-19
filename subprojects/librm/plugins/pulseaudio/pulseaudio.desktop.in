@@ -1,9 +1,0 @@
-[Plugin]
-Module=pulseaudio
-Name=PulseAudio plugin
-Comment=Audio plugin for PulseAudio
-Authors=Jan-Michael Brummer <jan.brummer@tabos.org>
-Copyright=Copyright © 2013 Jan-Michael Brummer
-Website=http://www.tabos.org/
-Help=http://www.tabos.org/forum/
-

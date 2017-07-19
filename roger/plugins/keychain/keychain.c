@@ -26,9 +26,7 @@
 #include <Security/Security.h>
 #include <CoreServices/CoreServices.h>
 
-#include <rm/rmcallentry.h>
-#include <rm/rmplugins.h>
-#include <rm/rmpassword.h>
+#include <rm/rm.h>
 
 #define RM_TYPE_KEYCHAIN_PLUGIN        (rm_keychain_plugin_get_type ())
 #define RM_KEYCHAIN_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_KEYCHAIN_PLUGIN, RmKeyChainPlugin))

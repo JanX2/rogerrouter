@@ -8,10 +8,9 @@ webjournal_sources += 'webjournal.c'
 webjournal_sources += webjournal_gresources
 
 webjournal_dep = []
-webjournal_dep += rm_dep
 webjournal_dep += roger_dep
 
-webjournal_inc = [rm_inc, roger_inc]
+webjournal_inc = [roger_inc]
 
 libwebjournal = shared_library('webjournal',
                         webjournal_sources,

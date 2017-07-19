@@ -22,7 +22,7 @@
 
 G_BEGIN_DECLS
 
-#include <rm/rmconnection.h>
+#include <rm/rm.h>
 
 #define APP_GSETTINGS_SCHEMA "org.tabos.roger"
 

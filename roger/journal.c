@@ -28,19 +28,7 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 
-#include <rm/rmprofile.h>
-#include <rm/rmrouter.h>
-#include <rm/rmcallentry.h>
-#include <rm/rmmain.h>
-#include <rm/rmfilter.h>
-#include <rm/rmobject.h>
-#include <rm/rmfile.h>
-#include <rm/rmosdep.h>
-#include <rm/rmobjectemit.h>
-#include <rm/rmlookup.h>
-#include <rm/rmcsv.h>
-#include <rm/rmstring.h>
-#include <rm/rmjournal.h>
+#include <rm/rm.h>
 
 #include <roger/main.h>
 #include <roger/phone.h>

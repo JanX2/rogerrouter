@@ -28,16 +28,7 @@
 #include <gio/gio.h>
 #include <gtk/gtk.h>
 
-#include <rm/rmstring.h>
-#include <rm/rmcontact.h>
-#include <rm/rmplugins.h>
-#include <rm/rmaddressbook.h>
-#include <rm/rmobject.h>
-#include <rm/rmobjectemit.h>
-#include <rm/rmfile.h>
-#include <rm/rmrouter.h>
-#include <rm/rmsettings.h>
-#include <rm/rmnumber.h>
+#include <rm/rm.h>
 
 #include <roger/main.h>
 #include <roger/settings.h>
@@ -377,22 +368,22 @@ static void process_telephone(struct vcard_data *card_data, RmContact *contact)
 				}
 			}
 		} else*/ {
-			number->type = PHONE_NUMBER_FAX_HOME;
+			number->type = RM_PHONE_NUMBER_TYPE_FAX_HOME;
 		}
 	} else {
 		/* Check for cell phone number, and create string if needed */
 		if (rm_strcasestr(card_data->options, "CELL") != NULL) {
-			number->type = PHONE_NUMBER_MOBILE;
+			number->type = RM_PHONE_NUMBER_TYPE_MOBILE;
 		}
 
 		/* Check for home phone number, and create string if needed */
 		if (rm_strcasestr(card_data->options, "HOME") != NULL) {
-			number->type = PHONE_NUMBER_HOME;
+			number->type = RM_PHONE_NUMBER_TYPE_HOME;
 		}
 
 		/* Check for work phone number, and create string if needed */
 		if (rm_strcasestr(card_data->options, "WORK") != NULL) {
-			number->type = PHONE_NUMBER_WORK;
+			number->type = RM_PHONE_NUMBER_TYPE_WORK;
 		}
 	}
 
@@ -1001,16 +992,16 @@ void vcard_write_file(char *file_name)
 			card_data->header = g_strdup("TEL");
 
 			switch (number->type) {
-			case PHONE_NUMBER_HOME:
+			case RM_PHONE_NUMBER_TYPE_HOME:
 				card_data->options = g_strdup("TYPE=HOME,VOICE");
 				break;
-			case PHONE_NUMBER_WORK:
+			case RM_PHONE_NUMBER_TYPE_WORK:
 				card_data->options = g_strdup("TYPE=WORK,VOICE");
 				break;
-			case PHONE_NUMBER_MOBILE:
+			case RM_PHONE_NUMBER_TYPE_MOBILE:
 				card_data->options = g_strdup("TYPE=CELL");
 				break;
-			case PHONE_NUMBER_FAX_HOME:
+			case RM_PHONE_NUMBER_TYPE_FAX_HOME:
 				card_data->options = g_strdup("TYPE=HOME,FAX");
 				break;
 			default:

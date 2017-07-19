@@ -26,16 +26,7 @@
 #include <AddressBook/ABAddressBookC.h>
 #include <AddressBook/ABGlobalsC.h>
 
-#include <rm/rmplugins.h>
-#include <rm/rmprofile.h>
-#include <rm/rmobject.h>
-#include <rm/rmaddressbook.h>
-#include <rm/rmcallentry.h>
-#include <rm/rmcontact.h>
-#include <rm/rmrouter.h>
-#include <rm/rmfile.h>
-#include <rm/rmstring.h>
-#include <rm/rmsettings.h>
+#include <rm/rm.h>
 
 #define RM_TYPE_OSXAB_PLUGIN        (rm_osxab_plugin_get_type ())
 #define RM_OSXAB_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_OSXAB_PLUGIN, RmOSXAbPlugin))

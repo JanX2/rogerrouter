@@ -24,14 +24,7 @@
 
 #include <gtk/gtk.h>
 
-#include <rm/rmobject.h>
-#include <rm/rmobjectemit.h>
-#include <rm/rmrouter.h>
-#include <rm/rmphone.h>
-#include <rm/rmaddressbook.h>
-#include <rm/rmstring.h>
-#include <rm/rmnumber.h>
-#include <rm/rmphone.h>
+#include <rm/rm.h>
 
 #include <roger/main.h>
 #include <roger/journal.h>

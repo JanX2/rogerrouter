@@ -2,10 +2,9 @@ thunderbird_sources = []
 thunderbird_sources += 'thunderbird.c'
 
 thunderbird_dep = []
-thunderbird_dep += rm_dep
 thunderbird_dep += roger_dep
 
-thunderbird_inc = [rm_inc, roger_inc]
+thunderbird_inc = [roger_inc]
 
 libthunderbird = shared_library('thunderbird',
                         thunderbird_sources,

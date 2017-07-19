@@ -21,8 +21,7 @@
 
 #include <gtk/gtk.h>
 
-#include <rm/rmvox.h>
-#include <rm/rmrouter.h>
+#include <rm/rm.h>
 
 #include <roger/journal.h>
 #include <roger/main.h>

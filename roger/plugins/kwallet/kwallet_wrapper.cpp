@@ -22,9 +22,7 @@ extern int kwallet4_get_password( const char *, char ** );
 extern int kwallet4_store_password( const char *, const char * );
 extern int kwallet4_init( void );
 
-#include <librm/call.h>
-#include <librm/plugins.h>
-#include <librm/password.h>
+#include <rm/rm.h>
 
 #define RM_TYPE_KWALLET_PLUGIN        (rm_kwallet_plugin_get_type ())
 #define RM_KWALLET_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_KWALLET_PLUGIN, RmKWalletPlugin))
