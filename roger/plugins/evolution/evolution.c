@@ -63,7 +63,7 @@ static void free_ebook_data(struct ebook_data *ebook_data)
  */
 void free_ebook_list(GList *ebook_list)
 {
-	g_list_free_full(ebook_list, (GDestroyNotify) free_ebook_data);
+	g_list_free_full(ebook_list, (GDestroyNotify)free_ebook_data);
 }
 
 /**
@@ -126,7 +126,7 @@ GList *get_ebook_list(void)
 	sources = e_source_registry_list_sources(get_source_registry(), E_SOURCE_EXTENSION_ADDRESS_BOOK);
 
 	for (source = sources; source != NULL; source = source->next) {
-		ESource *e_source = E_SOURCE(source -> data);
+		ESource *e_source = E_SOURCE(source->data);
 		ESource *parent_source;
 
 		if (!e_source_get_enabled(e_source)) {
@@ -245,7 +245,7 @@ void ebook_read_data(EClient *e_client)
 
 		contact = g_slice_new0(RmContact);
 
-		contact->priv = (gpointer) e_contact_get_const(e_contact, E_CONTACT_UID);
+		contact->priv = (gpointer)e_contact_get_const(e_contact, E_CONTACT_UID);
 
 		photo = e_contact_get(e_contact, E_CONTACT_PHOTO);
 		if (photo) {
@@ -392,10 +392,10 @@ gboolean ebook_read_book(void)
 	}
 
 	e_book_client_connect(source,
-#if EDS_CHECK_VERSION(3,16,0)
-		5,
+#if EDS_CHECK_VERSION(3, 16, 0)
+			      5,
 #endif
-		NULL, ebook_read_cb, NULL);
+			      NULL, ebook_read_cb, NULL);
 
 	return TRUE;
 }
@@ -415,10 +415,10 @@ gboolean ebook_read_book_sync(void)
 	}
 
 	client = e_book_client_connect_sync(source,
-#if EDS_CHECK_VERSION(3,16,0)
-		5,
+#if EDS_CHECK_VERSION(3, 16, 0)
+					    5,
 #endif
-		NULL, NULL);
+					    NULL, NULL);
 	if (client) {
 		ebook_read_data(client);
 	}
@@ -461,16 +461,16 @@ gboolean evolution_remove_contact(RmContact *contact)
 
 static void evolution_set_image(EContact *e_contact, RmContact *contact)
 {
-	if (contact -> image_uri != NULL) {
+	if (contact->image_uri != NULL) {
 		EContactPhoto photo;
 		guchar **data;
 		gsize *length;
 
 		photo.type = E_CONTACT_PHOTO_TYPE_INLINED;
 		data = &photo.data.inlined.data;
-		length = (gsize *) &photo.data.inlined.length;
+		length = (gsize*)&photo.data.inlined.length;
 		photo.data.inlined.mime_type = NULL;
-		if (g_file_get_contents(contact -> image_uri, (gchar **) data, (gsize *) length, NULL)) {
+		if (g_file_get_contents(contact->image_uri, (gchar**)data, (gsize*)length, NULL)) {
 			e_contact_set(e_contact, E_CONTACT_PHOTO, &photo);
 		}
 	} else if (contact->image == NULL) {
@@ -629,7 +629,7 @@ RmAddressBook evolution_book = {
 
 gboolean evolution_plugin_init(RmPlugin *plugin)
 {
-	ebook_settings = rm_settings_new_profile("org.tabos.roger.plugins.evolution", "evolution", (gchar*) rm_profile_get_name(rm_profile_get_active()));
+	ebook_settings = rm_settings_new_profile("org.tabos.roger.plugins.evolution", "evolution", (gchar*)rm_profile_get_name(rm_profile_get_active()));
 
 	ebook_read_book();
 

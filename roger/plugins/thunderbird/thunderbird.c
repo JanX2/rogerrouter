@@ -38,10 +38,10 @@ static GSList *contacts = NULL;
 static GSettings *thunderbird_settings = NULL;
 static GHashTable *table = NULL;
 
-#define MORK_COLUMN_META	"<(a=c)>"
-#define DEFAULT_SCOPE		0x80
+#define MORK_COLUMN_META        "<(a=c)>"
+#define DEFAULT_SCOPE           0x80
 
-#define MAX_VAL				0x7FFFFFFF
+#define MAX_VAL                         0x7FFFFFFF
 
 enum {
 	PARSE_VALUES,
@@ -67,7 +67,8 @@ static gint default_table_id = 1;
  * \brief Get selected thunderbird addressbook
  * \return thunderbird addressbook
  */
-static const gchar *thunderbird_get_selected_book(void) {
+static const gchar *thunderbird_get_selected_book(void)
+{
 	return g_settings_get_string(thunderbird_settings, "filename");
 }
 
@@ -75,7 +76,8 @@ static const gchar *thunderbird_get_selected_book(void) {
  * \brief Set selected thunderbird addressbook
  * \param uri thunderbird addressbook
  */
-void thunderbird_set_selected_book(gchar *uri) {
+void thunderbird_set_selected_book(gchar *uri)
+{
 	g_settings_set_string(thunderbird_settings, "filename", uri);
 }
 
@@ -83,7 +85,8 @@ void thunderbird_set_selected_book(gchar *uri) {
  * \brief Destroy hashtable
  * \param data hashtable widget
  */
-void hash_destroy(void *data) {
+void hash_destroy(void *data)
+{
 	g_hash_table_destroy(data);
 }
 
@@ -92,7 +95,8 @@ void hash_destroy(void *data) {
  * \param FreeData free data function
  * \return new hash table
  */
-static GHashTable *create_map(GDestroyNotify notify) {
+static GHashTable *create_map(GDestroyNotify notify)
+{
 	GHashTable *table;
 
 	table = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, notify);
@@ -106,7 +110,8 @@ static GHashTable *create_map(GDestroyNotify notify) {
  * \param key key value
  * \param value value pointer
  */
-static inline void insert_map(GHashTable *table, long key, void *value) {
+static inline void insert_map(GHashTable *table, long key, void *value)
+{
 	g_hash_table_insert(table, GINT_TO_POINTER(key), value);
 }
 
@@ -116,7 +121,8 @@ static inline void insert_map(GHashTable *table, long key, void *value) {
  * \param key key id
  * \return value of key or NULL on error
  */
-static inline void *find_map_entry(GHashTable *table, int key) {
+static inline void *find_map_entry(GHashTable *table, int key)
+{
 	return g_hash_table_lookup(table, GINT_TO_POINTER(key));
 }
 
@@ -124,7 +130,8 @@ static inline void *find_map_entry(GHashTable *table, int key) {
  * \brief Find thunderbird directory
  * \return string to directory
  */
-static gchar *find_thunderbird_dir(void) {
+static gchar *find_thunderbird_dir(void)
+{
 	gchar *buffer;
 	gchar file[256];
 	gchar *path;
@@ -136,10 +143,10 @@ static gchar *find_thunderbird_dir(void) {
 	result = g_string_new(NULL);
 	snprintf(file, sizeof(file), "%s/.mozilla-thunderbird/profiles.ini", g_get_home_dir());
 
-	buffer = (gchar *) rm_file_load(file, NULL);
+	buffer = (gchar*)rm_file_load(file, NULL);
 	if (buffer == NULL) {
 		snprintf(file, sizeof(file), "%s/.thunderbird/profiles.ini", g_get_home_dir());
-		buffer = (gchar *) rm_file_load(file, NULL);
+		buffer = (gchar*)rm_file_load(file, NULL);
 		version3 = TRUE;
 	}
 
@@ -163,9 +170,9 @@ static gchar *find_thunderbird_dir(void) {
 			}
 
 			while (path != NULL && *path != '\n') {
-				result = g_string_append_c(result, (gchar) *path++);
+				result = g_string_append_c(result, (gchar) * path++);
 			}
-	
+
 			while (result->str[strlen(result->str) - 1] == '\n') {
 				result->str[strlen(result->str) - 1] = '\0';
 			}
@@ -181,7 +188,8 @@ static gchar *find_thunderbird_dir(void) {
  * \brief Get next gchar of buffer
  * \return next gchar
  */
-static inline gchar next_char(void) {
+static inline gchar next_char(void)
+{
 	gchar cur = 0;
 
 	if (mork_pos < mork_size) {
@@ -197,16 +205,17 @@ static inline gchar next_char(void) {
  * \param character gchar to check
  * \return 1 or 0
  */
-static gboolean is_whitespace(gchar character) {
+static gboolean is_whitespace(gchar character)
+{
 	switch (character) {
-		case ' ':
-		case '\t':
-		case '\r':
-		case '\n':
-		case '\f':
-			return TRUE;
-		default:
-			return FALSE;
+	case ' ':
+	case '\t':
+	case '\r':
+	case '\n':
+	case '\f':
+		return TRUE;
+	default:
+		return FALSE;
 	}
 }
 
@@ -214,7 +223,8 @@ static gboolean is_whitespace(gchar character) {
  * \brief Parse comment section
  * \return 1 on success, else error
  */
-static inline gboolean parse_comment(void) {
+static inline gboolean parse_comment(void)
+{
 	gchar cur = next_char();
 
 	if (cur != '/') {
@@ -232,7 +242,8 @@ static inline gboolean parse_comment(void) {
  * \brief Parse cell section
  * \return 1 on success, else error
  */
-static gboolean parse_cell(void) {
+static gboolean parse_cell(void)
+{
 	gboolean result = TRUE;
 	gboolean is_column = TRUE;
 	gboolean is_value_oid = FALSE;
@@ -243,51 +254,51 @@ static gboolean parse_cell(void) {
 
 	while (result && cur != ')' && cur) {
 		switch (cur) {
-			case '=':
-				/* From column to value */
-				if (is_column) {
-					is_column = FALSE;
-				} else {
-					text = g_string_append_c(text, cur);
-				}
-				break;
-			case '$': {
-				gchar hex_chr[3];
-				int x;
+		case '=':
+			/* From column to value */
+			if (is_column) {
+				is_column = FALSE;
+			} else {
+				text = g_string_append_c(text, cur);
+			}
+			break;
+		case '$': {
+			gchar hex_chr[3];
+			int x;
 
-				hex_chr[0] = next_char();
-				hex_chr[1] = next_char();
-				hex_chr[2] = '\0';
-				x = strtoul(hex_chr, 0, 16);
-				g_string_append_printf(text, "%c", x);
-				break;
+			hex_chr[0] = next_char();
+			hex_chr[1] = next_char();
+			hex_chr[2] = '\0';
+			x = strtoul(hex_chr, 0, 16);
+			g_string_append_printf(text, "%c", x);
+			break;
+		}
+		case '\\': {
+			gchar next_chr = next_char();
+			if (next_chr != '\r' && next_chr != '\n') {
+				text = g_string_append_c(text, next_chr);
+			} else {
+				next_char();
 			}
-			case '\\': {
-				gchar next_chr = next_char();
-				if (next_chr != '\r' && next_chr != '\n') {
-					text = g_string_append_c(text, next_chr);
-				} else {
-					next_char();
-				}
-				break;
+			break;
+		}
+		case '^':
+			corners++;
+			if (corners == 1) {
+			} else if (corners == 2) {
+				is_column = FALSE;
+				is_value_oid = TRUE;
+			} else {
+				text = g_string_append_c(text, cur);
 			}
-			case '^':
-				corners++;
-				if (corners == 1) {
-				} else if (corners == 2) {
-					is_column = FALSE;
-					is_value_oid = TRUE;
-				} else {
-					text = g_string_append_c(text, cur);
-				}
-				break;
-			default:
-				if (is_column) {
-					column = g_string_append_c(column, cur);
-				} else {
-					text = g_string_append_c(text, cur);
-				}
-				break;
+			break;
+		default:
+			if (is_column) {
+				column = g_string_append_c(column, cur);
+			} else {
+				text = g_string_append_c(text, cur);
+			}
+			break;
 		}
 
 		cur = next_char();
@@ -332,7 +343,8 @@ static gboolean parse_cell(void) {
  * \brief Parse dictionary section
  * \return 1 on success, else error
  */
-static gboolean parse_dict(void) {
+static gboolean parse_dict(void)
+{
 	gchar cur = next_char();
 	gboolean result = TRUE;
 
@@ -341,22 +353,22 @@ static gboolean parse_dict(void) {
 	while (result && cur != '>' && cur) {
 		if (!is_whitespace(cur)) {
 			switch (cur) {
-				case '<':
-					if (!strncmp(mork_data + mork_pos - 1, MORK_COLUMN_META, strlen(MORK_COLUMN_META))) {
-						mork_now_parsing = PARSE_COLUMNS;
-						mork_pos += strlen(MORK_COLUMN_META) - 1;
-					}
-					break;
-				case '/':
-					result = parse_comment();
-					break;
-				case '(':
-					result = parse_cell();
-					break;
-				default:
-					g_warning("[%s]: error '%c'", __FUNCTION__, cur);
-					result = FALSE;
-					break;
+			case '<':
+				if (!strncmp(mork_data + mork_pos - 1, MORK_COLUMN_META, strlen(MORK_COLUMN_META))) {
+					mork_now_parsing = PARSE_COLUMNS;
+					mork_pos += strlen(MORK_COLUMN_META) - 1;
+				}
+				break;
+			case '/':
+				result = parse_comment();
+				break;
+			case '(':
+				result = parse_cell();
+				break;
+			default:
+				g_warning("[%s]: error '%c'", __FUNCTION__, cur);
+				result = FALSE;
+				break;
 			}
 		}
 		cur = next_char();
@@ -371,7 +383,8 @@ static gboolean parse_dict(void) {
  * \param pid pointer to save id
  * \param scope pointer to save scope
  */
-static void parse_scope_id(GString *text, gint *id, gint *scope) {
+static void parse_scope_id(GString *text, gint *id, gint *scope)
+{
 	gchar *pos;
 
 	if ((pos = strchr(text->str, ':')) != NULL) {
@@ -391,9 +404,9 @@ static void parse_scope_id(GString *text, gint *id, gint *scope) {
 
 		if (size > 1 && sc_str[0] == '^') {
 			/*gchar *tmp = g_malloc(strlen(sc_str));
-			strncpy(tmp, sc_str + 1, strlen(sc_str));
-			g_free(sc_str);
-			sc_str = tmp;*/
+			   strncpy(tmp, sc_str + 1, strlen(sc_str));
+			   g_free(sc_str);
+			   sc_str = tmp;*/
 			memcpy(sc_str, sc_str + 1, size - 1);
 		}
 
@@ -412,7 +425,8 @@ static void parse_scope_id(GString *text, gint *id, gint *scope) {
  * \param character current gchar
  * \return 1 on success, else error
  */
-static gchar parse_meta(gchar character) {
+static gchar parse_meta(gchar character)
+{
 	gchar cur = next_char();
 
 	while (cur != character && cur) {
@@ -429,7 +443,8 @@ static gchar parse_meta(gchar character) {
  * \param row_scope row scope id
  * \param row_id row id
  */
-static inline void set_current_row(int table_scope, int table_id, int row_scope, int row_id) {
+static inline void set_current_row(int table_scope, int table_id, int row_scope, int row_id)
+{
 	GHashTable *map;
 	GHashTable *tmp;
 
@@ -508,7 +523,8 @@ static inline void set_current_row(int table_scope, int table_id, int row_scope,
  * \param table_scope table scope id
  * \return 1 on success, else error
  */
-static gchar parse_row(int table_id, int table_scope) {
+static gchar parse_row(int table_id, int table_scope)
+{
 	gchar result = 1;
 	gchar cur = next_char();
 	GString *text = g_string_new(NULL);
@@ -529,15 +545,15 @@ static gchar parse_row(int table_id, int table_scope) {
 	while (result && cur != ']' && cur) {
 		if (!is_whitespace(cur)) {
 			switch (cur) {
-				case '(':
-					result = parse_cell();
-					break;
-				case '[':
-					result = parse_meta(']');
-					break;
-				default:
-					result = 0;
-					break;
+			case '(':
+				result = parse_cell();
+				break;
+			case '[':
+				result = parse_meta(']');
+				break;
+			default:
+				result = 0;
+				break;
 			}
 		}
 		cur = next_char();
@@ -552,7 +568,8 @@ static gchar parse_row(int table_id, int table_scope) {
  * \brief Parse table section
  * \return 1 on success, else error
  */
-static gboolean parse_table(void) {
+static gboolean parse_table(void)
+{
 	gboolean result = TRUE;
 	GString *text_id = g_string_new(NULL);
 	gint id = 0, scope = 0;
@@ -570,35 +587,35 @@ static gboolean parse_table(void) {
 	while (result && cur != '}' && cur) {
 		if (!is_whitespace(cur)) {
 			switch (cur) {
-				case '{':
-					result = parse_meta('}');
-					break;
-				case '[':
-					result = parse_row(id, scope);
-					break;
-				case '-':
-				case '+':
-					break;
-				default: {
-					GString *just_id = g_string_new(NULL);
+			case '{':
+				result = parse_meta('}');
+				break;
+			case '[':
+				result = parse_row(id, scope);
+				break;
+			case '-':
+			case '+':
+				break;
+			default: {
+				GString *just_id = g_string_new(NULL);
 
-					while (!is_whitespace(cur) && cur) {
-						just_id = g_string_append_c(just_id, cur);
-						cur = next_char();
+				while (!is_whitespace(cur) && cur) {
+					just_id = g_string_append_c(just_id, cur);
+					cur = next_char();
 
-						if (cur == '}') {
-							g_string_free(just_id, TRUE);
-							g_string_free(text_id, TRUE);
-							return result;
-						}
+					if (cur == '}') {
+						g_string_free(just_id, TRUE);
+						g_string_free(text_id, TRUE);
+						return result;
 					}
-
-					int just_id_num = 0, just_scope_num = 0;
-					parse_scope_id(just_id, &just_id_num, &just_scope_num);
-					set_current_row(scope, id, just_scope_num, just_id_num);
-					g_string_free(just_id, TRUE);
-					break;
 				}
+
+				int just_id_num = 0, just_scope_num = 0;
+				parse_scope_id(just_id, &just_id_num, &just_scope_num);
+				set_current_row(scope, id, just_scope_num, just_id_num);
+				g_string_free(just_id, TRUE);
+				break;
+			}
 			}
 		}
 		cur = next_char();
@@ -613,7 +630,8 @@ static gboolean parse_table(void) {
  * \brief Parse group section
  * \return 1 on success, else error
  */
-static gchar parse_group(void) {
+static gchar parse_group(void)
+{
 	return parse_meta('@');
 }
 
@@ -621,7 +639,8 @@ static gchar parse_group(void) {
  * \brief Parse mork code
  * \return 1 on success, else error
  */
-static gboolean parse_mork(void) {
+static gboolean parse_mork(void)
+{
 	gboolean result = TRUE;
 	gchar cur = 0;
 
@@ -630,30 +649,30 @@ static gboolean parse_mork(void) {
 	while (result && cur) {
 		if (!is_whitespace(cur)) {
 			switch (cur) {
-				case '/':
-					/* Comment */
-					result = parse_comment();
-					break;
-				case '<':
-					/* Dict */
-					result = parse_dict();
-					break;
-				case '{':
-					/* Table */
-					result = parse_table();
-					break;
-				case '@':
-					/* Group */
-					result = parse_group();
-					break;
-				case '[':
-					/* Row */
-					result = parse_row(0, 0);
-					break;
-				default:
-					g_warning("Error: %c", cur);
-					result = FALSE;
-					break;
+			case '/':
+				/* Comment */
+				result = parse_comment();
+				break;
+			case '<':
+				/* Dict */
+				result = parse_dict();
+				break;
+			case '{':
+				/* Table */
+				result = parse_table();
+				break;
+			case '@':
+				/* Group */
+				result = parse_group();
+				break;
+			case '[':
+				/* Row */
+				result = parse_row(0, 0);
+				break;
+			default:
+				g_warning("Error: %c", cur);
+				result = FALSE;
+				break;
 			}
 		}
 		cur = next_char();
@@ -670,7 +689,8 @@ static gboolean parse_mork(void) {
  * \param key key id
  * \return column entry
  */
-static inline gchar *get_column(int key) {
+static inline gchar *get_column(int key)
+{
 	return g_hash_table_lookup(mork_columns, GINT_TO_POINTER(key));
 }
 
@@ -679,7 +699,8 @@ static inline gchar *get_column(int key) {
  * \param key key id
  * \return value entry
  */
-static inline gchar *get_value(int key) {
+static inline gchar *get_value(int key)
+{
 	return g_hash_table_lookup(mork_values, GINT_TO_POINTER(key));
 }
 
@@ -688,7 +709,8 @@ static inline gchar *get_value(int key) {
  * \param map pointer to map structure holding person informations
  * \param pId id
  */
-static void parse_person(GHashTable *map, gpointer pId) {
+static void parse_person(GHashTable *map, gpointer pId)
+{
 	//const gchar *check = NULL;
 	//GdkPixbuf *image = NULL;
 	const gchar *home_street = NULL;
@@ -716,7 +738,7 @@ static void parse_person(GHashTable *map, gpointer pId) {
 	contact = g_slice_new0(RmContact);
 
 	g_hash_table_iter_init(&iter5, map);
-	while (g_hash_table_iter_next(&iter5, &key5, &value5))  {
+	while (g_hash_table_iter_next(&iter5, &key5, &value5)) {
 		if (GPOINTER_TO_INT(key5) == 0) {
 			continue;
 		}
@@ -802,7 +824,8 @@ static void parse_person(GHashTable *map, gpointer pId) {
 /**
  * \brief Parse tables for important informations
  */
-static void parse_tables(void) {
+static void parse_tables(void)
+{
 	GHashTable *tables = table_scope_map;
 
 	if (tables != NULL) {
@@ -810,7 +833,7 @@ static void parse_tables(void) {
 		gpointer key1, value1;
 
 		g_hash_table_iter_init(&iter1, tables);
-		while (g_hash_table_iter_next(&iter1, &key1, &value1))  {
+		while (g_hash_table_iter_next(&iter1, &key1, &value1)) {
 			if (GPOINTER_TO_INT(key1) == 0) {
 				//continue;
 			}
@@ -821,7 +844,7 @@ static void parse_tables(void) {
 				gpointer key2, value2;
 
 				g_hash_table_iter_init(&iter2, rows);
-				while (g_hash_table_iter_next(&iter2, &key2, &value2))  {
+				while (g_hash_table_iter_next(&iter2, &key2, &value2)) {
 					if (GPOINTER_TO_INT(key2) == 0) {
 						//continue;
 					}
@@ -832,7 +855,7 @@ static void parse_tables(void) {
 						gpointer key3, value3;
 
 						g_hash_table_iter_init(&iter3, rows2);
-						while (g_hash_table_iter_next(&iter3, &key3, &value3))  {
+						while (g_hash_table_iter_next(&iter3, &key3, &value3)) {
 							if (GPOINTER_TO_INT(key3) == 0) {
 								//continue;
 							}
@@ -843,7 +866,7 @@ static void parse_tables(void) {
 								gpointer key4, value4;
 
 								g_hash_table_iter_init(&iter4, rows3);
-								while (g_hash_table_iter_next(&iter4, &key4, &value4))  {
+								while (g_hash_table_iter_next(&iter4, &key4, &value4)) {
 									if (GPOINTER_TO_INT(key4) == 0) {
 										//continue;
 									}
@@ -866,7 +889,8 @@ static void parse_tables(void) {
  * \brief Open thunderbird address book
  * \param book address book file name
  */
-static void thunderbird_open_book(gchar *book) {
+static void thunderbird_open_book(gchar *book)
+{
 	int file, size;
 
 	file = open(book, O_RDONLY);
@@ -902,7 +926,8 @@ static void thunderbird_open_book(gchar *book) {
  * \brief Read thunderbird book
  * \return error code
  */
-static int thunderbird_read_book(void) {
+static int thunderbird_read_book(void)
+{
 	const gchar *book;
 	gchar file[256];
 

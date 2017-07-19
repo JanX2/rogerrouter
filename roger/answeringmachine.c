@@ -204,7 +204,7 @@ void app_answeringmachine(const gchar *name)
 	vox_playback->media_button = GTK_WIDGET(gtk_builder_get_object(builder, "play_button"));
 	g_signal_connect(vox_playback->media_button, "clicked", G_CALLBACK(vox_media_button_clicked_cb), vox_playback);
 
-#if GTK_CHECK_VERSION(3,20,0)
+#if GTK_CHECK_VERSION(3, 20, 0)
 	gchar *css_data = g_strdup_printf(".circular-button { border-radius: 20px; -gtk-outline-radius: 20px;}");
 #else
 	gchar *css_data = g_strdup_printf(".circular-button { border-radius: 20px; outline-radius: 20px; }");
@@ -213,7 +213,7 @@ void app_answeringmachine(const gchar *name)
 	gtk_css_provider_load_from_data(css_provider, css_data, -1, NULL);
 	g_free(css_data);
 
-	GtkStyleContext *style_context =  gtk_widget_get_style_context(vox_playback->media_button);
+	GtkStyleContext *style_context = gtk_widget_get_style_context(vox_playback->media_button);
 	gtk_style_context_add_provider(style_context, GTK_STYLE_PROVIDER(css_provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
 	gtk_style_context_add_class(style_context, "circular-button");
 

@@ -28,7 +28,7 @@
 
 #include <rm/rm.h>
 
-#define RM_TYPE_OSXAB_PLUGIN        (rm_osxab_plugin_get_type ())
+#define RM_TYPE_OSXAB_PLUGIN        (rm_osxab_plugin_get_type())
 #define RM_OSXAB_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_OSXAB_PLUGIN, RmOSXAbPlugin))
 
 typedef struct {
@@ -37,7 +37,7 @@ typedef struct {
 
 RM_PLUGIN_REGISTER(RM_TYPE_OSXAB_PLUGIN, RmOSXAbPlugin, rm_osxab_plugin)
 
-static GSList *contacts = NULL;
+static GSList * contacts = NULL;
 
 static char *cstring(CFStringRef s)
 {
@@ -47,10 +47,10 @@ static char *cstring(CFStringRef s)
 
 	CFIndex length = CFStringGetLength(s);
 	CFIndex max_size = CFStringGetMaximumSizeForEncoding(length, kCFStringEncodingUTF8);
-	char *buffer = (char *) malloc(max_size);
+	char *buffer = (char*)malloc(max_size);
 
 	if (CFStringGetCString(s, buffer, max_size, kCFStringEncodingUTF8)) {
-			return buffer;
+		return buffer;
 	}
 
 	free(buffer);
@@ -62,7 +62,8 @@ static char *cstring(CFStringRef s)
  * \brief Read osxab book
  * \return error code
  */
-static int osxab_read_book(void) {
+static int osxab_read_book(void)
+{
 	ABAddressBookRef ab = ABGetSharedAddressBook();
 	CFArrayRef entries;
 	CFIndex len;
@@ -79,7 +80,7 @@ static int osxab_read_book(void) {
 	len = CFArrayGetCount(entries);
 
 	for (int i = 0; i < len; i++) {
-		ABPersonRef person = (ABPersonRef) CFArrayGetValueAtIndex(entries, i);
+		ABPersonRef person = (ABPersonRef)CFArrayGetValueAtIndex(entries, i);
 		CFTypeRef firstName = ABRecordCopyValue(person, kABFirstNameProperty);
 		CFTypeRef lastName = ABRecordCopyValue(person, kABLastNameProperty);
 		CFTypeRef company = ABRecordCopyValue(person, kABOrganizationProperty);
@@ -103,9 +104,9 @@ static int osxab_read_book(void) {
 
 		lastname_cstr = cstring(lastName);
 		contact->name = g_strdup_printf("%s%s%s",
-			firstName ? cstring(firstName) : "",
-			lastname_cstr ? " " : "",
-			lastname_cstr ? lastname_cstr : "");
+						firstName ? cstring(firstName) : "",
+						lastname_cstr ? " " : "",
+						lastname_cstr ? lastname_cstr : "");
 
 		if (addresses) {
 			for (int j = 0; j < ABMultiValueCount((ABMultiValueRef)addresses); j++) {
@@ -118,7 +119,7 @@ static int osxab_read_book(void) {
 				gchar *tmp;
 
 				address->type = CFStringCompare(label, kABHomeLabel, 0);
-				
+
 				tmp = cstring(street);
 				address->street = tmp ? tmp : g_strdup("");
 				tmp = cstring(city);
@@ -151,7 +152,7 @@ static int osxab_read_book(void) {
 				number->number = cstring(an_phone);
 				contact->numbers = g_slist_prepend(contact->numbers, number);
 			}
-        }
+		}
 
 		CFDataRef image = ABPersonCopyImageData(person);
 		if (image) {
@@ -160,9 +161,9 @@ static int osxab_read_book(void) {
 
 			loader = gdk_pixbuf_loader_new();
 			if (gdk_pixbuf_loader_write(loader, CFDataGetBytePtr(image), image_len, NULL)) {
-					printf("Image loaded (%d)\n", image_len);
-					contact->image = gdk_pixbuf_loader_get_pixbuf(loader);
-					contact->image_len = image_len;
+				printf("Image loaded (%d)\n", image_len);
+				contact->image = gdk_pixbuf_loader_get_pixbuf(loader);
+				contact->image_len = image_len;
 			} else {
 				printf("Image NOT loaded\n");
 			}
@@ -199,7 +200,7 @@ static gboolean osxab_remove_contact(RmContact *contact)
 
 	g_debug("Uid: %s", cstring(contact->priv));
 	ref = ABCopyRecordForUniqueId(ab, contact->priv);
-	
+
 	if (ref) {
 		ABRemoveRecord(ab, ref);
 		ABSave(ab);
@@ -221,7 +222,7 @@ static gboolean osxab_save_contact(RmContact *contact)
 
 	if (!contact->priv) {
 		ref = ABPersonCreate();
-		contact->priv = (gpointer) ABRecordCopyUniqueId(ref);
+		contact->priv = (gpointer)ABRecordCopyUniqueId(ref);
 		ABAddRecord(ab, ref);
 	} else {
 		ref = ABCopyRecordForUniqueId(ab, contact->priv);
@@ -241,8 +242,8 @@ static gboolean osxab_save_contact(RmContact *contact)
 
 	if (contact->numbers) {
 		ABMutableMultiValueRef multi_phone = ABMultiValueCreateMutable();
-    	GSList *list;
-	
+		GSList *list;
+
 		for (list = contact->numbers; list != NULL; list = list->next) {
 			RmPhoneNumber *number = list->data;
 			CFTypeRef type;
@@ -270,14 +271,14 @@ static gboolean osxab_save_contact(RmContact *contact)
 			cfstring = CFStringCreateWithCString(NULL, number->number, kCFStringEncodingUTF8);
 			ABMultiValueAdd(multi_phone, cfstring, type, NULL);
 		}
-	
+
 		ABRecordSetValue(ref, kABPhoneProperty, multi_phone);
 	}
 
 	if (contact->addresses) {
 		ABMutableMultiValueRef multi_addresses = ABMultiValueCreateMutable();
-    	GSList *list;
-	
+		GSList *list;
+
 		for (list = contact->addresses; list != NULL; list = list->next) {
 			CFMutableDictionaryRef dic;
 			CFTypeRef type;
@@ -294,7 +295,7 @@ static gboolean osxab_save_contact(RmContact *contact)
 				continue;
 			}
 
-			dic = CFDictionaryCreateMutable(NULL,  0, NULL, NULL);
+			dic = CFDictionaryCreateMutable(NULL, 0, NULL, NULL);
 
 			cfstring = CFStringCreateWithCString(NULL, address->street, kCFStringEncodingUTF8);
 			CFDictionaryAddValue(dic, kABAddressStreetKey, cfstring);

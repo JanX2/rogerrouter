@@ -210,7 +210,7 @@ gboolean sip_connect(gpointer user_data)
 	 * which need to use the PJLIB framework
 	 */
 	if (!pj_thread_is_registered()) {
-		status = pj_thread_register("Threadname", rtpdesc, &thread );
+		status = pj_thread_register("Threadname", rtpdesc, &thread);
 		if (status != PJ_SUCCESS) {
 			g_warning("SIP: Threadname Failed to register with PJLIB,exit = %d", status);
 			pjsua_destroy();
@@ -277,18 +277,18 @@ gboolean sip_connect(gpointer user_data)
 	}
 
 	{
-	int dev_count;
+		int dev_count;
 
-	pjmedia_aud_dev_index dev_idx;
-	dev_count = pjmedia_aud_dev_count();
-	printf("Got %d audio devices\n", dev_count);
+		pjmedia_aud_dev_index dev_idx;
+		dev_count = pjmedia_aud_dev_count();
+		printf("Got %d audio devices\n", dev_count);
 
-	for (dev_idx=0; dev_idx<dev_count; ++dev_idx) {
-		pjmedia_aud_dev_info info;
-		pjmedia_aud_dev_get_info(dev_idx, &info);
+		for (dev_idx = 0; dev_idx < dev_count; ++dev_idx) {
+			pjmedia_aud_dev_info info;
+			pjmedia_aud_dev_get_info(dev_idx, &info);
 
-		printf("%d. %s/%s (in=%d, out=%d)\n", dev_idx, info.name, info.driver, info.input_count, info.output_count);
-	}
+			printf("%d. %s/%s (in=%d, out=%d)\n", dev_idx, info.name, info.driver, info.input_count, info.output_count);
+		}
 	}
 
 	return TRUE;
@@ -327,7 +327,7 @@ static gboolean sip_plugin_init(RmPlugin *plugin)
 
 	g_debug("%s(): sip", __FUNCTION__);
 
-	sip_settings = rm_settings_new_profile("org.tabos.roger.plugins.sip", "sip", (gchar*) rm_profile_get_name(rm_profile_get_active()));
+	sip_settings = rm_settings_new_profile("org.tabos.roger.plugins.sip", "sip", (gchar*)rm_profile_get_name(rm_profile_get_active()));
 
 	/* Add network event */
 	sip_plugin->net_event = rm_netmonitor_add_event("SIP", sip_connect, sip_disconnect, sip_plugin);

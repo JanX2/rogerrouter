@@ -79,14 +79,14 @@ gpointer gnotification_show(RmConnection *connection, RmContact *contact)
 	}
 	/* Create notification message */
 	text = g_markup_printf_escaped(_("Name:\t\t%s\nNumber:\t\t%s\nCompany:\t%s\nStreet:\t\t%s\nCity:\t\t\t%s%s%s\n"),
-	                               contact->name ? contact->name : "",
-	                               contact->number ? contact->number : "",
-	                               contact->company ? contact->company : "",
-	                               contact->street ? contact->street : "",
-	                               contact->zip ? contact->zip : "",
-	                               contact->zip ? " " : "",
-	                               contact->city ? contact->city : ""
-	                              );
+				       contact->name ? contact->name : "",
+				       contact->number ? contact->number : "",
+				       contact->company ? contact->company : "",
+				       contact->street ? contact->street : "",
+				       contact->zip ? contact->zip : "",
+				       contact->zip ? " " : "",
+				       contact->city ? contact->city : ""
+				       );
 
 	if (connection->type == RM_CONNECTION_TYPE_INCOMING) {
 		title = g_strdup_printf(_("Incoming call (on %s)"), connection->local_number);

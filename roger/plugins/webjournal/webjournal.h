@@ -22,6 +22,6 @@
 
 G_BEGIN_DECLS
 
-G_END_DECLS
+	G_END_DECLS
 
 #endif

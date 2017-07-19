@@ -159,8 +159,8 @@ static int get_page_count(GtkPrintContext *context, PrintData *print_data)
 		layout_v = 100 * PANGO_SCALE;
 	}
 
-	print_data->line_height = (gdouble) layout_h / PANGO_SCALE + 2;
-	print_data->char_width = (gdouble) layout_v / PANGO_SCALE;
+	print_data->line_height = (gdouble)layout_h / PANGO_SCALE + 2;
+	print_data->char_width = (gdouble)layout_v / PANGO_SCALE;
 	print_data->lines_per_page = ceil((height - print_data->line_height) / print_data->line_height);
 
 	/* 3 for header, 1 for bar */
@@ -177,7 +177,7 @@ static int get_page_count(GtkPrintContext *context, PrintData *print_data)
  */
 static void begin_print_cb(GtkPrintOperation *operation, GtkPrintContext *context, gpointer user_data)
 {
-	PrintData *print_data = (PrintData *) user_data;
+	PrintData *print_data = (PrintData*)user_data;
 	GtkTreeModel *model;
 	GtkTreeIter sIter;
 	gboolean valid;
@@ -291,7 +291,7 @@ static gchar *get_date_time(const gchar *format)
  */
 static void draw_page_cb(GtkPrintOperation *operation, GtkPrintContext *context, gint nPageNr, gpointer user_data)
 {
-	PrintData *print_data = (PrintData *) user_data;
+	PrintData *print_data = (PrintData*)user_data;
 	cairo_t *cairo;
 	gint line, i = 0;
 	GtkTreeModel *model;
@@ -469,7 +469,7 @@ static void draw_page_cb(GtkPrintOperation *operation, GtkPrintContext *context,
  */
 static void end_print_cb(GtkPrintOperation *operation, GtkPrintContext *context, gpointer user_data)
 {
-	PrintData *print_data = (PrintData *) user_data;
+	PrintData *print_data = (PrintData*)user_data;
 
 	g_free(print_data);
 }
@@ -530,7 +530,7 @@ GdkPixbuf *load_tiff_page(TIFF *tiff_file)
 	TIFFGetField(tiff_file, TIFFTAG_IMAGELENGTH, &height);
 
 	/* allocate and fill raster from file. */
-	raster = (uint32*) _TIFFmalloc(width * height * sizeof(uint32));
+	raster = (uint32*)_TIFFmalloc(width * height * sizeof(uint32));
 	TIFFRGBAImageBegin(&img, tiff_file, FALSE, NULL);
 	TIFFRGBAImageGet(&img, raster, width, height);
 	TIFFRGBAImageEnd(&img);
@@ -546,7 +546,7 @@ GdkPixbuf *load_tiff_page(TIFF *tiff_file)
 		}
 	}
 
-	return gdk_pixbuf_new_from_data((const guchar *) raster, GDK_COLORSPACE_RGB, TRUE, 8, width, height, width * 4, NULL, NULL);
+	return gdk_pixbuf_new_from_data((const guchar*)raster, GDK_COLORSPACE_RGB, TRUE, 8, width, height, width * 4, NULL, NULL);
 }
 
 /**
@@ -595,9 +595,9 @@ void create_fax_report(RmFaxStatus *status, gchar *file, const char *report_dir)
 	pixbuf = scale;
 
 	buffer = g_strdup_printf("%s/fax-report_%s_%s_%02d_%02d_%d_%02d_%02d_%02d.pdf",
-	                         report_dir, local, remote,
-	                         time_ptr->tm_mday, time_ptr->tm_mon + 1, time_ptr->tm_year + 1900,
-	                         time_ptr->tm_hour, time_ptr->tm_min, time_ptr->tm_sec);
+				 report_dir, local, remote,
+				 time_ptr->tm_mday, time_ptr->tm_mon + 1, time_ptr->tm_year + 1900,
+				 time_ptr->tm_hour, time_ptr->tm_min, time_ptr->tm_sec);
 	out = cairo_pdf_surface_create(buffer, MM_TO_POINTS(594), MM_TO_POINTS(841));
 	g_free(buffer);
 
@@ -696,7 +696,7 @@ void create_fax_report(RmFaxStatus *status, gchar *file, const char *report_dir)
 	cairo_move_to(cairo, 1000, 195);
 	cairo_show_text(cairo, _("Message:"));
 	cairo_move_to(cairo, 1220, 195);
-	buffer = (char *) t30_completion_code_to_str(status->error_code);
+	buffer = (char*)t30_completion_code_to_str(status->error_code);
 	cairo_show_text(cairo, buffer);
 #endif
 

@@ -39,11 +39,11 @@
 #include <fcntl.h>
 
 #if HAVE_SYS_UTSNAME_H
-#	include <sys/utsname.h>
+#       include <sys/utsname.h>
 #endif
 
 #if defined(__GNU_LIBRARY__) && !defined(__UCLIBC__)
-#	include <gnu/libc-version.h>
+#       include <gnu/libc-version.h>
 #endif
 
 #include <rm/rm.h>
@@ -78,7 +78,7 @@ static void crash_handler(int sig)
 
 
 	/*
-	 * besides guarding entrancy it's probably also better 
+	 * besides guarding entrancy it's probably also better
 	 * to mask off signals
 	 */
 	if (crashed_) return;
@@ -86,7 +86,7 @@ static void crash_handler(int sig)
 	crashed_++;
 
 #ifdef SIGTERM
-	if (sig == SIGTERM) 
+	if (sig == SIGTERM)
 		exit(0);
 #endif
 
@@ -110,7 +110,7 @@ static void crash_handler(int sig)
 
 		if (setgid(getgid()) != 0)
 			perror("setgid");
-		if (setuid(getuid()) != 0 )
+		if (setuid(getuid()) != 0)
 			perror("setuid");
 		execvp(argv0, args);
 	} else {
@@ -192,7 +192,7 @@ static void crash_debug(unsigned long crash_pid, gchar *exe_image, GString *debu
 		/*
 		 * setup debugger to attach to crashed roger
 		 */
-		*argptr++ = "gdb"; 
+		*argptr++ = "gdb";
 		*argptr++ = "--nw";
 		*argptr++ = "--nx";
 		*argptr++ = "--quiet";
@@ -201,7 +201,7 @@ static void crash_debug(unsigned long crash_pid, gchar *exe_image, GString *debu
 		*argptr++ = filespec;
 		*argptr++ = exe_image;
 		*argptr++ = g_strdup_printf("%ld", crash_pid);
-		*argptr   = NULL;
+		*argptr = NULL;
 
 		/*
 		 * redirect output to write end of pipe
@@ -210,12 +210,12 @@ static void crash_debug(unsigned long crash_pid, gchar *exe_image, GString *debu
 		if (dup(choutput[1]) < 0)
 			perror("dup");
 		close(choutput[0]);
-		if (-1 == execvp("gdb", argp)) 
+		if (-1 == execvp("gdb", argp))
 			g_print("error execvp\n");
 	} else {
 		char buf[100];
 		int r;
-	
+
 		waitpid(pid, NULL, 0);
 
 		/*
@@ -234,14 +234,14 @@ static void crash_debug(unsigned long crash_pid, gchar *exe_image, GString *debu
 				g_string_append(debug_output, buf);
 			}
 		} while (r > 0);
-		
+
 		close(choutput[0]);
 		close(choutput[1]);
-		
+
 		/*
 		 * kill the process we attached to
 		 */
-		kill(crash_pid, SIGCONT); 
+		kill(crash_pid, SIGCONT);
 	}
 }
 /**
@@ -293,7 +293,7 @@ static void crash_save_crash_log(GtkButton *button, const gchar *text)
 	g_date_time_unref(datetime);
 
 	native = gtk_file_chooser_native_new("Save Crash Log", NULL, GTK_FILE_CHOOSER_ACTION_SAVE, NULL, NULL);
-	chooser = GTK_FILE_CHOOSER (native);
+	chooser = GTK_FILE_CHOOSER(native);
 
 	gtk_file_chooser_set_do_overwrite_confirmation(chooser, TRUE);
 
@@ -305,14 +305,14 @@ static void crash_save_crash_log(GtkButton *button, const gchar *text)
 
 		filename = gtk_file_chooser_get_filename(chooser);
 		rm_file_save(filename, text, -1);
-		g_free (filename);
+		g_free(filename);
 
 		gtk_main_quit();
 	}
 
 	g_free(buf);
 
-	g_object_unref (native);
+	g_object_unref(native);
 }
 
 gboolean crash_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpointer data)
@@ -366,7 +366,7 @@ static GtkWidget *crash_dialog_show(const gchar *text, const gchar *debug_output
 	gtk_container_set_border_width(GTK_CONTAINER(hbox1), 4);
 
 	label1 = gtk_label_new
-	    (g_strdup_printf(_("%s.\nPlease file a bug report and include the information below\nand the debug log (~/.cache/rm/debug.log)."), text));
+			 (g_strdup_printf(_("%s.\nPlease file a bug report and include the information below\nand the debug log (~/.cache/rm/debug.log)."), text));
 	gtk_widget_show(label1);
 	gtk_box_pack_start(GTK_BOX(hbox1), label1, TRUE, TRUE, 0);
 	gtk_widget_set_halign(label1, GTK_ALIGN_START);
@@ -386,7 +386,7 @@ static GtkWidget *crash_dialog_show(const gchar *text, const gchar *debug_output
 	gtk_text_view_set_editable(GTK_TEXT_VIEW(text1), FALSE);
 	gtk_widget_show(text1);
 	gtk_container_add(GTK_CONTAINER(scrolledwindow1), text1);
-	
+
 	crash_report = g_strdup_printf(
 		"Roger Router version %s\n"
 		"GTK+ version %d.%d.%d / GLib %d.%d.%d\n"

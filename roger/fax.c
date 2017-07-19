@@ -36,7 +36,7 @@
 #include <roger/main.h>
 
 /* Workaround to build with pre-9.18 versions */
-#if defined( e_Quit )
+#if defined(e_Quit)
    #define gs_error_Quit  e_Quit
 #endif
 
@@ -85,7 +85,7 @@ gboolean fax_status_timer_cb(gpointer user_data)
 		gtk_label_set_text(GTK_LABEL(fax_ui->receiver_label), fax_status->remote_ident);
 		g_free(fax_status->remote_ident);
 
-		/* Fall through */
+	/* Fall through */
 	case RM_FAX_PHASE_SIGNALLING:
 		snprintf(buffer, sizeof(buffer), _("Transferring page %d of %d"), fax_status->page_current, fax_status->page_total);
 		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar), buffer);
@@ -93,7 +93,7 @@ gboolean fax_status_timer_cb(gpointer user_data)
 	case RM_FAX_PHASE_RELEASE:
 		if (!fax_status->error_code) {
 			g_debug("%s(): Fax transfer successful", __FUNCTION__);
-			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar),  _("Fax transfer successful"));
+			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar), _("Fax transfer successful"));
 		} else {
 			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar), _("Fax transfer failed"));
 			g_debug("%s(): Fax transfer failed", __FUNCTION__);
@@ -106,30 +106,30 @@ gboolean fax_status_timer_cb(gpointer user_data)
 		fax_ui->status_timer_id = 0;
 		return G_SOURCE_REMOVE;
 	case RM_FAX_PHASE_CALL:
-		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar),  _("Connecting…"));
+		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar), _("Connecting…"));
 		break;
 	default:
 		g_debug("%s(): Unhandled phase (%d)", __FUNCTION__, fax_status->phase);
-		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar),  "");
+		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar), "");
 		break;
 	}
 
-    gchar *time_diff;
-    gchar *buf;
- 
-    time_diff = rm_connection_get_duration_time(fax_ui->connection);
-    buf = g_strdup_printf(_("Time: %s"), time_diff);
-    g_free(time_diff);
- 
-    if (roger_uses_headerbar()) {
-        gtk_header_bar_set_subtitle(GTK_HEADER_BAR(fax_ui->header_bar), buf);
-    } else {
-        gchar *title = g_strdup_printf("%s - %s", rm_fax_get_name(fax_ui->fax), buf);
-        gtk_window_set_title(GTK_WINDOW(fax_ui->window), title);
-        g_free(title);
-    }
+	gchar *time_diff;
+	gchar *buf;
 
-    g_free(buf);
+	time_diff = rm_connection_get_duration_time(fax_ui->connection);
+	buf = g_strdup_printf(_("Time: %s"), time_diff);
+	g_free(time_diff);
+
+	if (roger_uses_headerbar()) {
+		gtk_header_bar_set_subtitle(GTK_HEADER_BAR(fax_ui->header_bar), buf);
+	} else {
+		gchar *title = g_strdup_printf("%s - %s", rm_fax_get_name(fax_ui->fax), buf);
+		gtk_window_set_title(GTK_WINDOW(fax_ui->window), title);
+		g_free(title);
+	}
+
+	g_free(buf);
 
 
 	return G_SOURCE_CONTINUE;
@@ -345,20 +345,20 @@ gchar *convert_to_fax(gchar *file_name)
 
 #if 1
 	ret = gsapi_new_instance(&minst, NULL);
-    if (ret < 0) {
+	if (ret < 0) {
 		return NULL;
 	}
 	ret = gsapi_set_arg_encoding(minst, GS_ARG_ENCODING_UTF8);
-    if (ret == 0) {
-        ret = gsapi_init_with_args(minst, 12, args);
+	if (ret == 0) {
+		ret = gsapi_init_with_args(minst, 12, args);
 	}
 
-    ret1 = gsapi_exit(minst);
-    if ((ret == 0) || (ret == gs_error_Quit)) {
+	ret1 = gsapi_exit(minst);
+	if ((ret == 0) || (ret == gs_error_Quit)) {
 		ret = ret1;
 	}
 
-    gsapi_delete_instance(minst);
+	gsapi_delete_instance(minst);
 #else
 	GError *error = NULL;
 	gint conv_ret_value;

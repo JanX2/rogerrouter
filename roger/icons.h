@@ -22,11 +22,11 @@
 
 G_BEGIN_DECLS
 
-#define APP_ICON_ADD	"list-add-symbolic"
-#define APP_ICON_REMOVE	"list-remove-symbolic"
-#define APP_ICON_TRASH	"user-trash-symbolic"
-#define APP_ICON_CALL	"call-start-symbolic"
-#define APP_ICON_HANGUP	"call-stop-symbolic"
+#define APP_ICON_ADD    "list-add-symbolic"
+#define APP_ICON_REMOVE "list-remove-symbolic"
+#define APP_ICON_TRASH  "user-trash-symbolic"
+#define APP_ICON_CALL   "call-start-symbolic"
+#define APP_ICON_HANGUP "call-stop-symbolic"
 
 GdkPixbuf *image_get_scaled(GdkPixbuf *image, gint req_width, gint req_height);
 

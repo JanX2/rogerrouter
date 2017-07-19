@@ -55,7 +55,7 @@ static gboolean phone_status_timer_cb(gpointer data)
 {
 	gchar *time_diff;
 	gchar *buf;
- 
+
 	time_diff = rm_connection_get_duration_time(phone_state->connection);
 	buf = g_strdup_printf(_("Time: %s"), time_diff);
 	g_free(time_diff);
@@ -236,7 +236,7 @@ void hangup_button_clicked_cb(GtkWidget *button, gpointer user_data)
  */
 void phone_item_toggled_cb(GtkCheckMenuItem *item, gpointer user_data)
 {
-	g_debug("%s(): called, %s", __FUNCTION__, (gchar *) user_data);
+	g_debug("%s(): called, %s", __FUNCTION__, (gchar*)user_data);
 
 	/* If item is active, adjust phone port accordingly and set sensitivity of phone buttons */
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(item))) {
@@ -450,7 +450,7 @@ gboolean phone_window_delete_event_cb(GtkWidget *window, GdkEvent *event, gpoint
 		if (phone_state->status_timer_id) {
 			g_source_remove(phone_state->status_timer_id);
 			phone_state->status_timer_id = 0;
-	}
+		}
 	}
 
 	/* Disconnect all signal handlers */

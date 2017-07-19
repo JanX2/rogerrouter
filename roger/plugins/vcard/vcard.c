@@ -75,7 +75,7 @@ static void vcard_free_data(struct vcard_data *card_data)
 	/* if entry is present, free it and set to NULL */
 	if (card_data->entry != NULL) {
 		g_free(card_data->entry);
-		card_data ->entry = NULL;
+		card_data->entry = NULL;
 	}
 
 	g_free(card_data);
@@ -100,10 +100,10 @@ static void process_first_last_name(struct vcard_data *card_data)
 	last_name = g_string_new("");
 	while (index < len) {
 		if (
-		    (card_data->entry[index] != 0x00) &&
-		    (card_data->entry[index] != ';') &&
-		    (card_data->entry[index] != 0x0A) &&
-		    (card_data->entry[index] != 0x0D)) {
+			(card_data->entry[index] != 0x00) &&
+			(card_data->entry[index] != ';') &&
+			(card_data->entry[index] != 0x0A) &&
+			(card_data->entry[index] != 0x0D)) {
 			g_string_append_c(last_name, card_data->entry[index++]);
 		} else {
 			break;
@@ -117,10 +117,10 @@ static void process_first_last_name(struct vcard_data *card_data)
 	first_name = g_string_new("");
 	while (index < len) {
 		if (
-		    (card_data->entry[index] != 0x00) &&
-		    (card_data->entry[index] != ';') &&
-		    (card_data->entry[index] != 0x0A) &&
-		    (card_data->entry[index] != 0x0D)) {
+			(card_data->entry[index] != 0x00) &&
+			(card_data->entry[index] != ';') &&
+			(card_data->entry[index] != 0x0A) &&
+			(card_data->entry[index] != 0x0D)) {
 			g_string_append_c(first_name, card_data->entry[index++]);
 		} else {
 			break;
@@ -147,10 +147,10 @@ static void process_formatted_name(struct vcard_data *card_data, RmContact *cont
 	str = g_string_new("");
 	for (index = 0; index < len; index++) {
 		if (
-		    (card_data->entry[index] != 0x00) &&
-		    (card_data->entry[index] != ';') &&
-		    (card_data->entry[index] != 0x0A) &&
-		    (card_data->entry[index] != 0x0D)) {
+			(card_data->entry[index] != 0x00) &&
+			(card_data->entry[index] != ';') &&
+			(card_data->entry[index] != 0x0A) &&
+			(card_data->entry[index] != 0x0D)) {
 			g_string_append_c(str, card_data->entry[index]);
 		} else {
 			break;
@@ -179,10 +179,10 @@ static void process_organization(struct vcard_data *card_data)
 	company = g_string_new("");
 	while (index < len) {
 		if (
-		    (card_data->entry[index] != 0x00) &&
-		    (card_data->entry[index] != ';') &&
-		    (card_data->entry[index] != 0x0A) &&
-		    (card_data->entry[index] != 0x0D)) {
+			(card_data->entry[index] != 0x00) &&
+			(card_data->entry[index] != ';') &&
+			(card_data->entry[index] != 0x0A) &&
+			(card_data->entry[index] != 0x0D)) {
 			g_string_append_c(company, card_data->entry[index++]);
 		} else {
 			break;
@@ -209,10 +209,10 @@ static void process_title(struct vcard_data *card_data)
 	title = g_string_new("");
 	while (index < len) {
 		if (
-		    (card_data->entry[index] != 0x00) &&
-		    (card_data->entry[index] != ';') &&
-		    (card_data->entry[index] != 0x0A) &&
-		    (card_data->entry[index] != 0x0D)) {
+			(card_data->entry[index] != 0x00) &&
+			(card_data->entry[index] != ';') &&
+			(card_data->entry[index] != 0x0A) &&
+			(card_data->entry[index] != 0x0D)) {
 			g_string_append_c(title, card_data->entry[index++]);
 		} else {
 			break;
@@ -241,10 +241,10 @@ static void process_uid(struct vcard_data *card_data, RmContact *contact)
 	uid = g_string_new("");
 	while (index < len) {
 		if (
-		    (card_data->entry[index] != 0x00) &&
-		    (card_data->entry[index] != ';') &&
-		    (card_data->entry[index] != 0x0A) &&
-		    (card_data->entry[index] != 0x0D)) {
+			(card_data->entry[index] != 0x00) &&
+			(card_data->entry[index] != ';') &&
+			(card_data->entry[index] != 0x0A) &&
+			(card_data->entry[index] != 0x0D)) {
 			g_string_append_c(uid, card_data->entry[index++]);
 		} else {
 			break;
@@ -336,10 +336,10 @@ static void process_address(struct vcard_data *card_data, RmContact *contact)
 
 	/* read country */
 	/*private_country = g_string_new("");
-	while (*tmp != 0x00 && *tmp != 0x0A && *tmp != 0x0D) {
-		g_string_append_c(private_country, *tmp);
-		tmp++;
-	}*/
+	   while (*tmp != 0x00 && *tmp != 0x0A && *tmp != 0x0D) {
+	        g_string_append_c(private_country, *tmp);
+	        tmp++;
+	   }*/
 }
 
 /**
@@ -360,14 +360,14 @@ static void process_telephone(struct vcard_data *card_data, RmContact *contact)
 
 	if (rm_strcasestr(card_data->options, "FAX") != NULL) {
 		/*if (rm_strcasestr(card_data->options, "WORK") != NULL) {
-			if (business_fax == NULL) {
-				business_fax = g_string_new("");
-				while (*tmp != 0x00 && *tmp != 0x0A && *tmp != 0x0D) {
-					g_string_append_c(business_fax, *tmp);
-					tmp++;
-				}
-			}
-		} else*/ {
+		        if (business_fax == NULL) {
+		                business_fax = g_string_new("");
+		                while (*tmp != 0x00 && *tmp != 0x0A && *tmp != 0x0D) {
+		                        g_string_append_c(business_fax, *tmp);
+		                        tmp++;
+		                }
+		        }
+		   } else*/{
 			number->type = RM_PHONE_NUMBER_TYPE_FAX_HOME;
 		}
 	} else {
@@ -451,7 +451,7 @@ GString *vcard_create_uid(void)
 			random += 6;
 		}
 
-		id = g_string_append_c(id, (char) random);
+		id = g_string_append_c(id, (char)random);
 	}
 
 	return id;
@@ -480,10 +480,10 @@ static void process_card_end(RmContact *contact)
 	}
 
 	/*
-	if (title != NULL) {
-		AddInfo(table, PERSON_TITLE, title->str);
-	}
-	}*/
+	   if (title != NULL) {
+	        AddInfo(table, PERSON_TITLE, title->str);
+	   }
+	   }*/
 
 	if (!contact->name && first_name != NULL && last_name != NULL) {
 		contact->name = g_strdup_printf("%s %s", first_name->str, last_name->str);
@@ -917,7 +917,7 @@ GList *vcard_remove_data(GList *list, gchar *header)
 	GList *tmp = NULL;
 	struct vcard_data *data = NULL;
 
-again:
+ again:
 	for (tmp = list; tmp != NULL && tmp->data != NULL; tmp = tmp->next) {
 		data = tmp->data;
 
@@ -1033,10 +1033,10 @@ void vcard_write_file(char *file_name)
 			}
 
 			card_data->entry = g_strdup_printf(";;%s;%s;;%s;%s",
-			                                   address->street,
-			                                   address->city,
-			                                   address->zip,
-			                                   /*address->country*/"");
+							   address->street,
+							   address->city,
+							   address->zip,
+			                                   /*address->country*/ "");
 
 			entry = g_list_append(entry, card_data);
 		}
@@ -1061,7 +1061,7 @@ void vcard_write_file(char *file_name)
 				}
 
 				if (g_file_get_contents(contact->image_uri, &data, &len, NULL)) {
-					gchar *base64 = g_base64_encode((const guchar *) data, len);
+					gchar *base64 = g_base64_encode((const guchar*)data, len);
 					if (card_data->options != NULL) {
 						g_free(card_data->options);
 					}

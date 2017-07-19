@@ -9,11 +9,11 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE(ContactSearch, contact_search, CONTACT, SEARCH, GtkBox)
 
-GtkWidget *contact_search_new(void);
+GtkWidget * contact_search_new(void);
 gchar *contact_search_get_number(ContactSearch *widget);
 void contact_search_clear(ContactSearch *widget);
 void contact_search_set_text(ContactSearch *widget,
-                             gchar         *text);
+			     gchar         *text);
 const gchar *contact_search_get_text(ContactSearch *widget);
 void contact_search_set_contact(ContactSearch *widget, RmContact *contact, gboolean identify);
 

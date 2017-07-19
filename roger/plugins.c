@@ -48,13 +48,13 @@ gboolean plugins_state_set_cb(GtkSwitch *widget, gboolean state, gpointer user_d
 }
 
 static void url_button_clicked_cb(GtkWidget *widget,
-                                  gpointer   user_data)
+				  gpointer user_data)
 {
 	rm_os_execute(user_data);
 }
 
 static void plugins_about_clicked_cb(GtkWidget *button,
-                                       gpointer   user_data)
+				     gpointer user_data)
 {
 	GtkListBoxRow *row = gtk_list_box_get_selected_row(GTK_LIST_BOX(user_data));
 	GtkWidget *child = gtk_container_get_children(GTK_CONTAINER(row))->data;
@@ -126,7 +126,7 @@ static void plugins_about_clicked_cb(GtkWidget *button,
 }
 
 static void plugins_help_clicked_cb(GtkWidget *button,
-                                       gpointer   user_data)
+				    gpointer user_data)
 {
 	GtkListBoxRow *row = gtk_list_box_get_selected_row(GTK_LIST_BOX(user_data));
 	GtkWidget *child = gtk_container_get_children(GTK_CONTAINER(row))->data;
@@ -140,7 +140,7 @@ static void plugins_help_clicked_cb(GtkWidget *button,
 }
 
 static void plugins_configure_clicked_cb(GtkWidget *button,
-                                       gpointer   user_data)
+					 gpointer user_data)
 {
 	GtkListBoxRow *row = gtk_list_box_get_selected_row(GTK_LIST_BOX(user_data));
 	GtkWidget *child = gtk_container_get_children(GTK_CONTAINER(row))->data;
@@ -160,8 +160,8 @@ static void plugins_configure_clicked_cb(GtkWidget *button,
 		}
 
 		win = gtk_dialog_new();
-		g_value_init (&a, G_TYPE_INT);
-		g_value_set_int (&a, 1);
+		g_value_init(&a, G_TYPE_INT);
+		g_value_set_int(&a, 1);
 		g_object_set_property(G_OBJECT(win), "use-header-bar", &a);
 		gtk_window_set_title(GTK_WINDOW(win), plugin->name);
 		gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(win))), config);
@@ -172,8 +172,8 @@ static void plugins_configure_clicked_cb(GtkWidget *button,
 }
 
 static void plugins_listbox_row_selected_cb(GtkListBox    *box,
-               GtkListBoxRow *row,
-               gpointer       user_data)
+					    GtkListBoxRow *row,
+					    gpointer user_data)
 {
 	GtkWidget *child;
 	RmPlugin *plugin;
@@ -195,9 +195,9 @@ static void plugins_listbox_row_selected_cb(GtkListBox    *box,
 	}
 
 	if (plugin->help) {
-		gtk_widget_set_sensitive (help_button, TRUE);
+		gtk_widget_set_sensitive(help_button, TRUE);
 	} else {
-		gtk_widget_set_sensitive (help_button, FALSE);
+		gtk_widget_set_sensitive(help_button, FALSE);
 	}
 }
 
@@ -296,7 +296,7 @@ void app_show_plugins(void)
 
 	item = gtk_separator_tool_item_new();
 
-	gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM (item), FALSE);
+	gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
 	gtk_tool_item_set_expand(item, TRUE);
 	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, 1);
 

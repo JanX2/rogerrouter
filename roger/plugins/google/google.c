@@ -79,10 +79,10 @@ gchar *ask_user_for_auth_code(const gchar *auth_uri)
 
 	dialog = gtk_message_dialog_new_with_markup(NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_NONE, "<span weight=\"bold\" size=\"larger\">%s</span>", _("Google plugin: Authorization required"));
 	gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog),
-		_("You need to authorize Roger Router to access your Google contact list."
-		"\n\nVisit Google's authorization page by pressing the button below. After you "
-		"confirmed the authorization, you will get an authorization code. Enter that code "
-		"in the field below to grant Roger Router access to your Google contact list."));
+						 _("You need to authorize Roger Router to access your Google contact list."
+						   "\n\nVisit Google's authorization page by pressing the button below. After you "
+						   "confirmed the authorization, you will get an authorization code. Enter that code "
+						   "in the field below to grant Roger Router access to your Google contact list."));
 
 	gtk_dialog_add_button(GTK_DIALOG(dialog), _("_Cancel"), GTK_RESPONSE_CANCEL);
 	btn_ok = gtk_dialog_add_button(GTK_DIALOG(dialog), _("_OK"), GTK_RESPONSE_OK);
@@ -160,7 +160,7 @@ static void google_interactive_auth(void)
 
 	/* Zero out the code before freeing. */
 	if (authorization_code != NULL) {
-		memset(authorization_code, 0, strlen (authorization_code));
+		memset(authorization_code, 0, strlen(authorization_code));
 	}
 
 	g_free(authorization_code);
@@ -205,7 +205,7 @@ static int google_init(void)
 		if (service == NULL) {
 			g_debug("Could not contacts service");
 			g_object_unref(authorizer);
-	  		return -2;
+			return -2;
 		}
 	}
 
@@ -242,7 +242,8 @@ static int google_init(void)
  * \brief Deinitialize gdata
  * \return error code
  */
-static int google_shutdown(void) {
+static int google_shutdown(void)
+{
 	gchar *token = NULL;
 
 	if (service != NULL) {
@@ -267,7 +268,8 @@ static int google_shutdown(void) {
  * \brief Read address book
  * \return error code
  */
-static int google_read_book(void) {
+static int google_read_book(void)
+{
 	GDataQuery *query;
 	GDataFeed *feed;
 	GList *list;
@@ -440,13 +442,14 @@ static int google_read_book(void) {
 }
 
 #if 0
-void google_set_image(GDataContactsContact *gcontact, struct sPerson *contact) {
+void google_set_image(GDataContactsContact *gcontact, struct sPerson *contact)
+{
 	if (contact->pnNewImage != NULL) {
 		gchar *pnData;
 		gsize nLength;
 
 		if (g_file_get_contents(contact->pnNewImage, &pnData, &nLength, NULL)) {
-			gdata_contacts_contact_set_photo(gcontact, service, (guint8 *) pnData, nLength, "image/jpeg", NULL, NULL);
+			gdata_contacts_contact_set_photo(gcontact, service, (guint8*)pnData, nLength, "image/jpeg", NULL, NULL);
 		}
 	} else if (contact->psImage == NULL) {
 		gdata_contacts_contact_set_photo(gcontact, service, NULL, 0, NULL, NULL, NULL);
@@ -457,7 +460,8 @@ void google_set_image(GDataContactsContact *gcontact, struct sPerson *contact) {
  * \brief Save address book
  * \return error code
  */
-int googleSaveBook(void) {
+int googleSaveBook(void)
+{
 	GList *list;
 	GError *error = NULL;
 	RmProfile *profile = rm_profile_get_active();
@@ -598,7 +602,7 @@ int googleSaveBook(void) {
 			google_set_image(contact, contact);
 
 			/* Update person id */
-			contact->id = (gchar *) gdata_entry_get_id(GDATA_ENTRY(contact));
+			contact->id = (gchar*)gdata_entry_get_id(GDATA_ENTRY(contact));
 		}
 
 		if (contact->nFlags & PERSON_FLAG_DELETED) {
@@ -784,10 +788,10 @@ int googleSaveBook(void) {
 			if (contact->pnPrivateStreet != NULL && strlen(contact->pnPrivateStreet) > 0) {
 				gdata_gd_postal_address_set_street(psAddress, contact->pnPrivateStreet);
 			}
-			if (contact->pnPrivateCity != NULL  && strlen(contact->pnPrivateCity) > 0) {
+			if (contact->pnPrivateCity != NULL && strlen(contact->pnPrivateCity) > 0) {
 				gdata_gd_postal_address_set_city(psAddress, contact->pnPrivateCity);
 			}
-			if (contact->pnPrivateCountry != NULL  && strlen(contact->pnPrivateCountry) > 0) {
+			if (contact->pnPrivateCountry != NULL && strlen(contact->pnPrivateCountry) > 0) {
 				gdata_gd_postal_address_set_country(psAddress, contact->pnPrivateCountry, NULL);
 			}
 			if (contact->pnPrivateZipCode != NULL && strlen(contact->pnPrivateZipCode) > 0) {

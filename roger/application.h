@@ -26,7 +26,7 @@ G_BEGIN_DECLS
 
 #define APP_GSETTINGS_SCHEMA "org.tabos.roger"
 
-extern GSettings *app_settings;
+extern GSettings * app_settings;
 extern GtkApplication *roger_app;
 
 void app_show_contacts(void);

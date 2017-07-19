@@ -307,7 +307,7 @@ static gboolean router_post(struct assistant *assistant)
 	g_debug("%s(): child %s", __FUNCTION__, gtk_stack_get_visible_child_name(GTK_STACK(assistant->router_stack)));
 	if (!strcmp(gtk_stack_get_visible_child_name(GTK_STACK(assistant->router_stack)), "manual")) {
 		server = gtk_entry_get_text(GTK_ENTRY(assistant->server));
-		g_object_set_data(G_OBJECT(assistant->router_stack), "server", (gchar*) server);
+		g_object_set_data(G_OBJECT(assistant->router_stack), "server", (gchar*)server);
 	} else {
 		server = g_object_get_data(G_OBJECT(assistant->router_stack), "server");
 	}
@@ -461,13 +461,13 @@ static gboolean finish_post(struct assistant *assistant)
 
 /** Assistant pages: Name, Pre/Post functions */
 struct assistant_page assistant_pages[] = {
-	{"welcome", welcome_pre, NULL},
-	{"profile", profile_pre, profile_post},
-	{"router", router_pre, router_post},
-	{"password", password_pre, password_post},
-	{"ftp_password", ftp_password_pre, ftp_password_post},
-	{"finish", finish_pre, finish_post},
-	{NULL, NULL, NULL}
+	{ "welcome", welcome_pre, NULL },
+	{ "profile", profile_pre, profile_post },
+	{ "router", router_pre, router_post },
+	{ "password", password_pre, password_post },
+	{ "ftp_password", ftp_password_pre, ftp_password_post },
+	{ "finish", finish_pre, finish_post },
+	{ NULL, NULL, NULL }
 };
 
 /**

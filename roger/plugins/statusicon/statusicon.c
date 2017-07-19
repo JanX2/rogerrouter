@@ -35,7 +35,7 @@ G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 
 #define MAX_LASTCALLS 5
 
-extern GList *journal_list;
+extern GList * journal_list;
 extern GtkWidget *journal_win;
 
 static GSettings *statusicon_settings = NULL;

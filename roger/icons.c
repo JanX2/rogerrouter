@@ -42,11 +42,11 @@ GdkPixbuf *image_get_scaled(GdkPixbuf *image, gint req_width, gint req_height)
 		height = gdk_pixbuf_get_height(image);
 
 		if (req_width != -1) {
-			factor = (float) req_width / orig_width;
+			factor = (float)req_width / orig_width;
 			width = orig_width / factor;
 			height = orig_height / height;
 		} else if (req_height != -1) {
-			factor = (float) req_height / orig_height;
+			factor = (float)req_height / orig_height;
 			width = orig_width / factor;
 			height = orig_height / height;
 		} else {

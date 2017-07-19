@@ -75,7 +75,7 @@ static gchar *convert_date_time(gchar *date_time)
 	gint hour;
 	gint min;
 
-	sscanf(date_time, "%d.%d.%d %d:%d", &day, &month, &year, &hour, &min );
+	sscanf(date_time, "%d.%d.%d %d:%d", &day, &month, &year, &hour, &min);
 
 	return g_strdup_printf("%4.4d%2.2d%2.2d%2.2d%2.2d00", 2000 + year, month, day, hour, min);
 }
@@ -179,23 +179,23 @@ static gboolean webjournal_plugin_init(RmPlugin *plugin)
 	plugin->priv = webjournal_plugin;
 
 	tmp = g_resources_lookup_data("/org/tabos/roger/plugins/webjournal/share/header.html", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
-	webjournal_plugin->header = (gchar *) g_bytes_get_data(tmp, NULL);
+	webjournal_plugin->header = (gchar*)g_bytes_get_data(tmp, NULL);
 	//g_free(file);
 
 	tmp = g_resources_lookup_data("/org/tabos/roger/plugins/webjournal/share/entry.html", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
-	webjournal_plugin->entry = (gchar*) g_bytes_get_data(tmp, NULL);
+	webjournal_plugin->entry = (gchar*)g_bytes_get_data(tmp, NULL);
 
 	tmp = g_resources_lookup_data("/org/tabos/roger/plugins/webjournal/share/footer.html", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
-	webjournal_plugin->footer = (gchar*) g_bytes_get_data(tmp, NULL);
+	webjournal_plugin->footer = (gchar*)g_bytes_get_data(tmp, NULL);
 
 	tmp = g_resources_lookup_data("/org/tabos/roger/plugins/webjournal/share/dragtable.js", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
-	webjournal_plugin->dragtable = (gchar*) g_bytes_get_data(tmp, NULL);
+	webjournal_plugin->dragtable = (gchar*)g_bytes_get_data(tmp, NULL);
 
 	tmp = g_resources_lookup_data("/org/tabos/roger/plugins/webjournal/share/sortable.js", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
-	webjournal_plugin->sortable = (gchar*) g_bytes_get_data(tmp, NULL);
+	webjournal_plugin->sortable = (gchar*)g_bytes_get_data(tmp, NULL);
 
 	tmp = g_resources_lookup_data("/org/tabos/roger/plugins/webjournal/share/styling.css", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
-	webjournal_plugin->styling = (gchar*) g_bytes_get_data(tmp, NULL);
+	webjournal_plugin->styling = (gchar*)g_bytes_get_data(tmp, NULL);
 
 	webjournal_settings = rm_settings_new("org.tabos.roger.plugins.webjournal");
 

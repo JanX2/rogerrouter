@@ -31,14 +31,15 @@ G_BEGIN_DECLS
 #define ui_set_destructive_style(widget) gtk_style_context_add_class(gtk_widget_get_style_context(widget), GTK_STYLE_CLASS_DESTRUCTIVE_ACTION)
 #define ui_set_button_style(widget) gtk_style_context_add_class(gtk_widget_get_style_context(widget), GTK_STYLE_CLASS_BUTTON_ACTION)
 
-#define gtk_widget_set_margin(widget, x1, y1, x2, y2) {\
-	gtk_widget_set_margin_top(widget, y1);\
-	gtk_widget_set_margin_bottom(widget, y2);\
-	gtk_widget_set_margin_start(widget, x1);\
-	gtk_widget_set_margin_end(widget, x2);\
+#define gtk_widget_set_margin(widget, x1, y1, x2, y2) { \
+		gtk_widget_set_margin_top(widget, y1); \
+		gtk_widget_set_margin_bottom(widget, y2); \
+		gtk_widget_set_margin_start(widget, x1); \
+		gtk_widget_set_margin_end(widget, x2); \
 }
 
-static inline GtkWidget *ui_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand, gboolean vexpand) {
+static inline GtkWidget *ui_group_create(GtkWidget *box, gchar *title_str, gboolean hexpand, gboolean vexpand)
+{
 	GtkWidget *group;
 	GtkWidget *title;
 	gchar *title_markup = ui_bold_text(title_str);

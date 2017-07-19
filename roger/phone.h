@@ -69,7 +69,7 @@ struct phone_device {
 	void (*terminated)(struct phone_state *state, RmConnection *connection);
 	GtkWidget *(*create_menu)(RmProfile *profile, struct phone_state *state);
 	GtkWidget *(*create_child)(struct phone_state *state, GtkWidget *grid);
-	void (*delete)(struct phone_state *state);
+	void(*delete)(struct phone_state *state);
 	void (*status)(struct phone_state *state, RmConnection *connection);
 };
 

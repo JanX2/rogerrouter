@@ -28,7 +28,7 @@
 
 #include <rm/rm.h>
 
-#define RM_TYPE_KEYCHAIN_PLUGIN        (rm_keychain_plugin_get_type ())
+#define RM_TYPE_KEYCHAIN_PLUGIN        (rm_keychain_plugin_get_type())
 #define RM_KEYCHAIN_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_KEYCHAIN_PLUGIN, RmKeyChainPlugin))
 
 typedef struct {
@@ -84,7 +84,7 @@ static gchar *keychain_get_password(RmProfile *profile, const gchar *type)
 
 	/* Check return value, if no error occurred: return password */
 	if (status == noErr) {
-		secret_password = g_strndup((char *) password, pwd_length);
+		secret_password = g_strndup((char*)password, pwd_length);
 		SecKeychainItemFreeContent(NULL, password);
 		return secret_password;
 	}
@@ -100,7 +100,8 @@ static gchar *keychain_get_password(RmProfile *profile, const gchar *type)
  * \param type password type
  * \param password password text
  */
-static void keychain_store_password(RmProfile *profile, const gchar *type, const gchar *password) {
+static void keychain_store_password(RmProfile *profile, const gchar *type, const gchar *password)
+{
 	OSStatus status;
 	SecKeychainItemRef item_ref = NULL;
 	gchar *pwd_name;
@@ -131,9 +132,9 @@ static void keychain_store_password(RmProfile *profile, const gchar *type, const
 		CFRelease(item_ref);
 		return;
 	}
-	
+
 	/* insert new keychain entry */
-	status = SecKeychainItemModifyAttributesAndData(item_ref, NULL, (UInt32) strlen(password), password);
+	status = SecKeychainItemModifyAttributesAndData(item_ref, NULL, (UInt32)strlen(password), password);
 
 	/* Check return value, if error occurred: show reason */
 	if (status != noErr) {
@@ -151,7 +152,8 @@ static void keychain_store_password(RmProfile *profile, const gchar *type, const
  * \param type type indicating which password to remove
  * \return TRUE on success, otherwise FALSE on error
  */
-static gboolean keychain_remove_password(RmProfile *profile, const gchar *type) {
+static gboolean keychain_remove_password(RmProfile *profile, const gchar *type)
+{
 	OSStatus status;
 	SecKeychainItemRef item_ref = NULL;
 	gchar *pwd_name;

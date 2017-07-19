@@ -38,13 +38,13 @@ static gchar *file_name = NULL;
 static gchar *number = NULL;
 
 static GOptionEntry entries[] = {
-	{"debug", 'd', 0, G_OPTION_ARG_NONE, &debug, "Enable debug messages", NULL},
-	{"journal", 'j', 0, G_OPTION_ARG_NONE, &journal, "Prints journal", NULL},
-	{"sendfax", 's', 0, G_OPTION_ARG_NONE, &sendfax, "Send fax", NULL},
-	{"file", 'f', 0, G_OPTION_ARG_STRING, &file_name, "PDF/PS file", NULL},
-	{"number", 'n', 0, G_OPTION_ARG_STRING, &number, "Remote phone number", NULL},
-	{"call", 'c', 0, G_OPTION_ARG_NONE, &call, "Call number", NULL},
-	{NULL}
+	{ "debug", 'd', 0, G_OPTION_ARG_NONE, &debug, "Enable debug messages", NULL },
+	{ "journal", 'j', 0, G_OPTION_ARG_NONE, &journal, "Prints journal", NULL },
+	{ "sendfax", 's', 0, G_OPTION_ARG_NONE, &sendfax, "Send fax", NULL },
+	{ "file", 'f', 0, G_OPTION_ARG_STRING, &file_name, "PDF/PS file", NULL },
+	{ "number", 'n', 0, G_OPTION_ARG_STRING, &number, "Remote phone number", NULL },
+	{ "call", 'c', 0, G_OPTION_ARG_NONE, &call, "Call number", NULL },
+	{ NULL }
 };
 
 /** Internal main loop */
@@ -72,13 +72,13 @@ void journal_loaded_cb(RmObject *obj, GSList *journal, gpointer unused)
 
 		g_printf("|----------------------------------------------------------------------------------------------------------------------------------|\n");
 		g_printf("|%-15.15s|%-20.20s|%-20.20s|%-20.20s|%-20.20s|%-20.20s|%-9.9s|\n",
-		         call->date_time,
-		         remote_name,
-		         call->remote->number,
-		         call->remote->city,
-		         local_name,
-		         call->local->number,
-		         call->duration);
+			 call->date_time,
+			 remote_name,
+			 call->remote->number,
+			 call->remote->city,
+			 local_name,
+			 call->local->number,
+			 call->duration);
 
 		g_free(local_name);
 		g_free(remote_name);
@@ -167,66 +167,66 @@ static void capi_connection_notify_cb(RmObject *object, gint type, RmConnection 
 void fax_connection_status_cb(RmObject *object, gint status, RmConnection *connection, gpointer user_data)
 {
 /*	struct fax_status *fax_status;
-	gchar buffer[256];
+        gchar buffer[256];
 
-	fax_status = connection->priv;
-	if (!fax_status) {
-		g_warning("No status available");
-		return;
-	}
+        fax_status = connection->priv;
+        if (!fax_status) {
+                g_warning("No status available");
+                return;
+        }
 
-	if (!status && !fax_status->done) {
-		switch (fax_status->phase) {
-		case PHASE_B:
-			g_debug("Ident: %s", fax_status->remote_ident);
-			snprintf(buffer, sizeof(buffer), "%d/%d", fax_status->page_current, fax_status->page_total);
+        if (!status && !fax_status->done) {
+                switch (fax_status->phase) {
+                case PHASE_B:
+                        g_debug("Ident: %s", fax_status->remote_ident);
+                        snprintf(buffer, sizeof(buffer), "%d/%d", fax_status->page_current, fax_status->page_total);
 
-			g_message(_("Transfer starting:"));
-			g_message("%s", buffer);
-			break;
-		case PHASE_D:
-			snprintf(buffer, sizeof(buffer), "%d", fax_status->page_current);
-			g_message(_("Transferring page"));
-			g_message("%s", buffer);
-			break;
-		case PHASE_E:
-			if (!fax_status->error_code) {
-				g_message("%s", "Fax transfer successful");
-				success = TRUE;
-			} else {
-				g_message("%s", "Fax transfer failed");
-				success = FALSE;
-			}
-			g_warning("%s(): TODO", __FUNCTION__);
-			//phone_hangup(connection);
-			fax_status->done = TRUE;
-			g_main_loop_quit(main_loop);
-			break;
-		default:
-			g_debug("Unhandled phase (%d)", fax_status->phase);
-			break;
-		}
-	} else if (status == 1) {
-		float percentage = 0.0f;
-		gchar text[6];
-		int percent = 0;
-		static int old_percent = 0;
+                        g_message(_("Transfer starting:"));
+                        g_message("%s", buffer);
+                        break;
+                case PHASE_D:
+                        snprintf(buffer, sizeof(buffer), "%d", fax_status->page_current);
+                        g_message(_("Transferring page"));
+                        g_message("%s", buffer);
+                        break;
+                case PHASE_E:
+                        if (!fax_status->error_code) {
+                                g_message("%s", "Fax transfer successful");
+                                success = TRUE;
+                        } else {
+                                g_message("%s", "Fax transfer failed");
+                                success = FALSE;
+                        }
+                        g_warning("%s(): TODO", __FUNCTION__);
+                        //phone_hangup(connection);
+                        fax_status->done = TRUE;
+                        g_main_loop_quit(main_loop);
+                        break;
+                default:
+                        g_debug("Unhandled phase (%d)", fax_status->phase);
+                        break;
+                }
+        } else if (status == 1) {
+                float percentage = 0.0f;
+                gchar text[6];
+                int percent = 0;
+                static int old_percent = 0;
 
-		percentage = (float) fax_status->bytes_sent / (float) fax_status->bytes_total;
+                percentage = (float) fax_status->bytes_sent / (float) fax_status->bytes_total;
 
-		if (percentage > 1.0f) {
-			percentage = 1.0f;
-		}
+                if (percentage > 1.0f) {
+                        percentage = 1.0f;
+                }
 
-		percent = percentage * 100;
-		if (old_percent == percent) {
-			return;
-		}
-		old_percent = percent;
+                percent = percentage * 100;
+                if (old_percent == percent) {
+                        return;
+                }
+                old_percent = percent;
 
-		snprintf(text, sizeof(text), "%d%%", percent);
-		g_message("Transfer at %s", text);
-	}*/
+                snprintf(text, sizeof(text), "%d%%", percent);
+                g_message("Transfer at %s", text);
+        }*/
 }
 
 
@@ -296,7 +296,6 @@ int main(int argc, char **argv)
 			g_warning("Error converting print file to TIFF!");
 			exit(-4);
 		}
-
 	}
 
 	if (call && number) {

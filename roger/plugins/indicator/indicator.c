@@ -40,7 +40,7 @@
 
 #define MAX_LASTCALLS 5
 
-#define RM_TYPE_INDICATOR_PLUGIN        (rm_indicator_plugin_get_type ())
+#define RM_TYPE_INDICATOR_PLUGIN        (rm_indicator_plugin_get_type())
 #define RM_INDICATOR_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_INDICATOR_PLUGIN, RmIndicatorPlugin))
 
 typedef struct {
@@ -49,7 +49,7 @@ typedef struct {
 
 RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_INDICATOR_PLUGIN, RmIndicatorPlugin, rm_indicator_plugin)
 
-extern GList *journal_list;
+extern GList * journal_list;
 extern GtkWidget *journal_win;
 
 static GSettings *indicator_settings = NULL;

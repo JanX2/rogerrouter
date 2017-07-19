@@ -151,17 +151,17 @@ void journal_redraw(void)
 		}
 
 		gtk_list_store_insert_with_values(list_store, &iter, -1,
-			JOURNAL_COL_TYPE, journal_get_call_icon(call->type),
-			JOURNAL_COL_DATETIME, call->date_time,
-			JOURNAL_COL_NAME, call->remote->name,
-			JOURNAL_COL_COMPANY, call->remote->company,
-			JOURNAL_COL_NUMBER, call->remote->number,
-			JOURNAL_COL_CITY, call->remote->city,
-			JOURNAL_COL_EXTENSION, call->local->name,
-			JOURNAL_COL_LINE, call->local->number,
-			JOURNAL_COL_DURATION, call->duration,
-			JOURNAL_COL_CALL_PTR, call,
-			-1);
+						  JOURNAL_COL_TYPE, journal_get_call_icon(call->type),
+						  JOURNAL_COL_DATETIME, call->date_time,
+						  JOURNAL_COL_NAME, call->remote->name,
+						  JOURNAL_COL_COMPANY, call->remote->company,
+						  JOURNAL_COL_NUMBER, call->remote->number,
+						  JOURNAL_COL_CITY, call->remote->city,
+						  JOURNAL_COL_EXTENSION, call->local->name,
+						  JOURNAL_COL_LINE, call->local->number,
+						  JOURNAL_COL_DURATION, call->duration,
+						  JOURNAL_COL_CALL_PTR, call,
+						  -1);
 
 		if (strchr(call->duration, 's') != NULL) {
 			/* Ignore voicebox duration */
@@ -188,7 +188,7 @@ void journal_redraw(void)
 
 		//gtk_widget_set_hexpand(grid, TRUE);
 		markup = g_strdup_printf("<b>%s</b>", profile ? profile->name : _("<No profile>"));
-		
+
 		if (pango_parse_markup(markup, -1, 0, &attributes, &text, NULL, NULL)) {
 			title = gtk_label_new(text);
 			gtk_label_set_attributes(GTK_LABEL(title), attributes);
@@ -463,9 +463,9 @@ void search_entry_changed(GtkEditable *entry, GtkTreeView *view)
 		journal_search_filter = rm_filter_new(rm_profile_get_active(), "internal_search");
 
 		if (g_ascii_isdigit(text[0])) {
-			rm_filter_rule_add(journal_search_filter, RM_FILTER_REMOTE_NUMBER, RM_FILTER_CONTAINS, (gchar *)text);
+			rm_filter_rule_add(journal_search_filter, RM_FILTER_REMOTE_NUMBER, RM_FILTER_CONTAINS, (gchar*)text);
 		} else {
-			rm_filter_rule_add(journal_search_filter, RM_FILTER_REMOTE_NAME, RM_FILTER_CONTAINS, (gchar *)text);
+			rm_filter_rule_add(journal_search_filter, RM_FILTER_REMOTE_NAME, RM_FILTER_CONTAINS, (gchar*)text);
 		}
 	}
 
@@ -697,7 +697,7 @@ static gboolean journal_column_header_button_pressed_cb(GtkTreeViewColumn *colum
 
 	if (event->button == GDK_BUTTON_SECONDARY) {
 #if GTK_CHECK_VERSION(3, 21, 0)
-		gtk_menu_popup_at_pointer(menu, (GdkEvent*) event);
+		gtk_menu_popup_at_pointer(menu, (GdkEvent*)event);
 #else
 		gtk_menu_popup(menu, NULL, NULL, NULL, NULL, event->button, event->time);
 #endif
@@ -749,7 +749,6 @@ void journal_popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer use
 	popover = gtk_popover_new_from_model(treeview, popover_menu);
 	gtk_widget_show(popover);
 #else
-
 	list = gtk_tree_selection_get_selected_rows(selection, &model);
 	gtk_tree_model_get_iter(model, &iter, (GtkTreePath*)list->data);
 	gtk_tree_model_get(model, &iter, JOURNAL_COL_CALL_PTR, &call, -1);
@@ -758,12 +757,12 @@ void journal_popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer use
 
 	/* Copy phone number */
 	menuitem = gtk_menu_item_new_with_label(_("Copy number"));
-	g_signal_connect(menuitem, "activate", (GCallback) journal_popup_copy_number, call);
+	g_signal_connect(menuitem, "activate", (GCallback)journal_popup_copy_number, call);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
 	/* Call phone number */
 	menuitem = gtk_menu_item_new_with_label(_("Call number"));
-	g_signal_connect(menuitem, "activate", (GCallback) journal_popup_call_number, call);
+	g_signal_connect(menuitem, "activate", (GCallback)journal_popup_call_number, call);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
 	/* Separator */
@@ -772,7 +771,7 @@ void journal_popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer use
 
 	/* Add contact */
 	menuitem = gtk_menu_item_new_with_label(_("Add contact"));
-	g_signal_connect(menuitem, "activate", (GCallback) journal_popup_add_contact, call);
+	g_signal_connect(menuitem, "activate", (GCallback)journal_popup_add_contact, call);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
 	/* Separator */
@@ -781,12 +780,12 @@ void journal_popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer use
 
 	/* Delete entry */
 	menuitem = gtk_menu_item_new_with_label(_("Delete entry"));
-	g_signal_connect(menuitem, "activate", (GCallback) journal_popup_delete_entry, call);
+	g_signal_connect(menuitem, "activate", (GCallback)journal_popup_delete_entry, call);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
 	gtk_widget_show_all(menu);
 
-#if GTK_CHECK_VERSION(3,21,0)
+#if GTK_CHECK_VERSION(3, 21, 0)
 	gtk_menu_popup_at_pointer(GTK_MENU(menu), (GdkEvent*)event);
 #else
 	gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, (event != NULL) ? event->button : 0, gdk_event_get_time((GdkEvent*)event));
@@ -802,7 +801,7 @@ gboolean journal_button_press_event_cb(GtkWidget *treeview, GdkEventButton *even
 
 		selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
 
-		if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(treeview), (gint) event->x, (gint) event->y, &path, NULL, NULL, NULL)) {
+		if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(treeview), (gint)event->x, (gint)event->y, &path, NULL, NULL, NULL)) {
 			gtk_tree_selection_unselect_all(selection);
 			gtk_tree_selection_select_path(selection, path);
 			gtk_tree_path_free(path);
@@ -859,16 +858,16 @@ void clear_journal_activated(GSimpleAction *action, GVariant *parameter, gpointe
 }
 
 /*static void journal_export_cb(GtkWidget *dialog, gint response, gpointer user_data)
-{
-	if (response == GTK_RESPONSE_ACCEPT) {
-		gchar *file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+   {
+        if (response == GTK_RESPONSE_ACCEPT) {
+                gchar *file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
 
-		g_debug("file: %s", file);
-		rm_journal_save_as(journal_list, file);
-	}
+                g_debug("file: %s", file);
+                rm_journal_save_as(journal_list, file);
+        }
 
-	gtk_widget_destroy(dialog);
-}*/
+        gtk_widget_destroy(dialog);
+   }*/
 
 void export_journal_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
@@ -881,7 +880,7 @@ void export_journal_activated(GSimpleAction *action, GVariant *parameter, gpoint
 	gtk_file_chooser_set_current_name(chooser, "journal.csv");
 	//g_signal_connect(chooser, "response", G_CALLBACK(journal_export_cb), NULL);
 	//gtk_widget_show_all(GTK_WIDGET(chooser));
-	res = gtk_native_dialog_run (GTK_NATIVE_DIALOG (native));
+	res = gtk_native_dialog_run(GTK_NATIVE_DIALOG(native));
 	if (res == GTK_RESPONSE_ACCEPT) {
 		gchar *file = gtk_file_chooser_get_filename(chooser);
 
@@ -977,20 +976,20 @@ void journal_window(GApplication *app)
 		_("Duration")
 	};
 	const GActionEntry journal_actions[] = {
-		{"refresh-journal", refresh_journal_activated},
-		{"print-journal", print_journal_activated},
-		{"clear-journal", clear_journal_activated},
-		{"export-journal", export_journal_activated},
-		{"add-contact", add_contact_activated},
-		{"delete-entry", delete_entry_activated},
-		{"contacts-edit-phone-home", contacts_add_detail_activated},
-		{"contacts-edit-phone-work", contacts_add_detail_activated},
-		{"contacts-edit-phone-mobile", contacts_add_detail_activated},
-		{"contacts-edit-phone-home-fax", contacts_add_detail_activated},
-		{"contacts-edit-phone-work-fax", contacts_add_detail_activated},
-		{"contacts-edit-phone-pager", contacts_add_detail_activated},
-		{"contacts-edit-address-home", contacts_add_detail_activated},
-		{"contacts-edit-address-work", contacts_add_detail_activated},
+		{ "refresh-journal", refresh_journal_activated },
+		{ "print-journal", print_journal_activated },
+		{ "clear-journal", clear_journal_activated },
+		{ "export-journal", export_journal_activated },
+		{ "add-contact", add_contact_activated },
+		{ "delete-entry", delete_entry_activated },
+		{ "contacts-edit-phone-home", contacts_add_detail_activated },
+		{ "contacts-edit-phone-work", contacts_add_detail_activated },
+		{ "contacts-edit-phone-mobile", contacts_add_detail_activated },
+		{ "contacts-edit-phone-home-fax", contacts_add_detail_activated },
+		{ "contacts-edit-phone-work-fax", contacts_add_detail_activated },
+		{ "contacts-edit-phone-pager", contacts_add_detail_activated },
+		{ "contacts-edit-address-home", contacts_add_detail_activated },
+		{ "contacts-edit-address-work", contacts_add_detail_activated },
 	};
 
 	journal_startup(app);
@@ -999,9 +998,9 @@ void journal_window(GApplication *app)
 	window = gtk_application_window_new(GTK_APPLICATION(app));
 
 	journal_win = window;
-	gtk_window_set_default_size((GtkWindow *)window, g_settings_get_uint(app_settings, "width"), g_settings_get_uint(app_settings, "height"));
+	gtk_window_set_default_size((GtkWindow*)window, g_settings_get_uint(app_settings, "width"), g_settings_get_uint(app_settings, "height"));
 	if (g_settings_get_boolean(app_settings, "maximized")) {
-		gtk_window_maximize((GtkWindow *)(window));
+		gtk_window_maximize((GtkWindow*)(window));
 	}
 
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
@@ -1032,7 +1031,7 @@ void journal_window(GApplication *app)
 		header = gtk_header_bar_new();
 		gtk_widget_set_hexpand(header, TRUE);
 		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
-		gtk_header_bar_set_title(GTK_HEADER_BAR (header), "Journal");
+		gtk_header_bar_set_title(GTK_HEADER_BAR(header), "Journal");
 		gtk_window_set_titlebar(GTK_WINDOW(window), header);
 		g_object_set_data(G_OBJECT(window), "headerbar", header);
 	} else {
@@ -1042,7 +1041,7 @@ void journal_window(GApplication *app)
 	}
 
 	/* Create button box as raised and linked */
-	box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+	box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_container_add(GTK_CONTAINER(header), box);
 	gtk_style_context_add_class(gtk_widget_get_style_context(box), GTK_STYLE_CLASS_RAISED);
 	gtk_style_context_add_class(gtk_widget_get_style_context(box), GTK_STYLE_CLASS_LINKED);
@@ -1060,7 +1059,7 @@ void journal_window(GApplication *app)
 	g_menu_append(menu, _("Clear journal"), "app.clear-journal");
 	g_menu_append(menu, _("Export journal"), "app.export-journal");
 
-#if GTK_CHECK_VERSION(3,12,0)
+#if GTK_CHECK_VERSION(3, 12, 0)
 	gtk_menu_button_set_use_popover(GTK_MENU_BUTTON(menu_button), TRUE);
 #else
 	gtk_container_add(GTK_CONTAINER(menu_button), gtk_image_new_from_icon_name("view-list-symbolic", GTK_ICON_SIZE_MENU));
@@ -1116,16 +1115,16 @@ void journal_window(GApplication *app)
 	gtk_widget_set_vexpand(scrolled, TRUE);
 
 	list_store = gtk_list_store_new(10,
-	                                GDK_TYPE_PIXBUF,
-	                                G_TYPE_STRING,
-	                                G_TYPE_STRING,
-	                                G_TYPE_STRING,
-	                                G_TYPE_STRING,
-	                                G_TYPE_STRING,
-	                                G_TYPE_STRING,
-	                                G_TYPE_STRING,
-	                                G_TYPE_STRING,
-	                                G_TYPE_POINTER);
+					GDK_TYPE_PIXBUF,
+					G_TYPE_STRING,
+					G_TYPE_STRING,
+					G_TYPE_STRING,
+					G_TYPE_STRING,
+					G_TYPE_STRING,
+					G_TYPE_STRING,
+					G_TYPE_STRING,
+					G_TYPE_STRING,
+					G_TYPE_POINTER);
 
 	g_object_set_data(G_OBJECT(window), "list_store", list_store);
 

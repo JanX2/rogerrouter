@@ -41,7 +41,7 @@ void app_shortcuts(void)
 
 		g_signal_connect(shortcuts_window, "delete-event", G_CALLBACK(gtk_widget_hide_on_delete), &shortcuts_window);
 		g_debug("%s(): Called", __FUNCTION__);
-		g_object_unref (builder);
+		g_object_unref(builder);
 	}
 	gtk_window_set_transient_for(GTK_WINDOW(shortcuts_window), GTK_WINDOW(journal_get_window()));
 

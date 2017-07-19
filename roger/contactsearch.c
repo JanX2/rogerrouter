@@ -129,7 +129,7 @@ static void contact_search_search_changed_cb(ContactSearch *widget, gpointer use
 	RmAddressBook *book;
 
 	/* Get current filter text */
-	widget->filter = (gchar*) gtk_entry_get_text(GTK_ENTRY(widget->entry));
+	widget->filter = (gchar*)gtk_entry_get_text(GTK_ENTRY(widget->entry));
 
 	/* If it is an invalid filter, abort and close menu if needed */
 	if (RM_EMPTY_STRING(widget->filter) || isdigit(widget->filter[0]) || widget->discard || widget->filter[0] == '*' || widget->filter[0] == '#') {
@@ -277,7 +277,7 @@ static gboolean contact_search_key_press_event_cb(ContactSearch *widget, GdkEven
 {
 	GtkListBoxRow *row = NULL;
 	GList *childs;
-	guint keyval = ((GdkEventKey *)event)->keyval;
+	guint keyval = ((GdkEventKey*)event)->keyval;
 	gint length;
 
 	if (!widget->box) {
@@ -340,7 +340,6 @@ static gboolean contact_search_key_press_event_cb(ContactSearch *widget, GdkEven
 		if (gtk_list_box_row_get_index(GTK_LIST_BOX_ROW(row)) < (length - 1)) {
 			row = gtk_list_box_get_row_at_index(GTK_LIST_BOX(widget->box), gtk_list_box_row_get_index(GTK_LIST_BOX_ROW(row)) + 1);
 			gtk_list_box_select_row(GTK_LIST_BOX(widget->box), GTK_LIST_BOX_ROW(row));
-
 		} else {
 			gtk_list_box_unselect_all(GTK_LIST_BOX(widget->box));
 		}
@@ -399,7 +398,7 @@ static void contact_search_init(ContactSearch *widget)
 	gtk_widget_set_sensitive(text, FALSE);
 	gtk_grid_attach(GTK_GRID(placeholder), text, 0, 1, 1, 1);
 
- 	gtk_list_box_set_placeholder(GTK_LIST_BOX(widget->box), placeholder);
+	gtk_list_box_set_placeholder(GTK_LIST_BOX(widget->box), placeholder);
 	gtk_list_box_set_filter_func(GTK_LIST_BOX(widget->box), contact_search_filter_cb, widget, NULL);
 	gtk_container_add(GTK_CONTAINER(widget->scrolled_win), widget->box);
 	g_signal_connect(G_OBJECT(widget->box), "row-activated", G_CALLBACK(contact_search_list_box_activated_cb), widget);
@@ -416,7 +415,7 @@ gchar *contact_search_get_number(ContactSearch *widget)
 	gchar *number = g_object_get_data(G_OBJECT(widget->entry), "number");
 
 	if (RM_EMPTY_STRING(number)) {
-		number = (gchar*) gtk_entry_get_text(GTK_ENTRY(widget->entry));
+		number = (gchar*)gtk_entry_get_text(GTK_ENTRY(widget->entry));
 	}
 
 	return number;
@@ -428,7 +427,7 @@ void contact_search_clear(ContactSearch *widget)
 }
 
 void contact_search_set_text(ContactSearch *widget,
-                             gchar         *text)
+			     gchar         *text)
 {
 	gtk_entry_set_text(GTK_ENTRY(widget->entry), text);
 }

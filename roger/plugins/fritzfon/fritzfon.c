@@ -80,7 +80,7 @@ static void parse_person(RmContact *contact, xmlnode *person)
 				client = rm_ftp_init(rm_router_get_host(rm_profile_get_active()));
 				rm_ftp_login(client, rm_router_get_ftp_user(profile), rm_router_get_ftp_password(profile));
 				rm_ftp_passive(client);
-				buffer = (guchar *) rm_ftp_get_file(client, url, &len);
+				buffer = (guchar*)rm_ftp_get_file(client, url, &len);
 				rm_ftp_shutdown(client);
 
 				loader = gdk_pixbuf_loader_new();
@@ -267,8 +267,8 @@ static gint fritzfon_get_books(void)
 
 	url = g_strdup_printf("http://%s/fon_num/fonbook_select.lua", rm_router_get_host(profile));
 	msg = soup_form_request_new(SOUP_METHOD_GET, url,
-	                            "sid", profile->router_info->session_id,
-	                            NULL);
+				    "sid", profile->router_info->session_id,
+				    NULL);
 	g_free(url);
 
 	soup_session_send_message(rm_soup_session, msg);
@@ -285,7 +285,7 @@ static gint fritzfon_get_books(void)
 
 	g_return_val_if_fail(data != NULL, -2);
 
-	gchar *pos = (gchar *)data;
+	gchar *pos = (gchar*)data;
 	do {
 		pos = strstr(pos, "<label for=\"uiBookid:");
 		if (pos) {
@@ -319,7 +319,7 @@ static gint fritzfon_get_books(void)
 
 	g_object_unref(msg);
 
-end:
+ end:
 	if (g_slist_length(fritzfon_books) == 0) {
 		book = g_slice_new(struct fritzfon_book);
 		book->id = g_strdup("0");

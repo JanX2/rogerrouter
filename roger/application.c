@@ -301,22 +301,22 @@ static void debug_activated(GSimpleAction *action, GVariant *parameter, gpointer
 }
 
 static GActionEntry apps_entries[] = {
-	{"addressbook", addressbook_activated, NULL, NULL, NULL},
-	{"assistant", assistant_activated, NULL, NULL, NULL},
-	{"plugins", plugins_activated, NULL, NULL, NULL},
-	{"preferences", preferences_activated, NULL, NULL, NULL},
-	{"phone", dialnumber_activated, NULL, NULL, NULL},
-	{"copy_ip", copy_ip_activated, NULL, NULL, NULL},
-	{"reconnect", reconnect_activated, NULL, NULL, NULL},
-	{"donate", donate_activated, NULL, NULL, NULL},
-	{"forum", forum_activated, NULL, NULL, NULL},
-	{"about", about_activated, NULL, NULL, NULL},
-	{"quit", quit_activated, NULL, NULL, NULL},
-	{"pickup", pickup_activated, "i", NULL, NULL},
-	{"hangup", hangup_activated, "i", NULL, NULL},
-	{"journal", journal_activated, NULL, NULL, NULL},
-	{"shortcuts", shortcuts_activated, NULL, NULL, NULL},
-	{"debug", debug_activated, NULL, NULL, NULL},
+	{ "addressbook", addressbook_activated, NULL, NULL, NULL },
+	{ "assistant", assistant_activated, NULL, NULL, NULL },
+	{ "plugins", plugins_activated, NULL, NULL, NULL },
+	{ "preferences", preferences_activated, NULL, NULL, NULL },
+	{ "phone", dialnumber_activated, NULL, NULL, NULL },
+	{ "copy_ip", copy_ip_activated, NULL, NULL, NULL },
+	{ "reconnect", reconnect_activated, NULL, NULL, NULL },
+	{ "donate", donate_activated, NULL, NULL, NULL },
+	{ "forum", forum_activated, NULL, NULL, NULL },
+	{ "about", about_activated, NULL, NULL, NULL },
+	{ "quit", quit_activated, NULL, NULL, NULL },
+	{ "pickup", pickup_activated, "i", NULL, NULL },
+	{ "hangup", hangup_activated, "i", NULL, NULL },
+	{ "journal", journal_activated, NULL, NULL, NULL },
+	{ "shortcuts", shortcuts_activated, NULL, NULL, NULL },
+	{ "debug", debug_activated, NULL, NULL, NULL },
 };
 
 static void application_startup(GtkApplication *application)
@@ -367,8 +367,8 @@ static void app_init(GtkApplication *app)
 	rm_use_fax_server(FALSE);
 #endif
 
-#if GTK_CHECK_VERSION(3,14,0)
-	const gchar *accels[] = {NULL, NULL, NULL, NULL};
+#if GTK_CHECK_VERSION(3, 14, 0)
+	const gchar *accels[] = { NULL, NULL, NULL, NULL };
 
 	accels[0] = "<Primary>p";
 	gtk_application_set_accels_for_action(app, "app.phone", accels);
@@ -379,7 +379,7 @@ static void app_init(GtkApplication *app)
 	accels[0] = "<Primary>a";
 	gtk_application_set_accels_for_action(app, "app.assistant", accels);
 
-#if GTK_CHECK_VERSION(3,20,0)
+#if GTK_CHECK_VERSION(3, 20, 0)
 	accels[0] = "<Primary>F1";
 	gtk_application_set_accels_for_action(app, "app.shortcuts", accels);
 #endif
@@ -424,7 +424,7 @@ static void app_init(GtkApplication *app)
 
 	section = g_menu_new();
 
-#if GTK_CHECK_VERSION(3,20,0)
+#if GTK_CHECK_VERSION(3, 20, 0)
 	g_menu_append(section, _("Keyboard Shortcuts"), "app.shortcuts");
 #endif
 
@@ -476,15 +476,15 @@ G_GNUC_NORETURN static gboolean option_version_cb(const gchar *option_name, cons
 }
 
 const GOptionEntry all_options[] = {
-	{"debug", 'd', 0, G_OPTION_ARG_NONE, &option_state.debug, "Enable debug", NULL},
-	{"hidden", 'i', 0, G_OPTION_ARG_NONE, &option_state.start_hidden, "Start with hidden window", NULL},
-	{"quit", 'q', 0, G_OPTION_ARG_NONE, &option_state.quit, "Quit", NULL},
-	{"call", 'c', 0, G_OPTION_ARG_STRING, &option_state.number, "Remote phone number", NULL},
-	{"version", 'v', G_OPTION_FLAG_NO_ARG | G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_CALLBACK, option_version_cb, NULL, NULL},
-	{"assistant", 'a', 0, G_OPTION_ARG_NONE, &option_state.assistant, "Start assistant", NULL},
-	{"profile", 'p', 0, G_OPTION_ARG_STRING, &option_state.profile, "Profile name", NULL},
-	{"crash", 0, 0, G_OPTION_ARG_STRING, &option_state.crash, "Crash parameters", NULL},
-	{NULL}
+	{ "debug", 'd', 0, G_OPTION_ARG_NONE, &option_state.debug, "Enable debug", NULL },
+	{ "hidden", 'i', 0, G_OPTION_ARG_NONE, &option_state.start_hidden, "Start with hidden window", NULL },
+	{ "quit", 'q', 0, G_OPTION_ARG_NONE, &option_state.quit, "Quit", NULL },
+	{ "call", 'c', 0, G_OPTION_ARG_STRING, &option_state.number, "Remote phone number", NULL },
+	{ "version", 'v', G_OPTION_FLAG_NO_ARG | G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_CALLBACK, option_version_cb, NULL, NULL },
+	{ "assistant", 'a', 0, G_OPTION_ARG_NONE, &option_state.assistant, "Start assistant", NULL },
+	{ "profile", 'p', 0, G_OPTION_ARG_STRING, &option_state.profile, "Profile name", NULL },
+	{ "crash", 0, 0, G_OPTION_ARG_STRING, &option_state.crash, "Crash parameters", NULL },
+	{ NULL }
 };
 
 GOptionContext *application_options_get_context(void)

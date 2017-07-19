@@ -175,7 +175,7 @@ static void contacts_update_details(RmContact *contact)
 				phone_image = gtk_image_new_from_icon_name(APP_ICON_CALL, GTK_ICON_SIZE_BUTTON);
 				gtk_button_set_image(GTK_BUTTON(dial), phone_image);
 
-#if GTK_CHECK_VERSION(3,20,0)
+#if GTK_CHECK_VERSION(3, 20, 0)
 				gchar *css_data = g_strdup_printf(".circular-button { border-radius: 20px; -gtk-outline-radius: 20px;}");
 #else
 				gchar *css_data = g_strdup_printf(".circular-button { border-radius: 20px; outline-radius: 20px; }");
@@ -184,7 +184,7 @@ static void contacts_update_details(RmContact *contact)
 				gtk_css_provider_load_from_data(css_provider, css_data, -1, NULL);
 				g_free(css_data);
 
-				GtkStyleContext *style_context =  gtk_widget_get_style_context(dial);
+				GtkStyleContext *style_context = gtk_widget_get_style_context(dial);
 				gtk_style_context_add_provider(style_context, GTK_STYLE_PROVIDER(css_provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
 				gtk_style_context_add_class(style_context, "circular-button");
 
@@ -229,7 +229,6 @@ static void contacts_update_details(RmContact *contact)
 
 				g_string_free(addr_str, TRUE);
 				detail_row++;
-
 			}
 			gtk_widget_set_visible(contacts->edit_button, TRUE);
 		} else {
@@ -423,7 +422,7 @@ void refresh_edit_dialog(RmContact *contact);
 void remove_phone_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 	RmContact *contact = user_data;
-	RmPhoneNumber *number = (RmPhoneNumber *) g_object_get_data(G_OBJECT(button), "number");
+	RmPhoneNumber *number = (RmPhoneNumber*)g_object_get_data(G_OBJECT(button), "number");
 
 	contact->numbers = g_slist_remove(contact->numbers, number);
 	refresh_edit_dialog(contact);
@@ -432,7 +431,7 @@ void remove_phone_clicked_cb(GtkWidget *button, gpointer user_data)
 void remove_address_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 	RmContact *contact = user_data;
-	RmContactAddress *address = (RmContactAddress *) g_object_get_data(G_OBJECT(button), "address");
+	RmContactAddress *address = (RmContactAddress*)g_object_get_data(G_OBJECT(button), "address");
 
 	contact->addresses = g_slist_remove(contact->addresses, address);
 	refresh_edit_dialog(contact);
@@ -506,8 +505,8 @@ void photo_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	gint result;
 	RmContact *contact = user_data;
 
-	file_chooser = gtk_file_chooser_dialog_new(_("Open image"), (GtkWindow *) gtk_widget_get_ancestor(button, GTK_TYPE_WINDOW),
-	               GTK_FILE_CHOOSER_ACTION_OPEN, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Open"), GTK_RESPONSE_ACCEPT, _("_No image"), 1, NULL);
+	file_chooser = gtk_file_chooser_dialog_new(_("Open image"), (GtkWindow*)gtk_widget_get_ancestor(button, GTK_TYPE_WINDOW),
+						   GTK_FILE_CHOOSER_ACTION_OPEN, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Open"), GTK_RESPONSE_ACCEPT, _("_No image"), 1, NULL);
 
 	filter = gtk_file_filter_new();
 
@@ -591,7 +590,8 @@ void contacts_add_detail(gchar *detail)
 		phone_number->number = g_strdup("");
 
 		contacts->tmp_contact->numbers = g_slist_prepend(contacts->tmp_contact->numbers, phone_number);
-	} if (!strncmp(detail, "address-", 8)) {
+	}
+	if (!strncmp(detail, "address-", 8)) {
 		/* Add address */
 		RmContactAddress *address;
 
@@ -693,7 +693,7 @@ void refresh_edit_dialog(RmContact *contact)
 		remove = gtk_button_new();
 		gtk_widget_set_tooltip_text(remove, _("Remove number"));
 
-		phone_image = gtk_image_new_from_icon_name(APP_ICON_TRASH, GTK_ICON_SIZE_BUTTON); 
+		phone_image = gtk_image_new_from_icon_name(APP_ICON_TRASH, GTK_ICON_SIZE_BUTTON);
 		gtk_button_set_image(GTK_BUTTON(remove), phone_image);
 		g_signal_connect(remove, "clicked", G_CALLBACK(remove_phone_clicked_cb), contact);
 		g_object_set_data(G_OBJECT(remove), "number", phone_number);
@@ -749,7 +749,7 @@ void refresh_edit_dialog(RmContact *contact)
 	separator = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
 	gtk_box_pack_start(GTK_BOX(box), separator, FALSE, FALSE, 0);
 
-	GtkWidget *add_detail_button = gtk_menu_button_new ();
+	GtkWidget *add_detail_button = gtk_menu_button_new();
 
 	GMenu *menu = g_menu_new();
 
@@ -770,7 +770,7 @@ void refresh_edit_dialog(RmContact *contact)
 
 	gtk_container_add(GTK_CONTAINER(add_detail_button), detail_box);
 	gtk_menu_button_set_menu_model(GTK_MENU_BUTTON(add_detail_button), G_MENU_MODEL(menu));
- 
+
 	gtk_widget_set_halign(add_detail_button, GTK_ALIGN_START);
 
 	gtk_box_pack_end(GTK_BOX(box), add_detail_button, FALSE, FALSE, 0);
@@ -867,7 +867,7 @@ void book_item_toggled_cb(GtkWidget *widget, gpointer user_data)
 		contacts->book = book;
 
 		rm_profile_set_addressbook(rm_profile_get_active(), book);
-		gchar *sub_name = (gchar*) name + strlen(rm_addressbook_get_name(book)) + 3;
+		gchar *sub_name = (gchar*)name + strlen(rm_addressbook_get_name(book)) + 3;
 		g_debug("%s(): sub_book '%s'", __FUNCTION__, sub_name);
 
 		rm_addressbook_set_sub_book(book, sub_name);
@@ -1072,7 +1072,7 @@ static void contacts_contacts_changed_cb(RmObject *object, gpointer user_data)
 	g_free(tmp);
 	g_free(name);
 
-		/* Update contact list */
+	/* Update contact list */
 	contacts_update_list();
 }
 
@@ -1137,7 +1137,7 @@ void app_contacts(RmContact *contact)
 	contacts->book = book;
 	contacts->window = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_window"));
 	gtk_window_set_transient_for(GTK_WINDOW(contacts->window), parent ? GTK_WINDOW(parent) : NULL);
-	gtk_window_set_position (GTK_WINDOW(contacts->window), GTK_WIN_POS_CENTER_ON_PARENT);
+	gtk_window_set_position(GTK_WINDOW(contacts->window), GTK_WIN_POS_CENTER_ON_PARENT);
 
 	header_bar = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_header_bar"));
 	contacts->list_box = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_list_box"));
@@ -1155,7 +1155,7 @@ void app_contacts(RmContact *contact)
 	contacts->select_book_button = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_select_book_button"));
 
 	if (g_slist_length(rm_addressbook_get_plugins()) > 1 || g_strv_length(rm_addressbook_get_sub_books(book))) {
-		gtk_widget_set_visible (contacts->select_book_button, TRUE);
+		gtk_widget_set_visible(contacts->select_book_button, TRUE);
 	}
 
 	name = rm_addressbook_get_name(book);
@@ -1193,7 +1193,6 @@ void app_contacts(RmContact *contact)
 		GtkStyleContext *style_context = gtk_widget_get_style_context(contacts_header_bar_right);
 		gtk_style_context_add_provider(style_context, GTK_STYLE_PROVIDER(css_provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
 		gtk_style_context_add_class(style_context, "round-corner");
-
 	} else {
 		GtkWidget *grid = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_window_grid"));
 

@@ -52,7 +52,7 @@ static gboolean debug_log_idle(gpointer user_data)
 	GString *output;
 	gchar *time;
 
-	output  = g_string_new("");
+	output = g_string_new("");
 	datetime = g_date_time_new_now_local();
 	time = g_date_time_format(datetime, "%H:%M:%S");
 	g_string_append_printf(output, "(%s)", time);
@@ -183,7 +183,7 @@ static void debug_save_clicked_cb(GtkWidget *widget, gpointer user_data)
 	g_date_time_unref(datetime);
 
 	native = gtk_file_chooser_native_new("Save Log", NULL, GTK_FILE_CHOOSER_ACTION_SAVE, NULL, NULL);
-	chooser = GTK_FILE_CHOOSER (native);
+	chooser = GTK_FILE_CHOOSER(native);
 
 	gtk_file_chooser_set_do_overwrite_confirmation(chooser, TRUE);
 
@@ -198,12 +198,12 @@ static void debug_save_clicked_cb(GtkWidget *widget, gpointer user_data)
 		gtk_text_buffer_get_start_iter(text_buffer, &start);
 		gtk_text_buffer_get_end_iter(text_buffer, &end);
 		rm_file_save(filename, gtk_text_buffer_get_text(text_buffer, &start, &end, FALSE), -1);
-		g_free (filename);
+		g_free(filename);
 	}
 
 	g_free(buf);
 
-	g_object_unref (native);
+	g_object_unref(native);
 }
 
 /**
@@ -271,6 +271,5 @@ void app_debug_window(void)
 	/* Persist debug state and set app handler for logging */
 	g_settings_set_boolean(app_settings, "debug", TRUE);
 	rm_log_set_app_handler(debug_log_handler);
-
 }
 

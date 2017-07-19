@@ -302,11 +302,11 @@ static void type_box_changed_cb(GtkWidget *widget, gpointer next)
 		gtk_combo_box_set_active(GTK_COMBO_BOX(combo_box), 0);
 		break;
 	case 2:
-		/* Name */
+	/* Name */
 	case 3:
-		/* Number */
+	/* Number */
 	case 4:
-		/* Extension */
+	/* Extension */
 	case 5:
 		/* Line */
 		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_box), _("Is"));
@@ -492,7 +492,7 @@ void filter_edit_button_clicked_cb(GtkWidget *widget, gpointer data)
 	GtkWidget *save;
 	GSList *list;
 	RmFilterRule *rule;
-	GValue ptr = {0};
+	GValue ptr = { 0 };
 	GtkListStore *list_store;
 	gint result;
 	gboolean use_header = roger_uses_headerbar();
@@ -740,8 +740,8 @@ void action_refresh_list(GtkListStore *list_store)
 		gchar *name = rm_action_get_name(action);
 
 		gtk_list_store_insert_with_values(list_store, &iter, -1,
-			0, name,
-			1, action, -1);
+						  0, name,
+						  1, action, -1);
 
 		g_free(name);
 
@@ -784,8 +784,8 @@ void settings_refresh_list(GtkListStore *list_store)
 	}
 
 	/*if (selected_numbers) {
-		g_strfreev(selected_numbers);
-	}*/
+	        g_strfreev(selected_numbers);
+	   }*/
 }
 
 void action_enable_renderer_toggled_cb(GtkCellRendererToggle *toggle, gchar *path_str, gpointer user_data)
@@ -793,8 +793,8 @@ void action_enable_renderer_toggled_cb(GtkCellRendererToggle *toggle, gchar *pat
 	GtkTreeModel *model = gtk_tree_view_get_model(user_data);
 	GtkTreePath *path = gtk_tree_path_new_from_string(path_str);
 	GtkTreeIter iter;
-	GValue iter_value = {0};
-	GValue name_value = {0};
+	GValue iter_value = { 0 };
+	GValue name_value = { 0 };
 	gboolean dial;
 	gint count = 0;
 
@@ -836,7 +836,6 @@ void action_apply_button_clicked_cb(GtkWidget *button, gpointer user_data)
 
 gboolean action_edit(RmAction *action)
 {
-
 #if 1
 	GtkWidget *dialog;
 	GtkWidget *name_entry;
@@ -886,7 +885,7 @@ gboolean action_edit(RmAction *action)
 		rm_action_set_name(action, gtk_entry_get_text(GTK_ENTRY(name_entry)));
 		rm_action_set_description(action, "");
 		rm_action_set_exec(action, gtk_entry_get_text(GTK_ENTRY(exec_entry)));
-		rm_action_set_numbers(action, (const gchar **)selected_numbers);
+		rm_action_set_numbers(action, (const gchar**)selected_numbers);
 		selected_action = action;
 
 		changed = TRUE;
@@ -1200,7 +1199,8 @@ void action_checkbutton_toggled_cb(GtkToggleButton *button, gpointer user_data)
  * \param box plugin combobox
  * \param user_data UNUSED
  */
-void audio_plugin_combobox_changed_cb(GtkComboBox *box, gpointer user_data) {
+void audio_plugin_combobox_changed_cb(GtkComboBox *box, gpointer user_data)
+{
 	GSList *devices;
 	gchar *active;
 	RmAudio *audio = NULL;
@@ -1282,7 +1282,7 @@ void audio_plugin_combobox_changed_cb(GtkComboBox *box, gpointer user_data) {
 
 void view_call_type_icons_combobox_changed_cb(GtkComboBoxText *widget, gpointer user_data)
 {
-	g_settings_set_string(app_settings, "icon-type", gtk_combo_box_get_active_id(GTK_COMBO_BOX (widget)));
+	g_settings_set_string(app_settings, "icon-type", gtk_combo_box_get_active_id(GTK_COMBO_BOX(widget)));
 	journal_init_call_icon();
 	journal_clear();
 	journal_redraw();
@@ -1313,8 +1313,8 @@ void settings_notification_outgoing_toggled_cb(GtkCellRendererToggle *toggle, gc
 	GtkTreeModel *model = GTK_TREE_MODEL(liststore);
 	GtkTreePath *path = gtk_tree_path_new_from_string(path_str);
 	GtkTreeIter iter;
-	GValue iter_value = {0};
-	GValue name_value = {0};
+	GValue iter_value = { 0 };
+	GValue name_value = { 0 };
 	gboolean dial;
 	gint count = 0;
 	gchar **selected_outgoing_numbers = NULL;
@@ -1350,7 +1350,7 @@ void settings_notification_outgoing_toggled_cb(GtkCellRendererToggle *toggle, gc
 	gtk_tree_path_free(path);
 
 	//g_settings_set_strv(notification_gtk_settings, "outgoing-numbers", (const gchar * const *) selected_outgoing_numbers);
-	rm_profile_set_notification_outgoing_numbers(rm_profile_get_active(), (const gchar * const *) selected_outgoing_numbers);
+	rm_profile_set_notification_outgoing_numbers(rm_profile_get_active(), (const gchar*const*)selected_outgoing_numbers);
 }
 
 void settings_notification_incoming_toggled_cb(GtkCellRendererToggle *toggle, gchar *path_str, gpointer user_data)
@@ -1359,8 +1359,8 @@ void settings_notification_incoming_toggled_cb(GtkCellRendererToggle *toggle, gc
 	GtkTreeModel *model = GTK_TREE_MODEL(liststore);
 	GtkTreePath *path = gtk_tree_path_new_from_string(path_str);
 	GtkTreeIter iter;
-	GValue iter_value = {0};
-	GValue name_value = {0};
+	GValue iter_value = { 0 };
+	GValue name_value = { 0 };
 	gboolean dial;
 	gint count = 0;
 	gchar **selected_incoming_numbers = NULL;
@@ -1396,7 +1396,7 @@ void settings_notification_incoming_toggled_cb(GtkCellRendererToggle *toggle, gc
 	gtk_tree_path_free(path);
 
 	//g_settings_set_strv(notification_gtk_settings, "incoming-numbers", (const gchar * const *) selected_incoming_numbers);
-	rm_profile_set_notification_incoming_numbers(rm_profile_get_active(), (const gchar * const *) selected_incoming_numbers);
+	rm_profile_set_notification_incoming_numbers(rm_profile_get_active(), (const gchar*const*)selected_incoming_numbers);
 }
 
 void phone_settings_close_button_cb(GtkWidget *button, gpointer user_data)
@@ -1502,8 +1502,8 @@ void settings_notification_combobox_changed_cb(GtkComboBox *box, gpointer user_d
 		return;
 	}
 
-	rm_profile_set_notification_incoming_numbers(profile, (const gchar * const *) incoming_numbers);
-	rm_profile_set_notification_outgoing_numbers(profile, (const gchar * const *) outgoing_numbers);
+	rm_profile_set_notification_incoming_numbers(profile, (const gchar*const*)incoming_numbers);
+	rm_profile_set_notification_outgoing_numbers(profile, (const gchar*const*)outgoing_numbers);
 }
 
 void settings_numbers_populate(GtkWidget *listbox)
@@ -1564,16 +1564,16 @@ void settings_numbers_populate(GtkWidget *listbox)
 		gtk_box_pack_end(GTK_BOX(child), combobox, FALSE, FALSE, 0);
 
 		/*GtkWidget *notification_label = gtk_label_new("with notification for");
-		gtk_widget_set_sensitive(notification_label, FALSE);
-		gtk_box_pack_start(GTK_BOX(child), notification_label, FALSE, FALSE, 0);
+		   gtk_widget_set_sensitive(notification_label, FALSE);
+		   gtk_box_pack_start(GTK_BOX(child), notification_label, FALSE, FALSE, 0);
 
-		GtkWidget *notification_combobox = gtk_combo_box_text_new();
-		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(notification_combobox), _("Incoming"));
-		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(notification_combobox), _("Outgoing"));
-		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(notification_combobox), _("Both"));
-		//g_signal_connect(G_OBJECT(combobox), "changed", G_CALLBACK(settings_numbers_device_combobox_changed_cb), numbers[idx]);
+		   GtkWidget *notification_combobox = gtk_combo_box_text_new();
+		   gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(notification_combobox), _("Incoming"));
+		   gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(notification_combobox), _("Outgoing"));
+		   gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(notification_combobox), _("Both"));
+		   //g_signal_connect(G_OBJECT(combobox), "changed", G_CALLBACK(settings_numbers_device_combobox_changed_cb), numbers[idx]);
 
-		gtk_box_pack_start(GTK_BOX(child), notification_combobox, TRUE, TRUE, 0);*/
+		   gtk_box_pack_start(GTK_BOX(child), notification_combobox, TRUE, TRUE, 0);*/
 
 		//gtk_widget_set_size_request(child, 100, 80);
 
@@ -1629,11 +1629,11 @@ void settings_notification_populate(GtkWidget *list_box)
 
 		gtk_list_box_insert(GTK_LIST_BOX(list_box), child, -1);
 
-		if (rm_strv_contains((const gchar * const *)selected_incoming_numbers, numbers[index])) {
+		if (rm_strv_contains((const gchar*const*)selected_incoming_numbers, numbers[index])) {
 			set += 1;
 		}
 
-		if (rm_strv_contains((const gchar * const *)selected_outgoing_numbers, numbers[index])) {
+		if (rm_strv_contains((const gchar*const*)selected_outgoing_numbers, numbers[index])) {
 			set += 2;
 		}
 
@@ -1702,13 +1702,13 @@ void fax_active_switch_activate_cb(GtkSwitch *widget, gpointer user_data)
 }
 
 void numbers_header_func(GtkListBoxRow *row,
-                         GtkListBoxRow *before,
-                         gpointer       user_data)
+			 GtkListBoxRow *before,
+			 gpointer user_data)
 {
 	GtkWidget *current;
 
 	if (!before) {
-		gtk_list_box_row_set_header(row , NULL);
+		gtk_list_box_row_set_header(row, NULL);
 		return;
 	}
 
@@ -1721,7 +1721,7 @@ void numbers_header_func(GtkListBoxRow *row,
 }
 
 void fax_msn_changed_cb(GtkWidget *widget,
-                        gpointer   user_data)
+			gpointer user_data)
 {
 	const gchar *number = gtk_combo_box_get_active_id(GTK_COMBO_BOX(settings->fax_msn_combobox));
 	gboolean active = gtk_switch_get_active(GTK_SWITCH(settings->fax_active_switch));
@@ -1809,9 +1809,9 @@ void app_show_settings(void)
 	g_settings_bind(profile->settings, "area-code", settings->area_code_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
 	/*gtk_widget_set_sensitive(settings->international_access_code_entry, is_cable);
-	gtk_widget_set_sensitive(settings->country_code_entry, is_cable);
-	gtk_widget_set_sensitive(settings->national_access_code_entry, is_cable);
-	gtk_widget_set_sensitive(settings->area_code_entry, is_cable);*/
+	   gtk_widget_set_sensitive(settings->country_code_entry, is_cable);
+	   gtk_widget_set_sensitive(settings->national_access_code_entry, is_cable);
+	   gtk_widget_set_sensitive(settings->area_code_entry, is_cable);*/
 
 	is_cable = TRUE;
 	gtk_editable_set_editable(GTK_EDITABLE(settings->international_access_code_entry), is_cable);
@@ -1843,21 +1843,21 @@ void app_show_settings(void)
 	g_settings_bind(profile->settings, "fax-active", settings->fax_active_switch, "active", G_SETTINGS_BIND_DEFAULT);
 	g_signal_connect(G_OBJECT(settings->fax_active_switch), "notify::active", G_CALLBACK(fax_active_switch_activate_cb), NULL);
 
-		/*settings->fax_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "fax_plugin_combobox"));
-	fax_plugins = rm_fax_get_plugins();
-	for (list = fax_plugins; list != NULL; list = list->next) {
-		RmFax *fax = list->data;
-		gchar *name;
+	/*settings->fax_plugin_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "fax_plugin_combobox"));
+	   fax_plugins = rm_fax_get_plugins();
+	   for (list = fax_plugins; list != NULL; list = list->next) {
+	   RmFax *fax = list->data;
+	   gchar *name;
 
-		g_assert(fax != NULL);
+	   g_assert(fax != NULL);
 
-		name = rm_fax_get_name(fax);
-		g_debug("Adding fax '%s'", name);
+	   name = rm_fax_get_name(fax);
+	   g_debug("Adding fax '%s'", name);
 
-		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->fax_plugin_combobox), name, name);
-		g_free(name);
-	}
-	g_settings_bind(rm_profile_get_active()->settings, "fax-plugin", settings->fax_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);*/
+	   gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->fax_plugin_combobox), name, name);
+	   g_free(name);
+	   }
+	   g_settings_bind(rm_profile_get_active()->settings, "fax-plugin", settings->fax_plugin_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);*/
 
 	/* Devices group */
 
@@ -1952,7 +1952,7 @@ void app_show_settings(void)
 		if (!gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(settings->audio_plugin_combobox))) {
 			gtk_combo_box_set_active(GTK_COMBO_BOX(settings->audio_plugin_combobox), 0);
 		} else {
-				audio_plugin_combobox_changed_cb(NULL, NULL);
+			audio_plugin_combobox_changed_cb(NULL, NULL);
 		}
 	}
 
@@ -1960,7 +1960,7 @@ void app_show_settings(void)
 	g_settings_bind(profile->settings, "notification-play-ringtone", settings->notification_ringtone_switch, "active", G_SETTINGS_BIND_DEFAULT);
 
 	settings->notification_listbox = GTK_WIDGET(gtk_builder_get_object(builder, "notification_listbox"));
-	gtk_list_box_set_header_func (GTK_LIST_BOX(settings->notification_listbox), numbers_header_func, NULL, NULL);
+	gtk_list_box_set_header_func(GTK_LIST_BOX(settings->notification_listbox), numbers_header_func, NULL, NULL);
 	settings_notification_populate(settings->notification_listbox);
 
 	/* Header bar information */
@@ -1972,28 +1972,28 @@ void app_show_settings(void)
 	g_free(box_string);
 
 	gtk_builder_add_callback_symbols(builder,
-									 "settings_destroy_cb", G_CALLBACK(settings_destroy_cb),
-									 "reload_button_clicked_cb", G_CALLBACK(reload_button_clicked_cb),
-									 "audio_plugin_combobox_changed_cb", G_CALLBACK(audio_plugin_combobox_changed_cb),
-									 "actions_edit_button_clicked_cb", G_CALLBACK(actions_edit_button_clicked_cb),
-									 "actions_remove_button_clicked_cb", G_CALLBACK(actions_remove_button_clicked_cb),
-									 "actions_add_button_clicked_cb", G_CALLBACK(actions_add_button_clicked_cb),
-									 "actions_treeview_button_press_event_cb", G_CALLBACK(actions_treeview_button_press_event_cb),
-									 "actions_treeview_cursor_changed_cb", G_CALLBACK(actions_treeview_cursor_changed_cb),
-									 "action_checkbutton_toggled_cb", G_CALLBACK(action_checkbutton_toggled_cb),
-									 "filter_edit_button_clicked_cb", G_CALLBACK(filter_edit_button_clicked_cb),
-									 "filter_remove_button_clicked_cb", G_CALLBACK(filter_remove_button_clicked_cb),
-									 "filter_add_button_clicked_cb", G_CALLBACK(filter_add_button_clicked_cb),
-									 "fax_report_directory_chooser_file_set_cb", G_CALLBACK(fax_report_directory_chooser_file_set_cb),
-									 "fax_report_switch_activate_cb", G_CALLBACK(fax_report_switch_activate_cb),
-									 "ftp_login_check_button_clicked_cb", G_CALLBACK(ftp_login_check_button_clicked_cb),
-									 "login_check_button_clicked_cb", G_CALLBACK(login_check_button_clicked_cb),
-									 "ftp_password_entry_changed_cb", G_CALLBACK(ftp_password_entry_changed_cb),
-									 "login_password_entry_changed_cb", G_CALLBACK(login_password_entry_changed_cb),
-									 "action_enable_renderer_toggled_cb", G_CALLBACK(action_enable_renderer_toggled_cb),
-									 "phone_active_switch_activate_cb", G_CALLBACK(phone_active_switch_activate_cb),
-									 "fax_active_switch_activate_cb", G_CALLBACK(fax_active_switch_activate_cb),
-									 NULL);
+					 "settings_destroy_cb", G_CALLBACK(settings_destroy_cb),
+					 "reload_button_clicked_cb", G_CALLBACK(reload_button_clicked_cb),
+					 "audio_plugin_combobox_changed_cb", G_CALLBACK(audio_plugin_combobox_changed_cb),
+					 "actions_edit_button_clicked_cb", G_CALLBACK(actions_edit_button_clicked_cb),
+					 "actions_remove_button_clicked_cb", G_CALLBACK(actions_remove_button_clicked_cb),
+					 "actions_add_button_clicked_cb", G_CALLBACK(actions_add_button_clicked_cb),
+					 "actions_treeview_button_press_event_cb", G_CALLBACK(actions_treeview_button_press_event_cb),
+					 "actions_treeview_cursor_changed_cb", G_CALLBACK(actions_treeview_cursor_changed_cb),
+					 "action_checkbutton_toggled_cb", G_CALLBACK(action_checkbutton_toggled_cb),
+					 "filter_edit_button_clicked_cb", G_CALLBACK(filter_edit_button_clicked_cb),
+					 "filter_remove_button_clicked_cb", G_CALLBACK(filter_remove_button_clicked_cb),
+					 "filter_add_button_clicked_cb", G_CALLBACK(filter_add_button_clicked_cb),
+					 "fax_report_directory_chooser_file_set_cb", G_CALLBACK(fax_report_directory_chooser_file_set_cb),
+					 "fax_report_switch_activate_cb", G_CALLBACK(fax_report_switch_activate_cb),
+					 "ftp_login_check_button_clicked_cb", G_CALLBACK(ftp_login_check_button_clicked_cb),
+					 "login_check_button_clicked_cb", G_CALLBACK(login_check_button_clicked_cb),
+					 "ftp_password_entry_changed_cb", G_CALLBACK(ftp_password_entry_changed_cb),
+					 "login_password_entry_changed_cb", G_CALLBACK(login_password_entry_changed_cb),
+					 "action_enable_renderer_toggled_cb", G_CALLBACK(action_enable_renderer_toggled_cb),
+					 "phone_active_switch_activate_cb", G_CALLBACK(phone_active_switch_activate_cb),
+					 "fax_active_switch_activate_cb", G_CALLBACK(fax_active_switch_activate_cb),
+					 NULL);
 	gtk_builder_connect_signals(builder, NULL);
 
 	g_object_unref(G_OBJECT(builder));

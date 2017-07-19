@@ -108,18 +108,18 @@ gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 		g_free(tmp);
 
 		//if (connection->type & RM_CONNECTION_TYPE_SOFTPHONE) {
-			GtkWidget *accept_button;
-			GtkWidget *decline_button;
+		GtkWidget *accept_button;
+		GtkWidget *decline_button;
 
-			accept_button = GTK_WIDGET(gtk_builder_get_object(builder, "pickup_button"));
-			gtk_actionable_set_action_name(GTK_ACTIONABLE(accept_button), "app.pickup");
-			gtk_actionable_set_action_target(GTK_ACTIONABLE(accept_button), "i", connection->id);
-			gtk_widget_set_visible(accept_button, TRUE);
+		accept_button = GTK_WIDGET(gtk_builder_get_object(builder, "pickup_button"));
+		gtk_actionable_set_action_name(GTK_ACTIONABLE(accept_button), "app.pickup");
+		gtk_actionable_set_action_target(GTK_ACTIONABLE(accept_button), "i", connection->id);
+		gtk_widget_set_visible(accept_button, TRUE);
 
-			decline_button = GTK_WIDGET(gtk_builder_get_object(builder, "hangup_button"));
-			gtk_actionable_set_action_name(GTK_ACTIONABLE(decline_button), "app.hangup");
-			gtk_actionable_set_action_target(GTK_ACTIONABLE(decline_button), "i", connection->id);
-			gtk_widget_set_visible(decline_button, TRUE);
+		decline_button = GTK_WIDGET(gtk_builder_get_object(builder, "hangup_button"));
+		gtk_actionable_set_action_name(GTK_ACTIONABLE(decline_button), "app.hangup");
+		gtk_actionable_set_action_target(GTK_ACTIONABLE(decline_button), "i", connection->id);
+		gtk_widget_set_visible(decline_button, TRUE);
 		//}
 	} else if (connection->type == RM_CONNECTION_TYPE_OUTGOING) {
 		gint duration = 5;
@@ -130,7 +130,7 @@ gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 		g_timeout_add_seconds(duration, notification_gtk_close, window);
 	}
 
-#if GTK_CHECK_VERSION (3, 22, 0)
+#if GTK_CHECK_VERSION(3, 22, 0)
 	GdkRectangle geometry;
 	GdkDisplay *display = gtk_widget_get_display(window);
 	GdkWindow *gdk_window = gtk_widget_get_window(window);
@@ -140,8 +140,8 @@ gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 	screen_width = geometry.width;
 	screen_height = geometry.height;
 #else
-	screen_width  = gdk_screen_width ();
-	screen_height = gdk_screen_height ();
+	screen_width = gdk_screen_width();
+	screen_height = gdk_screen_height();
 #endif
 
 	gtk_window_get_size(GTK_WINDOW(window), &width, &height);
