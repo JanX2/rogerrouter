@@ -423,4 +423,4 @@ gpointer statusicon_plugin_configure(RmPlugin *plugin)
 
 G_GNUC_END_IGNORE_DEPRECATIONS
 
-PLUGIN_CONFIG(statusicon)
+RM_PLUGIN_CONFIG(statusicon)

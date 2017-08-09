@@ -403,4 +403,4 @@ gpointer sip_plugin_configure(RmPlugin *plugin)
 	return group;
 }
 
-PLUGIN_CONFIG(sip)
+RM_PLUGIN_CONFIG(sip)

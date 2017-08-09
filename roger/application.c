@@ -551,7 +551,7 @@ static gint application_command_line_cb(GtkApplication *app, GApplicationCommand
 	if (startup_called) {
 #ifndef G_OS_WIN32
 		/* Install crash handle */
-		crash_install_handlers();
+		//crash_install_handlers();
 #endif
 
 		/* Initialize app and mark startup as done */

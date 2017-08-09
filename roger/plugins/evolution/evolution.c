@@ -646,4 +646,4 @@ gboolean evolution_plugin_shutdown(RmPlugin *plugin)
 	return TRUE;
 }
 
-PLUGIN(evolution);
+RM_PLUGIN(evolution);

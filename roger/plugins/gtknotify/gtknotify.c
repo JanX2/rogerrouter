@@ -190,4 +190,4 @@ gboolean gtknotify_plugin_shutdown(RmPlugin *plugin)
 	return TRUE;
 }
 
-PLUGIN(gtknotify)
+RM_PLUGIN(gtknotify)

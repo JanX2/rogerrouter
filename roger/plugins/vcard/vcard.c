@@ -1225,33 +1225,40 @@ void filename_button_clicked_cb(GtkButton *button, gpointer user_data)
 	gtk_widget_destroy(dialog);
 }
 
+void vcard_file_chooser_button_file_set_cb(GtkWidget *button, gpointer user_data)
+{
+	gchar *file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(button));
+
+	g_debug("%s(): Setting '%s'", __FUNCTION__, file);
+	g_settings_set_string(vcard_settings, "filename", file);
+}
+
 gpointer vcard_plugin_configure(RmPlugin *plugin)
 {
 	GtkWidget *grid = gtk_grid_new();
 	GtkWidget *group;
-	GtkWidget *report_dir_label;
+	GtkWidget *vcard_label;
 
 	/* Set standard spacing to 5 */
 	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 15);
 
-	report_dir_label = ui_label_new(_("VCard file"));
-	gtk_grid_attach(GTK_GRID(grid), report_dir_label, 0, 1, 1, 1);
+	vcard_label = ui_label_new(_("VCard file"));
+	gtk_grid_attach(GTK_GRID(grid), vcard_label, 0, 1, 1, 1);
 
-	GtkWidget *report_dir_entry = gtk_entry_new();
-	GtkWidget *report_dir_button = gtk_button_new_with_label(_("Select"));
+	GtkFileFilter *filter = gtk_file_filter_new ();
+	gtk_file_filter_add_pattern (filter, "*.vcf");
+	GtkWidget *vcard_button = gtk_file_chooser_button_new(_("Select vcard"), GTK_FILE_CHOOSER_ACTION_OPEN);
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(vcard_button), filter);
+	//g_settings_bind(vcard_settings, "filename", vcard_button, "file-set", G_SETTINGS_BIND_DEFAULT);
+	gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(vcard_button), g_settings_get_string(vcard_settings, "filename"));
+	g_signal_connect(vcard_button, "file-set", G_CALLBACK(vcard_file_chooser_button_file_set_cb), NULL);
 
-	gtk_widget_set_hexpand(report_dir_entry, TRUE);
-	g_settings_bind(vcard_settings, "filename", report_dir_entry, "text", G_SETTINGS_BIND_DEFAULT);
-
-	g_signal_connect(report_dir_button, "clicked", G_CALLBACK(filename_button_clicked_cb), report_dir_entry);
-
-	gtk_grid_attach(GTK_GRID(grid), report_dir_entry, 1, 1, 1, 1);
-	gtk_grid_attach(GTK_GRID(grid), report_dir_button, 2, 1, 1, 1);
+	gtk_grid_attach(GTK_GRID(grid), vcard_button, 1, 1, 1, 1);
 
 	group = ui_group_create(grid, _("Contact book"), TRUE, FALSE);
 
 	return group;
 }
 
-PLUGIN_CONFIG(vcard)
+RM_PLUGIN_CONFIG(vcard)

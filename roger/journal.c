@@ -593,6 +593,7 @@ gint journal_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpointer data)
 		return TRUE;
 	}
 
+	g_signal_handlers_disconnect_by_func(G_OBJECT(rm_object), journal_loaded_cb, NULL);
 	//gtk_application_remove_window(GTK_APPLICATION(data), GTK_WINDOW(journal_win));
 	//gtk_widget_destroy(journal_win);
 	journal_win = NULL;

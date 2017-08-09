@@ -30,7 +30,7 @@
 static GSList *contacts = NULL;
 static GSettings *fritzfon_settings = NULL;
 
-static xmlnode *master_node = NULL;
+static RmXmlNode *master_node = NULL;
 
 struct fritzfon_book {
 	gchar *id;
@@ -45,21 +45,21 @@ struct fritzfon_priv {
 
 static GSList *fritzfon_books = NULL;
 
-static void parse_person(RmContact *contact, xmlnode *person)
+static void parse_person(RmContact *contact, RmXmlNode *person)
 {
-	xmlnode *name;
-	xmlnode *image;
+	RmXmlNode *name;
+	RmXmlNode *image;
 	gchar *image_ptr;
 	struct fritzfon_priv *priv = contact->priv;
 
 	/* Get real name entry */
-	name = xmlnode_get_child(person, "realName");
-	contact->name = name ? xmlnode_get_data(name) : g_strdup("");
+	name = rm_xmlnode_get_child(person, "realName");
+	contact->name = name ? rm_xmlnode_get_data(name) : g_strdup("");
 
 	/* Get image */
-	image = xmlnode_get_child(person, "imageURL");
+	image = rm_xmlnode_get_child(person, "imageURL");
 	if (image != NULL) {
-		image_ptr = xmlnode_get_data(image);
+		image_ptr = rm_xmlnode_get_data(image);
 		priv->image_url = image_ptr;
 		if (image_ptr != NULL) {
 			/* file:///var/InternerSpeicher/FRITZ/fonpix/946684999-0.jpg */
@@ -94,21 +94,21 @@ static void parse_person(RmContact *contact, xmlnode *person)
 	}
 }
 
-static void parse_telephony(RmContact *contact, xmlnode *telephony)
+static void parse_telephony(RmContact *contact, RmXmlNode *telephony)
 {
-	xmlnode *child;
+	RmXmlNode *child;
 	gchar *number = NULL;
 
 	/* Check for numbers */
-	for (child = xmlnode_get_child(telephony, "number"); child != NULL; child = xmlnode_get_next_twin(child)) {
+	for (child = rm_xmlnode_get_child(telephony, "number"); child != NULL; child = rm_xmlnode_get_next_twin(child)) {
 		const gchar *type;
 
-		type = xmlnode_get_attrib(child, "type");
+		type = rm_xmlnode_get_attrib(child, "type");
 		if (type == NULL) {
 			continue;
 		}
 
-		number = xmlnode_get_data(child);
+		number = rm_xmlnode_get_data(child);
 		if (!RM_EMPTY_STRING(number)) {
 			RmPhoneNumber *phone_number;
 
@@ -137,9 +137,9 @@ static void parse_telephony(RmContact *contact, xmlnode *telephony)
 	}
 }
 
-static void contact_add(RmProfile *profile, xmlnode *node, gint count)
+static void contact_add(RmProfile *profile, RmXmlNode *node, gint count)
 {
-	xmlnode *tmp;
+	RmXmlNode *tmp;
 	RmContact *contact;
 	struct fritzfon_priv *priv;
 
@@ -157,24 +157,24 @@ static void contact_add(RmProfile *profile, xmlnode *node, gint count)
 		} else if (!strcmp(tmp->name, "telephony")) {
 			parse_telephony(contact, tmp);
 		} else if (!strcmp(tmp->name, "uniqueid")) {
-			priv->unique_id = xmlnode_get_data(tmp);
+			priv->unique_id = rm_xmlnode_get_data(tmp);
 		} else if (!strcmp(tmp->name, "mod_time")) {
 			/* empty */
 		} else {
 			/* Unhandled node, save it */
-			priv->nodes = g_slist_prepend(priv->nodes, xmlnode_copy(tmp));
+			priv->nodes = g_slist_prepend(priv->nodes, rm_xmlnode_copy(tmp));
 		}
 	}
 
 	contacts = g_slist_insert_sorted(contacts, contact, rm_contact_name_compare);
 }
 
-static void phonebook_add(RmProfile *profile, xmlnode *node)
+static void phonebook_add(RmProfile *profile, RmXmlNode *node)
 {
-	xmlnode *child;
+	RmXmlNode *child;
 	gint count = 0;
 
-	for (child = xmlnode_get_child(node, "contact"); child != NULL; child = xmlnode_get_next_twin(child)) {
+	for (child = rm_xmlnode_get_child(node, "contact"); child != NULL; child = rm_xmlnode_get_next_twin(child)) {
 		contact_add(profile, child, count++);
 	}
 }
@@ -182,8 +182,8 @@ static void phonebook_add(RmProfile *profile, xmlnode *node)
 static gint fritzfon_read_book(void)
 {
 	gchar uri[1024];
-	xmlnode *node = NULL;
-	xmlnode *child;
+	RmXmlNode *node = NULL;
+	RmXmlNode *child;
 	RmProfile *profile = rm_profile_get_active();
 	gchar *owner;
 	gchar *name;
@@ -228,7 +228,7 @@ static gint fritzfon_read_book(void)
 	}
 #endif
 
-	node = xmlnode_from_str(data, read);
+	node = rm_xmlnode_from_str(data, read);
 	if (node == NULL) {
 		g_object_unref(msg);
 		return -1;
@@ -236,7 +236,7 @@ static gint fritzfon_read_book(void)
 
 	master_node = node;
 
-	for (child = xmlnode_get_child(node, "phonebook"); child != NULL; child = xmlnode_get_next_twin(child)) {
+	for (child = rm_xmlnode_get_child(node, "phonebook"); child != NULL; child = rm_xmlnode_get_next_twin(child)) {
 		phonebook_add(profile, child);
 	}
 
@@ -339,16 +339,16 @@ gboolean fritzfon_reload_contacts(void)
 }
 
 
-xmlnode *create_phone(char *type, char *number)
+RmXmlNode *create_phone(char *type, char *number)
 {
-	xmlnode *number_node;
+	RmXmlNode *number_node;
 
-	number_node = xmlnode_new("number");
-	xmlnode_set_attrib(number_node, "type", type);
+	number_node = rm_xmlnode_new("number");
+	rm_xmlnode_set_attrib(number_node, "type", type);
 
 	/* For the meantime set priority to 0, TODO */
-	xmlnode_set_attrib(number_node, "prio", "0");
-	xmlnode_insert_data(number_node, number, -1);
+	rm_xmlnode_set_attrib(number_node, "prio", "0");
+	rm_xmlnode_insert_data(number_node, number, -1);
 
 	return number_node;
 }
@@ -358,37 +358,37 @@ xmlnode *create_phone(char *type, char *number)
  * \param contact person structure
  * \return xml node
  */
-static xmlnode *contact_to_xmlnode(RmContact *contact)
+static RmXmlNode *contact_to_xmlnode(RmContact *contact)
 {
-	xmlnode *node;
-	xmlnode *contact_node;
-	xmlnode *realname_node;
-	xmlnode *image_node;
-	xmlnode *telephony_node;
-	xmlnode *tmp_node;
+	RmXmlNode *node;
+	RmXmlNode *contact_node;
+	RmXmlNode *realname_node;
+	RmXmlNode *image_node;
+	RmXmlNode *telephony_node;
+	RmXmlNode *tmp_node;
 	GSList *list;
 	gchar *tmp;
 	struct fritzfon_priv *priv = contact->priv;
 
 	/* Main contact entry */
-	node = xmlnode_new("contact");
+	node = rm_xmlnode_new("contact");
 
 	/* Person */
-	contact_node = xmlnode_new("person");
+	contact_node = rm_xmlnode_new("person");
 
-	realname_node = xmlnode_new("realName");
-	xmlnode_insert_data(realname_node, contact->name, -1);
-	xmlnode_insert_child(contact_node, realname_node);
+	realname_node = rm_xmlnode_new("realName");
+	rm_xmlnode_insert_data(realname_node, contact->name, -1);
+	rm_xmlnode_insert_child(contact_node, realname_node);
 
 	/* ImageURL */
 	if (priv && priv->image_url) {
-		image_node = xmlnode_new("imageURL");
-		xmlnode_insert_data(image_node, priv->image_url, -1);
-		xmlnode_insert_child(contact_node, image_node);
+		image_node = rm_xmlnode_new("imageURL");
+		rm_xmlnode_insert_data(image_node, priv->image_url, -1);
+		rm_xmlnode_insert_child(contact_node, image_node);
 	}
 
 	/* Insert person to main node */
-	xmlnode_insert_child(node, contact_node);
+	rm_xmlnode_insert_child(node, contact_node);
 
 	/* Telephony */
 	if (contact->numbers) {
@@ -396,31 +396,31 @@ static xmlnode *contact_to_xmlnode(RmContact *contact)
 		gint id = 0;
 		gchar *tmp = g_strdup_printf("%d", g_slist_length(contact->numbers));
 
-		telephony_node = xmlnode_new("telephony");
-		xmlnode_set_attrib(telephony_node, "nid", tmp);
+		telephony_node = rm_xmlnode_new("telephony");
+		rm_xmlnode_set_attrib(telephony_node, "nid", tmp);
 		g_free(tmp);
 
 		for (list = contact->numbers; list != NULL; list = list->next) {
 			RmPhoneNumber *number = list->data;
-			xmlnode *number_node;
+			RmXmlNode *number_node;
 
-			number_node = xmlnode_new("number");
+			number_node = rm_xmlnode_new("number");
 
 			switch (number->type) {
 			case RM_PHONE_NUMBER_TYPE_HOME:
-				xmlnode_set_attrib(number_node, "type", "home");
+				rm_xmlnode_set_attrib(number_node, "type", "home");
 				break;
 			case RM_PHONE_NUMBER_TYPE_WORK:
-				xmlnode_set_attrib(number_node, "type", "work");
+				rm_xmlnode_set_attrib(number_node, "type", "work");
 				break;
 			case RM_PHONE_NUMBER_TYPE_MOBILE:
-				xmlnode_set_attrib(number_node, "type", "mobile");
+				rm_xmlnode_set_attrib(number_node, "type", "mobile");
 				break;
 			case RM_PHONE_NUMBER_TYPE_FAX_WORK:
-				xmlnode_set_attrib(number_node, "type", "fax_work");
+				rm_xmlnode_set_attrib(number_node, "type", "fax_work");
 				break;
 			case RM_PHONE_NUMBER_TYPE_FAX_HOME:
-				xmlnode_set_attrib(number_node, "type", "fax_home");
+				rm_xmlnode_set_attrib(number_node, "type", "fax_home");
 				break;
 			default:
 				continue;
@@ -428,36 +428,36 @@ static xmlnode *contact_to_xmlnode(RmContact *contact)
 
 			if (first) {
 				/* For the meantime set priority to 1 */
-				xmlnode_set_attrib(number_node, "prio", "1");
+				rm_xmlnode_set_attrib(number_node, "prio", "1");
 				first = FALSE;
 			}
 
 			tmp = g_strdup_printf("%d", id++);
-			xmlnode_set_attrib(number_node, "id", tmp);
+			rm_xmlnode_set_attrib(number_node, "id", tmp);
 			g_free(tmp);
 
-			xmlnode_insert_data(number_node, number->number, -1);
-			xmlnode_insert_child(telephony_node, number_node);
+			rm_xmlnode_insert_data(number_node, number->number, -1);
+			rm_xmlnode_insert_child(telephony_node, number_node);
 		}
-		xmlnode_insert_child(node, telephony_node);
+		rm_xmlnode_insert_child(node, telephony_node);
 	}
 
-	tmp_node = xmlnode_new("mod_time");
+	tmp_node = rm_xmlnode_new("mod_time");
 	tmp = g_strdup_printf("%u", (unsigned)time(NULL));
-	xmlnode_insert_data(tmp_node, tmp, -1);
-	xmlnode_insert_child(node, tmp_node);
+	rm_xmlnode_insert_data(tmp_node, tmp, -1);
+	rm_xmlnode_insert_child(node, tmp_node);
 	g_free(tmp);
 
-	tmp_node = xmlnode_new("uniqueid");
+	tmp_node = rm_xmlnode_new("uniqueid");
 	if (priv && priv->unique_id) {
-		xmlnode_insert_data(tmp_node, priv->unique_id, -1);
+		rm_xmlnode_insert_data(tmp_node, priv->unique_id, -1);
 	}
-	xmlnode_insert_child(node, tmp_node);
+	rm_xmlnode_insert_child(node, tmp_node);
 
 	if (priv) {
 		for (list = priv->nodes; list != NULL; list = list->next) {
-			xmlnode *priv_node = list->data;
-			xmlnode_insert_child(node, priv_node);
+			RmXmlNode *priv_node = list->data;
+			rm_xmlnode_insert_child(node, priv_node);
 		}
 	}
 
@@ -468,21 +468,21 @@ static xmlnode *contact_to_xmlnode(RmContact *contact)
  * \brief Convert phonebooks to xml node
  * \return xml node
  */
-xmlnode *phonebook_to_xmlnode(void)
+RmXmlNode *phonebook_to_xmlnode(void)
 {
-	xmlnode *node;
-	xmlnode *child;
-	xmlnode *book;
+	RmXmlNode *node;
+	RmXmlNode *child;
+	RmXmlNode *book;
 	GSList *list;
 
 	/* Create general phonebooks node */
-	node = xmlnode_new("phonebooks");
+	node = rm_xmlnode_new("phonebooks");
 
 	/* Currently we only support one phonebook, TODO */
-	book = xmlnode_new("phonebook");
-	xmlnode_set_attrib(book, "owner", g_settings_get_string(fritzfon_settings, "book-owner"));
-	xmlnode_set_attrib(book, "name", g_settings_get_string(fritzfon_settings, "book-name"));
-	xmlnode_insert_child(node, book);
+	book = rm_xmlnode_new("phonebook");
+	rm_xmlnode_set_attrib(book, "owner", g_settings_get_string(fritzfon_settings, "book-owner"));
+	rm_xmlnode_set_attrib(book, "name", g_settings_get_string(fritzfon_settings, "book-name"));
+	rm_xmlnode_insert_child(node, book);
 
 	/* Loop through persons list and add only non-deleted entries */
 	for (list = contacts; list != NULL; list = list->next) {
@@ -490,7 +490,7 @@ xmlnode *phonebook_to_xmlnode(void)
 
 		/* Convert each contact and add it to current phone book */
 		child = contact_to_xmlnode(contact);
-		xmlnode_insert_child(book, child);
+		rm_xmlnode_insert_child(book, child);
 	}
 
 	return node;
@@ -498,7 +498,7 @@ xmlnode *phonebook_to_xmlnode(void)
 
 gboolean fritzfon_save(void)
 {
-	xmlnode *node;
+	RmXmlNode *node;
 	RmProfile *profile = rm_profile_get_active();
 	gchar *data;
 	gint len;
@@ -515,7 +515,7 @@ gboolean fritzfon_save(void)
 
 	node = phonebook_to_xmlnode();
 
-	data = xmlnode_to_formatted_str(node, &len);
+	data = rm_xmlnode_to_formatted_str(node, &len);
 #define FRITZFON_DEBUG 1
 #ifdef FRITZFON_DEBUG
 	gchar *file;
@@ -675,4 +675,4 @@ gboolean fritzfon_plugin_shutdown(RmPlugin *plugin)
 	return TRUE;
 }
 
-PLUGIN(fritzfon);
+RM_PLUGIN(fritzfon);

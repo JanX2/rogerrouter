@@ -279,4 +279,4 @@ gpointer webjournal_plugin_configure(RmPlugin *plugin)
 	return group;
 }
 
-PLUGIN_CONFIG(webjournal)
+RM_PLUGIN_CONFIG(webjournal)

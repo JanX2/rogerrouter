@@ -917,4 +917,4 @@ gpointer google_plugin_configure(RmPlugin *config)
 	return group;
 }
 
-PLUGIN_CONFIG(google);
+RM_PLUGIN_CONFIG(google);

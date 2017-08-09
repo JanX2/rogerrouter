@@ -1110,4 +1110,4 @@ gpointer thunderbird_plugin_configure(RmPlugin *plugin)
 	return group;
 }
 
-PLUGIN_CONFIG(thunderbird)
+RM_PLUGIN_CONFIG(thunderbird)

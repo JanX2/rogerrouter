@@ -162,4 +162,4 @@ gboolean gnotification_plugin_shutdown(RmPlugin *plugin)
 	return TRUE;
 }
 
-PLUGIN(gnotification);
+RM_PLUGIN(gnotification);
