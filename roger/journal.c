@@ -513,8 +513,8 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 
 	switch (call->type) {
 	case RM_CALL_ENTRY_TYPE_FAX_REPORT:
-		//rm_os_execute(call->priv);
-		app_pdf(call->priv);
+		rm_os_execute(call->priv);
+		//app_pdf(call->priv);
 		break;
 	case RM_CALL_ENTRY_TYPE_FAX: {
 		gsize len = 0;
@@ -531,7 +531,7 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 			uri = g_strdup_printf("file://%s", path);
 			g_free(path);
 
-			/* rm_os_execute(uri); */
+			rm_os_execute(uri);
 			app_pdf(uri);
 
 			g_free(uri);
