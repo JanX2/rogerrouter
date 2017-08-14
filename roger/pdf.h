@@ -1,6 +1,6 @@
-/**
+/*
  * Roger Router
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2017 Jan-Michael Brummer
  *
  * This file is part of Roger Router.
  *
@@ -17,15 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PRINT_H
-#define PRINT_H
-
-#include <rm/rm.h>
+#ifndef PDF_H
+#define PDF_H
 
 G_BEGIN_DECLS
 
-void print_journal(GtkWidget *view_widget);
-void print_fax_report(RmFaxStatus *status, gchar *file, const char *report_dir);
+gint app_pdf(gchar *uri);
 
 G_END_DECLS
 

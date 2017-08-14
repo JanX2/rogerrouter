@@ -24,63 +24,7 @@
 
 G_BEGIN_DECLS
 
-enum phone_type {
-	PHONE_TYPE_VOICE,
-	PHONE_TYPE_FAX,
-};
-
-struct phone_state {
-	GtkWidget *window;
-	GtkWidget *grid;
-
-	GtkWidget *child_frame;
-	GtkWidget *control_frame;
-	GtkWidget *call_frame;
-	GtkWidget *header_bar;
-	GtkWidget *contact_search;
-	GtkWidget *mute_button;
-	GtkWidget *hold_button;
-	GtkWidget *record_button;
-	GtkWidget *pickup_button;
-	GtkWidget *hangup_button;
-
-	GtkWidget *menu_button;
-
-	GtkWidget *contact_menu;
-	GtkWidget *scrolled_win;
-	GtkWidget *box;
-	const gchar *filter;
-	gboolean discard;
-
-	gint status_timer_id;
-
-	const gchar *number;
-	RmPhone *phone;
-	RmConnection *connection;
-
-	gpointer priv;
-
-	enum phone_type type;
-};
-
-struct phone_device {
-	gchar *(*get_title)(void);
-	gboolean (*init)(RmContact *contact, RmConnection *connection);
-	void (*terminated)(struct phone_state *state, RmConnection *connection);
-	GtkWidget *(*create_menu)(RmProfile *profile, struct phone_state *state);
-	GtkWidget *(*create_child)(struct phone_state *state, GtkWidget *grid);
-	void(*delete)(struct phone_state *state);
-	void (*status)(struct phone_state *state, RmConnection *connection);
-};
-
-void app_show_phone_window(RmContact *contact, RmConnection *connection);
-GtkWidget *phone_search_entry_new(GtkWidget *window, RmContact *contact, struct phone_state *state);
-void phone_call_notify_cb(RmObject *object, RmCallEntry *call, gint connection, gchar *medium, gpointer user_data);
-void phone_setup_timer();
-void phone_remove_timer();
-GtkWidget *phone_dial_buttons_new(GtkWidget *window, struct phone_state *state);
-void phone_dial_buttons_set_dial(gboolean allow);
-GtkWidget *phone_window_new(enum phone_type type, RmContact *contact, RmConnection *connection, gpointer priv);
+void app_phone(RmContact *contact, RmConnection *connection);
 
 G_END_DECLS
 

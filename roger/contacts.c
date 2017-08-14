@@ -80,7 +80,7 @@ static void dial_clicked_cb(GtkWidget *button, gpointer user_data)
 	contact->number = number;
 
 	/* Show phone window with given contact */
-	app_show_phone_window(contact, NULL);
+	app_phone(contact, NULL);
 }
 
 /**
@@ -175,11 +175,7 @@ static void contacts_update_details(RmContact *contact)
 				phone_image = gtk_image_new_from_icon_name(APP_ICON_CALL, GTK_ICON_SIZE_BUTTON);
 				gtk_button_set_image(GTK_BUTTON(dial), phone_image);
 
-#if GTK_CHECK_VERSION(3, 20, 0)
-				gchar *css_data = g_strdup_printf(".circular-button { border-radius: 20px; -gtk-outline-radius: 20px;}");
-#else
-				gchar *css_data = g_strdup_printf(".circular-button { border-radius: 20px; outline-radius: 20px; }");
-#endif
+				gchar *css_data = g_strdup_printf(".circular-button { border-radius: 20px; -gtk-outline-radius: 20px; outline-radius: 20px;}");
 				GtkCssProvider *css_provider = gtk_css_provider_get_default();
 				gtk_css_provider_load_from_data(css_provider, css_data, -1, NULL);
 				g_free(css_data);
@@ -817,7 +813,7 @@ void contacts_save_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 	gtk_widget_set_visible(contacts->edit_button, TRUE);
 
 	if (!ok) {
-		gboolean use_header = roger_uses_headerbar();
+		gboolean use_header = TRUE;
 		gint response;
 
 		GtkWidget *info_dialog = gtk_message_dialog_new(GTK_WINDOW(contacts->window), use_header ? GTK_DIALOG_USE_HEADER_BAR : 0, GTK_MESSAGE_INFO, GTK_BUTTONS_OK_CANCEL, _("Note: Depending on the address book plugin not all information might be saved"));
@@ -1180,25 +1176,18 @@ void app_contacts(RmContact *contact)
 
 	contacts->details_placeholder_box = GTK_WIDGET(gtk_builder_get_object(builder, "details_placeholder_box"));
 
-	if (roger_uses_headerbar()) {
-		GtkWidget *contacts_header_bar_right = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_header_bar_right"));
-		gtk_window_set_titlebar(GTK_WINDOW(contacts->window), header_bar);
-		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(contacts_header_bar_right), TRUE);
+	GtkWidget *contacts_header_bar_right = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_header_bar_right"));
+	gtk_window_set_titlebar(GTK_WINDOW(contacts->window), header_bar);
+	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(contacts_header_bar_right), TRUE);
 
-		gchar *css_data = g_strdup_printf(".round-corner { border-top-right-radius: 7px; }");
-		GtkCssProvider *css_provider = gtk_css_provider_get_default();
-		gtk_css_provider_load_from_data(css_provider, css_data, -1, NULL);
-		g_free(css_data);
+	gchar *css_data = g_strdup_printf(".round-corner { border-top-right-radius: 7px; }");
+	GtkCssProvider *css_provider = gtk_css_provider_get_default();
+	gtk_css_provider_load_from_data(css_provider, css_data, -1, NULL);
+	g_free(css_data);
 
-		GtkStyleContext *style_context = gtk_widget_get_style_context(contacts_header_bar_right);
-		gtk_style_context_add_provider(style_context, GTK_STYLE_PROVIDER(css_provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
-		gtk_style_context_add_class(style_context, "round-corner");
-	} else {
-		GtkWidget *grid = GTK_WIDGET(gtk_builder_get_object(builder, "contacts_window_grid"));
-
-		gtk_window_set_title(GTK_WINDOW(contacts->window), _("Contacts"));
-		gtk_grid_attach(GTK_GRID(grid), header_bar, 0, 0, 3, 1);
-	}
+	GtkStyleContext *style_context = gtk_widget_get_style_context(contacts_header_bar_right);
+	gtk_style_context_add_provider(style_context, GTK_STYLE_PROVIDER(css_provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
+	gtk_style_context_add_class(style_context, "round-corner");
 
 	/* Only set buttons to sensitive if we can write to the selected book */
 	if (!rm_addressbook_can_save(book)) {

@@ -99,7 +99,7 @@ gboolean fax_status_timer_cb(gpointer user_data)
 			g_debug("%s(): Fax transfer failed", __FUNCTION__);
 		}
 		if (g_settings_get_boolean(rm_profile_get_active()->settings, "fax-report")) {
-			create_fax_report(fax_status, fax_ui->file, g_settings_get_string(rm_profile_get_active()->settings, "fax-report-dir"));
+			print_fax_report(fax_status, fax_ui->file, g_settings_get_string(rm_profile_get_active()->settings, "fax-report-dir"));
 		}
 
 		rm_fax_hangup(fax_ui->fax, fax_ui->connection);
@@ -121,13 +121,7 @@ gboolean fax_status_timer_cb(gpointer user_data)
 	buf = g_strdup_printf(_("Time: %s"), time_diff);
 	g_free(time_diff);
 
-	if (roger_uses_headerbar()) {
-		gtk_header_bar_set_subtitle(GTK_HEADER_BAR(fax_ui->header_bar), buf);
-	} else {
-		gchar *title = g_strdup_printf("%s - %s", rm_fax_get_name(fax_ui->fax), buf);
-		gtk_window_set_title(GTK_WINDOW(fax_ui->window), title);
-		g_free(title);
-	}
+	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(fax_ui->header_bar), buf);
 
 	g_free(buf);
 
@@ -259,17 +253,9 @@ gboolean app_show_fax_window_idle(gpointer data)
 	fax_ui->contact_search = contact_search_new();
 	gtk_grid_attach(GTK_GRID(grid2), fax_ui->contact_search, 0, 0, 1, 1);
 
-	if (roger_uses_headerbar()) {
-		/* Create header bar and set it to window */
-		gtk_header_bar_set_title(GTK_HEADER_BAR(fax_ui->header_bar), rm_fax_get_name(fax_ui->fax));
-		gtk_window_set_titlebar(GTK_WINDOW(fax_ui->window), fax_ui->header_bar);
-	} else {
-		GtkWidget *grid = GTK_WIDGET(gtk_builder_get_object(builder, "fax_grid"));
-		gtk_window_set_title(GTK_WINDOW(fax_ui->window), rm_fax_get_name(fax_ui->fax));
-		gtk_grid_attach(GTK_GRID(grid), fax_ui->header_bar, 0, 0, 3, 1);
-	}
-	//GtkWidget *grid2 = GTK_WIDGET(gtk_builder_get_object(builder, "fax_grid"));
-	//gtk_grid_attach(GTK_GRID(grid2), contact_search_new(), 0, 0, 3, 1);
+	/* Create header bar and set it to window */
+	gtk_header_bar_set_title(GTK_HEADER_BAR(fax_ui->header_bar), rm_fax_get_name(fax_ui->fax));
+	gtk_window_set_titlebar(GTK_WINDOW(fax_ui->window), fax_ui->header_bar);
 
 	g_signal_connect(fax_ui->pickup_button, "clicked", G_CALLBACK(fax_pickup_button_clicked_cb), fax_ui);
 

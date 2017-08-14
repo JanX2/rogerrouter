@@ -1,6 +1,6 @@
-/**
+/*
  * Roger Router
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2017 Jan-Michael Brummer
  *
  * This file is part of Roger Router and is based on Claw Mail crash handler
  *
@@ -55,27 +55,30 @@ static const gchar *DEBUG_SCRIPT = "thread apply all bt full\nkill\nq\n";
 extern gchar *argv0;
 
 /**
- * \brief see if the crash dialog is allowed (because some developers may prefer to run claws-mail under gdb...)
+ * crash_is_dialog_allowed:
+ *
+ * See if the crash dialog is allowed (because some developers may prefer to run it under gdb...)
+ *
+ * Return: %TRUE if crash dialog is allowed
  */
-static gboolean is_crash_dialog_allowed(void)
+static gboolean crash_is_dialog_allowed(void)
 {
 	return !g_getenv("ROGER_NO_CRASH");
 }
 
 /**
- * \brief this handler will probably evolve into something better.
+ * crash_handler:
+ * @sig: signal number
+ *
+ * This handler will probably evolve into something better.
  */
 static void crash_handler(int sig)
 {
 	pid_t pid;
 	static volatile unsigned long crashed_ = 0;
 
-	/*
-	 * let's hope argv0 aren't trashed.
-	 * both are defined in main.c.
-	 */
+	/* let's hope argv0 aren't trashed. */
 	extern gchar *argv0;
-
 
 	/*
 	 * besides guarding entrancy it's probably also better
@@ -122,13 +125,17 @@ static void crash_handler(int sig)
 }
 
 /**
- *\brief install crash handlers
+ * crash_install_handlers:
+ *
+ * Install crash handlers.
  */
 void crash_install_handlers(void)
 {
 	sigset_t mask;
 
-	if (!is_crash_dialog_allowed()) return;
+	if (!crash_is_dialog_allowed()) {
+		return;
+	}
 
 	sigemptyset(&mask);
 
@@ -156,7 +163,9 @@ void crash_install_handlers(void)
 }
 
 /**
- * \brief create debugger script file in roger directory
+ * crash_create_debugger_file:
+ *
+ * Create debugger script file in cache directory
  */
 static void crash_create_debugger_file(void)
 {
@@ -167,7 +176,12 @@ static void crash_create_debugger_file(void)
 }
 
 /**
- * \brief launches debugger and attaches it to crashed roger
+ * crash_debug:
+ * @crash_pid: PID of crashed app
+ * @exe_image: executable image
+ * @debug_output: debug output
+ *
+ * Launches debugger and attaches it to crashed app
  */
 static void crash_debug(unsigned long crash_pid, gchar *exe_image, GString *debug_output)
 {
@@ -244,10 +258,15 @@ static void crash_debug(unsigned long crash_pid, gchar *exe_image, GString *debu
 		kill(crash_pid, SIGCONT);
 	}
 }
+
 /**
- * \brief library version
+ * crash_get_libc_version:
+ *
+ * Get ibrary version
+ *
+ * Returns: libc version
  */
-static const gchar *get_lib_version(void)
+static const gchar *crash_get_libc_version(void)
 {
 #if defined(__UCLIBC__)
 	return g_strdup_printf("uClibc %i.%i.%i", __UCLIBC_MAJOR__, __UCLIBC_MINOR__, __UCLIBC_SUBLEVEL__);
@@ -259,9 +278,13 @@ static const gchar *get_lib_version(void)
 }
 
 /**
- * \brief operating system
+ * crash_get_os:
+ *
+ * Get operating system.
+ *
+ * Returns: operating system
  */
-static const gchar *get_operating_system(void)
+static const gchar *crash_get_os(void)
 {
 #if HAVE_SYS_UTSNAME_H
 	struct utsname utsbuf;
@@ -276,7 +299,11 @@ static const gchar *get_operating_system(void)
 }
 
 /**
- * \brief saves crash log to a file
+ * crash_save_log:
+ * @button: #GtkButton
+ * @text: text to store
+ *
+ * Saves crash log to a file
  */
 static void crash_save_crash_log(GtkButton *button, const gchar *text)
 {
@@ -315,6 +342,16 @@ static void crash_save_crash_log(GtkButton *button, const gchar *text)
 	g_object_unref(native);
 }
 
+/**
+ * crash_delete_event_cb:
+ * @widget: a #GtkWidget
+ * @event: a #GdkEvent
+ * @data: data (UNUSED)
+ *
+ * Destroys widget window
+ *
+ * Returns: %TRUE
+ */
 gboolean crash_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpointer data)
 {
 	gtk_widget_destroy(widget);
@@ -327,12 +364,15 @@ void crash_exit_clicked_cb(GtkWidget *widget, gpointer user_data)
 }
 
 /**
+ * crash_dialog:
+ * @text: description
+ * @debug_output: output text by gdb
+ *
  * \brief show crash dialog
- * \param text Description
- * \param debug_output Output text by gdb
- * \return GtkWidget *Dialog widget
+ *
+ * Returns: dialog widget
  */
-static GtkWidget *crash_dialog_show(const gchar *text, const gchar *debug_output)
+static GtkWidget *crash_dialog(const gchar *text, const gchar *debug_output)
 {
 	GtkWidget *window1;
 	GtkWidget *vbox1;
@@ -396,8 +436,8 @@ static GtkWidget *crash_dialog_show(const gchar *text, const gchar *debug_output
 		PACKAGE_VERSION,
 		gtk_major_version, gtk_minor_version, gtk_micro_version,
 		glib_major_version, glib_minor_version, glib_micro_version,
-		get_operating_system(),
-		get_lib_version(),
+		crash_get_os(),
+		crash_get_libc_version(),
 		text,
 		debug_output);
 
@@ -434,9 +474,11 @@ static GtkWidget *crash_dialog_show(const gchar *text, const gchar *debug_output
 	return window1;
 }
 
-
 /**
- * \brief crash dialog entry point
+ * crash_main:
+ * @arg: arguments
+ *
+ * Crash dialog entry point
  */
 void crash_main(const char *arg)
 {
@@ -456,17 +498,28 @@ void crash_main(const char *arg)
 	output = g_string_new("");
 	crash_debug(pid, tokens[2], output);
 
-	crash_dialog_show(text, output->str);
+	crash_dialog(text, output->str);
 	g_string_free(output, TRUE);
 	g_free(text);
 	g_strfreev(tokens);
 }
 
 #else
+/**
+ * crash_install_handlers:
+ *
+ * Install crash handlers.
+ */
 void crash_install_handlers(void)
 {
 }
 
+/**
+ * crash_main:
+ * @arg: arguments
+ *
+ * Crash dialog entry point
+ */
 void crash_main(const char *arg)
 {
 }

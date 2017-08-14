@@ -1,6 +1,6 @@
-/**
+/*
  * The rm project
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2017 Jan-Michael Brummer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -34,6 +34,7 @@
 #include <webjournal.h>
 
 typedef struct {
+	/*< private >*/
 	guint signal_id;
 	gchar *header;
 	gchar *entry;
@@ -45,7 +46,13 @@ typedef struct {
 
 static GSettings *webjournal_settings = NULL;
 
-gchar *get_call_type_string(gint type)
+/**
+ * webjournal_get_call_type_string:
+ * @type: a #RmCallEntryTypes
+ *
+ * Returns: call type string, must be freed with g_free()
+ */
+gchar *webjournal_get_call_type_string(RmCallEntryTypes type)
 {
 	switch (type) {
 	case RM_CALL_ENTRY_TYPE_INCOMING:
@@ -62,12 +69,22 @@ gchar *get_call_type_string(gint type)
 		return "voice";
 	case RM_CALL_ENTRY_TYPE_BLOCKED:
 		return "blocked";
+	default:
+		return "unknown";
 	}
 
 	return "unknown";
 }
 
-static gchar *convert_date_time(gchar *date_time)
+/**
+ * webjournal_convert_data_time:
+ * @date_time: date time string
+ *
+ * Converts "%d.%dm.%y %h:%m" to "2yyymmddhhmmm"
+ *
+ * Returns: new date time string
+ */
+static gchar *webjournal_convert_date_time(gchar *date_time)
 {
 	gint year;
 	gint month;
@@ -80,6 +97,14 @@ static gchar *convert_date_time(gchar *date_time)
 	return g_strdup_printf("%4.4d%2.2d%2.2d%2.2d%2.2d00", 2000 + year, month, day, hour, min);
 }
 
+/**
+ * webjournal_journal_loaded_cb:
+ * @obj: a #RmObject
+ * @journal journal list
+ * @user_data: a #RmWebJournalPlugin
+ *
+ * Processes a new loaded journal and create web journal
+ */
 void webjournal_journal_loaded_cb(RmObject *obj, GSList *journal, gpointer user_data)
 {
 	RmWebJournalPlugin *webjournal_plugin = user_data;
@@ -106,9 +131,9 @@ void webjournal_journal_loaded_cb(RmObject *obj, GSList *journal, gpointer user_
 		GRegex *sortable_customkey = g_regex_new("%CUSTOMKEY%", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
 		gchar *out1;
 		gchar *out2;
-		gchar *customkey = convert_date_time(call->date_time);
+		gchar *customkey = webjournal_convert_date_time(call->date_time);
 
-		out1 = g_regex_replace_literal(type, webjournal_plugin->entry, -1, 0, get_call_type_string(call->type), 0, NULL);
+		out1 = g_regex_replace_literal(type, webjournal_plugin->entry, -1, 0, webjournal_get_call_type_string(call->type), 0, NULL);
 
 		out2 = g_regex_replace_literal(date_time, out1, -1, 0, call->date_time, 0, NULL);
 		g_free(out1);
@@ -167,8 +192,10 @@ void webjournal_journal_loaded_cb(RmObject *obj, GSList *journal, gpointer user_
 }
 
 /**
- * \brief Activate plugin
- * \param plugin peas plugin
+ * webjournal_plugin_init:
+ * @plugin: a #RmPlugin
+ *
+ * Activate plugin
  */
 static gboolean webjournal_plugin_init(RmPlugin *plugin)
 {
@@ -180,7 +207,6 @@ static gboolean webjournal_plugin_init(RmPlugin *plugin)
 
 	tmp = g_resources_lookup_data("/org/tabos/roger/plugins/webjournal/share/header.html", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
 	webjournal_plugin->header = (gchar*)g_bytes_get_data(tmp, NULL);
-	//g_free(file);
 
 	tmp = g_resources_lookup_data("/org/tabos/roger/plugins/webjournal/share/entry.html", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
 	webjournal_plugin->entry = (gchar*)g_bytes_get_data(tmp, NULL);
@@ -211,8 +237,12 @@ static gboolean webjournal_plugin_init(RmPlugin *plugin)
 }
 
 /**
- * \brief Deactivate plugin
- * \param plugin peas plugin
+ * webjournal_plugin_shutdown:
+ * @plugin: a #RmPlugin
+ *
+ * Deactivate plugin
+ *
+ * Returns: %TRUE
  */
 static gboolean webjournal_plugin_shutdown(RmPlugin *plugin)
 {
@@ -228,6 +258,13 @@ static gboolean webjournal_plugin_shutdown(RmPlugin *plugin)
 	return TRUE;
 }
 
+/**
+ * webjournal_filename_button_clicked_cb:
+ * @button: filename button
+ * user_data: unused
+ *
+ * Show file chooser dialog.
+ */
 void filename_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
 	GtkWindow *window = gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default()));
@@ -250,6 +287,14 @@ void filename_button_clicked_cb(GtkButton *button, gpointer user_data)
 	gtk_widget_destroy(dialog);
 }
 
+/**
+ * webjournal_plugin_configure:
+ * @plugin: a #RmPlugin
+ *
+ * Create and return configure widget
+ *
+ * Returns: a #GtkWidget
+ */
 gpointer webjournal_plugin_configure(RmPlugin *plugin)
 {
 	GtkWidget *grid = gtk_grid_new();
@@ -280,3 +325,4 @@ gpointer webjournal_plugin_configure(RmPlugin *plugin)
 }
 
 RM_PLUGIN_CONFIG(webjournal)
+

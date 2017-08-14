@@ -1,6 +1,6 @@
-/**
+/*
  * Roger Router
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2017 Jan-Michael Brummer
  *
  * This file is part of Roger Router.
  *
@@ -22,6 +22,18 @@
 #include <gtk/gtk.h>
 #include <roger/icons.h>
 
+/**
+ * image_get_scaled:
+ * @image: a #GdkPixbuf
+ * @req_width: required width
+ * @req_height: required height
+ *
+ * Scales the image using @req_width and @req_height.
+ *  - In case one of them is -1 the size is calculated based on the other fixed value.
+ *  - In case both are -1 the width and height is unchanged.
+ *
+ * Returns: a new #GdxPixbuf
+ */
 GdkPixbuf *image_get_scaled(GdkPixbuf *image, gint req_width, gint req_height)
 {
 	GdkPixbuf *scaled = NULL;

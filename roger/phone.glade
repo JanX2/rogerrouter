@@ -17,7 +17,6 @@
     <property name="can_focus">False</property>
     <property name="resizable">False</property>
     <property name="window_position">center-on-parent</property>
-    <signal name="delete-event" handler="phone_window_delete_event_cb" swapped="no"/>
     <child>
       <object class="GtkGrid" id="phone_grid">
         <property name="visible">True</property>
@@ -41,7 +40,6 @@
                 <property name="receives_default">True</property>
                 <property name="hexpand">False</property>
                 <property name="image">call_start_icon</property>
-                <signal name="clicked" handler="pickup_button_clicked_cb" swapped="no"/>
                 <style>
                   <class name="suggested-action"/>
                 </style>
@@ -58,7 +56,6 @@
                 <property name="receives_default">True</property>
                 <property name="hexpand">False</property>
                 <property name="image">call_stop_icon</property>
-                <signal name="clicked" handler="hangup_button_clicked_cb" swapped="no"/>
                 <style>
                   <class name="destructive-action"/>
                 </style>
@@ -95,7 +92,6 @@
                             <property name="margin_right">6</property>
                             <property name="margin_top">6</property>
                             <property name="hexpand">True</property>
-                            <signal name="clicked" handler="phone_clear_button_clicked_cb" swapped="no"/>
                             <child>
                               <object class="GtkGrid">
                                 <property name="visible">True</property>
@@ -144,7 +140,6 @@
                             <property name="margin_left">6</property>
                             <property name="margin_right">6</property>
                             <property name="hexpand">True</property>
-                            <signal name="clicked" handler="phone_mute_button_clicked_cb" swapped="no"/>
                             <child>
                               <object class="GtkGrid">
                                 <property name="visible">True</property>
@@ -196,7 +191,6 @@
                             <property name="margin_left">6</property>
                             <property name="margin_right">6</property>
                             <property name="hexpand">True</property>
-                            <signal name="clicked" handler="phone_hold_button_clicked_cb" swapped="no"/>
                             <child>
                               <object class="GtkGrid">
                                 <property name="visible">True</property>
@@ -248,7 +242,6 @@
                             <property name="margin_right">6</property>
                             <property name="margin_bottom">6</property>
                             <property name="hexpand">True</property>
-                            <signal name="clicked" handler="phone_record_button_clicked_cb" swapped="no"/>
                             <child>
                               <object class="GtkGrid">
                                 <property name="visible">True</property>
@@ -326,12 +319,11 @@
                         <property name="row_homogeneous">True</property>
                         <property name="column_homogeneous">True</property>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="button_1">
                             <property name="name">button_1</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
                               <object class="GtkGrid">
                                 <property name="visible">True</property>
@@ -373,12 +365,11 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="button_2">
                             <property name="name">button_2</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
                               <object class="GtkGrid">
                                 <property name="visible">True</property>
@@ -420,12 +411,11 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="button_3">
                             <property name="name">button_3</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
                               <object class="GtkGrid">
                                 <property name="visible">True</property>
@@ -467,12 +457,11 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="button_4">
                             <property name="name">button_4</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
                               <object class="GtkGrid">
                                 <property name="visible">True</property>
@@ -514,12 +503,11 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="button_7">
                             <property name="name">button_7</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
                               <object class="GtkGrid">
                                 <property name="visible">True</property>
@@ -561,12 +549,11 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="button_*">
                             <property name="name">button_*</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
                               <object class="GtkGrid">
                                 <property name="visible">True</property>
@@ -608,12 +595,11 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="button_0">
                             <property name="name">button_0</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
                               <object class="GtkGrid">
                                 <property name="visible">True</property>
@@ -655,12 +641,11 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton"  id="button_#">
                             <property name="name">button_#</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
                               <object class="GtkGrid">
                                 <property name="visible">True</property>
@@ -702,12 +687,11 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="button_6">
                             <property name="name">button_6</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
                               <object class="GtkGrid">
                                 <property name="visible">True</property>
@@ -749,12 +733,11 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="button_5">
                             <property name="name">button_5</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
                               <object class="GtkGrid">
                                 <property name="visible">True</property>
@@ -796,12 +779,11 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="button_8">
                             <property name="name">button_8</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
                               <object class="GtkGrid">
                                 <property name="visible">True</property>
@@ -843,12 +825,11 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="button_9">
                             <property name="name">button_9</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="phone_dtmf_clicked_cb" swapped="no"/>
                             <child>
                               <object class="GtkGrid">
                                 <property name="visible">True</property>

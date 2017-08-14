@@ -17,11 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * TODO:
- *  - Check possibility to remove update timer
- */
-
 #include <config.h>
 
 #include <gtk/gtk.h>

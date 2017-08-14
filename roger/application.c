@@ -180,18 +180,17 @@ static void assistant_activated(GSimpleAction *action, GVariant *parameter, gpoi
 
 static void dialnumber_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
-	app_show_phone_window(NULL, NULL);
+	app_phone(NULL, NULL);
 }
 
 static void preferences_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
-	//app_show_preferences();
 	app_show_settings();
 }
 
 static void plugins_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
-	app_show_plugins();
+	app_plugins();
 }
 
 static void donate_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
@@ -246,7 +245,7 @@ void app_pickup(RmConnection *connection)
 	contact = rm_contact_find_by_number(connection->remote_number);
 
 	/* Show phone window */
-	app_show_phone_window(contact, connection);
+	app_phone(contact, connection);
 }
 
 static void pickup_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
@@ -357,6 +356,7 @@ static void app_init(GtkApplication *app)
 	rm_new(option_state.debug, &error);
 
 	/* Set local bindings */
+	g_print("%s(): locale: %s", __FUNCTION__, rm_get_directory(APP_LOCALE));
 	bindtextdomain(GETTEXT_PACKAGE, rm_get_directory(APP_LOCALE));
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);
@@ -577,7 +577,7 @@ static gint application_command_line_cb(GtkApplication *app, GApplicationCommand
 			/** Ask for contact information */
 			contact = rm_contact_find_by_number(full_number);
 
-			app_show_phone_window(contact, NULL);
+			app_phone(contact, NULL);
 			g_free(full_number);
 		}
 

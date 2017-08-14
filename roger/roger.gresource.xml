@@ -11,7 +11,7 @@
 		<file preprocess="xml-stripblanks">extensions.glade</file>
 		<file preprocess="xml-stripblanks">fax.glade</file>
 		<file preprocess="xml-stripblanks">contactsearch.glade</file>
-		<file preprocess="xml-stripblanks">images/roger.svg</file>
+		<file preprocess="xml-stripblanks">images/org.tabos.roger.svg</file>
 		<file preprocess="xml-stripblanks">images/address-book.svg</file>
 		<file preprocess="xml-stripblanks">images/roger-call-blocked.svg</file>
 		<file preprocess="xml-stripblanks">images/roger-call-in.svg</file>

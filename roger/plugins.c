@@ -31,15 +31,28 @@
 static GtkWidget *plugins_window = NULL;
 static GtkWidget *config_button = NULL;
 static GtkWidget *help_button = NULL;
+extern GApplication *journal_application;
 
-gboolean plugins_state_set_cb(GtkSwitch *widget, gboolean state, gpointer user_data)
+/**
+ * plugins_switch_state_set_cb:
+ * @widget: a #GtkSwitch
+ * @state: state of switch (on/off)
+ * @user_data: a #RmPlugin
+ *
+ * Depending on the state de/activate plugin and set config button sensitive
+ *
+ * Returns: %FALSE
+ */
+static gboolean plugins_switch_state_set_cb(GtkSwitch *widget, gboolean state, gpointer user_data)
 {
 	RmPlugin *plugin = user_data;
 
 	if (state) {
+		/* Enable plugin */
 		rm_plugins_enable(plugin);
 		gtk_widget_set_sensitive(config_button, TRUE);
 	} else {
+		/* Disable plugin */
 		gtk_widget_set_sensitive(config_button, FALSE);
 		rm_plugins_disable(plugin);
 	}
@@ -47,14 +60,26 @@ gboolean plugins_state_set_cb(GtkSwitch *widget, gboolean state, gpointer user_d
 	return FALSE;
 }
 
-static void url_button_clicked_cb(GtkWidget *widget,
-				  gpointer user_data)
+/**
+ * plugins_url_button_clicked_cb:
+ * @widget: a #GtkWidget (unused)
+ * @user_data: URL to open
+ *
+ * Opens URL of selected plugin.
+ */
+static void plugins_url_button_clicked_cb(GtkWidget *widget, gpointer user_data)
 {
 	rm_os_execute(user_data);
 }
 
-static void plugins_about_clicked_cb(GtkWidget *button,
-				     gpointer user_data)
+/**
+ * plugins_about_button_clicked_cb:
+ * @button: button #GtkWidget
+ * @user_data: a #GtkListBox
+ *
+ * Create and show about dialog of selected plugin.
+ */
+static void plugins_about_button_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 	GtkListBoxRow *row = gtk_list_box_get_selected_row(GTK_LIST_BOX(user_data));
 	GtkWidget *child = gtk_container_get_children(GTK_CONTAINER(row))->data;
@@ -75,22 +100,21 @@ static void plugins_about_clicked_cb(GtkWidget *button,
 		return;
 	}
 
-	about = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	about = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", TRUE, NULL);
 	gtk_window_set_transient_for(GTK_WINDOW(about), GTK_WINDOW(plugins_window));
 	gtk_window_set_resizable(GTK_WINDOW(about), FALSE);
 	gtk_window_set_modal(GTK_WINDOW(about), TRUE);
 	gtk_window_set_position(GTK_WINDOW(about), GTK_WIN_POS_CENTER_ON_PARENT);
 
-	header_bar = gtk_header_bar_new();
+	header_bar = gtk_dialog_get_header_bar(GTK_DIALOG(about));
 	gtk_header_bar_set_title(GTK_HEADER_BAR(header_bar), _("About this plugin"));
 	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header_bar), TRUE);
-	gtk_window_set_titlebar(GTK_WINDOW(about), header_bar);
 
 	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 12);
 	gtk_widget_set_hexpand(vbox, TRUE);
 	gtk_widget_set_vexpand(vbox, TRUE);
 	gtk_widget_set_margin(vbox, 18, 18, 18, 18);
-	gtk_container_add(GTK_CONTAINER(about), vbox);
+	gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(about))), vbox);
 
 	name_label = gtk_label_new("");
 	gtk_box_pack_start(GTK_BOX(vbox), name_label, FALSE, FALSE, 0);
@@ -109,7 +133,7 @@ static void plugins_about_clicked_cb(GtkWidget *button,
 	gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
 
 	help_button = gtk_button_new_with_label(_("Help"));
-	g_signal_connect(help_button, "clicked", G_CALLBACK(url_button_clicked_cb), plugin->help);
+	g_signal_connect(help_button, "clicked", G_CALLBACK(plugins_url_button_clicked_cb), plugin->help);
 	gtk_box_pack_start(GTK_BOX(hbox), help_button, TRUE, TRUE, 0);
 
 	dummy = gtk_label_new("");
@@ -119,14 +143,22 @@ static void plugins_about_clicked_cb(GtkWidget *button,
 	gtk_box_pack_start(GTK_BOX(hbox), dummy, FALSE, FALSE, 0);
 
 	homepage_button = gtk_button_new_with_label(_("Homepage"));
-	g_signal_connect(homepage_button, "clicked", G_CALLBACK(url_button_clicked_cb), plugin->homepage);
+	g_signal_connect(homepage_button, "clicked", G_CALLBACK(plugins_url_button_clicked_cb), plugin->homepage);
 	gtk_box_pack_end(GTK_BOX(hbox), homepage_button, TRUE, TRUE, 0);
 
-	gtk_widget_show_all(about);
+	gtk_widget_show_all(vbox);
+	gtk_dialog_run(GTK_DIALOG(about));
+	gtk_widget_destroy(about);
 }
 
-static void plugins_help_clicked_cb(GtkWidget *button,
-				    gpointer user_data)
+/**
+ * plugins_help_button_clicked_cb:
+ * @button: button #GtkWidget
+ * user_data: a #GtkListBox
+ *
+ * Opens help page of selected plugin
+ */
+static void plugins_help_button_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 	GtkListBoxRow *row = gtk_list_box_get_selected_row(GTK_LIST_BOX(user_data));
 	GtkWidget *child = gtk_container_get_children(GTK_CONTAINER(row))->data;
@@ -139,8 +171,14 @@ static void plugins_help_clicked_cb(GtkWidget *button,
 	rm_os_execute(plugin->help);
 }
 
-static void plugins_configure_clicked_cb(GtkWidget *button,
-					 gpointer user_data)
+/**
+ * plugins_configure_button_clicked_cb:
+ * @button: button #GtkWidget
+ * @user_data: a #GtkListBox
+ *
+ * Creates and opens configure window of selected plugin
+ */
+static void plugins_configure_button_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 	GtkListBoxRow *row = gtk_list_box_get_selected_row(GTK_LIST_BOX(user_data));
 	GtkWidget *child = gtk_container_get_children(GTK_CONTAINER(row))->data;
@@ -159,24 +197,31 @@ static void plugins_configure_clicked_cb(GtkWidget *button,
 			return;
 		}
 
-		win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+		win = g_object_new(GTK_TYPE_DIALOG, "use-header-bar", TRUE, NULL);;
 		gtk_window_set_transient_for(GTK_WINDOW(win), GTK_WINDOW(plugins_window));
 		gtk_window_set_modal(GTK_WINDOW(win), TRUE);
 
-		headerbar = gtk_header_bar_new ();
+		headerbar = gtk_dialog_get_header_bar(GTK_DIALOG(win));
 		gtk_header_bar_set_title(GTK_HEADER_BAR (headerbar), plugin->name);
-		gtk_window_set_titlebar(GTK_WINDOW(win), headerbar);
 		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(headerbar), TRUE);
 
-		gtk_container_add(GTK_CONTAINER(win), config);
+		gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(win))), config);
 
-		gtk_widget_show_all(win);
+		gtk_widget_show_all(config);
+		gtk_dialog_run(GTK_DIALOG(win));
+		gtk_widget_destroy(win);
 	}
 }
 
-static void plugins_listbox_row_selected_cb(GtkListBox    *box,
-					    GtkListBoxRow *row,
-					    gpointer user_data)
+/**
+ * plugins_listbox_row_selected_cb:
+ * @box: a #GtkListBox
+ * @row: a #GtkListBoxRow
+ * @user_data: UNUSED
+ *
+ * Select row: depending on plugin state & function activate configure/help button
+ */
+static void plugins_listbox_row_selected_cb(GtkListBox *box, GtkListBoxRow *row, gpointer user_data)
 {
 	GtkWidget *child;
 	RmPlugin *plugin;
@@ -204,7 +249,12 @@ static void plugins_listbox_row_selected_cb(GtkListBox    *box,
 	}
 }
 
-void app_show_plugins(void)
+/**
+ * app_plugins:
+ *
+ * Show plugins dialog
+ */
+void app_plugins(void)
 {
 	GtkWidget *header;
 	GtkWidget *grid;
@@ -217,11 +267,11 @@ void app_show_plugins(void)
 		return;
 	}
 
-	extern GApplication *journal_application;
 	plugins_window = gtk_application_window_new(GTK_APPLICATION(journal_application));
-	gtk_window_set_default_size(GTK_WINDOW(plugins_window), 700, 350);
+	gtk_window_set_default_size(GTK_WINDOW(plugins_window), 700, 500);
 	gtk_window_set_transient_for(GTK_WINDOW(plugins_window), GTK_WINDOW(journal_get_window()));
 	gtk_window_set_position(GTK_WINDOW(plugins_window), GTK_WIN_POS_CENTER_ON_PARENT);
+	gtk_window_set_modal(GTK_WINDOW(plugins_window), TRUE);
 
 	header = gtk_header_bar_new();
 	gtk_header_bar_set_title(GTK_HEADER_BAR(header), _("Configure plugins"));
@@ -270,7 +320,7 @@ void app_show_plugins(void)
 		gtk_widget_set_margin(on_switch, 6, 6, 3, 6);
 		gtk_widget_set_vexpand(on_switch, FALSE);
 		gtk_switch_set_active(GTK_SWITCH(on_switch), plugin->enabled);
-		g_signal_connect(G_OBJECT(on_switch), "state-set", G_CALLBACK(plugins_state_set_cb), plugin);
+		g_signal_connect(G_OBJECT(on_switch), "state-set", G_CALLBACK(plugins_switch_state_set_cb), plugin);
 
 		gtk_widget_set_sensitive(on_switch, !plugin->builtin);
 		gtk_grid_attach(GTK_GRID(child), on_switch, 1, 0, 1, 2);
@@ -294,7 +344,7 @@ void app_show_plugins(void)
 
 	gtk_container_add(GTK_CONTAINER(item), config_button);
 
-	g_signal_connect(config_button, "clicked", G_CALLBACK(plugins_configure_clicked_cb), listbox);
+	g_signal_connect(config_button, "clicked", G_CALLBACK(plugins_configure_button_clicked_cb), listbox);
 	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, 0);
 
 	item = gtk_separator_tool_item_new();
@@ -315,14 +365,14 @@ void app_show_plugins(void)
 	help_button = button;
 	image = gtk_image_new_from_icon_name("dialog-information-symbolic", GTK_ICON_SIZE_BUTTON);
 	gtk_button_set_image(GTK_BUTTON(button), image);
-	g_signal_connect(help_button, "clicked", G_CALLBACK(plugins_about_clicked_cb), listbox);
+	g_signal_connect(help_button, "clicked", G_CALLBACK(plugins_about_button_clicked_cb), listbox);
 	gtk_box_pack_start(GTK_BOX(button_box), button, FALSE, FALSE, 0);
 
 	button = gtk_button_new();
 	help_button = button;
 	image = gtk_image_new_from_icon_name("help-faq-symbolic", GTK_ICON_SIZE_BUTTON);
 	gtk_button_set_image(GTK_BUTTON(button), image);
-	g_signal_connect(help_button, "clicked", G_CALLBACK(plugins_help_clicked_cb), listbox);
+	g_signal_connect(help_button, "clicked", G_CALLBACK(plugins_help_button_clicked_cb), listbox);
 	gtk_box_pack_start(GTK_BOX(button_box), button, FALSE, FALSE, 0);
 
 	gtk_grid_attach(GTK_GRID(grid), toolbar, 0, 1, 1, 1);

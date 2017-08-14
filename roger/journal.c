@@ -39,6 +39,7 @@
 #include <roger/application.h>
 #include <roger/uitools.h>
 #include <roger/answeringmachine.h>
+#include <roger/pdf.h>
 
 GtkWidget *journal_view = NULL;
 GtkWidget *journal_win = NULL;
@@ -57,13 +58,6 @@ static RmFilter *journal_filter = NULL;
 static RmFilter *journal_search_filter = NULL;
 static GtkWidget *spinner = NULL;
 static GMutex journal_mutex;
-
-gboolean roger_uses_headerbar(void)
-{
-	return TRUE;
-	//return FALSE;
-	//return use_header;
-}
 
 void journal_clear(void)
 {
@@ -179,39 +173,34 @@ void journal_redraw(void)
 
 	status = g_object_get_data(G_OBJECT(journal_win), "headerbar");
 
-	if (roger_uses_headerbar()) {
-		GtkWidget *grid = gtk_grid_new();
-		GtkWidget *title;
-		GtkWidget *subtitle;
-		gchar *markup;
-		PangoAttrList *attributes;
+	GtkWidget *grid = gtk_grid_new();
+	GtkWidget *title;
+	GtkWidget *subtitle;
+	gchar *markup;
+	PangoAttrList *attributes;
 
-		//gtk_widget_set_hexpand(grid, TRUE);
-		markup = g_strdup_printf("<b>%s</b>", profile ? profile->name : _("<No profile>"));
+	//gtk_widget_set_hexpand(grid, TRUE);
+	markup = g_strdup_printf("<b>%s</b>", profile ? profile->name : _("<No profile>"));
 
-		if (pango_parse_markup(markup, -1, 0, &attributes, &text, NULL, NULL)) {
-			title = gtk_label_new(text);
-			gtk_label_set_attributes(GTK_LABEL(title), attributes);
-		} else {
-			title = gtk_label_new(_("<No profile>"));
-		}
-
-		//gtk_widget_set_hexpand(title, TRUE);
-		gtk_grid_attach(GTK_GRID(grid), title, 0, 0, 2, 1);
-
-		markup = g_strdup_printf(_("<small>%d calls, %d:%2.2dh</small>"), count, duration / 60, duration % 60);
-		pango_parse_markup(markup, -1, 0, &attributes, &text, NULL, NULL);
-		subtitle = gtk_label_new(text);
-		gtk_label_set_attributes(GTK_LABEL(subtitle), attributes);
-		gtk_widget_set_sensitive(subtitle, FALSE);
-		gtk_grid_attach(GTK_GRID(grid), subtitle, 0, 1, 2, 1);
-
-		gtk_widget_show_all(grid);
-		gtk_header_bar_set_custom_title(GTK_HEADER_BAR(status), grid);
+	if (pango_parse_markup(markup, -1, 0, &attributes, &text, NULL, NULL)) {
+		title = gtk_label_new(text);
+		gtk_label_set_attributes(GTK_LABEL(title), attributes);
 	} else {
-		text = g_strdup_printf(_("%s - %d calls, %d:%2.2dh"), profile ? profile->name : _("<No profile>"), count, duration / 60, duration % 60);
-		gtk_window_set_title(GTK_WINDOW(journal_win), text);
+		title = gtk_label_new(_("<No profile>"));
 	}
+
+	//gtk_widget_set_hexpand(title, TRUE);
+	gtk_grid_attach(GTK_GRID(grid), title, 0, 0, 2, 1);
+
+	markup = g_strdup_printf(_("<small>%d calls, %d:%2.2dh</small>"), count, duration / 60, duration % 60);
+	pango_parse_markup(markup, -1, 0, &attributes, &text, NULL, NULL);
+	subtitle = gtk_label_new(text);
+	gtk_label_set_attributes(GTK_LABEL(subtitle), attributes);
+	gtk_widget_set_sensitive(subtitle, FALSE);
+	gtk_grid_attach(GTK_GRID(grid), subtitle, 0, 1, 2, 1);
+
+	gtk_widget_show_all(grid);
+	gtk_header_bar_set_custom_title(GTK_HEADER_BAR(status), grid);
 
 	g_free(text);
 }
@@ -336,17 +325,13 @@ void journal_button_refresh_clicked_cb(GtkWidget *button, GtkWidget *window)
 
 void journal_button_print_clicked_cb(GtkWidget *button, GtkWidget *view)
 {
-	journal_print(view);
+	print_journal(view);
 }
 
 void journal_button_clear_clicked_cb(GtkWidget *button, GtkWidget *view)
 {
 	GtkWidget *dialog;
-	gint flags = GTK_DIALOG_MODAL;
-
-	if (roger_uses_headerbar()) {
-		flags |= GTK_DIALOG_USE_HEADER_BAR;
-	}
+	gint flags = GTK_DIALOG_MODAL | GTK_DIALOG_USE_HEADER_BAR;
 
 	dialog = gtk_message_dialog_new(GTK_WINDOW(journal_win), flags, GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE, _("Do you want to delete the router journal?"));
 
@@ -396,11 +381,7 @@ void delete_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, g
 void journal_button_delete_clicked_cb(GtkWidget *button, GtkWidget *view)
 {
 	GtkWidget *dialog;
-	gint flags = GTK_DIALOG_MODAL;
-
-	if (roger_uses_headerbar()) {
-		flags |= GTK_DIALOG_USE_HEADER_BAR;
-	}
+	gint flags = GTK_DIALOG_MODAL |GTK_DIALOG_USE_HEADER_BAR;
 
 	dialog = gtk_message_dialog_new(GTK_WINDOW(journal_win), flags, GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE, _("Do you really want to delete the selected entry?"));
 
@@ -532,7 +513,8 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 
 	switch (call->type) {
 	case RM_CALL_ENTRY_TYPE_FAX_REPORT:
-		rm_os_execute(call->priv);
+		//rm_os_execute(call->priv);
+		app_pdf(call->priv);
 		break;
 	case RM_CALL_ENTRY_TYPE_FAX: {
 		gsize len = 0;
@@ -542,11 +524,17 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 
 		if (data && len) {
 			gchar *path = g_build_filename(rm_get_user_cache_dir(), G_DIR_SEPARATOR_S, "fax.pdf", NULL);
+			gchar *uri;
 
 			rm_file_save(path, data, len);
 
-			rm_os_execute(path);
+			uri = g_strdup_printf("file://%s", path);
 			g_free(path);
+
+			/* rm_os_execute(uri); */
+			app_pdf(uri);
+
+			g_free(uri);
 		}
 		g_free(data);
 		break;
@@ -558,7 +546,7 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 		app_answeringmachine(call->priv);
 		break;
 	default:
-		app_show_phone_window(call->remote, NULL);
+		app_phone(call->remote, NULL);
 		break;
 	}
 }
@@ -715,7 +703,7 @@ void journal_popup_copy_number(GtkWidget *widget, RmCallEntry *call)
 
 void journal_popup_call_number(GtkWidget *widget, RmCallEntry *call)
 {
-	app_show_phone_window(call->remote, NULL);
+	app_phone(call->remote, NULL);
 }
 
 void journal_popup_add_contact(GtkWidget *widget, RmCallEntry *call)
@@ -1027,19 +1015,13 @@ void journal_window(GApplication *app)
 	GtkWidget *entry;
 	GMenu *menu;
 
-	if (roger_uses_headerbar()) {
-		/* Create header bar and set it to window */
-		header = gtk_header_bar_new();
-		gtk_widget_set_hexpand(header, TRUE);
-		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
-		gtk_header_bar_set_title(GTK_HEADER_BAR(header), "Journal");
-		gtk_window_set_titlebar(GTK_WINDOW(window), header);
-		g_object_set_data(G_OBJECT(window), "headerbar", header);
-	} else {
-		header = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
-		gtk_widget_set_hexpand(header, TRUE);
-		gtk_grid_attach(GTK_GRID(grid), header, 0, y++, 1, 1);
-	}
+	/* Create header bar and set it to window */
+	header = gtk_header_bar_new();
+	gtk_widget_set_hexpand(header, TRUE);
+	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
+	gtk_header_bar_set_title(GTK_HEADER_BAR(header), "Journal");
+	gtk_window_set_titlebar(GTK_WINDOW(window), header);
+	g_object_set_data(G_OBJECT(window), "headerbar", header);
 
 	/* Create button box as raised and linked */
 	box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);

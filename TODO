@@ -3,9 +3,7 @@ TODO
 * Default notification should be all instead none
 * Fax spooler/server always build-in
 * Installation hint for not working fax device
-* Removal of libsecret in flatpak
 * Translation in flatpak
-
 
 * Windows
 -----------

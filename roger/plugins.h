@@ -22,7 +22,7 @@
 
 G_BEGIN_DECLS
 
-void app_show_plugins(void);
+void app_plugins(void);
 
 G_END_DECLS
 

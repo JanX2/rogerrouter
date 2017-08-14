@@ -30,12 +30,4 @@ gnome.compile_schemas()
 install_data('org.tabos.roger.plugins.webjournal.gschema.xml',
 install_dir : 'share/glib-2.0/schemas')
 
-libwebjournal_data = []
-libwebjournal_data += 'share/dragtable.js'
-libwebjournal_data += 'share/entry.html'
-libwebjournal_data += 'share/footer.html'
-libwebjournal_data += 'share/sortable.js'
-libwebjournal_data += 'share/styling.css'
-
-install_data(libwebjournal_data, install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/webjournal/')
 

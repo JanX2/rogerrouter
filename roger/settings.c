@@ -65,7 +65,6 @@ struct settings {
 	GtkWidget *fax_ghostscript_label;
 	GtkWidget *fax_ghostscript_file_chooser_button;
 
-	GtkWidget *view_call_type_icons_combobox;
 	GtkListStore *filter_liststore;
 	GtkListStore *actions_liststore;
 	GtkWidget *incoming_call_rings_checkbutton;
@@ -495,7 +494,7 @@ void filter_edit_button_clicked_cb(GtkWidget *widget, gpointer data)
 	GValue ptr = { 0 };
 	GtkListStore *list_store;
 	gint result;
-	gboolean use_header = roger_uses_headerbar();
+	gboolean use_header = TRUE;
 
 	if (!gtk_tree_selection_get_selected(selection, &model, &selected_iter)) {
 		return;
@@ -646,7 +645,7 @@ void filter_add_button_clicked_cb(GtkWidget *widget, gpointer data)
 	GtkTreeModel *model;
 	RmFilter *filter;
 	gint result;
-	gboolean use_header = roger_uses_headerbar();
+	gboolean use_header = TRUE;
 
 	pref_filters_current_rules = NULL;
 	//dialog = gtk_dialog_new_with_buttons(_("Add new filter"), settings->window, GTK_DIALOG_DESTROY_WITH_PARENT, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_OK"), GTK_RESPONSE_OK, NULL);

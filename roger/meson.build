@@ -42,6 +42,8 @@ sourcelist += 'journal.c'
 sourcelist += 'journal.h'
 sourcelist += 'main.h'
 sourcelist += 'main_ui.c'
+sourcelist += 'pdf.c'
+sourcelist += 'pdf.h'
 sourcelist += 'phone.c'
 sourcelist += 'phone.h'
 sourcelist += 'plugins.c'
@@ -66,6 +68,7 @@ roger_dep += dependency('libsoup-2.4')
 roger_dep += dependency('libtiff-4')
 roger_dep += dependency('spandsp')
 roger_dep += dependency('librm')
+roger_dep += dependency('poppler-glib')
 roger_dep += cc.find_library('m', required: true)
 roger_dep += cc.find_library('gs', required: true)
 
@@ -90,11 +93,7 @@ i18n.merge_file(
 )
 
 images = []
-images += 'images/app.png'
-install_data(images, install_dir : get_option('datadir') + '/roger/')
-
-images = []
-images += 'images/roger.svg'
+images += 'images/org.tabos.roger.svg'
 install_data(images, install_dir : get_option('datadir') + '/icons/hicolor/scalable/apps/')
 
 subdir('plugins')

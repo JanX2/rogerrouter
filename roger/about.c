@@ -73,7 +73,7 @@ void app_show_about(void)
 	gtk_about_dialog_set_documenters(GTK_ABOUT_DIALOG(dialog), documenters);
 	gtk_about_dialog_set_translator_credits(GTK_ABOUT_DIALOG(dialog), g_locale_to_utf8(translators, -1, 0, 0, 0));
 	gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog), PACKAGE_BUGREPORT);
-	gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(dialog), gdk_pixbuf_new_from_resource("/org/tabos/roger/images/roger.svg", NULL));
+	gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(dialog), gdk_pixbuf_new_from_resource("/org/tabos/roger/images/org.tabos.roger.svg", NULL));
 	g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(about_response), dialog);
 
 	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(journal_get_window()));
