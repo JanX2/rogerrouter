@@ -508,13 +508,20 @@ void journal_update_filter(void)
 void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
 {
 	RmCallEntry *call;
+	GError *error = NULL;
 
 	gtk_tree_model_get(model, iter, JOURNAL_COL_CALL_PTR, &call, -1);
 
 	switch (call->type) {
 	case RM_CALL_ENTRY_TYPE_FAX_REPORT:
-		rm_os_execute(call->priv);
+		//rm_os_execute(call->priv);
 		//app_pdf(call->priv);
+		if (!gtk_show_uri_on_window(GTK_WINDOW(journal_get_window()), call->priv, gtk_get_current_event_time (), &error)) {
+			g_debug("%s(): Could not open uri '%s'", __FUNCTION__, call->priv);
+			g_debug("%s(): '%s'", __FUNCTION__, error->message);
+		} else {
+			g_debug("%s(): Opened '%s'", __FUNCTION__, call->priv);
+		}
 		break;
 	case RM_CALL_ENTRY_TYPE_FAX: {
 		gsize len = 0;
@@ -531,8 +538,14 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 			uri = g_strdup_printf("file://%s", path);
 			g_free(path);
 
-			rm_os_execute(uri);
-			app_pdf(uri);
+			/* rm_os_execute(uri); */
+			/* app_pdf(uri); */
+			if (!gtk_show_uri_on_window(GTK_WINDOW(journal_get_window()), uri, gtk_get_current_event_time (), &error)) {
+				g_debug("%s(): Could not open uri '%s'", __FUNCTION__, uri);
+				g_debug("%s(): '%s'", __FUNCTION__, error->message);
+			} else {
+				g_debug("%s(): Opened '%s'", __FUNCTION__, uri);
+			}
 
 			g_free(uri);
 		}
