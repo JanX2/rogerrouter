@@ -4,6 +4,8 @@ TODO
 * Fax spooler/server always build-in
 * Installation hint for not working fax device
 * Translation in flatpak
+* Assistent: How to handle existing profile names? Overwrite?
+* FRITZ!Box: Handle insufficient permissions
 
 * Windows
 -----------

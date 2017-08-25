@@ -136,7 +136,7 @@ RmNotification gnotification = {
 
 /**
  * \brief Activate plugin
- * \param plugin peas plugin
+ * \param plugin plugin
  */
 gboolean gnotification_plugin_init(RmPlugin *plugin)
 {
@@ -147,7 +147,7 @@ gboolean gnotification_plugin_init(RmPlugin *plugin)
 
 /**
  * \brief Deactivate plugin
- * \param plugin peas plugin
+ * \param plugin plugin
  */
 gboolean gnotification_plugin_shutdown(RmPlugin *plugin)
 {

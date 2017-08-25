@@ -552,7 +552,7 @@ void app_phone(RmContact *contact, RmConnection *connection)
 	gtk_window_set_transient_for(GTK_WINDOW(phone_state->window), GTK_WINDOW(journal_get_window()));
 	gtk_window_set_position (GTK_WINDOW(phone_state->window), GTK_WIN_POS_CENTER_ALWAYS);
 
-	GtkWidget *grid2 = GTK_WIDGET(gtk_builder_get_object(builder, "phone_grid_intern"));
+	GtkWidget *grid2 = GTK_WIDGET(gtk_builder_get_object(builder, "phone_grid"));
 	phone_state->contact_search = contact_search_new();
 	gtk_grid_attach(GTK_GRID(grid2), phone_state->contact_search, 0, 0, 1, 1);
 
@@ -573,7 +573,7 @@ void app_phone(RmContact *contact, RmConnection *connection)
 	/* Create header bar and set it to window */
 	gtk_header_bar_set_title(GTK_HEADER_BAR(phone_state->header_bar), phone_get_active_name());
 	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(phone_state->header_bar), "");
-	gtk_window_set_titlebar(GTK_WINDOW(phone_state->window), phone_state->header_bar);
+	//gtk_window_set_titlebar(GTK_WINDOW(phone_state->window), phone_state->header_bar);
 
 	g_signal_connect(G_OBJECT(phone_state->window), "delete-event", G_CALLBACK(phone_window_delete_event_cb), phone_state);
 	g_signal_connect(G_OBJECT(phone_state->hangup_button), "clicked", G_CALLBACK(phone_hangup_button_clicked_cb), phone_state);

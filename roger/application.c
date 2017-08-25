@@ -70,7 +70,9 @@ void app_show_preferences(void)
 
 void app_show_help(void)
 {
-	rm_os_execute("http://www.tabos.org/forum");
+	gchar *uri = "http://www.tabos.org/forum";
+
+	gtk_show_uri_on_window(GTK_WINDOW(journal_get_window()), uri, gtk_get_current_event_time (), NULL);
 }
 
 void app_quit(void)
@@ -127,7 +129,7 @@ void app_authenticate_cb(RmObject *app, RmAuthData *auth_data)
 	gchar *description;
 	SoupURI* uri;
 
-	g_debug("%s(): app_authenticate", __FUNCTION__);
+	g_debug("%s(): called", __FUNCTION__);
 	builder = gtk_builder_new_from_resource("/org/tabos/roger/authenticate.glade");
 	if (!builder) {
 		g_warning("Could not load authentication ui");
@@ -195,7 +197,9 @@ static void plugins_activated(GSimpleAction *action, GVariant *parameter, gpoint
 
 static void donate_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
-	rm_os_execute("http://www.tabos.org/");
+	gchar *uri = "http://www.tabos.org/";
+
+	gtk_show_uri_on_window(GTK_WINDOW(journal_get_window()), uri, gtk_get_current_event_time (), NULL);
 }
 
 static void forum_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
@@ -356,7 +360,7 @@ static void app_init(GtkApplication *app)
 	rm_new(option_state.debug, &error);
 
 	/* Set local bindings */
-	g_print("%s(): locale: %s", __FUNCTION__, rm_get_directory(APP_LOCALE));
+	g_print("%s(): locale: %s, package: '%s'", __FUNCTION__, rm_get_directory(APP_LOCALE), GETTEXT_PACKAGE);
 	bindtextdomain(GETTEXT_PACKAGE, rm_get_directory(APP_LOCALE));
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);

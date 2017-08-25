@@ -317,7 +317,7 @@ RmPhone sip_phone = {
 
 /**
  * \brief Activate plugin (add net event)
- * \param plugin peas plugin
+ * \param plugin plugin
  */
 static gboolean sip_plugin_init(RmPlugin *plugin)
 {
@@ -343,7 +343,7 @@ static gboolean sip_plugin_init(RmPlugin *plugin)
 
 /**
  * \brief Deactivate plugin (remote net event)
- * \param plugin peas plugin
+ * \param plugin plugin
  */
 static gboolean sip_plugin_shutdown(RmPlugin *plugin)
 {

@@ -514,8 +514,6 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 
 	switch (call->type) {
 	case RM_CALL_ENTRY_TYPE_FAX_REPORT:
-		//rm_os_execute(call->priv);
-		//app_pdf(call->priv);
 		if (!gtk_show_uri_on_window(GTK_WINDOW(journal_get_window()), call->priv, gtk_get_current_event_time (), &error)) {
 			g_debug("%s(): Could not open uri '%s'", __FUNCTION__, call->priv);
 			g_debug("%s(): '%s'", __FUNCTION__, error->message);
@@ -538,8 +536,6 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 			uri = g_strdup_printf("file://%s", path);
 			g_free(path);
 
-			/* rm_os_execute(uri); */
-			/* app_pdf(uri); */
 			if (!gtk_show_uri_on_window(GTK_WINDOW(journal_get_window()), uri, gtk_get_current_event_time (), &error)) {
 				g_debug("%s(): Could not open uri '%s'", __FUNCTION__, uri);
 				g_debug("%s(): '%s'", __FUNCTION__, error->message);
@@ -553,7 +549,7 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 		break;
 	}
 	case RM_CALL_ENTRY_TYPE_RECORD:
-		rm_os_execute(call->priv);
+		gtk_show_uri_on_window(GTK_WINDOW(journal_get_window()), call->priv, gtk_get_current_event_time (), &error);
 		break;
 	case RM_CALL_ENTRY_TYPE_VOICE:
 		app_answeringmachine(call->priv);

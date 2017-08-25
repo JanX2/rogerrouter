@@ -69,7 +69,17 @@ static gboolean plugins_switch_state_set_cb(GtkSwitch *widget, gboolean state, g
  */
 static void plugins_url_button_clicked_cb(GtkWidget *widget, gpointer user_data)
 {
-	rm_os_execute(user_data);
+	GError *error = NULL;
+	gchar *uri = user_data;
+
+	//rm_os_execute(user_data);
+	g_debug("%s(): clicked", __FUNCTION__);
+	if (!gtk_show_uri_on_window(GTK_WINDOW(plugins_window), uri, gtk_get_current_event_time (), &error)) {
+		g_debug("%s(): Could not open uri '%s'", __FUNCTION__, uri);
+		g_debug("%s(): '%s'", __FUNCTION__, error->message);
+	} else {
+		g_debug("%s(): Opened '%s'", __FUNCTION__, uri);
+	}
 }
 
 /**
@@ -168,7 +178,7 @@ static void plugins_help_button_clicked_cb(GtkWidget *button, gpointer user_data
 		return;
 	}
 
-	rm_os_execute(plugin->help);
+	gtk_show_uri_on_window(GTK_WINDOW(journal_get_window()), plugin->help, gtk_get_current_event_time (), NULL);
 }
 
 /**

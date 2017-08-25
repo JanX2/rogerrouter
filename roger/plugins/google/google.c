@@ -53,8 +53,14 @@ struct auth_code_data {
 static void auth_uri_link_button_clicked_cb(GtkButton *button, gpointer data)
 {
 	struct auth_code_data *auth_code_data = data;
+	GError *error = NULL;
 
-	rm_os_execute(auth_code_data->auth_uri);
+	if (!gtk_show_uri_on_window(NULL, auth_code_data->auth_uri, gtk_get_current_event_time (), &error)) {
+			g_debug("%s(): Could not open uri '%s'", __FUNCTION__, auth_code_data->auth_uri);
+			g_debug("%s(): '%s'", __FUNCTION__, error->message);
+		} else {
+			g_debug("%s(): Opened '%s'", __FUNCTION__, auth_code_data->auth_uri);
+		}
 
 	gtk_widget_grab_focus(auth_code_data->entry);
 }
