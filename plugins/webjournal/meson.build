@@ -8,7 +8,7 @@ webjournal_sources += 'webjournal.c'
 webjournal_sources += webjournal_gresources
 
 webjournal_dep = []
-webjournal_dep += roger_dep
+webjournal_dep += plugins_dep
 
 webjournal_inc = [roger_inc]
 

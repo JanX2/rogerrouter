@@ -6,7 +6,7 @@ indicator_sources += 'indicator.c'
 
 indicator_dep = []
 indicator_dep += rm_dep
-indicator_dep += roger_dep
+indicator_dep += plugins_dep
 indicator_dep += indicator
 
 libindicator = shared_library('indicator',

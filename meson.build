@@ -56,6 +56,7 @@ configure_file(
 roger_inc = include_directories('.')
 
 subdir('po')
+subdir('plugins')
 subdir('roger')
 subdir('roger-cli')
 subdir('platform')

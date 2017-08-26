@@ -5,7 +5,7 @@ google_sources = []
 google_sources += 'google.c'
 
 google_dep = []
-google_dep += roger_dep
+google_dep += plugins_dep
 google_dep += gdata
 
 libgoogle = shared_library('google',

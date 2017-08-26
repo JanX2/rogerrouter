@@ -2,7 +2,7 @@ fritzfon_sources = []
 fritzfon_sources += 'fritzfon.c'
 
 fritzfon_dep = []
-fritzfon_dep += roger_dep
+fritzfon_dep += plugins_dep
 
 fritzfon_inc = [roger_inc]
 

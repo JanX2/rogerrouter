@@ -5,7 +5,7 @@ dep = dependency('libpjproject', required : false)
 
 if dep.found()
 sip_dep = []
-sip_dep += roger_dep
+sip_dep += plugins_dep
 sip_dep += dep
 sip_dep += dependency('libsrtp')
 sip_dep += dependency('speexdsp')

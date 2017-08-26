@@ -2,7 +2,7 @@ vcard_sources = []
 vcard_sources += 'vcard.c'
 
 vcard_dep = []
-vcard_dep += roger_dep
+vcard_dep += plugins_dep
 
 vcard_inc = [roger_inc]
 

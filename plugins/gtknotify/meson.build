@@ -9,7 +9,7 @@ gtknotify_sources += 'gtknotify.c'
 gtknotify_sources += gtknotify_gresources
 
 gtknotify_dep = []
-gtknotify_dep += roger_dep
+gtknotify_dep += plugins_dep
 
 gtknotify_inc = [roger_inc]
 

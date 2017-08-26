@@ -2,7 +2,7 @@ gnotification_sources = []
 gnotification_sources += 'gnotification.c'
 
 gnotification_dep = []
-gnotification_dep += roger_dep
+gnotification_dep += plugins_dep
 
 gnotification_inc = [roger_inc]
 

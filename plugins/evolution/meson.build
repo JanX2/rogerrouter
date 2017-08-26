@@ -6,7 +6,7 @@ evolution_sources = []
 evolution_sources += 'evolution.c'
 
 evolution_dep = []
-evolution_dep += roger_dep
+evolution_dep += plugins_dep
 evolution_dep += dependency('libebook-1.2')
 
 evolution_inc = []

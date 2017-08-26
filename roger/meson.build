@@ -96,5 +96,4 @@ images = []
 images += 'images/org.tabos.roger.svg'
 install_data(images, install_dir : get_option('datadir') + '/icons/hicolor/scalable/apps/')
 
-subdir('plugins')
 subdir('data')

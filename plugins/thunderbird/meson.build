@@ -2,7 +2,7 @@ thunderbird_sources = []
 thunderbird_sources += 'thunderbird.c'
 
 thunderbird_dep = []
-thunderbird_dep += roger_dep
+thunderbird_dep += plugins_dep
 
 thunderbird_inc = [roger_inc]
 

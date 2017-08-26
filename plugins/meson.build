@@ -1,3 +1,8 @@
+plugins_dep=[]
+plugins_dep+=dependency('gtk+-3.0')
+plugins_dep+=dependency('libsoup-2.4')
+plugins_dep+=dependency('librm')
+
 subdir('evolution')
 subdir('fritzfon')
 subdir('gnotification')

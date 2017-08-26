@@ -3,7 +3,7 @@ statusicon_sources += 'statusicon.c'
 
 statusicon_dep = []
 statusicon_dep += rm_dep
-statusicon_dep += roger_dep
+statusicon_dep += plugins_dep
 
 statusicon_inc = [rm_inc, roger_inc]
 
