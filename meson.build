@@ -58,7 +58,6 @@ roger_inc = include_directories('.')
 subdir('po')
 subdir('plugins')
 subdir('roger')
-subdir('roger-cli')
 subdir('platform')
 
 meson.add_install_script('meson_post_install.sh')

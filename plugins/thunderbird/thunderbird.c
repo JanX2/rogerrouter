@@ -60,7 +60,7 @@ static GHashTable *current_cells = NULL;
 static GHashTable *table_scope_map = NULL;
 static gint num_possible = 0;
 static gint num_persons = 0;
-static gint mork_size = 0;
+static off_t mork_size = 0;
 static gint default_table_id = 1;
 
 /**
@@ -278,7 +278,8 @@ static gboolean parse_cell(void)
 			if (next_chr != '\r' && next_chr != '\n') {
 				text = g_string_append_c(text, next_chr);
 			} else {
-				next_char();
+				/* Ignored */
+				cur = next_char();
 			}
 			break;
 		}
@@ -407,7 +408,7 @@ static void parse_scope_id(GString *text, gint *id, gint *scope)
 			   strncpy(tmp, sc_str + 1, strlen(sc_str));
 			   g_free(sc_str);
 			   sc_str = tmp;*/
-			memcpy(sc_str, sc_str + 1, size - 1);
+			memmove(sc_str, sc_str + 1, size - 1);
 		}
 
 		*id = strtoul(id_str, 0, 16);
@@ -891,7 +892,8 @@ static void parse_tables(void)
  */
 static void thunderbird_open_book(gchar *book)
 {
-	int file, size;
+	int file;
+	off_t size;
 
 	file = open(book, O_RDONLY);
 	if (file == -1) {
@@ -899,6 +901,11 @@ static void thunderbird_open_book(gchar *book)
 	}
 
 	size = lseek(file, 0, SEEK_END);
+	if (size == -1) {
+		close(file);
+		return;
+	}
+
 	lseek(file, 0, SEEK_SET);
 
 	mork_data = g_malloc(size);
@@ -949,7 +956,8 @@ static int thunderbird_read_book(void)
 	table_scope_map = create_map(hash_destroy);
 
 	book = thunderbird_get_selected_book();
-	strncpy(file, book, sizeof(file));
+	memset(file, 0, sizeof(file));
+	strncpy(file, book, sizeof(file) - 1);
 
 #ifdef THUNDERBIRD_DEBUG
 	g_debug("Thunderbird book (%s)", file);

@@ -70,7 +70,7 @@ gchar *webjournal_get_call_type_string(RmCallEntryTypes type)
 	case RM_CALL_ENTRY_TYPE_BLOCKED:
 		return "blocked";
 	default:
-		return "unknown";
+		break;
 	}
 
 	return "unknown";

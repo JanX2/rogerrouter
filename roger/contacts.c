@@ -813,10 +813,9 @@ void contacts_save_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 	gtk_widget_set_visible(contacts->edit_button, TRUE);
 
 	if (!ok) {
-		gboolean use_header = TRUE;
 		gint response;
 
-		GtkWidget *info_dialog = gtk_message_dialog_new(GTK_WINDOW(contacts->window), use_header ? GTK_DIALOG_USE_HEADER_BAR : 0, GTK_MESSAGE_INFO, GTK_BUTTONS_OK_CANCEL, _("Note: Depending on the address book plugin not all information might be saved"));
+		GtkWidget *info_dialog = gtk_message_dialog_new(GTK_WINDOW(contacts->window), GTK_DIALOG_USE_HEADER_BAR, GTK_MESSAGE_INFO, GTK_BUTTONS_OK_CANCEL, _("Note: Depending on the address book plugin not all information might be saved"));
 		GtkWidget *content = gtk_dialog_get_content_area(GTK_DIALOG(info_dialog));
 		GtkWidget *check_button = gtk_check_button_new_with_label(_("Do not show again"));
 

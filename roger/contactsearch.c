@@ -191,7 +191,7 @@ static void contact_search_search_changed_cb(ContactSearch *widget, gpointer use
 			g_object_set_data(G_OBJECT(grid), "contact", contact);
 			g_object_set_data(G_OBJECT(grid), "number", number->number);
 
-			if (contact && contact->image) {
+			if (contact->image) {
 				GdkPixbuf *buf = image_get_scaled(contact->image, 32, 32);
 
 				image = gtk_image_new_from_pixbuf(buf);

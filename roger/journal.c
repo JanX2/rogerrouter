@@ -157,7 +157,7 @@ void journal_redraw(void)
 						  JOURNAL_COL_CALL_PTR, call,
 						  -1);
 
-		if (strchr(call->duration, 's') != NULL) {
+		if (call->duration && strchr(call->duration, 's') != NULL) {
 			/* Ignore voicebox duration */
 		} else {
 			if (call->duration != NULL && strlen(call->duration) > 0) {

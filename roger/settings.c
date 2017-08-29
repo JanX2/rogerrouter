@@ -1236,7 +1236,7 @@ void audio_plugin_combobox_changed_cb(GtkComboBox *box, gpointer user_data)
 	}
 
 	/* Fill device comboboxes */
-	devices = audio->get_devices();
+	devices = audio ? audio->get_devices() : NULL;
 	for (list = devices; list; list = list->next) {
 		RmAudioDevice *device = list->data;
 
