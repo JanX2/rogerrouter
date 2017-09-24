@@ -24,7 +24,7 @@
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
 
-#if 0
+#ifdef GS_LIB
 #include <ghostscript/iapi.h>
 #include <ghostscript/ierrors.h>
 #endif
@@ -283,9 +283,11 @@ gchar *convert_to_fax(gchar *file_name)
 	gchar *output;
 	gchar *out_file;
 	RmProfile *profile = rm_profile_get_active();
+#ifdef GS_LIB
 	gint ret;
 	gint ret1;
 	void *minst;
+#endif
 
 	/* convert ps to fax */
 	args[0] = "ps2tiff";
@@ -331,7 +333,7 @@ gchar *convert_to_fax(gchar *file_name)
 	args[11] = file_name;
 	args[12] = NULL;
 
-#if 0
+#ifdef GS_LIB
 	ret = gsapi_new_instance(&minst, NULL);
 	if (ret < 0) {
 		return NULL;
