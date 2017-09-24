@@ -42,8 +42,6 @@ sourcelist += 'journal.c'
 sourcelist += 'journal.h'
 sourcelist += 'main.h'
 sourcelist += 'main_ui.c'
-sourcelist += 'pdf.c'
-sourcelist += 'pdf.h'
 sourcelist += 'phone.c'
 sourcelist += 'phone.h'
 sourcelist += 'plugins.c'
@@ -66,9 +64,7 @@ roger_dep = []
 roger_dep += dependency('gtk+-3.0', version : '>=3.12.0')
 roger_dep += dependency('libsoup-2.4')
 roger_dep += dependency('libtiff-4')
-roger_dep += dependency('spandsp')
 roger_dep += dependency('librm')
-roger_dep += dependency('poppler-glib')
 roger_dep += cc.find_library('m', required: true)
 roger_dep += cc.find_library('gs', required: true)
 

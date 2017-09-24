@@ -7,6 +7,8 @@ TODO
 * Assistent: How to handle existing profile names? Overwrite?
 * FRITZ!Box: Handle insufficient permissions
 
+** (Roger Router:3): [1;31mERROR[0m **: 22:07:42 Settings schema ‚org.tabos.rm.profile‘ does not contain a key named ’name-dect1′
+
 * Windows
 -----------
   * Printer installation
