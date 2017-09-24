@@ -66,7 +66,7 @@ roger_dep += dependency('libsoup-2.4')
 roger_dep += dependency('libtiff-4')
 roger_dep += dependency('librm')
 roger_dep += cc.find_library('m', required: true)
-roger_dep += cc.find_library('gs', required: true)
+roger_dep += cc.find_library('gs', required: false)
 
 executable('roger', sources : sourcelist, dependencies : roger_dep, include_directories : roger_inc, gui_app : true, install : true)
 

@@ -329,7 +329,7 @@ gchar *convert_to_fax(gchar *file_name)
 	args[11] = file_name;
 	args[12] = NULL;
 
-#if 1
+#if 0
 	ret = gsapi_new_instance(&minst, NULL);
 	if (ret < 0) {
 		return NULL;
