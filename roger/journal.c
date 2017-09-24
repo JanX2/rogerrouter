@@ -39,7 +39,6 @@
 #include <roger/application.h>
 #include <roger/uitools.h>
 #include <roger/answeringmachine.h>
-#include <roger/pdf.h>
 
 GtkWidget *journal_view = NULL;
 GtkWidget *journal_win = NULL;
