@@ -24,8 +24,10 @@
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
 
+#if 0
 #include <ghostscript/iapi.h>
 #include <ghostscript/ierrors.h>
+#endif
 
 #include <rm/rm.h>
 
