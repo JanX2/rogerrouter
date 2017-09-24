@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define _POSIX_SOURCE
+#define _DEFAULT_SOURCE
 
 #include <config.h>
 
@@ -34,6 +34,8 @@
 #include <time.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <unistd.h>
+#include <grp.h>
 
 #include <errno.h>
 #include <fcntl.h>
@@ -113,7 +115,7 @@ static void crash_handler(int sig)
 
 		if (setgid(getgid()) != 0)
 			perror("setgid");
-		if (setuid(getuid()) != 0)
+		if (setuid(getuid()) != 0 || setgroups(0, NULL) < 0)
 			perror("setuid");
 		execvp(argv0, args);
 	} else {
@@ -200,7 +202,7 @@ static void crash_debug(unsigned long crash_pid, gchar *exe_image, GString *debu
 
 		if (setgid(getgid()) != 0)
 			perror("setgid");
-		if (setuid(getuid()) != 0)
+		if (setuid(getuid()) != 0 || setgroups(0, NULL) < 0)
 			perror("setuid");
 
 		/*
