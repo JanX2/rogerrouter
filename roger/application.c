@@ -303,6 +303,22 @@ static void debug_activated(GSimpleAction *action, GVariant *parameter, gpointer
 	app_debug_window();
 }
 
+static void hideonquit_activated(GSimpleAction *simple,
+                       GVariant      *parameter,
+                       gpointer       user_data)
+{
+  //g_print ("%d\n", g_variant_get_boolean (parameter));
+
+	journal_set_hide_on_quit (g_variant_get_boolean(parameter));
+}
+
+static void hideonstart_activated(GSimpleAction *simple,
+                       GVariant      *parameter,
+                       gpointer       user_data)
+{
+	journal_set_hide_on_start(g_variant_get_boolean(parameter));
+}
+
 static GActionEntry apps_entries[] = {
 	{ "addressbook", addressbook_activated, NULL, NULL, NULL },
 	{ "assistant", assistant_activated, NULL, NULL, NULL },
@@ -320,6 +336,8 @@ static GActionEntry apps_entries[] = {
 	{ "journal", journal_activated, NULL, NULL, NULL },
 	{ "shortcuts", shortcuts_activated, NULL, NULL, NULL },
 	{ "debug", debug_activated, NULL, NULL, NULL },
+	{ "hideonquit", hideonquit_activated, "b" },
+	{ "hideonstart", hideonstart_activated, "b" },
 };
 
 static void application_startup(GtkApplication *application)

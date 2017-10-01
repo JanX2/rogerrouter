@@ -4,6 +4,8 @@ gnome = import('gnome')
 
 msgfmt = find_program('msgfmt')
 
+result = run_command(msgfmt, ['--version'])
+
 add_global_arguments('-std=c99', language : 'c')
 
 app_version = meson.project_version()
@@ -15,7 +17,7 @@ app_version_micro = version_arr[2]
 
 cc = meson.get_compiler('c')
 
-intltool_merge = find_program('intltool-merge')
+#intltool_merge = find_program('intltool-merge')
 
 cdata = configuration_data()
 cdata.set('PACKAGE_NAME', '"Roger Router"')

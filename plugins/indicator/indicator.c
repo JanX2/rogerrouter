@@ -1,6 +1,6 @@
-/**
+/*
  * Roger Router - Plugin Application Indicator
- * Copyright (c) 2013-2015 Dieter Schärf
+ * Copyright (c) 2013-2017 Dieter Schärf, Jan-Michael Brummer
  *
  * Roger Router
  * Copyright (c) 2012-2015 Jan-Michael Brummer
@@ -38,29 +38,46 @@
 #include <roger/uitools.h>
 #include <roger/settings.h>
 
-#define MAX_LASTCALLS 5
-
-#define RM_TYPE_INDICATOR_PLUGIN        (rm_indicator_plugin_get_type())
-#define RM_INDICATOR_PLUGIN(o)          (G_TYPE_CHECK_INSTANCE_CAST((o), RM_TYPE_INDICATOR_PLUGIN, RmIndicatorPlugin))
-
 typedef struct {
+	AppIndicator *indicator;
+	GSettings *settings;
 	guint signal_id;
-} RmIndicatorPluginPrivate;
+	GAction *preferences;
+	GAction *contacts;
+	GAction *about;
+	GAction *phone;
+	GAction *plugins;
+	GAction *quit;
+	GAction *copy_ip;
+	GAction *reconnect;
+	GAction *journal;
+	GAction *hideonquit;
+	GAction *hideonstart;
+} RmIndicatorPlugin;
 
-RM_PLUGIN_REGISTER_CONFIGURABLE(RM_TYPE_INDICATOR_PLUGIN, RmIndicatorPlugin, rm_indicator_plugin)
+void indicator_copy_ip(GtkWidget *widget,
+                       gpointer   user_data)
+{
+	RmIndicatorPlugin *indicator_plugin = user_data;
 
-extern GList * journal_list;
-extern GtkWidget *journal_win;
+	g_action_activate(indicator_plugin->copy_ip, NULL);
+}
 
-static GSettings *indicator_settings = NULL;
-static AppIndicator *indicator = NULL;
+void indicator_reconnect(GtkWidget *widget,
+                       gpointer   user_data)
+{
+	RmIndicatorPlugin *indicator_plugin = user_data;
 
+	g_action_activate(indicator_plugin->reconnect, NULL);
+}
 /**
- * \brief create "Functions" submenu items
- * \param none
- * \return new menu widget
+ * indicator_menu_functions:
+ *
+ * Create "Functions" submenu items
+ *
+ * Returns: new menu widget
  */
-GtkWidget *indicator_menu_functions(void)
+static GtkWidget *indicator_menu_functions(RmIndicatorPlugin *indicator_plugin)
 {
 	GtkWidget *menu;
 	GtkWidget *item;
@@ -70,141 +87,80 @@ GtkWidget *indicator_menu_functions(void)
 	/* Functions - Copy IP adress */
 	item = gtk_menu_item_new_with_label(_("Copy IP address"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(app_copy_ip), NULL);
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(indicator_copy_ip), indicator_plugin);
 
 	/* Functions - Reconnect */
 	item = gtk_menu_item_new_with_label(_("Reconnect"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(app_reconnect), NULL);
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(indicator_reconnect), indicator_plugin);
 
 	return menu;
-}
-
-/**
- * \brief "dial_number" callback function
- * \param obj gtk menu item
- * \param user_data unused user pointer
- */
-void indicator_dial_number_cb(GtkMenuItem *item, gpointer user_data)
-{
-	app_show_phone_window(user_data, NULL);
-}
-
-/**
- * \brief create last call entrys and add to submenu "Last calls"
- * \param obj gtk menu
- * \param gchar label
- * \param int call_type
- */
-void indicator_menu_last_calls_group(GtkWidget *menu, gchar *label, int call_type)
-{
-	GtkWidget *item;
-	GList *list;
-	int count = 0;
-
-	item = gtk_menu_item_new_with_label(label);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	gtk_widget_set_sensitive(GTK_WIDGET(item), FALSE);
-
-	list = journal_list;
-
-	while (list != NULL) {
-		RmCallEntry *call = list->data;
-
-		if (call->type == call_type && (!RM_EMPTY_STRING(call->remote->name) || !RM_EMPTY_STRING(call->remote->number))) {
-			item = gtk_menu_item_new();
-
-			if (!RM_EMPTY_STRING(call->remote->name)) {
-				gtk_menu_item_set_label(GTK_MENU_ITEM(item), call->remote->name);
-			} else {
-				gtk_menu_item_set_label(GTK_MENU_ITEM(item), call->remote->number);
-			}
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(indicator_dial_number_cb), call->remote);
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-
-			count++;
-
-			if (count == MAX_LASTCALLS) {
-				break;
-			}
-		}
-		list = list->next;
-	}
-}
-
-/**
- * \brief create "Last calls" submenu items
- * \param pnNumber call number
- * \param type call type
- * \return new menu widget
- */
-GtkWidget *indicator_menu_last_calls(void)
-{
-	GtkWidget *menu;
-	GtkWidget *item;
-
-	menu = gtk_menu_new();
-
-	/* Last calls - Incomming */
-	indicator_menu_last_calls_group(menu, _("Incoming"), RM_CALL_ENTRY_TYPE_INCOMING);
-
-	/* Separator */
-	item = gtk_separator_menu_item_new();
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-
-	/* Last calls - Outgoing */
-	indicator_menu_last_calls_group(menu, _("Outgoing"), RM_CALL_ENTRY_TYPE_OUTGOING);
-
-	/* Separator */
-	item = gtk_separator_menu_item_new();
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-
-	/* Last calls - Missed */
-	indicator_menu_last_calls_group(menu, _("Missed"), RM_CALL_ENTRY_TYPE_MISSED);
-
-	return menu;
-}
-
-/**
- * \brief "last_calls" callback function
- * \param obj gtk menu item
- */
-void indicator_last_calls_cb(GtkMenuItem *item)
-{
-	GtkWidget *submenu;
-
-	submenu = indicator_menu_last_calls();
-	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
-
-	gtk_widget_show_all(submenu);
 }
 
 /**
  * \brief "journal" callback function
  * \param none
  */
-void indicator_journal_cb(void)
+void indicator_journal_cb(GtkWidget *widget, gpointer user_data)
 {
-	app_indicator_set_status(indicator, APP_INDICATOR_STATUS_ACTIVE);
+	RmIndicatorPlugin *indicator_plugin = user_data;
 
-	if (gtk_widget_get_visible(GTK_WIDGET(journal_win))) {
-		gtk_window_present(GTK_WINDOW(journal_win));
-	} else {
-		gtk_widget_set_visible(GTK_WIDGET(journal_win), TRUE);
-	}
+	app_indicator_set_status(indicator_plugin->indicator, APP_INDICATOR_STATUS_ACTIVE);
+	g_action_activate(indicator_plugin->journal, NULL);
 }
 
 void indicator_phone_cb(GtkWidget *widget, gpointer user_data)
 {
-	app_show_phone_window(NULL, NULL);
+	RmIndicatorPlugin *indicator_plugin = user_data;
+
+	g_action_activate(indicator_plugin->phone, NULL);
 }
 
+void indicator_show_contacts(GtkWidget *widget,
+                             gpointer   user_data)
+{
+	RmIndicatorPlugin *indicator_plugin = user_data;
+
+	g_action_activate(indicator_plugin->contacts, NULL);
+}
+
+void indicator_show_plugins(GtkWidget *widget,
+                             gpointer   user_data)
+{
+	RmIndicatorPlugin *indicator_plugin = user_data;
+
+	g_action_activate(indicator_plugin->plugins, NULL);
+}
+
+void indicator_show_about(GtkWidget *widget,
+                             gpointer   user_data)
+{
+	RmIndicatorPlugin *indicator_plugin = user_data;
+
+	g_action_activate(indicator_plugin->about, NULL);
+}
+
+void indicator_quit(GtkWidget *widget,
+                             gpointer   user_data)
+{
+	RmIndicatorPlugin *indicator_plugin = user_data;
+
+	g_action_activate(indicator_plugin->quit, NULL);
+}
+
+void indicator_show_preferences(GtkWidget *widget,
+                             gpointer   user_data)
+{
+	RmIndicatorPlugin *indicator_plugin = user_data;
+
+	g_action_activate(indicator_plugin->preferences, NULL);
+}
 /**
  * \brief create menu
  * \param none
  * \return new menu widget
  */
-GtkWidget *indicator_menu(void)
+GtkWidget *indicator_menu(RmIndicatorPlugin *indicator_plugin)
 {
 	GtkWidget *menu;
 	GtkWidget *item;
@@ -215,62 +171,51 @@ GtkWidget *indicator_menu(void)
 	/* Journal */
 	item = gtk_menu_item_new_with_label(_("Journal"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(indicator_journal_cb), NULL);
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(indicator_journal_cb), indicator_plugin);
 
 	/* Contacts */
 	item = gtk_menu_item_new_with_label(_("Contacts"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(app_show_contacts), NULL);
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(indicator_show_contacts), indicator_plugin);
 
 	/* Phone */
 	item = gtk_menu_item_new_with_label(_("Phone"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(indicator_phone_cb), NULL);
-
-	/* Last calls */
-	item = gtk_menu_item_new_with_label(_("Last calls"));
-	submenu = indicator_menu_last_calls();
-	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(indicator_last_calls_cb), NULL);
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(indicator_phone_cb), indicator_plugin);
 
 	/* Functions */
 	item = gtk_menu_item_new_with_label(_("Functions"));
-	submenu = indicator_menu_functions();
+	submenu = indicator_menu_functions(indicator_plugin);
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
 	/* Separator */
 	item = gtk_separator_menu_item_new();
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+
+	/* Plugins */
+	item = gtk_menu_item_new_with_label(_("Plugins"));
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(indicator_show_plugins), indicator_plugin);
 
 	/* Preferences */
 	item = gtk_menu_item_new_with_label(_("Preferences"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(app_show_preferences), NULL);
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(indicator_show_preferences), indicator_plugin);
 
 	/* Separator */
 	item = gtk_separator_menu_item_new();
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-
-	/* Help */
-	item = gtk_menu_item_new_with_label(_("Help"));
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(app_show_help), NULL);
 
 	/* About */
 	item = gtk_menu_item_new_with_label(_("About"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(app_show_about), NULL);
-
-	/* Separator */
-	item = gtk_separator_menu_item_new();
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(indicator_show_about), indicator_plugin);
 
 	/* Quit */
 	item = gtk_menu_item_new_with_label(_("Quit"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(app_quit), NULL);
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(indicator_quit), indicator_plugin);
 
 	gtk_widget_show_all(menu);
 
@@ -278,17 +223,19 @@ GtkWidget *indicator_menu(void)
 }
 
 /**
- * \brief "connection-notify" callback function
+ * \brief "connection-changed" callback function
  * \param obj app object
  * \param connection connection structure
  * \param unused_pointer unused user pointer
  */
-void indicator_connection_notify_cb(RmObject *obj, RmConnection *connection, gpointer unused_pointer)
+void indicator_connection_changed_cb(RmObject *obj, RmConnection *connection, gpointer user_data)
 {
-	g_debug("Called: '%d/%d", connection->type, CONNECTION_TYPE_MISSED);
-	if (connection->type == CONNECTION_TYPE_MISSED) {
+	RmIndicatorPlugin *indicator_plugin = user_data;
+
+	g_debug("Called: '%d/%d", connection->type, RM_CONNECTION_TYPE_MISSED);
+	if (connection->type == RM_CONNECTION_TYPE_MISSED) {
 		g_debug("Setting missed icon");
-		app_indicator_set_status(indicator, APP_INDICATOR_STATUS_ATTENTION);
+		app_indicator_set_status(indicator_plugin->indicator, APP_INDICATOR_STATUS_ATTENTION);
 	}
 }
 
@@ -300,13 +247,13 @@ void indicator_connection_notify_cb(RmObject *obj, RmConnection *connection, gpo
 void indicator_combobox_default_changed_cb(GtkComboBox *widget, gpointer user_data)
 {
 	/* GSettings has not written the changed value to its container, so we explicit set it here */
-	GtkWidget *combo_box = user_data;
+	RmIndicatorPlugin *indicator_plugin = user_data;
 
-	g_settings_set_string(indicator_settings, "default-icon", gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_box)));
+	g_settings_set_string(indicator_plugin->settings, "default-icon", gtk_combo_box_get_active_id(GTK_COMBO_BOX(widget)));
 
 	/* Update indicator icon */
-	gchar *iconname = g_strconcat("roger-", g_settings_get_string(indicator_settings, "default-icon"), NULL);
-	app_indicator_set_icon_full(indicator, iconname, "default-icon");
+	gchar *iconname = g_strconcat("roger-", g_settings_get_string(indicator_plugin->settings, "default-icon"), NULL);
+	app_indicator_set_icon_full(indicator_plugin->indicator, iconname, "default-icon");
 	g_free(iconname);
 }
 
@@ -317,72 +264,98 @@ void indicator_combobox_default_changed_cb(GtkComboBox *widget, gpointer user_da
  */
 void indicator_combobox_notify_changed_cb(GtkComboBox *widget, gpointer user_data)
 {
+	RmIndicatorPlugin *indicator_plugin = user_data;
 	/* GSettings has not written the changed value to its container, so we explicit set it here */
-	GtkWidget *combo_box = user_data;
 
-	g_settings_set_string(indicator_settings, "notify-icon", gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_box)));
+	g_settings_set_string(indicator_plugin->settings, "notify-icon", gtk_combo_box_get_active_id(GTK_COMBO_BOX(widget)));
 
 	/* Update indicator attention icon */
-	gchar *iconname = g_strconcat("roger-", g_settings_get_string(indicator_settings, "notify-icon"), NULL);
-	app_indicator_set_attention_icon_full(indicator, iconname, "notify-icon");
+	gchar *iconname = g_strconcat("roger-", g_settings_get_string(indicator_plugin->settings, "notify-icon"), NULL);
+	app_indicator_set_attention_icon_full(indicator_plugin->indicator, iconname, "notify-icon");
 	g_free(iconname);
 }
 
-void impl_activate(PeasActivatable *plugin)
+static void indicator_set_hide_on_quit(RmIndicatorPlugin *indicator_plugin,
+                                       gboolean           state)
 {
-	RmIndicatorPlugin *indicator_plugin;
+	g_action_activate(indicator_plugin->hideonquit, g_variant_new_boolean(state));
+}
+
+static void indicator_set_hide_on_start(RmIndicatorPlugin *indicator_plugin,
+                                       gboolean           state)
+{
+	g_action_activate(indicator_plugin->hideonstart, g_variant_new_boolean(state));
+}
+
+gboolean indicator_plugin_init(RmPlugin *plugin)
+{
+	RmIndicatorPlugin *indicator_plugin = g_slice_alloc0(sizeof(RmIndicatorPlugin));
+	GApplication *app = g_application_get_default();
 	GtkWidget *menu;
 
-	journal_set_hide_on_quit(TRUE);
+	indicator_plugin->preferences = g_action_map_lookup_action(G_ACTION_MAP(app), "preferences");
+	indicator_plugin->contacts = g_action_map_lookup_action(G_ACTION_MAP(app), "addressbook");
+	indicator_plugin->quit = g_action_map_lookup_action(G_ACTION_MAP(app), "quit");
+	indicator_plugin->phone = g_action_map_lookup_action(G_ACTION_MAP(app), "phone");
+	indicator_plugin->about = g_action_map_lookup_action(G_ACTION_MAP(app), "about");
+	indicator_plugin->plugins = g_action_map_lookup_action(G_ACTION_MAP(app), "plugins");
+	indicator_plugin->copy_ip = g_action_map_lookup_action(G_ACTION_MAP(app), "copy_ip");
+	indicator_plugin->reconnect = g_action_map_lookup_action(G_ACTION_MAP(app), "reconnect");
+	indicator_plugin->journal = g_action_map_lookup_action(G_ACTION_MAP(app), "journal");
+	indicator_plugin->hideonquit = g_action_map_lookup_action(G_ACTION_MAP(app), "hideonquit");
+	indicator_plugin->hideonstart = g_action_map_lookup_action(G_ACTION_MAP(app), "hideonstart");
 
-	indicator_settings = rm_settings_new("org.tabos.roger.plugins.indicator");
+	plugin->priv = indicator_plugin;
+	indicator_set_hide_on_quit(indicator_plugin, TRUE);
+
+	indicator_plugin->settings = rm_settings_new("org.tabos.roger.plugins.indicator");
 
 	/* Create Application Indicator */
-	gchar *iconname = g_strconcat("roger-", g_settings_get_string(indicator_settings, "default-icon"), NULL);
-	indicator = app_indicator_new("roger", iconname, APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
-	iconname = g_strconcat("roger-", g_settings_get_string(indicator_settings, "notify-icon"), NULL);
-	app_indicator_set_attention_icon_full(indicator, iconname, "notify-icon");
+	gchar *iconname = g_strconcat("roger-", g_settings_get_string(indicator_plugin->settings, "default-icon"), NULL);
+	indicator_plugin->indicator = app_indicator_new("roger", iconname, APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
+	iconname = g_strconcat("roger-", g_settings_get_string(indicator_plugin->settings, "notify-icon"), NULL);
+	app_indicator_set_attention_icon_full(indicator_plugin->indicator, iconname, "notify-icon");
 	g_free(iconname);
 
-	menu = indicator_menu();
-	app_indicator_set_menu(indicator, GTK_MENU(menu));
+	menu = indicator_menu(indicator_plugin);
+	app_indicator_set_menu(indicator_plugin->indicator, GTK_MENU(menu));
 
-	app_indicator_set_status(indicator, APP_INDICATOR_STATUS_ACTIVE);
+	app_indicator_set_status(indicator_plugin->indicator, APP_INDICATOR_STATUS_ACTIVE);
 
-	/* Connect to "call-notify" signal */
-	indicator_plugin = RM_INDICATOR_PLUGIN(plugin);
-	indicator_plugin->priv->signal_id = g_signal_connect(G_OBJECT(rm_object), "connection-notify", G_CALLBACK(indicator_connection_notify_cb), NULL);
+	/* Connect to "connection-changed" signal */
+	indicator_plugin->signal_id = g_signal_connect(G_OBJECT(rm_object), "connection-changed", G_CALLBACK(indicator_connection_changed_cb), indicator_plugin);
 
-	if (g_settings_get_boolean(indicator_settings, "hide-journal-on-startup")) {
-		journal_set_hide_on_start(TRUE);
+	if (g_settings_get_boolean(indicator_plugin->settings, "hide-journal-on-startup")) {
+		indicator_set_hide_on_start(indicator_plugin, TRUE);
 	}
+
+	return TRUE;
 }
 
-void impl_deactivate(PeasActivatable *plugin)
+gboolean indicator_plugin_shutdown(RmPlugin *plugin)
 {
-	RmIndicatorPlugin *indicator_plugin;
+	RmIndicatorPlugin *indicator_plugin = plugin->priv;
 
 	/* Unregister delete handler */
-	journal_set_hide_on_quit(FALSE);
+	indicator_set_hide_on_quit(indicator_plugin, FALSE);
 
 	/* If signal handler is connected: disconnect */
-	indicator_plugin = RM_INDICATOR_PLUGIN(plugin);
-	if (g_signal_handler_is_connected(G_OBJECT(rm_object), indicator_plugin->priv->signal_id)) {
-		g_signal_handler_disconnect(G_OBJECT(rm_object), indicator_plugin->priv->signal_id);
+	if (g_signal_handler_is_connected(G_OBJECT(rm_object), indicator_plugin->signal_id)) {
+		g_signal_handler_disconnect(G_OBJECT(rm_object), indicator_plugin->signal_id);
 	}
 
-	if (journal_win) {
-		/* Make sure journal window is visible on deactivate */
-		gtk_widget_show(GTK_WIDGET(journal_win));
-	}
+	/* Make sure journal window is visible on deactivate */
+	indicator_journal_cb (NULL, indicator_plugin);
 
-	app_indicator_set_status(indicator, APP_INDICATOR_STATUS_PASSIVE);
-	g_clear_object(&indicator);
+	app_indicator_set_status(indicator_plugin->indicator, APP_INDICATOR_STATUS_PASSIVE);
+	g_clear_object(&indicator_plugin->indicator);
 
-	indicator = NULL;
+	plugin->priv = NULL;
+
+	return TRUE;
 }
 
-GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
+gpointer indicator_plugin_configure(RmPlugin *plugin)
 {
 	GtkWidget *settings_grid;
 	GtkWidget *label;
@@ -390,6 +363,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	GtkWidget *combo_box_default;
 	GtkWidget *combo_box_notify;
 	GtkWidget *group;
+	RmIndicatorPlugin *indicator_plugin = plugin->priv;
 
 	/* Settings grid */
 	settings_grid = gtk_grid_new();
@@ -401,7 +375,7 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	gtk_grid_attach(GTK_GRID(settings_grid), label, 0, 0, 1, 1);
 
 	switch_journal = gtk_switch_new();
-	gtk_switch_set_active(GTK_SWITCH(switch_journal), g_settings_get_boolean(indicator_settings, "hide-journal-on-startup"));
+	gtk_switch_set_active(GTK_SWITCH(switch_journal), g_settings_get_boolean(indicator_plugin->settings, "hide-journal-on-startup"));
 	gtk_widget_set_halign(switch_journal, GTK_ALIGN_START);
 	gtk_grid_attach(GTK_GRID(settings_grid), switch_journal, 1, 0, 1, 1);
 
@@ -426,14 +400,16 @@ GtkWidget *impl_create_configure_widget(PeasGtkConfigurable *config)
 	gtk_grid_attach(GTK_GRID(settings_grid), combo_box_notify, 1, 2, 1, 1);
 
 	/* Set signals */
-	g_settings_bind(indicator_settings, "hide-journal-on-startup", switch_journal, "active", G_SETTINGS_BIND_DEFAULT);
-	g_settings_bind(indicator_settings, "default-icon", combo_box_default, "active-id", G_SETTINGS_BIND_DEFAULT);
-	g_settings_bind(indicator_settings, "notify-icon", combo_box_notify, "active-id", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(indicator_plugin->settings, "hide-journal-on-startup", switch_journal, "active", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(indicator_plugin->settings, "default-icon", combo_box_default, "active-id", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(indicator_plugin->settings, "notify-icon", combo_box_notify, "active-id", G_SETTINGS_BIND_DEFAULT);
 
-	g_signal_connect(combo_box_default, "changed", G_CALLBACK(indicator_combobox_default_changed_cb), combo_box_default);
-	g_signal_connect(combo_box_notify, "changed", G_CALLBACK(indicator_combobox_notify_changed_cb), combo_box_notify);
+	g_signal_connect(combo_box_default, "changed", G_CALLBACK(indicator_combobox_default_changed_cb), indicator_plugin);
+	g_signal_connect(combo_box_notify, "changed", G_CALLBACK(indicator_combobox_notify_changed_cb), indicator_plugin);
 
-	group = pref_group_create(settings_grid, _("Settings for Application Indicator"), TRUE, TRUE);
+	group = ui_group_create(settings_grid, _("Settings for Application Indicator"), TRUE, TRUE);
 
 	return group;
 }
+
+RM_PLUGIN_CONFIG(indicator);
