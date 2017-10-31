@@ -395,11 +395,8 @@ static void app_init(GtkApplication *app)
 	accels[0] = "<Primary>p";
 	gtk_application_set_accels_for_action(app, "app.phone", accels);
 
-	accels[0] = "<Primary>c";
+	accels[0] = "<Primary>b";
 	gtk_application_set_accels_for_action(app, "app.addressbook", accels);
-
-	accels[0] = "<Primary>a";
-	gtk_application_set_accels_for_action(app, "app.assistant", accels);
 
 #if GTK_CHECK_VERSION(3, 20, 0)
 	accels[0] = "<Primary>F1";
@@ -417,8 +414,7 @@ static void app_init(GtkApplication *app)
 	gtk_application_set_accels_for_action(app, "app.debug", accels);
 #else
 	gtk_application_add_accelerator(app, "<Control>p", "app.phone", NULL);
-	gtk_application_add_accelerator(app, "<Control>c", "app.addressbook", NULL);
-	gtk_application_add_accelerator(app, "<Control>a", "app.assistant", NULL);
+	gtk_application_add_accelerator(app, "<Control>b", "app.addressbook", NULL);
 	gtk_application_add_accelerator(app, "<Control>q", "app.quit", NULL);
 	gtk_application_add_accelerator(app, "<Control>s", "app.preferences", NULL);
 	gtk_application_add_accelerator(app, "<Control>d", "app.debug", NULL);

@@ -1787,9 +1787,12 @@ void app_show_settings(void)
 		GtkWidget *tmp = GTK_WIDGET(gtk_builder_get_object(builder, "ftp_login_check_button"));
 
 		g_debug("%s(): Disable ftp data", __FUNCTION__);
-		gtk_widget_set_sensitive(settings->ftp_user_entry, FALSE);
-		gtk_widget_set_sensitive(settings->ftp_password_entry, FALSE);
-		gtk_widget_set_sensitive(tmp, FALSE);
+		gtk_widget_set_no_show_all(settings->ftp_user_entry, TRUE);
+		gtk_widget_set_visible(settings->ftp_user_entry, FALSE);
+		gtk_widget_set_no_show_all(settings->ftp_password_entry, TRUE);
+		gtk_widget_set_visible(settings->ftp_password_entry, FALSE);
+		gtk_widget_set_no_show_all(tmp, TRUE);
+		gtk_widget_set_visible(tmp, FALSE);
 	}
 
 	/* Prefix group */

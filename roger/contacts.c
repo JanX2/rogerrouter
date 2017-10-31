@@ -1,6 +1,6 @@
-/**
+/*
  * Roger Router
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2017 Jan-Michael Brummer
  *
  * This file is part of Roger Router.
  *
@@ -31,7 +31,7 @@
 #include <roger/icons.h>
 #include <roger/journal.h>
 
-struct contacts {
+typedef struct {
 	GtkWidget *window;
 	GtkWidget *active_user_widget;
 	GtkWidget *cancel_button;
@@ -53,16 +53,18 @@ struct contacts {
 
 	RmContact *tmp_contact;
 	RmContact *new_contact;
-};
+} Contacts;
 
-static struct contacts *contacts = NULL;
+static Contacts *contacts = NULL;
 
 /**
- * \brief Phone/dial button clicked
- * \param button phone button widget
- * \param user_data telephone number to dial
+ * contacts_dial_clicked_cb:
+ * @button: phone button
+ * @user_data: telephone number to dial
+ *
+ * Phone/dial button clicked
  */
-static void dial_clicked_cb(GtkWidget *button, gpointer user_data)
+static void contacts_dial_clicked_cb(GtkWidget *button, gpointer user_data)
 {
 	RmContact *contact;
 	gchar *full_number;
@@ -84,8 +86,10 @@ static void dial_clicked_cb(GtkWidget *button, gpointer user_data)
 }
 
 /**
- * \brief Update contact detail page
- * \param contact contact structure
+ * contacts_update_detail:
+ * @contact: a #RmContact
+ *
+ * Update contact detail page
  */
 static void contacts_update_details(RmContact *contact)
 {
@@ -175,16 +179,10 @@ static void contacts_update_details(RmContact *contact)
 				phone_image = gtk_image_new_from_icon_name(APP_ICON_CALL, GTK_ICON_SIZE_BUTTON);
 				gtk_button_set_image(GTK_BUTTON(dial), phone_image);
 
-				gchar *css_data = g_strdup_printf(".circular-button { border-radius: 20px; -gtk-outline-radius: 20px; outline-radius: 20px;}");
-				GtkCssProvider *css_provider = gtk_css_provider_get_default();
-				gtk_css_provider_load_from_data(css_provider, css_data, -1, NULL);
-				g_free(css_data);
-
 				GtkStyleContext *style_context = gtk_widget_get_style_context(dial);
-				gtk_style_context_add_provider(style_context, GTK_STYLE_PROVIDER(css_provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
-				gtk_style_context_add_class(style_context, "circular-button");
+				gtk_style_context_add_class(style_context, "circular");
 
-				g_signal_connect(dial, "clicked", G_CALLBACK(dial_clicked_cb), phone_number->number);
+				g_signal_connect(dial, "clicked", G_CALLBACK(contacts_dial_clicked_cb), phone_number->number);
 				gtk_grid_attach(GTK_GRID(grid), type, 0, detail_row, 1, 1);
 				gtk_grid_attach(GTK_GRID(grid), number, 1, detail_row, 1, 1);
 				gtk_grid_attach(GTK_GRID(grid), dial, 2, detail_row, 1, 1);
@@ -268,15 +266,24 @@ static void contacts_update_details(RmContact *contact)
 }
 
 /**
- * \brief Destory child widget
- * \param widget child widget
- * \param user_data UNUSED
+ * contacts_destroy_child;
+ * @widget: child widget
+ * @user_data: UNUSED
+ *
+ * Destory child widget
  */
 static void contacts_destroy_child(GtkWidget *widget, gpointer user_data)
 {
 	gtk_widget_destroy(widget);
 }
 
+/**
+ * contacts_get_selected_contact:
+ *
+ * Get currently selected contact
+ *
+ * Returns: a #RmContact or %NULL on error
+ */
 static RmContact *contacts_get_selected_contact(void)
 {
 	GtkListBoxRow *row = gtk_list_box_get_selected_row(GTK_LIST_BOX(contacts->list_box));
@@ -303,7 +310,9 @@ static RmContact *contacts_get_selected_contact(void)
 }
 
 /**
- * \brief Update contact list (clears previous and add all matching contacts)
+ * contacts_update_list:
+ *
+ * Update contact list (clears previous and add all matching contacts)
  */
 static void contacts_update_list(void)
 {
@@ -1071,7 +1080,7 @@ static void contacts_contacts_changed_cb(RmObject *object, gpointer user_data)
 	contacts_update_list();
 }
 
-void contacts_set_contact(struct contacts *contacts, RmContact *contact)
+void contacts_set_contact(Contacts *contacts, RmContact *contact)
 {
 	if (contacts->new_contact) {
 		rm_contact_free(contacts->new_contact);
@@ -1124,7 +1133,7 @@ void app_contacts(RmContact *contact)
 		}
 	}
 
-	contacts = g_malloc0(sizeof(struct contacts));
+	contacts = g_malloc0(sizeof(Contacts));
 	contacts_set_contact(contacts, contact);
 
 	parent = journal_get_window();

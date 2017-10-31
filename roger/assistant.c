@@ -1,6 +1,6 @@
-/**
+/*
  * Roger Router
- * Copyright (c) 2012-2016 Jan-Michael Brummer
+ * Copyright (c) 2012-2017 Jan-Michael Brummer
  *
  * This file is part of Roger Router.
  *
@@ -31,7 +31,8 @@
 #include <roger/uitools.h>
 
 /** Assistant structure, keeping track of internal widgets and states */
-struct assistant {
+typedef struct {
+	/*< private >*/
 	/* Internal states for child page handling */
 	gint current_page;
 	gint max_page;
@@ -64,38 +65,41 @@ struct assistant {
 
 	/** New assistant created profile */
 	RmProfile *profile;
-};
+} Assistant;
 
 /** Assistant page structure, holding name and pre/post functions */
-struct assistant_page {
+typedef struct assistant_page {
+	/*< private >*/
 	gchar *name;
-	void (*pre)(struct assistant *assistant);
-	gboolean (*post)(struct assistant *assistant);
-};
-
-/** Assistant */
-static struct assistant *assistant = NULL;
+	void (*pre)(Assistant *assistant);
+	gboolean (*post)(Assistant *assistant);
+} AssistantPage;
 
 /**
- * \brief Pre welcome page
- * \param assistant assistant structure
+ * welcome_pre:
+ * @assistant: a #Assistant
+ *
+ * Pre welcome page
  */
-static void welcome_pre(struct assistant *assistant)
+static void assistant_welcome_pre(Assistant *assistant)
 {
 	/* Update title */
 	gtk_header_bar_set_title(GTK_HEADER_BAR(assistant->header), _("Welcome"));
 }
 
 /**
- * \brief Profile entry changed callback
- * \param entry entry widget
- * \param user_data UNUSED
+ * assistant_profile_entry_changed:
+ * @entry: @aGtkEditable
+ * @user_data: a #Assistant
+ *
+ * Profile entry changed callback
  */
-void profile_entry_changed(GtkEditable *entry, gpointer user_data)
+static void assistant_profile_entry_changed(GtkEditable *entry, gpointer user_data)
 {
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 	GSList *profile_list = rm_profile_get_list();
 	RmProfile *profile;
+	Assistant *assistant = user_data;
 
 	/* Loop through all known profiles and check for duplicate profile name */
 	while (profile_list != NULL) {
@@ -118,10 +122,12 @@ void profile_entry_changed(GtkEditable *entry, gpointer user_data)
 }
 
 /**
- * \brief Pre profile page
- * \param assistant assistant structure
+ * assistant_profile_pre:
+ * @assistant: a #Assistant
+ *
+ * Pre profile page
  */
-static void profile_pre(struct assistant *assistant)
+static void assistant_profile_pre(Assistant *assistant)
 {
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(assistant->profile_name));
 
@@ -136,11 +142,14 @@ static void profile_pre(struct assistant *assistant)
 }
 
 /**
- * \brief Post profile page
- * \param assistant assistant structure
- * \return TRUE to continue, FALSE on error
+ * assistant_profile_post:
+ * @assistant: a #Assistant
+ *
+ * Post profile page
+ *
+ * Returns: %TRUE to continue, %FALSE on error
  */
-static gboolean profile_post(struct assistant *assistant)
+static gboolean assistant_profile_post(Assistant *assistant)
 {
 	const gchar *name = gtk_entry_get_text(GTK_ENTRY(assistant->profile_name));
 
@@ -151,29 +160,33 @@ static gboolean profile_post(struct assistant *assistant)
 }
 
 /**
- * \brief Destroy listbox
- * \param widget listbox
- * \param user_data UNUSED
+ * assistant_router_listbox_destroy:
+ * @widget: a #GtkWidget
+ * @user_data: UNUSED
+ *
+ * Destroy listbox
  */
-static void router_listbox_destroy(GtkWidget *widget, gpointer user_data)
+static void assistant_router_listbox_destroy(GtkWidget *widget, gpointer user_data)
 {
 	gtk_widget_destroy(widget);
 }
 
 /**
- * \brief Scan for routers using ssdp
- * \param user_data UNUSED
- * \return G_SOURCE_REMOVE
+ * assistant_scan_router:
+ * @user_data: a #Assistant
+ *
+ * Scan for routers using ssdp
+ *
+ * Returns: #G_SOURCE_REMOVE
  */
-static gboolean scan(gpointer user_data)
+static gboolean assistant_scan_router(gpointer user_data)
 {
 	GList *routers = rm_ssdp_get_routers();
 	GList *list;
-
-	//return G_SOURCE_REMOVE;
+	Assistant *assistant = user_data;
 
 	/* For all children of list box, call router_listbox_destroy() */
-	gtk_container_foreach(GTK_CONTAINER(assistant->router_listbox), router_listbox_destroy, NULL);
+	gtk_container_foreach(GTK_CONTAINER(assistant->router_listbox), assistant_router_listbox_destroy, NULL);
 
 	for (list = routers; list != NULL; list = list->next) {
 		GtkWidget *new_device;
@@ -202,13 +215,17 @@ static gboolean scan(gpointer user_data)
 }
 
 /**
- * \brief Router row activated callback
- * \param box listbox entry containing detected routers
- * \param row selected row
- * \param user_data UNUSED
+ * assistant_router_listbox_row_activated_cb:
+ * @box: a äGtkListBox
+ * @row: a #GtkListBoxRow
+ * @user_data: a #Assistant
+ *
+ * Router row activated callback
  */
-void router_listbox_row_activated_cb(GtkListBox *box, GtkListBoxRow *row, gpointer user_data)
+static void assistant_router_listbox_row_activated_cb(GtkListBox *box, GtkListBoxRow *row, gpointer user_data)
 {
+	Assistant *assistant = user_data;
+
 	if (row != NULL) {
 		/* We have a selected row, get child and set host internally */
 		GtkWidget *child = gtk_container_get_children(GTK_CONTAINER(row))->data;
@@ -221,23 +238,28 @@ void router_listbox_row_activated_cb(GtkListBox *box, GtkListBoxRow *row, gpoint
 }
 
 /**
- * \brief Router row selected callback
- * \param box listbox entry containing detected routers
- * \param row selected row
- * \param user_data UNUSED
+ * assistant_router_listbox_row_selected_cb:
+ * @box: a #GtkListBox
+ * @row: selected #GtkListBoxRow
+ * @user_data: UNUSED
+ *
+ * Router row selected callback
  */
-void router_listbox_row_selected_cb(GtkListBox *box, GtkListBoxRow *row, gpointer user_data)
+static void assistant_router_listbox_row_selected_cb(GtkListBox *box, GtkListBoxRow *row, gpointer user_data)
 {
-	router_listbox_row_activated_cb(box, row, user_data);
+	assistant_router_listbox_row_activated_cb(box, row, user_data);
 }
 
 /**
- * \brief Router entry changed callback
- * \param entry entry widget
- * \param user_data UNUSED
+ * assistant_router_entry_changed:
+ * @entry: a #GtkEditable
+ * @user_data: a #Assistant
+ *
+ * Router entry changed callback
  */
-void router_entry_changed(GtkEditable *entry, gpointer user_data)
+void assistant_router_entry_changed(GtkEditable *entry, gpointer user_data)
 {
+	Assistant *assistant = user_data;
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(assistant->server));
 	gboolean valid;
 
@@ -249,12 +271,15 @@ void router_entry_changed(GtkEditable *entry, gpointer user_data)
 }
 
 /**
- * \brief React on router stack changes and update button state
- * \param entry entry widget
- * \param user_data UNUSED
+ * assistant_router_stack_changed_cb:
+ * @entry: a #GtkEditable
+ * @user_data: a #Assistant
+ *
+ * React on router stack changes and update button state
  */
-static void router_stack_changed_cb(GtkEditable *entry, gpointer user_data)
+static void assistant_router_stack_changed_cb(GtkEditable *entry, gpointer user_data)
 {
+	Assistant *assistant = user_data;
 	const gchar *name = gtk_stack_get_visible_child_name(GTK_STACK(assistant->router_stack));
 
 	if (!name) {
@@ -264,7 +289,7 @@ static void router_stack_changed_cb(GtkEditable *entry, gpointer user_data)
 	/* Check active page */
 	if (!strcmp(name, "manual")) {
 		/* Call router ip entry changed callback to check for a valid ip */
-		router_entry_changed(NULL, NULL);
+		assistant_router_entry_changed(NULL, assistant);
 	} else {
 		GtkListBoxRow *row = gtk_list_box_get_row_at_index(GTK_LIST_BOX(assistant->router_listbox), 0);
 
@@ -278,13 +303,15 @@ static void router_stack_changed_cb(GtkEditable *entry, gpointer user_data)
 }
 
 /**
- * \brief Pre router page
- * \param assistant assistant structure
+ * assistant_router_pre:
+ * @assistant: a #Assistant
+ *
+ * Pre router page
  */
-static void router_pre(struct assistant *assistant)
+static void assistant_router_pre(Assistant *assistant)
 {
 	/* Start scan for routers */
-	g_idle_add(scan, NULL);
+	g_idle_add(assistant_scan_router, assistant);
 
 	/* Update next button state */
 	gtk_widget_set_sensitive(assistant->next_button, FALSE);
@@ -294,24 +321,25 @@ static void router_pre(struct assistant *assistant)
 }
 
 /**
- * \brief Post router page
- * \param assistant assistant structure
- * \return TRUE to continue, FALSE on error
+ * assistant_router_post:
+ * @assistant: a #Assistant
+ *
+ * Post router page
+ *
+ * Returns: %TRUE to continue, %FALSE on error
  */
-static gboolean router_post(struct assistant *assistant)
+static gboolean assistant_router_post(Assistant *assistant)
 {
 	const gchar *server;
 	gboolean present;
 
 	/* Get user selected server */
-	g_debug("%s(): child %s", __FUNCTION__, gtk_stack_get_visible_child_name(GTK_STACK(assistant->router_stack)));
 	if (!strcmp(gtk_stack_get_visible_child_name(GTK_STACK(assistant->router_stack)), "manual")) {
 		server = gtk_entry_get_text(GTK_ENTRY(assistant->server));
 		g_object_set_data(G_OBJECT(assistant->router_stack), "server", (gchar*)server);
 	} else {
 		server = g_object_get_data(G_OBJECT(assistant->router_stack), "server");
 	}
-	g_debug("%s(): server %s", __FUNCTION__, server);
 
 	rm_profile_set_host(assistant->profile, server);
 
@@ -325,21 +353,26 @@ static gboolean router_post(struct assistant *assistant)
 }
 
 /**
- * \brief Pre password page
- * \param assistant assistant structure
+ * assistant_password_pre:
+ * @assistant: a #Assistant
+ *
+ * Pre password page
  */
-static void password_pre(struct assistant *assistant)
+static void assistant_password_pre(Assistant *assistant)
 {
 	/* Update title */
 	gtk_header_bar_set_title(GTK_HEADER_BAR(assistant->header), _("Router password"));
 }
 
 /**
- * \brief Post password page
- * \param assistant assistant structure
- * \return TRUE to continue, FALSE on error
+ * assistant_password_post:
+ * @assistant: a #Assistant
+ *
+ * Post password page
+ *
+ * Returns: %TRUE to continue, %FALSE on error
  */
-static gboolean password_post(struct assistant *assistant)
+static gboolean assistant_password_post(Assistant *assistant)
 {
 	const gchar *user = gtk_entry_get_text(GTK_ENTRY(assistant->user));
 	const gchar *password = gtk_entry_get_text(GTK_ENTRY(assistant->password));
@@ -373,10 +406,12 @@ static gboolean password_post(struct assistant *assistant)
 }
 
 /**
- * \brief Pre ftp password page
- * \param assistant assistant structure
+ * assistant_ftp_password_pre:
+ * @assistant: a #Assistant
+ *
+ * Pre ftp password page
  */
-static void ftp_password_pre(struct assistant *assistant)
+static void assistant_ftp_password_pre(Assistant *assistant)
 {
 	const gchar *user = gtk_entry_get_text(GTK_ENTRY(assistant->user));
 	const gchar *password = gtk_entry_get_text(GTK_ENTRY(assistant->password));
@@ -390,11 +425,14 @@ static void ftp_password_pre(struct assistant *assistant)
 }
 
 /**
- * \brief Post ftp password page
- * \param assistant assistant structure
- * \return TRUE to continue, FALSE on error
+ * assistant_ftp_password_post:
+ * @assistant: a #Assistant
+ *
+ * Post ftp password page
+ *
+ * Returns: %TRUE to continue, %FALSE on error
  */
-static gboolean ftp_password_post(struct assistant *assistant)
+static gboolean assistant_ftp_password_post(Assistant *assistant)
 {
 	const gchar *host = g_object_get_data(G_OBJECT(assistant->router_stack), "server");
 	const gchar *ftp_user = gtk_entry_get_text(GTK_ENTRY(assistant->ftp_user));
@@ -423,21 +461,27 @@ static gboolean ftp_password_post(struct assistant *assistant)
 }
 
 /**
- * \brief Pre finish page
+ * assistant_finish_pre:
+ * @assistant: a #Assistant
+ *
+ * Pre finish page
  */
-static void finish_pre(struct assistant *assistant)
+static void assistant_finish_pre(Assistant *assistant)
 {
 	/* Set title */
 	gtk_header_bar_set_title(GTK_HEADER_BAR(assistant->header), _("Ready to go"));
 }
 
 /**
- * \brief Post finish page
+ * assistant_finish_post:
+ * @assistant: a #Assistant
+ *
+ * Post finish page
  * Add new profile to list, trigger a reconnect of network monitor and set journal visible
- * \param assistant assistant private structure
- * \return TRUE
+ *
+ * Returns: %TRUE
  */
-static gboolean finish_post(struct assistant *assistant)
+static gboolean assistant_finish_post(Assistant *assistant)
 {
 	/* Enable telnet & capi port */
 	if (rm_router_dial_number(assistant->profile, ROUTER_DIAL_PORT_AUTO, ROUTER_ENABLE_TELNET)) {
@@ -460,25 +504,28 @@ static gboolean finish_post(struct assistant *assistant)
 }
 
 /** Assistant pages: Name, Pre/Post functions */
-struct assistant_page assistant_pages[] = {
-	{ "welcome", welcome_pre, NULL },
-	{ "profile", profile_pre, profile_post },
-	{ "router", router_pre, router_post },
-	{ "password", password_pre, password_post },
-	{ "ftp_password", ftp_password_pre, ftp_password_post },
-	{ "finish", finish_pre, finish_post },
+AssistantPage assistant_pages[] = {
+	{ "welcome", assistant_welcome_pre, NULL },
+	{ "profile", assistant_profile_pre, assistant_profile_post },
+	{ "router", assistant_router_pre, assistant_router_post },
+	{ "password", assistant_password_pre, assistant_password_post },
+	{ "ftp_password", assistant_ftp_password_pre, assistant_ftp_password_post },
+	{ "finish", assistant_finish_pre, assistant_finish_post },
 	{ NULL, NULL, NULL }
 };
 
 /**
- * \brief Control function for next button clicked
+ * assistant_back_button_clicked_cb:
+ * @next: a #GtkWidget
+ * @user_data: a #Assistant
+ *
+ * Control function for next button clicked
  * Responsible for top buttons and pre and post states of child pages
- * \param next next button widget
- * \param user_data UNUSED
  */
-void back_button_clicked_cb(GtkWidget *next, gpointer user_data)
+static void assistant_back_button_clicked_cb(GtkWidget *next, gpointer user_data)
 {
-	g_debug("%s(): current page %d", __FUNCTION__, assistant->current_page);
+	Assistant *assistant = user_data;
+
 	/* In case we are on the first page, exit assistant */
 	if (assistant->current_page <= 0) {
 		RmProfile *profile = rm_profile_get_active();
@@ -489,7 +536,7 @@ void back_button_clicked_cb(GtkWidget *next, gpointer user_data)
 			rm_profile_remove(assistant->profile);
 		}
 
-		g_slice_free(struct assistant, assistant);
+		g_slice_free(Assistant, assistant);
 		assistant = NULL;
 
 		/* In case no profile is active and assistant is aborted, exit application */
@@ -532,14 +579,17 @@ void back_button_clicked_cb(GtkWidget *next, gpointer user_data)
 }
 
 /**
- * \brief Control function for next button clicked
+ * assistant_next_button_clicked_cb:
+ * @next: #GtkWidget
+ * @user_data: a #Assistant
+ *
+ * Control function for next button clicked
  * Responsible for top buttons and pre and post states of child pages
- * \param next next button widget
- * \param user_data UNUSED
  */
-void next_button_clicked_cb(GtkWidget *next, gpointer user_data)
+static void assistant_next_button_clicked_cb(GtkWidget *next, gpointer user_data)
 {
-	g_debug("%s(): current page %d", __FUNCTION__, assistant->current_page);
+	Assistant *assistant = user_data;
+
 	gtk_button_set_label(GTK_BUTTON(assistant->back_button), _("Back"));
 
 	/* In case we have a post page function and it returns FALSE, exit immediately */
@@ -550,7 +600,7 @@ void next_button_clicked_cb(GtkWidget *next, gpointer user_data)
 	/* Check if we have reached the end */
 	if (assistant->current_page >= assistant->max_page - 1) {
 		gtk_widget_destroy(assistant->window);
-		g_slice_free(struct assistant, assistant);
+		g_slice_free(Assistant, assistant);
 		assistant = NULL;
 		return;
 	}
@@ -582,19 +632,17 @@ void next_button_clicked_cb(GtkWidget *next, gpointer user_data)
 }
 
 /**
- * \brief Create router setup assistant
+ * app_assistant:
+ *
+ * Create router setup assistant
  */
 void app_assistant(void)
 {
+	Assistant *assistant = NULL;
 	GtkBuilder *builder;
 	GtkWidget *placeholder;
 	GList *childrens;
 	gint max = 0;
-
-	/* Only open assitant once at a time */
-	if (assistant) {
-		return;
-	}
 
 	builder = gtk_builder_new_from_resource("/org/tabos/roger/assistant.glade");
 	if (!builder) {
@@ -603,7 +651,7 @@ void app_assistant(void)
 	}
 
 	/* Allocate private structure */
-	assistant = g_slice_alloc0(sizeof(struct assistant));
+	assistant = g_slice_alloc0(sizeof(Assistant));
 
 	/* Connect to builder objects */
 	assistant->window = GTK_WIDGET(gtk_builder_get_object(builder, "assistant"));
@@ -612,25 +660,27 @@ void app_assistant(void)
 
 	assistant->stack = GTK_WIDGET(gtk_builder_get_object(builder, "stack"));
 	assistant->back_button = GTK_WIDGET(gtk_builder_get_object(builder, "back_button"));
-	g_signal_connect(assistant->back_button, "clicked", G_CALLBACK(back_button_clicked_cb), NULL);
+	g_signal_connect(assistant->back_button, "clicked", G_CALLBACK(assistant_back_button_clicked_cb), assistant);
 	assistant->next_button = GTK_WIDGET(gtk_builder_get_object(builder, "next_button"));
-	g_signal_connect(assistant->next_button, "clicked", G_CALLBACK(next_button_clicked_cb), NULL);
+	g_signal_connect(assistant->next_button, "clicked", G_CALLBACK(assistant_next_button_clicked_cb), assistant);
 
 	assistant->profile_name = GTK_WIDGET(gtk_builder_get_object(builder, "profile_name_entry"));
-	g_signal_connect(assistant->profile_name, "changed", G_CALLBACK(profile_entry_changed), NULL);
+	g_signal_connect(assistant->profile_name, "changed", G_CALLBACK(assistant_profile_entry_changed), assistant);
 
 	assistant->router_stack = GTK_WIDGET(gtk_builder_get_object(builder, "router_stack"));
-	g_signal_connect(assistant->router_stack, "notify::visible-child", G_CALLBACK(router_stack_changed_cb), NULL);
+	g_signal_connect(assistant->router_stack, "notify::visible-child", G_CALLBACK(assistant_router_stack_changed_cb), assistant);
 
 	assistant->router_listbox = GTK_WIDGET(gtk_builder_get_object(builder, "router_listbox"));
-	g_signal_connect(assistant->router_listbox, "row-activated", G_CALLBACK(router_listbox_row_activated_cb), NULL);
-	g_signal_connect(assistant->router_listbox, "row-selected", G_CALLBACK(router_listbox_row_selected_cb), NULL);
+
+	// TODO: One is enough...
+	g_signal_connect(assistant->router_listbox, "row-activated", G_CALLBACK(assistant_router_listbox_row_activated_cb), assistant);
+	g_signal_connect(assistant->router_listbox, "row-selected", G_CALLBACK(assistant_router_listbox_row_selected_cb), assistant);
 	placeholder = gtk_label_new(_("No router detected"));
 	gtk_widget_show(placeholder);
 	gtk_list_box_set_placeholder(GTK_LIST_BOX(assistant->router_listbox), placeholder);
 
 	assistant->server = GTK_WIDGET(gtk_builder_get_object(builder, "ip_address_entry"));
-	g_signal_connect(assistant->server, "changed", G_CALLBACK(router_entry_changed), NULL);
+	g_signal_connect(assistant->server, "changed", G_CALLBACK(assistant_router_entry_changed), assistant);
 	assistant->user = GTK_WIDGET(gtk_builder_get_object(builder, "user_entry"));
 	assistant->password = GTK_WIDGET(gtk_builder_get_object(builder, "password_entry"));
 
@@ -657,3 +707,4 @@ void app_assistant(void)
 	/* Show window */
 	gtk_widget_show_all(assistant->window);
 }
+

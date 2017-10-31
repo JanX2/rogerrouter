@@ -380,6 +380,8 @@ static void contact_search_init(ContactSearch *widget)
 	gtk_popover_set_position(GTK_POPOVER(widget->menu), GTK_POS_BOTTOM);
 	gtk_popover_set_relative_to(GTK_POPOVER(widget->menu), GTK_WIDGET(widget->entry));
 
+	gtk_entry_set_activates_default(GTK_ENTRY(widget->entry), TRUE);
+
 	widget->scrolled_win = gtk_scrolled_window_new(NULL, NULL);
 	gtk_container_add(GTK_CONTAINER(widget->menu), widget->scrolled_win);
 

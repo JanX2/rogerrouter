@@ -63,7 +63,7 @@ Author: Jan-Michael Brummer
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="margin_top">26</property>
-                <property name="resource">/org/tabos/roger/images/roger.svg</property>
+                <property name="resource">/org/tabos/roger/images/org.tabos.roger.svg</property>
               </object>
               <packing>
                 <property name="expand">False</property>

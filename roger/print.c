@@ -603,7 +603,7 @@ void print_fax_report(RmFaxStatus *status, gchar *file, const char *report_dir)
 	char *remote = status->remote_number;
 	char *local = status->local_number;
 	char *status_code = status->error_code == 0 ? _("SUCCESS") : _("FAILED");
-	int pages = status->page_current;
+	int pages = status->pages_transferred;
 	RmProfile *profile = rm_profile_get_active();
 	TIFF *tiff;
 	GdkPixbuf *scale;

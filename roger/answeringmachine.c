@@ -26,7 +26,8 @@
 #include <roger/journal.h>
 #include <roger/main.h>
 
-struct _VoxPlaybackData {
+typedef struct _VoxPlaybackData {
+	/*< private >*/
 	gpointer vox_data;
 	gint fraction;
 	gint update_id;
@@ -36,36 +37,7 @@ struct _VoxPlaybackData {
 	GtkWidget *time;
 	GtkWidget *scale;
 	gint scale_id;
-};
-
-typedef struct _VoxPlaybackData VoxPlaybackData;
-
-static gboolean vox_update_ui(gpointer data);
-
-/**
- * vox_start_playback:
- * @playback: a #VoxPlaybackData
- *
- * Initialize internal data and starts voice playback
- */
-static void vox_start_playback(VoxPlaybackData *playback)
-{
-	/* Reset scale range */
-	gtk_range_set_value(GTK_RANGE(playback->scale), 0.0f);
-
-	/* Start playback */
-	playback->fraction = 0;
-	rm_vox_play(playback->vox_data);
-	playback->playing = TRUE;
-
-	/* Change button image */
-	GtkWidget *media_image = gtk_image_new_from_icon_name("media-playback-pause-symbolic", GTK_ICON_SIZE_BUTTON);
-	gtk_button_set_image(GTK_BUTTON(playback->media_button), media_image);
-	gtk_widget_set_sensitive(playback->scale, TRUE);
-
-	/* Timer which will update the ui every 250ms */
-	playback->update_id = g_timeout_add(250, vox_update_ui, playback);
-}
+} VoxPlaybackData;
 
 /**
  * vox_stop_playback:
@@ -119,6 +91,31 @@ static gboolean vox_update_ui(gpointer data)
 	}
 
 	return TRUE;
+}
+
+/**
+ * vox_start_playback:
+ * @playback: a #VoxPlaybackData
+ *
+ * Initialize internal data and starts voice playback
+ */
+static void vox_start_playback(VoxPlaybackData *playback)
+{
+	/* Reset scale range */
+	gtk_range_set_value(GTK_RANGE(playback->scale), 0.0f);
+
+	/* Start playback */
+	playback->fraction = 0;
+	rm_vox_play(playback->vox_data);
+	playback->playing = TRUE;
+
+	/* Change button image */
+	GtkWidget *media_image = gtk_image_new_from_icon_name("media-playback-pause-symbolic", GTK_ICON_SIZE_BUTTON);
+	gtk_button_set_image(GTK_BUTTON(playback->media_button), media_image);
+	gtk_widget_set_sensitive(playback->scale, TRUE);
+
+	/* Timer which will update the ui every 250ms */
+	playback->update_id = g_timeout_add(250, vox_update_ui, playback);
 }
 
 /**

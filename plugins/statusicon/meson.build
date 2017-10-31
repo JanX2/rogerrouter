@@ -1,16 +1,10 @@
 statusicon_sources = []
 statusicon_sources += 'statusicon.c'
 
-statusicon_dep = []
-statusicon_dep += rm_dep
-statusicon_dep += plugins_dep
-
-statusicon_inc = [rm_inc, roger_inc]
-
 libstatusicon = shared_library('statusicon',
                         statusicon_sources,
-                        include_directories : statusicon_inc,
-                        dependencies : statusicon_dep,
+                        include_directories : roger_inc,
+                        dependencies : plugins_dep,
                         install : true,
                         install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/statusicon/')
 
@@ -20,3 +14,8 @@ custom_target('statusicon.plugin',
     command : [msgfmt, '--desktop', '--template', '@INPUT@', '-d', podir, '-o', '@OUTPUT@'],
     install : true,
     install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/statusicon/')
+
+gnome.compile_schemas()
+install_data('org.tabos.roger.plugins.statusicon.gschema.xml',
+install_dir : 'share/glib-2.0/schemas')
+

@@ -89,7 +89,7 @@ gboolean fax_status_timer_cb(gpointer user_data)
 
 	/* Fall through */
 	case RM_FAX_PHASE_SIGNALLING:
-		snprintf(buffer, sizeof(buffer), _("Transferring page %d of %d"), fax_status->page_current, fax_status->page_total);
+		snprintf(buffer, sizeof(buffer), _("Transferred %d of %d"), fax_status->pages_transferred, fax_status->pages_total);
 		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar), buffer);
 		break;
 	case RM_FAX_PHASE_RELEASE:
@@ -149,8 +149,6 @@ static void fax_connection_changed_cb(RmObject *object, gint event, RmConnection
 
 	if (event == RM_CONNECTION_TYPE_DISCONNECT) {
 		g_debug("%s(): cleanup", __FUNCTION__);
-		g_unlink(fax_ui->file);
-
 		if (fax_ui->status_timer_id) {
 			g_source_remove(fax_ui->status_timer_id);
 			fax_ui->status_timer_id = 0;
@@ -208,6 +206,20 @@ void fax_hangup_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	fax_dial_buttons_set_dial(fax_ui, TRUE);
 }
 
+gboolean fax_delete_event_cb(GtkWidget *window,
+                             GdkEvent  *event,
+                             gpointer   user_data)
+{
+	struct fax_ui *fax_ui = user_data;
+
+	if (fax_ui->file) {
+			g_unlink(fax_ui->file);
+			fax_ui->file = NULL;
+	}
+
+	return FALSE;
+}
+
 gboolean app_show_fax_window_idle(gpointer data)
 {
 	GtkBuilder *builder;
@@ -251,8 +263,9 @@ gboolean app_show_fax_window_idle(gpointer data)
 	fax_ui->progress_bar = GTK_WIDGET(gtk_builder_get_object(builder, "fax_status_progress_bar"));
 	gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar), "");
 
-	GtkWidget *grid2 = GTK_WIDGET(gtk_builder_get_object(builder, "fax_grid2"));
+	GtkWidget *grid2 = GTK_WIDGET(gtk_builder_get_object(builder, "fax_grid"));
 	fax_ui->contact_search = contact_search_new();
+	gtk_window_set_default(GTK_WINDOW(fax_ui->window), fax_ui->pickup_button);
 	gtk_grid_attach(GTK_GRID(grid2), fax_ui->contact_search, 0, 0, 1, 1);
 
 	/* Create header bar and set it to window */
@@ -269,8 +282,9 @@ gboolean app_show_fax_window_idle(gpointer data)
 	fax_dial_buttons_set_dial(fax_ui, TRUE);
 
 	/* Connect connection signals */
-	//g_signal_connect(rm_object, "connection-terminated", G_CALLBACK(fax_connection_terminated_cb), fax_ui);
 	g_signal_connect(G_OBJECT(rm_object), "connection-changed", G_CALLBACK(fax_connection_changed_cb), fax_ui);
+
+	g_signal_connect(G_OBJECT(fax_ui->window), "delete-event", G_CALLBACK(fax_delete_event_cb), fax_ui);
 
 	gtk_widget_show_all(fax_ui->window);
 
@@ -290,7 +304,7 @@ gchar *convert_to_fax(gchar *file_name)
 #endif
 
 	/* convert ps to fax */
-	args[0] = "ps2tiff";
+	args[0] = "gs";
 	args[1] = "-q";
 	args[2] = "-dNOPAUSE";
 	args[3] = "-dSAFER";
@@ -355,7 +369,7 @@ gchar *convert_to_fax(gchar *file_name)
 
 	if (!g_spawn_sync(NULL, args, NULL, G_SPAWN_SEARCH_PATH | G_SPAWN_CHILD_INHERITS_STDIN | G_SPAWN_LEAVE_DESCRIPTORS_OPEN /*| G_SPAWN_STDOUT_TO_DEV_NULL | G_SPAWN_STDERR_TO_DEV_NULL*/, NULL, NULL, NULL, NULL, &conv_ret_value, &error)) {
 		g_warning("%s(): Error occurred: %s", __FUNCTION__, error ? error->message : "");
-		g_free(args[0]);
+		//g_free(args[0]);
 		g_free(out_file);
 
 		return NULL;
