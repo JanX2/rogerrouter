@@ -28,7 +28,5 @@ custom_target('sip.plugin',
     install : true,
     install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/sip/')
 
-gnome.compile_schemas()
-install_data('org.tabos.roger.plugins.sip.gschema.xml',
-install_dir : 'share/glib-2.0/schemas')
+install_data('org.tabos.roger.plugins.sip.gschema.xml', install_dir : 'share/glib-2.0/schemas')
 endif

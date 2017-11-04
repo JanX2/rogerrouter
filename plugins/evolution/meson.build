@@ -27,8 +27,5 @@ custom_target('evolution.plugin',
     install : true,
     install_dir : join_paths(get_option('prefix'), get_option('libdir'), 'roger', 'evolution'))
 
-gnome.compile_schemas()
-
-install_data('org.tabos.roger.plugins.evolution.gschema.xml',
-install_dir : join_paths(get_option('datadir'), 'glib-2.0', 'schemas'))
+install_data('org.tabos.roger.plugins.evolution.gschema.xml', install_dir : join_paths(get_option('datadir'), 'glib-2.0', 'schemas'))
 endif

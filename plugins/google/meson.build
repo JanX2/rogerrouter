@@ -22,7 +22,5 @@ custom_target('google.plugin',
     install : true,
     install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/google/')
 
-gnome.compile_schemas()
-install_data('org.tabos.roger.plugins.google.gschema.xml',
-install_dir : 'share/glib-2.0/schemas')
+install_data('org.tabos.roger.plugins.google.gschema.xml', install_dir : 'share/glib-2.0/schemas')
 endif

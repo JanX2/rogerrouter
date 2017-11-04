@@ -22,7 +22,10 @@
 		"--socket=pulseaudio",
 		/* We need access to auth agents */
 		"--talk-name=org.freedesktop.secrets",
-		"--filesystem=xdg-run/keyring"
+		"--filesystem=xdg-run/keyring",
+		/* Statusicon + AppIndicator */
+		"--talk-name=org.kde.StatusNotifierWatcher",
+		"--talk-name=com.canonical.indicator.application"
 	],
 	"build-options" : {
 		"cflags": "-O2 -g",
@@ -37,6 +40,7 @@
 		"/share/doc", "/share/gir-1.0"
 	],
 	"modules": [
+		"libappindicator.json",
 		{
 			"name": "gssdp",
 			"cleanup": [ "/bin" ],
@@ -90,6 +94,26 @@
 					"type": "archive",
 					"url": "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs921/ghostscript-9.21.tar.gz",
 					"sha256": "02bceadbc4dddeb6f2eec9c8b1623d945d355ca11b8b4df035332b217d58ce85"
+				}
+			]
+		},
+		{
+			"name": "liboauth",
+			"sources": [
+				{
+					"type": "archive",
+					"url": "http://netix.dl.sourceforge.net/project/liboauth/liboauth-1.0.3.tar.gz",
+					"sha256": "0df60157b052f0e774ade8a8bac59d6e8d4b464058cc55f9208d72e41156811f"
+				}
+			]
+		},
+		{
+			"name": "libgdata",
+			"config-opts": [ "--disable-always-build-tests", "--disable-Werror", "--disable-static", "--enable-goa=no" ],
+			"sources": [
+				{
+					"type": "git",
+					"url": "git://git.gnome.org/libgdata"
 				}
 			]
 		},

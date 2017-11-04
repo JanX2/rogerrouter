@@ -22,9 +22,7 @@ custom_target('indicator.plugin',
     install : true,
     install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/indicator/')
 
-gnome.compile_schemas()
-install_data('org.tabos.roger.plugins.indicator.gschema.xml',
-install_dir : 'share/glib-2.0/schemas')
+install_data('org.tabos.roger.plugins.indicator.gschema.xml', install_dir : 'share/glib-2.0/schemas')
 
 icon_sizes = ['16x16', '22x22', '24x24', '32x32', '48x48']
 
