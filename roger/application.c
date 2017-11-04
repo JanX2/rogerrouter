@@ -378,12 +378,12 @@ static void app_init(GtkApplication *app)
 	rm_new(option_state.debug, &error);
 
 	/* Set local bindings */
-	g_print("%s(): locale: %s, package: '%s'", __FUNCTION__, rm_get_directory(APP_LOCALE), GETTEXT_PACKAGE);
+	g_debug("%s(): locale: %s, package: '%s'", __FUNCTION__, rm_get_directory(APP_LOCALE), GETTEXT_PACKAGE);
 	bindtextdomain(GETTEXT_PACKAGE, rm_get_directory(APP_LOCALE));
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);
 
-#if RM_FAX_SERVER
+#ifdef RM_FAX_SERVER
 	rm_use_fax_server(TRUE);
 #else
 	rm_use_fax_server(FALSE);

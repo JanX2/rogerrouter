@@ -26,8 +26,6 @@ custom_target('webjournal.plugin',
     install : true,
     install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/webjournal/')
 
-gnome.compile_schemas()
-install_data('org.tabos.roger.plugins.webjournal.gschema.xml',
-install_dir : 'share/glib-2.0/schemas')
+install_data('org.tabos.roger.plugins.webjournal.gschema.xml', install_dir : 'share/glib-2.0/schemas')
 
 

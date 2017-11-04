@@ -6,7 +6,6 @@
 	"command": "roger",
 	"tags": ["nightly"],
 	"desktop-file-name-prefix": "(Nightly) ",
-	"rename-icon": "roger",
 	"finish-args": [
 		/* X11 + XShm access */
 		"--socket=x11", "--share=ipc",
@@ -20,7 +19,10 @@
 		"--filesystem=xdg-run/dconf", "--filesystem=~/.config/dconf:ro",
 		"--talk-name=ca.desrt.dconf", "--env=DCONF_USER_CONFIG_DIR=.config/dconf",
 		/* Pulseaudio */
-		"--socket=pulseaudio"
+		"--socket=pulseaudio",
+		/* We need access to auth agents */
+		"--talk-name=org.freedesktop.secrets",
+		"--filesystem=xdg-run/keyring"
 	],
 	"build-options" : {
 		"cflags": "-O2 -g",
@@ -92,26 +94,10 @@
 			]
 		},
 		{
-			"name": "poppler",
-			"buildsystem": "autotools",
-			"cleanup": [ "/bin" ],
-			"config-opts": [
-				"--enable-libopenjpeg=none",
-				"--enable-xpdf-headers"
-			],
-			"sources": [
-				{
-					"type": "archive",
-					"url": "https://poppler.freedesktop.org/poppler-0.57.0.tar.xz",
-					"sha256": "0ea37de71b7db78212ebc79df59f99b66409a29c2eac4d882dae9f2397fe44d8"
-				}
-			]
-		},
-		{
 			"name": "librm",
 			"buildsystem": "meson",
 			"builddir": true,
-			"config-opts": ["--libdir=lib", "-D enable-secret=false"],
+			"config-opts": ["--libdir=/app/lib", "--buildtype=release"],
 			"sources": [
 				{
 					"type": "git",
@@ -121,10 +107,9 @@
 		},
 		{
 			"name": "roger",
-			"config-opts": ["-Dfax_spooler=false"],
+			"config-opts": ["--libdir=/app/lib", "--buildtype=release", "-Dfax_spooler=false"],
 			"buildsystem": "meson",
 			"builddir": true,
-			"config-opts": ["--libdir=lib"],
 			"sources": [
 				{
 					"type": "git",

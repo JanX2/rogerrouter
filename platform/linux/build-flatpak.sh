@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BUILD_DIR=build
+BUILD_DIR=~/.builds
 NAME=org.tabos.roger
 JSON=$NAME.flatpak.json
 REPO=repo

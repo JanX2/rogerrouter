@@ -15,7 +15,5 @@ custom_target('statusicon.plugin',
     install : true,
     install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/statusicon/')
 
-gnome.compile_schemas()
-install_data('org.tabos.roger.plugins.statusicon.gschema.xml',
-install_dir : 'share/glib-2.0/schemas')
+install_data('org.tabos.roger.plugins.statusicon.gschema.xml', install_dir : 'share/glib-2.0/schemas')
 

@@ -20,6 +20,4 @@ custom_target('thunderbird.plugin',
     install : true,
     install_dir : get_option('prefix') + '/' + get_option('libdir') + '/roger/thunderbird/')
 
-gnome.compile_schemas()
-install_data('org.tabos.roger.plugins.thunderbird.gschema.xml',
-install_dir : 'share/glib-2.0/schemas')
+install_data('org.tabos.roger.plugins.thunderbird.gschema.xml', install_dir : 'share/glib-2.0/schemas')

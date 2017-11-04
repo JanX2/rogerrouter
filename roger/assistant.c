@@ -533,6 +533,7 @@ static void assistant_back_button_clicked_cb(GtkWidget *next, gpointer user_data
 		gtk_widget_destroy(assistant->window);
 
 		if (assistant->profile) {
+			g_debug("%s(): Removing profile", __FUNCTION__);
 			rm_profile_remove(assistant->profile);
 		}
 

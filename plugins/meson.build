@@ -1,14 +1,14 @@
 plugins_dep=[]
-plugins_dep+=dependency('gtk+-3.0')
-plugins_dep+=dependency('libsoup-2.4')
-plugins_dep+=dependency('librm')
+plugins_dep += dependency('gtk+-3.0')
+plugins_dep += dependency('libsoup-2.4')
+plugins_dep += dependency('librm')
 
 subdir('evolution')
 subdir('google')
 
-#if host_machine.system() == 'windows'
+if host_machine.system() == 'windows'
 subdir('gtknotify')
-#endif
+endif
 
 subdir('indicator')
 subdir('keychain')
