@@ -1461,14 +1461,14 @@ void settings_numbers_device_combobox_changed_cb(GtkComboBox *box, gpointer user
 	if (old_device) {
 		numbers = rm_strv_remove(rm_device_get_numbers(old_device), number);
 
-		rm_device_set_numbers(old_device, numbers);
+		rm_device_set_numbers(old_device, numbers, rm_profile_get_name(rm_profile_get_active()));
 	}
 
 	//Add number
 	if (new_device) {
 		numbers = rm_strv_add(rm_device_get_numbers(new_device), number);
 
-		rm_device_set_numbers(new_device, numbers);
+		rm_device_set_numbers(new_device, numbers, rm_profile_get_name(rm_profile_get_active()));
 	}
 }
 
@@ -1648,61 +1648,17 @@ void fax_ghostscript_file_chooser_button_file_set_cb(GtkWidget *button, gpointer
 	g_settings_set_string(profile->settings, "ghostscript", file);
 }
 
-void update_numbers(gboolean active, const gchar *number)
-{
-	GSList *devices = rm_device_get_plugins();
-	GSList *list;
-	/* This one is hard-coded as we are currently supporting CAPI and Call Monitor only, once
-	 * SIP is implemented we need to break this one up */
-	RmDevice *new_device = active ? rm_device_get("CAPI") : rm_device_get("Call Monitor");
-	RmDevice *old_device = NULL;
-	gchar **numbers;
-
-	for (list = devices; list != NULL; list = list->next) {
-		RmDevice *device = list->data;
-
-		if (rm_device_handles_number(device, (gchar*)number)) {
-			old_device = device;
-			break;
-		}
-	}
-
-	//Remove number
-	if (old_device) {
-		numbers = rm_strv_remove(rm_device_get_numbers(old_device), number);
-
-		rm_device_set_numbers(old_device, numbers);
-	}
-
-	//Add number
-	if (new_device) {
-		numbers = rm_strv_add(rm_device_get_numbers(new_device), number);
-
-		rm_device_set_numbers(new_device, numbers);
-	}
-}
-
 void phone_active_switch_activate_cb(GtkSwitch *widget, gpointer user_data)
 {
-	const gchar *number = gtk_combo_box_get_active_id(GTK_COMBO_BOX(settings->softphone_msn_combobox));
-	gboolean active = gtk_switch_get_active(widget);
-
-	g_debug("%s(): Updating numbers", __FUNCTION__);
-	update_numbers(active, number);
+	rm_profile_update_numbers(rm_profile_get_active());
 }
 
 void fax_active_switch_activate_cb(GtkSwitch *widget, gpointer user_data)
 {
-	const gchar *number = gtk_combo_box_get_active_id(GTK_COMBO_BOX(settings->fax_msn_combobox));
-	gboolean active = gtk_switch_get_active(widget);
-
-	g_debug("%s(): Updating numbers", __FUNCTION__);
-	update_numbers(active, number);
+	rm_profile_update_numbers(rm_profile_get_active());
 }
 
-void numbers_header_func(GtkListBoxRow *row,
-			 GtkListBoxRow *before,
-			 gpointer user_data)
+void numbers_header_func(GtkListBoxRow *row, GtkListBoxRow *before, gpointer user_data)
 {
 	GtkWidget *current;
 
@@ -1719,14 +1675,24 @@ void numbers_header_func(GtkListBoxRow *row,
 	}
 }
 
-void fax_msn_changed_cb(GtkWidget *widget,
-			gpointer user_data)
+void phone_msn_changed_cb(GtkWidget *widget, gpointer user_data)
 {
-	const gchar *number = gtk_combo_box_get_active_id(GTK_COMBO_BOX(settings->fax_msn_combobox));
-	gboolean active = gtk_switch_get_active(GTK_SWITCH(settings->fax_active_switch));
+	RmProfile *profile = rm_profile_get_active();
+	const gchar *number = gtk_combo_box_get_active_id(GTK_COMBO_BOX(settings->softphone_msn_combobox));
 
-	g_debug("%s(): Updating numbers", __FUNCTION__);
-	update_numbers(active, number);
+	g_settings_set_string(profile->settings, "phone-number", number);
+
+	rm_profile_update_numbers(profile);
+}
+
+void fax_msn_changed_cb(GtkWidget *widget, gpointer user_data)
+{
+	RmProfile *profile = rm_profile_get_active();
+	const gchar *number = gtk_combo_box_get_active_id(GTK_COMBO_BOX(settings->fax_msn_combobox));
+
+	g_settings_set_string(profile->settings, "fax-number", number);
+
+	rm_profile_update_numbers(profile);
 }
 
 void app_show_settings(void)
@@ -1835,6 +1801,7 @@ void app_show_settings(void)
 		gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(settings->softphone_msn_combobox), numbers[idx], numbers[idx]);
 	}
 	g_settings_bind(profile->settings, "phone-number", settings->softphone_msn_combobox, "active-id", G_SETTINGS_BIND_DEFAULT);
+	g_signal_connect(settings->softphone_msn_combobox, "changed", G_CALLBACK(phone_msn_changed_cb), NULL);
 
 	settings->softphone_controller_combobox = GTK_WIDGET(gtk_builder_get_object(builder, "softphone_controller_combobox"));
 	g_settings_bind(profile->settings, "phone-controller", settings->softphone_controller_combobox, "active", G_SETTINGS_BIND_DEFAULT);

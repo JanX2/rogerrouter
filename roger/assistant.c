@@ -376,7 +376,6 @@ static gboolean assistant_password_post(Assistant *assistant)
 {
 	const gchar *user = gtk_entry_get_text(GTK_ENTRY(assistant->user));
 	const gchar *password = gtk_entry_get_text(GTK_ENTRY(assistant->password));
-	gchar **numbers;
 
 	/* Create new profile based on user input */
 	rm_profile_set_login_user(assistant->profile, user);
@@ -390,16 +389,6 @@ static gboolean assistant_password_post(Assistant *assistant)
 	/* Get settings */
 	if (!rm_router_login(assistant->profile) || !rm_router_get_settings(assistant->profile)) {
 		return FALSE;
-	}
-
-	/* Store router serial number for detection purpose */
-	g_settings_set_string(assistant->profile->settings, "serial-number", assistant->profile->router_info->serial);
-	/* Set initial fax report dir */
-	g_settings_set_string(assistant->profile->settings, "fax-report-dir", g_get_home_dir());
-	/* Set initial softphone number */
-	numbers = rm_router_get_numbers(assistant->profile);
-	if (numbers && numbers[0]) {
-		g_settings_set_string(assistant->profile->settings, "phone-number", numbers[0]);
 	}
 
 	return TRUE;
