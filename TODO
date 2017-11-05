@@ -1,66 +1,44 @@
-TODO
-----------
+General
+--------
 * Default notification should be all instead none
-* Fax spooler/server always build-in
 * Installation hint for not working fax device
 * Translation in flatpak
 * Assistent: How to handle existing profile names? Overwrite?
 * FRITZ!Box: Handle insufficient permissions
-
-** (Roger Router:3): [1;31mERROR[0m **: 22:07:42 Settings schema ‚org.tabos.rm.profile‘ does not contain a key named ’name-dect1′
-
-* Windows
------------
-  * Printer installation
-  * Audio plugin test
-
 * Design Journal/Contacts/Phone with Glade
-
 * Areacodes plugin for every country (global list available as csv)
   (90% done, add special handling for countrys not starting with 0 indicator,
   e.g. Russian Federation)
 * Export contacts to router
 * FRITZ!Box: Read upnp xml to retrieve control url instead of hardcoding the value
-
 * FRITZ!Fon: label field
-
 * GNetworkMonitor currently only works on Linux! Add implementation for:
     - Windows (patch added: https://bugzilla.gnome.org/show_bug.cgi?id=685442)
     - OS X
-
 * G_OS_LINUX??
-
-**** WIN32 ****
-* Application icon in different sizes
-
-**** OSX ****
-* Add G_OS_OSX in glib
-* Add consistent directory handling in glib
-
-** Contacts **
-- Outlook
-
-** Reverse lookup **
-- Germany: dasörtliche, dastelefonbuch, klicktel, goyellow, gelbeseiten
-- France: 11880.fr
-- Swiss: tel.search.ch, tel.local.ch
-- Austria: telefonabc.at
-
-** Journal **
-- MySQL
-- Text
-
-** Misc **
-- tellows
-- notes
-
-************** UNDECIDED **************
-* Different sound output for notifications
+* Reverse lookup
+ - Germany: dasörtliche, dastelefonbuch, klicktel, goyellow, gelbeseiten
+ - France: 11880.fr
+ - Swiss: tel.search.ch, tel.local.ch
+ - Austria: telefonabc.at
+* Journal
+ - MySQL
+ - Text
+* Misc
+ - tellows
+ - notes
 * Import for JFritz
 * DSL/Connection information
-
-* Distribution schema: Add default actions
-
-* wincred faults with empty password?
-
 * VCard crashes on file changes
+
+Windows
+--------
+ * Printer installation
+ * Audio plugin test
+ * Application icon in different sizes
+ * Outlook
+
+OS X
+-----
+* Add G_OS_OSX in glib
+* Add consistent directory handling in glib

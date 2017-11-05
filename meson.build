@@ -41,6 +41,12 @@ else
 	cdata.set10('RM_FAX_SERVER', 1)
 endif
 
+gslib = cc.find_library('gs', required: false)
+
+if gslib.found()
+	cdata.set10('GS_LIB', 1)
+endif
+
 check_headers = [['dlfcn.h','HAVE_DLFCN_H'],
   ['sys/utsname.h', 'HAVE_SYS_UTSNAME_H'],
 ]
