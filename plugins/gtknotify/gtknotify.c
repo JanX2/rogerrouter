@@ -67,7 +67,7 @@ gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 	}
 
 	window = GTK_WIDGET(gtk_builder_get_object(builder, "window"));
-	gtk_application_add_window(GTK_APPLICATION(g_application_get_default()), GTK_WINDOW(window));
+	//gtk_application_add_window(GTK_APPLICATION(g_application_get_default()), GTK_WINDOW(window));
 
 	type_label = GTK_WIDGET(gtk_builder_get_object(builder, "type_label"));
 	local_label = GTK_WIDGET(gtk_builder_get_object(builder, "local_label"));
@@ -107,7 +107,7 @@ gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 		gtk_label_set_markup(GTK_LABEL(type_label), tmp);
 		g_free(tmp);
 
-		//if (connection->type & RM_CONNECTION_TYPE_SOFTPHONE) {
+		if (connection->type & RM_CONNECTION_TYPE_SOFTPHONE) {
 		GtkWidget *accept_button;
 		GtkWidget *decline_button;
 
@@ -120,8 +120,8 @@ gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 		gtk_actionable_set_action_name(GTK_ACTIONABLE(decline_button), "app.hangup");
 		gtk_actionable_set_action_target(GTK_ACTIONABLE(decline_button), "i", connection->id);
 		gtk_widget_set_visible(decline_button, TRUE);
-		//}
-	} else if (connection->type == RM_CONNECTION_TYPE_OUTGOING) {
+		}
+	} else if (connection->type & RM_CONNECTION_TYPE_OUTGOING) {
 		gint duration = 5;
 		tmp = ui_bold_text(_("Outgoing call"));
 		gtk_label_set_markup(GTK_LABEL(type_label), tmp);
@@ -129,7 +129,9 @@ gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 
 		g_timeout_add_seconds(duration, notification_gtk_close, window);
 	}
+	gtk_widget_show_all(window);
 
+#if 1
 #if GTK_CHECK_VERSION(3, 22, 0)
 	GdkRectangle geometry;
 	GdkDisplay *display = gtk_widget_get_display(window);
@@ -146,8 +148,7 @@ gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 
 	gtk_window_get_size(GTK_WINDOW(window), &width, &height);
 	gtk_window_move(GTK_WINDOW(window), screen_width - width - 18, screen_height - height - 18);
-
-	gtk_widget_show(window);
+#endif
 
 	gtk_window_stick(GTK_WINDOW(window));
 	gtk_window_set_keep_above(GTK_WINDOW(window), TRUE);

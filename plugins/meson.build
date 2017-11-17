@@ -14,7 +14,6 @@ subdir('indicator')
 subdir('keychain')
 
 subdir('osxab')
-subdir('sip')
 
 subdir('statusicon')
 

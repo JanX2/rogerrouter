@@ -1,3 +1,5 @@
+TODO: This is outdate. We have switched to MXE. Scripts have been adapter, Adwaita theme is currently missing.
+
 This directory should contain everything for:
   - Platform setup with all dependencies (cross-compiling on Fedora) -> setup-mingw.sh
   - Build generation (compile everything using a shell script) -> setup-roger.sh

@@ -304,7 +304,11 @@ gchar *convert_to_fax(gchar *file_name)
 #endif
 
 	/* convert ps to fax */
+#ifdef G_OS_WIN32
+	args[0] = g_settings_get_string(profile->settings, "ghostscript");
+#else
 	args[0] = "gs";
+#endif
 	args[1] = "-q";
 	args[2] = "-dNOPAUSE";
 	args[3] = "-dSAFER";

@@ -71,13 +71,13 @@ Function un.onInit
 	!insertmacro MUI_UNGETLANGUAGE
 FunctionEnd
 
-Section -Prerequisites
-	SetOutPath $INSTDIR\3rdparty
-	MessageBox MB_YESNO "Ghostscript is needed for the fax transfer. Do you want to install it?" /SD IDYES IDNO endGhostscript
-		File "..\..\..\packages\gs919w32.exe"
-		ExecWait "$INSTDIR\3rdparty\gs919w32.exe"
-	endGhostscript:
-SectionEnd
+;Section -Prerequisites
+;	SetOutPath $INSTDIR\3rdparty
+;	MessageBox MB_YESNO "Ghostscript is needed for the fax transfer. Do you want to install it?" /SD IDYES IDNO endGhostscript
+;		File "..\..\..\packages\gs919w32.exe"
+;		ExecWait "$INSTDIR\3rdparty\gs919w32.exe"
+;	endGhostscript:
+;SectionEnd
 
 Section RogerRouter
 	; Install license file
@@ -88,8 +88,7 @@ Section RogerRouter
 	SetOutPath "$INSTDIR"
 
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/roger.exe"
-	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/roger-cli.exe"
-	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/librm.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/librm-0.dll"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/gspawn-win32-helper-console.exe"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/gspawn-win32-helper.exe"
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libatk-1.0-0.dll"
@@ -165,7 +164,16 @@ Section RogerRouter
 	File "/usr/i686-w64-mingw32/sys-root/mingw/bin/libwavpack-1.dll"
 
 	SetOutPath "$INSTDIR\lib\gstreamer-1.0"
-	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/gstreamer-1.0/"
+	;File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/gstreamer-1.0/"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/lib/gstreamer-1.0/libgstapp.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/lib/gstreamer-1.0/libgstaudioconvert.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/lib/gstreamer-1.0/libgstaudioresample.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/lib/gstreamer-1.0/libgstautodetect.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/lib/gstreamer-1.0/libgstcoreelements.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/lib/gstreamer-1.0/libgstdirectsoundsink.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/lib/gstreamer-1.0/libgstdirectsoundsrc.dll"
+	File "/usr/i686-w64-mingw32/sys-root/mingw/lib/gstreamer-1.0/libgstplayback.dll"
+
 
 	; Install data files
 	SetOutPath "$INSTDIR\etc"
@@ -184,13 +192,14 @@ Section RogerRouter
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/capi/*fritz*.dll"
 
 	SetOutPath "$INSTDIR\lib\roger"
-	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/roger/"
+	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/roger/*.dll"
+	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/roger/*.plugin"
 
 	SetOutPath "$INSTDIR\lib\rm"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/lib/rm/"
 
 	SetOutPath "$INSTDIR\share\"
-	File /r "/usr/i686-w64-mingw32/sys-root/mingw/share/roger"
+	;File /r "/usr/i686-w64-mingw32/sys-root/mingw/share/roger"
 	File /r "/usr/i686-w64-mingw32/sys-root/mingw/share/glib-2.0"
 
 	SetOutPath "$INSTDIR\share\icons\Adwaita\scalable"
