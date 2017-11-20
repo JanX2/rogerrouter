@@ -304,22 +304,16 @@ gchar *convert_to_fax(gchar *file_name)
 #endif
 
 	/* convert ps to fax */
-#ifdef G_OS_WIN32
-	args[0] = g_settings_get_string(profile->settings, "ghostscript");
-#else
+//#ifdef G_OS_WIN32
+//	args[0] = g_settings_get_string(profile->settings, "ghostscript");
+//#else
 	args[0] = "gs";
-#endif
+//#endif
 	args[1] = "-q";
 	args[2] = "-dNOPAUSE";
 	args[3] = "-dSAFER";
 	args[4] = "-dBATCH";
 
-#ifdef FAX_SFF
-	if (g_settings_get_boolean(profile->settings, "fax-sff")) {
-		args[5] = "-sDEVICE=cfax";
-		out_file = g_strdup_printf("%s/%s.sff", rm_get_user_cache_dir(), g_path_get_basename(file_name));
-	} else
-#endif
 	{
 		gchar *ofile = g_strdup_printf("%s.tif", g_path_get_basename(file_name));
 		args[5] = "-sDEVICE=tiffg4";
@@ -357,14 +351,16 @@ gchar *convert_to_fax(gchar *file_name)
 		return NULL;
 	}
 	ret = gsapi_set_arg_encoding(minst, GS_ARG_ENCODING_UTF8);
-	if (ret == 0) {
-		ret = gsapi_init_with_args(minst, 12, args);
-	}
+	g_debug("%s(): 1. ret %d", __FUNCTION__, ret);
+	ret = gsapi_init_with_args(minst, 12, args);
+	g_debug("%s(): 1.1 ret %d", __FUNCTION__, ret);
 
 	ret1 = gsapi_exit(minst);
+	g_debug("%s(): 2. ret %d", __FUNCTION__, ret1);
 	if ((ret == 0) || (ret == gs_error_Quit)) {
 		ret = ret1;
 	}
+	g_debug("%s(): final ret %d", __FUNCTION__, ret1);
 
 	gsapi_delete_instance(minst);
 #else
@@ -395,7 +391,7 @@ void fax_process_cb(GtkWidget *widget, gchar *file_name, gpointer user_data)
 	gchar *out_file;
 
 	out_file = convert_to_fax(file_name);
-	g_unlink(file_name);
+	//g_unlink(file_name);
 
 	if (out_file) {
 		g_idle_add(app_show_fax_window_idle, out_file);

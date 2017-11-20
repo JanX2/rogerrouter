@@ -1870,15 +1870,6 @@ void app_show_settings(void)
 	settings->fax_ecm_switch = GTK_WIDGET(gtk_builder_get_object(builder, "fax_ecm_switch"));
 	g_settings_bind(profile->settings, "fax-ecm", settings->fax_ecm_switch, "active", G_SETTINGS_BIND_DEFAULT);
 
-#ifdef G_OS_WIN32
-	settings->fax_ghostscript_label = GTK_WIDGET(gtk_builder_get_object(builder, "fax_ghostscript_label"));
-	gtk_widget_set_no_show_all(settings->fax_ghostscript_label, FALSE);
-	settings->fax_ghostscript_file_chooser_button = GTK_WIDGET(gtk_builder_get_object(builder, "fax_ghostscript_file_chooser_button"));
-	gtk_widget_set_no_show_all(settings->fax_ghostscript_file_chooser_button, FALSE);
-	gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(settings->fax_ghostscript_file_chooser_button), g_settings_get_string(profile->settings, "ghostscript"));
-	g_signal_connect(G_OBJECT(settings->fax_ghostscript_file_chooser_button), "file-set", G_CALLBACK(fax_ghostscript_file_chooser_button_file_set_cb), NULL);
-#endif
-
 	/* Journal group */
 	settings->filter_liststore = GTK_LIST_STORE(gtk_builder_get_object(builder, "filter_liststore"));
 	filter_refresh_list(settings->filter_liststore);
