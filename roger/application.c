@@ -383,12 +383,6 @@ static void app_init(GtkApplication *app)
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);
 
-#ifdef RM_FAX_SERVER
-	rm_use_fax_server(TRUE);
-#else
-	rm_use_fax_server(FALSE);
-#endif
-
 #if GTK_CHECK_VERSION(3, 14, 0)
 	const gchar *accels[] = { NULL, NULL, NULL, NULL };
 

@@ -5,6 +5,7 @@ cpp = 'i686-w64-mingw32.shared.posix-g++'
 ar = 'i686-w64-mingw32.shared.posix-ar'
 strip = 'i686-w64-mingw32.shared.posix-strip'  
 pkgconfig = 'i686-w64-mingw32.shared.posix-pkg-config'
+windres = 'i686-w64-mingw32.shared.posix-windres'
 exe_wrapper = 'wine' # A command used to run generated executables.
 
 [host_machine]
@@ -15,4 +16,3 @@ endian = 'little'
 
 [properties]
 c_link_args = ['-mwindows']
-WINDRES = 'i686-w64-mingw32.shared.posix-windres'

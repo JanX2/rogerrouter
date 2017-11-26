@@ -24,10 +24,8 @@
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
 
-#ifdef GS_LIB
 #include <ghostscript/iapi.h>
 #include <ghostscript/ierrors.h>
-#endif
 
 #include <rm/rm.h>
 
@@ -297,18 +295,12 @@ gchar *convert_to_fax(gchar *file_name)
 	gchar *output;
 	gchar *out_file;
 	RmProfile *profile = rm_profile_get_active();
-#ifdef GS_LIB
 	gint ret;
 	gint ret1;
 	void *minst;
-#endif
 
 	/* convert ps to fax */
-//#ifdef G_OS_WIN32
-//	args[0] = g_settings_get_string(profile->settings, "ghostscript");
-//#else
 	args[0] = "gs";
-//#endif
 	args[1] = "-q";
 	args[2] = "-dNOPAUSE";
 	args[3] = "-dSAFER";
@@ -345,7 +337,6 @@ gchar *convert_to_fax(gchar *file_name)
 	args[11] = file_name;
 	args[12] = NULL;
 
-#ifdef GS_LIB
 	ret = gsapi_new_instance(&minst, NULL);
 	if (ret < 0) {
 		return NULL;
@@ -363,18 +354,6 @@ gchar *convert_to_fax(gchar *file_name)
 	g_debug("%s(): final ret %d", __FUNCTION__, ret1);
 
 	gsapi_delete_instance(minst);
-#else
-	GError *error = NULL;
-	gint conv_ret_value;
-
-	if (!g_spawn_sync(NULL, args, NULL, G_SPAWN_SEARCH_PATH | G_SPAWN_CHILD_INHERITS_STDIN | G_SPAWN_LEAVE_DESCRIPTORS_OPEN /*| G_SPAWN_STDOUT_TO_DEV_NULL | G_SPAWN_STDERR_TO_DEV_NULL*/, NULL, NULL, NULL, NULL, &conv_ret_value, &error)) {
-		g_warning("%s(): Error occurred: %s", __FUNCTION__, error ? error->message : "");
-		//g_free(args[0]);
-		g_free(out_file);
-
-		return NULL;
-	}
-#endif
 
 	if (!g_file_test(out_file, G_FILE_TEST_EXISTS)) {
 		g_warning("%s(): Error converting print file to FAX format!", __FUNCTION__);

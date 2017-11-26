@@ -10,10 +10,11 @@ $(PKG)_URL      := https://www.soft-switch.org/downloads/spandsp/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc tiff
 
 define $(PKG)_UPDATE
-#    $(WGET) -q -O- 'https://git.xiph.org/?p=speex.git;a=tags' | \
-#    grep '<a class="list name"' | \
-#    $(SED) -n 's,.*<a[^>]*>Speex-\([0-9][^<]*\)<.*,\1,p' | \
-#    head -1
+    $(WGET) -q -O- 'https://www.soft-switch.org/downloads/spandsp/' | \
+    grep '<a href="spandsp-' | \
+    $(SED)  -n "s,.*spandsp-\([0-9]\+\.[0-9]*[02468]\.[^']*\)\.tgz.*,\1,p" | \
+    $(SORT) -Vr |\
+    head -1
 endef
 
 define $(PKG)_BUILD

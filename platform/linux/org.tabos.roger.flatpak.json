@@ -112,8 +112,25 @@
 			"config-opts": [ "--disable-always-build-tests", "--disable-Werror", "--disable-static", "--enable-goa=no" ],
 			"sources": [
 				{
-					"type": "git",
-					"url": "git://git.gnome.org/libgdata"
+					"type": "archive",
+					"url": "https://download.gnome.org/sources/libgdata/0.17/libgdata-0.17.9.tar.xz",
+					"sha256": "85c4f7674c0098ffaf060ae01b6b832cb277b3673d54ace3bdedaad6b127453a"
+				}
+			]
+		},
+		{
+			"name": "poppler",
+			"buildsystem": "autotools",
+			"cleanup": [ "/bin" ],
+			"config-opts": [
+				"--enable-libopenjpeg=none",
+				"--enable-xpdf-headers"
+			],
+			"sources": [
+				{
+					"type": "archive",
+					"url": "https://poppler.freedesktop.org/poppler-0.57.0.tar.xz",
+					"sha256": "0ea37de71b7db78212ebc79df59f99b66409a29c2eac4d882dae9f2397fe44d8"
 				}
 			]
 		},
@@ -125,13 +142,13 @@
 			"sources": [
 				{
 					"type": "git",
-					"url": "ssh://git@git.krueger-it.net:10022/tabos.org/librm.git"
+					"url": "https://git.krueger-it.net/tabos.org/librm.git"
 				}
 			]
 		},
 		{
 			"name": "roger",
-			"config-opts": ["--libdir=/app/lib", "--buildtype=release", "-Dfax_spooler=false"],
+			"config-opts": ["--libdir=/app/lib", "--buildtype=release"],
 			"buildsystem": "meson",
 			"builddir": true,
 			"sources": [

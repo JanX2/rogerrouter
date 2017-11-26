@@ -74,7 +74,6 @@ Section RogerRouter
 	SetOutPath "$INSTDIR"
 
 	File "bin/roger.exe"
-	File "bin/roger.exe"
 	File "bin/librm-0.dll"
 	File "bin/gspawn-win32-helper-console.exe"
 	File "bin/gspawn-win32-helper.exe"
@@ -171,7 +170,7 @@ Section RogerRouter
 	File "bin/gstreamer-1.0/libgstautodetect.dll"
 	File "bin/gstreamer-1.0/libgstcoreelements.dll"
 	File "bin/gstreamer-1.0/libgstdirectsoundsink.dll"
-	;File "bin/gstreamer-1.0/libgstdirectsoundsrc.dll"
+	File "bin/gstreamer-1.0/libgstdirectsoundsrc.dll"
 	File "bin/gstreamer-1.0/libgstplayback.dll"
 
 	SetOutPath "$INSTDIR\lib\gio"
@@ -236,17 +235,17 @@ Section RogerRouter
 SectionEnd
 
 Section "Start Menu Shortcuts"
-	CreateShortCut "$SMPROGRAMS\RogerRouter.lnk" "$INSTDIR\roger.exe"
+	CreateShortCut "$SMPROGRAMS\Roger Router.lnk" "$INSTDIR\roger.exe"
 SectionEnd
 
 Section "Desktop Icons"
-	CreateShortCut "$DESKTOP\RogerRouter.lnk" "$INSTDIR\roger.exe"
+	CreateShortCut "$DESKTOP\Roger Router.lnk" "$INSTDIR\roger.exe"
 SectionEnd
 
 Section "Uninstall"
 	DeleteRegKey HKCU "Software\GSettings\org\tabos"
-	Delete /rebootok "$DESKTOP\RogerRouter.lnk"
-	Delete /rebootok "$SMPROGRAMS\RogerRouter\RogerRouter.lnk"
+	Delete /rebootok "$DESKTOP\Roger Router.lnk"
+	Delete /rebootok "$SMPROGRAMS\RogerRouter\Roger Router.lnk"
 	Delete /rebootok "$SMPROGRAMS\RogerRouter\Uninstall.lnk"
 	RMDir "$SMPROGRAMS\RogerRouter"
 	RMDir /r "$INSTDIR"

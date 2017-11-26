@@ -6,4 +6,4 @@ if [ ! -d "$MXEDIR" ]; then
 fi
 
 cd $MXEDIR
-make capi gtk3 speex libsndfile speexdsp spandsp gst-plugins-good gst-plugins-bad librsvg libsoup json-glib gssdp gupnp ghostscript adwaita-icon-theme MXE_TARGETS=i686-w64-mingw32.shared.posix
+make capi gtk3 speex libsndfile speexdsp spandsp gst-plugins-good gst-plugins-bad librsvg libsoup json-glib gssdp gupnp ghostscript adwaita-icon-theme poppler MXE_TARGETS=i686-w64-mingw32.shared.posix

@@ -504,6 +504,8 @@ void journal_update_filter(void)
 	gtk_combo_box_set_active(GTK_COMBO_BOX(journal_filter_box), 0);
 }
 
+int app_pdf(char *data, int length, gchar *filename);
+
 void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
 {
 	RmCallEntry *call;
@@ -513,12 +515,13 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 
 	switch (call->type) {
 	case RM_CALL_ENTRY_TYPE_FAX_REPORT:
-		if (!gtk_show_uri_on_window(GTK_WINDOW(journal_get_window()), call->priv, gtk_get_current_event_time (), &error)) {
+		/*if (!gtk_show_uri_on_window(GTK_WINDOW(journal_get_window()), call->priv, gtk_get_current_event_time(), &error)) {
 			g_debug("%s(): Could not open uri '%s'", __FUNCTION__, call->priv);
 			g_debug("%s(): '%s'", __FUNCTION__, error->message);
 		} else {
 			g_debug("%s(): Opened '%s'", __FUNCTION__, call->priv);
-		}
+		}*/
+		app_pdf(NULL, 0, call->priv);
 		break;
 	case RM_CALL_ENTRY_TYPE_FAX: {
 		gsize len = 0;
@@ -532,23 +535,26 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 
 			rm_file_save(path, data, len);
 
-			uri = g_strdup_printf("file://%s", path);
+			uri = g_strdup_printf("file:///%s", path);
 			g_free(path);
 
-			if (!gtk_show_uri_on_window(GTK_WINDOW(journal_get_window()), uri, gtk_get_current_event_time (), &error)) {
+			/*if (!gtk_show_uri_on_window(GTK_WINDOW(journal_get_window()), uri, gtk_get_current_event_time(), &error)) {
 				g_debug("%s(): Could not open uri '%s'", __FUNCTION__, uri);
 				g_debug("%s(): '%s'", __FUNCTION__, error->message);
 			} else {
 				g_debug("%s(): Opened '%s'", __FUNCTION__, uri);
-			}
+			}*/
+
+			app_pdf(data, len, NULL);
+			//app_pdf(NULL, 0, uri);
 
 			g_free(uri);
 		}
-		g_free(data);
+		//g_free(data);
 		break;
 	}
 	case RM_CALL_ENTRY_TYPE_RECORD:
-		gtk_show_uri_on_window(GTK_WINDOW(journal_get_window()), call->priv, gtk_get_current_event_time (), &error);
+		gtk_show_uri_on_window(GTK_WINDOW(journal_get_window()), call->priv, gtk_get_current_event_time(), &error);
 		break;
 	case RM_CALL_ENTRY_TYPE_VOICE:
 		app_answeringmachine(call->priv);
