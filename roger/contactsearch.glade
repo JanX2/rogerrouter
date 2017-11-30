@@ -16,9 +16,9 @@
         <property name="activates_default">True</property>
         <property name="primary_icon_name">edit-find-symbolic</property>
         <property name="placeholder_text" translatable="yes">Enter name or number...</property>
-        <signal name="icon-press" handler="contact_search_icon_press_cb" swapped="yes"/>
+        <!--<signal name="icon-press" handler="contact_search_icon_press_cb" swapped="yes"/>
         <signal name="key-press-event" handler="contact_search_key_press_event_cb" swapped="yes"/>
-        <signal name="search-changed" handler="contact_search_search_changed_cb" swapped="yes"/>
+        <signal name="search-changed" handler="contact_search_search_changed_cb" swapped="yes"/>-->
       </object>
       <packing>
         <property name="expand">False</property>
