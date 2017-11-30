@@ -291,11 +291,11 @@ static void journal_activated(GSimpleAction *action, GVariant *parameter, gpoint
 {
 	GtkWidget *journal_win = journal_get_window();
 
-	if (gtk_widget_get_visible(GTK_WIDGET(journal_win))) {
-		gtk_window_present(GTK_WINDOW(journal_win));
-	} else {
+	//if (gtk_widget_get_visible(GTK_WIDGET(journal_win))) {
+	//	gtk_window_present(GTK_WINDOW(journal_win));
+	//} else {
 		gtk_widget_set_visible(GTK_WIDGET(journal_win), !gtk_widget_get_visible(GTK_WIDGET(journal_win)));
-	}
+	//}
 }
 
 static void debug_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
@@ -307,8 +307,6 @@ static void hideonquit_activated(GSimpleAction *simple,
                        GVariant      *parameter,
                        gpointer       user_data)
 {
-  //g_print ("%d\n", g_variant_get_boolean (parameter));
-
 	journal_set_hide_on_quit (g_variant_get_boolean(parameter));
 }
 
@@ -473,7 +471,7 @@ static void app_init(GtkApplication *app)
 		journal_set_hide_on_quit(TRUE);
 	}
 
-	if (rm_netmonitor_is_online() && !rm_profile_get_active()) {
+	if (rm_netmonitor_is_online() && !rm_profile_get_list()) {
 		journal_set_hide_on_start(TRUE);
 		app_assistant();
 	}
@@ -483,7 +481,7 @@ static void app_init(GtkApplication *app)
 
 G_GNUC_NORETURN static gboolean option_version_cb(const gchar *option_name, const gchar *value, gpointer data, GError **error)
 {
-	g_print("%s %s\n", PACKAGE_NAME, PACKAGE_VERSION);
+	g_message("%s %s\n", PACKAGE_NAME, PACKAGE_VERSION);
 	exit(0);
 }
 
