@@ -281,7 +281,7 @@ void app_plugins(void)
 	gtk_window_set_default_size(GTK_WINDOW(plugins_window), 700, 500);
 	gtk_window_set_transient_for(GTK_WINDOW(plugins_window), GTK_WINDOW(journal_get_window()));
 	gtk_window_set_position(GTK_WINDOW(plugins_window), GTK_WIN_POS_CENTER_ON_PARENT);
-	gtk_window_set_modal(GTK_WINDOW(plugins_window), TRUE);
+	//gtk_window_set_modal(GTK_WINDOW(plugins_window), TRUE);
 
 	header = gtk_header_bar_new();
 	gtk_header_bar_set_title(GTK_HEADER_BAR(header), _("Configure plugins"));
