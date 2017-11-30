@@ -11,7 +11,7 @@
 	</enum>
 	<schema id="org.tabos.roger.plugins.statusicon" path="/org/tabos/roger/plugins/statusicon/">
 		<key name="hide-journal-on-startup" type="b">
-			<default>true</default>
+			<default>false</default>
 			<summary>Hide Journal on startup</summary>
 			<description>If true, the Journal is hide on startup off Roger Router.</description>
 		</key>

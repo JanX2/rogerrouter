@@ -289,17 +289,18 @@ void statusicon_popup_menu_cb(GtkStatusIcon *statusicon, guint button, guint act
 
 /**
  * statusicon_connection_changed_cb:
- * @obj: a #RmObject
+ * @object: a #RmObject
+ * @event: event id
  * @connection: a #RmConnection
  * @user_data: a #RmStatusIconPlugin
  *
  * "connection-changed" callback function. Set icon to notify in case of missed calls.
  */
-void statusicon_connection_changed_cb(RmObject *obj, RmConnection *connection, gpointer user_data)
+void statusicon_connection_changed_cb(RmObject *object, gint event, RmConnection *connection, gpointer user_data)
 {
 	RmStatusIconPlugin *statusicon_plugin = user_data;
 
-	if (connection->type == RM_CONNECTION_TYPE_MISSED) {
+	if ((connection->type & ~RM_CONNECTION_TYPE_SOFTPHONE) == RM_CONNECTION_TYPE_MISSED) {
 		gchar *iconname = g_strconcat("roger-", g_settings_get_string(statusicon_plugin->settings, "notify-icon"), NULL);
 		gtk_status_icon_set_from_icon_name(statusicon_plugin->statusicon, iconname);
 		g_free(iconname);

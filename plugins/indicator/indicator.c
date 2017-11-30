@@ -224,17 +224,16 @@ GtkWidget *indicator_menu(RmIndicatorPlugin *indicator_plugin)
 
 /**
  * \brief "connection-changed" callback function
- * \param obj app object
+ * \param object app object
+ * \param event event type
  * \param connection connection structure
  * \param unused_pointer unused user pointer
  */
-void indicator_connection_changed_cb(RmObject *obj, RmConnection *connection, gpointer user_data)
+void indicator_connection_changed_cb(RmObject *object, gint event, RmConnection *connection, gpointer user_data)
 {
 	RmIndicatorPlugin *indicator_plugin = user_data;
 
-	g_debug("Called: '%d/%d", connection->type, RM_CONNECTION_TYPE_MISSED);
-	if (connection->type == RM_CONNECTION_TYPE_MISSED) {
-		g_debug("Setting missed icon");
+	if ((connection->type & ~RM_CONNECTION_TYPE_SOFTPHONE) == RM_CONNECTION_TYPE_MISSED) {
 		app_indicator_set_status(indicator_plugin->indicator, APP_INDICATOR_STATUS_ATTENTION);
 	}
 }
@@ -313,6 +312,7 @@ gboolean indicator_plugin_init(RmPlugin *plugin)
 	/* Create Application Indicator */
 	gchar *iconname = g_strconcat("roger-", g_settings_get_string(indicator_plugin->settings, "default-icon"), NULL);
 	indicator_plugin->indicator = app_indicator_new("roger", iconname, APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
+	app_indicator_set_icon_theme_path(indicator_plugin->indicator, "/app/share/icons/");
 	iconname = g_strconcat("roger-", g_settings_get_string(indicator_plugin->settings, "notify-icon"), NULL);
 	app_indicator_set_attention_icon_full(indicator_plugin->indicator, iconname, "notify-icon");
 	g_free(iconname);
