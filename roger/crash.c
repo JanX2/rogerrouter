@@ -321,7 +321,7 @@ static void crash_save_crash_log(GtkButton *button, const gchar *text)
 	g_free(time);
 	g_date_time_unref(datetime);
 
-	native = gtk_file_chooser_native_new("Save Crash Log", NULL, GTK_FILE_CHOOSER_ACTION_SAVE, NULL, NULL);
+	native = gtk_file_chooser_native_new("Save Crash Log", NULL, GTK_FILE_CHOOSER_ACTION_SAVE, _("Save"), _("Cancel"));
 	chooser = GTK_FILE_CHOOSER(native);
 
 	gtk_file_chooser_set_do_overwrite_confirmation(chooser, TRUE);

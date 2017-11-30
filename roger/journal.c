@@ -578,9 +578,9 @@ static gboolean journal_hide_on_start = FALSE;
 void journal_set_hide_on_quit(gboolean hide)
 {
 	journal_hide_on_quit = hide;
-	if (hide && journal_win) {
+	/*if (hide && journal_win) {
 		gtk_widget_set_visible(journal_win, FALSE);
-	}
+	}*/
 }
 
 void journal_set_hide_on_start(gboolean hide)
@@ -878,7 +878,7 @@ void export_journal_activated(GSimpleAction *action, GVariant *parameter, gpoint
 	GtkFileChooser *chooser;
 	gint res;
 
-	native = gtk_file_chooser_native_new(_("Export journal"), GTK_WINDOW(journal_win), GTK_FILE_CHOOSER_ACTION_SAVE, NULL, NULL);
+	native = gtk_file_chooser_native_new(_("Export journal"), GTK_WINDOW(journal_win), GTK_FILE_CHOOSER_ACTION_SAVE, _("Save"), _("Cancel"));
 	chooser = GTK_FILE_CHOOSER(native);
 	gtk_file_chooser_set_current_name(chooser, "journal.csv");
 	//g_signal_connect(chooser, "response", G_CALLBACK(journal_export_cb), NULL);
