@@ -128,10 +128,22 @@ Section RogerRouter
 	File "bin/libidn-11.dll"
 	File "bin/liblcms2-2.dll"
 
+	# Poppler (PDF)
+	File "bin/libpoppler-glib-8.dll"
+	File "bin/libstdc++-6.dll"
+	File "bin/libcurl-4.dll"
+	File "bin/librtmp-1.dll"
+	File "bin/libssh2-1.dll"
+	File "bin/libpoppler-66.dll"
+	File "bin/libgcrypt-20.dll"
+	File "bin/libgpg-error-0.dll"
+
+	# UPnP
 	File "bin/libgssdp-1.0-3.dll"
 	File "bin/libgupnp-1.0-4.dll"
 	File "bin/libjson-glib-1.0-0.dll"
 
+	# GStreamer
 	File "bin/libgstreamer-1.0-0.dll"
 	File "bin/libgstallocators-1.0-0.dll"
 	File "bin/libgstaudio-1.0-0.dll"
