@@ -291,11 +291,7 @@ static void journal_activated(GSimpleAction *action, GVariant *parameter, gpoint
 {
 	GtkWidget *journal_win = journal_get_window();
 
-	//if (gtk_widget_get_visible(GTK_WIDGET(journal_win))) {
-	//	gtk_window_present(GTK_WINDOW(journal_win));
-	//} else {
-		gtk_widget_set_visible(GTK_WIDGET(journal_win), !gtk_widget_get_visible(GTK_WIDGET(journal_win)));
-	//}
+	gtk_widget_set_visible(GTK_WIDGET(journal_win), !gtk_widget_get_visible(GTK_WIDGET(journal_win)));
 }
 
 static void debug_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
