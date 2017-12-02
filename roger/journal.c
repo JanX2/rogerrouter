@@ -578,14 +578,17 @@ static gboolean journal_hide_on_start = FALSE;
 void journal_set_hide_on_quit(gboolean hide)
 {
 	journal_hide_on_quit = hide;
-	/*if (hide && journal_win) {
-		gtk_widget_set_visible(journal_win, FALSE);
-	}*/
+	if (!hide && journal_win) {
+		gtk_widget_set_visible(journal_win, TRUE);
+	}
 }
 
 void journal_set_hide_on_start(gboolean hide)
 {
 	journal_hide_on_start = hide;
+	if (hide && journal_win) {
+		gtk_widget_set_visible(journal_win, FALSE);
+	}
 }
 
 gint journal_delete_event_cb(GtkWidget *widget, GdkEvent *event, gpointer data)
