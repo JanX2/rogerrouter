@@ -835,7 +835,6 @@ void action_apply_button_clicked_cb(GtkWidget *button, gpointer user_data)
 
 gboolean action_edit(RmAction *action)
 {
-#if 1
 	GtkWidget *dialog;
 	GtkWidget *name_entry;
 	GtkWidget *exec_entry;
@@ -881,9 +880,9 @@ gboolean action_edit(RmAction *action)
 			rm_action_set_name(action, gtk_entry_get_text(GTK_ENTRY(name_entry)));
 		}
 
-		rm_action_set_name(action, gtk_entry_get_text(GTK_ENTRY(name_entry)));
+		rm_action_set_name(action, g_strdup(gtk_entry_get_text(GTK_ENTRY(name_entry))));
 		rm_action_set_description(action, "");
-		rm_action_set_exec(action, gtk_entry_get_text(GTK_ENTRY(exec_entry)));
+		rm_action_set_exec(action, g_strdup(gtk_entry_get_text(GTK_ENTRY(exec_entry))));
 		rm_action_set_numbers(action, (const gchar**)selected_numbers);
 		selected_action = action;
 
@@ -893,134 +892,6 @@ gboolean action_edit(RmAction *action)
 	gtk_widget_destroy(dialog);
 
 	return changed;
-#else
-	GtkWidget *dialog;
-	GtkWidget *content_area;
-	GtkWidget *grid;
-	GtkWidget *general_grid;
-	GtkWidget *settings_grid;
-	GtkWidget *name_label;
-	GtkWidget *name_entry;
-	GtkWidget *exec_label;
-	GtkWidget *exec_entry;
-	GtkWidget *scroll_window;
-	GtkWidget *view;
-	GtkListStore *list_store;
-	GtkTreeModel *tree_model;
-	GtkCellRenderer *renderer;
-	GtkTreeViewColumn *enable_column;
-	GtkTreeViewColumn *number_column;
-	gint result;
-	gboolean changed = FALSE;
-
-	dialog = gtk_dialog_new_with_buttons(_("Action"), GTK_WINDOW(settings->window), GTK_DIALOG_MODAL | GTK_DIALOG_USE_HEADER_BAR, _("_Apply"), GTK_RESPONSE_APPLY, _("_Cancel"), GTK_RESPONSE_CANCEL, NULL);
-
-	/**
-	 * General:
-	 *   Name: <ENTRY>
-	 *   Description: <ENTRY>
-	 *   Exec: <ENTRY>
-	 *
-	 * MSN Settings:
-	 *   |-Enabled----Number-------|
-	 *   |    +       NUMBER       |
-	 *   |-------------------------|
-	 */
-	grid = gtk_grid_new();
-	gtk_grid_set_column_homogeneous(GTK_GRID(grid), TRUE);
-
-	content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
-	gtk_container_add(GTK_CONTAINER(content_area), grid);
-
-	/* Set standard spacing to 5 */
-	gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
-
-	/* General grid */
-	general_grid = gtk_grid_new();
-	gtk_grid_set_row_spacing(GTK_GRID(general_grid), 5);
-	gtk_grid_set_column_spacing(GTK_GRID(general_grid), 5);
-
-	/* Name */
-	name_label = ui_label_new(_("Name"));
-	gtk_grid_attach(GTK_GRID(general_grid), name_label, 0, 0, 1, 1);
-
-	name_entry = gtk_entry_new();
-	gtk_grid_attach(GTK_GRID(general_grid), name_entry, 1, 0, 1, 1);
-
-	/* Exec */
-	exec_label = ui_label_new(_("Execute"));
-	gtk_grid_attach(GTK_GRID(general_grid), exec_label, 0, 2, 1, 1);
-
-	exec_entry = gtk_entry_new();
-	gtk_widget_set_tooltip_text(exec_entry, _("Regex:\n%LINE% - Local line\n%NUMBER% - Caller number\n%NAME% - Caller name\n%COMPANY% - Caller company"));
-	gtk_grid_attach(GTK_GRID(general_grid), exec_entry, 1, 2, 1, 1);
-
-	if (action) {
-		gtk_entry_set_text(GTK_ENTRY(name_entry), action->name);
-		gtk_entry_set_text(GTK_ENTRY(exec_entry), action->exec);
-	}
-
-	gtk_grid_attach(GTK_GRID(grid), pref_group_create(general_grid, _("General"), TRUE, FALSE), 0, 0, 1, 1);
-
-	/* Settings grid */
-	settings_grid = gtk_grid_new();
-	gtk_widget_set_hexpand(settings_grid, TRUE);
-	gtk_widget_set_vexpand(settings_grid, TRUE);
-
-	/* Scrolled window */
-	scroll_window = gtk_scrolled_window_new(NULL, NULL);
-	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(scroll_window), GTK_SHADOW_IN);
-	gtk_widget_set_hexpand(scroll_window, TRUE);
-	gtk_widget_set_vexpand(scroll_window, TRUE);
-
-	/* Treeview */
-	view = gtk_tree_view_new();
-
-	gtk_widget_set_hexpand(view, TRUE);
-	gtk_widget_set_vexpand(view, TRUE);
-	gtk_container_add(GTK_CONTAINER(scroll_window), view);
-	gtk_grid_attach(GTK_GRID(settings_grid), scroll_window, 0, 0, 1, 1);
-
-	list_store = gtk_list_store_new(2, G_TYPE_BOOLEAN, G_TYPE_STRING);
-
-	settings_refresh_list(list_store);
-
-	tree_model = GTK_TREE_MODEL(list_store);
-
-	gtk_tree_view_set_model(GTK_TREE_VIEW(view), GTK_TREE_MODEL(tree_model));
-
-	renderer = gtk_cell_renderer_toggle_new();
-	enable_column = gtk_tree_view_column_new_with_attributes(_("Enable"), renderer, "active", 0, NULL);
-	gtk_tree_view_append_column(GTK_TREE_VIEW(view), enable_column);
-	g_signal_connect(G_OBJECT(renderer), "toggled", G_CALLBACK(action_enable_renderer_toggled_cb), view);
-
-	renderer = gtk_cell_renderer_text_new();
-	number_column = gtk_tree_view_column_new_with_attributes(_("Number"), renderer, "text", 1, NULL);
-	gtk_tree_view_append_column(GTK_TREE_VIEW(view), number_column);
-
-	gtk_grid_attach(GTK_GRID(grid), pref_group_create(settings_grid, _("MSN Settings"), TRUE, TRUE), 1, 0, 1, 1);
-
-	gtk_widget_show_all(grid);
-	result = gtk_dialog_run(GTK_DIALOG(dialog));
-
-	if (result == GTK_RESPONSE_APPLY) {
-		if (!action) {
-			action = action_create();
-			action_add(rm_profile_get_active(), action);
-			selected_action = action;
-		}
-
-		action = action_modify(action, gtk_entry_get_text(GTK_ENTRY(name_entry)), "", gtk_entry_get_text(GTK_ENTRY(exec_entry)), selected_numbers);
-		action_commit(rm_profile_get_active());
-
-		changed = TRUE;
-	}
-
-	gtk_widget_destroy(dialog);
-
-	return changed;
-#endif
 }
 
 void actions_add_button_clicked_cb(GtkWidget *widget, gpointer data)
@@ -1873,6 +1744,12 @@ void app_show_settings(void)
 	/* Journal group */
 	settings->filter_liststore = GTK_LIST_STORE(gtk_builder_get_object(builder, "filter_liststore"));
 	filter_refresh_list(settings->filter_liststore);
+
+	{
+		GtkWidget *tmp = GTK_WIDGET(gtk_builder_get_object(builder, "grid100"));
+		gtk_widget_set_no_show_all(tmp, TRUE);
+		gtk_widget_set_visible(tmp, FALSE);
+	}
 
 	/* Action group */
 	settings->actions_liststore = GTK_LIST_STORE(gtk_builder_get_object(builder, "actions_liststore"));
