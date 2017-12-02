@@ -168,7 +168,7 @@ static void pdf_save(GtkWidget *widget, gpointer user_data)
  *
  * Returns: 0 on success, otherwise error
  */
-int app_pdf(char *data, int length, gchar *uri) {
+int app_pdf(gchar *data, gsize length, gchar *uri) {
 	GtkWidget* win;
 	GtkWidget *headerbar;
 	GtkWidget *sw;
@@ -178,19 +178,20 @@ int app_pdf(char *data, int length, gchar *uri) {
 	gdouble popwidth, popheight;
 	PdfViewer *pdf_viewer;
 
+	if (uri && !data && !length) {
+		data = rm_file_load(uri, &length);
+	}
+
 	/* Open document */
 	if (data && length) {
 		doc = poppler_document_new_from_data(data, length, "", &err);
-	} else {
-		doc = poppler_document_new_from_file(uri, "", &err);
 	}
 
 	if (!doc) {
-			g_warning("%s(): %s", __FUNCTION__, err->message);
+		g_warning("%s(): %s", __FUNCTION__, err->message);
+		g_error_free(err);
 
-			g_error_free(err);
-
-			return -1;
+		return -1;
 	}
 
 	pdf_viewer = g_slice_alloc0(sizeof(PdfViewer));
@@ -201,11 +202,11 @@ int app_pdf(char *data, int length, gchar *uri) {
 	/* Get first page */
 	pdf_viewer->page = poppler_document_get_page(doc, 0);
 	if(!pdf_viewer->page) {
-			g_warning("%s(): Could not open first page of document", __FUNCTION__);
+		g_warning("%s(): Could not open first page of document", __FUNCTION__);
 
-			g_object_unref(pdf_viewer->doc);
+		g_object_unref(pdf_viewer->doc);
 
-			return -2;
+		return -2;
 	}
 
 	/* Get number of pages */
@@ -236,31 +237,31 @@ int app_pdf(char *data, int length, gchar *uri) {
 	gtk_widget_set_vexpand(pdf_viewer->da, TRUE);
 	gtk_grid_attach(GTK_GRID(grid), pdf_viewer->da, 0, 0, 1, 1);
 
-		GtkWidget *button;
-		GtkWidget *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+	GtkWidget *button;
+	GtkWidget *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 
-		/* Set linked/raised style */
-		gtk_header_bar_pack_start (GTK_HEADER_BAR(headerbar), box);
-		gtk_style_context_add_class(gtk_widget_get_style_context(box), GTK_STYLE_CLASS_RAISED);
-		gtk_style_context_add_class(gtk_widget_get_style_context(box), GTK_STYLE_CLASS_LINKED);
+	/* Set linked/raised style */
+	gtk_header_bar_pack_start (GTK_HEADER_BAR(headerbar), box);
+	gtk_style_context_add_class(gtk_widget_get_style_context(box), GTK_STYLE_CLASS_RAISED);
+	gtk_style_context_add_class(gtk_widget_get_style_context(box), GTK_STYLE_CLASS_LINKED);
 
-		/* Add prev button */
-		button = gtk_button_new_from_icon_name("go-previous-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR);
-		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(pdf_prev_page), pdf_viewer);
-		gtk_widget_set_sensitive(button, FALSE);
-		gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
-		pdf_viewer->prev = button;
+	/* Add prev button */
+	button = gtk_button_new_from_icon_name("go-previous-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR);
+	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(pdf_prev_page), pdf_viewer);
+	gtk_widget_set_sensitive(button, FALSE);
+	gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
+	pdf_viewer->prev = button;
 
-		/* Add next button */
-		button = gtk_button_new_from_icon_name("go-next-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR);
-		gtk_widget_set_sensitive(button, FALSE);
-		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(pdf_next_page), pdf_viewer);
-		gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
-		pdf_viewer->next = button;
+	/* Add next button */
+	button = gtk_button_new_from_icon_name("go-next-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR);
+	gtk_widget_set_sensitive(button, FALSE);
+	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(pdf_next_page), pdf_viewer);
+	gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
+	pdf_viewer->next = button;
 
-		button = gtk_button_new_from_icon_name("document-save-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR);
-		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(pdf_save), pdf_viewer);
-		gtk_header_bar_pack_end(GTK_HEADER_BAR(headerbar), button);
+	button = gtk_button_new_from_icon_name("document-save-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR);
+	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(pdf_save), pdf_viewer);
+	gtk_header_bar_pack_end(GTK_HEADER_BAR(headerbar), button);
 
 	if (pdf_viewer->num_pages > 1) {
 		gtk_widget_set_sensitive(pdf_viewer->next, TRUE);
