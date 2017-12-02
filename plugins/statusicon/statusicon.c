@@ -280,11 +280,7 @@ void statusicon_popup_menu_cb(GtkStatusIcon *statusicon, guint button, guint act
 
 	gtk_widget_show_all(menu);
 
-#ifdef G_OS_WIN32
-	button = 0;
-#endif
-
-	gtk_menu_popup(GTK_MENU(menu), NULL, NULL, gtk_status_icon_position_menu, statusicon_plugin->statusicon, button, activate_time);
+	gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, statusicon_plugin->statusicon, button, activate_time);
 }
 
 /**
@@ -448,9 +444,6 @@ gboolean statusicon_plugin_shutdown(RmPlugin *plugin)
 	if (g_signal_handler_is_connected(G_OBJECT(rm_object), statusicon_plugin->signal_id)) {
 		g_signal_handler_disconnect(G_OBJECT(rm_object), statusicon_plugin->signal_id);
 	}
-
-	/* Make sure journal window is visible on deactivate */
-	statusicon_journal_activate_cb(NULL, statusicon_plugin);
 
 	gtk_status_icon_set_visible(statusicon_plugin->statusicon, FALSE);
 	g_clear_object(&statusicon_plugin->statusicon);
