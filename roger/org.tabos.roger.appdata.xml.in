@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2016 Jan-Michael Brummer <jan.brummer@tabos.org
+  Copyright 2017 Jan-Michael Brummer <jan.brummer@tabos.org
 -->
-<component type="desktop">
-  <id>org.tabos.roger.desktop</id>
+<component type="desktop-application">
+  <id>org.tabos.roger</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0</project_license>
   <name>Roger Router</name>
   <summary>Journal, Fax-Software and Call-Monitor for AVM FRITZ!Box or compatible</summary>
+  <launchable type="desktop-id">org.tabos.roger.desktop</launchable>
   <description>
-    <p>Roger Router is a clean solution for controlling the FRITZ!Box or compatible router with Linux. It offers a rich feature list, including call monitor, journal, fax support and also has a great integration into Evolution and FritzFon address books.</p>
-    <p>Some plugins for Roger Router are packaged separately.</p>
+    <p>Roger Router is a clean solution for controlling the FRITZ!Box or compatible router with Linux. It offers a rich feature list, including call monitor, journal, fax support and also has a great integration into several address books.</p>
   </description>
   <screenshots>
     <screenshot height="575" type="default" width="1252">
@@ -18,6 +18,16 @@
       <caption>Journal view of all calls</caption>
     </screenshot>
   </screenshots>
+  <releases>
+    <release version="1.92.0" date="2017-12-01">
+      <description>
+        Beta-Release for upcoming 2.0.
+      </description>
+    </release>
+  </releases>
+  <categories>
+    <category>Network</category>
+  </categories>
   <keywords>
     <keyword xml:lang="de">box</keyword>
     <keyword xml:lang="de">fax</keyword>
