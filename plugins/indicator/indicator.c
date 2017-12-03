@@ -312,7 +312,6 @@ gboolean indicator_plugin_init(RmPlugin *plugin)
 	/* Create Application Indicator */
 	gchar *iconname = g_strconcat("roger-", g_settings_get_string(indicator_plugin->settings, "default-icon"), NULL);
 	indicator_plugin->indicator = app_indicator_new("roger", iconname, APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
-	app_indicator_set_icon_theme_path(indicator_plugin->indicator, "/app/share/icons/");
 	iconname = g_strconcat("roger-", g_settings_get_string(indicator_plugin->settings, "notify-icon"), NULL);
 	app_indicator_set_attention_icon_full(indicator_plugin->indicator, iconname, "notify-icon");
 	g_free(iconname);
@@ -343,9 +342,6 @@ gboolean indicator_plugin_shutdown(RmPlugin *plugin)
 	if (g_signal_handler_is_connected(G_OBJECT(rm_object), indicator_plugin->signal_id)) {
 		g_signal_handler_disconnect(G_OBJECT(rm_object), indicator_plugin->signal_id);
 	}
-
-	/* Make sure journal window is visible on deactivate */
-	indicator_journal_cb (NULL, indicator_plugin);
 
 	app_indicator_set_status(indicator_plugin->indicator, APP_INDICATOR_STATUS_PASSIVE);
 	g_clear_object(&indicator_plugin->indicator);
