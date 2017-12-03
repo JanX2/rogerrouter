@@ -40,6 +40,8 @@ endforeach
 
 images = []
 images += 'images/scalable/roger-default.svg'
+images += 'images/scalable/roger-mono-dark.svg'
+images += 'images/scalable/roger-mono-lite.svg'
 images += 'images/scalable/roger-notify.svg'
 
 install_data(images, install_dir : get_option('datadir') + '/icons/hicolor/scalable/status')
