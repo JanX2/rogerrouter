@@ -174,7 +174,7 @@ int app_pdf(gchar *data, gsize length, gchar *uri) {
 	GtkWidget *sw;
 	GtkWidget *grid;
 	GError *err = NULL;
-	PopplerDocument *doc;
+	PopplerDocument *doc = NULL;
 	gdouble popwidth, popheight;
 	PdfViewer *pdf_viewer;
 
