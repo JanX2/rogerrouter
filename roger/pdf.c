@@ -179,6 +179,7 @@ int app_pdf(gchar *data, gsize length, gchar *uri) {
 	PdfViewer *pdf_viewer;
 
 	if (uri && !data && !length) {
+		g_debug("%s(): Loading '%s'", __FUNCTION__, uri);
 		data = rm_file_load(uri, &length);
 	}
 
@@ -188,8 +189,10 @@ int app_pdf(gchar *data, gsize length, gchar *uri) {
 	}
 
 	if (!doc) {
-		g_warning("%s(): %s", __FUNCTION__, err->message);
-		g_error_free(err);
+		g_warning("%s(): %s", __FUNCTION__, err ? err->message : "");
+		if (err) {
+			g_error_free(err);
+		}
 
 		return -1;
 	}
