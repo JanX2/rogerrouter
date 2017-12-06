@@ -1,7 +1,7 @@
 statusicon_sources = []
 statusicon_sources += 'statusicon.c'
 
-libstatusicon = shared_library('statusicon',
+libstatusicon = shared_module('statusicon',
                         statusicon_sources,
                         include_directories : roger_inc,
                         dependencies : plugins_dep,

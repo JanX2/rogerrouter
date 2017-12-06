@@ -5,12 +5,12 @@ plugins_dep += dependency('librm')
 
 subdir('google')
 
-if host_machine.system() == 'windows'
-subdir('gtknotify')
-subdir('statusicon')
-else
+if host_machine.system().contains('linux')
 subdir('indicator')
 subdir('evolution')
+else
+subdir('gtknotify')
+subdir('statusicon')
 endif
 
 subdir('keychain')

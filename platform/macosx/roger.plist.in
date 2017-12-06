@@ -28,5 +28,7 @@
     <string>Copyright 2008 - 2016 Jan-Michael Brummer, GNU General Public License V2.</string>
     <key>LSMinimumSystemVersion</key>
     <string>10.5</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
 </dict>
 </plist>

@@ -13,7 +13,7 @@ gtknotify_dep += plugins_dep
 
 gtknotify_inc = [roger_inc]
 
-libgtknotify = shared_library('gtknotify',
+libgtknotify = shared_module('gtknotify',
                         gtknotify_sources,
                         include_directories : gtknotify_inc,
                         dependencies : gtknotify_dep,

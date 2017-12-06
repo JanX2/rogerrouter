@@ -8,7 +8,7 @@ indicator_dep = []
 indicator_dep += plugins_dep
 indicator_dep += indicator
 
-libindicator = shared_library('indicator',
+libindicator = shared_module('indicator',
                         indicator_sources,
                         include_directories : roger_inc,
                         dependencies : indicator_dep,

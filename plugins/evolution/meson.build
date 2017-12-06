@@ -13,7 +13,7 @@ evolution_inc = []
 evolution_inc += include_directories('../../..')
 evolution_inc += roger_inc
 
-libevolution = shared_library('evolution',
+libevolution = shared_module('evolution',
                         evolution_sources,
                         include_directories : evolution_inc,
                         dependencies : evolution_dep,

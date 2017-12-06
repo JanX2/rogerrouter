@@ -8,7 +8,7 @@ google_dep = []
 google_dep += plugins_dep
 google_dep += gdata
 
-libgoogle = shared_library('google',
+libgoogle = shared_module('google',
                         google_sources,
                         include_directories : roger_inc,
                         dependencies : google_dep,

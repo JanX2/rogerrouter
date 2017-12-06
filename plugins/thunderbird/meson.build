@@ -6,7 +6,7 @@ thunderbird_dep += plugins_dep
 
 thunderbird_inc = [roger_inc]
 
-libthunderbird = shared_library('thunderbird',
+libthunderbird = shared_module('thunderbird',
                         thunderbird_sources,
                         include_directories : thunderbird_inc,
                         dependencies : thunderbird_dep,

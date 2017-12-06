@@ -6,7 +6,7 @@ vcard_dep += plugins_dep
 
 vcard_inc = [roger_inc]
 
-libvcard = shared_library('vcard',
+libvcard = shared_module('vcard',
                         vcard_sources,
                         include_directories : vcard_inc,
                         dependencies : vcard_dep,

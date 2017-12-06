@@ -12,7 +12,7 @@ webjournal_dep += plugins_dep
 
 webjournal_inc = [roger_inc]
 
-libwebjournal = shared_library('webjournal',
+libwebjournal = shared_module('webjournal',
                         webjournal_sources,
                         include_directories : webjournal_inc,
                         dependencies : webjournal_dep,
