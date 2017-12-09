@@ -1745,11 +1745,11 @@ void app_show_settings(void)
 	settings->filter_liststore = GTK_LIST_STORE(gtk_builder_get_object(builder, "filter_liststore"));
 	filter_refresh_list(settings->filter_liststore);
 
-	{
+	/*{
 		GtkWidget *tmp = GTK_WIDGET(gtk_builder_get_object(builder, "grid100"));
 		gtk_widget_set_no_show_all(tmp, TRUE);
 		gtk_widget_set_visible(tmp, FALSE);
-	}
+	}*/
 
 	/* Action group */
 	settings->actions_liststore = GTK_LIST_STORE(gtk_builder_get_object(builder, "actions_liststore"));
