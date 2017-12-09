@@ -104,13 +104,7 @@ void contact_search_set_contact(ContactSearch *widget, RmContact *contact, gbool
 		search_contact = contact;
 	}
 
-	g_object_set_data(G_OBJECT(widget->entry), "number", g_strdup(search_contact->number));
-
-	if (!RM_EMPTY_STRING(search_contact->name)) {
-		gtk_entry_set_text(GTK_ENTRY(widget->entry), search_contact->name);
-	} else {
-		gtk_entry_set_text(GTK_ENTRY(widget->entry), search_contact->number);
-	}
+	gtk_entry_set_text(GTK_ENTRY(widget->entry), search_contact->number);
 
 	if (identify) {
 		rm_contact_free(search_contact);
@@ -175,7 +169,7 @@ static gboolean contact_search_completion_match_selected_cb(GtkEntryCompletion *
 
 	gtk_entry_set_text(GTK_ENTRY(contact_search->entry), item->number);
 
-	g_signal_emit_by_name(contact_search->entry, "activate");
+	//g_signal_emit_by_name(contact_search->entry, "activate");
 
 	return TRUE;
 }
@@ -277,13 +271,7 @@ GtkWidget *contact_search_new(void)
  */
 gchar *contact_search_get_number(ContactSearch *widget)
 {
-	gchar *number = g_object_get_data(G_OBJECT(widget->entry), "number");
-
-	if (RM_EMPTY_STRING(number)) {
-		number = (gchar*)gtk_entry_get_text(GTK_ENTRY(widget->entry));
-	}
-
-	return number;
+	return (gchar*)gtk_entry_get_text(GTK_ENTRY(widget->entry));
 }
 
 /**
