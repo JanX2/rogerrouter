@@ -268,10 +268,12 @@ void ebook_read_data(EClient *e_client)
 				GRegex *pro = g_regex_new("%25", G_REGEX_DOTALL | G_REGEX_OPTIMIZE, 0, NULL);
 
 				if (!strncmp(photo->data.uri, "file://", 7)) {
-					// TODO!!
-					//gchar *uri = g_regex_replace_literal(pro, photo->data.uri + 7, -1, 0, "%", 0, NULL);
-					//buf = gdk_pixbuf_new_from_file(uri, NULL);
-					//len = gdk_pixbuf_get_byte_length(buf);
+					gchar *uri = g_regex_replace_literal(pro, photo->data.uri + 7, -1, 0, "%", 0, NULL);
+					buf = gdk_pixbuf_new_from_file(uri, NULL);
+
+					if (buf != NULL) {
+						len = gdk_pixbuf_get_byte_length(buf);
+					}
 				} else {
 					g_debug("Cannot handle URI: '%s'!", photo->data.uri);
 				}
