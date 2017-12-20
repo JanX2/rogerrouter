@@ -1,6 +1,6 @@
-/**
+/*
  * Roger Router
- * Copyright (c) 2012-2014 Jan-Michael Brummer
+ * Copyright (c) 2012-2017 Jan-Michael Brummer
  *
  * This file is part of Roger Router.
  *
@@ -27,23 +27,39 @@
 #include <roger/uitools.h>
 
 /**
- * \brief Close notification_gtk window
- */
-static gboolean notification_gtk_close(gpointer window)
-{
-	gtk_widget_destroy(window);
-
-	return FALSE;
-}
-
-/**
- * \brief Close gnotification window
+ * gtknotify_close:
+ * @priv: pointer to notification window
+ *
+ * Close notification window
  */
 void gtknotify_close(gpointer priv)
 {
 	gtk_widget_destroy(priv);
 }
 
+/**
+ * gtknotify_timeout_close_cb:
+ * @window: pointer to active notification window
+ *
+ * Closes given @window
+ *
+ * Returns: %G_SOURCE_REMOVE
+ */
+static gboolean gtknotify_timeout_close_cb(gpointer window)
+{
+	gtknotify_close(window);
+
+	return G_SOURCE_REMOVE;
+}
+
+/**
+ * gtknotify_show:
+ * @connection: a #RmConnection
+ * @contact: a #RmContact
+ *
+ * Shows a native gtk window with call details of @connection and @contact
+ * Returns: %NULL
+ */
 gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 {
 	GtkWidget *window;
@@ -67,7 +83,7 @@ gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 	}
 
 	window = GTK_WIDGET(gtk_builder_get_object(builder, "window"));
-	//gtk_application_add_window(GTK_APPLICATION(g_application_get_default()), GTK_WINDOW(window));
+	gtk_application_add_window(GTK_APPLICATION(g_application_get_default()), GTK_WINDOW(window));
 
 	type_label = GTK_WIDGET(gtk_builder_get_object(builder, "type_label"));
 	local_label = GTK_WIDGET(gtk_builder_get_object(builder, "local_label"));
@@ -90,15 +106,9 @@ gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 	gtk_label_set_text(GTK_LABEL(contact_city_label), tmp);
 	g_free(tmp);
 
-	g_object_set_data(G_OBJECT(window), "name", contact_name_label);
-	g_object_set_data(G_OBJECT(window), "street", contact_street_label);
-	g_object_set_data(G_OBJECT(window), "city", contact_city_label);
-
 	if (contact->image) {
-		//GdkPixbuf *buf = image_get_scaled(contact->image, 96, 96);
-		//gtk_image_set_from_pixbuf(GTK_IMAGE(image), buf);
-
-		gtk_image_set_from_pixbuf(GTK_IMAGE(image), contact->image);
+		GdkPixbuf *buf = image_get_scaled(contact->image, 96, 96);
+		gtk_image_set_from_pixbuf(GTK_IMAGE(image), buf);
 	}
 
 	if (connection->type & RM_CONNECTION_TYPE_INCOMING) {
@@ -108,47 +118,33 @@ gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 		g_free(tmp);
 
 		if (connection->type & RM_CONNECTION_TYPE_SOFTPHONE) {
-		GtkWidget *accept_button;
-		GtkWidget *decline_button;
+			GtkWidget *accept_button;
+			GtkWidget *decline_button;
+			GtkWidget *separator;
 
-		accept_button = GTK_WIDGET(gtk_builder_get_object(builder, "pickup_button"));
-		gtk_actionable_set_action_name(GTK_ACTIONABLE(accept_button), "app.pickup");
-		gtk_actionable_set_action_target(GTK_ACTIONABLE(accept_button), "i", connection->id);
-		gtk_widget_set_visible(accept_button, TRUE);
+			separator = GTK_WIDGET(gtk_builder_get_object(builder, "separator"));
+			gtk_widget_set_visible(separator, TRUE);
 
-		decline_button = GTK_WIDGET(gtk_builder_get_object(builder, "hangup_button"));
-		gtk_actionable_set_action_name(GTK_ACTIONABLE(decline_button), "app.hangup");
-		gtk_actionable_set_action_target(GTK_ACTIONABLE(decline_button), "i", connection->id);
-		gtk_widget_set_visible(decline_button, TRUE);
+			accept_button = GTK_WIDGET(gtk_builder_get_object(builder, "pickup_button"));
+			gtk_actionable_set_action_name(GTK_ACTIONABLE(accept_button), "app.pickup");
+			gtk_actionable_set_action_target(GTK_ACTIONABLE(accept_button), "i", connection->id);
+			gtk_widget_set_visible(accept_button, TRUE);
+
+			decline_button = GTK_WIDGET(gtk_builder_get_object(builder, "hangup_button"));
+			gtk_actionable_set_action_name(GTK_ACTIONABLE(decline_button), "app.hangup");
+			gtk_actionable_set_action_target(GTK_ACTIONABLE(decline_button), "i", connection->id);
+			gtk_widget_set_visible(decline_button, TRUE);
 		}
 	} else if (connection->type & RM_CONNECTION_TYPE_OUTGOING) {
 		gint duration = 5;
+
 		tmp = ui_bold_text(_("Outgoing call"));
 		gtk_label_set_markup(GTK_LABEL(type_label), tmp);
 		g_free(tmp);
 
-		g_timeout_add_seconds(duration, notification_gtk_close, window);
+		g_timeout_add_seconds(duration, gtknotify_timeout_close_cb, window);
 	}
 	gtk_widget_show_all(window);
-
-#if 1
-#if GTK_CHECK_VERSION(3, 22, 0)
-	GdkRectangle geometry;
-	GdkDisplay *display = gtk_widget_get_display(window);
-	GdkWindow *gdk_window = gtk_widget_get_window(window);
-	GdkMonitor *monitor = gdk_display_get_monitor_at_window(display, gdk_window);
-
-	gdk_monitor_get_geometry(monitor, &geometry);
-	screen_width = geometry.width;
-	screen_height = geometry.height;
-#else
-	screen_width = gdk_screen_width();
-	screen_height = gdk_screen_height();
-#endif
-
-	gtk_window_get_size(GTK_WINDOW(window), &width, &height);
-	gtk_window_move(GTK_WINDOW(window), screen_width - width - 18, screen_height - height - 18);
-#endif
 
 	gtk_window_stick(GTK_WINDOW(window));
 	gtk_window_set_keep_above(GTK_WINDOW(window), TRUE);
@@ -156,10 +152,18 @@ gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 	return window;
 }
 
+/**
+ * gtknotify_update:
+ * @connection: a #RmConnection
+ * @contact: a #RmContact
+ *
+ * Updates notification (currently does nothing)
+ */
 void gtknotify_update(RmConnection *connection, RmContact *contact)
 {
 }
 
+/** RmNotification declaration */
 RmNotification gtknotify = {
 	"GTK Notify",
 	gtknotify_show,
@@ -168,24 +172,30 @@ RmNotification gtknotify = {
 };
 
 /**
- * \brief Activate plugin (init libnotify and connect to call-notify signal)
- * \param plugin peas plugin
+ * gtknotify_plugin_init:
+ * @plugin: a #RmPlugin
+ *
+ * Activate plugin
+ *
+ * Returns: %TRUE
  */
 gboolean gtknotify_plugin_init(RmPlugin *plugin)
 {
-	g_debug("%s(): gtknotify", __FUNCTION__);
 	rm_notification_register(&gtknotify);
 
 	return TRUE;
 }
 
 /**
- * \brief Deactivate plugin
- * \param plugin peas plugin
+ * gtknotify_plugin_shutdown:
+ * @plugin: a #RmPlugin
+ *
+ * Deactivate plugin
+ *
+ * Returns: %TRUE
  */
 gboolean gtknotify_plugin_shutdown(RmPlugin *plugin)
 {
-	g_debug("%s(): gtknotify", __FUNCTION__);
 	rm_notification_unregister(&gtknotify);
 
 	return TRUE;

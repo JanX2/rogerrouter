@@ -9,14 +9,14 @@ if host_machine.system().contains('linux')
 subdir('indicator')
 subdir('evolution')
 else
-subdir('gtknotify')
 subdir('statusicon')
 endif
+subdir('gtknotify')
 
 subdir('keychain')
 subdir('osxab')
 
 
 subdir('thunderbird')
-subdir('vcard')
+#subdir('vcard')
 subdir('webjournal')
