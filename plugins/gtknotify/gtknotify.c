@@ -63,8 +63,7 @@ static gboolean gtknotify_timeout_close_cb(gpointer window)
 gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 {
 	GtkWidget *window;
-	GtkWidget *type_label;
-	GtkWidget *local_label;
+	GtkWidget *headerbar;
 	GtkWidget *contact_company_label;
 	GtkWidget *contact_number_label;
 	GtkWidget *contact_name_label;
@@ -73,8 +72,6 @@ gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 	GtkWidget *image;
 	gchar *tmp;
 	GtkBuilder *builder;
-	gint width, height;
-	gint screen_width, screen_height;
 
 	builder = gtk_builder_new_from_resource("/org/tabos/roger/plugins/gtknotify/gtknotify.glade");
 	if (!builder) {
@@ -85,8 +82,7 @@ gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 	window = GTK_WIDGET(gtk_builder_get_object(builder, "window"));
 	gtk_application_add_window(GTK_APPLICATION(g_application_get_default()), GTK_WINDOW(window));
 
-	type_label = GTK_WIDGET(gtk_builder_get_object(builder, "type_label"));
-	local_label = GTK_WIDGET(gtk_builder_get_object(builder, "local_label"));
+	headerbar = GTK_WIDGET(gtk_builder_get_object(builder, "headerbar"));
 	contact_name_label = GTK_WIDGET(gtk_builder_get_object(builder, "name_label"));
 	contact_number_label = GTK_WIDGET(gtk_builder_get_object(builder, "number_label"));
 	contact_company_label = GTK_WIDGET(gtk_builder_get_object(builder, "company_label"));
@@ -95,7 +91,7 @@ gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 	image = GTK_WIDGET(gtk_builder_get_object(builder, "image"));
 
 	tmp = connection->local_number ? g_strdup_printf(_("(on %s)"), connection->local_number) : g_strdup(_("(on ?)"));
-	gtk_label_set_text(GTK_LABEL(local_label), tmp);
+	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(headerbar), tmp);
 	g_free(tmp);
 
 	gtk_label_set_text(GTK_LABEL(contact_name_label), contact->name ? contact->name : "");
@@ -112,10 +108,7 @@ gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 	}
 
 	if (connection->type & RM_CONNECTION_TYPE_INCOMING) {
-		tmp = ui_bold_text(_("Incoming call"));
-
-		gtk_label_set_markup(GTK_LABEL(type_label), tmp);
-		g_free(tmp);
+		gtk_header_bar_set_title(GTK_HEADER_BAR(headerbar), _("Incoming call"));
 
 		if (connection->type & RM_CONNECTION_TYPE_SOFTPHONE) {
 			GtkWidget *accept_button;
@@ -138,16 +131,13 @@ gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 	} else if (connection->type & RM_CONNECTION_TYPE_OUTGOING) {
 		gint duration = 5;
 
-		tmp = ui_bold_text(_("Outgoing call"));
-		gtk_label_set_markup(GTK_LABEL(type_label), tmp);
-		g_free(tmp);
+		gtk_header_bar_set_title(GTK_HEADER_BAR(headerbar), _("Outgoing call"));
 
 		g_timeout_add_seconds(duration, gtknotify_timeout_close_cb, window);
 	}
 	gtk_widget_show_all(window);
 
-	gtk_window_stick(GTK_WINDOW(window));
-	gtk_window_set_keep_above(GTK_WINDOW(window), TRUE);
+	gtk_window_present(GTK_WINDOW(window));
 
 	return window;
 }
