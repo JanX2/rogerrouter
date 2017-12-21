@@ -191,9 +191,8 @@ static void contact_search_init(ContactSearch *widget)
 	gtk_entry_set_activates_default(GTK_ENTRY(widget->entry), TRUE);
 
 	widget->completion = gtk_entry_completion_new();
-	//g_object_unref(widget->completion);
 
-        store = gtk_list_store_new(4, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER);
+	store = gtk_list_store_new(4, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER);
 
 	book = rm_profile_get_addressbook(rm_profile_get_active());
 	if (!book) {
@@ -214,9 +213,14 @@ static void contact_search_init(ContactSearch *widget)
 		GtkTreeIter iter;
 
                 if (contact != NULL) {
-			GdkPixbuf *pixbuf = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), AVATAR_DEFAULT, 32, 0, NULL);
+			GdkPixbuf *pixbuf;
 			GSList *numbers = contact->numbers;
 
+					if (contact->image) {
+						pixbuf = image_get_scaled(contact->image, 32, 32);
+					} else {
+						pixbuf  = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), AVATAR_DEFAULT, 32, 0, NULL);
+					}
 			for (numbers = contact->numbers; numbers != NULL; numbers = numbers->next) {
 				RmPhoneNumber *phone_number = numbers->data;
 				gchar *num_str = g_strdup_printf("%s: %s", phone_number_type_to_string(phone_number->type), phone_number->number);
@@ -243,10 +247,10 @@ static void contact_search_init(ContactSearch *widget)
 	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(widget->completion), cell, TRUE);
 	gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(widget->completion), cell, "text", 1);
 	gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(widget->completion), cell, "line-two", 2);
-	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(widget->completion), cell, TRUE);
 	gtk_entry_completion_set_match_func(widget->completion, contact_search_match_func, NULL, NULL);
 
 	gtk_entry_set_completion(GTK_ENTRY(widget->entry), widget->completion);
+	//g_object_unref(widget->completion);
 }
 
 /**
