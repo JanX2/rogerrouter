@@ -23,7 +23,6 @@
 
 #include <roger/contactsearch.h>
 #include <roger/contacts.h>
-#include <roger/icons.h>
 #include <roger/main.h>
 #include <roger/gd-two-lines-renderer.h>
 
@@ -217,7 +216,7 @@ static void contact_search_init(ContactSearch *widget)
 			GSList *numbers = contact->numbers;
 
 					if (contact->image) {
-						pixbuf = image_get_scaled(contact->image, 32, 32);
+						pixbuf = rm_image_scale(contact->image, 32);
 					} else {
 						pixbuf  = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), AVATAR_DEFAULT, 32, 0, NULL);
 					}

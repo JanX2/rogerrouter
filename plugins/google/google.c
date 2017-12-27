@@ -432,7 +432,6 @@ static int google_read_book(void)
 				loader = gdk_pixbuf_loader_new();
 				if (gdk_pixbuf_loader_write(loader, photo, photo_len, NULL)) {
 					contact->image = gdk_pixbuf_loader_get_pixbuf(loader);
-					contact->image_len = photo_len;
 				}
 				gdk_pixbuf_loader_close(loader, NULL);
 			}

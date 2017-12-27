@@ -1,69 +1,50 @@
 # List of files that (could) contain strings for translation
-[encoding: UTF-8]
 roger/about.c
 roger/answeringmachine.c
-[type: gettext/glade]roger/answeringmachine.glade
+roger/answeringmachine.glade
 roger/application.c
 roger/assistant.c
-[type: gettext/glade]roger/assistant.glade
-[type: gettext/glade]roger/authenticate.glade
+roger/assistant.glade
+roger/authenticate.glade
 roger/contacts.c
-[type: gettext/glade]roger/contacts.glade
-roger/fax.c
+roger/contacts.glade
+roger/contactsearch.c
+roger/contactsearch.glade
 roger/crash.c
+roger/debug.c
+roger/fax.c
 roger/journal.c
 roger/main_ui.c
+roger/pdf.c
 roger/phone.c
+roger/plugins.c
 roger/print.c
 roger/settings.c
-[type: gettext/glade]roger/settings.glade
-[type: gettext/glade]roger/shortcuts.glade
-roger/plugins/evolution/evolution.c
-[type: gettext/xml]roger/plugins/evolution/roger-plugins-evolution.metainfo.xml.in
-[type: gettext/ini]roger/plugins/evolution/evolution.plugin.in
-roger/plugins/fritzfon/fritzfon.c
-[type: gettext/ini]roger/plugins/fritzfon/fritzfon.plugin.in
-[type: gettext/xml]roger/plugins/fritzfon/roger-plugins-fritzfon.metainfo.xml.in
-roger/plugins/gtknotify/gtknotify.c
-[type: gettext/xml]roger/plugins/gtknotify/roger-plugins-gtknotify.metainfo.xml.in
-[type: gettext/ini]roger/plugins/gtknotify/gtknotify.plugin.in
-roger/plugins/statusicon/gtk.c
-[type: gettext/xml]roger/plugins/statusicon/roger-plugins-statusicon.metainfo.xml.in
-[type: gettext/ini]roger/plugins/statusicon/statusicon.plugin.in
-roger/plugins/indicator/indicator.c
-[type: gettext/xml]roger/plugins/indicator/roger-plugins-indicator.metainfo.xml.in
-[type: gettext/ini]roger/plugins/indicator/indicator.plugin.in
-roger/plugins/vcard/vcard.c
-[type: gettext/xml]roger/plugins/vcard/roger-plugins-vcard.metainfo.xml.in
-[type: gettext/ini]roger/plugins/vcard/vcard.plugin.in
-roger/plugins/google/google.c
-[type: gettext/xml]roger/plugins/google/roger-plugins-google.metainfo.xml.in
-[type: gettext/ini]roger/plugins/google/google.plugin.in
-roger/plugins/thunderbird/thunderbird.c
-[type: gettext/xml]roger/plugins/thunderbird/roger-plugins-thunderbird.metainfo.xml.in
-[type: gettext/ini]roger/plugins/thunderbird/thunderbird.plugin.in
-roger/plugins/gnotification/gnotification.c
-[type: gettext/ini]roger/plugins/gnotification/gnotification.plugin.in
-[type: gettext/xml]roger/plugins/gnotification/roger-plugins-gnotify.metainfo.xml.in
-roger/plugins/notification/notification.c
-[type: gettext/xml]roger/plugins/notification/roger-plugins-notification.metainfo.xml.in
-[type: gettext/ini]roger/plugins/notification/notification.plugin.in
-roger/plugins/webjournal/webjournal.c
-[type: gettext/xml]roger/plugins/webjournal/roger-plugins-webjournal.metainfo.xml.in
-[type: gettext/ini]roger/plugins/webjournal/webjournal.plugin.in
-[type: gettext/xml]roger/plugins/kwallet/roger-plugins-kwallet.metainfo.xml.in
-[type: gettext/xml]roger/plugins/sip/roger-plugins-sip.metainfo.xml.in
-roger/plugins/sip/sip.c
-[type: gettext/ini]roger/plugins/sip/sip.plugin.in
-roger-cli/main_cli.c
-libroutermanager/fax_spooler.c
-libroutermanager/filter.c
-libroutermanager/router.c
-libroutermanager/plugins/fritzbox/firmware-common.c
-[type: gettext/ini]libroutermanager/plugins/areacodes_global/areacodes_global.plugin.in
-[type: gettext/ini]libroutermanager/plugins/callmonitor/callmonitor.plugin.in
-[type: gettext/ini]libroutermanager/plugins/fritzbox/fritzbox.plugin.in
-[type: gettext/ini]libroutermanager/plugins/pulseaudio/pulseaudio.plugin.in
-[type: gettext/ini]libroutermanager/plugins/reverselookup/reverselookup.plugin.in
-[type: gettext/ini]org.tabos.roger.desktop.in
-org.tabos.roger.appdata.xml.in
+roger/settings.glade
+roger/shortcuts.glade
+roger/org.tabos.roger.desktop.in
+roger/org.tabos.roger.appdata.xml.in
+plugins/evolution/evolution.c
+plugins/evolution/roger-plugins-evolution.metainfo.xml.in
+plugins/evolution/evolution.desktop.in
+plugins/google/google.c
+plugins/google/roger-plugins-google.metainfo.xml.in
+plugins/google/google.desktop.in
+plugins/gtknotify/gtknotify.c
+plugins/gtknotify/roger-plugins-gtknotify.metainfo.xml.in
+plugins/gtknotify/gtknotify.desktop.in
+plugins/indicator/indicator.c
+plugins/indicator/roger-plugins-indicator.metainfo.xml.in
+plugins/indicator/indicator.desktop.in
+plugins/statusicon/statusicon.c
+plugins/statusicon/roger-plugins-statusicon.metainfo.xml.in
+plugins/statusicon/statusicon.desktop.in
+plugins/thunderbird/thunderbird.c
+plugins/thunderbird/roger-plugins-thunderbird.metainfo.xml.in
+plugins/thunderbird/thunderbird.desktop.in
+plugins/vcard/vcard.c
+plugins/vcard/roger-plugins-vcard.metainfo.xml.in
+plugins/vcard/vcard.desktop.in
+plugins/webjournal/webjournal.c
+plugins/webjournal/roger-plugins-webjournal.metainfo.xml.in
+plugins/webjournal/webjournal.desktop.in

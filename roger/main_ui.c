@@ -28,7 +28,6 @@
 
 #include <roger/application.h>
 #include <roger/main.h>
-#include <roger/crash.h>
 
 #include <config.h>
 
@@ -50,21 +49,6 @@ int main(int argc, char **argv)
 	int idx;
 
 	argv0 = g_strdup(argv[0]);
-
-	/* Checking for crash parameter here is very important */
-	for (idx = 0; idx < argc; idx++) {
-		gchar *crash_param = NULL;
-		if (!strcmp(argv[idx], "--crash")) {
-			if (idx + 1 < argc) {
-				crash_param = argv[idx + 1];
-			}
-
-			gtk_init(&argc, &argv);
-			crash_main(crash_param);
-			gtk_main();
-			exit(0);
-		}
-	}
 
 	roger_app = application_new();
 

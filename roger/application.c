@@ -35,7 +35,6 @@
 #include <roger/fax.h>
 #include <roger/contacts.h>
 #include <roger/shortcuts.h>
-#include <roger/crash.h>
 #include <roger/uitools.h>
 #include <roger/plugins.h>
 #include <roger/debug.h>
@@ -53,7 +52,6 @@ struct cmd_line_option_state {
 	gchar *number;
 	gboolean assistant;
 	gchar *profile;
-	gchar *crash;
 };
 
 static struct cmd_line_option_state option_state;
@@ -489,7 +487,6 @@ const GOptionEntry all_options[] = {
 	{ "version", 'v', G_OPTION_FLAG_NO_ARG | G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_CALLBACK, option_version_cb, NULL, NULL },
 	{ "assistant", 'a', 0, G_OPTION_ARG_NONE, &option_state.assistant, "Start assistant", NULL },
 	{ "profile", 'p', 0, G_OPTION_ARG_STRING, &option_state.profile, "Profile name", NULL },
-	{ "crash", 0, 0, G_OPTION_ARG_STRING, &option_state.crash, "Crash parameters", NULL },
 	{ NULL }
 };
 
@@ -555,11 +552,6 @@ static gint application_command_line_cb(GtkApplication *app, GApplicationCommand
 
 	g_debug("%s(): Startup_called?: %d", __FUNCTION__, startup_called);
 	if (startup_called) {
-#ifndef G_OS_WIN32
-		/* Install crash handle */
-		//crash_install_handlers();
-#endif
-
 		/* Initialize app and mark startup as done */
 		app_init(app);
 		gdk_notify_startup_complete();

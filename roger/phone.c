@@ -30,7 +30,6 @@
 #include <roger/journal.h>
 #include <roger/phone.h>
 #include <roger/uitools.h>
-#include <roger/icons.h>
 #include <roger/contactsearch.h>
 
 #include <roger/contacts.h>

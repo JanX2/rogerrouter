@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roger 1.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-03 12:34+0100\n"
+"POT-Creation-Date: 2017-12-09 20:09+0100\n"
 "PO-Revision-Date: 2016-09-17 21:39+0200\n"
 "Last-Translator: Jan-Michael Brummer <jan.brummer@tabos.org>\n"
 "Language-Team: Deutsch <>\n"
@@ -31,7 +31,7 @@ msgstr ""
 msgid "Time: %2.2d:%2.2d:%2.2d"
 msgstr "Zeit: %2.2d:%2.2d:%2.2d"
 
-#: roger/answeringmachine.glade:96
+#: roger/answeringmachine.glade:99
 msgid "Time: 00:00:00"
 msgstr "Zeit: 00:00:00"
 
@@ -40,24 +40,24 @@ msgstr "Zeit: 00:00:00"
 msgid "A username and password are being requested by the site %s"
 msgstr "Ein Benutzername sowie Passwort werden von der Seite %s benötigt"
 
-#: roger/application.c:415 plugins/indicator/indicator.c:177
-#: plugins/statusicon/statusicon.c:238
+#: roger/application.c:415 plugins/statusicon/statusicon.c:238
+#: plugins/indicator/indicator.c:177
 msgid "Contacts"
 msgstr "Kontakte"
 
 #: roger/application.c:416 roger/phone.c:514 roger/settings.glade:743
-#: roger/settings.glade:771 plugins/indicator/indicator.c:182
-#: plugins/statusicon/statusicon.c:243
+#: roger/settings.glade:771 plugins/statusicon/statusicon.c:243
+#: plugins/indicator/indicator.c:182
 msgid "Phone"
 msgstr "Telefon"
 
-#: roger/application.c:419 plugins/indicator/indicator.c:88
-#: plugins/statusicon/statusicon.c:98
+#: roger/application.c:419 plugins/statusicon/statusicon.c:98
+#: plugins/indicator/indicator.c:88
 msgid "Copy IP address"
 msgstr "IP-Adresse kopieren"
 
-#: roger/application.c:420 plugins/indicator/indicator.c:93
-#: plugins/statusicon/statusicon.c:103
+#: roger/application.c:420 plugins/statusicon/statusicon.c:103
+#: plugins/indicator/indicator.c:93
 msgid "Reconnect"
 msgstr "Neu verbinden"
 
@@ -65,8 +65,8 @@ msgstr "Neu verbinden"
 msgid "Debug window"
 msgstr "Debug-Fenster"
 
-#: roger/application.c:422 plugins/indicator/indicator.c:187
-#: plugins/statusicon/statusicon.c:248
+#: roger/application.c:422 plugins/statusicon/statusicon.c:248
+#: plugins/indicator/indicator.c:187
 msgid "Functions"
 msgstr "Funktionen"
 
@@ -74,13 +74,13 @@ msgstr "Funktionen"
 msgid "Assistant"
 msgstr "Assistent"
 
-#: roger/application.c:427 plugins/indicator/indicator.c:197
-#: plugins/statusicon/statusicon.c:258
+#: roger/application.c:427 plugins/statusicon/statusicon.c:258
+#: plugins/indicator/indicator.c:197
 msgid "Plugins"
 msgstr "Plugins"
 
-#: roger/application.c:428 plugins/indicator/indicator.c:202
-#: plugins/statusicon/statusicon.c:263
+#: roger/application.c:428 plugins/statusicon/statusicon.c:263
+#: plugins/indicator/indicator.c:202
 msgid "Preferences"
 msgstr "Einstellungen"
 
@@ -88,13 +88,13 @@ msgstr "Einstellungen"
 msgid "Keyboard Shortcuts"
 msgstr "Tastenkürzel"
 
-#: roger/application.c:437 plugins/indicator/indicator.c:211
-#: plugins/statusicon/statusicon.c:272
+#: roger/application.c:437 plugins/statusicon/statusicon.c:272
+#: plugins/indicator/indicator.c:211
 msgid "About"
 msgstr "Info"
 
 #: roger/application.c:438 roger/assistant.c:554 roger/assistant.c:695
-#: plugins/indicator/indicator.c:216 plugins/statusicon/statusicon.c:277
+#: plugins/statusicon/statusicon.c:277 plugins/indicator/indicator.c:216
 msgid "Quit"
 msgstr "Beenden"
 
@@ -296,14 +296,14 @@ msgstr "<b>Einen Kontakt auswählen</b>"
 msgid "Open image"
 msgstr "Bild öffnen"
 
-#: roger/contacts.c:514 plugins/google/google.c:93
-#: plugins/thunderbird/thunderbird.c:1055 plugins/vcard/vcard.c:1207
+#: roger/contacts.c:514 roger/pdf.c:144 plugins/vcard/vcard.c:1207
+#: plugins/google/google.c:93 plugins/thunderbird/thunderbird.c:1055
 #: plugins/webjournal/webjournal.c:271
 msgid "_Cancel"
 msgstr "_Abbrechen"
 
-#: roger/contacts.c:514 plugins/thunderbird/thunderbird.c:1055
-#: plugins/vcard/vcard.c:1207
+#: roger/contacts.c:514 plugins/vcard/vcard.c:1207
+#: plugins/thunderbird/thunderbird.c:1055
 msgid "_Open"
 msgstr "_Öffnen"
 
@@ -508,18 +508,6 @@ msgstr "Verbinden…"
 msgid "Time: %s"
 msgstr "Zeit: %s"
 
-#: roger/fax.glade:86
-msgid "From:"
-msgstr "Von:"
-
-#: roger/fax.glade:99
-msgid "To:"
-msgstr "An:"
-
-#: roger/fax.glade:112
-msgid "Status:"
-msgstr "Status:"
-
 #: roger/journal.c:182 roger/journal.c:188
 msgid "<No profile>"
 msgstr "<Kein Profil>"
@@ -597,10 +585,24 @@ msgstr "Journal löschen"
 msgid "Restore default"
 msgstr "Vorgabe verwenden"
 
-#: roger/journal.c:1229 roger/print.c:345 plugins/indicator/indicator.c:172
-#: plugins/statusicon/statusicon.c:233
+#: roger/journal.c:1229 roger/print.c:345 plugins/statusicon/statusicon.c:233
+#: plugins/indicator/indicator.c:172
 msgid "Journal"
 msgstr "Journal"
+
+#: roger/pdf.c:144
+#, fuzzy
+msgid "Save Fax"
+msgstr "Speichern"
+
+#: roger/pdf.c:146 plugins/webjournal/webjournal.c:271
+msgid "_Save"
+msgstr "_Speichern"
+
+#: roger/pdf.c:225
+#, fuzzy
+msgid "Fax Viewer"
+msgstr "Faxbericht"
 
 #: roger/phone.c:174
 msgid "A call is in progress, hangup first"
@@ -613,114 +615,6 @@ msgstr "Telefone"
 #: roger/phone.c:306
 msgid "Suppress number"
 msgstr "Nummer unterdrücken"
-
-#: roger/phone.glade:129
-msgid "C"
-msgstr "C"
-
-#: roger/phone.glade:143
-msgid "<small>Clear</small>"
-msgstr "<small>Löschen</small>"
-
-#: roger/phone.glade:190
-msgid "<small>Mute</small>"
-msgstr "<small>Stumm</small>"
-
-#: roger/phone.glade:235
-msgid "<small>Hold</small>"
-msgstr "<small>Halten</small>"
-
-#: roger/phone.glade:281
-msgid "<small>Record</small>"
-msgstr "<small>Aufnehmen</small>"
-
-#: roger/phone.glade:351
-msgid "1"
-msgstr "1"
-
-#: roger/phone.glade:365 roger/phone.glade:581 roger/phone.glade:687
-msgid "<small> </small>"
-msgstr "<small> </small>"
-
-#: roger/phone.glade:397
-msgid "2"
-msgstr "2"
-
-#: roger/phone.glade:411
-msgid "<small>ABC</small>"
-msgstr "<small>ABC</small>"
-
-#: roger/phone.glade:443
-msgid "3"
-msgstr "3"
-
-#: roger/phone.glade:457
-msgid "<small>DEF</small>"
-msgstr "<small>DEF</small>"
-
-#: roger/phone.glade:489
-msgid "4"
-msgstr "4"
-
-#: roger/phone.glade:503
-msgid "<small>GHI</small>"
-msgstr "<small>GHI</small>"
-
-#: roger/phone.glade:535
-msgid "7"
-msgstr "7"
-
-#: roger/phone.glade:549
-msgid "<small>PQRS</small>"
-msgstr "<small>PQRS</small>"
-
-#: roger/phone.glade:593
-msgid "*"
-msgstr "*"
-
-#: roger/phone.glade:627
-msgid "<small>+</small>"
-msgstr "<small>+</small>"
-
-#: roger/phone.glade:639
-msgid "0"
-msgstr "0"
-
-#: roger/phone.glade:673
-msgid "#"
-msgstr "#"
-
-#: roger/phone.glade:719
-msgid "6"
-msgstr "6"
-
-#: roger/phone.glade:733
-msgid "<small>MNO</small>"
-msgstr "<small>MNO</small>"
-
-#: roger/phone.glade:765
-msgid "5"
-msgstr "5"
-
-#: roger/phone.glade:779
-msgid "<small>JKL</small>"
-msgstr "<small>JKL</small>"
-
-#: roger/phone.glade:811
-msgid "<small>TUV</small>"
-msgstr "<small>TUV</small>"
-
-#: roger/phone.glade:823
-msgid "8"
-msgstr "8"
-
-#: roger/phone.glade:857
-msgid "9"
-msgstr "9"
-
-#: roger/phone.glade:871
-msgid "<small>WXYZ</small>"
-msgstr "<small>WXYZ</small>"
 
 #: roger/plugins.c:120
 msgid "About this plugin"
@@ -1179,6 +1073,10 @@ msgstr "Ausgabe (Klingelton)"
 msgid "Audio"
 msgstr "Audio"
 
+#: roger/settings.glade:1733
+msgid "Settings"
+msgstr "Einstellungen"
+
 #: roger/shortcuts.glade:14
 msgctxt "shortcut window"
 msgid "General"
@@ -1204,51 +1102,6 @@ msgctxt "shortcut window"
 msgid "Open settings"
 msgstr "Einstellungen öffnen"
 
-#: roger/org.tabos.roger.desktop.in:3 roger/org.tabos.roger.desktop.in:4
-#: roger/org.tabos.roger.appdata.xml.in:9 plugins/statusicon/statusicon.c:360
-msgid "Roger Router"
-msgstr "Roger Router"
-
-#: roger/org.tabos.roger.desktop.in:5 roger/org.tabos.roger.appdata.xml.in:10
-msgid "Journal, Fax-Software and Call-Monitor for AVM FRITZ!Box or compatible"
-msgstr ""
-"Journal, Fax-Software und Anrufmonitor für AVM FRITZ!Box oder kompatibel"
-
-#: roger/org.tabos.roger.desktop.in:7
-msgid "org.tabos.roger"
-msgstr "org.tabos.roger"
-
-#: roger/org.tabos.roger.desktop.in:12
-msgid "fritz;box;fritzbox;router;manager;fax;softphone;"
-msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
-
-#: roger/org.tabos.roger.appdata.xml.in:13
-msgid ""
-"Roger Router is a clean solution for controlling the FRITZ!Box or compatible "
-"router with Linux. It offers a rich feature list, including call monitor, "
-"journal, fax support and also has a great integration into several address "
-"books."
-msgstr ""
-"Das Programm Roger Router ist eine grafische Oberfläche, mit der man Faxe "
-"über FRITZ!Box-Router von AVM {de} versenden kann. Zusätzlich kann Roger "
-"Router den Anrufmonitor, Anrufbeantworter und Fax-Speicher des Routers "
-"abfragen und darstellen. Dabei werden eingehende und ausgehende "
-"Telefonnummern mittels Adressbuch oder Online-Dienst in Namen aufgelöst.\n"
-"\n"
-"Des Weiteren können Telefonnummern vom Rechner aus angewählt und die "
-"Internetverbindung neu aufgebaut werden. Die auf dem Router gespeicherten "
-"Nachrichten bzw. Faxe können direkt über die Oberfläche angehört bzw. "
-"angezeigt und auch auf dem Router gelöscht werden. "
-
-#: roger/org.tabos.roger.appdata.xml.in:18
-msgid "Journal view of all calls"
-msgstr "Journalansicht aller Anrufe"
-
-#: roger/org.tabos.roger.appdata.xml.in:48
-#: roger/org.tabos.roger.appdata.xml.in:53
-msgid "Jan-Michael Brummer"
-msgstr "Jan-Michael Brummer"
-
 #: plugins/evolution/evolution.desktop.in:4
 msgid "Evolution"
 msgstr "Evolution"
@@ -1256,6 +1109,112 @@ msgstr "Evolution"
 #: plugins/evolution/evolution.desktop.in:5
 msgid "Evolution address book support"
 msgstr "Evolution Adressbuch-Support"
+
+#: plugins/gtknotify/gtknotify.c:81
+#, c-format
+msgid "(on %s)"
+msgstr "(an %s)"
+
+#: plugins/gtknotify/gtknotify.c:81
+msgid "(on ?)"
+msgstr "(an ?)"
+
+#: plugins/gtknotify/gtknotify.c:105
+msgid "Incoming call"
+msgstr "Eingehender Anruf"
+
+#: plugins/gtknotify/gtknotify.c:126
+msgid "Outgoing call"
+msgstr "Ausgehender Anruf"
+
+#: plugins/gtknotify/gtknotify.desktop.in:4
+msgid "Notifications (using GTK)"
+msgstr "Benachrichtigungen (mittels GTK)"
+
+#: plugins/gtknotify/gtknotify.desktop.in:5
+msgid "Display notification about incoming/outgoing/missed calls using GTK"
+msgstr ""
+"Zeigt Benachrichtigungen über eingehende/ausgehende/verpasste Anrufe (GTK)"
+
+#: plugins/statusicon/statusicon.c:360 roger/org.tabos.roger.desktop.in:3
+#: roger/org.tabos.roger.desktop.in:4 roger/org.tabos.roger.appdata.xml.in:9
+msgid "Roger Router"
+msgstr "Roger Router"
+
+#: plugins/statusicon/statusicon.c:481 plugins/indicator/indicator.c:370
+msgid "Hide Journal on startup"
+msgstr "Verstecke das Journal beim Starten"
+
+#: plugins/statusicon/statusicon.c:490 plugins/indicator/indicator.c:379
+msgid "Default Icon"
+msgstr "Standard-Symbol"
+
+#: plugins/statusicon/statusicon.c:494 plugins/statusicon/statusicon.c:504
+#: plugins/indicator/indicator.c:383 plugins/indicator/indicator.c:393
+msgid "default"
+msgstr "default"
+
+#: plugins/statusicon/statusicon.c:495 plugins/statusicon/statusicon.c:505
+#: plugins/indicator/indicator.c:384 plugins/indicator/indicator.c:394
+msgid "mono-dark"
+msgstr "mono-dark"
+
+#: plugins/statusicon/statusicon.c:496 plugins/statusicon/statusicon.c:506
+#: plugins/indicator/indicator.c:385 plugins/indicator/indicator.c:395
+msgid "mono-lite"
+msgstr "mono-lite"
+
+#: plugins/statusicon/statusicon.c:500 plugins/indicator/indicator.c:389
+msgid "Notify Icon"
+msgstr "Benachrichtigungs-Symbol"
+
+#: plugins/statusicon/statusicon.c:517
+msgid "Settings for Status icon GTK"
+msgstr "Einstellungen für Statusicon GTK"
+
+#: plugins/statusicon/statusicon.desktop.in:4
+msgid "Status icon GTK"
+msgstr "Statusicon GTK"
+
+#: plugins/statusicon/statusicon.desktop.in:5
+msgid "Status icon plugin using GTK following FreeDesktop standard"
+msgstr "Statusicon-Plugin in GTK nach den FreeDesktop-Standard"
+
+#: plugins/indicator/indicator.c:406
+msgid "Settings for Application Indicator"
+msgstr "Einstellungen für Application Indicator"
+
+#: plugins/indicator/indicator.desktop.in:4
+msgid "Application Indicator"
+msgstr "Application Indicator"
+
+#: plugins/indicator/indicator.desktop.in:5
+msgid "Status icon plugin using AppIndicator support"
+msgstr "Statusicon-Plugin mit AppIndicator-Unterstützung"
+
+#: plugins/vcard/vcard.c:1207
+msgid "Select vcard file"
+msgstr "VCard-Datei auswählen"
+
+#: plugins/vcard/vcard.c:1246
+msgid "VCard file"
+msgstr "VCard-Datei"
+
+#: plugins/vcard/vcard.c:1251
+msgid "Select vcard"
+msgstr "VCard auswählen"
+
+#: plugins/vcard/vcard.c:1259 plugins/thunderbird/thunderbird.c:1116
+msgid "Contact book"
+msgstr "Kontaktbuch"
+
+#: plugins/vcard/vcard.desktop.in:4
+msgid "VCard"
+msgstr "VCard"
+
+#: plugins/vcard/vcard.desktop.in:5
+msgid "VCard address book support"
+msgstr "VCard Adressbuch-Support"
 
 #: plugins/google/google.c:86
 msgid "Google plugin: Authorization required"
@@ -1313,99 +1272,6 @@ msgstr "Google"
 msgid "Google address book support"
 msgstr "Google Adressbuch-Support"
 
-#: plugins/gtknotify/gtknotify.c:81
-#, c-format
-msgid "(on %s)"
-msgstr "(an %s)"
-
-#: plugins/gtknotify/gtknotify.c:81
-msgid "(on ?)"
-msgstr "(an ?)"
-
-#: plugins/gtknotify/gtknotify.c:105
-msgid "Incoming call"
-msgstr "Eingehender Anruf"
-
-#: plugins/gtknotify/gtknotify.c:126
-msgid "Outgoing call"
-msgstr "Ausgehender Anruf"
-
-#: plugins/gtknotify/gtknotify.desktop.in:4
-msgid "Notifications (using GTK)"
-msgstr "Benachrichtigungen (mittels GTK)"
-
-#: plugins/gtknotify/gtknotify.desktop.in:5
-msgid "Display notification about incoming/outgoing/missed calls using GTK"
-msgstr ""
-"Zeigt Benachrichtigungen über eingehende/ausgehende/verpasste Anrufe (GTK)"
-
-#: plugins/indicator/indicator.c:371 plugins/statusicon/statusicon.c:481
-msgid "Hide Journal on startup"
-msgstr "Verstecke das Journal beim Starten"
-
-#: plugins/indicator/indicator.c:380 plugins/statusicon/statusicon.c:490
-msgid "Default Icon"
-msgstr "Standard-Symbol"
-
-#: plugins/indicator/indicator.c:384 plugins/indicator/indicator.c:394
-#: plugins/statusicon/statusicon.c:494 plugins/statusicon/statusicon.c:504
-msgid "default"
-msgstr "default"
-
-#: plugins/indicator/indicator.c:385 plugins/indicator/indicator.c:395
-#: plugins/statusicon/statusicon.c:495 plugins/statusicon/statusicon.c:505
-msgid "mono-dark"
-msgstr "mono-dark"
-
-#: plugins/indicator/indicator.c:386 plugins/indicator/indicator.c:396
-#: plugins/statusicon/statusicon.c:496 plugins/statusicon/statusicon.c:506
-msgid "mono-lite"
-msgstr "mono-lite"
-
-#: plugins/indicator/indicator.c:390 plugins/statusicon/statusicon.c:500
-msgid "Notify Icon"
-msgstr "Benachrichtigungs-Symbol"
-
-#: plugins/indicator/indicator.c:407
-msgid "Settings for Application Indicator"
-msgstr "Einstellungen für Application Indicator"
-
-#: plugins/indicator/indicator.desktop.in:4
-msgid "Application Indicator"
-msgstr "Application Indicator"
-
-#: plugins/indicator/indicator.desktop.in:5
-msgid "Status icon plugin using AppIndicator support"
-msgstr "Statusicon-Plugin mit AppIndicator-Unterstützung"
-
-#: plugins/keychain/keychain.desktop.in:4
-msgid "KeyChain"
-msgstr "KeyChain"
-
-#: plugins/keychain/keychain.desktop.in:5
-msgid "OS X KeyChain support"
-msgstr "OS X KeyChain Unterstützung"
-
-#: plugins/osxab/osxab.desktop.in:4
-msgid "OSX Address book"
-msgstr "OSX Adressbuch"
-
-#: plugins/osxab/osxab.desktop.in:5
-msgid "OS X Address book"
-msgstr "OS X Adressbuch"
-
-#: plugins/statusicon/statusicon.c:517
-msgid "Settings for Status icon GTK"
-msgstr "Einstellungen für Statusicon GTK"
-
-#: plugins/statusicon/statusicon.desktop.in:4
-msgid "Status icon GTK"
-msgstr "Statusicon GTK"
-
-#: plugins/statusicon/statusicon.desktop.in:5
-msgid "Status icon plugin using GTK following FreeDesktop standard"
-msgstr "Statusicon-Plugin in GTK nach den FreeDesktop-Standard"
-
 #: plugins/thunderbird/thunderbird.c:1055
 msgid "Select mab file"
 msgstr "VCard-Datei auswählen"
@@ -1418,10 +1284,6 @@ msgstr "Thunderbird-Datei"
 msgid "Select"
 msgstr "Auswählen"
 
-#: plugins/thunderbird/thunderbird.c:1116 plugins/vcard/vcard.c:1259
-msgid "Contact book"
-msgstr "Kontaktbuch"
-
 #: plugins/thunderbird/thunderbird.desktop.in:4
 msgid "Thunderbird"
 msgstr "Thunderbird"
@@ -1430,33 +1292,9 @@ msgstr "Thunderbird"
 msgid "Thunderbird address book support"
 msgstr "Thunderbird Adressbuch-Support"
 
-#: plugins/vcard/vcard.c:1207
-msgid "Select vcard file"
-msgstr "VCard-Datei auswählen"
-
-#: plugins/vcard/vcard.c:1246
-msgid "VCard file"
-msgstr "VCard-Datei"
-
-#: plugins/vcard/vcard.c:1251
-msgid "Select vcard"
-msgstr "VCard auswählen"
-
-#: plugins/vcard/vcard.desktop.in:4
-msgid "VCard"
-msgstr "VCard"
-
-#: plugins/vcard/vcard.desktop.in:5
-msgid "VCard address book support"
-msgstr "VCard Adressbuch-Support"
-
 #: plugins/webjournal/webjournal.c:271
 msgid "Set HTML file"
 msgstr "HTML-Datei auswählen"
-
-#: plugins/webjournal/webjournal.c:271
-msgid "_Save"
-msgstr "_Speichern"
 
 #: plugins/webjournal/webjournal.c:308
 msgid "Web Journal output file"
@@ -1470,6 +1308,146 @@ msgstr "Web Journal"
 #: plugins/webjournal/webjournal.desktop.in:5
 msgid "Store journal as html file on a server"
 msgstr "Speichert das Journal als HTML-Datei auf einem Server"
+
+#: roger/org.tabos.roger.desktop.in:5 roger/org.tabos.roger.appdata.xml.in:10
+msgid "Journal, Fax-Software and Call-Monitor for AVM FRITZ!Box or compatible"
+msgstr ""
+"Journal, Fax-Software und Anrufmonitor für AVM FRITZ!Box oder kompatibel"
+
+#: roger/org.tabos.roger.desktop.in:7
+msgid "org.tabos.roger"
+msgstr "org.tabos.roger"
+
+#: roger/org.tabos.roger.desktop.in:12
+msgid "fritz;box;fritzbox;router;manager;fax;softphone;"
+msgstr "fritz;box;fritzbox;router;verwaltung;fax;softphone;"
+
+#: roger/org.tabos.roger.appdata.xml.in:13
+msgid ""
+"Roger Router is a clean solution for controlling the FRITZ!Box or compatible "
+"router with Linux. It offers a rich feature list, including call monitor, "
+"journal, fax support and also has a great integration into several address "
+"books."
+msgstr ""
+"Das Programm Roger Router ist eine grafische Oberfläche, mit der man Faxe "
+"über FRITZ!Box-Router von AVM {de} versenden kann. Zusätzlich kann Roger "
+"Router den Anrufmonitor, Anrufbeantworter und Fax-Speicher des Routers "
+"abfragen und darstellen. Dabei werden eingehende und ausgehende "
+"Telefonnummern mittels Adressbuch oder Online-Dienst in Namen aufgelöst.\n"
+"\n"
+"Des Weiteren können Telefonnummern vom Rechner aus angewählt und die "
+"Internetverbindung neu aufgebaut werden. Die auf dem Router gespeicherten "
+"Nachrichten bzw. Faxe können direkt über die Oberfläche angehört bzw. "
+"angezeigt und auch auf dem Router gelöscht werden. "
+
+#: roger/org.tabos.roger.appdata.xml.in:18
+msgid "Journal view of all calls"
+msgstr "Journalansicht aller Anrufe"
+
+#~ msgid "From:"
+#~ msgstr "Von:"
+
+#~ msgid "To:"
+#~ msgstr "An:"
+
+#~ msgid "Status:"
+#~ msgstr "Status:"
+
+#~ msgid "C"
+#~ msgstr "C"
+
+#~ msgid "<small>Clear</small>"
+#~ msgstr "<small>Löschen</small>"
+
+#~ msgid "<small>Mute</small>"
+#~ msgstr "<small>Stumm</small>"
+
+#~ msgid "<small>Hold</small>"
+#~ msgstr "<small>Halten</small>"
+
+#~ msgid "<small>Record</small>"
+#~ msgstr "<small>Aufnehmen</small>"
+
+#~ msgid "1"
+#~ msgstr "1"
+
+#~ msgid "<small> </small>"
+#~ msgstr "<small> </small>"
+
+#~ msgid "2"
+#~ msgstr "2"
+
+#~ msgid "<small>ABC</small>"
+#~ msgstr "<small>ABC</small>"
+
+#~ msgid "3"
+#~ msgstr "3"
+
+#~ msgid "<small>DEF</small>"
+#~ msgstr "<small>DEF</small>"
+
+#~ msgid "4"
+#~ msgstr "4"
+
+#~ msgid "<small>GHI</small>"
+#~ msgstr "<small>GHI</small>"
+
+#~ msgid "7"
+#~ msgstr "7"
+
+#~ msgid "<small>PQRS</small>"
+#~ msgstr "<small>PQRS</small>"
+
+#~ msgid "*"
+#~ msgstr "*"
+
+#~ msgid "<small>+</small>"
+#~ msgstr "<small>+</small>"
+
+#~ msgid "0"
+#~ msgstr "0"
+
+#~ msgid "#"
+#~ msgstr "#"
+
+#~ msgid "6"
+#~ msgstr "6"
+
+#~ msgid "<small>MNO</small>"
+#~ msgstr "<small>MNO</small>"
+
+#~ msgid "5"
+#~ msgstr "5"
+
+#~ msgid "<small>JKL</small>"
+#~ msgstr "<small>JKL</small>"
+
+#~ msgid "<small>TUV</small>"
+#~ msgstr "<small>TUV</small>"
+
+#~ msgid "8"
+#~ msgstr "8"
+
+#~ msgid "9"
+#~ msgstr "9"
+
+#~ msgid "<small>WXYZ</small>"
+#~ msgstr "<small>WXYZ</small>"
+
+#~ msgid "Jan-Michael Brummer"
+#~ msgstr "Jan-Michael Brummer"
+
+#~ msgid "KeyChain"
+#~ msgstr "KeyChain"
+
+#~ msgid "OS X KeyChain support"
+#~ msgstr "OS X KeyChain Unterstützung"
+
+#~ msgid "OSX Address book"
+#~ msgstr "OSX Adressbuch"
+
+#~ msgid "OS X Address book"
+#~ msgstr "OS X Adressbuch"
 
 #~ msgid "<b>No contact found</b>"
 #~ msgstr "<b>Kein Kontakt gefunden</b>"
@@ -1616,9 +1594,6 @@ msgstr "Speichert das Journal als HTML-Datei auf einem Server"
 
 #~ msgid "Enter name or number"
 #~ msgstr "Name oder Nummer eingeben"
-
-#~ msgid "Settings"
-#~ msgstr "Einstellungen"
 
 #~ msgid "Extensions"
 #~ msgstr "Erweiterungen"

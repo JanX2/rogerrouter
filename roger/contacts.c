@@ -28,7 +28,6 @@
 #include <roger/main.h>
 #include <roger/uitools.h>
 #include <roger/phone.h>
-#include <roger/icons.h>
 #include <roger/journal.h>
 
 typedef struct {
@@ -129,7 +128,7 @@ static void contacts_update_details(RmContact *contact)
 			gtk_grid_attach(GTK_GRID(grid), detail_name_label, 1, 0, 1, 1);
 
 			if (contact->image) {
-				GdkPixbuf *buf = image_get_scaled(contact->image, 96, 96);
+				GdkPixbuf *buf = rm_image_scale(contact->image, 96);
 				gtk_image_set_from_pixbuf(GTK_IMAGE(detail_photo_image), buf);
 			} else {
 				gtk_image_set_from_icon_name(GTK_IMAGE(detail_photo_image), AVATAR_DEFAULT, GTK_ICON_SIZE_DIALOG);
@@ -345,7 +344,9 @@ static void contacts_update_list(void)
 
 		/* Create contact image */
 		if (contact->image) {
-			img = gtk_image_new_from_pixbuf(image_get_scaled(contact->image, -1, -1));
+			gint size;
+			gtk_icon_size_lookup(GTK_ICON_SIZE_DIALOG, &size, NULL);
+			img = gtk_image_new_from_pixbuf(rm_image_scale(contact->image, size));
 		} else {
 			img = gtk_image_new_from_icon_name(AVATAR_DEFAULT, GTK_ICON_SIZE_DIALOG);
 		}
@@ -526,14 +527,8 @@ void photo_button_clicked_cb(GtkWidget *button, gpointer user_data)
 	result = gtk_dialog_run(GTK_DIALOG(file_chooser));
 
 	if (result == GTK_RESPONSE_ACCEPT) {
-		if (contact->image_uri != NULL) {
-			g_free(contact->image_uri);
-			contact->image_uri = NULL;
-		}
-		contact->image_uri = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(file_chooser));
-		if (contact->image_uri != NULL) {
-			contact->image = gdk_pixbuf_new_from_file(contact->image_uri, NULL);
-		}
+		gchar *image_uri = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(file_chooser));
+		rm_contact_set_image_from_file(contact, image_uri);
 	} else if (result == 1) {
 		if (contact->image != NULL) {
 			contact->image = NULL;
@@ -663,7 +658,7 @@ void refresh_edit_dialog(RmContact *contact)
 	gtk_grid_attach(GTK_GRID(grid), detail_name_label, 1, 0, 1, 1);
 
 	if (contact && contact->image) {
-		GdkPixbuf *buf = image_get_scaled(contact->image, 96, 96);
+		GdkPixbuf *buf = rm_image_scale(contact->image, 96);
 		gtk_image_set_from_pixbuf(GTK_IMAGE(detail_photo_image), buf);
 	} else {
 		gtk_image_set_from_icon_name(GTK_IMAGE(detail_photo_image), AVATAR_DEFAULT, GTK_ICON_SIZE_DIALOG);

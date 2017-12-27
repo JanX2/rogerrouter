@@ -80,7 +80,6 @@ gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 	}
 
 	window = GTK_WIDGET(gtk_builder_get_object(builder, "window"));
-	gtk_application_add_window(GTK_APPLICATION(g_application_get_default()), GTK_WINDOW(window));
 
 	headerbar = GTK_WIDGET(gtk_builder_get_object(builder, "headerbar"));
 	contact_name_label = GTK_WIDGET(gtk_builder_get_object(builder, "name_label"));
@@ -103,7 +102,7 @@ gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 	g_free(tmp);
 
 	if (contact->image) {
-		GdkPixbuf *buf = image_get_scaled(contact->image, 96, 96);
+		GdkPixbuf *buf = rm_image_scale(contact->image, 96);
 		gtk_image_set_from_pixbuf(GTK_IMAGE(image), buf);
 	}
 
@@ -135,9 +134,10 @@ gpointer gtknotify_show(RmConnection *connection, RmContact *contact)
 
 		g_timeout_add_seconds(duration, gtknotify_timeout_close_cb, window);
 	}
-	gtk_widget_show_all(window);
 
-	gtk_window_present(GTK_WINDOW(window));
+	gtk_window_set_gravity (GTK_WINDOW(window), GDK_GRAVITY_SOUTH_EAST);
+	gtk_window_move(GTK_WINDOW(window), gdk_screen_width(), gdk_screen_height());
+	gtk_widget_show(window);
 
 	return window;
 }

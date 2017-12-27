@@ -35,7 +35,6 @@
 #include <roger/journal.h>
 #include <roger/print.h>
 #include <roger/contacts.h>
-#include <roger/icons.h>
 #include <roger/application.h>
 #include <roger/uitools.h>
 #include <roger/answeringmachine.h>

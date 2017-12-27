@@ -2,7 +2,6 @@ General
 --------
 * Default notification should be all instead none
 * Installation hint for not working fax device
-* Translation in flatpak
 * Assistent: How to handle existing profile names? Overwrite?
 * FRITZ!Box: Handle insufficient permissions
 * Design Journal/Contacts/Phone with Glade
@@ -33,9 +32,6 @@ General
 
 Windows
 --------
- * Printer installation
- * Audio plugin test
- * Application icon in different sizes
  * Outlook
 
 OS X

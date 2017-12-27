@@ -250,7 +250,6 @@ void ebook_read_data(EClient *e_client)
 		photo = e_contact_get(e_contact, E_CONTACT_PHOTO);
 		if (photo) {
 			GdkPixbuf *buf = NULL;
-			gsize len = 0;
 
 			switch (photo->type) {
 			case E_CONTACT_PHOTO_TYPE_INLINED:
@@ -259,7 +258,6 @@ void ebook_read_data(EClient *e_client)
 				if (gdk_pixbuf_loader_write(loader, photo->data.inlined.data, photo->data.inlined.length, NULL)) {
 					gdk_pixbuf_loader_close(loader, NULL);
 					buf = gdk_pixbuf_loader_get_pixbuf(loader);
-					len = photo->data.inlined.length;
 				} else {
 					g_debug("Could not load inlined photo!");
 				}
@@ -270,10 +268,6 @@ void ebook_read_data(EClient *e_client)
 				if (!strncmp(photo->data.uri, "file://", 7)) {
 					gchar *uri = g_regex_replace_literal(pro, photo->data.uri + 7, -1, 0, "%", 0, NULL);
 					buf = gdk_pixbuf_new_from_file(uri, NULL);
-
-					if (buf != NULL) {
-						len = gdk_pixbuf_get_byte_length(buf);
-					}
 				} else {
 					g_debug("Cannot handle URI: '%s'!", photo->data.uri);
 				}
@@ -286,12 +280,10 @@ void ebook_read_data(EClient *e_client)
 			}
 
 			contact->image = buf;
-			contact->image_len = len;
 
 			e_contact_photo_free(photo);
 		} else {
 			contact->image = NULL;
-			contact->image_len = 0;
 		}
 
 		contact->name = g_strdup(display_name);
@@ -366,6 +358,10 @@ void ebook_read_data(EClient *e_client)
 	}
 
 	g_slist_free(ebook_contacts);
+
+	/* Send signal to redraw journal and update contacts view */
+	g_debug("%s(): ********************************* loaded", __FUNCTION__);
+	rm_object_emit_contacts_changed();
 }
 
 static void ebook_read_cb(GObject *source, GAsyncResult *res, gpointer user_data)
@@ -463,17 +459,16 @@ gboolean evolution_remove_contact(RmContact *contact)
 
 static void evolution_set_image(EContact *e_contact, RmContact *contact)
 {
-	if (contact->image_uri != NULL) {
+	if (contact->image != NULL) {
 		EContactPhoto photo;
-		guchar **data;
-		gsize *length;
+		GError *error = NULL;
 
-		photo.type = E_CONTACT_PHOTO_TYPE_INLINED;
-		data = &photo.data.inlined.data;
-		length = (gsize*)&photo.data.inlined.length;
-		photo.data.inlined.mime_type = NULL;
-		if (g_file_get_contents(contact->image_uri, (gchar**)data, (gsize*)length, NULL)) {
+		if (gdk_pixbuf_save_to_buffer(contact->image, (gchar**)&photo.data.inlined.data, &photo.data.inlined.length, "png", &error, NULL)) {
+			photo.type = E_CONTACT_PHOTO_TYPE_INLINED;
+			photo.data.inlined.mime_type = NULL;
 			e_contact_set(e_contact, E_CONTACT_PHOTO, &photo);
+		} else {
+			g_warning("%s(): gdk_pixbuf_save_to_buffer failed (%s)", __FUNCTION__, error? error->message : "");
 		}
 	} else if (contact->image == NULL) {
 		e_contact_set(e_contact, E_CONTACT_PHOTO, NULL);

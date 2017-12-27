@@ -98,7 +98,7 @@ gboolean fax_status_timer_cb(gpointer user_data)
 			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(fax_ui->progress_bar), _("Fax transfer failed"));
 			g_debug("%s(): Fax transfer failed", __FUNCTION__);
 		}
-		if (g_settings_get_boolean(rm_profile_get_active()->settings, "fax-report")) {
+		if (fax_ui->status_timer_id && g_settings_get_boolean(rm_profile_get_active()->settings, "fax-report")) {
 			print_fax_report(fax_status, fax_ui->file, g_settings_get_string(rm_profile_get_active()->settings, "fax-report-dir"));
 		}
 
