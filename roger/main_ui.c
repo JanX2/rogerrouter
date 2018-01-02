@@ -46,7 +46,6 @@ gchar *argv0 = NULL;
 int main(int argc, char **argv)
 {
 	int status;
-	int idx;
 
 	argv0 = g_strdup(argv[0]);
 

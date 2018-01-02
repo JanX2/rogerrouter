@@ -26,6 +26,8 @@
 #include <roger/main.h>
 #include <roger/uitools.h>
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+
 /**
  * gtknotify_close:
  * @priv: pointer to notification window
@@ -190,5 +192,7 @@ gboolean gtknotify_plugin_shutdown(RmPlugin *plugin)
 
 	return TRUE;
 }
+
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 RM_PLUGIN(gtknotify)
