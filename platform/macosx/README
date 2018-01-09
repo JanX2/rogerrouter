@@ -1,16 +1,16 @@
 These are the steps necessary to compile Roger Router from source on OS X:
 
-Latest version tested: 10.8.5
+Latest version tested: 10.12.6
 
 * Building GTK+ 3 for OS X
 
     $ curl -O https://git.gnome.org/browse/gtk-osx/plain/gtk-osx-build-setup.sh
     $ sh gtk-osx-build-setup.sh
 
-- Please note that we have to add the following in our ~/.jhbuild-custom:
+- Please note that we have to add the following in our ~/.jhbuildrc-custom:
 
     os.environ["CFLAGS"] = "-Wall"
-    moduleset=os.environ['HOME'] + '/PATH_TO_ROGER_SRC/macosx/roger.modules'
+    moduleset=os.environ['HOME'] + '/PATH_TO_ROGER_SRC/platform/macosx/roger.modules'
 
 -  Setup PATH so we can easily execute jhbuild
     $ export PATH=$PATH:/Users/$USER/.local/bin
