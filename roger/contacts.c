@@ -843,8 +843,6 @@ void contacts_save_button_clicked_cb(GtkComboBox *box, gpointer user_data)
 		} else {
 			rm_addressbook_save_contact(book, contacts->tmp_contact);
 		}
-
-		rm_addressbook_reload_contacts(book);
 	}
 
 	if (contacts->tmp_contact) {
