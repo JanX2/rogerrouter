@@ -34,6 +34,7 @@
 #include <roger/contactsearch.h>
 #include <roger/print.h>
 #include <roger/main.h>
+#include <roger/uitools.h>
 
 /* Workaround to build with pre-9.18 versions */
 #if defined(e_Quit)
@@ -54,6 +55,7 @@ struct fax_ui {
 	RmFax *fax;
 	RmFaxStatus status;
 	RmConnection *connection;
+        RmProfile *profile;
 	gchar *file;
 	gchar *number;
 	gint status_timer_id;
@@ -218,6 +220,41 @@ gboolean fax_delete_event_cb(GtkWidget *window,
 	return FALSE;
 }
 
+/**
+ * fax_create_menu:
+ * @fax_ui: a pointer to fax_ui
+ *
+ * Create fax window menu for suppress number toggle
+ *
+ * Returns: newly create fax menu
+ */
+static GtkWidget *fax_create_menu(struct fax_ui *fax_ui)
+{
+	GtkWidget *menu;
+	GtkWidget *item;
+	GtkWidget *box;
+	GSList *phone_radio_list = NULL;
+	GSList *list = NULL;
+
+	/* Create popover */
+	menu = gtk_popover_new(NULL);
+
+	/* Create vertical box */
+	box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+	gtk_widget_set_margin(box, 6, 6, 6, 6);
+
+	gtk_container_add(GTK_CONTAINER(menu), box);
+
+	/* Add suppress check item */
+	item = gtk_check_button_new_with_label(_("Suppress number"));
+	g_settings_bind(fax_ui->profile->settings, "suppress", item, "active", G_SETTINGS_BIND_DEFAULT);
+	gtk_box_pack_start(GTK_BOX(box), item, FALSE, FALSE, 0);
+
+	gtk_widget_show_all(box);
+
+	return menu;
+}
+
 gboolean app_show_fax_window_idle(gpointer data)
 {
 	GtkBuilder *builder;
@@ -240,6 +277,7 @@ gboolean app_show_fax_window_idle(gpointer data)
 	/* Allocate fax window structure */
 	fax_ui = g_slice_alloc0(sizeof(struct fax_ui));
 	fax_ui->file = fax_file;
+        fax_ui->profile = profile;
 
 	fax_ui->fax = rm_profile_get_fax(profile);
 
@@ -266,7 +304,11 @@ gboolean app_show_fax_window_idle(gpointer data)
 	gtk_window_set_default(GTK_WINDOW(fax_ui->window), fax_ui->pickup_button);
 	gtk_grid_attach(GTK_GRID(grid2), fax_ui->contact_search, 0, 0, 1, 1);
 
-	/* Create header bar and set it to window */
+        GtkWidget *menu_button = GTK_WIDGET(gtk_builder_get_object(builder, "fax_menu_button"));
+	GtkWidget *menu = fax_create_menu(fax_ui);
+	gtk_menu_button_set_popover(GTK_MENU_BUTTON(menu_button), menu);
+
+        /* Create header bar and set it to window */
 	gtk_header_bar_set_title(GTK_HEADER_BAR(fax_ui->header_bar), rm_fax_get_name(fax_ui->fax));
 	gtk_window_set_titlebar(GTK_WINDOW(fax_ui->window), fax_ui->header_bar);
 
