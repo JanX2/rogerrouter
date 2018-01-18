@@ -1,9 +1,10 @@
 <?xml version="1.0" standalone="no"?> <!--*- mode: nxml -*-->
 <?xml-stylesheet type="text/xsl" href="moduleset.xsl"?>
 <moduleset>
-	<include href="http://git.gnome.org/browse/gtk-osx/plain/modulesets-stable/gtk-osx.modules"/>
+	<!-- <include href="https://git.gnome.org/browse/gtk-osx/plain/modulesets-stable/gtk-osx.modules"/> -->
+	<include href="Source/jhbuild/modulesets/gtk-osx.modules"/>
 	<repository type="git" name="roger" href="https://git.krueger-it.net/tabos.org/"/>
-	<repository type="tarball" name="libcapi20" href="https://www.tabos.org/wp-content/uploads/2017/03/"/>
+	<repository type="tarball" name="libcapi20" href="http://www.tabos.org/wp-content/uploads/2017/03/"/>
 	<repository type="tarball" name="speex" href="http://downloads.xiph.org/releases/speex/"/>
 	<repository type="tarball" name="libsndfile" href="http://www.mega-nerd.com/libsndfile/files/"/>
 	<repository type="tarball" name="libsoup" href="http://ftp.gnome.org/pub/GNOME/sources/libsoup/2.58/"/>
@@ -40,7 +41,7 @@
 		</dependencies>
 	</autotools>
 
-	 <autotools id="spandsp" supports-non-srcdir-builds="no">
+	 <autotools id="spandsp" autogen-sh="configure" supports-non-srcdir-builds="no">
 		<branch repo="spandsp" module="spandsp-0.0.6pre21.tgz" version="0.0.6" checkoutdir="spandsp-0.0.6" />
 	</autotools>
 
@@ -51,17 +52,6 @@
 	<autotools id="ghostscript" autogen-sh="configure" autogenargs="--without-x" makeargs="so" makeinstallargs="soinstall" supports-non-srcdir-builds="no">
 		<branch repo="ghostscript" module="ghostscript-9.21.tar.gz" version="9.21"/>
 	</autotools>
-
- <distutils id="meson" python3="1">
-    <branch repo="github-tar"
-            version="0.42.0"
-            module="mesonbuild/meson/releases/download/${version}/meson-${version}.tar.gz"
-            checkoutdir="meson-${version}"
-            hash="sha256:a74c7387a3dd8171e931bcd948355f7f9529368eae72c3c22a9beef6c2e73498"/>
-    <dependencies>
-      <dep package="ninja"/>
-    </dependencies>
-  </distutils>
 
 	<meson id="rm">
 		<branch repo="roger" module="librm.git"/>
@@ -74,7 +64,6 @@
 			<dep package="gssdp"/>
 			<dep package="spandsp"/>
 			<dep package="python3"/>
-			<dep package="meson"/>
 			<dep package="json-glib"/>
 			<dep package="gstreamer"/>
 			<dep package="poppler"/>

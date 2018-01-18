@@ -1,32 +1,59 @@
 These are the steps necessary to compile Roger Router from source on OS X:
 
-Latest version tested: 10.8.5
+Latest version tested: 10.13.2
 
 * Building GTK+ 3 for OS X
 
     $ curl -O https://git.gnome.org/browse/gtk-osx/plain/gtk-osx-build-setup.sh
     $ sh gtk-osx-build-setup.sh
 
-- Please note that we have to add the following in our ~/.jhbuild-custom:
+- We need jhbuild from master instead of gtk-osx preferred stable because of meson support
 
-    os.environ["CFLAGS"] = "-Wall"
-    moduleset=os.environ['HOME'] + '/PATH_TO_ROGER_SRC/macosx/roger.modules'
+    $ cd Source/jhbuild/
+    $ git stash
+    $ git checkout master
+    $ make
+    $ make install
+    $ cd $HOME
+
+- Please note that we have to add the following in our ~/.jhbuildrc-custom:
+
+    moduleset=os.environ['HOME'] + '/PATH_TO_ROGER_MODULES/roger.modules'
 
 -  Setup PATH so we can easily execute jhbuild
     $ export PATH=$PATH:/Users/$USER/.local/bin
 
-Note: There is a bug in recent xcode version which prevents bootstrap from compile. In this case disable the module_extra_env["pkg-config"] ... line in .jhbuildrc for xcodeversion >= 5.0
-
     $ jhbuild bootstrap
+
+# Note: Bison
+# 1. errors (illegal instruction 4): OS X introduced new security mechanisms. Adjustment of gnulib necessary. Vasnprintf needs to be exchanged
+
+# Note: m4-common
+# 1. Failure due to diff in Makefile.am (remove line and continue)
+
     $ jhbuild build meta-gtk-osx-bootstrap
     $ jhbuild build meta-gtk-osx-gtk3
 
+# Note: ragen
+# 1. Needed distclean
+
 * Building Roger Router
 
-
-Note that roger.modules in moduleset is a symlink to the file located in the Roger Router sources.
-
     $ jhbuild build roger
+
+# Note: gnutls
+# 1. Downloading through ftp took too long, downloaded manually and added it to gtk/Sources/pkgs
+
+# Note: poppler
+# 1. Moduleset request a gz instead of xz. Manually fixing solves issue
+# 2. destclean required
+
+# Note: python3
+# 1. Crash during execution. Solution remove line from configuration for Darwin:
+# LINKFORSHARED="-Wl,-stack_size,1000000 $LINKFORSHARED"
+
+# Note: meson
+# Download it from official site, and install it within jhbuild shell
 
 Optional: Add more eye-candy:
     Copy settings.ini to gtk/inst/etc/gtk-3.0
