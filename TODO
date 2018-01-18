@@ -12,7 +12,6 @@ General
 * FRITZ!Box: Read upnp xml to retrieve control url instead of hardcoding the value
 * FRITZ!Fon: label field
 * GNetworkMonitor currently only works on Linux! Add implementation for:
-    - Windows (patch added: https://bugzilla.gnome.org/show_bug.cgi?id=685442)
     - OS X
 * G_OS_LINUX??
 * Reverse lookup
