@@ -1600,7 +1600,7 @@ void app_show_settings(void)
 
 	/* Connect to builder objects */
 	settings->window = GTK_WIDGET(gtk_builder_get_object(builder, "settings"));
-	gtk_window_set_transient_for(GTK_WINDOW(settings->window), GTK_WINDOW(journal_get_window()));
+	//gtk_window_set_transient_for(GTK_WINDOW(settings->window), GTK_WINDOW(journal_get_window()));
 
 	settings->headerbar = GTK_WIDGET(gtk_builder_get_object(builder, "headerbar"));
 
@@ -1621,18 +1621,27 @@ void app_show_settings(void)
 	gtk_entry_set_text(GTK_ENTRY(settings->ftp_password_entry), rm_router_get_ftp_password(profile));
 
 	if (!rm_router_need_ftp(profile)) {
-		GtkWidget *tmp = GTK_WIDGET(gtk_builder_get_object(builder, "ftp_login_check_button"));
+		GtkWidget *tmp;
 
 		g_debug("%s(): Disable ftp data", __FUNCTION__);
-		gtk_widget_set_sensitive(tmp, FALSE);
-		gtk_widget_set_sensitive(settings->ftp_user_entry, FALSE);
-		gtk_widget_set_sensitive(settings->ftp_password_entry, FALSE);
-		//gtk_widget_set_no_show_all(settings->ftp_user_entry, TRUE);
-		//gtk_widget_set_visible(settings->ftp_user_entry, FALSE);
-		//gtk_widget_set_no_show_all(settings->ftp_password_entry, TRUE);
-		//gtk_widget_set_visible(settings->ftp_password_entry, FALSE);
-		//gtk_widget_set_no_show_all(tmp, TRUE);
-		//gtk_widget_set_visible(tmp, FALSE);
+
+		tmp = GTK_WIDGET(gtk_builder_get_object(builder, "ftp_user_label"));
+		gtk_widget_set_no_show_all(tmp, TRUE);
+		gtk_widget_set_visible(tmp, FALSE);
+
+		gtk_widget_set_no_show_all(settings->ftp_user_entry, TRUE);
+		gtk_widget_set_visible(settings->ftp_user_entry, FALSE);
+
+		tmp = GTK_WIDGET(gtk_builder_get_object(builder, "ftp_password_label"));
+		gtk_widget_set_no_show_all(tmp, TRUE);
+		gtk_widget_set_visible(tmp, FALSE);
+
+		gtk_widget_set_no_show_all(settings->ftp_password_entry, TRUE);
+		gtk_widget_set_visible(settings->ftp_password_entry, FALSE);
+
+		tmp = GTK_WIDGET(gtk_builder_get_object(builder, "ftp_login_check_button"));
+		gtk_widget_set_no_show_all(tmp, TRUE);
+		gtk_widget_set_visible(tmp, FALSE);
 	}
 
 	/* Prefix group */
