@@ -233,8 +233,6 @@ static GtkWidget *fax_create_menu(struct fax_ui *fax_ui)
 	GtkWidget *menu;
 	GtkWidget *item;
 	GtkWidget *box;
-	GSList *phone_radio_list = NULL;
-	GSList *list = NULL;
 
 	/* Create popover */
 	menu = gtk_popover_new(NULL);
