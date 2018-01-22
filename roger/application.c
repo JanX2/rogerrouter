@@ -339,7 +339,7 @@ static void application_startup(GtkApplication *application)
 
 static void rm_object_message_cb(RmObject *object, gchar *title, gchar *message, gpointer user_data)
 {
-	GtkWidget *dialog = gtk_message_dialog_new_with_markup(roger_app ? gtk_application_get_active_window(roger_app) : NULL, GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE, "<span weight=\"bold\" size=\"larger\">%s</span>", title);
+	GtkWidget *dialog = gtk_message_dialog_new_with_markup(roger_app ? gtk_application_get_active_window(roger_app) : NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE, "<span weight=\"bold\" size=\"larger\">%s</span>", title);
 
 	gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), "%s", message ? message : "");
 
