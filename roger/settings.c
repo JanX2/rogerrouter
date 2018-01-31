@@ -1603,6 +1603,7 @@ void app_show_settings(void)
 	gtk_window_set_transient_for(GTK_WINDOW(settings->window), GTK_WINDOW(journal_get_window()));
 
 	settings->headerbar = GTK_WIDGET(gtk_builder_get_object(builder, "headerbar"));
+	gtk_header_bar_set_title(GTK_HEADER_BAR(settings->headerbar), _("Settings"));
 
 	/* Router group */
 	settings->host_entry = GTK_WIDGET(gtk_builder_get_object(builder, "host_entry"));
