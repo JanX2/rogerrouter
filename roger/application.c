@@ -617,6 +617,7 @@ GtkApplication *application_new(void)
 
 	/* Create application */
 	roger_app = gtk_application_new(APP_GSETTINGS_SCHEMA, G_APPLICATION_HANDLES_COMMAND_LINE);
+	gtk_window_set_default_icon_name ("org.tabos.roger");
 
 	/* Create application settings */
 	app_settings = rm_settings_new(APP_GSETTINGS_SCHEMA);

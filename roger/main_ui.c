@@ -51,7 +51,6 @@ int main(int argc, char **argv)
 
 	roger_app = application_new();
 
-	gtk_window_set_default_icon_name("roger");
 	gdk_notify_startup_complete();
 	status = g_application_run(G_APPLICATION(roger_app), argc, argv);
 

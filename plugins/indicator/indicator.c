@@ -251,7 +251,7 @@ void indicator_combobox_default_changed_cb(GtkComboBox *widget, gpointer user_da
 	g_settings_set_string(indicator_plugin->settings, "default-icon", gtk_combo_box_get_active_id(GTK_COMBO_BOX(widget)));
 
 	/* Update indicator icon */
-	gchar *iconname = g_strconcat("roger-", g_settings_get_string(indicator_plugin->settings, "default-icon"), NULL);
+	gchar *iconname = g_strconcat("org.tabos.roger.", g_settings_get_string(indicator_plugin->settings, "default-icon"), NULL);
 	app_indicator_set_icon_full(indicator_plugin->indicator, iconname, "default-icon");
 	g_free(iconname);
 }
@@ -269,7 +269,7 @@ void indicator_combobox_notify_changed_cb(GtkComboBox *widget, gpointer user_dat
 	g_settings_set_string(indicator_plugin->settings, "notify-icon", gtk_combo_box_get_active_id(GTK_COMBO_BOX(widget)));
 
 	/* Update indicator attention icon */
-	gchar *iconname = g_strconcat("roger-", g_settings_get_string(indicator_plugin->settings, "notify-icon"), NULL);
+	gchar *iconname = g_strconcat("org.tabos.roger.", g_settings_get_string(indicator_plugin->settings, "notify-icon"), NULL);
 	app_indicator_set_attention_icon_full(indicator_plugin->indicator, iconname, "notify-icon");
 	g_free(iconname);
 }
@@ -310,9 +310,10 @@ gboolean indicator_plugin_init(RmPlugin *plugin)
 	indicator_plugin->settings = rm_settings_new("org.tabos.roger.plugins.indicator");
 
 	/* Create Application Indicator */
-	gchar *iconname = g_strconcat("roger-", g_settings_get_string(indicator_plugin->settings, "default-icon"), NULL);
-	indicator_plugin->indicator = app_indicator_new("roger", iconname, APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
-	iconname = g_strconcat("roger-", g_settings_get_string(indicator_plugin->settings, "notify-icon"), NULL);
+	gchar *iconname = g_strconcat("org.tabos.roger.", g_settings_get_string(indicator_plugin->settings, "default-icon"), NULL);
+	indicator_plugin->indicator = app_indicator_new("org.tabos.roger", iconname, APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
+
+	iconname = g_strconcat("org.tabos.roger.", g_settings_get_string(indicator_plugin->settings, "notify-icon"), NULL);
 	app_indicator_set_attention_icon_full(indicator_plugin->indicator, iconname, "notify-icon");
 	g_free(iconname);
 
