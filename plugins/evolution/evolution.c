@@ -617,7 +617,6 @@ RmAddressBook evolution_book = {
 	"Evolution",
 	evolution_get_active_book_name,
 	evolution_get_contacts,
-	evolution_reload,
 	evolution_remove_contact,
 	evolution_save_contact,
 	evolution_get_sub_books,

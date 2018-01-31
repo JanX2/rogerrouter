@@ -1018,7 +1018,6 @@ RmAddressBook thunderbird_book = {
 	"Thunderbird",
 	thunderbird_get_active_book_name,
 	thunderbird_get_contacts,
-	thunderbird_reload_contacts,
 	NULL,//thunderbird_remove_contact,
 	NULL,//thunderbird_save_contact,
 	thunderbird_get_sub_books,
