@@ -233,8 +233,6 @@ static GtkWidget *fax_create_menu(struct fax_ui *fax_ui)
 	GtkWidget *menu;
 	GtkWidget *item;
 	GtkWidget *box;
-	GSList *phone_radio_list = NULL;
-	GSList *list = NULL;
 
 	/* Create popover */
 	menu = gtk_popover_new(NULL);
@@ -283,7 +281,6 @@ gboolean app_show_fax_window_idle(gpointer data)
 
 	/* Connect to builder objects */
 	fax_ui->window = GTK_WIDGET(gtk_builder_get_object(builder, "fax_window"));
-	gtk_window_set_transient_for(GTK_WINDOW(fax_ui->window), GTK_WINDOW(journal_get_window()));
 
 	fax_ui->pickup_button = GTK_WIDGET(gtk_builder_get_object(builder, "call_start_button"));
 	fax_ui->hangup_button = GTK_WIDGET(gtk_builder_get_object(builder, "call_stop_button"));
@@ -304,7 +301,7 @@ gboolean app_show_fax_window_idle(gpointer data)
 	gtk_window_set_default(GTK_WINDOW(fax_ui->window), fax_ui->pickup_button);
 	gtk_grid_attach(GTK_GRID(grid2), fax_ui->contact_search, 0, 0, 1, 1);
 
-        GtkWidget *menu_button = GTK_WIDGET(gtk_builder_get_object(builder, "fax_menu_button"));
+    GtkWidget *menu_button = GTK_WIDGET(gtk_builder_get_object(builder, "fax_menu_button"));
 	GtkWidget *menu = fax_create_menu(fax_ui);
 	gtk_menu_button_set_popover(GTK_MENU_BUTTON(menu_button), menu);
 
@@ -327,6 +324,7 @@ gboolean app_show_fax_window_idle(gpointer data)
 	g_signal_connect(G_OBJECT(fax_ui->window), "delete-event", G_CALLBACK(fax_delete_event_cb), fax_ui);
 
 	gtk_widget_show_all(fax_ui->window);
+	gtk_window_present(GTK_WINDOW(fax_ui->window));
 
 	return FALSE;
 }
