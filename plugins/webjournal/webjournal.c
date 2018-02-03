@@ -265,7 +265,7 @@ static gboolean webjournal_plugin_shutdown(RmPlugin *plugin)
  *
  * Show file chooser dialog.
  */
-void filename_button_clicked_cb(GtkButton *button, gpointer user_data)
+static void webjournal_filename_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
 	GtkWindow *window = gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default()));
 	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Set HTML file"), window, GTK_FILE_CHOOSER_ACTION_SAVE, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Save"), GTK_RESPONSE_ACCEPT, NULL);
@@ -314,7 +314,7 @@ gpointer webjournal_plugin_configure(RmPlugin *plugin)
 	gtk_widget_set_hexpand(report_dir_entry, TRUE);
 	g_settings_bind(webjournal_settings, "filename", report_dir_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
-	g_signal_connect(report_dir_button, "clicked", G_CALLBACK(filename_button_clicked_cb), report_dir_entry);
+	g_signal_connect(report_dir_button, "clicked", G_CALLBACK(webjournal_filename_button_clicked_cb), report_dir_entry);
 
 	gtk_grid_attach(GTK_GRID(grid), report_dir_entry, 1, 1, 1, 1);
 	gtk_grid_attach(GTK_GRID(grid), report_dir_button, 2, 1, 1, 1);

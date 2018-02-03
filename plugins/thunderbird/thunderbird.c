@@ -1049,7 +1049,7 @@ gboolean thunderbird_plugin_shutdown(RmPlugin *plugin)
 	return TRUE;
 }
 
-void filename_button_clicked_cb(GtkButton *button, gpointer user_data)
+static void thunderbird_filename_button_clicked_cb(GtkButton *button, gpointer user_data)
 {
 	GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Select mab file"), NULL, GTK_FILE_CHOOSER_ACTION_OPEN, _("_Cancel"), GTK_RESPONSE_CANCEL, _("_Open"), GTK_RESPONSE_ACCEPT, NULL);
 	GtkFileFilter *filter;
@@ -1107,7 +1107,7 @@ gpointer thunderbird_plugin_configure(RmPlugin *plugin)
 	gtk_widget_set_hexpand(report_dir_entry, TRUE);
 	g_settings_bind(thunderbird_settings, "filename", report_dir_entry, "text", G_SETTINGS_BIND_DEFAULT);
 
-	g_signal_connect(report_dir_button, "clicked", G_CALLBACK(filename_button_clicked_cb), report_dir_entry);
+	g_signal_connect(report_dir_button, "clicked", G_CALLBACK(thunderbird_filename_button_clicked_cb), report_dir_entry);
 
 	gtk_grid_attach(GTK_GRID(grid), report_dir_entry, 1, 1, 1, 1);
 	gtk_grid_attach(GTK_GRID(grid), report_dir_button, 2, 1, 1, 1);
