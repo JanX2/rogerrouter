@@ -1,39 +1,15 @@
 General
 --------
 * Default notification should be all instead none
-* Installation hint for not working fax device
 * Assistent: How to handle existing profile names? Overwrite?
 * FRITZ!Box: Handle insufficient permissions
-* Design Journal/Contacts/Phone with Glade
-* Areacodes plugin for every country (global list available as csv)
-  (90% done, add special handling for countrys not starting with 0 indicator,
-  e.g. Russian Federation)
-* Export contacts to router
-* FRITZ!Box: Read upnp xml to retrieve control url instead of hardcoding the value
+* Journal with Glade
 * FRITZ!Fon: label field
-* GNetworkMonitor currently only works on Linux! Add implementation for:
-    - OS X
-* G_OS_LINUX??
-* Reverse lookup
- - Germany: dasörtliche, dastelefonbuch, klicktel, goyellow, gelbeseiten
- - France: 11880.fr
- - Swiss: tel.search.ch, tel.local.ch
- - Austria: telefonabc.at
-* Journal
- - MySQL
- - Text
-* Misc
- - tellows
- - notes
-* Import for JFritz
-* DSL/Connection information
+* GNetworkMonitor for OS X
 * VCard crashes on file changes
+* Softphone Record playback
+* Fax Report should be in A4 instead of A1
 
-Windows
---------
- * Outlook
-
-OS X
------
-* Add G_OS_OSX in glib
-* Add consistent directory handling in glib
+#0  0x000000381fa80526 in strlen () at /lib/libc.so.6
+#1  0x00007ffff59b745c in rm_number_format () at /app/lib/librm.so.0
+#2  0x00007fffd2e730b6 in  () at /app/lib/rm/reverselookup/libreverselookup.so

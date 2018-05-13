@@ -552,9 +552,16 @@ void row_activated_foreach(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 		//g_free(data);
 		break;
 	}
-	case RM_CALL_ENTRY_TYPE_RECORD:
-		gtk_show_uri_on_window(GTK_WINDOW(journal_get_window()), call->priv, gtk_get_current_event_time(), &error);
+	case RM_CALL_ENTRY_TYPE_RECORD: {
+    gchar *tmp = call->priv;
+		if (!gtk_show_uri_on_window(GTK_WINDOW(journal_get_window()), tmp, GDK_CURRENT_TIME, &error)) {
+				g_debug("%s(): Could not open uri '%s'", __FUNCTION__, tmp);
+				g_debug("%s(): '%s'", __FUNCTION__, error->message);
+    } else {
+				g_debug("%s(): Opened '%s'", __FUNCTION__, tmp);
+	  }
 		break;
+  }
 	case RM_CALL_ENTRY_TYPE_VOICE:
 		app_answeringmachine(call->priv);
 		break;
