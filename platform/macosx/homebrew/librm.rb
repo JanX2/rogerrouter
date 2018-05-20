@@ -1,28 +1,28 @@
 class Librm < Formula
   desc "RouterManager Library"
-  homepage "http://www.tabos.org"
+  homepage "https://www.tabos.org"
   url "https://www.tabos.org/wp-content/uploads/2018/05/librm-master.tar.gz"
   version "2.0.0"
   sha256 "09f78f5dd6a8959186a90cb9f00bdb445146d434a7595feea3203b294c31af08"
 
-  depends_on "pkg-config" => :build
   depends_on "meson-internal" => :build
   depends_on "ninja" => :build
-  depends_on "gettext" 
-  depends_on "glib"
-  depends_on "gdk-pixbuf"
-  depends_on "libsoup"
-  depends_on "speex"
-  depends_on "spandsp"
-  depends_on "json-glib"
-  depends_on "libsndfile"
-  depends_on "gupnp"
-  depends_on "gtk+3"
-  depends_on "gtk-mac-integration"
+  depends_on "pkg-config" => :build
   depends_on "capi20"
-  depends_on "gstreamer"
+  depends_on "gdk-pixbuf"
+  depends_on "gettext"
+  depends_on "glib"
   depends_on "gst-plugins-base"
   depends_on "gst-plugins-good"
+  depends_on "gstreamer"
+  depends_on "gtk+3"
+  depends_on "gtk-mac-integration"
+  depends_on "gupnp"
+  depends_on "json-glib"
+  depends_on "libsndfile"
+  depends_on "libsoup"
+  depends_on "spandsp"
+  depends_on "speex"
 
   def install
     args = %W[

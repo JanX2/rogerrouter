@@ -1,9 +1,8 @@
 class Capi20 < Formula
-  desc "Handle requests from CAPI-driven applications such as fax systems via active and passive ISDN cards or FRITZ!Box routers."
+  desc "Handle requests from CAPI-driven applications via FRITZ!Box routers"
   homepage "https://www.tabos.org"
   url "https://www.tabos.org/wp-content/uploads/2017/03/capi20-v3.tar.xz"
   sha256 "d6612fc5472cd40f56de4463975eae602dcab38dc285c0c7d4059a5a35a39724"
-  version="3.0.6"
 
   def install
     system "./configure", "--disable-dependency-tracking",

@@ -6,14 +6,14 @@ class Rogerrouter < Formula
   version "2.0.0"
   sha256 "29e2a6961dcc26ac038fcc9074094f17da3b9eb3005ea3792dce938ecb22c9e2"
 
-  depends_on "pkg-config" => :build
   depends_on "meson-internal" => :build
   depends_on "ninja" => :build
-  depends_on "gettext" 
-  depends_on "ghostscript" 
+  depends_on "pkg-config" => :build
+  depends_on "gettext"
+  depends_on "ghostscript"
   depends_on "gtk+3"
-  depends_on "libsoup"
   depends_on "librm"
+  depends_on "libsoup"
   depends_on "poppler"
 
   def install
