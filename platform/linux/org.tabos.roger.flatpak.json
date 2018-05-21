@@ -49,7 +49,6 @@
         "/share/gir-1.0"
     ],
     "modules" : [
-        "libappindicator.json",
         {
             "name" : "gssdp",
             "cleanup" : [
