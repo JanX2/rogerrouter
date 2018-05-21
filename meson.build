@@ -25,14 +25,14 @@ cdata.set('PACKAGE_VERSION', '"@0@"'.format(app_version))
 cdata.set('PACKAGE_BUGREPORT', '"https://www.tabos.org/forum"')
 cdata.set('GETTEXT_PACKAGE', '"roger"')
 
-if host_machine.system().contains('linux')
-cdata.set('APP_PLUGINS', '"' + get_option('prefix') + '/' + get_option('libdir') + '/roger/"')
-cdata.set('APP_DATA', '"' + get_option('prefix') + '/' + get_option('datadir') + '/roger/"')
-cdata.set('APP_LOCALE', '"' + get_option('prefix') + '/' + get_option('localedir') + '"')
-else
+if host_machine.system() == 'windows'
 cdata.set('APP_PLUGINS', '"' + get_option('libdir') + '/roger/"')
 cdata.set('APP_DATA', '"' + get_option('datadir') + '/roger/"')
 cdata.set('APP_LOCALE', '"' + get_option('localedir') + '"')
+else
+cdata.set('APP_PLUGINS', '"' + get_option('prefix') + '/' + get_option('libdir') + '/roger/"')
+cdata.set('APP_DATA', '"' + get_option('prefix') + '/' + get_option('datadir') + '/roger/"')
+cdata.set('APP_LOCALE', '"' + get_option('prefix') + '/' + get_option('localedir') + '"')
 endif
 
 gslib = cc.find_library('gs')
@@ -59,7 +59,9 @@ subdir('plugins')
 subdir('roger')
 subdir('platform')
 
-meson.add_install_script('meson_post_install.sh')
+if get_option('enable-post-install')
+  meson.add_install_script('meson_post_install.sh')
+endif
 
 #rpm = import('rpm')
 #rpm.generate_spec_template()

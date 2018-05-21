@@ -1,0 +1,1 @@
+option('enable-post-install', type: 'boolean', value: 'true', description : 'Enable post install (schema compiling, desktop, ...)')
