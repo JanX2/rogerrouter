@@ -15,6 +15,8 @@ class Rogerrouter < Formula
   depends_on "librm"
   depends_on "libsoup"
   depends_on "poppler"
+  depends_on "hicolor-icon-theme"
+  depends_on "adwaita-icon-theme"
 
   def install
     args = %W[
@@ -36,6 +38,7 @@ class Rogerrouter < Formula
   def post_install
     system "#{Formula["glib"].opt_bin}/glib-compile-schemas", "#{HOMEBREW_PREFIX}/share/glib-2.0/schemas"
     system "#{Formula["gtk+3"].opt_bin}/gtk3-update-icon-cache", "-f", "-t", "#{HOMEBREW_PREFIX}/share/icons/hicolor"
+    system "lpadmin", "-p", "Roger-Router-Fax", "-m", "drv:///sample.drv/generic.ppd", "-v", "socket://localhost:9100/", "-E", "-o", "PageSize=A4"
   end
 
   test do
