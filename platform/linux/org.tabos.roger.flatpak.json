@@ -221,7 +221,6 @@
         {
             "name" : "librm",
             "buildsystem" : "meson",
-            "builddir" : true,
             "config-opts" : [
                 "--libdir=/app/lib",
                 "--buildtype=release"
@@ -240,7 +239,6 @@
                 "--buildtype=release"
             ],
             "buildsystem" : "meson",
-            "builddir" : true,
             "sources" : [
                 {
                     "type" : "git",
